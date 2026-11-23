@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=109" />
+  <link rel="manifest" href="./manifest.json?v=110" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=109" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=109" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=110" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=110" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -295,7 +295,7 @@
     .tabbar {
       position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
       width: 100%; max-width: 480px; display: flex;
-      padding: 8px 6px calc(8px + var(--safe-bottom)); z-index: 25;
+      padding: 7px 4px calc(8px + var(--safe-bottom)); z-index: 25;
       border-top: 1px solid var(--border);
     }
     .tabbar.light { background: var(--surface); }
@@ -303,8 +303,18 @@
 
     .tab-btn {
       flex: 1; min-width: 0; background: transparent; border: none; display: flex; flex-direction: column;
-      align-items: center; gap: 2px; font-size: 10.5px; font-weight: 600;
-      color: var(--text-sub); cursor: pointer; padding: 4px 2px; position: relative;
+      align-items: center; gap: 2px; font-size: 10px; font-weight: 600;
+      color: var(--text-sub); cursor: pointer; padding: 4px 1px; position: relative;
+      border-radius: 10px; transition: background 0.16s ease, color 0.16s ease;
+    }
+    .tab-btn.more-active {
+      background: rgba(245, 158, 11, 0.14);
+      color: #D97706 !important;
+      font-weight: 800;
+    }
+    .tabbar.dark .tab-btn.more-active {
+      background: rgba(245, 158, 11, 0.2);
+      color: #FDE68A !important;
     }
     .tab-btn span:last-of-type {
       max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -1166,6 +1176,157 @@
       flex-shrink: 0;
     }
 
+
+    /* ==================== v10.10 더보기(☰) 사이트 바로가기 바텀시트 ==================== */
+    .quick-sheet-modal {
+      width: 100%;
+      max-width: 480px;
+      background: linear-gradient(180deg, #131B2E 0%, #0B0F19 100%);
+      color: #FFFFFF;
+      border-radius: 24px 24px 0 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 12px 18px calc(24px + var(--safe-bottom));
+      max-height: 82vh;
+      overflow-y: auto;
+      box-shadow: 0 -16px 40px rgba(0, 0, 0, 0.45);
+    }
+    .quick-sheet-handle {
+      width: 40px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.22);
+      margin: 0 auto 14px;
+    }
+    .quick-sheet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .quick-sheet-title {
+      font-size: 16.5px;
+      font-weight: 800;
+      color: #F8FAFC;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin: 0;
+    }
+    .quick-sheet-close {
+      background: rgba(255, 255, 255, 0.12);
+      color: #E2E8F0;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .quick-link-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 15px;
+      margin-bottom: 10px;
+      text-decoration: none;
+      color: #FFFFFF;
+      font-size: 15px;
+      font-weight: 800;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.26);
+      cursor: pointer;
+      transition: transform 0.14s ease, filter 0.14s ease;
+      text-align: left;
+      font-family: inherit;
+    }
+    .quick-link-btn:active {
+      transform: scale(0.98);
+      filter: brightness(0.95);
+    }
+    .quick-link-btn.dark-text {
+      color: #191919;
+      border-color: rgba(0, 0, 0, 0.08);
+    }
+    .quick-link-left {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+      flex: 1;
+    }
+    .quick-link-icon {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 19px;
+    }
+    .quick-link-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .quick-link-sub {
+      font-size: 11px;
+      font-weight: 600;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+    .quick-link-arrow {
+      font-size: 14px;
+      opacity: 0.85;
+      flex-shrink: 0;
+    }
+    .quick-sheet-admin-bar {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .quick-sheet-admin-btn {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.1);
+      color: #FDE68A;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 11px;
+      padding: 10px 12px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .quick-preset-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .quick-preset-chip {
+      border: 1px solid var(--border);
+      background: #F8FAFC;
+      color: #334155;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .quick-preset-chip:active {
+      background: #111827;
+      color: #fff;
+    }
+    .tab-icon-bars {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 19px;
+    }
+
     /* 토스트 */
     .toast {
       position: fixed; bottom: calc(86px + var(--safe-bottom)); left: 50%;
@@ -1181,7 +1342,7 @@
   <div class="app-shell">
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=109" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=110" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -1848,6 +2009,60 @@
     </div>
   </div>
 
+
+  <!-- 더보기(☰): 사이트 바로가기 바텀시트 -->
+  <div id="quickLinksSheet" class="modal-backdrop">
+    <div class="quick-sheet-modal">
+      <div class="quick-sheet-handle"></div>
+      <div class="quick-sheet-head">
+        <h3 id="quickSheetTitle" class="quick-sheet-title">🔗 사이트 바로가기</h3>
+        <button class="quick-sheet-close" type="button" onclick="closeQuickLinksSheet()">✕</button>
+      </div>
+      <div id="quickLinksSheetList"></div>
+      <div id="quickLinksSheetAdminBar" class="quick-sheet-admin-bar hidden">
+        <button class="quick-sheet-admin-btn" type="button" onclick="openAddQuickLinkFromSheet()">+ 사이트 추가</button>
+        <button class="quick-sheet-admin-btn" type="button" onclick="goToQuickLinksManage()">⚙️ 관리 센터에서 편집</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 관리자: 사이트 바로가기 추가/수정 모달 -->
+  <div id="quickLinkModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="quickLinkModalTitle" class="modal-title">🔗 사이트 바로가기 추가</h3>
+        <button class="close-btn" data-close="quickLinkModal">✕</button>
+      </div>
+      <input type="hidden" id="editQuickLinkId" />
+      <div class="form-group">
+        <label class="form-label">빠른 프리셋 선택</label>
+        <div class="quick-preset-row">
+          <button class="quick-preset-chip" type="button" onclick="applyQuickLinkPreset('instagram')">📸 인스타그램</button>
+          <button class="quick-preset-chip" type="button" onclick="applyQuickLinkPreset('youtube')">▶️ 유튜브</button>
+          <button class="quick-preset-chip" type="button" onclick="applyQuickLinkPreset('church')">⛪ 교회 홈페이지</button>
+          <button class="quick-preset-chip" type="button" onclick="applyQuickLinkPreset('kakao')">💬 카카오톡</button>
+          <button class="quick-preset-chip" type="button" onclick="applyQuickLinkPreset('naver')">🌿 네이버·블로그</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">버튼 이름</label>
+        <input id="quickLinkLabelInput" class="form-input" maxlength="24" placeholder="예: 인스타그램 바로가기" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">연결할 사이트 주소 (URL)</label>
+        <input id="quickLinkUrlInput" type="url" class="form-input" placeholder="예: https://www.instagram.com/아이디" />
+        <div style="font-size:11.5px; color:#64748B; margin-top:4px; line-height:1.45;">
+          인스타그램·유튜브 주소를 넣으면 앱이 설치된 스마트폰에서 해당 앱으로 바로 열립니다.
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">버튼 색상 · 아이콘 테마</label>
+        <div id="quickLinkThemePalette" class="color-palette"></div>
+      </div>
+      <button id="saveQuickLinkBtn" class="btn-full btn-dark" type="button" style="margin-top:6px;" onclick="handleSaveQuickLink()">사이트 바로가기 저장</button>
+    </div>
+  </div>
+
   <div id="toast" class="toast"></div>
 
   <script>
@@ -1868,7 +2083,7 @@
     const FieldValue = firebase.firestore.FieldValue;
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 14;
+    const CURRENT_SCHEMA_VERSION = 15;
 
     // 매일 자정(KST) 자동 변경되는 일일 큐티 성경말씀 풀 (60편)
     const DAILY_QT_POOL = [
@@ -1939,12 +2154,13 @@
     const KEY_BIBLE_MARKS = 'right_youth_bible_marks_v103';
     const KEY_BIBLE_FONT = 'right_youth_bible_font_v103';
 
-    const DEFAULT_TAB_ORDER = ['home', 'bible', 'qt', 'bylaws', 'manage'];
+    const DEFAULT_TAB_ORDER = ['home', 'bible', 'qt', 'bylaws', 'more', 'manage'];
     const TAB_META_DEFS = {
       home: { icon: '🏠', roleHint: '메인 홈' },
       bible: { icon: '📖', roleHint: '성경' },
       qt: { icon: '✨', roleHint: '오늘의 말씀' },
       bylaws: { icon: '📜', roleHint: '회칙' },
+      more: { icon: '☰', roleHint: '더보기 (사이트 바로가기)' },
       manage: { icon: '🛠️', roleHint: '관리자 전용' }
     };
     const DEFAULT_TAB_LABELS = {
@@ -1952,12 +2168,71 @@
       bible: '성경',
       qt: '오늘의 말씀',
       bylaws: '회칙',
+      more: '더보기',
       manage: '관리 센터',
       manageContent: '화면·공지 관리',
       manageMembers: '회원 승인·역할',
       manageRoles: '역할·권한 설정',
       tabOrder: DEFAULT_TAB_ORDER
     };
+
+    const QUICK_LINK_THEMES = [
+      {
+        id: 'instagram',
+        label: '인스타그램',
+        css: 'linear-gradient(135deg, #F58529 0%, #DD2A7B 52%, #8134AF 100%)',
+        darkText: false,
+        svg: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5"></rect><circle cx="12" cy="12" r="4.2"></circle><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"></circle></svg>'
+      },
+      {
+        id: 'youtube',
+        label: '유튜브',
+        css: 'linear-gradient(135deg, #FF0000 0%, #CC0000 100%)',
+        darkText: false,
+        svg: '<svg width="23" height="23" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1c.4-1.9.5-3.8.5-5.8s-.1-3.9-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>'
+      },
+      {
+        id: 'church',
+        label: '교회 홈페이지',
+        css: 'linear-gradient(135deg, #1E3A5F 0%, #0F2540 100%)',
+        darkText: false,
+        svg: '⛪'
+      },
+      {
+        id: 'kakao',
+        label: '카카오톡',
+        css: 'linear-gradient(135deg, #FEE500 0%, #FACC15 100%)',
+        darkText: true,
+        svg: '💬'
+      },
+      {
+        id: 'naver',
+        label: '네이버·블로그',
+        css: 'linear-gradient(135deg, #03C75A 0%, #059669 100%)',
+        darkText: false,
+        svg: '🌿'
+      },
+      {
+        id: 'blue',
+        label: '블루 링크',
+        css: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
+        darkText: false,
+        svg: '🔗'
+      },
+      {
+        id: 'dark',
+        label: '다크 슬레이트',
+        css: 'linear-gradient(135deg, #1E293B 0%, #334155 100%)',
+        darkText: false,
+        svg: '🌐'
+      }
+    ];
+
+    const DEFAULT_QUICK_LINKS = [
+      { id: 'ql_insta', label: '인스타그램 바로가기', url: '', theme: 'instagram' },
+      { id: 'ql_youtube', label: '유튜브 채널 바로가기', url: '', theme: 'youtube' },
+      { id: 'ql_church', label: '교회 홈페이지 바로가기', url: '', theme: 'church' }
+    ];
 
     const BIBLE_BOOKS = [
       { id: 1, t: 'OT', name: '창세기', abbr: '창', ch: 50 },
@@ -2411,7 +2686,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=109" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=110" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -2434,8 +2709,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=109', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=109', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=110', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=110', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -2566,6 +2841,8 @@
     let myMemberDoc = null;
     let roles = structuredClone(DEFAULT_ROLES);
     let blocks = structuredClone(DEFAULT_BLOCKS);
+    let quickLinks = structuredClone(DEFAULT_QUICK_LINKS);
+    let selectedQuickLinkTheme = 'instagram';
     let tabLabels = structuredClone(DEFAULT_TAB_LABELS);
     let notices = [];
     let qtPosts = [];
@@ -2808,7 +3085,7 @@
           items: DEFAULT_ROLES,
           byId: buildRolesByIdMap(DEFAULT_ROLES)
         });
-        batch.set(db.collection('config').doc('layout'), { blocks: DEFAULT_BLOCKS });
+        batch.set(db.collection('config').doc('layout'), { blocks: DEFAULT_BLOCKS, quickLinks: DEFAULT_QUICK_LINKS });
         batch.set(db.collection('config').doc('labels'), DEFAULT_TAB_LABELS);
         const welcomeId = String(Date.now());
         batch.set(db.collection('notices').doc(welcomeId), {
@@ -2844,7 +3121,13 @@
               if (!copy.audience) copy.audience = copy.type === 'leader_card' ? 'leader' : 'all';
               return copy;
             });
-          await db.collection('config').doc('layout').set({ blocks: cleanedBlocks }, { merge: true });
+          const layoutPatch = { blocks: cleanedBlocks };
+          if (!Array.isArray(layoutSnap.data().quickLinks)) {
+            layoutPatch.quickLinks = DEFAULT_QUICK_LINKS;
+          }
+          await db.collection('config').doc('layout').set(layoutPatch, { merge: true });
+        } else if (!layoutSnap.exists || !Array.isArray(layoutSnap.data().quickLinks)) {
+          await db.collection('config').doc('layout').set({ quickLinks: DEFAULT_QUICK_LINKS }, { merge: true });
         }
 
         // 3) 칸(탭) 이름 기본값 동기화 ('큐티' -> '오늘의 말씀')
@@ -2963,9 +3246,14 @@
 
       unsubCore.push(
         db.collection('config').doc('layout').onSnapshot(doc => {
-          if (doc.exists && Array.isArray(doc.data().blocks)) {
+          if (doc.exists) {
             const d = doc.data();
-            blocks = d.blocks.filter(b => b.type !== 'quick_check' && b.type !== 'today_qt');
+            if (Array.isArray(d.quickLinks)) {
+              quickLinks = d.quickLinks;
+            }
+            if (Array.isArray(d.blocks)) {
+              blocks = d.blocks.filter(b => b.type !== 'quick_check' && b.type !== 'today_qt');
+            }
             const alertObj = d.lastAlert || null;
             const alertTs = alertObj ? Number(alertObj.ts || 0) : 0;
             if (layoutFirstSnap) {
@@ -2983,6 +3271,9 @@
             }
           }
           applyScreen();
+          if (document.getElementById('quickLinksSheet').classList.contains('open')) {
+            renderQuickLinksSheetContent();
+          }
         }, err => handleDbError(err, '배치 동기화'))
       );
 
@@ -3453,13 +3744,28 @@
       const tabbar = document.getElementById('appTabbar');
       tabbar.className = `tabbar ${isManageMode ? 'dark' : 'light'}`;
       const orderedTabs = getValidTabOrder().filter(k => k !== 'manage' || canManage);
+      const isMoreOpen = document.getElementById('quickLinksSheet').classList.contains('open');
       tabbar.innerHTML = orderedTabs.map(key => {
         const meta = TAB_META_DEFS[key] || { icon: '•' };
+        if (key === 'more') {
+          return `
+            <button id="tabBtnMore" class="tab-btn ${isMoreOpen ? 'more-active' : ''}" onclick="toggleQuickLinksSheet()">
+              <span class="tab-icon tab-icon-bars">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                  <line x1="4" y1="6.5" x2="20" y2="6.5"></line>
+                  <line x1="4" y1="12" x2="20" y2="12"></line>
+                  <line x1="4" y1="17.5" x2="20" y2="17.5"></line>
+                </svg>
+              </span>
+              <span>${escapeHtml(getTabLabel('more'))}</span>
+            </button>
+          `;
+        }
         const badgeHtml = (key === 'manage' && perms.canManageMembers && pendingCount > 0)
           ? `<span class="tab-badge">${pendingCount}</span>`
           : '';
         return `
-          <button class="tab-btn ${currentMainTab === key ? 'active' : ''}" onclick="switchMainTab('${key}')">
+          <button class="tab-btn ${!isMoreOpen && currentMainTab === key ? 'active' : ''}" onclick="switchMainTab('${key}')">
             <span class="tab-icon">${meta.icon}</span>
             <span>${escapeHtml(getTabLabel(key))}</span>
             ${badgeHtml}
@@ -3486,6 +3792,7 @@
     }
 
     window.switchMainTab = (tab) => {
+      document.getElementById('quickLinksSheet').classList.remove('open');
       currentMainTab = tab;
       applyScreen();
     };
@@ -3831,6 +4138,51 @@
                   </div>
                 </div>
               `).join('')}
+        ` : ''}
+
+        ${canLayout ? `
+          <div class="manage-divider"></div>
+          <div class="section-head">
+            <h2 class="section-title">🔗 사이트 바로가기 관리 (☰ ${escapeHtml(getTabLabel('more'))})</h2>
+            <button class="btn-admin" onclick="openAddQuickLinkModal()">+ 새 사이트</button>
+          </div>
+          ${quickLinks.length === 0
+            ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">등록된 사이트 바로가기가 없습니다.<br>인스타·유튜브·교회 홈페이지 등을 추가해 보세요.</div>'
+            : quickLinks.map((ql, idx) => {
+                const theme = getQuickLinkTheme(ql.theme);
+                const hasUrl = !!(ql.url && String(ql.url).trim());
+                return `
+                  <div class="card">
+                    <div class="layout-item-head">
+                      <div style="display:flex; align-items:center; gap:9px; min-width:0; flex:1;">
+                        <span style="width:34px; height:34px; border-radius:10px; background:${theme.css}; color:${theme.darkText ? '#191919' : '#fff'}; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">${theme.svg}</span>
+                        <div style="min-width:0; flex:1;">
+                          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                            <strong style="font-size:14px;">${idx + 1}. ${escapeHtml(ql.label)}</strong>
+                            ${hasUrl ? '<span class="tag green">연결됨</span>' : '<span class="tag warm">주소 미등록</span>'}
+                          </div>
+                          <div style="font-size:11.5px; color:#64748B; margin-top:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                            ${hasUrl ? escapeHtml(ql.url) : '수정 버튼을 눌러 사이트 주소를 입력해 주세요'}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="order-btns">
+                        <button class="order-btn" onclick="moveQuickLink(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                        <button class="order-btn" onclick="moveQuickLink(${idx}, 1)" ${idx === quickLinks.length - 1 ? 'disabled' : ''}>▼</button>
+                      </div>
+                    </div>
+                    <div class="card-footer">
+                      ${hasUrl
+                        ? `<a href="${escapeHtml(ql.url)}" target="_blank" rel="noopener noreferrer" class="btn-sm" style="text-decoration:none;">열기 테스트 ↗</a>`
+                        : `<button class="btn-sm primary" type="button" onclick="openEditQuickLinkModal('${ql.id}')">주소 입력하기</button>`}
+                      <div style="display:flex; gap:6px;">
+                        <button class="btn-sm" onclick="openEditQuickLinkModal('${ql.id}')">수정</button>
+                        <button class="btn-sm danger" onclick="deleteQuickLink('${ql.id}')">삭제</button>
+                      </div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
         ` : ''}
 
         ${canLayout && canNotices ? '<div class="manage-divider"></div>' : ''}
@@ -4692,7 +5044,12 @@
       btn.addEventListener('click', () => document.getElementById(btn.dataset.close).classList.remove('open'));
     });
     document.querySelectorAll('.modal-backdrop').forEach(bg => {
-      bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('open'); });
+      bg.addEventListener('click', e => {
+        if (e.target === bg) {
+          bg.classList.remove('open');
+          if (bg.id === 'quickLinksSheet') syncMoreTabActiveState();
+        }
+      });
     });
     document.getElementById('copyLinkBtn').addEventListener('click', async () => {
       const target = notices.find(n => String(n.id) === String(currentDetailId));
@@ -5881,6 +6238,7 @@
         bible: String(draftTabNames.bible || '').trim() || DEFAULT_TAB_LABELS.bible,
         qt: String(draftTabNames.qt || '').trim() || DEFAULT_TAB_LABELS.qt,
         bylaws: String(draftTabNames.bylaws || '').trim() || DEFAULT_TAB_LABELS.bylaws,
+        more: String(draftTabNames.more || '').trim() || DEFAULT_TAB_LABELS.more,
         manage: String(draftTabNames.manage || '').trim() || DEFAULT_TAB_LABELS.manage,
         manageContent: document.getElementById('lblManageContentInput').value.trim() || DEFAULT_TAB_LABELS.manageContent,
         manageMembers: document.getElementById('lblManageMembersInput').value.trim() || DEFAULT_TAB_LABELS.manageMembers,
@@ -5898,6 +6256,240 @@
       } finally {
         btn.disabled = false;
       }
+    };
+
+    // ==================== 17. 더보기(☰) 사이트 바로가기 바텀시트 및 관리자 편집 ====================
+    function getQuickLinkTheme(themeId) {
+      return QUICK_LINK_THEMES.find(t => t.id === themeId) || QUICK_LINK_THEMES[5];
+    }
+
+    function normalizeExternalUrl(raw) {
+      let url = String(raw || '').trim();
+      if (!url) return '';
+      if (/^(javascript|data|vbscript):/i.test(url)) return '';
+      if (!/^https?:\/\//i.test(url)) {
+        url = 'https://' + url;
+      }
+      return url;
+    }
+
+    function syncMoreTabActiveState() {
+      const sheetOpen = document.getElementById('quickLinksSheet').classList.contains('open');
+      const moreBtn = document.getElementById('tabBtnMore');
+      if (moreBtn) moreBtn.classList.toggle('more-active', sheetOpen);
+      const user = getCurrentUser();
+      if (user && !sheetOpen) {
+        // Restore active state on current main tab button
+        document.querySelectorAll('#appTabbar .tab-btn').forEach(btn => {
+          const oc = btn.getAttribute('onclick') || '';
+          if (oc.includes(`'${currentMainTab}'`)) btn.classList.add('active');
+        });
+      } else if (sheetOpen) {
+        document.querySelectorAll('#appTabbar .tab-btn').forEach(btn => {
+          if (btn.id !== 'tabBtnMore') btn.classList.remove('active');
+        });
+      }
+    }
+
+    function renderQuickLinksSheetContent() {
+      const user = getCurrentUser();
+      const canEdit = hasUserPerm(user, 'canEditLayout');
+      document.getElementById('quickLinksSheetAdminBar').classList.toggle('hidden', !canEdit);
+
+      const listEl = document.getElementById('quickLinksSheetList');
+      const displayLinks = canEdit
+        ? quickLinks
+        : quickLinks.filter(ql => !!(ql.url && String(ql.url).trim()));
+
+      if (displayLinks.length === 0) {
+        listEl.innerHTML = `
+          <div style="text-align:center; padding:28px 12px; color:#94A3B8; font-size:13.5px; line-height:1.6;">
+            <div style="font-size:26px; margin-bottom:8px;">🔗</div>
+            <div style="font-weight:700; color:#E2E8F0; margin-bottom:4px;">아직 등록된 사이트가 없습니다.</div>
+            <div>${canEdit ? '아래 [+ 사이트 추가] 버튼을 눌러 인스타·유튜브·교회 사이트를 등록해 보세요.' : '관리자가 사이트를 등록하면 이곳에서 바로 이동할 수 있습니다.'}</div>
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = displayLinks.map(ql => {
+        const theme = getQuickLinkTheme(ql.theme);
+        const safeUrl = normalizeExternalUrl(ql.url);
+        const textCls = theme.darkText ? 'dark-text' : '';
+
+        if (safeUrl) {
+          return `
+            <a class="quick-link-btn ${textCls}" style="background:${theme.css};"
+               href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer"
+               onclick="closeQuickLinksSheet()">
+              <span class="quick-link-left">
+                <span class="quick-link-icon">${theme.svg}</span>
+                <span class="quick-link-label">${escapeHtml(ql.label)}</span>
+              </span>
+              <span class="quick-link-arrow">▸</span>
+            </a>
+          `;
+        }
+
+        // 주소 미등록 항목 (관리자에게만 표시, 클릭 시 바로 주소 입력 모달 열기)
+        return `
+          <button class="quick-link-btn ${textCls}" type="button" style="background:${theme.css}; opacity:0.82;"
+                  onclick="closeQuickLinksSheet(); openEditQuickLinkModal('${ql.id}')">
+            <span class="quick-link-left">
+              <span class="quick-link-icon">${theme.svg}</span>
+              <span style="min-width:0;">
+                <div class="quick-link-label">${escapeHtml(ql.label)}</div>
+                <div class="quick-link-sub">주소 미등록 · 눌러서 사이트 주소 입력</div>
+              </span>
+            </span>
+            <span class="quick-link-arrow">✎</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    window.toggleQuickLinksSheet = () => {
+      const sheet = document.getElementById('quickLinksSheet');
+      if (sheet.classList.contains('open')) {
+        closeQuickLinksSheet();
+      } else {
+        renderQuickLinksSheetContent();
+        sheet.classList.add('open');
+        syncMoreTabActiveState();
+      }
+    };
+
+    window.closeQuickLinksSheet = () => {
+      document.getElementById('quickLinksSheet').classList.remove('open');
+      syncMoreTabActiveState();
+    };
+
+    window.openAddQuickLinkFromSheet = () => {
+      closeQuickLinksSheet();
+      openAddQuickLinkModal();
+    };
+
+    window.goToQuickLinksManage = () => {
+      closeQuickLinksSheet();
+      currentMainTab = 'manage';
+      currentManageSubTab = 'content';
+      applyScreen();
+    };
+
+    function renderQuickLinkThemePalette() {
+      document.getElementById('quickLinkThemePalette').innerHTML = QUICK_LINK_THEMES.map(t => `
+        <div class="color-dot ${selectedQuickLinkTheme === t.id ? 'selected' : ''}"
+             style="background:${t.css}; display:inline-flex; align-items:center; justify-content:center; color:${t.darkText ? '#191919' : '#fff'}; font-size:13px;"
+             title="${escapeHtml(t.label)}"
+             onclick="selectQuickLinkTheme('${t.id}')">
+        </div>
+      `).join('');
+    }
+
+    window.selectQuickLinkTheme = (id) => {
+      selectedQuickLinkTheme = id;
+      renderQuickLinkThemePalette();
+    };
+
+    window.applyQuickLinkPreset = (presetId) => {
+      const map = {
+        instagram: { label: '인스타그램 바로가기', placeholder: 'https://www.instagram.com/아이디', theme: 'instagram' },
+        youtube: { label: '유튜브 채널 바로가기', placeholder: 'https://www.youtube.com/@채널명', theme: 'youtube' },
+        church: { label: '교회 홈페이지 바로가기', placeholder: 'https://교회홈페이지주소', theme: 'church' },
+        kakao: { label: '카카오톡 채널 바로가기', placeholder: 'https://pf.kakao.com/...', theme: 'kakao' },
+        naver: { label: '네이버 카페 · 블로그', placeholder: 'https://blog.naver.com/...', theme: 'naver' }
+      };
+      const p = map[presetId];
+      if (!p) return;
+      document.getElementById('quickLinkLabelInput').value = p.label;
+      document.getElementById('quickLinkUrlInput').placeholder = p.placeholder;
+      selectedQuickLinkTheme = p.theme;
+      renderQuickLinkThemePalette();
+    };
+
+    window.openAddQuickLinkModal = () => {
+      document.getElementById('quickLinkModalTitle').textContent = '🔗 새 사이트 바로가기 추가';
+      document.getElementById('editQuickLinkId').value = '';
+      document.getElementById('quickLinkLabelInput').value = '';
+      document.getElementById('quickLinkUrlInput').value = '';
+      document.getElementById('quickLinkUrlInput').placeholder = '예: https://www.instagram.com/아이디';
+      selectedQuickLinkTheme = 'instagram';
+      renderQuickLinkThemePalette();
+      document.getElementById('quickLinkModal').classList.add('open');
+    };
+
+    window.openEditQuickLinkModal = (id) => {
+      const ql = quickLinks.find(x => x.id === id);
+      if (!ql) return;
+      document.getElementById('quickLinkModalTitle').textContent = '🔗 사이트 바로가기 수정';
+      document.getElementById('editQuickLinkId').value = ql.id;
+      document.getElementById('quickLinkLabelInput').value = ql.label || '';
+      document.getElementById('quickLinkUrlInput').value = ql.url || '';
+      selectedQuickLinkTheme = ql.theme || 'blue';
+      renderQuickLinkThemePalette();
+      document.getElementById('quickLinkModal').classList.add('open');
+    };
+
+    async function saveQuickLinksToCloud(nextLinks, msg) {
+      try {
+        await db.collection('config').doc('layout').set({ quickLinks: nextLinks }, { merge: true });
+        if (msg) showToast(msg);
+      } catch (err) {
+        handleDbError(err, '사이트 바로가기 저장');
+      }
+    }
+
+    window.handleSaveQuickLink = async () => {
+      const id = document.getElementById('editQuickLinkId').value;
+      const label = document.getElementById('quickLinkLabelInput').value.trim();
+      const rawUrl = document.getElementById('quickLinkUrlInput').value.trim();
+
+      if (!label) return showToast('버튼 이름을 입력해 주세요.');
+      if (!rawUrl) return showToast('연결할 사이트 주소(URL)를 입력해 주세요.');
+
+      const url = normalizeExternalUrl(rawUrl);
+      if (!url) return showToast('올바른 웹사이트 주소를 입력해 주세요.');
+
+      const next = structuredClone(quickLinks);
+      if (id) {
+        const target = next.find(x => x.id === id);
+        if (target) {
+          target.label = label;
+          target.url = url;
+          target.theme = selectedQuickLinkTheme;
+        }
+      } else {
+        next.push({
+          id: 'ql_' + Date.now(),
+          label,
+          url,
+          theme: selectedQuickLinkTheme
+        });
+      }
+
+      const btn = document.getElementById('saveQuickLinkBtn');
+      btn.disabled = true;
+      try {
+        await saveQuickLinksToCloud(next, id ? '사이트 바로가기가 수정되었습니다!' : '새 사이트 바로가기가 추가되었습니다!');
+        document.getElementById('quickLinkModal').classList.remove('open');
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    window.moveQuickLink = async (idx, dir) => {
+      const t = idx + dir;
+      if (t < 0 || t >= quickLinks.length) return;
+      const next = structuredClone(quickLinks);
+      [next[idx], next[t]] = [next[t], next[idx]];
+      await saveQuickLinksToCloud(next, '사이트 바로가기 순서가 변경되었습니다.');
+    };
+
+    window.deleteQuickLink = async (id) => {
+      const ql = quickLinks.find(x => x.id === id);
+      if (!ql || !confirm(`[${ql.label}] 바로가기를 삭제할까요?`)) return;
+      const next = quickLinks.filter(x => x.id !== id);
+      await saveQuickLinksToCloud(next, '사이트 바로가기가 삭제되었습니다.');
     };
 
   </script>
