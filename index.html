@@ -14,6 +14,10 @@
   <link rel="apple-touch-icon" href="./icon-192.png" />
   <link rel="icon" type="image/png" href="./icon-192.png" />
 
+  <!-- Firebase SDK (Compat CDN - 안정적인 실시간 Firestore 연동) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
   <style>
     :root {
       --primary: #111827;
@@ -56,6 +60,46 @@
     }
 
     .hidden { display: none !important; }
+
+    /* 초기 서버 연결 로딩 화면 */
+    .loading-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px;
+      background: radial-gradient(circle at top center, #1F2937 0%, #0B0F19 52%, #09090B 100%);
+      color: #fff;
+      text-align: center;
+    }
+    .spinner {
+      width: 34px;
+      height: 34px;
+      border: 3px solid rgba(255, 255, 255, 0.18);
+      border-top-color: #F59E0B;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 18px 0 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .sync-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(22, 163, 74, 0.16);
+      color: #4ADE80;
+      margin-top: 6px;
+    }
+    .sync-pill.error {
+      background: rgba(239, 68, 68, 0.2);
+      color: #FCA5A5;
+    }
 
     /* PWA 배너 */
     .pwa-banner {
@@ -152,6 +196,7 @@
       width: 100%; border: none; border-radius: 13px; padding: 13.5px;
       font-size: 15px; font-weight: 800; cursor: pointer;
     }
+    .btn-full:disabled { opacity: 0.55; cursor: not-allowed; }
     .btn-dark { background: #111827; color: #fff; }
     .btn-blue { background: #2563EB; color: #fff; }
     .btn-amber { background: var(--admin-accent); color: #0F172A; }
@@ -277,16 +322,6 @@
       background: rgba(255,255,255,0.16); color: #fff; border: 1.5px solid rgba(255,255,255,0.45);
     }
 
-    /* 광고 배너 가로/세로 카드 */
-    .ad-card {
-      background: #FFFBEB; border: 1.5px solid #FDE68A; border-radius: 16px;
-      padding: 15px 16px; margin-bottom: 10px;
-    }
-    .ad-card-badge {
-      display: inline-block; font-size: 10.5px; font-weight: 800;
-      padding: 2px 8px; border-radius: 999px; background: #F59E0B; color: #111827; margin-bottom: 6px;
-    }
-
     /* 공통 카드 & 컨트롤 */
     .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 8px; }
     .section-title { font-size: 15.5px; font-weight: 800; margin: 0; }
@@ -351,9 +386,7 @@
     .btn-sm:disabled { opacity: 0.35; cursor: not-allowed; }
 
     /* 관리자 내부 서브탭 */
-    .sub-tabs {
-      display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 14px;
-    }
+    .sub-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 14px; }
     .sub-tab-btn {
       border: 1px solid var(--border); background: #fff; color: #475569;
       border-radius: 10px; padding: 8px 12px; font-size: 12.5px; font-weight: 700;
@@ -369,10 +402,7 @@
     .stat-num { font-size: 20px; font-weight: 800; color: var(--admin-accent); }
     .stat-label { font-size: 11px; color: #CBD5E1; margin-top: 3px; }
 
-    /* 레이아웃 편집기 블록 행 */
-    .layout-item-head {
-      display: flex; align-items: center; justify-content: space-between; gap: 8px;
-    }
+    .layout-item-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
     .order-btns { display: flex; gap: 4px; }
     .order-btn {
       width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border);
@@ -380,7 +410,6 @@
     }
     .order-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-    /* 권한 배지 리스트 */
     .perm-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
     .perm-chip {
       font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px;
@@ -446,6 +475,7 @@
       transform: translateX(-50%) translateY(20px); background: rgba(15, 23, 42, 0.92);
       color: #fff; padding: 10px 16px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
       opacity: 0; pointer-events: none; transition: all 0.25s; z-index: 100; white-space: nowrap;
+      max-width: 92vw; overflow: hidden; text-overflow: ellipsis;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
@@ -459,12 +489,26 @@
       <button id="pwaBannerClose" class="pwa-banner-close" aria-label="닫기">✕</button>
     </div>
 
+    <!-- ==================== 0. 초기 서버 연결 화면 ==================== -->
+    <section id="loadingScreen" class="loading-screen">
+      <img src="./icon-512.png" alt="라이트 청년부 로고" class="login-logo" />
+      <h1 class="login-title">라이트 청년부</h1>
+      <div class="spinner"></div>
+      <p id="loadingMsg" style="font-size:13px; color:#CBD5E1; margin:0; line-height:1.5;">
+        실시간 서버에 연결하고 있습니다...
+      </p>
+      <button id="retryInitBtn" class="btn-amber hidden" style="margin-top:16px; border:none; border-radius:10px; padding:10px 18px; font-weight:800; cursor:pointer;" onclick="location.reload()">
+        다시 연결하기
+      </button>
+    </section>
+
     <!-- ==================== 1. 통합 인증 화면 (로그인 / 회원가입 / 관리자) ==================== -->
-    <section id="loginScreen" class="login-screen">
+    <section id="loginScreen" class="login-screen hidden">
       <div class="login-brand">
         <img src="./icon-512.png" alt="라이트 청년부 로고" class="login-logo" />
         <h1 class="login-title">라이트 청년부</h1>
         <p class="login-sub">구미제일감리교회 청년부</p>
+        <div id="syncStatusPill" class="sync-pill">🟢 실시간 서버 연결됨</div>
       </div>
 
       <div class="login-card">
@@ -479,7 +523,7 @@
           <p class="login-desc">승인된 <b>본인 성명(아이디)</b>과 <b>비밀번호</b>로 로그인합니다.<br>부여받은 역할에 따라 이용 가능한 메뉴가 자동으로 구성됩니다.</p>
           <label class="login-field-label" for="loginNameInput">아이디 (본인 성명)</label>
           <div class="login-input-wrap">
-            <input id="loginNameInput" class="login-input" placeholder="예: 김민수 / 박회장 / 이새신" autocomplete="username" />
+            <input id="loginNameInput" class="login-input" placeholder="본인 성명을 입력하세요" autocomplete="username" />
           </div>
           <label class="login-field-label" for="loginPwInput">비밀번호</label>
           <div class="login-input-wrap">
@@ -487,14 +531,14 @@
           </div>
           <div id="loginError" class="login-error"></div>
           <div class="auto-login-note">
-            <span>🔓</span><span>한 번 로그인하면 다음부터는 <b>자동 로그인</b>됩니다.</span>
+            <span>🔓</span><span>한 번 로그인하면 앱 업데이트 후에도 <b>자동 로그인</b>이 유지됩니다.</span>
           </div>
           <button id="submitLoginBtn" class="btn-full btn-dark" type="button">로그인</button>
         </div>
 
         <!-- 회원가입 -->
         <div id="panelSignup" class="hidden">
-          <p class="login-desc">별도 이메일 없이 <b>본인 성명</b>을 아이디로 사용합니다.<br>가입 신청 후 관리자가 승인 및 역할을 부여하면 이용할 수 있습니다.</p>
+          <p class="login-desc">별도 이메일 없이 <b>본인 성명</b>을 아이디로 사용합니다.<br>가입 신청 후 관리자가 승인하면 즉시 이용 가능합니다.</p>
           <label class="login-field-label" for="signupNameInput">아이디 (본인 성명)</label>
           <div class="login-input-wrap">
             <input id="signupNameInput" class="login-input blue-focus" placeholder="본인 성명을 입력하세요" />
@@ -516,33 +560,32 @@
           <p class="login-desc">관리자 코드를 입력하면 <b>화면 배치 편집 · 역할 관리 · 회원 승인</b>을 포함한 전체 관리 화면으로 입장합니다.</p>
           <label class="login-field-label" for="adminPinInput">관리자 코드</label>
           <div class="login-input-wrap">
-            <input id="adminPinInput" type="password" inputmode="numeric" class="login-input admin-focus" placeholder="관리자 코드 입력 (테스트용: 1234)" />
+            <input id="adminPinInput" type="password" inputmode="numeric" class="login-input admin-focus" placeholder="관리자 코드 입력 (초기값: 1234)" />
           </div>
           <div id="adminError" class="login-error"></div>
           <button id="submitAdminBtn" class="btn-full btn-amber" type="button">최고 관리자로 로그인</button>
         </div>
 
-        <!-- 승인 대기 / 거절 상태 -->
+        <!-- 승인 대기 / 거절 상태 (실시간 자동 승인 감지) -->
         <div id="panelStatus" class="hidden">
           <div class="status-box">
             <div id="statusEmoji" class="status-emoji pending">⏳</div>
             <h2 id="statusTitle" class="status-title">관리자 승인 대기 중</h2>
             <p id="statusDesc" class="status-desc"></p>
             <div id="statusMeta" class="status-meta"></div>
-            <button id="recheckStatusBtn" class="btn-full btn-dark" type="button" style="margin-bottom:8px;">승인 완료 확인하고 바로 입장</button>
+            <button id="recheckStatusBtn" class="btn-full btn-dark" type="button" style="margin-bottom:8px;">승인 상태 새로고침</button>
             <button id="switchAccountBtn" class="btn-outline" type="button" style="width:100%; padding:12px;">다른 계정 · 관리자 로그인</button>
           </div>
         </div>
       </div>
 
       <div class="login-footer-hint">
-        관리자 코드: <b>1234</b><br>
-        역할 테스트 계정 (비번 모두 <b>1234</b>): <b>박회장</b>(회장) · <b>김민수</b>(청년) · <b>이새신</b>(새신자)<br>
-        <span class="version-pill">라이트 청년부 · v7</span>
+        회원·공지·역할 데이터는 클라우드 서버에 안전하게 영구 보관됩니다.<br>
+        <span class="version-pill">라이트 청년부 · v8 (실시간 서버 연동)</span>
       </div>
     </section>
 
-    <!-- ==================== 2. 통합 메인 앱 (권한·역할별 동적 화면) ==================== -->
+    <!-- ==================== 2. 통합 메인 앱 ==================== -->
     <div id="mainApp" class="hidden" style="display:flex; flex-direction:column; flex:1;">
       <header id="appHeader" class="header light">
         <div class="brand">
@@ -559,13 +602,13 @@
       </header>
 
       <main class="main">
-        <!-- (1) 메인 홈 화면 (관리자가 설정한 블록 순서·노출 그대로 표시) -->
+        <!-- (1) 메인 홈 화면 -->
         <section id="viewHome" class="hidden"></section>
 
         <!-- (2) 예배 · 행사 체크 화면 -->
         <section id="viewCheck" class="hidden"></section>
 
-        <!-- (3) 관리 센터 (역할 권한에 따라 허용된 서브 메뉴만 자동 표시) -->
+        <!-- (3) 관리 센터 -->
         <section id="viewManage" class="hidden">
           <div id="manageSubTabs" class="sub-tabs"></div>
           <div id="manageContent"></div>
@@ -696,6 +739,21 @@
   <div id="toast" class="toast"></div>
 
   <script>
+    // ==================== 0. Firebase 초기화 ====================
+    const firebaseConfig = {
+      apiKey: "AIzaSyDEbbb-WaUnAVw0BL77JOjzZLM8AjcmFGQ",
+      authDomain: "right-youth-app.firebaseapp.com",
+      projectId: "right-youth-app",
+      storageBucket: "right-youth-app.firebasestorage.app",
+      messagingSenderId: "722260953114",
+      appId: "1:722260953114:web:455d28af39b5cd9caba9a3",
+      measurementId: "G-CGRXP7P20M"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const FieldValue = firebase.firestore.FieldValue;
+
     // 1. 서비스 워커 등록 및 새 버전 자동 새로고침
     if ('serviceWorker' in navigator) {
       let swReloaded = false;
@@ -747,15 +805,9 @@
       pwaBanner.classList.remove('show');
     });
 
-    // 3. 권한 정의 · 기본 역할 7종 · 기본 화면 블록 · 저장소
-    const ADMIN_PIN = '1234';
-    const KEY_NOTICES = 'youth_v7_notices';
-    const KEY_SUNDAY = 'youth_v7_sunday';
-    const KEY_ROLES = 'youth_v7_roles';
-    const KEY_MEMBERS = 'youth_v7_members';
-    const KEY_BLOCKS = 'youth_v7_blocks';
-    const KEY_SESSION = 'youth_v7_session';
-    const KEY_PENDING_ID = 'youth_v7_pending_id';
+    // 3. 상수 · 기본 역할 7종 · 기본 화면 블록 · 영구 세션 키 (업데이트해도 유지됨)
+    const KEY_SESSION = 'right_youth_app_session';
+    const KEY_PENDING_ID = 'right_youth_app_pending_id';
 
     const PERMISSION_DEFS = [
       { key: 'canViewHome', label: '공지·광고 열람 및 출석·행사 체크 (기본)' },
@@ -810,92 +862,54 @@
     const DEFAULT_BLOCKS = [
       {
         id: 'blk_hero', type: 'hero_notice', label: '상단 메인 고정 배너',
-        visible: true, locked: false,
-        badge: '📌 중요 공지', title: '고정 공지 자동 연동', desc: '공지 관리에서 상단 배너로 고정한 글이 자동으로 표시됩니다.', theme: 'dark'
+        visible: true, badge: '📌 중요 공지', title: '고정 공지 자동 연동',
+        desc: '공지 관리에서 상단 배너로 고정한 글이 자동으로 표시됩니다.', theme: 'dark'
       },
       {
         id: 'blk_newcomer', type: 'newcomer_card', label: '새신자 환영 안내 (권한 대상자 노출)',
-        visible: true, locked: false,
-        badge: '💐 새가족 환영', title: '라이트 청년부에 오신 것을 환영합니다!',
+        visible: true, badge: '💐 새가족 환영', title: '라이트 청년부에 오신 것을 환영합니다!',
         desc: '예배 시간: 주일 오후 2시 · 본당 비전홀\n예배 후 새가족 다과 및 소개 시간이 준비되어 있습니다. 궁금한 점은 언제든 임원에게 편하게 물어보세요!', theme: 'rose'
       },
       {
         id: 'blk_leader', type: 'leader_card', label: '리더·교역자 전용 전달사항',
-        visible: true, locked: false,
-        badge: '🔐 리더 전용 공지', title: '이번 주 임원·팀장 모임 안내',
+        visible: true, badge: '🔐 리더 전용 공지', title: '이번 주 임원·팀장 모임 안내',
         desc: '주일 예배 시작 30분 전(오후 1시 30분) 소예배실에서 기도회 및 주간 점검 모임이 있습니다.', theme: 'dark'
       },
       {
-        id: 'blk_ad_1', type: 'custom_ad', label: '홍보 배너 · 겨울 수련회',
-        visible: true, locked: false,
-        badge: '✨ 홍보 배너', title: '2026 겨울 라이트 청년부 수련회 D-33',
-        desc: '12월 26일(토)~28일(월) 은혜수양관 · 새가족 회비 전액 지원!', theme: 'gold'
+        id: 'blk_ad_1', type: 'custom_ad', label: '홍보 배너 · 라이트 청년부',
+        visible: true, badge: '✨ 홍보 배너', title: '구미제일감리교회 라이트 청년부',
+        desc: '관리자 화면에서 배너 위치와 내용을 언제든 자유롭게 수정·삭제할 수 있습니다.', theme: 'gold'
       },
       {
         id: 'blk_quick_check', type: 'quick_check', label: '주일 예배 빠른 출석 체크',
-        visible: true, locked: false,
-        badge: '⛪ 이번 주 주일 예배', title: '구미제일감리교회 청년부 예배',
+        visible: true, badge: '⛪ 이번 주 주일 예배', title: '구미제일감리교회 청년부 예배',
         desc: '예배당 도착 후 아래 버튼을 눌러 바로 출석을 체크해 주세요.', theme: 'dark'
       },
       {
         id: 'blk_notices', type: 'notice_list', label: '공지 · 광고 · 소식 목록',
-        visible: true, locked: false,
-        badge: '', title: '📢 공지 · 광고 · 소식', desc: '', theme: 'dark'
+        visible: true, badge: '', title: '📢 공지 · 광고 · 소식', desc: '', theme: 'dark'
       }
     ];
 
-    const DEFAULT_NOTICES = [
-      {
-        id: 1, category: '행사', title: '2026 겨울 라이트 청년부 수련회 신청 안내',
-        body: '일시: 12월 26일(토) ~ 28일(월)\n장소: 은혜수양관\n회비: 30,000원 (새신자 무료)\n\n참석하실 분들은 아래 [참석 체크] 버튼을 눌러주세요!',
-        date: '2026.11.23', pinned: true, needAttend: true, confirmedBy: ['김민수', '박회장'], attendedBy: ['김민수']
-      },
-      {
-        id: 2, category: '공지', title: '이번 주 라이트 청년부 예배 및 셀 모임 안내',
-        body: '시간: 주일 오후 2시 본당 비전홀\n예배 후 셀별 나눔이 진행됩니다. 새가족 환영 다과가 준비되어 있습니다.',
-        date: '2026.11.23', pinned: false, needAttend: false, confirmedBy: ['김민수'], attendedBy: []
-      },
-      {
-        id: 3, category: '광고', title: '찬양팀 · 미디어팀 새 봉사자 모집',
-        body: '음향, PPT, 촬영, 악기(건반·기타) 분야 봉사자를 모집합니다. 관심 있으신 분들은 참석 체크를 눌러주시면 팀장이 연락드립니다.',
-        date: '2026.11.20', pinned: false, needAttend: true, confirmedBy: [], attendedBy: []
-      }
-    ];
+    // 실시간 상태 (Firestore에서 실시간 동기화됨)
+    let adminPin = '1234';
+    let roles = structuredClone(DEFAULT_ROLES);
+    let blocks = structuredClone(DEFAULT_BLOCKS);
+    let notices = [];
+    let sundayChecks = [];
+    let members = [];
+    let isReady = false;
+    let initLoadedFlags = { app: false, roles: false, layout: false, members: false, notices: false, sunday: false };
 
-    const DEFAULT_SUNDAY = [
-      { name: '김민수', roleName: '청년', time: '오후 1:52' },
-      { name: '박회장', roleName: '회장', time: '오후 1:40' }
-    ];
-
-    const DEFAULT_MEMBERS = [
-      { id: 1001, name: '박회장', password: '1234', status: 'approved', roleId: 'role_president', createdAt: '2026.11.18' },
-      { id: 1002, name: '김민수', password: '1234', status: 'approved', roleId: 'role_youth', createdAt: '2026.11.20' },
-      { id: 1003, name: '이새신', password: '1234', status: 'approved', roleId: 'role_newcomer', createdAt: '2026.11.22' },
-      { id: 1004, name: '이지현', password: '1234', status: 'pending', roleId: 'role_youth', createdAt: '2026.11.23' }
-    ];
-
-    let roles = JSON.parse(localStorage.getItem(KEY_ROLES) || 'null') || structuredClone(DEFAULT_ROLES);
-    let blocks = JSON.parse(localStorage.getItem(KEY_BLOCKS) || 'null') || structuredClone(DEFAULT_BLOCKS);
-    let notices = JSON.parse(localStorage.getItem(KEY_NOTICES) || 'null') || structuredClone(DEFAULT_NOTICES);
-    let sundayChecks = JSON.parse(localStorage.getItem(KEY_SUNDAY) || 'null') || structuredClone(DEFAULT_SUNDAY);
-    let members = JSON.parse(localStorage.getItem(KEY_MEMBERS) || 'null') || structuredClone(DEFAULT_MEMBERS);
     let session = JSON.parse(localStorage.getItem(KEY_SESSION) || 'null');
     let pendingMemberId = JSON.parse(localStorage.getItem(KEY_PENDING_ID) || 'null');
 
-    let currentMainTab = 'home'; // 'home' | 'check' | 'manage'
-    let currentManageSubTab = 'layout'; // 'layout' | 'notices' | 'status' | 'members' | 'roles'
+    let currentMainTab = 'home';
+    let currentManageSubTab = 'layout';
     let currentFilter = '전체';
     let currentDetailId = null;
     let selectedRoleColor = ROLE_COLORS[0];
     let selectedBlockTheme = 'dark';
-
-    function saveAll() {
-      localStorage.setItem(KEY_ROLES, JSON.stringify(roles));
-      localStorage.setItem(KEY_BLOCKS, JSON.stringify(blocks));
-      localStorage.setItem(KEY_NOTICES, JSON.stringify(notices));
-      localStorage.setItem(KEY_SUNDAY, JSON.stringify(sundayChecks));
-      localStorage.setItem(KEY_MEMBERS, JSON.stringify(members));
-    }
 
     function saveSession(s) {
       session = s;
@@ -910,7 +924,7 @@
     }
 
     function getRoleById(roleId) {
-      return roles.find(r => r.id === roleId) || roles[roles.length - 1] || {
+      return roles.find(r => r.id === roleId) || roles.find(r => r.name === '청년') || roles[0] || {
         id: 'fallback', name: '청년', color: '#475569',
         perms: { canViewHome: true, canViewNewcomer: false, canViewLeaderBoard: false, canManageNotices: false, canEditLayout: false, canViewCheckStatus: false, canManageMembers: false }
       };
@@ -921,6 +935,7 @@
       if (session.role === 'super_admin') {
         return {
           isSuperAdmin: true,
+          uid: 'super_admin',
           name: '최고 관리자',
           role: {
             id: 'super_admin', name: '최고 관리자', color: '#D97706',
@@ -929,9 +944,9 @@
         };
       }
       if (session.role === 'member') {
-        const m = members.find(x => x.id === session.memberId);
+        const m = members.find(x => String(x.id) === String(session.memberId));
         if (!m) return null;
-        return { isSuperAdmin: false, member: m, name: m.name, role: getRoleById(m.roleId) };
+        return { isSuperAdmin: false, uid: String(m.id), member: m, name: m.name, role: getRoleById(m.roleId) };
       }
       return null;
     }
@@ -954,7 +969,7 @@
       const el = document.getElementById('toast');
       el.textContent = msg;
       el.classList.add('show');
-      setTimeout(() => el.classList.remove('show'), 2300);
+      setTimeout(() => el.classList.remove('show'), 2400);
     }
 
     function escapeHtml(str) {
@@ -995,7 +1010,112 @@
       ['loginError', 'signupError', 'adminError'].forEach(id => document.getElementById(id).classList.remove('show'));
     }
 
-    // ==================== 4. 인증 탭 및 로그인/회원가입 ====================
+    function handleDbError(err, actionLabel) {
+      console.error(err);
+      if (err && err.code === 'permission-denied') {
+        showToast('서버 권한 만료: Firebase 규칙을 확인해 주세요.');
+        const pill = document.getElementById('syncStatusPill');
+        if (pill) { pill.className = 'sync-pill error'; pill.textContent = '🔴 서버 보안 규칙 확인 필요'; }
+      } else {
+        showToast(`${actionLabel || '저장'} 중 오류가 발생했습니다. 네트워크를 확인해 주세요.`);
+      }
+    }
+
+    // ==================== 4. Firestore 최초 시드 & 실시간 구독 ====================
+    async function ensureInitialSeed() {
+      const appRef = db.collection('config').doc('app');
+      const snap = await appRef.get();
+      if (!snap.exists) {
+        const batch = db.batch();
+        batch.set(appRef, { adminPin: '1234', initialized: true, createdAt: formatToday() });
+        batch.set(db.collection('config').doc('roles'), { items: DEFAULT_ROLES });
+        batch.set(db.collection('config').doc('layout'), { blocks: DEFAULT_BLOCKS });
+        const welcomeId = String(Date.now());
+        batch.set(db.collection('notices').doc(welcomeId), {
+          id: welcomeId,
+          category: '공지',
+          title: '라이트 청년부 앱 오픈 안내',
+          body: '구미제일감리교회 라이트 청년부 앱이 실시간 서버와 연결되었습니다.\n관리자 화면에서 공지·광고·배너를 자유롭게 수정해 사용해 주세요!',
+          date: formatToday(),
+          pinned: true,
+          needAttend: false,
+          order: 0,
+          confirmedBy: [],
+          attendedBy: []
+        });
+        await batch.commit();
+      }
+    }
+
+    function markLoaded(key) {
+      initLoadedFlags[key] = true;
+      const allDone = Object.values(initLoadedFlags).every(Boolean);
+      if (allDone && !isReady) {
+        isReady = true;
+        document.getElementById('loadingScreen').classList.add('hidden');
+        applyScreen();
+      } else if (isReady) {
+        applyScreen();
+        if (currentDetailId && document.getElementById('detailModal').classList.contains('open')) {
+          openDetail(currentDetailId);
+        }
+      }
+    }
+
+    async function startRealtimeSync() {
+      try {
+        await ensureInitialSeed();
+      } catch (err) {
+        console.error('Seed error:', err);
+        document.getElementById('loadingMsg').innerHTML =
+          err && err.code === 'permission-denied'
+            ? 'Firestore 보안 규칙이 만료되었거나 차단되었습니다.<br>Firebase 콘솔 → Firestore → 규칙 탭을 확인해 주세요.'
+            : '서버 연결에 실패했습니다.<br>인터넷 연결을 확인한 뒤 다시 시도해 주세요.';
+        document.getElementById('retryInitBtn').classList.remove('hidden');
+        return;
+      }
+
+      db.collection('config').doc('app').onSnapshot(doc => {
+        if (doc.exists && doc.data().adminPin) adminPin = String(doc.data().adminPin);
+        markLoaded('app');
+      }, err => handleDbError(err, '설정 동기화'));
+
+      db.collection('config').doc('roles').onSnapshot(doc => {
+        if (doc.exists && Array.isArray(doc.data().items) && doc.data().items.length > 0) {
+          roles = doc.data().items;
+        }
+        markLoaded('roles');
+      }, err => handleDbError(err, '역할 동기화'));
+
+      db.collection('config').doc('layout').onSnapshot(doc => {
+        if (doc.exists && Array.isArray(doc.data().blocks)) {
+          blocks = doc.data().blocks;
+        }
+        markLoaded('layout');
+      }, err => handleDbError(err, '배치 동기화'));
+
+      db.collection('members').onSnapshot(snap => {
+        members = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
+          .sort((a, b) => Number(b.createdTs || 0) - Number(a.createdTs || 0));
+        markLoaded('members');
+      }, err => handleDbError(err, '회원 동기화'));
+
+      db.collection('notices').onSnapshot(snap => {
+        notices = snap.docs.map(d => ({
+          confirmedBy: [], attendedBy: [], order: 9999,
+          ...d.data(), id: String(d.id)
+        })).sort((a, b) => (a.order - b.order) || (Number(b.id) - Number(a.id)));
+        markLoaded('notices');
+      }, err => handleDbError(err, '공지 동기화'));
+
+      db.collection('sundayChecks').onSnapshot(snap => {
+        sundayChecks = snap.docs.map(d => ({ ...d.data(), uid: String(d.id) }))
+          .sort((a, b) => Number(b.timestamp || 0) - Number(a.timestamp || 0));
+        markLoaded('sunday');
+      }, err => handleDbError(err, '출석 동기화'));
+    }
+
+    // ==================== 5. 인증 탭 및 로그인/회원가입 ====================
     window.switchAuthTab = (tab) => {
       clearErrors();
       document.getElementById('authTabs').classList.remove('hidden');
@@ -1029,11 +1149,10 @@
         emoji.className = 'status-emoji pending';
         emoji.textContent = '⏳';
         title.textContent = '관리자 승인 대기 중';
-        desc.innerHTML = `<b>${escapeHtml(member.name)}</b>님의 회원가입 신청이 접수되었습니다.<br>관리자가 승인하고 역할을 부여하면 <b>자동 로그인</b>으로 바로 입장됩니다.`;
-        recheckBtn.textContent = '승인 완료 확인하고 바로 입장';
+        desc.innerHTML = `<b>${escapeHtml(member.name)}</b>님의 회원가입 신청이 서버에 접수되었습니다.<br>관리자가 승인하면 <b>자동으로 바로 입장</b>됩니다.`;
+        recheckBtn.textContent = '승인 여부 다시 확인';
         recheckBtn.onclick = () => {
-          members = JSON.parse(localStorage.getItem(KEY_MEMBERS) || 'null') || members;
-          const latest = members.find(m => m.id === member.id);
+          const latest = members.find(m => String(m.id) === String(member.id));
           if (!latest) { savePendingId(null); switchAuthTab('login'); return; }
           if (latest.status === 'approved') {
             savePendingId(null);
@@ -1053,20 +1172,20 @@
         title.textContent = '가입 승인이 보류되었습니다';
         desc.innerHTML = `<b>${escapeHtml(member.name)}</b>님의 가입 신청이 거절되었습니다.`;
         recheckBtn.textContent = '다시 가입 신청하기';
-        recheckBtn.onclick = () => {
-          member.status = 'pending';
-          member.createdAt = formatToday();
-          saveAll();
-          savePendingId(member.id);
-          showStatusPanel(member);
-          showToast('가입 승인을 다시 신청했습니다.');
+        recheckBtn.onclick = async () => {
+          try {
+            await db.collection('members').doc(String(member.id)).update({
+              status: 'pending', createdAt: formatToday(), createdTs: Date.now()
+            });
+            showToast('가입 승인을 다시 신청했습니다.');
+          } catch (err) { handleDbError(err, '재신청'); }
         };
       }
 
       meta.innerHTML = `
         <div><b>아이디 (성명):</b> ${escapeHtml(member.name)}</div>
         <div><b>신청일:</b> ${escapeHtml(member.createdAt)}</div>
-        <div><b>현재 상태:</b> ${member.status === 'pending' ? '관리자 승인 대기' : '거절/보류'}</div>
+        <div><b>현재 상태:</b> ${member.status === 'pending' ? '관리자 승인 대기 (실시간 연동 중)' : '거절/보류'}</div>
       `;
     }
 
@@ -1075,7 +1194,7 @@
       switchAuthTab('login');
     });
 
-    function handleSignup() {
+    async function handleSignup() {
       clearErrors();
       const name = document.getElementById('signupNameInput').value.trim();
       const pw = document.getElementById('signupPwInput').value.trim();
@@ -1088,22 +1207,32 @@
       if (dup) {
         return showError('signupError', dup.status === 'pending'
           ? `'${name}'님은 이미 승인 대기 중입니다.`
-          : `이미 등록된 성명입니다. 동명이인은 뒤에 숫자를 붙여주세요. (예: ${name}01)`);
+          : `이미 등록된 성명입니다. 동명이인은 뒤에 생년 등을 붙여주세요. (예: ${name}01)`);
       }
 
-      const defaultYouth = roles.find(r => r.name === '청년') || roles[0];
-      const newMember = {
-        id: Date.now(), name, password: pw, status: 'pending',
-        roleId: defaultYouth.id, createdAt: formatToday()
-      };
-      members.unshift(newMember);
-      saveAll();
-      savePendingId(newMember.id);
-      document.getElementById('signupNameInput').value = '';
-      document.getElementById('signupPwInput').value = '';
-      document.getElementById('signupPwConfirmInput').value = '';
-      showToast('회원가입 신청이 완료되었습니다!');
-      showStatusPanel(newMember);
+      const btn = document.getElementById('submitSignupBtn');
+      btn.disabled = true;
+      btn.textContent = '신청 접수 중...';
+      try {
+        const defaultYouth = roles.find(r => r.name === '청년') || roles[0];
+        const newId = String(Date.now());
+        const newMember = {
+          id: newId, name, password: pw, status: 'pending',
+          roleId: defaultYouth.id, createdAt: formatToday(), createdTs: Date.now()
+        };
+        await db.collection('members').doc(newId).set(newMember);
+        savePendingId(newId);
+        document.getElementById('signupNameInput').value = '';
+        document.getElementById('signupPwInput').value = '';
+        document.getElementById('signupPwConfirmInput').value = '';
+        showToast('회원가입 신청이 서버에 등록되었습니다!');
+        showStatusPanel(newMember);
+      } catch (err) {
+        handleDbError(err, '회원가입 신청');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '회원가입 신청하기';
+      }
     }
 
     function handleMemberLogin() {
@@ -1131,8 +1260,8 @@
     function handleAdminLogin() {
       clearErrors();
       const pin = document.getElementById('adminPinInput').value.trim();
-      if (pin !== ADMIN_PIN) {
-        showError('adminError', '관리자 코드가 일치하지 않습니다. (테스트용: 1234)');
+      if (pin !== adminPin) {
+        showError('adminError', '관리자 코드가 일치하지 않습니다.');
         return;
       }
       saveSession({ role: 'super_admin' });
@@ -1151,23 +1280,29 @@
 
     window.logout = () => {
       saveSession(null);
+      document.getElementById('loginNameInput').value = '';
+      document.getElementById('loginPwInput').value = '';
+      document.getElementById('adminPinInput').value = '';
+      switchAuthTab('login');
       applyScreen();
       showToast('로그아웃되었습니다.');
     };
 
-    // ==================== 5. 메인 화면 라우팅 및 권한 기반 UI ====================
+    // ==================== 6. 메인 화면 라우팅 및 권한 기반 UI ====================
     function applyScreen() {
+      if (!isReady) return;
       const loginEl = document.getElementById('loginScreen');
       const mainAppEl = document.getElementById('mainApp');
       const themeMeta = document.querySelector('meta[name="theme-color"]');
 
-      // 승인 대기였던 기기 자동 입장 확인
+      // 승인 대기였던 기기가 실시간으로 승인 완료되면 즉시 자동 로그인!
       if (!session && pendingMemberId) {
-        const pm = members.find(m => m.id === pendingMemberId);
+        const pm = members.find(m => String(m.id) === String(pendingMemberId));
         if (pm && pm.status === 'approved') {
           savePendingId(null);
           saveSession({ role: 'member', memberId: pm.id });
           currentMainTab = 'home';
+          showToast(`가입이 승인되었습니다! ${pm.name}님 환영합니다.`);
         } else if (pm) {
           loginEl.classList.remove('hidden');
           mainAppEl.classList.add('hidden');
@@ -1185,10 +1320,10 @@
         loginEl.classList.remove('hidden');
         mainAppEl.classList.add('hidden');
         themeMeta.setAttribute('content', '#0B0F19');
-        document.getElementById('loginNameInput').value = '';
-        document.getElementById('loginPwInput').value = '';
-        document.getElementById('adminPinInput').value = '';
-        switchAuthTab('login');
+        // 이미 로그인 탭이 열려 있고 사용자가 입력 중일 수 있으므로, 상태 화면일 때만 초기화
+        if (!document.getElementById('panelStatus').classList.contains('hidden')) {
+          switchAuthTab('login');
+        }
         return;
       }
 
@@ -1211,7 +1346,6 @@
       const isManageMode = currentMainTab === 'manage';
       themeMeta.setAttribute('content', isManageMode ? '#0B0F19' : '#111827');
 
-      // 헤더 스타일 & 역할 배지
       const header = document.getElementById('appHeader');
       header.className = `header ${isManageMode ? 'dark' : 'light'}`;
       document.getElementById('headerLogoutBtn').className = `exit-btn ${isManageMode ? 'dark' : 'light'}`;
@@ -1219,9 +1353,8 @@
       const badge = document.getElementById('headerRoleBadge');
       badge.textContent = user.role.name;
       badge.style.background = user.role.color;
-      document.getElementById('headerSubText').textContent = `${user.name}님 · 자동 로그인 중`;
+      document.getElementById('headerSubText').textContent = `${user.name}님 · 🟢 실시간 연동`;
 
-      // 하단 탭바 (권한 있는 사용자에게만 [관리 센터] 탭 표시)
       const pendingCount = members.filter(m => m.status === 'pending').length;
       const tabbar = document.getElementById('appTabbar');
       tabbar.className = `tabbar ${isManageMode ? 'dark' : 'light'}`;
@@ -1257,7 +1390,7 @@
       applyScreen();
     };
 
-    // ==================== 6. 메인 홈 화면 렌더링 (블록 순서·권한 실시간 반영) ====================
+    // ==================== 7. 메인 홈 화면 렌더링 ====================
     function renderHomeView(user) {
       const perms = user.role.perms;
       const myName = user.name;
@@ -1275,10 +1408,10 @@
           if (!pinned) return '';
           return `
             <div class="home-block">
-              <div class="hero-banner" style="background:${getThemeCss(b.theme)};" onclick="openDetail(${pinned.id})">
+              <div class="hero-banner" style="background:${getThemeCss(b.theme)};" onclick="openDetail('${pinned.id}')">
                 <span class="hero-badge">${escapeHtml(b.badge || '📌 중요 공지')} · ${escapeHtml(pinned.category)}</span>
                 <h2 class="hero-title">${escapeHtml(pinned.title)}</h2>
-                <p class="hero-desc">${escapeHtml(pinned.body.split('\n')[0])}</p>
+                <p class="hero-desc">${escapeHtml((pinned.body || '').split('\n')[0])}</p>
               </div>
             </div>
           `;
@@ -1323,7 +1456,7 @@
         }
 
         if (b.type === 'quick_check') {
-          const checked = sundayChecks.some(c => c.name === myName);
+          const checked = sundayChecks.some(c => c.uid === user.uid);
           return `
             <div class="home-block">
               <div class="worship-check-card" style="background:${getThemeCss(b.theme)};">
@@ -1354,10 +1487,10 @@
               ${filtered.length === 0
                 ? '<div class="card" style="text-align:center;color:#64748B;">해당 구분의 글이 없습니다.</div>'
                 : filtered.map(n => {
-                    const isConfirmed = n.confirmedBy.includes(myName);
-                    const isAttended = n.attendedBy.includes(myName);
+                    const isConfirmed = (n.confirmedBy || []).includes(myName);
+                    const isAttended = (n.attendedBy || []).includes(myName);
                     return `
-                      <div class="card clickable" onclick="openDetail(${n.id})">
+                      <div class="card clickable" onclick="openDetail('${n.id}')">
                         <div class="card-top">
                           <div style="display:flex;align-items:center;gap:6px;">
                             <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
@@ -1368,12 +1501,12 @@
                         <h3 class="card-title">${escapeHtml(n.title)}</h3>
                         <p class="card-body clamp">${escapeHtml(n.body)}</p>
                         <div class="card-footer" onclick="event.stopPropagation()">
-                          <button class="check-btn ${isConfirmed ? 'checked' : ''}" onclick="toggleConfirm(${n.id})">
-                            ${isConfirmed ? '✅ 확인 완료' : '☑️ 확인했어요'} (${n.confirmedBy.length})
+                          <button class="check-btn ${isConfirmed ? 'checked' : ''}" onclick="toggleConfirm('${n.id}')">
+                            ${isConfirmed ? '✅ 확인 완료' : '☑️ 확인했어요'} (${(n.confirmedBy || []).length})
                           </button>
                           ${n.needAttend ? `
-                            <button class="check-btn attend ${isAttended ? 'checked' : ''}" onclick="toggleAttend(${n.id})">
-                              ${isAttended ? '🙋 참석 체크됨' : '🙋 참석 체크'} (${n.attendedBy.length})
+                            <button class="check-btn attend ${isAttended ? 'checked' : ''}" onclick="toggleAttend('${n.id}')">
+                              ${isAttended ? '🙋 참석 체크됨' : '🙋 참석 체크'} (${(n.attendedBy || []).length})
                             </button>
                           ` : ''}
                         </div>
@@ -1393,10 +1526,10 @@
       if (user) renderHomeView(user);
     };
 
-    // ==================== 7. 예배·행사 체크 화면 ====================
+    // ==================== 8. 예배·행사 체크 화면 ====================
     function renderCheckView(user) {
       const myName = user.name;
-      const checked = sundayChecks.some(c => c.name === myName);
+      const checked = sundayChecks.some(c => c.uid === user.uid);
       const events = notices.filter(n => n.needAttend);
 
       document.getElementById('viewCheck').innerHTML = `
@@ -1414,7 +1547,7 @@
         ${events.length === 0
           ? '<div class="card" style="text-align:center;color:#64748B;">현재 참석 체크 중인 행사가 없습니다.</div>'
           : events.map(n => {
-              const isAttended = n.attendedBy.includes(myName);
+              const isAttended = (n.attendedBy || []).includes(myName);
               return `
                 <div class="card">
                   <div class="card-top">
@@ -1423,7 +1556,7 @@
                   </div>
                   <h3 class="card-title">${escapeHtml(n.title)}</h3>
                   <p class="card-body clamp" style="margin-bottom:12px;">${escapeHtml(n.body)}</p>
-                  <button class="btn-full ${isAttended ? 'btn-outline' : 'btn-dark'}" onclick="toggleAttend(${n.id})">
+                  <button class="btn-full ${isAttended ? 'btn-outline' : 'btn-dark'}" onclick="toggleAttend('${n.id}')">
                     ${isAttended ? '✅ 참석 체크 완료 (누르면 취소)' : '🙋 이 행사에 참석 체크하기'}
                   </button>
                 </div>
@@ -1432,74 +1565,93 @@
       `;
     }
 
-    // 예배자 체크 액션
-    window.toggleConfirm = (id) => {
+    // 예배자 체크 액션 (Firestore Atomic arrayUnion / arrayRemove)
+    window.toggleConfirm = async (id) => {
       const user = getCurrentUser();
       if (!user) return;
-      const target = notices.find(n => n.id === id);
+      const target = notices.find(n => String(n.id) === String(id));
       if (!target) return;
-      const idx = target.confirmedBy.indexOf(user.name);
-      if (idx >= 0) { target.confirmedBy.splice(idx, 1); showToast('확인을 취소했습니다.'); }
-      else { target.confirmedBy.push(user.name); showToast('공지를 확인했습니다!'); }
-      saveAll();
-      applyScreen();
-      if (currentDetailId === id) openDetail(id);
+      const isConfirmed = (target.confirmedBy || []).includes(user.name);
+      try {
+        await db.collection('notices').doc(String(id)).update({
+          confirmedBy: isConfirmed ? FieldValue.arrayRemove(user.name) : FieldValue.arrayUnion(user.name)
+        });
+        showToast(isConfirmed ? '확인을 취소했습니다.' : '공지를 확인했습니다!');
+      } catch (err) { handleDbError(err, '공지 확인'); }
     };
 
-    window.toggleAttend = (id) => {
+    window.toggleAttend = async (id) => {
       const user = getCurrentUser();
       if (!user) return;
-      const target = notices.find(n => n.id === id);
+      const target = notices.find(n => String(n.id) === String(id));
       if (!target) return;
-      const idx = target.attendedBy.indexOf(user.name);
-      if (idx >= 0) { target.attendedBy.splice(idx, 1); showToast('참석 체크를 취소했습니다.'); }
-      else {
-        target.attendedBy.push(user.name);
-        if (!target.confirmedBy.includes(user.name)) target.confirmedBy.push(user.name);
-        showToast('행사 참석이 체크되었습니다!');
-      }
-      saveAll();
-      applyScreen();
-      if (currentDetailId === id) openDetail(id);
+      const isAttended = (target.attendedBy || []).includes(user.name);
+      try {
+        if (isAttended) {
+          await db.collection('notices').doc(String(id)).update({
+            attendedBy: FieldValue.arrayRemove(user.name)
+          });
+          showToast('참석 체크를 취소했습니다.');
+        } else {
+          await db.collection('notices').doc(String(id)).update({
+            attendedBy: FieldValue.arrayUnion(user.name),
+            confirmedBy: FieldValue.arrayUnion(user.name)
+          });
+          showToast('행사 참석이 체크되었습니다!');
+        }
+      } catch (err) { handleDbError(err, '참석 체크'); }
     };
 
-    window.toggleSundayCheck = () => {
+    window.toggleSundayCheck = async () => {
       const user = getCurrentUser();
       if (!user) return;
-      const idx = sundayChecks.findIndex(c => c.name === user.name);
-      if (idx >= 0) { sundayChecks.splice(idx, 1); showToast('주일 출석 체크를 취소했습니다.'); }
-      else { sundayChecks.unshift({ name: user.name, roleName: user.role.name, time: formatNowTime() }); showToast('주일 예배 출석이 체크되었습니다!'); }
-      saveAll();
-      applyScreen();
+      const docRef = db.collection('sundayChecks').doc(user.uid);
+      const already = sundayChecks.some(c => c.uid === user.uid);
+      try {
+        if (already) {
+          await docRef.delete();
+          showToast('주일 출석 체크를 취소했습니다.');
+        } else {
+          await docRef.set({
+            uid: user.uid,
+            name: user.name,
+            roleName: user.role.name,
+            time: formatNowTime(),
+            date: formatToday(),
+            timestamp: Date.now()
+          });
+          showToast('주일 예배 출석이 체크되었습니다!');
+        }
+      } catch (err) { handleDbError(err, '출석 체크'); }
     };
 
     window.openDetail = (id) => {
       const user = getCurrentUser();
       if (!user) return;
-      const n = notices.find(item => item.id === id);
+      const n = notices.find(item => String(item.id) === String(id));
       if (!n) return;
-      currentDetailId = id;
+      currentDetailId = String(id);
       document.getElementById('detailTag').textContent = n.category;
       document.getElementById('detailTitle').textContent = n.title;
       document.getElementById('detailDate').textContent = n.date;
       document.getElementById('detailBody').textContent = n.body;
 
-      const isConfirmed = n.confirmedBy.includes(user.name);
-      const isAttended = n.attendedBy.includes(user.name);
+      const isConfirmed = (n.confirmedBy || []).includes(user.name);
+      const isAttended = (n.attendedBy || []).includes(user.name);
       document.getElementById('detailCheckArea').innerHTML = `
-        <button class="check-btn ${isConfirmed ? 'checked' : ''}" style="flex:1;justify-content:center;" onclick="toggleConfirm(${n.id})">
-          ${isConfirmed ? '✅ 확인 완료' : '☑️ 확인했어요'} (${n.confirmedBy.length})
+        <button class="check-btn ${isConfirmed ? 'checked' : ''}" style="flex:1;justify-content:center;" onclick="toggleConfirm('${n.id}')">
+          ${isConfirmed ? '✅ 확인 완료' : '☑️ 확인했어요'} (${(n.confirmedBy || []).length})
         </button>
         ${n.needAttend ? `
-          <button class="check-btn attend ${isAttended ? 'checked' : ''}" style="flex:1;justify-content:center;" onclick="toggleAttend(${n.id})">
-            ${isAttended ? '🙋 참석 체크됨' : '🙋 참석 체크'} (${n.attendedBy.length})
+          <button class="check-btn attend ${isAttended ? 'checked' : ''}" style="flex:1;justify-content:center;" onclick="toggleAttend('${n.id}')">
+            ${isAttended ? '🙋 참석 체크됨' : '🙋 참석 체크'} (${(n.attendedBy || []).length})
           </button>
         ` : ''}
       `;
       document.getElementById('detailModal').classList.add('open');
     };
 
-    // ==================== 8. 관리 센터 (권한별 서브메뉴 동적 표시) ====================
+    // ==================== 9. 관리 센터 ====================
     function renderManageView(user) {
       const perms = user.role.perms;
       const allowed = getAllowedManageSubTabs(perms);
@@ -1543,7 +1695,7 @@
           <button class="btn-admin" onclick="openAddBlockModal()">+ 새 배너·광고 추가</button>
         </div>
         <p style="font-size:12.5px; color:#64748B; margin:0 0 12px; line-height:1.45;">
-          ▲/▼ 버튼으로 배너와 광고 위치를 자유롭게 바꾸고, 문구 수정·숨김·삭제를 앱 안에서 바로 할 수 있습니다.
+          여기서 수정한 배너 위치와 문구는 <b>모든 청년부원의 앱에 실시간으로 반영</b>됩니다.
         </p>
         ${blocks.map((b, idx) => `
           <div class="card ${b.visible ? '' : 'dimmed'}">
@@ -1572,30 +1724,33 @@
       `;
     }
 
-    window.moveBlock = (idx, dir) => {
+    async function saveBlocksToCloud(nextBlocks, msg) {
+      try {
+        await db.collection('config').doc('layout').set({ blocks: nextBlocks });
+        if (msg) showToast(msg);
+      } catch (err) { handleDbError(err, '화면 배치 저장'); }
+    }
+
+    window.moveBlock = async (idx, dir) => {
       const targetIdx = idx + dir;
       if (targetIdx < 0 || targetIdx >= blocks.length) return;
-      [blocks[idx], blocks[targetIdx]] = [blocks[targetIdx], blocks[idx]];
-      saveAll();
-      applyScreen();
-      showToast('메인 화면 배치가 변경되었습니다.');
+      const next = structuredClone(blocks);
+      [next[idx], next[targetIdx]] = [next[targetIdx], next[idx]];
+      await saveBlocksToCloud(next, '메인 화면 배치가 실시간 반영되었습니다.');
     };
 
-    window.toggleBlockVisible = (id) => {
-      const b = blocks.find(x => x.id === id);
+    window.toggleBlockVisible = async (id) => {
+      const next = structuredClone(blocks);
+      const b = next.find(x => x.id === id);
       if (!b) return;
       b.visible = !b.visible;
-      saveAll();
-      applyScreen();
-      showToast(b.visible ? '메인 화면에 표시됩니다.' : '메인 화면에서 숨겼습니다.');
+      await saveBlocksToCloud(next, b.visible ? '메인 화면에 표시됩니다.' : '메인 화면에서 숨겼습니다.');
     };
 
-    window.deleteBlock = (id) => {
+    window.deleteBlock = async (id) => {
       if (!confirm('이 배너·광고 영역을 삭제할까요?')) return;
-      blocks = blocks.filter(x => x.id !== id);
-      saveAll();
-      applyScreen();
-      showToast('배너가 삭제되었습니다.');
+      const next = blocks.filter(x => x.id !== id);
+      await saveBlocksToCloud(next, '배너가 삭제되었습니다.');
     };
 
     function renderBlockThemePalette() {
@@ -1605,10 +1760,7 @@
              onclick="selectBlockTheme('${t.id}')"></div>
       `).join('');
     }
-    window.selectBlockTheme = (id) => {
-      selectedBlockTheme = id;
-      renderBlockThemePalette();
-    };
+    window.selectBlockTheme = (id) => { selectedBlockTheme = id; renderBlockThemePalette(); };
 
     window.openAddBlockModal = () => {
       document.getElementById('blockModalTitle').textContent = '새 홍보 배너 · 광고 영역 추가';
@@ -1642,36 +1794,31 @@
       document.getElementById('blockModal').classList.add('open');
     };
 
-    document.getElementById('saveBlockBtn').addEventListener('click', () => {
+    document.getElementById('saveBlockBtn').addEventListener('click', async () => {
       const id = document.getElementById('editBlockId').value;
       const label = document.getElementById('blockLabelInput').value.trim();
       const badge = document.getElementById('blockBadgeInput').value.trim();
       const title = document.getElementById('blockTitleInput').value.trim();
       const desc = document.getElementById('blockDescInput').value.trim();
       const visible = document.getElementById('blockVisibleInput').checked;
-
       if (!label) return showToast('관리용 블록 이름을 입력해 주세요.');
+
+      const next = structuredClone(blocks);
+      let msg = '';
       if (id) {
-        const b = blocks.find(x => x.id === id);
-        if (b) {
-          b.label = label; b.badge = badge; b.title = title; b.desc = desc;
-          b.visible = visible; b.theme = selectedBlockTheme;
-        }
-        showToast('화면 영역이 수정되었습니다!');
+        const b = next.find(x => x.id === id);
+        if (b) { b.label = label; b.badge = badge; b.title = title; b.desc = desc; b.visible = visible; b.theme = selectedBlockTheme; }
+        msg = '화면 영역이 수정되었습니다!';
       } else {
         if (!title) return showToast('배너 제목을 입력해 주세요.');
-        blocks.unshift({
-          id: 'blk_custom_' + Date.now(), type: 'custom_ad',
-          label, badge, title, desc, visible, theme: selectedBlockTheme
-        });
-        showToast('새 배너가 메인 화면 상단에 추가되었습니다!');
+        next.unshift({ id: 'blk_custom_' + Date.now(), type: 'custom_ad', label, badge, title, desc, visible, theme: selectedBlockTheme });
+        msg = '새 배너가 메인 화면 상단에 추가되었습니다!';
       }
-      saveAll();
+      await saveBlocksToCloud(next, msg);
       document.getElementById('blockModal').classList.remove('open');
-      applyScreen();
     });
 
-    // (B) 공지·광고 관리 (순서 ▲/▼ 포함)
+    // (B) 공지·광고 관리
     function renderManageNotices(el) {
       el.innerHTML = `
         <div class="section-head">
@@ -1696,10 +1843,10 @@
                 <h3 class="card-title">${escapeHtml(n.title)}</h3>
                 <p class="card-body clamp">${escapeHtml(n.body)}</p>
                 <div class="card-footer">
-                  <span style="font-size:12px;color:#475569;font-weight:600;">확인 ${n.confirmedBy.length}명 ${n.needAttend ? `· 참석 ${n.attendedBy.length}명` : ''}</span>
+                  <span style="font-size:12px;color:#475569;font-weight:600;">확인 ${(n.confirmedBy || []).length}명 ${n.needAttend ? `· 참석 ${(n.attendedBy || []).length}명` : ''}</span>
                   <div style="display:flex;gap:6px;">
-                    <button class="btn-sm" onclick="openEditNotice(${n.id})">수정</button>
-                    <button class="btn-sm danger" onclick="deleteNotice(${n.id})">삭제</button>
+                    <button class="btn-sm" onclick="openEditNotice('${n.id}')">수정</button>
+                    <button class="btn-sm danger" onclick="deleteNotice('${n.id}')">삭제</button>
                   </div>
                 </div>
               </div>
@@ -1707,13 +1854,19 @@
       `;
     }
 
-    window.moveNotice = (idx, dir) => {
+    window.moveNotice = async (idx, dir) => {
       const t = idx + dir;
       if (t < 0 || t >= notices.length) return;
-      [notices[idx], notices[t]] = [notices[t], notices[idx]];
-      saveAll();
-      applyScreen();
-      showToast('공지·광고 순서가 변경되었습니다.');
+      const reordered = [...notices];
+      [reordered[idx], reordered[t]] = [reordered[t], reordered[idx]];
+      try {
+        const batch = db.batch();
+        reordered.forEach((n, i) => {
+          batch.update(db.collection('notices').doc(String(n.id)), { order: i });
+        });
+        await batch.commit();
+        showToast('공지·광고 순서가 변경되었습니다.');
+      } catch (err) { handleDbError(err, '순서 변경'); }
     };
 
     window.openNewNoticeModal = () => {
@@ -1728,7 +1881,7 @@
     };
 
     window.openEditNotice = (id) => {
-      const n = notices.find(x => x.id === id);
+      const n = notices.find(x => String(x.id) === String(id));
       if (!n) return;
       document.getElementById('noticeModalTitle').textContent = '공지 · 광고 수정';
       document.getElementById('editNoticeId').value = n.id;
@@ -1740,7 +1893,7 @@
       document.getElementById('noticeModal').classList.add('open');
     };
 
-    document.getElementById('saveNoticeBtn').addEventListener('click', () => {
+    document.getElementById('saveNoticeBtn').addEventListener('click', async () => {
       const editId = document.getElementById('editNoticeId').value;
       const category = document.getElementById('noticeCategory').value;
       const title = document.getElementById('noticeTitleInput').value.trim();
@@ -1748,27 +1901,47 @@
       const pinned = document.getElementById('noticePinInput').checked;
       const needAttend = document.getElementById('noticeAttendInput').checked;
       if (!title || !body) return showToast('제목과 내용을 모두 입력해 주세요.');
-      if (pinned) notices.forEach(n => n.pinned = false);
 
-      if (editId) {
-        const n = notices.find(x => String(x.id) === String(editId));
-        if (n) { n.category = category; n.title = title; n.body = body; n.pinned = pinned; n.needAttend = needAttend; }
-        showToast('공지가 수정되었습니다!');
-      } else {
-        notices.unshift({ id: Date.now(), category, title, body, date: formatToday(), pinned, needAttend, confirmedBy: [], attendedBy: [] });
-        showToast('새 공지가 등록되었습니다!');
+      const btn = document.getElementById('saveNoticeBtn');
+      btn.disabled = true;
+      try {
+        const batch = db.batch();
+        if (pinned) {
+          notices.forEach(n => {
+            if (n.pinned && String(n.id) !== String(editId)) {
+              batch.update(db.collection('notices').doc(String(n.id)), { pinned: false });
+            }
+          });
+        }
+
+        if (editId) {
+          batch.update(db.collection('notices').doc(String(editId)), { category, title, body, pinned, needAttend });
+          await batch.commit();
+          showToast('공지가 수정되었습니다!');
+        } else {
+          const newId = String(Date.now());
+          const minOrder = notices.length > 0 ? Math.min(...notices.map(n => Number(n.order || 0))) - 1 : 0;
+          batch.set(db.collection('notices').doc(newId), {
+            id: newId, category, title, body, date: formatToday(),
+            pinned, needAttend, order: minOrder, confirmedBy: [], attendedBy: []
+          });
+          await batch.commit();
+          showToast('새 공지가 등록되었습니다!');
+        }
+        document.getElementById('noticeModal').classList.remove('open');
+      } catch (err) {
+        handleDbError(err, '공지 저장');
+      } finally {
+        btn.disabled = false;
       }
-      saveAll();
-      document.getElementById('noticeModal').classList.remove('open');
-      applyScreen();
     });
 
-    window.deleteNotice = (id) => {
+    window.deleteNotice = async (id) => {
       if (!confirm('이 글을 삭제할까요?')) return;
-      notices = notices.filter(x => x.id !== id);
-      saveAll();
-      applyScreen();
-      showToast('삭제되었습니다.');
+      try {
+        await db.collection('notices').doc(String(id)).delete();
+        showToast('삭제되었습니다.');
+      } catch (err) { handleDbError(err, '공지 삭제'); }
     };
 
     // (C) 회원 승인 및 역할 부여
@@ -1800,8 +1973,8 @@
                   </select>
                 </div>
                 <div style="display:flex; gap:8px; margin-top:10px;">
-                  <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberWithRole(${m.id})">✅ 역할 부여 및 승인</button>
-                  <button class="btn-sm danger" style="padding:9px 14px;" onclick="rejectMember(${m.id})">거절</button>
+                  <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberWithRole('${m.id}')">✅ 역할 부여 및 승인</button>
+                  <button class="btn-sm danger" style="padding:9px 14px;" onclick="rejectMember('${m.id}')">거절</button>
                 </div>
               </div>
             `).join('')}
@@ -1812,7 +1985,7 @@
         </div>
         <div class="card">
           ${approved.length === 0
-            ? '<div style="text-align:center;color:#64748B;font-size:13px;padding:8px 0;">승인된 회원이 없습니다.</div>'
+            ? '<div style="text-align:center;color:#64748B;font-size:13px;padding:8px 0;">아직 승인된 회원이 없습니다.<br>회원가입 탭에서 가입 신청 후 승인해 보세요.</div>'
             : approved.map(m => {
                 const r = getRoleById(m.roleId);
                 return `
@@ -1825,11 +1998,11 @@
                       <div class="member-meta">가입일 ${escapeHtml(m.createdAt)}</div>
                     </div>
                     <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                      <select class="role-select" onchange="changeMemberRole(${m.id}, this.value)">
+                      <select class="role-select" onchange="changeMemberRole('${m.id}', this.value)">
                         ${roleOptionsHtml(m.roleId)}
                       </select>
-                      <button class="btn-sm" onclick="resetMemberPw(${m.id})">비번초기화</button>
-                      <button class="btn-sm danger" onclick="deleteMember(${m.id})">삭제</button>
+                      <button class="btn-sm" onclick="resetMemberPw('${m.id}')">비번초기화</button>
+                      <button class="btn-sm danger" onclick="deleteMember('${m.id}')">삭제</button>
                     </div>
                   </div>
                 `;
@@ -1838,65 +2011,69 @@
       `;
     }
 
-    window.approveMemberWithRole = (id) => {
-      const m = members.find(x => x.id === id);
+    window.approveMemberWithRole = async (id) => {
+      const m = members.find(x => String(x.id) === String(id));
       if (!m) return;
       const sel = document.getElementById(`approveRole-${id}`);
-      if (sel) m.roleId = sel.value;
-      m.status = 'approved';
-      saveAll();
-      applyScreen();
-      showToast(`${m.name}님을 [${getRoleById(m.roleId).name}] 역할로 승인했습니다!`);
+      const roleId = sel ? sel.value : m.roleId;
+      try {
+        await db.collection('members').doc(String(id)).update({ status: 'approved', roleId });
+        showToast(`${m.name}님을 [${getRoleById(roleId).name}] 역할로 승인했습니다!`);
+      } catch (err) { handleDbError(err, '회원 승인'); }
     };
 
-    window.changeMemberRole = (id, newRoleId) => {
-      const m = members.find(x => x.id === id);
+    window.changeMemberRole = async (id, newRoleId) => {
+      const m = members.find(x => String(x.id) === String(id));
       if (!m) return;
-      m.roleId = newRoleId;
-      saveAll();
-      applyScreen();
-      showToast(`${m.name}님의 역할이 [${getRoleById(newRoleId).name}](으)로 변경되었습니다.`);
+      try {
+        await db.collection('members').doc(String(id)).update({ roleId: newRoleId });
+        showToast(`${m.name}님의 역할이 [${getRoleById(newRoleId).name}](으)로 변경되었습니다.`);
+      } catch (err) { handleDbError(err, '역할 변경'); }
     };
 
-    window.rejectMember = (id) => {
-      const m = members.find(x => x.id === id);
+    window.rejectMember = async (id) => {
+      const m = members.find(x => String(x.id) === String(id));
       if (!m || !confirm(`${m.name}님의 가입을 거절할까요?`)) return;
-      m.status = 'rejected';
-      saveAll();
-      applyScreen();
-      showToast('가입 신청을 거절했습니다.');
+      try {
+        await db.collection('members').doc(String(id)).update({ status: 'rejected' });
+        showToast('가입 신청을 거절했습니다.');
+      } catch (err) { handleDbError(err, '가입 거절'); }
     };
 
-    window.resetMemberPw = (id) => {
-      const m = members.find(x => x.id === id);
+    window.resetMemberPw = async (id) => {
+      const m = members.find(x => String(x.id) === String(id));
       if (!m || !confirm(`${m.name}님의 비밀번호를 '1234'로 초기화할까요?`)) return;
-      m.password = '1234';
-      saveAll();
-      showToast('비밀번호가 1234로 초기화되었습니다.');
+      try {
+        await db.collection('members').doc(String(id)).update({ password: '1234' });
+        showToast('비밀번호가 1234로 초기화되었습니다.');
+      } catch (err) { handleDbError(err, '비밀번호 초기화'); }
     };
 
-    window.deleteMember = (id) => {
-      const m = members.find(x => x.id === id);
-      if (!m || !confirm(`${m.name}님을 삭제할까요?`)) return;
-      members = members.filter(x => x.id !== id);
-      saveAll();
-      applyScreen();
-      showToast('회원을 삭제했습니다.');
+    window.deleteMember = async (id) => {
+      const m = members.find(x => String(x.id) === String(id));
+      if (!m || !confirm(`${m.name}님을 회원 목록에서 삭제할까요?`)) return;
+      try {
+        await db.collection('members').doc(String(id)).delete();
+        showToast('회원을 삭제했습니다.');
+      } catch (err) { handleDbError(err, '회원 삭제'); }
     };
 
-    // (D) 역할 만들기 · 수정 · 삭제 및 역할별 권한 설정
+    // (D) 역할 관리 + 최고 관리자 코드 변경
     function renderManageRoles(el) {
+      const prevPinEl = document.getElementById('newAdminPinInput');
+      const prevPinDraft = prevPinEl ? prevPinEl.value : '';
+      const wasPinFocused = prevPinEl && document.activeElement === prevPinEl;
       el.innerHTML = `
         <div class="section-head">
           <h2 class="section-title">🏷️ 역할 목록 및 권한 (${roles.length}개)</h2>
           <button class="btn-admin" onclick="openAddRoleModal()">+ 새 역할 만들기</button>
         </div>
         <p style="font-size:12.5px; color:#64748B; margin:0 0 12px; line-height:1.45;">
-          기본 7개 역할(목사·부장·교사·회장·팀장·청년·새신자)의 권한을 수정하거나, 새로운 역할을 자유롭게 추가·삭제할 수 있습니다.
+          기본 7개 역할(목사·부장·교사·회장·팀장·청년·새신자)의 권한을 수정하거나 새 역할을 자유롭게 추가·삭제할 수 있습니다.
         </p>
         ${roles.map(r => {
           const count = members.filter(m => m.status === 'approved' && m.roleId === r.id).length;
-          const activePerms = PERMISSION_DEFS.filter(p => r.perms[p.key]);
+          const activePerms = PERMISSION_DEFS.filter(p => r.perms && r.perms[p.key]);
           return `
             <div class="card">
               <div class="card-top">
@@ -1915,8 +2092,33 @@
             </div>
           `;
         }).join('')}
+
+        <div class="card" style="margin-top:16px; border-color:#CBD5E1;">
+          <div class="card-top">
+            <strong style="font-size:14.5px;">🔐 최고 관리자 코드 변경</strong>
+            <span class="tag slate">현재: ${escapeHtml(adminPin)}</span>
+          </div>
+          <p style="font-size:12px; color:#64748B; margin:0 0 10px;">로그인 화면 [관리자] 탭에서 사용하는 비밀번호를 앱에서 바로 변경할 수 있습니다.</p>
+          <div style="display:flex; gap:8px;">
+            <input id="newAdminPinInput" class="form-input" placeholder="새 관리자 코드 (4자리 이상)" style="flex:1;" />
+            <button class="btn-admin" onclick="changeAdminPin()">변경</button>
+          </div>
+        </div>
       `;
+      const newPinEl = document.getElementById('newAdminPinInput');
+      if (newPinEl && prevPinDraft) newPinEl.value = prevPinDraft;
+      if (newPinEl && wasPinFocused) newPinEl.focus();
     }
+
+    window.changeAdminPin = async () => {
+      const val = (document.getElementById('newAdminPinInput').value || '').trim();
+      if (val.length < 4) return showToast('관리자 코드는 4자리 이상 입력해 주세요.');
+      try {
+        await db.collection('config').doc('app').set({ adminPin: val }, { merge: true });
+        document.getElementById('newAdminPinInput').value = '';
+        showToast('최고 관리자 코드가 변경되었습니다!');
+      } catch (err) { handleDbError(err, '관리자 코드 변경'); }
+    };
 
     function renderRoleColorPalette() {
       document.getElementById('roleColorPalette').innerHTML = ROLE_COLORS.map(c => `
@@ -1957,7 +2159,7 @@
       document.getElementById('roleModal').classList.add('open');
     };
 
-    document.getElementById('saveRoleBtn').addEventListener('click', () => {
+    document.getElementById('saveRoleBtn').addEventListener('click', async () => {
       const id = document.getElementById('editRoleId').value;
       const name = document.getElementById('roleNameInput').value.trim();
       if (!name) return showToast('역할 이름을 입력해 주세요.');
@@ -1967,43 +2169,54 @@
         perms[cb.dataset.perm] = cb.checked;
       });
 
+      const next = structuredClone(roles);
+      let msg = '';
       if (id) {
-        const r = roles.find(x => x.id === id);
+        const r = next.find(x => x.id === id);
         if (r) { r.name = name; r.color = selectedRoleColor; r.perms = perms; }
-        showToast(`[${name}] 역할이 수정되었습니다!`);
+        msg = `[${name}] 역할이 수정되었습니다!`;
       } else {
-        if (roles.some(r => r.name === name)) return showToast('이미 같은 이름의 역할이 존재합니다.');
-        roles.push({ id: 'role_' + Date.now(), name, color: selectedRoleColor, perms });
-        showToast(`[${name}] 새 역할이 추가되었습니다!`);
+        if (next.some(r => r.name === name)) return showToast('이미 같은 이름의 역할이 존재합니다.');
+        next.push({ id: 'role_' + Date.now(), name, color: selectedRoleColor, perms });
+        msg = `[${name}] 새 역할이 추가되었습니다!`;
       }
-      saveAll();
-      document.getElementById('roleModal').classList.remove('open');
-      applyScreen();
+      try {
+        await db.collection('config').doc('roles').set({ items: next });
+        document.getElementById('roleModal').classList.remove('open');
+        showToast(msg);
+      } catch (err) { handleDbError(err, '역할 저장'); }
     });
 
-    window.deleteRole = (roleId) => {
+    window.deleteRole = async (roleId) => {
       if (roles.length <= 1) return showToast('최소 1개의 역할은 남아 있어야 합니다.');
       const r = roles.find(x => x.id === roleId);
-      if (!r || !confirm(`[${r.name}] 역할을 삭제할까요?\n해당 역할에 소속된 회원은 기본 역할로 자동 변경됩니다.`)) return;
-      roles = roles.filter(x => x.id !== roleId);
-      const fallback = roles.find(x => x.name === '청년') || roles[0];
-      members.forEach(m => { if (m.roleId === roleId) m.roleId = fallback.id; });
-      saveAll();
-      applyScreen();
-      showToast(`[${r.name}] 역할이 삭제되었습니다.`);
+      if (!r || !confirm(`[${r.name}] 역할을 삭제할까요?\n소속 회원은 기본 역할로 자동 변경됩니다.`)) return;
+      const next = roles.filter(x => x.id !== roleId);
+      const fallback = next.find(x => x.name === '청년') || next[0];
+      try {
+        const batch = db.batch();
+        batch.set(db.collection('config').doc('roles'), { items: next });
+        members.forEach(m => {
+          if (m.roleId === roleId) {
+            batch.update(db.collection('members').doc(String(m.id)), { roleId: fallback.id });
+          }
+        });
+        await batch.commit();
+        showToast(`[${r.name}] 역할이 삭제되었습니다.`);
+      } catch (err) { handleDbError(err, '역할 삭제'); }
     };
 
-    // (E) 체크 현황
+    // (E) 체크 현황 (주일 출석만 주간 초기화 가능 - 회원/공지는 건드리지 않음)
     function renderManageStatus(el) {
       const events = notices.filter(n => n.needAttend);
       el.innerHTML = `
         <div class="section-head">
           <h2 class="section-title">📊 예배 · 행사 체크 현황</h2>
-          <button class="btn-sm" onclick="resetDemoData()">전체 초기화</button>
+          <button class="btn-sm danger" onclick="clearSundayChecks()">주일 출석만 초기화</button>
         </div>
         <div class="card">
           <div class="card-top">
-            <strong style="font-size:15px;">⛪ 주일 예배 출석 체크</strong>
+            <strong style="font-size:15px;">⛪ 이번 주 주일 예배 출석 체크</strong>
             <span class="tag green">${sundayChecks.length}명</span>
           </div>
           ${sundayChecks.length === 0
@@ -2023,10 +2236,10 @@
                 <div style="padding:10px 0; border-bottom:1px solid #F1F5F9;">
                   <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
                     <strong style="font-size:13.5px;">${escapeHtml(ev.title)}</strong>
-                    <span class="tag warm">${ev.attendedBy.length}명</span>
+                    <span class="tag warm">${(ev.attendedBy || []).length}명</span>
                   </div>
                   <div style="font-size:12.5px; color:#475569;">
-                    ${ev.attendedBy.length ? ev.attendedBy.map(escapeHtml).join(', ') : '아직 참석 체크 인원이 없습니다.'}
+                    ${(ev.attendedBy || []).length ? ev.attendedBy.map(escapeHtml).join(', ') : '아직 참석 체크 인원이 없습니다.'}
                   </div>
                 </div>
               `).join('')}
@@ -2034,16 +2247,15 @@
       `;
     }
 
-    window.resetDemoData = () => {
-      if (!confirm('화면 배치·역할·회원·공지 데이터를 v7 초기 상태로 되돌릴까요?')) return;
-      roles = structuredClone(DEFAULT_ROLES);
-      blocks = structuredClone(DEFAULT_BLOCKS);
-      notices = structuredClone(DEFAULT_NOTICES);
-      sundayChecks = structuredClone(DEFAULT_SUNDAY);
-      members = structuredClone(DEFAULT_MEMBERS);
-      saveAll();
-      applyScreen();
-      showToast('초기 상태로 되돌렸습니다.');
+    window.clearSundayChecks = async () => {
+      if (sundayChecks.length === 0) return showToast('초기화할 주일 출석 기록이 없습니다.');
+      if (!confirm('새 주일을 시작하기 위해 주일 예배 출석 기록만 비울까요?\n(회원과 공지는 유지됩니다.)')) return;
+      try {
+        const batch = db.batch();
+        sundayChecks.forEach(c => batch.delete(db.collection('sundayChecks').doc(c.uid)));
+        await batch.commit();
+        showToast('이번 주 주일 출석 기록을 초기화했습니다.');
+      } catch (err) { handleDbError(err, '출석 초기화'); }
     };
 
     // 모달 닫기 & 링크 복사
@@ -2054,13 +2266,14 @@
       bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('open'); });
     });
     document.getElementById('copyLinkBtn').addEventListener('click', async () => {
-      const target = notices.find(n => n.id === currentDetailId);
+      const target = notices.find(n => String(n.id) === String(currentDetailId));
       const text = target ? `[라이트 청년부] ${target.title}\n${window.location.href}` : window.location.href;
       try { await navigator.clipboard.writeText(text); showToast('공지 링크가 복사되었습니다!'); }
       catch { showToast('주소창의 링크를 복사해 주세요.'); }
     });
 
-    applyScreen();
+    // 앱 시작: Firebase 실시간 연결 시작
+    startRealtimeSync();
   </script>
 </body>
 </html>

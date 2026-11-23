@@ -1,4 +1,4 @@
-const CACHE_NAME = 'right-youth-app-v7';
+const CACHE_NAME = 'right-youth-app-v8';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -29,6 +29,10 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+
+  const url = new URL(event.request.url);
+  // 외부 API(Firebase Firestore, CDN 등)는 서비스 워커가 가로채지 않고 직접 통신
+  if (url.origin !== self.location.origin) return;
 
   const isHtml =
     event.request.mode === 'navigate' ||
