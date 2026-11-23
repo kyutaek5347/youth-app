@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=115" />
+  <link rel="manifest" href="./manifest.json?v=116" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=115" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=115" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=116" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=116" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1480,7 +1480,7 @@
   <div class="app-shell">
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=115" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=116" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -1676,9 +1676,9 @@
             <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
               <div>
                 <div id="qtViewTitle" style="font-size:18px; font-weight:800;">✨ 오늘의 말씀</div>
-                <div style="font-size:12px; color:rgba(255,255,255,0.85); margin-top:3px;">오늘의 말씀을 묵상하고 하트와 댓글로 은혜를 나눠보세요</div>
+                <div style="font-size:12px; color:rgba(255,255,255,0.85); margin-top:3px;">매일 00:00(한국시간) 새 말씀 자동 변경 · 하트와 댓글로 나눠보세요</div>
               </div>
-              <button id="qtWriteTopBtn" class="btn-amber hidden" type="button" style="border:none; border-radius:10px; padding:8px 12px; font-size:12px; font-weight:800; cursor:pointer; white-space:nowrap;" onclick="openNewQtModal()">+ 말씀 추가</button>
+              <button id="qtWriteTopBtn" class="btn-amber hidden" type="button" style="border:none; border-radius:10px; padding:8px 12px; font-size:12px; font-weight:800; cursor:pointer; white-space:nowrap;" onclick="openNewQtModal()">+ 말씀·글 쓰기</button>
             </div>
           </div>
 
@@ -1882,25 +1882,33 @@
   <div id="qtFormModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="qtFormModalTitle" class="modal-title">✨ 새 말씀 등록</h3>
+        <h3 id="qtFormModalTitle" class="modal-title">✨ 새 말씀·글 등록</h3>
         <button class="close-btn" data-close="qtFormModal">✕</button>
       </div>
       <input type="hidden" id="editQtId" />
       <div class="form-group">
-        <label class="form-label">날짜</label>
+        <label class="form-label" for="qtDisplayModeSelect">게시 방식 선택</label>
+        <select id="qtDisplayModeSelect" class="form-select" onchange="updateQtDisplayModeHint()">
+          <option value="together">📌 오늘의 말씀과 같이 올리기 (자동 말씀 + 작성 글)</option>
+          <option value="replace">🔄 오늘의 말씀 대신 이 글만 올리기 (대체)</option>
+        </select>
+        <div id="qtDisplayModeHint" class="info-box" style="margin-top:7px; margin-bottom:0; padding:9px 11px; font-size:11.5px;"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="qtDateInput">날짜 (한국시간 기준)</label>
         <input id="qtDateInput" class="form-input" placeholder="예: 2026.11.24" />
       </div>
       <div class="form-group">
-        <label class="form-label">성경 구절</label>
-        <input id="qtPassageInput" class="form-input" placeholder="예: 시편 23:1-3" />
+        <label class="form-label" for="qtPassageInput">제목 또는 성경 구절 (선택)</label>
+        <input id="qtPassageInput" class="form-input" placeholder="예: 시편 23:1-3 또는 글 제목 (비워도 등록 가능)" />
       </div>
       <div class="form-group">
-        <label class="form-label">성경 말씀</label>
-        <textarea id="qtScriptureInput" class="form-textarea" style="min-height:130px;" placeholder="성경 말씀 구절을 입력하세요."></textarea>
+        <label class="form-label" for="qtScriptureInput">말씀 · 작성 글 내용 (필수)</label>
+        <textarea id="qtScriptureInput" class="form-textarea" style="min-height:135px;" placeholder="성경 말씀이나 청년부원들과 나누고 싶은 글을 자유롭게 입력하세요."></textarea>
       </div>
       <label class="checkbox-row" style="margin-bottom:14px;">
         <input type="checkbox" id="qtNotifyInput" checked />
-        <span>등록 시 회원들에게 새 말씀 알림 띄우기</span>
+        <span>등록 시 회원들에게 새 말씀·글 알림 띄우기</span>
       </label>
       <button id="saveQtBtn" class="btn-full btn-dark" type="button" onclick="handleSaveQt()">오늘의 말씀에 게시하기</button>
     </div>
@@ -2951,7 +2959,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=115" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=116" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -2974,8 +2982,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=115', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=115', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=116', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=116', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -4450,10 +4458,15 @@
 
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
+        handleKstDayRolloverCheck();
         checkAndNotifyTodayBirthdays();
         checkAndNotifyNewcomers();
         const u = getCurrentUser();
-        if (u && currentMainTab === 'home') renderHomeView(u);
+        if (u) {
+          if (currentMainTab === 'home') renderHomeView(u);
+          else if (currentMainTab === 'qt') renderQtView();
+          else if (currentMainTab === 'manage') renderManageView(u);
+        }
       }
     });
 
@@ -4816,7 +4829,7 @@
             <div class="stat-label">공지 · 광고</div>
           </div>
           <div class="stat-box" onclick="switchMainTab('qt')">
-            <div class="stat-num">${qtPosts.length + 1}</div>
+            <div class="stat-num">${hasTodayReplaceQt() ? qtPosts.length : (qtPosts.length + 1)}</div>
             <div class="stat-label">${escapeHtml(getTabLabel('qt'))} · 이동</div>
           </div>
         </div>
@@ -4968,17 +4981,24 @@
         ${canQt ? `
           <div class="section-head">
             <h2 class="section-title">✨ 오늘의 말씀 관리</h2>
-            <button class="btn-admin" onclick="openNewQtModal()">+ 말씀 추가</button>
+            <button class="btn-admin" onclick="openNewQtModal()">+ 말씀·글 추가</button>
           </div>
           ${(() => {
             const autoToday = getAutoDailyQtForToday();
+            const isReplaced = hasTodayReplaceQt();
             return `
-              <div class="card" style="border-color:#C7D2FE; background:#F5F7FF;">
+              <div class="card" style="border-color:${isReplaced ? '#CBD5E1' : '#C7D2FE'}; background:${isReplaced ? '#F8FAFC' : '#F5F7FF'}; ${isReplaced ? 'opacity:0.78;' : ''}">
                 <div class="card-top">
-                  <span class="qt-passage-pill">📖 ${escapeHtml(autoToday.passage)}</span>
+                  <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                    <span class="qt-passage-pill">📖 ${escapeHtml(autoToday.passage)}</span>
+                    ${isReplaced
+                      ? '<span class="tag warm">관리자 글로 대체됨</span>'
+                      : '<span class="tag green">매일 00:00(KST) 자동 표시중</span>'}
+                  </div>
                   <span class="card-date">${escapeHtml(autoToday.date)}</span>
                 </div>
                 <p class="card-body clamp" style="margin-bottom:10px;">${escapeHtml(autoToday.scripture)}</p>
+                ${isReplaced ? '<div style="font-size:11.5px; color:#92400E; margin-bottom:9px;">오늘은 관리자가 올린 대체 글이 오늘의 말씀 자리에 표시됩니다. (내일 00:00 한국시간에 새 자동 말씀으로 전환)</div>' : ''}
                 <div style="display:flex; gap:6px; flex-wrap:wrap;">
                   <button class="btn-sm primary" onclick="openQtDetail('${autoToday.id}')">💬 댓글·하트 보기</button>
                   <button class="btn-sm" onclick="switchMainTab('qt')">오늘의 말씀 칸 이동 ▸</button>
@@ -4987,23 +5007,30 @@
             `;
           })()}
           ${qtPosts.length === 0
-            ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">목회자·관리자가 추가한 말씀이 없습니다.<br>(매일 자동 말씀 1편은 하단 오늘의 말씀 칸에 올라갑니다.)</div>'
-            : qtPosts.slice(0, 8).map(q => `
-                <div class="card">
-                  <div class="card-top">
-                    <span class="qt-passage-pill">📖 ${escapeHtml(q.passage || '오늘의 말씀')}</span>
-                    <span class="card-date">${escapeHtml(q.date || '')}</span>
-                  </div>
-                  <p class="card-body clamp">${escapeHtml(q.scripture || q.title || '')}</p>
-                  <div class="card-footer">
-                    <button class="btn-sm" onclick="openQtDetail('${q.id}')">💬 댓글·하트</button>
-                    <div style="display:flex; gap:6px;">
-                      <button class="btn-sm" onclick="openEditQtModal('${q.id}')">수정</button>
-                      <button class="btn-sm danger" onclick="deleteQtPost('${q.id}')">삭제</button>
+            ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">관리자가 추가한 말씀이 없습니다.<br>(매일 자동 말씀 1편은 하단 오늘의 말씀 칸에 올라갑니다.)</div>'
+            : qtPosts.slice(0, 8).map(q => {
+                const isReplace = q.displayMode === 'replace';
+                const isTodayPost = normalizeDotDate(q.date) === getKstDateParts().dot;
+                return `
+                  <div class="card">
+                    <div class="card-top">
+                      <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                        <span class="tag ${isReplace ? 'warm' : 'slate'}">${isReplace ? (isTodayPost ? '🔄 오늘의 말씀 대체중' : '🔄 대체 게시') : '📌 말씀과 함께 게시'}</span>
+                        ${q.passage ? `<span class="qt-passage-pill">📖 ${escapeHtml(q.passage)}</span>` : ''}
+                      </div>
+                      <span class="card-date">${escapeHtml(q.date || '')}</span>
+                    </div>
+                    <p class="card-body clamp">${escapeHtml(q.scripture || q.title || '')}</p>
+                    <div class="card-footer">
+                      <button class="btn-sm" onclick="openQtDetail('${q.id}')">💬 댓글·하트</button>
+                      <div style="display:flex; gap:6px;">
+                        <button class="btn-sm" onclick="openEditQtModal('${q.id}')">수정</button>
+                        <button class="btn-sm danger" onclick="deleteQtPost('${q.id}')">삭제</button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              `).join('')}
+                `;
+              }).join('')}
         ` : ''}
       `;
     }
@@ -6794,9 +6821,54 @@
       return { y, m, d, dot: `${y}.${m}.${d}`, compact: `${y}${m}${d}`, dayNumber };
     }
 
+    function normalizeDotDate(raw) {
+      const s = String(raw || '').trim();
+      const m = s.match(/^(\d{4})[.\-/](\d{1,2})[.\-/](\d{1,2})$/);
+      if (!m) return s;
+      return `${m[1]}.${String(Number(m[2])).padStart(2, '0')}.${String(Number(m[3])).padStart(2, '0')}`;
+    }
+
+    let lastKstDayCompact = getKstDateParts().compact;
+    let kstMidnightTimer = null;
+
+    function msUntilNextKstMidnight() {
+      const KST_OFFSET = 9 * 60 * 60 * 1000;
+      const nowKstMs = Date.now() + KST_OFFSET;
+      const nextMidnightKstMs = (Math.floor(nowKstMs / 86400000) + 1) * 86400000;
+      return Math.max(1000, (nextMidnightKstMs - nowKstMs) + 1000);
+    }
+
+    function handleKstDayRolloverCheck() {
+      const curCompact = getKstDateParts().compact;
+      if (curCompact !== lastKstDayCompact) {
+        lastKstDayCompact = curCompact;
+        const u = getCurrentUser();
+        if (u) {
+          checkAndNotifyTodayBirthdays();
+          if (currentMainTab === 'qt') renderQtView();
+          else if (currentMainTab === 'home') renderHomeView(u);
+          else if (currentMainTab === 'manage') renderManageView(u);
+        }
+      }
+    }
+
+    function scheduleKstMidnightRefresh() {
+      if (kstMidnightTimer) clearTimeout(kstMidnightTimer);
+      kstMidnightTimer = setTimeout(() => {
+        handleKstDayRolloverCheck();
+        scheduleKstMidnightRefresh();
+      }, msUntilNextKstMidnight());
+    }
+    scheduleKstMidnightRefresh();
+
+    function hasTodayReplaceQt() {
+      const todayDot = getKstDateParts().dot;
+      return qtPosts.some(p => p.displayMode === 'replace' && normalizeDotDate(p.date) === todayDot);
+    }
+
     function getAutoDailyQtForToday() {
       const { dot, compact, dayNumber } = getKstDateParts();
-      // 60편 성경말씀을 매일 자정(KST)마다 겹치지 않게 자동 업로드 (구절 + 말씀 본문만 표시)
+      // 60편 성경말씀을 매일 한국시간 00:00마다 겹치지 않게 자동 업로드 (구절 + 말씀 본문만 표시)
       const n = DAILY_QT_POOL.length;
       const idx = ((dayNumber * 17 + 7) % n + n) % n;
       const item = DAILY_QT_POOL[idx];
@@ -6841,20 +6913,34 @@
       const canManageQt = hasUserPerm(user, 'canManageQt');
       document.getElementById('qtWriteTopBtn').classList.toggle('hidden', !canManageQt);
 
+      const todayDot = getKstDateParts().dot;
       const autoToday = getAutoDailyQtForToday();
-      // 매일 자동으로 올라오는 오늘의 말씀 1편 + 목회자/관리자가 추가한 말씀 목록
-      const combined = [autoToday, ...qtPosts.map(p => ({ ...p, isAuto: false }))];
+      const replacedToday = hasTodayReplaceQt();
+
+      const mappedCustom = qtPosts.map(p => ({ ...p, isAuto: false }));
+      const todayReplacePosts = mappedCustom.filter(p => p.displayMode === 'replace' && normalizeDotDate(p.date) === todayDot);
+      const otherCustomPosts = mappedCustom.filter(p => !(p.displayMode === 'replace' && normalizeDotDate(p.date) === todayDot));
+
+      // 관리자가 오늘 날짜를 '대체(replace)'로 올린 경우 자동 말씀 대신 관리자 글 표시, 아니면 자동 말씀과 함께 표시
+      const combined = replacedToday
+        ? [...todayReplacePosts, ...otherCustomPosts]
+        : [autoToday, ...mappedCustom];
 
       const container = document.getElementById('qtListContainer');
       container.innerHTML = combined.map((post) => {
         const cmts = qtComments.filter(c => c.postId === post.id);
         const previewCmts = cmts.slice(-2);
         const verseText = post.scripture || post.guide || post.title || '';
+        const isTodayReplace = !post.isAuto && post.displayMode === 'replace' && normalizeDotDate(post.date) === todayDot;
+        const badgeText = post.isAuto
+          ? '✨ 오늘의 말씀'
+          : (isTodayReplace ? '✨ 오늘의 말씀 (관리자)' : '✍️ 관리자 작성 글');
+        const badgeCls = (post.isAuto || isTodayReplace) ? 'warm' : '';
         return `
-          <div class="card clickable" style="${post.isAuto ? 'border-color:#A5B4FC;' : ''}" onclick="openQtDetail('${post.id}')">
+          <div class="card clickable" style="${(post.isAuto || isTodayReplace) ? 'border-color:#A5B4FC;' : ''}" onclick="openQtDetail('${post.id}')">
             <div class="card-top">
               <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                <span class="tag ${post.isAuto ? 'warm' : ''}">${post.isAuto ? '✨ 오늘의 말씀' : '✍️ 목회자·관리자 말씀'}</span>
+                <span class="tag ${badgeCls}">${badgeText}</span>
                 ${post.passage ? `<span class="qt-passage-pill">📖 ${escapeHtml(post.passage)}</span>` : ''}
               </div>
               <span class="card-date">${escapeHtml(post.date || '')}</span>
@@ -6877,7 +6963,7 @@
             <div class="card-footer">
               <button class="btn-sm" type="button" onclick="event.stopPropagation(); openQtDetail('${post.id}')">💬 댓글 ${cmts.length}개</button>
               ${canManageQt ? (post.isAuto ? `
-                <button class="btn-sm primary" type="button" onclick="event.stopPropagation(); openNewQtModal()">+ 말씀 추가</button>
+                <button class="btn-sm primary" type="button" onclick="event.stopPropagation(); openNewQtModal()">+ 말씀·글 쓰기</button>
               ` : `
                 <div style="display:flex; gap:6px;">
                   <button class="btn-sm" type="button" onclick="event.stopPropagation(); openEditQtModal('${post.id}')">수정</button>
@@ -7064,9 +7150,24 @@
       }
     };
 
+    window.updateQtDisplayModeHint = () => {
+      const mode = document.getElementById('qtDisplayModeSelect').value;
+      const hint = document.getElementById('qtDisplayModeHint');
+      if (!hint) return;
+      if (mode === 'replace') {
+        hint.className = 'info-box warn';
+        hint.innerHTML = '🔄 <b>오늘의 말씀 대체:</b> 해당 날짜의 자동 말씀을 숨기고, 관리자가 작성한 이 글만 오늘의 말씀으로 표시합니다. 다음 날 00:00(한국시간)에는 새 자동 말씀이 다시 올라옵니다.';
+      } else {
+        hint.className = 'info-box';
+        hint.innerHTML = '📌 <b>같이 올리기:</b> 매일 00:00(한국시간)에 올라오는 자동 오늘의 말씀과 관리자가 작성한 이 글이 함께 표시됩니다.';
+      }
+    };
+
     window.openNewQtModal = (prefill = null) => {
-      document.getElementById('qtFormModalTitle').textContent = `✨ 새 ${getTabLabel('qt')} 등록`;
+      document.getElementById('qtFormModalTitle').textContent = `✨ 새 ${getTabLabel('qt')} · 글 등록`;
       document.getElementById('editQtId').value = '';
+      document.getElementById('qtDisplayModeSelect').value = 'together';
+      updateQtDisplayModeHint();
       document.getElementById('qtDateInput').value = getKstDateParts().dot;
       document.getElementById('qtPassageInput').value = prefill && prefill.passage ? prefill.passage : '';
       document.getElementById('qtScriptureInput').value = prefill && prefill.scripture ? prefill.scripture : '';
@@ -7077,8 +7178,10 @@
     window.openEditQtModal = (postId) => {
       const p = qtPosts.find(x => String(x.id) === String(postId));
       if (!p) return;
-      document.getElementById('qtFormModalTitle').textContent = `✨ ${getTabLabel('qt')} 수정`;
+      document.getElementById('qtFormModalTitle').textContent = `✨ ${getTabLabel('qt')} · 글 수정`;
       document.getElementById('editQtId').value = p.id;
+      document.getElementById('qtDisplayModeSelect').value = p.displayMode === 'replace' ? 'replace' : 'together';
+      updateQtDisplayModeHint();
       document.getElementById('qtDateInput').value = p.date || getKstDateParts().dot;
       document.getElementById('qtPassageInput').value = p.passage || '';
       document.getElementById('qtScriptureInput').value = p.scripture || p.guide || '';
@@ -7090,28 +7193,33 @@
       const user = getCurrentUser();
       if (!user) return;
       const editId = document.getElementById('editQtId').value;
-      const date = document.getElementById('qtDateInput').value.trim() || getKstDateParts().dot;
+      const displayMode = document.getElementById('qtDisplayModeSelect').value === 'replace' ? 'replace' : 'together';
+      const rawDate = document.getElementById('qtDateInput').value.trim();
+      const date = normalizeDotDate(rawDate) || getKstDateParts().dot;
       const passage = document.getElementById('qtPassageInput').value.trim();
       const scripture = document.getElementById('qtScriptureInput').value.trim();
       const notifyOnPublish = document.getElementById('qtNotifyInput').checked;
 
-      if (!passage) return showToast('성경 구절을 입력해 주세요. (예: 시편 23:1-3)');
-      if (!scripture) return showToast('성경 말씀 내용을 입력해 주세요.');
+      if (!scripture) return showToast('말씀이나 작성 글 내용을 입력해 주세요.');
 
       const btn = document.getElementById('saveQtBtn');
       btn.disabled = true;
       try {
         lastSelfQtEditTs = Date.now();
         if (editId) {
-          await db.collection('qtPosts').doc(editId).update({ date, passage, scripture });
-          showToast('말씀이 수정되었습니다!');
+          await db.collection('qtPosts').doc(editId).update({ date, passage, scripture, displayMode });
+          showToast(displayMode === 'replace'
+            ? '오늘의 말씀 대체 글로 수정되었습니다!'
+            : '오늘의 말씀과 함께 표시되도록 수정되었습니다!');
         } else {
           const targetId = String(Date.now());
           await db.collection('qtPosts').doc(targetId).set({
-            id: targetId, date, passage, scripture,
+            id: targetId, date, passage, scripture, displayMode,
             authorName: user.name, notifyOnPublish, createdTs: Date.now()
           });
-          showToast('새 말씀이 [오늘의 말씀]에 등록되었습니다!');
+          showToast(displayMode === 'replace'
+            ? '오늘의 말씀을 이 글로 대체하여 등록했습니다!'
+            : '오늘의 말씀과 함께 표시되도록 등록했습니다!');
         }
         document.getElementById('qtFormModal').classList.remove('open');
       } catch (err) {
