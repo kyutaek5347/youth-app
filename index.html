@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=105" />
+  <link rel="manifest" href="./manifest.json?v=106" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=105" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=105" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=106" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=106" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1151,7 +1151,7 @@
   <div class="app-shell">
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=105" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=106" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -1877,7 +1877,7 @@
     const FieldValue = firebase.firestore.FieldValue;
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 12;
+    const CURRENT_SCHEMA_VERSION = 13;
 
     // 매일 자정(KST) 자동 변경되는 일일 큐티 성경말씀 풀 (60편)
     const DAILY_QT_POOL = [
@@ -2226,29 +2226,23 @@
     ];
 
     // 4. 기본 역할 7종 · 기본 화면 블록
-    // 앞으로 업데이트로 새 기능 권한을 여기에 추가하면 최고 관리자·기존 관리자 역할에 자동 부여되고,
-    // 역할·권한 설정 화면에도 자동으로 체크박스가 생성되어 다른 역할에 자유롭게 부여할 수 있습니다.
+    // 최고 관리자는 업데이트로 추가되는 모든 권한을 자동 보유합니다.
+    // 각 일반 역할(목사·부장·회장·팀장 등)에는 새 권한이 자동 부여되지 않고 미선택(false)으로 추가되며,
+    // 관리자가 '역할·권한 설정'에서 원하는 역할에만 직접 체크해 부여할 수 있습니다.
     const PERMISSION_DEFS = [
-      { key: 'canViewHome', label: '공지·광고·오늘의 말씀 열람 (기본)', defaultAll: true, autoGrantToAdmins: true },
-      { key: 'canViewNewcomer', label: '새신자 소식·환영 안내 카드 보기', autoGrantToAdmins: true },
-      { key: 'canViewLeaderBoard', label: '임원·리더 전용 소식 보기', autoGrantToAdmins: true },
-      { key: 'canManageNotices', label: '공지·광고 작성, 수정, 삭제 및 순서 변경', autoGrantToAdmins: true },
-      { key: 'canManageQt', label: '오늘의 말씀(큐티) 작성, 수정, 삭제 및 메인 표시 관리', autoGrantToAdmins: true },
-      { key: 'canEditLayout', label: '앱 메인 화면 배너·칸 편집, 추가/삭제 및 칸 이름 변경', autoGrantToAdmins: true },
-      { key: 'canManageMembers', label: '회원 가입 승인, 역할 부여 및 역할·권한 설정', autoGrantToAdmins: false }
+      { key: 'canViewHome', label: '공지·광고·오늘의 말씀 열람 (기본)', defaultAll: true },
+      { key: 'canViewNewcomer', label: '새신자 소식·환영 안내 카드 보기' },
+      { key: 'canViewLeaderBoard', label: '임원·리더 전용 소식 보기' },
+      { key: 'canManageNotices', label: '공지·광고 작성, 수정, 삭제 및 순서 변경' },
+      { key: 'canManageQt', label: '오늘의 말씀(큐티) 작성, 수정, 삭제 및 메인 표시 관리' },
+      { key: 'canEditLayout', label: '앱 메인 화면 배너·칸 편집, 추가/삭제 및 칸 이름 변경' },
+      { key: 'canManageMembers', label: '회원 가입 승인, 역할 부여 및 역할·권한 설정' }
     ];
 
     function buildAllPermsTrue() {
       const obj = {};
       PERMISSION_DEFS.forEach(p => { obj[p.key] = true; });
       return obj;
-    }
-
-    function isAdminTierRole(role) {
-      if (!role) return false;
-      const adminIds = ['role_pastor', 'role_director', 'role_president'];
-      if (adminIds.includes(role.id)) return true;
-      return !!(role.perms && role.perms.canManageMembers);
     }
 
     function normalizeRolePermissions(roleList) {
@@ -2259,19 +2253,10 @@
           delete perms.canViewCheckStatus;
           changed = true;
         }
-        const isAdminRole = isAdminTierRole(r);
         PERMISSION_DEFS.forEach(p => {
           if (perms[p.key] === undefined) {
-            if (p.defaultAll) {
-              perms[p.key] = true;
-            } else if (isAdminRole && p.autoGrantToAdmins) {
-              perms[p.key] = true;
-            } else if (p.key === 'canManageQt' && perms.canManageNotices) {
-              // 기존 공지/큐티 작성 권한을 갖고 있던 교사·팀장 역할에도 자연스럽게 승계
-              perms[p.key] = true;
-            } else {
-              perms[p.key] = false;
-            }
+            // 기본 열람 권한(canViewHome) 외의 새 권한은 자동 부여하지 않고 미선택(false) 상태로 추가
+            perms[p.key] = !!p.defaultAll;
             changed = true;
           }
         });
@@ -2429,7 +2414,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=105" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=106" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -2452,8 +2437,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=105', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=105', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=106', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=106', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -2706,9 +2691,6 @@
     function hasUserPerm(user, key) {
       if (!user) return false;
       if (user.isSuperAdmin) return true;
-      if (key === 'canManageQt') {
-        return !!(user.role && user.role.perms && (user.role.perms.canManageQt || user.role.perms.canManageNotices));
-      }
       return !!(user.role && user.role.perms && user.role.perms[key]);
     }
 
@@ -2847,11 +2829,10 @@
           byId: buildRolesByIdMap(normalizedRoles)
         });
 
-        // 2) 메인 화면 배치 정리 (비어 있으면 기본 칸 자동 복원, 오늘의 말씀 칸 자동 보강)
+        // 2) 메인 화면 배치 정리 (기존에 등록된 칸이 있을 때만 정리, 비어 있으면 그대로 유지)
         const layoutSnap = await db.collection('config').doc('layout').get();
-        let cleanedBlocks = [];
         if (layoutSnap.exists && Array.isArray(layoutSnap.data().blocks) && layoutSnap.data().blocks.length > 0) {
-          cleanedBlocks = layoutSnap.data().blocks
+          const cleanedBlocks = layoutSnap.data().blocks
             .filter(b => b.type !== 'quick_check')
             .map(b => {
               const copy = { ...b };
@@ -2864,23 +2845,8 @@
               }
               return copy;
             });
-          if (!cleanedBlocks.some(b => b.type === 'today_qt')) {
-            const heroIdx = cleanedBlocks.findIndex(b => b.type === 'hero_notice');
-            cleanedBlocks.splice(heroIdx >= 0 ? heroIdx + 1 : 0, 0, {
-              id: 'blk_today_qt',
-              type: 'today_qt',
-              label: '오늘의 말씀',
-              badge: '✨ 오늘의 말씀',
-              title: '오늘의 말씀',
-              desc: '매일 새로운 성경말씀이 자동으로 올라오며, 목회자와 관리자가 큐티를 추가할 수 있습니다.',
-              theme: 'indigo',
-              audience: 'all'
-            });
-          }
-        } else {
-          cleanedBlocks = structuredClone(DEFAULT_BLOCKS);
+          await db.collection('config').doc('layout').set({ blocks: cleanedBlocks }, { merge: true });
         }
-        await db.collection('config').doc('layout').set({ blocks: cleanedBlocks }, { merge: true });
 
         // 3) 칸(탭) 이름 기본값 동기화 ('큐티' -> '오늘의 말씀')
         try {
@@ -3678,14 +3644,18 @@
       const canManageQt = hasUserPerm(user, 'canManageQt');
       const visibleBlocks = blocks.filter(canSeeBlock);
 
-      // 배치된 칸이 비어 있어도 빈 화면이 되지 않도록 기본 구성(공지 배너 + 오늘의 말씀 + 공지 목록)으로 안전 표시
-      const renderTargets = visibleBlocks.length > 0 ? visibleBlocks : [
-        { id: 'fallback_hero', type: 'hero_notice', badge: '📌 중요 공지', theme: 'dark', audience: 'all' },
-        { id: 'fallback_qt', type: 'today_qt', badge: '✨ 오늘의 말씀', theme: 'indigo', audience: 'all' },
-        { id: 'fallback_notices', type: 'notice_list', title: '📢 공지 · 광고 · 소식', theme: 'dark', audience: 'all' }
-      ];
+      if (visibleBlocks.length === 0) {
+        container.innerHTML = `
+          <div class="card" style="text-align:center; padding:42px 20px; color:#64748B;">
+            <div style="font-size:30px; margin-bottom:10px;">✨</div>
+            <div style="font-size:15px; font-weight:800; color:#1E293B; margin-bottom:6px;">아직 메인 화면에 표시된 소식이 없습니다.</div>
+            <div style="font-size:12.5px; color:#64748B; line-height:1.55;">새로운 공지나 오늘의 말씀이 올라오면 이곳에 표시됩니다.</div>
+          </div>
+        `;
+        return;
+      }
 
-      container.innerHTML = renderTargets.map(b => {
+      container.innerHTML = visibleBlocks.map(b => {
 
         if (b.type === 'hero_notice') {
           const pinned = notices.find(n => n.pinned) || notices[0];
@@ -4621,6 +4591,9 @@
         <div class="section-head">
           <h2 class="section-title">🏷️ 역할 목록 및 권한 (${roles.length}개)</h2>
           <button class="btn-admin" onclick="openAddRoleModal()">+ 새 역할 만들기</button>
+        </div>
+        <div class="info-box" style="margin-top:0; margin-bottom:12px;">
+          최고 관리자는 새 기능이 추가될 때 모든 권한이 자동 적용됩니다. 각 역할의 권한은 아래 <b>내용 수정</b>에서 원하는 항목만 직접 선택해 부여할 수 있습니다.
         </div>
         ${roles.map(r => {
           const count = members.filter(m => m.status === 'approved' && m.roleId === r.id).length;
