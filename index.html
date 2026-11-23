@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=111" />
+  <link rel="manifest" href="./manifest.json?v=112" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=111" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=111" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=112" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=112" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -688,11 +688,11 @@
       background: #0F172A;
       color: #FDE68A;
       border-radius: 14px;
-      padding: 16px;
+      padding: 16px 10px;
       text-align: center;
-      font-size: 28px;
+      font-size: 23px;
       font-weight: 900;
-      letter-spacing: 6px;
+      letter-spacing: 3px;
       margin: 12px 0;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
@@ -1342,7 +1342,7 @@
   <div class="app-shell">
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=111" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=112" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -1588,15 +1588,15 @@
         <button class="close-btn" data-close="resetPwModal">✕</button>
       </div>
       <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-        관리자가 비밀번호를 초기화한 뒤 발급해 준 <b>6자리 초기화 코드</b>를 입력하면 새 비밀번호로 바로 변경됩니다.
+        관리자가 발급해 준 <b>영문·숫자 8자리 초기화 코드</b>를 입력하면 새 비밀번호로 바로 변경됩니다. (발급 후 <b>24시간</b> 동안 유효)
       </div>
       <div class="form-group">
         <label class="form-label">아이디 (본인 성명)</label>
         <input id="resetNameInput" class="form-input" placeholder="가입한 본인 성명" />
       </div>
       <div class="form-group">
-        <label class="form-label">관리자에게 받은 초기화 코드 (6자리)</label>
-        <input id="resetCodeInput" type="tel" inputmode="numeric" class="form-input" placeholder="숫자 6자리 입력" maxlength="6" />
+        <label class="form-label">관리자에게 받은 초기화 코드 (8자리)</label>
+        <input id="resetCodeInput" type="text" class="form-input" style="text-transform:uppercase; letter-spacing:1.5px; font-weight:700;" placeholder="영문·숫자 8자리 입력" maxlength="8" autocomplete="off" />
       </div>
       <div class="form-group">
         <label class="form-label">새 비밀번호 (6자리 이상)</label>
@@ -1619,10 +1619,11 @@
         <button class="close-btn" data-close="adminResetIssuedModal">✕</button>
       </div>
       <div id="issuedResetDesc" style="font-size:13.5px; color:#334155; line-height:1.55;"></div>
-      <div id="issuedResetCodeDisplay" class="code-display-box">000000</div>
+      <div id="issuedResetCodeDisplay" class="code-display-box">--------</div>
       <div style="font-size:12px; color:#64748B; line-height:1.5; margin-bottom:14px;">
         • 기존 비밀번호는 즉시 차단되었습니다.<br>
-        • 아래 버튼으로 안내 문구를 복사해 카카오톡 등으로 전달해 주시면, 이용자가 직접 새 비밀번호를 설정할 수 있습니다.
+        • 이 코드는 발급 시점부터 <b>24시간</b> 동안만 사용할 수 있습니다. (만료 시 재발급 가능)<br>
+        • 아래 버튼으로 안내 문구를 복사해 카카오톡 등으로 전달해 주세요.
       </div>
       <div style="display:flex; gap:8px;">
         <button class="btn-full btn-dark" type="button" style="flex:1; padding:12px; font-size:13.5px;" onclick="copyIssuedResetMessage()">📋 안내 문구 복사</button>
@@ -1788,8 +1789,8 @@
         <input id="lblManageMembersInput" class="form-input" maxlength="14" placeholder="회원 승인·역할" />
       </div>
       <div class="form-group">
-        <label class="form-label">역할 설정 탭 (기본: 역할·권한 설정)</label>
-        <input id="lblManageRolesInput" class="form-input" maxlength="14" placeholder="역할·권한 설정" />
+        <label class="form-label">역할 설정 탭 (기본: 역할 설정)</label>
+        <input id="lblManageRolesInput" class="form-input" maxlength="14" placeholder="역할 설정" />
       </div>
 
       <div style="display:flex; gap:8px; margin-top:10px;">
@@ -1969,12 +1970,11 @@
           <div id="blockColorPalette" class="color-palette"></div>
         </div>
       </div>
-            <div class="form-group" id="blockAudienceGroup">
+      <div class="form-group" id="blockAudienceGroup">
         <label class="form-label">이 칸을 볼 수 있는 대상</label>
         <select id="blockAudienceSelect" class="form-select">
           <option value="all">전체 승인 회원 (기본)</option>
-          <option value="newcomer">새신자 · 임원만 보기</option>
-          <option value="leader">리더 · 교역자만 보기</option>
+          <option value="admin">최고 관리자만 보기</option>
         </select>
       </div>
       <label class="checkbox-row" style="margin-bottom:12px;">
@@ -1993,6 +1993,10 @@
         <button class="close-btn" data-close="roleModal">✕</button>
       </div>
       <input type="hidden" id="editRoleId" />
+      <div class="info-box" style="margin-top:0; margin-bottom:12px;">
+        역할은 회원 이름 옆에 표시되는 직분 배지입니다.<br>
+        앱의 수정·삭제·게시·승인 권한은 <b>최고 관리자</b>에게만 부여됩니다.
+      </div>
       <div class="form-group">
         <label class="form-label">역할 이름</label>
         <input id="roleNameInput" class="form-input" placeholder="예: 찬양팀장, 미디어팀, 새가족부장" />
@@ -2000,10 +2004,6 @@
       <div class="form-group">
         <label class="form-label">역할 배지 색상</label>
         <div id="roleColorPalette" class="color-palette"></div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">이 역할이 이용할 수 있는 기능 선택</label>
-        <div id="rolePermCheckboxes"></div>
       </div>
       <button id="saveRoleBtn" class="btn-full btn-dark" type="button" style="margin-top:8px;">역할 저장하기</button>
     </div>
@@ -2084,7 +2084,7 @@
     const authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 15;
+    const CURRENT_SCHEMA_VERSION = 16;
 
     // 매일 자정(KST) 자동 변경되는 일일 큐티 성경말씀 풀 (60편)
     const DAILY_QT_POOL = [
@@ -2174,7 +2174,7 @@
       manage: '관리 센터',
       manageContent: '화면·공지 관리',
       manageMembers: '회원 승인·역할',
-      manageRoles: '역할·권한 설정',
+      manageRoles: '역할 설정',
       tabOrder: DEFAULT_TAB_ORDER
     };
 
@@ -2506,45 +2506,53 @@
       }
     ];
 
-    // 4. 기본 역할 7종 · 기본 화면 블록
-    // 최고 관리자는 업데이트로 추가되는 모든 권한을 자동 보유합니다.
-    // 각 일반 역할(목사·부장·회장·팀장 등)에는 새 권한이 자동 부여되지 않고 미선택(false)으로 추가되며,
-    // 관리자가 '역할·권한 설정'에서 원하는 역할에만 직접 체크해 부여할 수 있습니다.
-    const PERMISSION_DEFS = [
-      { key: 'canViewHome', label: '공지·광고·오늘의 말씀 열람 (기본)', defaultAll: true },
-      { key: 'canViewNewcomer', label: '새신자 소식·환영 안내 카드 보기' },
-      { key: 'canViewLeaderBoard', label: '임원·리더 전용 소식 보기' },
-      { key: 'canManageNotices', label: '공지·광고 작성, 수정, 삭제 및 순서 변경' },
-      { key: 'canManageQt', label: '오늘의 말씀 작성, 수정, 삭제 및 댓글 관리' },
-      { key: 'canEditLayout', label: '앱 메인 화면 배너·칸 편집, 추가/삭제 및 칸 이름 변경' },
-      { key: 'canManageMembers', label: '회원 가입 승인, 역할 부여 및 역할·권한 설정' }
-    ];
+    // 4. 기본 역할 7종 (표시용 직분 배지) · 기본 화면 블록
+    // v10.12 보안 강화: 모든 수정·삭제·게시·회원관리 권한은 최고 관리자 전용입니다.
+    const ADMIN_PERMS_TRUE = {
+      canViewHome: true,
+      canManageNotices: true,
+      canManageQt: true,
+      canEditLayout: true,
+      canManageMembers: true
+    };
+    const MEMBER_PERMS_READONLY = {
+      canViewHome: true,
+      canManageNotices: false,
+      canManageQt: false,
+      canEditLayout: false,
+      canManageMembers: false
+    };
 
-    function buildAllPermsTrue() {
-      const obj = {};
-      PERMISSION_DEFS.forEach(p => { obj[p.key] = true; });
-      return obj;
+    function sanitizeRolesList(roleList) {
+      return (Array.isArray(roleList) ? roleList : []).map(r => ({
+        id: String(r.id),
+        name: String(r.name || '청년'),
+        color: String(r.color || '#475569')
+      }));
     }
 
-    function normalizeRolePermissions(roleList) {
-      let changed = false;
-      const next = (Array.isArray(roleList) ? roleList : []).map(r => {
-        const perms = { ...(r.perms || {}) };
-        if ('canViewCheckStatus' in perms) {
-          delete perms.canViewCheckStatus;
-          changed = true;
-        }
-        PERMISSION_DEFS.forEach(p => {
-          if (perms[p.key] === undefined) {
-            // 기본 열람 권한(canViewHome) 외의 새 권한은 자동 부여하지 않고 미선택(false) 상태로 추가
-            perms[p.key] = !!p.defaultAll;
-            changed = true;
-          }
-        });
-        return { ...r, perms };
+    function buildRolesMetaByIdMap(roleList) {
+      const map = {};
+      sanitizeRolesList(roleList).forEach(r => {
+        map[r.id] = { name: r.name, color: r.color };
       });
-      return { items: next, changed };
+      return map;
     }
+
+    function generateResetCode() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      const arr = new Uint32Array(8);
+      if (window.crypto && window.crypto.getRandomValues) {
+        window.crypto.getRandomValues(arr);
+      } else {
+        for (let i = 0; i < 8; i++) arr[i] = Math.floor(Math.random() * chars.length);
+      }
+      let out = '';
+      for (let i = 0; i < 8; i++) out += chars[arr[i] % chars.length];
+      return out;
+    }
+
+    const RESET_CODE_TTL_MS = 24 * 60 * 60 * 1000;
 
     const ROLE_COLORS = ['#7C3AED', '#1E3A8A', '#059669', '#D97706', '#2563EB', '#475569', '#DB2777', '#DC2626', '#0D9488'];
     const BANNER_THEMES = [
@@ -2556,34 +2564,13 @@
     ];
 
     const DEFAULT_ROLES = [
-      {
-        id: 'role_pastor', name: '목사', color: '#7C3AED',
-        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canManageQt: true, canEditLayout: true, canManageMembers: true }
-      },
-      {
-        id: 'role_director', name: '부장', color: '#1E3A8A',
-        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canManageQt: true, canEditLayout: true, canManageMembers: true }
-      },
-      {
-        id: 'role_teacher', name: '교사', color: '#059669',
-        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canManageQt: true, canEditLayout: false, canManageMembers: false }
-      },
-      {
-        id: 'role_president', name: '회장', color: '#D97706',
-        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canManageQt: true, canEditLayout: true, canManageMembers: true }
-      },
-      {
-        id: 'role_leader', name: '팀장', color: '#2563EB',
-        perms: { canViewHome: true, canViewNewcomer: false, canViewLeaderBoard: true, canManageNotices: true, canManageQt: true, canEditLayout: false, canManageMembers: false }
-      },
-      {
-        id: 'role_youth', name: '청년', color: '#475569',
-        perms: { canViewHome: true, canViewNewcomer: false, canViewLeaderBoard: false, canManageNotices: false, canManageQt: false, canEditLayout: false, canManageMembers: false }
-      },
-      {
-        id: 'role_newcomer', name: '새신자', color: '#DB2777',
-        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: false, canManageNotices: false, canManageQt: false, canEditLayout: false, canManageMembers: false }
-      }
+      { id: 'role_pastor', name: '목사', color: '#7C3AED' },
+      { id: 'role_director', name: '부장', color: '#1E3A8A' },
+      { id: 'role_teacher', name: '교사', color: '#059669' },
+      { id: 'role_president', name: '회장', color: '#D97706' },
+      { id: 'role_leader', name: '팀장', color: '#2563EB' },
+      { id: 'role_youth', name: '청년', color: '#475569' },
+      { id: 'role_newcomer', name: '새신자', color: '#DB2777' }
     ];
 
     const DEFAULT_BLOCKS = [
@@ -2604,26 +2591,14 @@
       },
       {
         id: 'blk_leader', type: 'leader_card', label: '리더·교역자 전용 소식',
-        badge: '🔐 리더 전용', title: '이번 주 임원·팀장 모임 안내',
-        desc: '주일 예배 시작 30분 전(오후 1시 30분) 소예배실에서 기도회 및 주간 점검 모임이 있습니다.', theme: 'dark', audience: 'leader'
+        badge: '🔐 관리자 전용', title: '이번 주 임원·팀장 모임 안내',
+        desc: '주일 예배 시작 30분 전(오후 1시 30분) 소예배실에서 기도회 및 주간 점검 모임이 있습니다.', theme: 'dark', audience: 'admin'
       },
       {
         id: 'blk_notices', type: 'notice_list', label: '공지 · 광고 · 소식 목록',
         badge: '', title: '📢 공지 · 광고 · 소식', desc: '', theme: 'dark', audience: 'all'
       }
     ];
-
-    function buildRolesByIdMap(roleList) {
-      const map = {};
-      roleList.forEach(r => {
-        const entry = { canViewHome: true };
-        PERMISSION_DEFS.forEach(p => {
-          entry[p.key] = p.defaultAll ? true : !!(r.perms && r.perms[p.key]);
-        });
-        map[r.id] = entry;
-      });
-      return map;
-    }
 
     function nameToHex(name) {
       const normalized = String(name || '').trim().replace(/\s+/g, '').toLowerCase();
@@ -2692,7 +2667,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=111" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=112" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -2715,8 +2690,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=111', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=111', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=112', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=112', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -2747,7 +2722,7 @@
 
     function renderNotifModalState() {
       const user = getCurrentUser();
-      const canManageMembers = !!(user && (user.isSuperAdmin || (user.role.perms && user.role.perms.canManageMembers)));
+      const canManageMembers = !!(user && user.isSuperAdmin);
 
       document.getElementById('notifMasterToggle').checked = notifPrefs.enabled;
       document.getElementById('notifHomeToggle').checked = notifPrefs.homeNews;
@@ -2961,10 +2936,10 @@
     }
 
     function getRoleById(roleId) {
-      return roles.find(r => r.id === roleId) || roles.find(r => r.name === '청년') || roles[0] || {
-        id: 'fallback', name: '청년', color: '#475569',
-        perms: { canViewHome: true, canViewNewcomer: false, canViewLeaderBoard: false, canManageNotices: false, canEditLayout: false, canManageMembers: false }
-      };
+      const found = roles.find(r => r.id === roleId) || roles.find(r => r.name === '청년') || roles[0];
+      return found
+        ? { id: found.id, name: found.name, color: found.color || '#475569', perms: MEMBER_PERMS_READONLY }
+        : { id: 'fallback', name: '청년', color: '#475569', perms: MEMBER_PERMS_READONLY };
     }
 
     function getCurrentUser() {
@@ -2976,7 +2951,7 @@
           name: '최고 관리자',
           role: {
             id: 'super_admin', name: '최고 관리자', color: '#D97706',
-            perms: buildAllPermsTrue()
+            perms: ADMIN_PERMS_TRUE
           }
         };
       }
@@ -2994,8 +2969,8 @@
 
     function hasUserPerm(user, key) {
       if (!user) return false;
-      if (user.isSuperAdmin) return true;
-      return !!(user.role && user.role.perms && user.role.perms[key]);
+      if (key === 'canViewHome') return true;
+      return !!user.isSuperAdmin;
     }
 
     function hasAnyManagePerm(perms) {
@@ -3118,9 +3093,10 @@
         batch.set(appRef, { initialized: true, schemaVersion: CURRENT_SCHEMA_VERSION, createdAt: formatToday() });
         batch.set(db.collection('config').doc('roles'), {
           items: DEFAULT_ROLES,
-          byId: buildRolesByIdMap(DEFAULT_ROLES)
+          metaById: buildRolesMetaByIdMap(DEFAULT_ROLES)
         });
-        batch.set(db.collection('config').doc('layout'), { blocks: DEFAULT_BLOCKS, quickLinks: DEFAULT_QUICK_LINKS });
+        batch.set(db.collection('config').doc('layout'), { blocks: DEFAULT_BLOCKS });
+        batch.set(db.collection('config').doc('quickLinks'), { items: DEFAULT_QUICK_LINKS });
         batch.set(db.collection('config').doc('labels'), DEFAULT_TAB_LABELS);
         const welcomeId = String(Date.now());
         batch.set(db.collection('notices').doc(welcomeId), {
@@ -3134,44 +3110,61 @@
         });
         await batch.commit();
       } else if ((appSnap.data().schemaVersion || 0) < CURRENT_SCHEMA_VERSION) {
-        // 1) 역할 권한 자동 동기화 (신규 업데이트 권한을 기존 관리자 역할에 자동 부여 + 모든 역할에 항목 추가)
+        // 1) 역할 문서에서 권한 제거 (이름·배지 색상 + 댓글 검증용 metaById만 유지)
         const rolesSnap = await db.collection('config').doc('roles').get();
         const rawRoles = rolesSnap.exists && Array.isArray(rolesSnap.data().items) && rolesSnap.data().items.length > 0
           ? rolesSnap.data().items
           : DEFAULT_ROLES;
-        const normalizedRoles = normalizeRolePermissions(rawRoles).items;
+        const cleanRoles = sanitizeRolesList(rawRoles);
         await db.collection('config').doc('roles').set({
-          items: normalizedRoles,
-          byId: buildRolesByIdMap(normalizedRoles)
+          items: cleanRoles,
+          metaById: buildRolesMetaByIdMap(cleanRoles)
         });
 
-        // 2) 메인 화면 배치 정리 (기존에 등록된 칸이 있을 때만 정리, 비어 있으면 그대로 유지)
+        // 2) 사이트 바로가기(quickLinks)를 별도 보안 문서(config/quickLinks)로 분리 이관
         const layoutSnap = await db.collection('config').doc('layout').get();
+        const qlRef = db.collection('config').doc('quickLinks');
+        const qlSnap = await qlRef.get();
+        const legacyLinks = (layoutSnap.exists && Array.isArray(layoutSnap.data().quickLinks))
+          ? layoutSnap.data().quickLinks
+          : null;
+        if (!qlSnap.exists) {
+          await qlRef.set({ items: legacyLinks || DEFAULT_QUICK_LINKS });
+        }
+
+        // 3) 메인 화면 배치 정리 (legacy quickLinks 필드 제거)
         if (layoutSnap.exists && Array.isArray(layoutSnap.data().blocks) && layoutSnap.data().blocks.length > 0) {
           const cleanedBlocks = layoutSnap.data().blocks
             .filter(b => b.type !== 'quick_check' && b.type !== 'today_qt')
             .map(b => {
               const copy = { ...b };
               delete copy.visible;
-              if (!copy.audience) copy.audience = copy.type === 'leader_card' ? 'leader' : 'all';
+              if (copy.audience === 'leader') copy.audience = 'admin';
+              else if (!copy.audience || copy.audience === 'newcomer') copy.audience = 'all';
               return copy;
             });
-          const layoutPatch = { blocks: cleanedBlocks };
-          if (!Array.isArray(layoutSnap.data().quickLinks)) {
-            layoutPatch.quickLinks = DEFAULT_QUICK_LINKS;
-          }
-          await db.collection('config').doc('layout').set(layoutPatch, { merge: true });
-        } else if (!layoutSnap.exists || !Array.isArray(layoutSnap.data().quickLinks)) {
-          await db.collection('config').doc('layout').set({ quickLinks: DEFAULT_QUICK_LINKS }, { merge: true });
+          await db.collection('config').doc('layout').set({
+            blocks: cleanedBlocks,
+            quickLinks: FieldValue.delete()
+          }, { merge: true });
+        } else if (layoutSnap.exists && layoutSnap.data().quickLinks !== undefined) {
+          await db.collection('config').doc('layout').set({
+            quickLinks: FieldValue.delete()
+          }, { merge: true });
         }
 
-        // 3) 칸(탭) 이름 기본값 동기화 ('큐티' -> '오늘의 말씀')
+        // 4) 칸(탭) 이름 기본값 동기화
         try {
           const labelsSnap = await db.collection('config').doc('labels').get();
           if (!labelsSnap.exists) {
             await db.collection('config').doc('labels').set(DEFAULT_TAB_LABELS);
-          } else if (labelsSnap.data().qt === '큐티') {
-            await db.collection('config').doc('labels').set({ qt: '오늘의 말씀' }, { merge: true });
+          } else {
+            const lblPatch = {};
+            if (labelsSnap.data().qt === '큐티') lblPatch.qt = '오늘의 말씀';
+            if (labelsSnap.data().manageRoles === '역할·권한 설정') lblPatch.manageRoles = '역할 설정';
+            if (Object.keys(lblPatch).length > 0) {
+              await db.collection('config').doc('labels').set(lblPatch, { merge: true });
+            }
           }
         } catch (lblErr) { console.warn('Labels migration skipped:', lblErr); }
 
@@ -3180,26 +3173,12 @@
           schemaVersion: CURRENT_SCHEMA_VERSION,
           adminPin: FieldValue.delete()
         }, { merge: true });
-      } else {
-        // 스키마 버전이 같더라도 새 권한 키가 추가됐으면 자동으로 역할에 반영
-        try {
-          const rolesSnap = await db.collection('config').doc('roles').get();
-          if (rolesSnap.exists && Array.isArray(rolesSnap.data().items)) {
-            const res = normalizeRolePermissions(rolesSnap.data().items);
-            if (res.changed) {
-              await db.collection('config').doc('roles').set({
-                items: res.items,
-                byId: buildRolesByIdMap(res.items)
-              });
-            }
-          }
-        } catch {}
       }
     }
 
     function syncMembersAllSubscription() {
       const user = getCurrentUser();
-      const needsAllMembers = !!(user && (user.isSuperAdmin || (user.role.perms && user.role.perms.canManageMembers)));
+      const needsAllMembers = !!(user && user.isSuperAdmin);
       if (needsAllMembers && !unsubMembersAll) {
         membersFirstSnap = true;
         knownPendingMemberIds = new Set();
@@ -3279,11 +3258,25 @@
         }, err => handleDbError(err, '역할 동기화'))
       );
 
+      let quickLinksDedicatedLoaded = false;
+      unsubCore.push(
+        db.collection('config').doc('quickLinks').onSnapshot(doc => {
+          if (doc.exists && Array.isArray(doc.data().items)) {
+            quickLinksDedicatedLoaded = true;
+            quickLinks = doc.data().items;
+            applyScreen();
+            if (document.getElementById('quickLinksSheet').classList.contains('open')) {
+              renderQuickLinksSheetContent();
+            }
+          }
+        }, () => {})
+      );
+
       unsubCore.push(
         db.collection('config').doc('layout').onSnapshot(doc => {
           if (doc.exists) {
             const d = doc.data();
-            if (Array.isArray(d.quickLinks)) {
+            if (!quickLinksDedicatedLoaded && Array.isArray(d.quickLinks)) {
               quickLinks = d.quickLinks;
             }
             if (Array.isArray(d.blocks)) {
@@ -3635,7 +3628,7 @@
         emoji.className = 'status-emoji pending';
         emoji.textContent = '🔑';
         title.textContent = '비밀번호가 초기화되었습니다';
-        desc.innerHTML = `관리자가 <b>${escapeHtml(member.name)}</b>님의 비밀번호를 초기화했습니다.<br>관리자에게 받은 <b>6자리 초기화 코드</b>로 새 비밀번호를 설정해 주세요.`;
+        desc.innerHTML = `관리자가 <b>${escapeHtml(member.name)}</b>님의 비밀번호를 초기화했습니다.<br>관리자에게 받은 <b>8자리 초기화 코드</b>(24시간 유효)로 새 비밀번호를 설정해 주세요.`;
         recheckBtn.textContent = '새 비밀번호 설정하기';
         recheckBtn.onclick = async () => {
           const targetName = member.name;
@@ -4043,9 +4036,8 @@
       function canSeeBlock(b) {
         if (b.hiddenOnHome) return false;
         if (user.isSuperAdmin) return true;
-        const aud = b.audience || (b.type === 'leader_card' ? 'leader' : 'all');
-        if (aud === 'leader') return !!perms.canViewLeaderBoard;
-        if (aud === 'newcomer') return !!perms.canViewNewcomer;
+        const aud = b.audience || (b.type === 'leader_card' ? 'admin' : 'all');
+        if (aud === 'admin' || aud === 'leader') return false;
         return true;
       }
 
@@ -4248,6 +4240,7 @@
                       <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                         <strong style="font-size:14px;">${idx + 1}. ${escapeHtml(b.label)}</strong>
                         ${b.hiddenOnHome ? '<span class="tag slate">숨김</span>' : '<span class="tag green">메인 표시중</span>'}
+                        ${(b.audience === 'admin' || b.audience === 'leader') ? '<span class="tag warm">관리자 전용</span>' : ''}
                       </div>
                       ${b.title ? `<div style="font-size:12px; color:#64748B; margin-top:4px;">${escapeHtml(b.title)}</div>` : ''}
                     </div>
@@ -4468,7 +4461,7 @@
       document.getElementById('blockBadgeInput').value = b.badge || '';
       document.getElementById('blockTitleInput').value = b.title || '';
       document.getElementById('blockDescInput').value = b.desc || '';
-      document.getElementById('blockAudienceSelect').value = b.audience || (b.type === 'leader_card' ? 'leader' : 'all');
+      document.getElementById('blockAudienceSelect').value = (b.audience === 'admin' || b.audience === 'leader') ? 'admin' : 'all';
       document.getElementById('blockNotifyInput').checked = true;
       selectedBlockTheme = b.theme || 'dark';
       renderBlockThemePalette();
@@ -4757,6 +4750,9 @@
           </div>
           ${resetPending.map(m => {
             const r = getRoleById(m.roleId);
+            const expTs = Number(m.resetExpiresAt || 0);
+            const isExpired = expTs > 0 && Date.now() >= expTs;
+            const remainHours = expTs > 0 ? Math.max(1, Math.ceil((expTs - Date.now()) / 3600000)) : null;
             return `
               <div class="card highlight-pending">
                 <div class="card-top">
@@ -4764,13 +4760,17 @@
                     <span>${escapeHtml(m.name)}</span>
                     <span class="role-pill" style="background:${r.color};">${escapeHtml(r.name)}</span>
                   </div>
-                  <span class="tag warm">코드: ${escapeHtml(m.resetCode || '-')}</span>
+                  <span class="tag ${isExpired ? 'red' : 'warm'}">${isExpired ? '만료됨' : `코드: ${escapeHtml(m.resetCode || '-')}`}</span>
                 </div>
-                <div style="font-size:12px; color:#92400E; margin-bottom:10px;">
-                  이용자가 로그인 화면에서 새 비밀번호를 설정할 때까지 대기 중입니다.
+                <div style="font-size:12px; color:${isExpired ? '#DC2626' : '#92400E'}; margin-bottom:10px;">
+                  ${isExpired
+                    ? '초기화 코드 유효기간(24시간)이 만료되었습니다. [재발급]을 눌러 새 코드를 발급해 주세요.'
+                    : `이용자가 새 비밀번호를 설정할 때까지 대기 중입니다.${remainHours ? ` (약 ${remainHours}시간 남음)` : ''}`}
                 </div>
                 <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                  <button class="btn-sm primary" onclick="showIssuedResetModal('${m.id}')">📋 안내 복사</button>
+                  ${isExpired
+                    ? `<button class="btn-sm primary" onclick="initMemberPasswordReset('${m.id}')">🔄 코드 재발급</button>`
+                    : `<button class="btn-sm primary" onclick="showIssuedResetModal('${m.id}')">📋 안내 복사</button>`}
                   <button class="btn-sm" onclick="cancelMemberPasswordReset('${m.id}')">초기화 취소</button>
                   <button class="btn-sm danger" onclick="deleteMember('${m.id}')">삭제</button>
                 </div>
@@ -4865,14 +4865,16 @@
     window.initMemberPasswordReset = async (id) => {
       const m = members.find(x => String(x.id) === String(id));
       if (!m) return;
-      if (!confirm(`${m.name}님의 비밀번호를 초기화할까요?\n기존 비밀번호는 즉시 차단되며, 새 비밀번호 설정용 6자리 코드가 발급됩니다.`)) return;
+      if (!confirm(`${m.name}님의 비밀번호를 초기화할까요?\n기존 비밀번호는 즉시 차단되며, 24시간 유효한 8자리 초기화 코드가 발급됩니다.`)) return;
       try {
         const nameHex = nameToHex(m.name);
         const curVer = Math.max(await getAuthVerForHex(nameHex), Number(m.authVer || 0));
         const nextVer = curVer + 1;
-        const code = String(Math.floor(100000 + Math.random() * 900000));
+        const code = generateResetCode();
         const resetKey = `${nameHex}_${code}`;
         const origStatus = m.status === 'reset_pending' ? (m.origStatus || 'approved') : m.status;
+        const nowTs = Date.now();
+        const expiresAt = nowTs + RESET_CODE_TTL_MS;
 
         const batch = db.batch();
         if (m.resetKey) {
@@ -4887,13 +4889,15 @@
           createdAt: m.createdAt || formatToday(),
           nextVer,
           used: false,
-          issuedAt: Date.now()
+          issuedAt: nowTs,
+          expiresAt
         });
         batch.update(db.collection('members').doc(String(m.id)), {
           status: 'reset_pending',
           origStatus,
           resetCode: code,
-          resetKey
+          resetKey,
+          resetExpiresAt: expiresAt
         });
         await batch.commit();
 
@@ -4921,7 +4925,7 @@
       const { name, code } = lastIssuedResetInfo;
       if (!name || !code) return;
       const text = `[라이트 청년부] ${name}님 비밀번호가 초기화되었습니다.
-로그인 화면 아래 '비밀번호가 초기화되셨나요? 새 비밀번호 설정'을 눌러 아래 코드를 입력하고 새 비밀번호를 설정해 주세요.
+로그인 화면 아래 '비밀번호가 초기화되셨나요? 새 비밀번호 설정'을 눌러 아래 8자리 코드를 입력하고 새 비밀번호를 설정해 주세요. (24시간 유효)
 
 • 성명: ${name}
 • 초기화 코드: ${code}`;
@@ -4945,7 +4949,8 @@
           status: m.origStatus || 'approved',
           origStatus: FieldValue.delete(),
           resetCode: FieldValue.delete(),
-          resetKey: FieldValue.delete()
+          resetKey: FieldValue.delete(),
+          resetExpiresAt: FieldValue.delete()
         });
         await batch.commit();
         showToast(`${m.name}님의 비밀번호 초기화를 취소했습니다.`);
@@ -4974,7 +4979,7 @@
       } catch (err) { handleDbError(err, '회원 삭제'); }
     };
 
-    // (D) 역할 관리 + 최고 관리자 비밀번호 변경
+    // (D) 역할 관리 (표시용 직분 배지) + 최고 관리자 비밀번호 변경
     function renderManageRoles(el, user) {
       const prevCurEl = document.getElementById('curAdminPwInput');
       const prevNewEl = document.getElementById('newAdminPwInput');
@@ -4983,29 +4988,25 @@
 
       el.innerHTML = `
         <div class="section-head">
-          <h2 class="section-title">🏷️ 역할 목록 및 권한 (${roles.length}개)</h2>
+          <h2 class="section-title">🏷️ 역할(직분 배지) 목록 (${roles.length}개)</h2>
           <button class="btn-admin" onclick="openAddRoleModal()">+ 새 역할 만들기</button>
         </div>
         <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-          최고 관리자는 새 기능이 추가될 때 모든 권한이 자동 적용됩니다. 각 역할의 권한은 아래 <b>내용 수정</b>에서 원하는 항목만 직접 선택해 부여할 수 있습니다.
+          역할은 회원 이름 옆에 표시되는 직분 배지이며, 별도의 관리 권한은 부여되지 않습니다. 앱 수정·삭제·게시·승인은 <b>최고 관리자 전용</b>입니다.
         </div>
         ${roles.map(r => {
           const count = members.filter(m => m.status === 'approved' && m.roleId === r.id).length;
-          const activePerms = PERMISSION_DEFS.filter(p => r.perms && r.perms[p.key]);
           return `
             <div class="card">
-              <div class="card-top">
+              <div class="card-top" style="margin-bottom:0;">
                 <div style="display:flex; align-items:center; gap:8px;">
                   <span class="role-pill" style="background:${r.color}; font-size:12px; padding:4px 10px;">${escapeHtml(r.name)}</span>
                   <span style="font-size:12px; color:#64748B; font-weight:600;">소속 ${count}명</span>
                 </div>
                 <div style="display:flex; gap:6px;">
-                  <button class="btn-sm" onclick="openEditRoleModal('${r.id}')">내용 수정</button>
+                  <button class="btn-sm" onclick="openEditRoleModal('${r.id}')">수정</button>
                   <button class="btn-sm danger" onclick="deleteRole('${r.id}')" ${roles.length <= 1 ? 'disabled' : ''}>삭제</button>
                 </div>
-              </div>
-              <div class="perm-chips">
-                ${activePerms.map(p => `<span class="perm-chip">${escapeHtml(p.label.split(' (')[0])}</span>`).join('')}
               </div>
             </div>
           `;
@@ -5013,11 +5014,11 @@
 
         <div class="card" style="margin-top:16px; border-color:#CBD5E1;">
           <div class="card-top">
-            <strong style="font-size:14.5px;">🔐 최고 관리자 코드 (관리자 공유)</strong>
+            <strong style="font-size:14.5px;">🔐 최고 관리자 코드</strong>
             ${sharedAdminCodeUpdatedAt ? `<span class="card-date">${escapeHtml(sharedAdminCodeUpdatedAt)} 업데이트</span>` : ''}
           </div>
           <div style="font-size:12px; color:#64748B; margin-bottom:10px; line-height:1.5;">
-            최고 관리자 및 회원·역할 관리 권한이 있는 관리자에게만 보입니다. 코드를 잊었을 때 다른 관리자가 확인해 알려줄 수 있습니다.
+            최고 관리자 계정으로 로그인했을 때만 확인 및 변경할 수 있습니다.
           </div>
           ${sharedAdminCode ? `
             <div class="secret-code-row">
@@ -5082,34 +5083,23 @@
     }
     window.selectRoleColor = (c) => { selectedRoleColor = c; renderRoleColorPalette(); };
 
-    function renderRolePermCheckboxes(permsObj) {
-      document.getElementById('rolePermCheckboxes').innerHTML = PERMISSION_DEFS.map(p => `
-        <label class="checkbox-row">
-          <input type="checkbox" data-perm="${p.key}" ${permsObj[p.key] ? 'checked' : ''} ${p.key === 'canViewHome' ? 'checked disabled' : ''} />
-          <span>${escapeHtml(p.label)}</span>
-        </label>
-      `).join('');
-    }
-
     window.openAddRoleModal = () => {
       document.getElementById('roleModalTitle').textContent = '새 역할 만들기';
       document.getElementById('editRoleId').value = '';
       document.getElementById('roleNameInput').value = '';
       selectedRoleColor = ROLE_COLORS[4];
       renderRoleColorPalette();
-      renderRolePermCheckboxes({ canViewHome: true });
       document.getElementById('roleModal').classList.add('open');
     };
 
     window.openEditRoleModal = (roleId) => {
       const r = roles.find(x => x.id === roleId);
       if (!r) return;
-      document.getElementById('roleModalTitle').textContent = `[${r.name}] 역할 · 권한 수정`;
+      document.getElementById('roleModalTitle').textContent = `[${r.name}] 역할 수정`;
       document.getElementById('editRoleId').value = r.id;
       document.getElementById('roleNameInput').value = r.name;
       selectedRoleColor = r.color || ROLE_COLORS[0];
       renderRoleColorPalette();
-      renderRolePermCheckboxes(r.perms || { canViewHome: true });
       document.getElementById('roleModal').classList.add('open');
     };
 
@@ -5118,26 +5108,21 @@
       const name = document.getElementById('roleNameInput').value.trim();
       if (!name) return showToast('역할 이름을 입력해 주세요.');
 
-      const perms = { canViewHome: true };
-      document.querySelectorAll('#rolePermCheckboxes [data-perm]').forEach(cb => {
-        perms[cb.dataset.perm] = cb.checked;
-      });
-
-      const next = structuredClone(roles);
+      const next = sanitizeRolesList(roles);
       let msg = '';
       if (id) {
         const r = next.find(x => x.id === id);
-        if (r) { r.name = name; r.color = selectedRoleColor; r.perms = perms; }
+        if (r) { r.name = name; r.color = selectedRoleColor; }
         msg = `[${name}] 역할이 수정되었습니다!`;
       } else {
         if (next.some(r => r.name === name)) return showToast('이미 같은 이름의 역할이 존재합니다.');
-        next.push({ id: 'role_' + Date.now(), name, color: selectedRoleColor, perms });
+        next.push({ id: 'role_' + Date.now(), name, color: selectedRoleColor });
         msg = `[${name}] 새 역할이 추가되었습니다!`;
       }
       try {
         await db.collection('config').doc('roles').set({
           items: next,
-          byId: buildRolesByIdMap(next)
+          metaById: buildRolesMetaByIdMap(next)
         });
         document.getElementById('roleModal').classList.remove('open');
         showToast(msg);
@@ -5148,13 +5133,13 @@
       if (roles.length <= 1) return showToast('최소 1개의 역할은 남아 있어야 합니다.');
       const r = roles.find(x => x.id === roleId);
       if (!r || !confirm(`[${r.name}] 역할을 삭제할까요?\n소속 회원은 기본 역할로 자동 변경됩니다.`)) return;
-      const next = roles.filter(x => x.id !== roleId);
+      const next = sanitizeRolesList(roles.filter(x => x.id !== roleId));
       const fallback = next.find(x => x.name === '청년') || next[0];
       try {
         const batch = db.batch();
         batch.set(db.collection('config').doc('roles'), {
           items: next,
-          byId: buildRolesByIdMap(next)
+          metaById: buildRolesMetaByIdMap(next)
         });
         members.forEach(m => {
           if (m.roleId === roleId) {
@@ -5215,12 +5200,12 @@
       const errEl = document.getElementById('resetPwError');
       errEl.classList.remove('show');
       const name = document.getElementById('resetNameInput').value.trim();
-      const code = document.getElementById('resetCodeInput').value.replace(/[^0-9]/g, '');
+      const code = document.getElementById('resetCodeInput').value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
       const newPw = document.getElementById('resetNewPwInput').value.trim();
       const newPw2 = document.getElementById('resetNewPwConfirmInput').value.trim();
 
       if (name.length < 2) return showError('resetPwError', '가입한 본인 성명을 입력해 주세요.');
-      if (!/^\d{6}$/.test(code)) return showError('resetPwError', '관리자에게 받은 초기화 코드 6자리를 입력해 주세요.');
+      if (!/^[A-Z0-9]{8}$/.test(code)) return showError('resetPwError', '관리자에게 받은 영문·숫자 8자리 초기화 코드를 입력해 주세요.');
       if (newPw.length < 6) return showError('resetPwError', '새 비밀번호는 6자리 이상으로 입력해 주세요.');
       if (newPw !== newPw2) return showError('resetPwError', '새 비밀번호 확인이 일치하지 않습니다.');
 
@@ -5233,14 +5218,27 @@
       try {
         const nameHex = nameToHex(name);
         const resetKey = `${nameHex}_${code}`;
-        const resetSnap = await db.collection('passwordResets').doc(resetKey).get();
+        let resetSnap = null;
+        try {
+          resetSnap = await db.collection('passwordResets').doc(resetKey).get();
+        } catch (readErr) {
+          if (readErr && readErr.code === 'permission-denied') {
+            isCompletingReset = false;
+            return showError('resetPwError', '성명 또는 초기화 코드가 일치하지 않거나, 이미 사용되었거나 유효기간(24시간)이 만료된 코드입니다.');
+          }
+          throw readErr;
+        }
 
         if (!resetSnap.exists || resetSnap.data().used === true) {
           isCompletingReset = false;
-          return showError('resetPwError', '성명 또는 초기화 코드 6자리가 일치하지 않거나 이미 사용된 코드입니다.');
+          return showError('resetPwError', '성명 또는 초기화 코드가 일치하지 않거나 이미 사용된 코드입니다.');
         }
 
         const rData = resetSnap.data();
+        if (rData.expiresAt && Date.now() >= Number(rData.expiresAt)) {
+          isCompletingReset = false;
+          return showError('resetPwError', '초기화 코드의 유효기간(24시간)이 만료되었습니다. 관리자에게 재발급을 요청해 주세요.');
+        }
         const nextVer = Number(rData.nextVer || 1);
         const newEmail = hexToAuthEmail(nameHex, nextVer);
 
@@ -6563,7 +6561,7 @@
 
     async function saveQuickLinksToCloud(nextLinks, msg) {
       try {
-        await db.collection('config').doc('layout').set({ quickLinks: nextLinks }, { merge: true });
+        await db.collection('config').doc('quickLinks').set({ items: nextLinks }, { merge: true });
         if (msg) showToast(msg);
       } catch (err) {
         handleDbError(err, '사이트 바로가기 저장');
