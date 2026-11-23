@@ -1,4 +1,4 @@
-const CACHE_NAME = 'right-youth-app-v5';
+const CACHE_NAME = 'right-youth-app-v6';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -30,8 +30,12 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
+  const isHtml =
+    event.request.mode === 'navigate' ||
+    (event.request.headers.get('accept') || '').includes('text/html');
+
   event.respondWith(
-    fetch(event.request)
+    fetch(isHtml ? new Request(event.request.url, { cache: 'no-store' }) : event.request)
       .then((response) => {
         if (response && response.status === 200) {
           const responseClone = response.clone();
