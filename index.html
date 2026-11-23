@@ -3,23 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>우리교회 청년부</title>
+  <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
   <link rel="manifest" href="./manifest.json" />
-  <meta name="theme-color" content="#312E81" />
+  <meta name="theme-color" content="#111827" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="우리청년부" />
+  <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
   <link rel="icon" type="image/png" href="./icon-192.png" />
 
   <style>
     :root {
-      --primary: #312E81;
-      --primary-light: #4F46E5;
-      --primary-soft: #EEF2FF;
-      --admin-bg: #0F172A;
+      --primary: #111827;
+      --primary-light: #2563EB;
+      --primary-soft: #EFF6FF;
+      --brand-gold: #F59E0B;
+      --brand-crimson: #DC2626;
+      --admin-bg: #0B0F19;
       --admin-card: #1E293B;
       --admin-accent: #F59E0B;
       --bg: #F8FAFC;
@@ -60,7 +62,7 @@
     /* PWA 배너 */
     .pwa-banner {
       display: none;
-      background: #1E1B4B;
+      background: #0B0F19;
       color: #fff;
       padding: 11px 16px;
       font-size: 12.5px;
@@ -96,30 +98,34 @@
       flex-direction: column;
       justify-content: center;
       padding: 28px 20px;
-      background: linear-gradient(180deg, #EEF2FF 0%, #F8FAFC 45%, #FFFFFF 100%);
+      background: linear-gradient(180deg, #111827 0%, #1F2937 32%, #F8FAFC 32%, #FFFFFF 100%);
     }
     .gate-brand {
       text-align: center;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
     .gate-logo {
-      width: 72px;
-      height: 72px;
-      border-radius: 20px;
-      box-shadow: 0 10px 24px rgba(49, 46, 129, 0.22);
-      margin-bottom: 14px;
+      width: 96px;
+      height: 96px;
+      border-radius: 26px;
+      object-fit: cover;
+      background: #000;
+      border: 2px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+      margin-bottom: 12px;
     }
     .gate-title {
       font-size: 24px;
       font-weight: 800;
-      color: var(--primary);
-      margin: 0 0 6px;
+      color: #FFFFFF;
+      margin: 0 0 4px;
+      letter-spacing: -0.3px;
     }
     .gate-sub {
-      font-size: 13.5px;
-      color: var(--text-sub);
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.78);
       margin: 0;
-      line-height: 1.5;
+      line-height: 1.45;
     }
 
     .role-card {
@@ -128,10 +134,10 @@
       border-radius: 20px;
       padding: 20px;
       margin-bottom: 14px;
-      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
     }
     .role-card.worshipper-card {
-      border-color: #C7D2FE;
+      border-color: #CBD5E1;
     }
     .role-card.admin-card {
       background: var(--admin-bg);
@@ -154,7 +160,7 @@
       font-size: 22px;
       flex-shrink: 0;
     }
-    .role-icon.indigo { background: var(--primary-soft); }
+    .role-icon.dark { background: #F1F5F9; }
     .role-icon.amber { background: rgba(245, 158, 11, 0.18); }
     .role-name { font-size: 17px; font-weight: 800; margin: 0 0 3px; }
     .role-desc { font-size: 12.5px; margin: 0; opacity: 0.78; line-height: 1.4; }
@@ -184,14 +190,14 @@
       font-weight: 700;
       cursor: pointer;
     }
-    .btn-indigo { background: var(--primary-light); color: #fff; }
+    .btn-dark { background: #111827; color: #fff; }
     .btn-amber { background: var(--admin-accent); color: #0F172A; }
 
     .gate-hint {
       text-align: center;
       font-size: 12px;
       color: var(--text-sub);
-      margin-top: 8px;
+      margin-top: 6px;
       line-height: 1.5;
     }
 
@@ -200,7 +206,7 @@
       position: sticky;
       top: 0;
       z-index: 20;
-      padding: 14px 16px;
+      padding: 13px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -216,7 +222,17 @@
       border-bottom-color: #1E293B;
     }
     .brand { display: flex; align-items: center; gap: 10px; }
-    .brand-logo { width: 34px; height: 34px; border-radius: 10px; object-fit: cover; }
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      object-fit: cover;
+      background: #000;
+      border: 1px solid rgba(15, 23, 42, 0.12);
+    }
+    .header.admin .brand-logo {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
     .brand-title { font-size: 16px; font-weight: 800; line-height: 1.15; }
     .brand-sub { font-size: 11px; margin-top: 2px; opacity: 0.72; }
 
@@ -229,7 +245,7 @@
       margin-left: 4px;
       vertical-align: middle;
     }
-    .mode-badge.worshipper { background: var(--primary-soft); color: var(--primary-light); }
+    .mode-badge.worshipper { background: #FEF3C7; color: #B45309; }
     .mode-badge.admin { background: var(--admin-accent); color: #0F172A; }
 
     .exit-btn {
@@ -284,24 +300,25 @@
       cursor: pointer;
       padding: 4px 0;
     }
-    .tabbar.worshipper .tab-btn.active { color: var(--primary-light); font-weight: 800; }
+    .tabbar.worshipper .tab-btn.active { color: #111827; font-weight: 800; }
     .tabbar.admin .tab-btn { color: #94A3B8; }
     .tabbar.admin .tab-btn.active { color: var(--admin-accent); font-weight: 800; }
     .tab-icon { font-size: 20px; line-height: 1; }
 
     /* ==================== 3. 콘텐츠 컴포넌트 ==================== */
     .hero-banner {
-      background: linear-gradient(135deg, #312E81 0%, #4F46E5 100%);
+      background: linear-gradient(135deg, #09090B 0%, #1F2937 65%, #374151 100%);
       color: #fff;
       border-radius: 18px;
       padding: 20px;
       margin-bottom: 16px;
       cursor: pointer;
-      box-shadow: 0 8px 20px rgba(49, 46, 129, 0.2);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.22);
+      border: 1px solid rgba(245, 158, 11, 0.28);
     }
     .hero-badge {
       display: inline-block;
-      background: rgba(251, 191, 36, 0.22);
+      background: rgba(245, 158, 11, 0.22);
       color: #FDE68A;
       font-size: 11px;
       font-weight: 700;
@@ -310,7 +327,7 @@
       margin-bottom: 10px;
     }
     .hero-title { font-size: 18.5px; font-weight: 800; margin: 0 0 6px; line-height: 1.3; }
-    .hero-desc { font-size: 13px; color: rgba(255,255,255,0.88); margin: 0; line-height: 1.45; }
+    .hero-desc { font-size: 13px; color: rgba(255,255,255,0.86); margin: 0; line-height: 1.45; }
 
     /* 필터 칩 */
     .filter-row {
@@ -332,8 +349,8 @@
       cursor: pointer;
     }
     .filter-chip.active {
-      background: var(--primary);
-      border-color: var(--primary);
+      background: #111827;
+      border-color: #111827;
       color: #fff;
     }
 
@@ -419,21 +436,11 @@
       color: #15803D;
     }
     .check-btn.attend.checked {
-      background: var(--primary-soft);
-      border-color: #A5B4FC;
-      color: var(--primary-light);
+      background: #FEF3C7;
+      border-color: #FCD34D;
+      color: #B45309;
     }
 
-    .btn-primary {
-      background: var(--primary-light);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 9px 14px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-    }
     .btn-admin {
       background: var(--admin-bg);
       color: #fff;
@@ -489,11 +496,12 @@
 
     /* 주일 예배 체크 카드 */
     .worship-check-card {
-      background: linear-gradient(135deg, #0F766E 0%, #0D9488 100%);
+      background: linear-gradient(135deg, #111827 0%, #1E293B 100%);
       color: #fff;
       border-radius: 18px;
       padding: 20px;
       margin-bottom: 16px;
+      border: 1px solid rgba(245, 158, 11, 0.35);
     }
     .worship-check-btn {
       width: 100%;
@@ -504,13 +512,13 @@
       font-size: 14.5px;
       font-weight: 800;
       cursor: pointer;
-      background: #fff;
-      color: #0F766E;
+      background: var(--admin-accent);
+      color: #111827;
     }
     .worship-check-btn.done {
-      background: rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.16);
       color: #fff;
-      border: 1.5px solid rgba(255, 255, 255, 0.55);
+      border: 1.5px solid rgba(255, 255, 255, 0.45);
     }
 
     .log-item {
@@ -612,22 +620,22 @@
     <!-- ==================== 1. 첫 입장 화면 (역할 완전 분리) ==================== -->
     <section id="gateScreen" class="gate-screen">
       <div class="gate-brand">
-        <img src="./icon-192.png" alt="로고" class="gate-logo" />
-        <h1 class="gate-title">우리교회 청년부</h1>
-        <p class="gate-sub">사용할 화면을 선택해 입장해 주세요.<br>관리자와 예배자 화면이 완전히 구분되어 있습니다.</p>
+        <img src="./icon-512.png" alt="라이트 청년부 로고" class="gate-logo" />
+        <h1 class="gate-title">라이트 청년부</h1>
+        <p class="gate-sub">구미제일감리교회 청년부<br>사용할 화면을 선택해 입장해 주세요.</p>
       </div>
 
       <!-- 예배자 입장 카드 -->
       <div class="role-card worshipper-card">
         <div class="role-head">
-          <div class="role-icon indigo">🙏</div>
+          <div class="role-icon dark">🙏</div>
           <div>
             <h2 class="role-name">예배자 화면으로 입장</h2>
             <p class="role-desc">광고·소식·공지 확인 및 예배/행사 체크 전용</p>
           </div>
         </div>
         <input id="worshipperNameInput" class="gate-input" placeholder="이름 또는 셀 입력 (선택, 예: 2셀 지현)" />
-        <button id="enterWorshipperBtn" class="btn-full btn-indigo">예배자로 시작하기</button>
+        <button id="enterWorshipperBtn" class="btn-full btn-dark">예배자로 시작하기</button>
       </div>
 
       <!-- 관리자 입장 카드 -->
@@ -653,10 +661,10 @@
     <div id="worshipperApp" class="hidden" style="display:flex; flex-direction:column; flex:1;">
       <header class="header worshipper">
         <div class="brand">
-          <img src="./icon-192.png" alt="로고" class="brand-logo" />
+          <img src="./icon-192.png" alt="라이트 청년부 로고" class="brand-logo" />
           <div>
             <div class="brand-title">
-              우리교회 청년부 <span class="mode-badge worshipper">예배자</span>
+              라이트 청년부 <span class="mode-badge worshipper">예배자</span>
             </div>
             <div id="worshipperWelcome" class="brand-sub">환영합니다!</div>
           </div>
@@ -681,9 +689,9 @@
         <!-- 예배자 탭 2: 예배·행사 체크 -->
         <section id="wTabCheck" class="hidden">
           <div class="worship-check-card">
-            <div style="font-size:12px; font-weight:700; opacity:0.85;">이번 주 청년부 주일 예배</div>
-            <div style="font-size:20px; font-weight:800; margin-top:4px;">주일 오후 2시 · 본당 비전홀</div>
-            <div style="font-size:13px; opacity:0.88; margin-top:4px;">예배당 도착 후 아래 버튼을 눌러 출석을 체크해 주세요.</div>
+            <div style="font-size:12px; font-weight:700; color:#FDE68A;">라이트 청년부 주일 예배</div>
+            <div style="font-size:20px; font-weight:800; margin-top:4px;">구미제일감리교회 청년부 예배</div>
+            <div style="font-size:13px; opacity:0.86; margin-top:4px;">예배당 도착 후 아래 버튼을 눌러 출석을 체크해 주세요.</div>
             <button id="sundayCheckBtn" class="worship-check-btn" onclick="toggleSundayCheck()"></button>
           </div>
 
@@ -710,10 +718,10 @@
     <div id="adminApp" class="hidden" style="display:flex; flex-direction:column; flex:1;">
       <header class="header admin">
         <div class="brand">
-          <img src="./icon-192.png" alt="로고" class="brand-logo" />
+          <img src="./icon-192.png" alt="라이트 청년부 로고" class="brand-logo" />
           <div>
             <div class="brand-title">
-              우리교회 청년부 <span class="mode-badge admin">관리자</span>
+              라이트 청년부 <span class="mode-badge admin">관리자</span>
             </div>
             <div class="brand-sub">광고 · 공지 · 체크 현황 관리</div>
           </div>
@@ -807,7 +815,7 @@
       </div>
       <div class="form-group">
         <label class="form-label">제목</label>
-        <input id="noticeTitleInput" class="form-input" placeholder="예: 12월 청년부 송년 예배 안내" />
+        <input id="noticeTitleInput" class="form-input" placeholder="예: 12월 라이트 청년부 송년 예배 안내" />
       </div>
       <div class="form-group">
         <label class="form-label">내용</label>
@@ -821,7 +829,7 @@
         <input type="checkbox" id="noticeAttendInput" />
         <span>예배자 '참석 체크' 버튼 함께 받기</span>
       </label>
-      <button id="saveNoticeBtn" class="btn-full btn-indigo">저장하고 게시하기</button>
+      <button id="saveNoticeBtn" class="btn-full btn-dark">저장하고 게시하기</button>
     </div>
   </div>
 
@@ -858,7 +866,7 @@
       e.preventDefault();
       deferredPrompt = e;
       if (!isStandalone) {
-        pwaBannerText.innerHTML = '<b>우리교회 청년부</b>를 스마트폰 앱으로 설치해 보세요!';
+        pwaBannerText.innerHTML = '<b>라이트 청년부</b>를 스마트폰 앱으로 설치해 보세요!';
         pwaBannerAction.classList.remove('hidden');
         pwaBanner.classList.add('show');
       }
@@ -874,7 +882,7 @@
       pwaBanner.classList.remove('show');
     });
 
-    // 3. 상태 및 샘플 데이터 (로컬 저장소 공유 — 혼자 테스트 시 관리자↔예배자 즉시 연동)
+    // 3. 상태 및 샘플 데이터
     const ADMIN_PIN = '1234';
     const STORAGE_KEY_NOTICES = 'youth_v2_notices';
     const STORAGE_KEY_SUNDAY = 'youth_v2_sunday_checks';
@@ -885,7 +893,7 @@
       {
         id: 1,
         category: '행사',
-        title: '2026 겨울 청년부 수련회 신청 안내',
+        title: '2026 겨울 라이트 청년부 수련회 신청 안내',
         body: '일시: 12월 26일(토) ~ 28일(월)\n장소: 은혜수양관\n회비: 30,000원 (새가족 무료)\n\n참석하실 분들은 아래 [참석 체크] 버튼을 눌러주세요!',
         date: '2026.11.23',
         pinned: true,
@@ -896,8 +904,8 @@
       {
         id: 2,
         category: '공지',
-        title: '이번 주 청년부 예배 및 셀 모임 안내',
-        body: '시간: 주일 오후 2시 본당 3층 비전홀\n예배 후 1층 카페에서 셀별 나눔이 진행됩니다. 새가족 환영 다과가 준비되어 있습니다.',
+        title: '이번 주 라이트 청년부 예배 및 셀 모임 안내',
+        body: '시간: 주일 오후 2시 본당 비전홀\n예배 후 셀별 나눔이 진행됩니다. 새가족 환영 다과가 준비되어 있습니다.',
         date: '2026.11.23',
         pinned: false,
         needAttend: false,
@@ -924,7 +932,7 @@
 
     let notices = JSON.parse(localStorage.getItem(STORAGE_KEY_NOTICES) || 'null') || structuredClone(DEFAULT_NOTICES);
     let sundayChecks = JSON.parse(localStorage.getItem(STORAGE_KEY_SUNDAY) || 'null') || structuredClone(DEFAULT_SUNDAY);
-    let currentRole = localStorage.getItem(STORAGE_KEY_ROLE) || null; // 'worshipper' | 'admin' | null
+    let currentRole = localStorage.getItem(STORAGE_KEY_ROLE) || null;
     let worshipperName = localStorage.getItem(STORAGE_KEY_WNAME) || '예배자';
     let currentFilter = '전체';
     let currentDetailId = null;
@@ -970,7 +978,7 @@
       return '';
     }
 
-    // 4. 화면 전환 (입장 게이트 ↔ 예배자 화면 ↔ 관리자 화면)
+    // 4. 화면 전환
     function applyScreen() {
       document.getElementById('gateScreen').classList.toggle('hidden', currentRole !== null);
       document.getElementById('worshipperApp').classList.toggle('hidden', currentRole !== 'worshipper');
@@ -978,14 +986,14 @@
 
       const themeMeta = document.querySelector('meta[name="theme-color"]');
       if (currentRole === 'admin') {
-        themeMeta.setAttribute('content', '#0F172A');
+        themeMeta.setAttribute('content', '#0B0F19');
         renderAdmin();
       } else if (currentRole === 'worshipper') {
-        themeMeta.setAttribute('content', '#312E81');
+        themeMeta.setAttribute('content', '#111827');
         document.getElementById('worshipperWelcome').textContent = `${worshipperName}님, 환영합니다`;
         renderWorshipper();
       } else {
-        themeMeta.setAttribute('content', '#312E81');
+        themeMeta.setAttribute('content', '#111827');
         document.getElementById('worshipperNameInput').value = worshipperName === '예배자' ? '' : worshipperName;
         document.getElementById('adminPinInput').value = '';
       }
@@ -1025,7 +1033,7 @@
       showToast('처음 화면으로 이동했습니다.');
     };
 
-    // 5. 예배자 화면 렌더링 (확인 & 체크 전용 — 작성/삭제 UI 없음)
+    // 5. 예배자 화면 렌더링
     function renderWorshipper() {
       const pinned = notices.find(n => n.pinned) || notices[0];
       const hero = document.getElementById('wHeroBanner');
@@ -1076,7 +1084,6 @@
         }).join('');
       }
 
-      // 주일 예배 체크 버튼
       const alreadyChecked = sundayChecks.some(c => c.name === worshipperName);
       const sundayBtn = document.getElementById('sundayCheckBtn');
       sundayBtn.classList.toggle('done', alreadyChecked);
@@ -1084,7 +1091,6 @@
         ? `✅ ${worshipperName}님 출석 체크 완료 (누르면 취소)`
         : '☑️ 이번 주 주일 예배 출석 체크하기';
 
-      // 행사 참석 체크 목록
       const events = notices.filter(n => n.needAttend);
       const evEl = document.getElementById('wEventCheckList');
       if (events.length === 0) {
@@ -1100,7 +1106,7 @@
               </div>
               <h3 class="card-title">${escapeHtml(n.title)}</h3>
               <p class="card-body clamp" style="margin-bottom:12px;">${escapeHtml(n.body)}</p>
-              <button class="btn-full ${isAttended ? 'btn-outline' : 'btn-indigo'}" onclick="toggleAttend(${n.id})">
+              <button class="btn-full ${isAttended ? 'btn-outline' : 'btn-dark'}" onclick="toggleAttend(${n.id})">
                 ${isAttended ? '✅ 참석 체크 완료 (누르면 취소)' : '🙋 이 행사에 참석 체크하기'}
               </button>
             </div>
@@ -1179,7 +1185,7 @@
       document.getElementById('detailModal').classList.add('open');
     };
 
-    // 6. 관리자 화면 렌더링 (등록·수정·삭제 + 체크 현황 집계)
+    // 6. 관리자 화면 렌더링
     function renderAdmin() {
       const totalConfirm = notices.reduce((sum, n) => sum + n.confirmedBy.length, 0);
       document.getElementById('adminStatsGrid').innerHTML = `
@@ -1226,7 +1232,6 @@
         `).join('');
       }
 
-      // 주일 출석 현황
       document.getElementById('adminSundayCount').textContent = `${sundayChecks.length}명`;
       document.getElementById('adminSundayList').innerHTML = sundayChecks.length === 0
         ? '<div style="font-size:13px;color:#64748B;padding:8px 0;">아직 출석 체크한 예배자가 없습니다.</div>'
@@ -1237,7 +1242,6 @@
             </div>
           `).join('');
 
-      // 행사별 참석 현황
       const events = notices.filter(n => n.needAttend);
       document.getElementById('adminEventStatusList').innerHTML = events.length === 0
         ? '<div style="font-size:13px;color:#64748B;padding:8px 0;">참석 체크를 받는 행사가 없습니다.</div>'
@@ -1383,7 +1387,7 @@
 
     document.getElementById('copyLinkBtn').addEventListener('click', async () => {
       const target = notices.find(n => n.id === currentDetailId);
-      const text = target ? `[우리교회 청년부] ${target.title}\n${window.location.href}` : window.location.href;
+      const text = target ? `[라이트 청년부] ${target.title}\n${window.location.href}` : window.location.href;
       try {
         await navigator.clipboard.writeText(text);
         showToast('공지 링크가 복사되었습니다!');

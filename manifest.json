@@ -1,13 +1,13 @@
 {
-  "name": "우리교회 청년부",
-  "short_name": "우리청년부",
-  "description": "우리교회 청년부 주간 광고 및 기도제목 소통 앱",
+  "name": "라이트 청년부",
+  "short_name": "라이트 청년부",
+  "description": "구미제일감리교회 라이트 청년부 광고 · 소식 · 예배 체크 앱",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#F8FAFC",
-  "theme_color": "#312E81",
+  "background_color": "#09090B",
+  "theme_color": "#111827",
   "lang": "ko",
   "icons": [
     {
