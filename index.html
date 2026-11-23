@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json" />
+  <link rel="manifest" href="./manifest.json?v=101" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png" />
-  <link rel="icon" type="image/png" href="./icon-192.png" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=101" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=101" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -108,10 +108,14 @@
     }
     .inapp-notif.show { transform: translateX(-50%) translateY(0); }
     .inapp-notif-icon {
-      width: 34px; height: 34px; border-radius: 10px;
-      background: rgba(245, 158, 11, 0.2);
+      width: 38px; height: 38px; border-radius: 10px;
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.16);
       display: flex; align-items: center; justify-content: center;
-      font-size: 17px; flex-shrink: 0;
+      overflow: hidden; flex-shrink: 0;
+    }
+    .inapp-notif-icon img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
     }
     .inapp-notif-title { font-size: 13px; font-weight: 800; color: #FDE68A; margin: 0 0 2px; }
     .inapp-notif-body { font-size: 12.5px; color: #E2E8F0; margin: 0; line-height: 1.4; }
@@ -659,7 +663,7 @@
   <div class="app-shell">
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon">🔔</div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=101" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -1357,7 +1361,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').textContent = icon || '🔔';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=101" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -1380,17 +1384,19 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
+      const iconUrl = new URL('./icon-192.png?v=101', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=101', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
             body,
-            icon: './icon-192.png',
-            badge: './icon-192.png',
+            icon: iconUrl,
+            badge: badgeUrl,
             tag: 'right-youth-' + Date.now()
           });
           return true;
         }
-        new Notification(title, { body, icon: './icon-192.png' });
+        new Notification(title, { body, icon: iconUrl, badge: badgeUrl });
         return true;
       } catch (err) {
         console.warn('Device notification fallback error:', err);
