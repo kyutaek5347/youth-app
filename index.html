@@ -19,12 +19,16 @@
       --primary: #312E81;
       --primary-light: #4F46E5;
       --primary-soft: #EEF2FF;
-      --accent: #F59E0B;
+      --admin-bg: #0F172A;
+      --admin-card: #1E293B;
+      --admin-accent: #F59E0B;
       --bg: #F8FAFC;
       --surface: #FFFFFF;
       --text: #0F172A;
       --text-sub: #64748B;
       --border: #E2E8F0;
+      --success: #16A34A;
+      --success-soft: #DCFCE7;
       --danger: #EF4444;
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
@@ -48,73 +52,18 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      box-shadow: 0 0 30px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 0 30px rgba(15, 23, 42, 0.1);
     }
 
-    /* 상단 헤더 */
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .brand-logo {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      object-fit: cover;
-    }
-    .brand-title { font-size: 17px; font-weight: 800; color: var(--primary); line-height: 1.1; }
-    .brand-sub { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
+    .hidden { display: none !important; }
 
-    /* 임원 모드 스위치 */
-    .admin-toggle {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-sub);
-      cursor: pointer;
-      user-select: none;
-    }
-    .admin-toggle.active { color: var(--primary-light); }
-    .switch {
-      width: 38px;
-      height: 22px;
-      background: #CBD5E1;
-      border-radius: 999px;
-      position: relative;
-      transition: background 0.2s;
-    }
-    .switch::after {
-      content: "";
-      width: 18px;
-      height: 18px;
-      background: #fff;
-      border-radius: 50%;
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      transition: transform 0.2s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-    .admin-toggle.active .switch { background: var(--primary-light); }
-    .admin-toggle.active .switch::after { transform: translateX(16px); }
-
-    /* 앱 설치 / 브라우저 안내 배너 */
+    /* PWA 배너 */
     .pwa-banner {
       display: none;
       background: #1E1B4B;
       color: #fff;
-      padding: 12px 16px;
-      font-size: 13px;
+      padding: 11px 16px;
+      font-size: 12.5px;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
@@ -122,7 +71,7 @@
     .pwa-banner.show { display: flex; }
     .pwa-banner-text { line-height: 1.4; }
     .pwa-banner-btn {
-      background: var(--accent);
+      background: var(--admin-accent);
       color: #111827;
       border: none;
       border-radius: 8px;
@@ -138,25 +87,216 @@
       color: #CBD5E1;
       font-size: 16px;
       cursor: pointer;
-      padding: 0 4px;
     }
 
-    /* 메인 콘텐츠 */
+    /* ==================== 1. 첫 입장(역할 선택) 화면 ==================== */
+    .gate-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 28px 20px;
+      background: linear-gradient(180deg, #EEF2FF 0%, #F8FAFC 45%, #FFFFFF 100%);
+    }
+    .gate-brand {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .gate-logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      box-shadow: 0 10px 24px rgba(49, 46, 129, 0.22);
+      margin-bottom: 14px;
+    }
+    .gate-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 0 0 6px;
+    }
+    .gate-sub {
+      font-size: 13.5px;
+      color: var(--text-sub);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .role-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+    }
+    .role-card.worshipper-card {
+      border-color: #C7D2FE;
+    }
+    .role-card.admin-card {
+      background: var(--admin-bg);
+      border-color: #334155;
+      color: #fff;
+    }
+    .role-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .role-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .role-icon.indigo { background: var(--primary-soft); }
+    .role-icon.amber { background: rgba(245, 158, 11, 0.18); }
+    .role-name { font-size: 17px; font-weight: 800; margin: 0 0 3px; }
+    .role-desc { font-size: 12.5px; margin: 0; opacity: 0.78; line-height: 1.4; }
+
+    .gate-input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 13px;
+      font-size: 14px;
+      margin-bottom: 10px;
+      font-family: inherit;
+    }
+    .gate-input.dark {
+      background: #1E293B;
+      border-color: #334155;
+      color: #fff;
+    }
+    .gate-input.dark::placeholder { color: #94A3B8; }
+
+    .btn-full {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 13px;
+      font-size: 14.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-indigo { background: var(--primary-light); color: #fff; }
+    .btn-amber { background: var(--admin-accent); color: #0F172A; }
+
+    .gate-hint {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    /* ==================== 2. 공통 헤더 & 탭바 ==================== */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .header.worshipper {
+      background: var(--surface);
+      color: var(--text);
+    }
+    .header.admin {
+      background: var(--admin-bg);
+      color: #fff;
+      border-bottom-color: #1E293B;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-logo { width: 34px; height: 34px; border-radius: 10px; object-fit: cover; }
+    .brand-title { font-size: 16px; font-weight: 800; line-height: 1.15; }
+    .brand-sub { font-size: 11px; margin-top: 2px; opacity: 0.72; }
+
+    .mode-badge {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 999px;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+    .mode-badge.worshipper { background: var(--primary-soft); color: var(--primary-light); }
+    .mode-badge.admin { background: var(--admin-accent); color: #0F172A; }
+
+    .exit-btn {
+      border-radius: 9px;
+      padding: 7px 11px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .exit-btn.light {
+      background: #F1F5F9;
+      color: #334155;
+      border: 1px solid var(--border);
+    }
+    .exit-btn.dark {
+      background: #1E293B;
+      color: #E2E8F0;
+      border: 1px solid #334155;
+    }
+
     .main {
       flex: 1;
-      padding: 16px 16px calc(84px + var(--safe-bottom));
+      padding: 16px 16px calc(86px + var(--safe-bottom));
     }
 
-    /* 상단 고정 배너 */
+    .tabbar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      padding: 8px 12px calc(8px + var(--safe-bottom));
+      z-index: 25;
+      border-top: 1px solid var(--border);
+    }
+    .tabbar.worshipper { background: var(--surface); }
+    .tabbar.admin { background: var(--admin-bg); border-top-color: #1E293B; }
+
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-sub);
+      cursor: pointer;
+      padding: 4px 0;
+    }
+    .tabbar.worshipper .tab-btn.active { color: var(--primary-light); font-weight: 800; }
+    .tabbar.admin .tab-btn { color: #94A3B8; }
+    .tabbar.admin .tab-btn.active { color: var(--admin-accent); font-weight: 800; }
+    .tab-icon { font-size: 20px; line-height: 1; }
+
+    /* ==================== 3. 콘텐츠 컴포넌트 ==================== */
     .hero-banner {
       background: linear-gradient(135deg, #312E81 0%, #4F46E5 100%);
       color: #fff;
       border-radius: 18px;
       padding: 20px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       cursor: pointer;
-      position: relative;
-      overflow: hidden;
       box-shadow: 0 8px 20px rgba(49, 46, 129, 0.2);
     }
     .hero-badge {
@@ -169,49 +309,43 @@
       border-radius: 999px;
       margin-bottom: 10px;
     }
-    .hero-title { font-size: 19px; font-weight: 800; margin: 0 0 6px; line-height: 1.3; }
-    .hero-desc { font-size: 13px; color: rgba(255,255,255,0.86); margin: 0; line-height: 1.45; }
+    .hero-title { font-size: 18.5px; font-weight: 800; margin: 0 0 6px; line-height: 1.3; }
+    .hero-desc { font-size: 13px; color: rgba(255,255,255,0.88); margin: 0; line-height: 1.45; }
 
-    /* 섹션 헤더 */
+    /* 필터 칩 */
+    .filter-row {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 12px;
+    }
+    .filter-chip {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-sub);
+      border-radius: 999px;
+      padding: 6px 13px;
+      font-size: 12.5px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .filter-chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
     .section-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 12px;
+      gap: 8px;
     }
     .section-title { font-size: 16px; font-weight: 800; margin: 0; }
-    .btn-primary {
-      background: var(--primary-light);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 8px 13px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .btn-outline {
-      background: var(--surface);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 8px 12px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .btn-danger-sm {
-      background: #FEF2F2;
-      color: var(--danger);
-      border: 1px solid #FECACA;
-      border-radius: 8px;
-      padding: 4px 8px;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-    }
 
-    /* 카드 리스트 */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -220,8 +354,7 @@
       margin-bottom: 12px;
       box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
     }
-    .card.clickable { cursor: pointer; transition: transform 0.12s; }
-    .card.clickable:active { transform: scale(0.99); }
+    .card.clickable { cursor: pointer; }
     .card-top {
       display: flex;
       align-items: center;
@@ -239,6 +372,7 @@
     }
     .tag.warm { background: #FEF3C7; color: #B45309; }
     .tag.green { background: #DCFCE7; color: #15803D; }
+    .tag.slate { background: #F1F5F9; color: #475569; }
     .card-date { font-size: 12px; color: var(--text-sub); }
     .card-title { font-size: 15px; font-weight: 700; margin: 0 0 6px; line-height: 1.35; }
     .card-body {
@@ -255,90 +389,139 @@
       overflow: hidden;
     }
 
-    /* 소통 카드 액션 */
-    .card-actions {
+    /* 체크 버튼 & 액션 */
+    .card-footer {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 8px;
       margin-top: 12px;
       padding-top: 10px;
       border-top: 1px solid #F1F5F9;
+      flex-wrap: wrap;
     }
-    .pray-btn {
+    .check-btn {
       display: inline-flex;
       align-items: center;
       gap: 5px;
       background: #F8FAFC;
       border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 6px 12px;
+      border-radius: 10px;
+      padding: 7px 12px;
       font-size: 12.5px;
-      font-weight: 600;
-      color: var(--text);
+      font-weight: 700;
+      color: #334155;
       cursor: pointer;
     }
-    .pray-btn.prayed {
+    .check-btn.checked {
+      background: var(--success-soft);
+      border-color: #86EFAC;
+      color: #15803D;
+    }
+    .check-btn.attend.checked {
       background: var(--primary-soft);
-      border-color: #C7D2FE;
+      border-color: #A5B4FC;
       color: var(--primary-light);
     }
-    .comment-box {
-      margin-top: 10px;
-      background: #F8FAFC;
+
+    .btn-primary {
+      background: var(--primary-light);
+      color: #fff;
+      border: none;
       border-radius: 10px;
-      padding: 10px;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
     }
-    .comment-item {
-      font-size: 12.5px;
-      padding: 5px 0;
-      border-bottom: 1px solid #E2E8F0;
+    .btn-admin {
+      background: var(--admin-bg);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
     }
-    .comment-item:last-of-type { border-bottom: none; }
-    .comment-author { font-weight: 700; margin-right: 6px; color: var(--primary); }
-    .comment-form {
-      display: flex;
-      gap: 6px;
-      margin-top: 8px;
-    }
-    .comment-input {
-      flex: 1;
+    .btn-outline {
+      background: var(--surface);
+      color: var(--text);
       border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-sm {
       border-radius: 8px;
-      padding: 7px 10px;
-      font-size: 12.5px;
-      background: #fff;
+      padding: 5px 9px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: #F8FAFC;
+      color: #334155;
+    }
+    .btn-sm.danger {
+      background: #FEF2F2;
+      color: var(--danger);
+      border-color: #FECACA;
     }
 
-    /* 하단 탭바 */
-    .tabbar {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
+    /* 관리자 요약 통계 */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .stat-box {
+      background: var(--admin-bg);
+      color: #fff;
+      border-radius: 14px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+    .stat-num { font-size: 22px; font-weight: 800; color: var(--admin-accent); }
+    .stat-label { font-size: 11px; color: #CBD5E1; margin-top: 3px; }
+
+    /* 주일 예배 체크 카드 */
+    .worship-check-card {
+      background: linear-gradient(135deg, #0F766E 0%, #0D9488 100%);
+      color: #fff;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .worship-check-btn {
       width: 100%;
-      max-width: 480px;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      display: flex;
-      padding: 8px 12px calc(8px + var(--safe-bottom));
-      z-index: 25;
-    }
-    .tab-btn {
-      flex: 1;
-      background: transparent;
+      margin-top: 14px;
       border: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      font-size: 11.5px;
-      font-weight: 600;
-      color: var(--text-sub);
+      border-radius: 12px;
+      padding: 13px;
+      font-size: 14.5px;
+      font-weight: 800;
       cursor: pointer;
-      padding: 4px 0;
+      background: #fff;
+      color: #0F766E;
     }
-    .tab-btn.active { color: var(--primary-light); font-weight: 800; }
-    .tab-icon { font-size: 20px; line-height: 1; }
+    .worship-check-btn.done {
+      background: rgba(255, 255, 255, 0.22);
+      color: #fff;
+      border: 1.5px solid rgba(255, 255, 255, 0.55);
+    }
+
+    .log-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #F1F5F9;
+      font-size: 13px;
+    }
+    .log-item:last-child { border-bottom: none; }
 
     /* 모달 */
     .modal-backdrop {
@@ -357,7 +540,7 @@
       background: var(--surface);
       border-radius: 22px 22px 0 0;
       padding: 20px 18px calc(24px + var(--safe-bottom));
-      max-height: 86vh;
+      max-height: 88vh;
       overflow-y: auto;
     }
     .modal-head {
@@ -386,20 +569,20 @@
       font-size: 14px;
       font-family: inherit;
     }
-    .form-textarea { min-height: 100px; resize: vertical; }
+    .form-textarea { min-height: 105px; resize: vertical; }
     .checkbox-row {
       display: flex;
       align-items: center;
       gap: 8px;
       font-size: 13px;
       font-weight: 600;
-      margin: 10px 0 16px;
+      margin: 10px 0;
     }
 
     /* 토스트 */
     .toast {
       position: fixed;
-      bottom: calc(82px + var(--safe-bottom));
+      bottom: calc(84px + var(--safe-bottom));
       left: 50%;
       transform: translateX(-50%) translateY(20px);
       background: rgba(15, 23, 42, 0.92);
@@ -415,70 +598,179 @@
       white-space: nowrap;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    .hidden { display: none !important; }
   </style>
 </head>
 <body>
   <div class="app-shell">
-    <!-- PWA 설치 / 카카오톡 브라우저 안내 배너 -->
+    <!-- PWA 설치 안내 배너 -->
     <div id="pwaBanner" class="pwa-banner">
       <div id="pwaBannerText" class="pwa-banner-text"></div>
       <button id="pwaBannerAction" class="pwa-banner-btn hidden">앱 설치</button>
       <button id="pwaBannerClose" class="pwa-banner-close" aria-label="닫기">✕</button>
     </div>
 
-    <!-- 상단 헤더 -->
-    <header class="header">
-      <div class="brand">
-        <img src="./icon-192.png" alt="로고" class="brand-logo" />
-        <div>
-          <div class="brand-title">우리교회 청년부</div>
-          <div class="brand-sub">광고 · 기도제목 소통</div>
-        </div>
+    <!-- ==================== 1. 첫 입장 화면 (역할 완전 분리) ==================== -->
+    <section id="gateScreen" class="gate-screen">
+      <div class="gate-brand">
+        <img src="./icon-192.png" alt="로고" class="gate-logo" />
+        <h1 class="gate-title">우리교회 청년부</h1>
+        <p class="gate-sub">사용할 화면을 선택해 입장해 주세요.<br>관리자와 예배자 화면이 완전히 구분되어 있습니다.</p>
       </div>
-      <div id="adminToggle" class="admin-toggle" role="button" tabindex="0">
-        <span>임원 모드</span>
-        <div class="switch"></div>
+
+      <!-- 예배자 입장 카드 -->
+      <div class="role-card worshipper-card">
+        <div class="role-head">
+          <div class="role-icon indigo">🙏</div>
+          <div>
+            <h2 class="role-name">예배자 화면으로 입장</h2>
+            <p class="role-desc">광고·소식·공지 확인 및 예배/행사 체크 전용</p>
+          </div>
+        </div>
+        <input id="worshipperNameInput" class="gate-input" placeholder="이름 또는 셀 입력 (선택, 예: 2셀 지현)" />
+        <button id="enterWorshipperBtn" class="btn-full btn-indigo">예배자로 시작하기</button>
       </div>
-    </header>
 
-    <!-- 메인 영역 -->
-    <main class="main">
-      <!-- 홈(광고) 탭 -->
-      <section id="tabHome">
-        <div id="heroBanner" class="hero-banner"></div>
-        <div class="section-head">
-          <h2 class="section-title">📢 이번 주 광고</h2>
-          <button id="openNoticeModalBtn" class="btn-primary hidden">+ 새 광고 올리기</button>
+      <!-- 관리자 입장 카드 -->
+      <div class="role-card admin-card">
+        <div class="role-head">
+          <div class="role-icon amber">🔐</div>
+          <div>
+            <h2 class="role-name">관리자 화면으로 입장</h2>
+            <p class="role-desc">광고·소식·공지 등록/수정 및 체크 현황 관리</p>
+          </div>
         </div>
-        <div id="noticeList"></div>
-      </section>
+        <input id="adminPinInput" type="password" inputmode="numeric" class="gate-input dark" placeholder="관리자 비밀번호 입력 (테스트용: 1234)" />
+        <button id="enterAdminBtn" class="btn-full btn-amber">관리자 인증 후 입장</button>
+      </div>
 
-      <!-- 소통(기도) 탭 -->
-      <section id="tabCommunity" class="hidden">
-        <div class="section-head">
-          <h2 class="section-title">🙏 기도제목 · 나눔</h2>
-          <button id="openPrayerModalBtn" class="btn-primary">+ 글 남기기</button>
+      <div class="gate-hint">
+        🧪 <b>혼자 테스트 팁:</b> 관리자에서 공지를 올린 뒤<br>
+        상단 <b>[모드 나가기]</b>로 예배자 화면에 들어가면 바로 확인됩니다.
+      </div>
+    </section>
+
+    <!-- ==================== 2. 예배자 전용 앱 화면 ==================== -->
+    <div id="worshipperApp" class="hidden" style="display:flex; flex-direction:column; flex:1;">
+      <header class="header worshipper">
+        <div class="brand">
+          <img src="./icon-192.png" alt="로고" class="brand-logo" />
+          <div>
+            <div class="brand-title">
+              우리교회 청년부 <span class="mode-badge worshipper">예배자</span>
+            </div>
+            <div id="worshipperWelcome" class="brand-sub">환영합니다!</div>
+          </div>
         </div>
-        <div id="prayerList"></div>
-      </section>
-    </main>
+        <button class="exit-btn light" onclick="exitMode()">모드 나가기</button>
+      </header>
 
-    <!-- 하단 탭바 -->
-    <nav class="tabbar">
-      <button class="tab-btn active" data-tab="home">
-        <span class="tab-icon">🏠</span>
-        <span>홈 (광고)</span>
-      </button>
-      <button class="tab-btn" data-tab="community">
-        <span class="tab-icon">💬</span>
-        <span>소통 (기도)</span>
-      </button>
-    </nav>
+      <main class="main">
+        <!-- 예배자 탭 1: 공지·소식 확인 -->
+        <section id="wTabNotice">
+          <div id="wHeroBanner" class="hero-banner"></div>
+          <div class="filter-row" id="wFilterRow">
+            <button class="filter-chip active" data-cat="전체">전체</button>
+            <button class="filter-chip" data-cat="공지">공지</button>
+            <button class="filter-chip" data-cat="광고">광고</button>
+            <button class="filter-chip" data-cat="소식">소식</button>
+            <button class="filter-chip" data-cat="행사">행사</button>
+          </div>
+          <div id="wNoticeList"></div>
+        </section>
+
+        <!-- 예배자 탭 2: 예배·행사 체크 -->
+        <section id="wTabCheck" class="hidden">
+          <div class="worship-check-card">
+            <div style="font-size:12px; font-weight:700; opacity:0.85;">이번 주 청년부 주일 예배</div>
+            <div style="font-size:20px; font-weight:800; margin-top:4px;">주일 오후 2시 · 본당 비전홀</div>
+            <div style="font-size:13px; opacity:0.88; margin-top:4px;">예배당 도착 후 아래 버튼을 눌러 출석을 체크해 주세요.</div>
+            <button id="sundayCheckBtn" class="worship-check-btn" onclick="toggleSundayCheck()"></button>
+          </div>
+
+          <div class="section-head">
+            <h2 class="section-title">📋 참석 체크가 필요한 행사</h2>
+          </div>
+          <div id="wEventCheckList"></div>
+        </section>
+      </main>
+
+      <nav class="tabbar worshipper">
+        <button class="tab-btn active" data-wtab="notice">
+          <span class="tab-icon">📢</span>
+          <span>공지·소식</span>
+        </button>
+        <button class="tab-btn" data-wtab="check">
+          <span class="tab-icon">✅</span>
+          <span>예배·행사 체크</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- ==================== 3. 관리자 전용 앱 화면 ==================== -->
+    <div id="adminApp" class="hidden" style="display:flex; flex-direction:column; flex:1;">
+      <header class="header admin">
+        <div class="brand">
+          <img src="./icon-192.png" alt="로고" class="brand-logo" />
+          <div>
+            <div class="brand-title">
+              우리교회 청년부 <span class="mode-badge admin">관리자</span>
+            </div>
+            <div class="brand-sub">광고 · 공지 · 체크 현황 관리</div>
+          </div>
+        </div>
+        <button class="exit-btn dark" onclick="exitMode()">모드 나가기</button>
+      </header>
+
+      <main class="main">
+        <!-- 관리자 탭 1: 공지·광고 관리 -->
+        <section id="aTabManage">
+          <div class="stats-grid" id="adminStatsGrid"></div>
+
+          <div class="section-head">
+            <h2 class="section-title">📝 광고·소식·공지 관리</h2>
+            <button id="openNewNoticeBtn" class="btn-admin">+ 새 글 올리기</button>
+          </div>
+          <div id="aNoticeList"></div>
+        </section>
+
+        <!-- 관리자 탭 2: 예배자 체크 현황 -->
+        <section id="aTabStatus" class="hidden">
+          <div class="section-head">
+            <h2 class="section-title">📊 예배자 체크 현황</h2>
+            <button class="btn-sm" onclick="resetDemoData()">초기화</button>
+          </div>
+
+          <div class="card">
+            <div class="card-top">
+              <strong style="font-size:15px;">⛪ 이번 주 주일 예배 출석 체크</strong>
+              <span id="adminSundayCount" class="tag green">0명</span>
+            </div>
+            <div id="adminSundayList"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-top">
+              <strong style="font-size:15px;">🙋 행사별 참석 체크 명단</strong>
+            </div>
+            <div id="adminEventStatusList"></div>
+          </div>
+        </section>
+      </main>
+
+      <nav class="tabbar admin">
+        <button class="tab-btn active" data-atab="manage">
+          <span class="tab-icon">🛠️</span>
+          <span>공지·광고 관리</span>
+        </button>
+        <button class="tab-btn" data-atab="status">
+          <span class="tab-icon">📊</span>
+          <span>체크 현황</span>
+        </button>
+      </nav>
+    </div>
   </div>
 
-  <!-- 광고 상세 모달 -->
+  <!-- 공지 상세 보기 모달 (예배자용) -->
   <div id="detailModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
@@ -487,27 +779,30 @@
       </div>
       <h3 id="detailTitle" style="margin:0 0 6px; font-size:18px;"></h3>
       <div id="detailDate" class="card-date" style="margin-bottom:14px;"></div>
-      <p id="detailBody" class="card-body" style="margin-bottom:20px;"></p>
+      <p id="detailBody" class="card-body" style="margin-bottom:18px;"></p>
+      <div id="detailCheckArea" style="display:flex; gap:8px; margin-bottom:10px;"></div>
       <div style="display:flex; gap:8px;">
-        <button id="copyLinkBtn" class="btn-primary" style="flex:1;">🔗 공지 링크 복사</button>
+        <button id="copyLinkBtn" class="btn-outline" style="flex:1;">🔗 링크 복사</button>
         <button class="btn-outline" data-close="detailModal">닫기</button>
       </div>
     </div>
   </div>
 
-  <!-- 새 광고 작성 모달 (임원 전용) -->
+  <!-- 공지 등록/수정 모달 (관리자 전용) -->
   <div id="noticeModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">새 광고 올리기</h3>
+        <h3 id="noticeModalTitle" class="modal-title">새 광고 · 공지 올리기</h3>
         <button class="close-btn" data-close="noticeModal">✕</button>
       </div>
+      <input type="hidden" id="editNoticeId" />
       <div class="form-group">
         <label class="form-label">구분</label>
         <select id="noticeCategory" class="form-select">
-          <option value="주일공지">주일공지</option>
-          <option value="수련회·행사">수련회·행사</option>
-          <option value="모집안내">모집안내</option>
+          <option value="공지">공지</option>
+          <option value="광고">광고</option>
+          <option value="소식">소식</option>
+          <option value="행사">행사</option>
         </select>
       </div>
       <div class="form-group">
@@ -516,261 +811,134 @@
       </div>
       <div class="form-group">
         <label class="form-label">내용</label>
-        <textarea id="noticeBodyInput" class="form-textarea" placeholder="일시, 장소, 준비물 등을 적어주세요."></textarea>
+        <textarea id="noticeBodyInput" class="form-textarea" placeholder="일시, 장소, 준비물 등 안내 내용을 적어주세요."></textarea>
       </div>
       <label class="checkbox-row">
         <input type="checkbox" id="noticePinInput" />
-        <span>홈 상단 배너로 고정하기</span>
+        <span>예배자 홈 상단 배너로 고정하기</span>
       </label>
-      <button id="saveNoticeBtn" class="btn-primary" style="width:100%; padding:12px;">광고 등록하기</button>
-    </div>
-  </div>
-
-  <!-- 기도제목 작성 모달 -->
-  <div id="prayerModal" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-head">
-        <h3 class="modal-title">기도제목 · 나눔 올리기</h3>
-        <button class="close-btn" data-close="prayerModal">✕</button>
-      </div>
-      <div class="form-group">
-        <label class="form-label">이름 또는 닉네임</label>
-        <input id="prayerAuthorInput" class="form-input" placeholder="예: 3셀 김민수 (비우면 익명)" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">카테고리</label>
-        <select id="prayerCategoryInput" class="form-select">
-          <option value="기도제목">기도제목</option>
-          <option value="은혜나눔">은혜나눔</option>
-          <option value="자유소통">자유소통</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">내용</label>
-        <textarea id="prayerBodyInput" class="form-textarea" placeholder="함께 나누고 싶은 기도제목이나 이야기를 적어주세요."></textarea>
-      </div>
-      <button id="savePrayerBtn" class="btn-primary" style="width:100%; padding:12px;">올리기</button>
+      <label class="checkbox-row" style="margin-bottom:16px;">
+        <input type="checkbox" id="noticeAttendInput" />
+        <span>예배자 '참석 체크' 버튼 함께 받기</span>
+      </label>
+      <button id="saveNoticeBtn" class="btn-full btn-indigo">저장하고 게시하기</button>
     </div>
   </div>
 
   <div id="toast" class="toast"></div>
 
   <script>
-    // 1. 서비스 워커 등록 (PWA 정식 앱 설치를 위한 필수 코드)
+    // 1. 서비스 워커 등록 및 자동 업데이트 확인
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch((err) => {
-          console.log('SW 등록 실패:', err);
-        });
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          reg.update();
+        }).catch(() => {});
       });
     }
 
-    // 2. PWA 앱 설치 배너 및 카카오톡 브라우저 안내 처리
+    // 2. PWA 설치 배너
     let deferredPrompt = null;
     const pwaBanner = document.getElementById('pwaBanner');
     const pwaBannerText = document.getElementById('pwaBannerText');
     const pwaBannerAction = document.getElementById('pwaBannerAction');
-    const pwaBannerClose = document.getElementById('pwaBannerClose');
-
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     const ua = navigator.userAgent.toLowerCase();
-    const isKakao = ua.includes('kakaotalk');
-    const isIOS = /iphone|ipad|ipod/.test(ua);
 
     if (!isStandalone) {
-      if (isKakao) {
-        pwaBannerText.innerHTML = '카톡 화면에서는 앱 설치가 안 돼요.<br>오른쪽 아래 <b>⋮ → 다른 브라우저로 열기</b>를 눌러주세요!';
+      if (ua.includes('kakaotalk')) {
+        pwaBannerText.innerHTML = '카톡 창에서는 설치가 안 돼요.<br>오른쪽 아래 <b>⋮ → 다른 브라우저로 열기</b>를 눌러주세요!';
         pwaBanner.classList.add('show');
-      } else if (isIOS) {
-        pwaBannerText.innerHTML = '아이폰 앱 설치: 아래 <b>공유(□↑) → 홈 화면에 추가</b>를 눌러주세요!';
+      } else if (/iphone|ipad|ipod/.test(ua)) {
+        pwaBannerText.innerHTML = '아이폰·아이패드 설치: <b>공유(□↑) → 홈 화면에 추가</b>';
         pwaBanner.classList.add('show');
       }
     }
-
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
       if (!isStandalone) {
-        pwaBannerText.innerHTML = '<b>우리교회 청년부</b>를 스마트폰 앱으로 바로 설치해 보세요!';
+        pwaBannerText.innerHTML = '<b>우리교회 청년부</b>를 스마트폰 앱으로 설치해 보세요!';
         pwaBannerAction.classList.remove('hidden');
         pwaBanner.classList.add('show');
       }
     });
-
     pwaBannerAction.addEventListener('click', async () => {
       if (!deferredPrompt) return;
       deferredPrompt.prompt();
-      const result = await deferredPrompt.userChoice;
-      if (result.outcome === 'accepted') {
-        pwaBanner.classList.remove('show');
-        showToast('앱 설치가 시작되었습니다!');
-      }
+      const res = await deferredPrompt.userChoice;
+      if (res.outcome === 'accepted') pwaBanner.classList.remove('show');
       deferredPrompt = null;
     });
-
-    pwaBannerClose.addEventListener('click', () => {
+    document.getElementById('pwaBannerClose').addEventListener('click', () => {
       pwaBanner.classList.remove('show');
     });
 
-    // 3. 기본 샘플 데이터 (로컬 저장소 연동으로 앱 재실행 시에도 테스트 내용 유지)
+    // 3. 상태 및 샘플 데이터 (로컬 저장소 공유 — 혼자 테스트 시 관리자↔예배자 즉시 연동)
+    const ADMIN_PIN = '1234';
+    const STORAGE_KEY_NOTICES = 'youth_v2_notices';
+    const STORAGE_KEY_SUNDAY = 'youth_v2_sunday_checks';
+    const STORAGE_KEY_ROLE = 'youth_v2_role';
+    const STORAGE_KEY_WNAME = 'youth_v2_wname';
+
     const DEFAULT_NOTICES = [
       {
         id: 1,
-        category: '수련회·행사',
+        category: '행사',
         title: '2026 겨울 청년부 수련회 신청 안내',
-        body: '일시: 12월 26일(토) ~ 28일(월)\n장소: 은혜수양관\n회비: 30,000원 (새가족 무료)\n\n이번 주일까지 셀 리더에게 신청해 주세요!',
-        date: '2026.11.22',
-        pinned: true
+        body: '일시: 12월 26일(토) ~ 28일(월)\n장소: 은혜수양관\n회비: 30,000원 (새가족 무료)\n\n참석하실 분들은 아래 [참석 체크] 버튼을 눌러주세요!',
+        date: '2026.11.23',
+        pinned: true,
+        needAttend: true,
+        confirmedBy: ['1셀 민수', '2셀 지현'],
+        attendedBy: ['1셀 민수']
       },
       {
         id: 2,
-        category: '주일공지',
+        category: '공지',
         title: '이번 주 청년부 예배 및 셀 모임 안내',
         body: '시간: 주일 오후 2시 본당 3층 비전홀\n예배 후 1층 카페에서 셀별 나눔이 진행됩니다. 새가족 환영 다과가 준비되어 있습니다.',
-        date: '2026.11.22',
-        pinned: false
+        date: '2026.11.23',
+        pinned: false,
+        needAttend: false,
+        confirmedBy: ['1셀 민수'],
+        attendedBy: []
       },
       {
         id: 3,
-        category: '모집안내',
+        category: '광고',
         title: '찬양팀 · 미디어팀 새 봉사자 모집',
-        body: '음향, PPT, 촬영, 악기(건반·기타) 분야 봉사자를 모집합니다. 초보자도 환영하니 임원진에게 편하게 문의해 주세요.',
-        date: '2026.11.18',
-        pinned: false
+        body: '음향, PPT, 촬영, 악기(건반·기타) 분야 봉사자를 모집합니다. 관심 있으신 분들은 참석 체크를 눌러주시면 임원이 연락드립니다.',
+        date: '2026.11.20',
+        pinned: false,
+        needAttend: true,
+        confirmedBy: [],
+        attendedBy: []
       }
     ];
 
-    const DEFAULT_PRAYERS = [
-      {
-        id: 101,
-        author: '2셀 지현',
-        category: '기도제목',
-        body: '다음 주 최종 면접을 앞두고 있습니다. 긴장하지 않고 준비한 것들을 담대하게 잘 나누고 올 수 있도록 함께 기도해 주세요!',
-        date: '방금 전',
-        prays: 7,
-        prayedByMe: false,
-        comments: [
-          { author: '1셀 민수', text: '화이팅입니다! 꼭 좋은 결과 있기를 기도할게요 🙏' }
-        ]
-      },
-      {
-        id: 102,
-        author: '익명',
-        category: '은혜나눔',
-        body: '이번 주일 말씀 덕분에 한 주 동안 마음이 참 평안했습니다. 청년부 공동체가 있어서 감사해요.',
-        date: '어제',
-        prays: 12,
-        prayedByMe: false,
-        comments: []
-      }
+    const DEFAULT_SUNDAY = [
+      { name: '1셀 민수', time: '오후 1:52' },
+      { name: '2셀 지현', time: '오후 1:58' }
     ];
 
-    let notices = JSON.parse(localStorage.getItem('youth_notices_v1') || 'null') || DEFAULT_NOTICES;
-    let prayers = JSON.parse(localStorage.getItem('youth_prayers_v1') || 'null') || DEFAULT_PRAYERS;
-    let isAdmin = false;
-    let currentDetailNotice = null;
+    let notices = JSON.parse(localStorage.getItem(STORAGE_KEY_NOTICES) || 'null') || structuredClone(DEFAULT_NOTICES);
+    let sundayChecks = JSON.parse(localStorage.getItem(STORAGE_KEY_SUNDAY) || 'null') || structuredClone(DEFAULT_SUNDAY);
+    let currentRole = localStorage.getItem(STORAGE_KEY_ROLE) || null; // 'worshipper' | 'admin' | null
+    let worshipperName = localStorage.getItem(STORAGE_KEY_WNAME) || '예배자';
+    let currentFilter = '전체';
+    let currentDetailId = null;
 
-    function persistData() {
-      localStorage.setItem('youth_notices_v1', JSON.stringify(notices));
-      localStorage.setItem('youth_prayers_v1', JSON.stringify(prayers));
+    function saveAll() {
+      localStorage.setItem(STORAGE_KEY_NOTICES, JSON.stringify(notices));
+      localStorage.setItem(STORAGE_KEY_SUNDAY, JSON.stringify(sundayChecks));
     }
 
     function showToast(msg) {
-      const toast = document.getElementById('toast');
-      toast.textContent = msg;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2200);
-    }
-
-    function formatToday() {
-      const d = new Date();
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      return `${y}.${m}.${day}`;
-    }
-
-    // 4. 화면 렌더링
-    function renderHome() {
-      const pinned = notices.find(n => n.pinned) || notices[0];
-      const hero = document.getElementById('heroBanner');
-      if (pinned) {
-        hero.classList.remove('hidden');
-        hero.innerHTML = `
-          <span class="hero-badge">📌 고정 공지 · ${pinned.category}</span>
-          <h2 class="hero-title">${escapeHtml(pinned.title)}</h2>
-          <p class="hero-desc">${escapeHtml(pinned.body.split('\n')[0])}</p>
-        `;
-        hero.onclick = () => openDetail(pinned);
-      } else {
-        hero.classList.add('hidden');
-      }
-
-      document.getElementById('openNoticeModalBtn').classList.toggle('hidden', !isAdmin);
-
-      const listEl = document.getElementById('noticeList');
-      if (notices.length === 0) {
-        listEl.innerHTML = '<div class="card" style="text-align:center;color:#64748B;">등록된 광고가 없습니다.</div>';
-        return;
-      }
-
-      listEl.innerHTML = notices.map(n => `
-        <div class="card clickable" onclick="openDetailById(${n.id})">
-          <div class="card-top">
-            <div style="display:flex;align-items:center;gap:6px;">
-              <span class="tag ${n.category === '수련회·행사' ? 'warm' : ''}">${escapeHtml(n.category)}</span>
-              ${n.pinned ? '<span class="tag green">배너고정</span>' : ''}
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;">
-              <span class="card-date">${escapeHtml(n.date)}</span>
-              ${isAdmin ? `<button class="btn-danger-sm" onclick="event.stopPropagation(); deleteNotice(${n.id})">삭제</button>` : ''}
-            </div>
-          </div>
-          <h3 class="card-title">${escapeHtml(n.title)}</h3>
-          <p class="card-body clamp">${escapeHtml(n.body)}</p>
-        </div>
-      `).join('');
-    }
-
-    function renderCommunity() {
-      const listEl = document.getElementById('prayerList');
-      if (prayers.length === 0) {
-        listEl.innerHTML = '<div class="card" style="text-align:center;color:#64748B;">첫 번째 기도제목을 남겨보세요!</div>';
-        return;
-      }
-
-      listEl.innerHTML = prayers.map(p => `
-        <div class="card">
-          <div class="card-top">
-            <div style="display:flex;align-items:center;gap:6px;">
-              <span class="tag ${p.category === '은혜나눔' ? 'green' : ''}">${escapeHtml(p.category)}</span>
-              <strong style="font-size:13px;">${escapeHtml(p.author)}</strong>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;">
-              <span class="card-date">${escapeHtml(p.date)}</span>
-              ${isAdmin ? `<button class="btn-danger-sm" onclick="deletePrayer(${p.id})">삭제</button>` : ''}
-            </div>
-          </div>
-          <p class="card-body">${escapeHtml(p.body)}</p>
-          <div class="card-actions">
-            <button class="pray-btn ${p.prayedByMe ? 'prayed' : ''}" onclick="togglePray(${p.id})">
-              🙏 함께 기도해요 <span>${p.prays}</span>
-            </button>
-          </div>
-          <div class="comment-box">
-            ${p.comments.map(c => `
-              <div class="comment-item">
-                <span class="comment-author">${escapeHtml(c.author)}</span>
-                <span>${escapeHtml(c.text)}</span>
-              </div>
-            `).join('')}
-            <div class="comment-form">
-              <input id="commentInput-${p.id}" class="comment-input" placeholder="응원의 댓글을 남겨주세요..." />
-              <button class="btn-primary" style="padding:6px 10px;font-size:12px;" onclick="addComment(${p.id})">등록</button>
-            </div>
-          </div>
-        </div>
-      `).join('');
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2200);
     }
 
     function escapeHtml(str) {
@@ -781,85 +949,427 @@
         .replace(/"/g, '&quot;');
     }
 
-    // 5. 상호작용 핸들러
-    window.openDetailById = (id) => {
-      const target = notices.find(n => n.id === id);
-      if (target) openDetail(target);
-    };
-
-    function openDetail(notice) {
-      currentDetailNotice = notice;
-      document.getElementById('detailTag').textContent = notice.category;
-      document.getElementById('detailTitle').textContent = notice.title;
-      document.getElementById('detailDate').textContent = notice.date;
-      document.getElementById('detailBody').textContent = notice.body;
-      document.getElementById('detailModal').classList.add('open');
+    function formatToday() {
+      const d = new Date();
+      return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
     }
 
-    window.deleteNotice = (id) => {
-      if (!confirm('이 광고를 삭제할까요?')) return;
-      notices = notices.filter(n => n.id !== id);
-      persistData();
-      renderHome();
-      showToast('광고가 삭제되었습니다.');
-    };
+    function formatNowTime() {
+      const d = new Date();
+      const h = d.getHours();
+      const m = String(d.getMinutes()).padStart(2, '0');
+      const ampm = h >= 12 ? '오후' : '오전';
+      const hh = h % 12 || 12;
+      return `${ampm} ${hh}:${m}`;
+    }
 
-    window.deletePrayer = (id) => {
-      if (!confirm('이 글을 삭제할까요?')) return;
-      prayers = prayers.filter(p => p.id !== id);
-      persistData();
-      renderCommunity();
-      showToast('글이 삭제되었습니다.');
-    };
+    function tagColor(cat) {
+      if (cat === '행사') return 'warm';
+      if (cat === '소식') return 'green';
+      if (cat === '광고') return 'slate';
+      return '';
+    }
 
-    window.togglePray = (id) => {
-      const target = prayers.find(p => p.id === id);
-      if (!target) return;
-      target.prayedByMe = !target.prayedByMe;
-      target.prays += target.prayedByMe ? 1 : -1;
-      persistData();
-      renderCommunity();
-    };
+    // 4. 화면 전환 (입장 게이트 ↔ 예배자 화면 ↔ 관리자 화면)
+    function applyScreen() {
+      document.getElementById('gateScreen').classList.toggle('hidden', currentRole !== null);
+      document.getElementById('worshipperApp').classList.toggle('hidden', currentRole !== 'worshipper');
+      document.getElementById('adminApp').classList.toggle('hidden', currentRole !== 'admin');
 
-    window.addComment = (id) => {
-      const input = document.getElementById(`commentInput-${id}`);
-      const text = input.value.trim();
-      if (!text) return;
-      const target = prayers.find(p => p.id === id);
-      if (!target) return;
-      target.comments.push({ author: isAdmin ? '임원' : '청년', text });
-      persistData();
-      renderCommunity();
-      showToast('댓글이 등록되었습니다.');
-    };
+      const themeMeta = document.querySelector('meta[name="theme-color"]');
+      if (currentRole === 'admin') {
+        themeMeta.setAttribute('content', '#0F172A');
+        renderAdmin();
+      } else if (currentRole === 'worshipper') {
+        themeMeta.setAttribute('content', '#312E81');
+        document.getElementById('worshipperWelcome').textContent = `${worshipperName}님, 환영합니다`;
+        renderWorshipper();
+      } else {
+        themeMeta.setAttribute('content', '#312E81');
+        document.getElementById('worshipperNameInput').value = worshipperName === '예배자' ? '' : worshipperName;
+        document.getElementById('adminPinInput').value = '';
+      }
+    }
 
-    // 임원 모드 전환
-    document.getElementById('adminToggle').addEventListener('click', function () {
-      isAdmin = !isAdmin;
-      this.classList.toggle('active', isAdmin);
-      renderHome();
-      renderCommunity();
-      showToast(isAdmin ? '임원(관리자) 모드가 켜졌습니다.' : '일반 청년 모드로 전환되었습니다.');
+    document.getElementById('enterWorshipperBtn').addEventListener('click', () => {
+      const inputName = document.getElementById('worshipperNameInput').value.trim();
+      worshipperName = inputName || '예배자';
+      currentRole = 'worshipper';
+      localStorage.setItem(STORAGE_KEY_ROLE, currentRole);
+      localStorage.setItem(STORAGE_KEY_WNAME, worshipperName);
+      applyScreen();
+      showToast('예배자 화면으로 입장했습니다.');
     });
 
-    // 탭 전환
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tab = btn.dataset.tab;
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('tabHome').classList.toggle('hidden', tab !== 'home');
-        document.getElementById('tabCommunity').classList.toggle('hidden', tab !== 'community');
+    function tryAdminLogin() {
+      const pin = document.getElementById('adminPinInput').value.trim();
+      if (pin !== ADMIN_PIN) {
+        showToast('비밀번호가 일치하지 않습니다. (테스트용: 1234)');
+        return;
+      }
+      currentRole = 'admin';
+      localStorage.setItem(STORAGE_KEY_ROLE, currentRole);
+      applyScreen();
+      showToast('관리자 화면으로 입장했습니다.');
+    }
+
+    document.getElementById('enterAdminBtn').addEventListener('click', tryAdminLogin);
+    document.getElementById('adminPinInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') tryAdminLogin();
+    });
+
+    window.exitMode = () => {
+      currentRole = null;
+      localStorage.removeItem(STORAGE_KEY_ROLE);
+      applyScreen();
+      showToast('처음 화면으로 이동했습니다.');
+    };
+
+    // 5. 예배자 화면 렌더링 (확인 & 체크 전용 — 작성/삭제 UI 없음)
+    function renderWorshipper() {
+      const pinned = notices.find(n => n.pinned) || notices[0];
+      const hero = document.getElementById('wHeroBanner');
+      if (pinned) {
+        hero.classList.remove('hidden');
+        hero.innerHTML = `
+          <span class="hero-badge">📌 중요 공지 · ${escapeHtml(pinned.category)}</span>
+          <h2 class="hero-title">${escapeHtml(pinned.title)}</h2>
+          <p class="hero-desc">${escapeHtml(pinned.body.split('\n')[0])}</p>
+        `;
+        hero.onclick = () => openDetail(pinned.id);
+      } else {
+        hero.classList.add('hidden');
+      }
+
+      const filtered = currentFilter === '전체' ? notices : notices.filter(n => n.category === currentFilter);
+      const listEl = document.getElementById('wNoticeList');
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = '<div class="card" style="text-align:center;color:#64748B;">해당 구분의 글이 없습니다.</div>';
+      } else {
+        listEl.innerHTML = filtered.map(n => {
+          const isConfirmed = n.confirmedBy.includes(worshipperName);
+          const isAttended = n.attendedBy.includes(worshipperName);
+          return `
+            <div class="card clickable" onclick="openDetail(${n.id})">
+              <div class="card-top">
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
+                  ${n.pinned ? '<span class="tag green">고정</span>' : ''}
+                </div>
+                <span class="card-date">${escapeHtml(n.date)}</span>
+              </div>
+              <h3 class="card-title">${escapeHtml(n.title)}</h3>
+              <p class="card-body clamp">${escapeHtml(n.body)}</p>
+              <div class="card-footer" onclick="event.stopPropagation()">
+                <button class="check-btn ${isConfirmed ? 'checked' : ''}" onclick="toggleConfirm(${n.id})">
+                  ${isConfirmed ? '✅ 확인 완료' : '☑️ 확인했어요'} (${n.confirmedBy.length})
+                </button>
+                ${n.needAttend ? `
+                  <button class="check-btn attend ${isAttended ? 'checked' : ''}" onclick="toggleAttend(${n.id})">
+                    ${isAttended ? '🙋 참석 체크됨' : '🙋 참석 체크'} (${n.attendedBy.length})
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 주일 예배 체크 버튼
+      const alreadyChecked = sundayChecks.some(c => c.name === worshipperName);
+      const sundayBtn = document.getElementById('sundayCheckBtn');
+      sundayBtn.classList.toggle('done', alreadyChecked);
+      sundayBtn.textContent = alreadyChecked
+        ? `✅ ${worshipperName}님 출석 체크 완료 (누르면 취소)`
+        : '☑️ 이번 주 주일 예배 출석 체크하기';
+
+      // 행사 참석 체크 목록
+      const events = notices.filter(n => n.needAttend);
+      const evEl = document.getElementById('wEventCheckList');
+      if (events.length === 0) {
+        evEl.innerHTML = '<div class="card" style="text-align:center;color:#64748B;">현재 참석 체크 중인 행사가 없습니다.</div>';
+      } else {
+        evEl.innerHTML = events.map(n => {
+          const isAttended = n.attendedBy.includes(worshipperName);
+          return `
+            <div class="card">
+              <div class="card-top">
+                <span class="tag warm">${escapeHtml(n.category)}</span>
+                <span class="card-date">${escapeHtml(n.date)}</span>
+              </div>
+              <h3 class="card-title">${escapeHtml(n.title)}</h3>
+              <p class="card-body clamp" style="margin-bottom:12px;">${escapeHtml(n.body)}</p>
+              <button class="btn-full ${isAttended ? 'btn-outline' : 'btn-indigo'}" onclick="toggleAttend(${n.id})">
+                ${isAttended ? '✅ 참석 체크 완료 (누르면 취소)' : '🙋 이 행사에 참석 체크하기'}
+              </button>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    window.toggleConfirm = (id) => {
+      const target = notices.find(n => n.id === id);
+      if (!target) return;
+      const idx = target.confirmedBy.indexOf(worshipperName);
+      if (idx >= 0) {
+        target.confirmedBy.splice(idx, 1);
+        showToast('확인을 취소했습니다.');
+      } else {
+        target.confirmedBy.push(worshipperName);
+        showToast('공지를 확인했습니다!');
+      }
+      saveAll();
+      renderWorshipper();
+      if (currentDetailId === id) openDetail(id);
+    };
+
+    window.toggleAttend = (id) => {
+      const target = notices.find(n => n.id === id);
+      if (!target) return;
+      const idx = target.attendedBy.indexOf(worshipperName);
+      if (idx >= 0) {
+        target.attendedBy.splice(idx, 1);
+        showToast('참석 체크를 취소했습니다.');
+      } else {
+        target.attendedBy.push(worshipperName);
+        if (!target.confirmedBy.includes(worshipperName)) target.confirmedBy.push(worshipperName);
+        showToast('행사 참석이 체크되었습니다!');
+      }
+      saveAll();
+      renderWorshipper();
+      if (currentDetailId === id) openDetail(id);
+    };
+
+    window.toggleSundayCheck = () => {
+      const idx = sundayChecks.findIndex(c => c.name === worshipperName);
+      if (idx >= 0) {
+        sundayChecks.splice(idx, 1);
+        showToast('주일 출석 체크를 취소했습니다.');
+      } else {
+        sundayChecks.unshift({ name: worshipperName, time: formatNowTime() });
+        showToast('이번 주 주일 예배 출석이 체크되었습니다!');
+      }
+      saveAll();
+      renderWorshipper();
+    };
+
+    window.openDetail = (id) => {
+      const n = notices.find(item => item.id === id);
+      if (!n) return;
+      currentDetailId = id;
+      document.getElementById('detailTag').textContent = n.category;
+      document.getElementById('detailTitle').textContent = n.title;
+      document.getElementById('detailDate').textContent = n.date;
+      document.getElementById('detailBody').textContent = n.body;
+
+      const isConfirmed = n.confirmedBy.includes(worshipperName);
+      const isAttended = n.attendedBy.includes(worshipperName);
+      document.getElementById('detailCheckArea').innerHTML = `
+        <button class="check-btn ${isConfirmed ? 'checked' : ''}" style="flex:1;justify-content:center;" onclick="toggleConfirm(${n.id})">
+          ${isConfirmed ? '✅ 확인 완료' : '☑️ 확인했어요'} (${n.confirmedBy.length})
+        </button>
+        ${n.needAttend ? `
+          <button class="check-btn attend ${isAttended ? 'checked' : ''}" style="flex:1;justify-content:center;" onclick="toggleAttend(${n.id})">
+            ${isAttended ? '🙋 참석 체크됨' : '🙋 참석 체크'} (${n.attendedBy.length})
+          </button>
+        ` : ''}
+      `;
+      document.getElementById('detailModal').classList.add('open');
+    };
+
+    // 6. 관리자 화면 렌더링 (등록·수정·삭제 + 체크 현황 집계)
+    function renderAdmin() {
+      const totalConfirm = notices.reduce((sum, n) => sum + n.confirmedBy.length, 0);
+      document.getElementById('adminStatsGrid').innerHTML = `
+        <div class="stat-box">
+          <div class="stat-num">${notices.length}</div>
+          <div class="stat-label">게시된 공지</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">${sundayChecks.length}</div>
+          <div class="stat-label">주일 출석체크</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">${totalConfirm}</div>
+          <div class="stat-label">공지 확인 합계</div>
+        </div>
+      `;
+
+      const listEl = document.getElementById('aNoticeList');
+      if (notices.length === 0) {
+        listEl.innerHTML = '<div class="card" style="text-align:center;color:#64748B;">등록된 공지·광고가 없습니다. 새 글을 올려보세요.</div>';
+      } else {
+        listEl.innerHTML = notices.map(n => `
+          <div class="card">
+            <div class="card-top">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
+                ${n.pinned ? '<span class="tag green">상단배너</span>' : ''}
+                ${n.needAttend ? '<span class="tag warm">참석체크ON</span>' : ''}
+              </div>
+              <span class="card-date">${escapeHtml(n.date)}</span>
+            </div>
+            <h3 class="card-title">${escapeHtml(n.title)}</h3>
+            <p class="card-body clamp">${escapeHtml(n.body)}</p>
+            <div class="card-footer">
+              <div style="font-size:12px; color:#475569; font-weight:600;">
+                확인 ${n.confirmedBy.length}명 ${n.needAttend ? `· 참석 ${n.attendedBy.length}명` : ''}
+              </div>
+              <div style="display:flex; gap:6px;">
+                <button class="btn-sm" onclick="openEditNotice(${n.id})">수정</button>
+                <button class="btn-sm danger" onclick="deleteNotice(${n.id})">삭제</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 주일 출석 현황
+      document.getElementById('adminSundayCount').textContent = `${sundayChecks.length}명`;
+      document.getElementById('adminSundayList').innerHTML = sundayChecks.length === 0
+        ? '<div style="font-size:13px;color:#64748B;padding:8px 0;">아직 출석 체크한 예배자가 없습니다.</div>'
+        : sundayChecks.map(c => `
+            <div class="log-item">
+              <strong>${escapeHtml(c.name)}</strong>
+              <span class="card-date">${escapeHtml(c.time)} 체크</span>
+            </div>
+          `).join('');
+
+      // 행사별 참석 현황
+      const events = notices.filter(n => n.needAttend);
+      document.getElementById('adminEventStatusList').innerHTML = events.length === 0
+        ? '<div style="font-size:13px;color:#64748B;padding:8px 0;">참석 체크를 받는 행사가 없습니다.</div>'
+        : events.map(ev => `
+            <div style="padding:10px 0; border-bottom:1px solid #F1F5F9;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                <strong style="font-size:13.5px;">${escapeHtml(ev.title)}</strong>
+                <span class="tag warm">${ev.attendedBy.length}명 참석</span>
+              </div>
+              <div style="font-size:12.5px; color:#475569;">
+                ${ev.attendedBy.length ? ev.attendedBy.map(escapeHtml).join(', ') : '아직 참석 체크한 인원이 없습니다.'}
+              </div>
+            </div>
+          `).join('');
+    }
+
+    // 관리자 글 등록/수정/삭제
+    document.getElementById('openNewNoticeBtn').addEventListener('click', () => {
+      document.getElementById('noticeModalTitle').textContent = '새 광고 · 공지 올리기';
+      document.getElementById('editNoticeId').value = '';
+      document.getElementById('noticeCategory').value = '공지';
+      document.getElementById('noticeTitleInput').value = '';
+      document.getElementById('noticeBodyInput').value = '';
+      document.getElementById('noticePinInput').checked = false;
+      document.getElementById('noticeAttendInput').checked = false;
+      document.getElementById('noticeModal').classList.add('open');
+    });
+
+    window.openEditNotice = (id) => {
+      const target = notices.find(n => n.id === id);
+      if (!target) return;
+      document.getElementById('noticeModalTitle').textContent = '광고 · 공지 수정하기';
+      document.getElementById('editNoticeId').value = target.id;
+      document.getElementById('noticeCategory').value = target.category;
+      document.getElementById('noticeTitleInput').value = target.title;
+      document.getElementById('noticeBodyInput').value = target.body;
+      document.getElementById('noticePinInput').checked = !!target.pinned;
+      document.getElementById('noticeAttendInput').checked = !!target.needAttend;
+      document.getElementById('noticeModal').classList.add('open');
+    };
+
+    document.getElementById('saveNoticeBtn').addEventListener('click', () => {
+      const editId = document.getElementById('editNoticeId').value;
+      const category = document.getElementById('noticeCategory').value;
+      const title = document.getElementById('noticeTitleInput').value.trim();
+      const body = document.getElementById('noticeBodyInput').value.trim();
+      const pinned = document.getElementById('noticePinInput').checked;
+      const needAttend = document.getElementById('noticeAttendInput').checked;
+
+      if (!title || !body) {
+        showToast('제목과 내용을 모두 입력해 주세요.');
+        return;
+      }
+      if (pinned) notices.forEach(n => n.pinned = false);
+
+      if (editId) {
+        const target = notices.find(n => String(n.id) === String(editId));
+        if (target) {
+          target.category = category;
+          target.title = title;
+          target.body = body;
+          target.pinned = pinned;
+          target.needAttend = needAttend;
+        }
+        showToast('내용이 수정되었습니다!');
+      } else {
+        notices.unshift({
+          id: Date.now(),
+          category,
+          title,
+          body,
+          date: formatToday(),
+          pinned,
+          needAttend,
+          confirmedBy: [],
+          attendedBy: []
+        });
+        showToast('새 글이 등록되었습니다! 예배자 화면에서 확인해 보세요.');
+      }
+
+      saveAll();
+      document.getElementById('noticeModal').classList.remove('open');
+      renderAdmin();
+    });
+
+    window.deleteNotice = (id) => {
+      if (!confirm('이 글을 삭제할까요?')) return;
+      notices = notices.filter(n => n.id !== id);
+      saveAll();
+      renderAdmin();
+      showToast('삭제되었습니다.');
+    };
+
+    window.resetDemoData = () => {
+      if (!confirm('테스트 데이터를 초기 샘플 상태로 되돌릴까요?')) return;
+      notices = structuredClone(DEFAULT_NOTICES);
+      sundayChecks = structuredClone(DEFAULT_SUNDAY);
+      saveAll();
+      renderAdmin();
+      showToast('테스트 데이터가 초기화되었습니다.');
+    };
+
+    // 필터 및 탭 핸들러
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        currentFilter = chip.dataset.cat;
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        renderWorshipper();
       });
     });
 
-    // 모달 열기/닫기
-    document.getElementById('openNoticeModalBtn').addEventListener('click', () => {
-      document.getElementById('noticeModal').classList.add('open');
+    document.querySelectorAll('[data-wtab]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const t = btn.dataset.wtab;
+        document.querySelectorAll('[data-wtab]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('wTabNotice').classList.toggle('hidden', t !== 'notice');
+        document.getElementById('wTabCheck').classList.toggle('hidden', t !== 'check');
+      });
     });
-    document.getElementById('openPrayerModalBtn').addEventListener('click', () => {
-      document.getElementById('prayerModal').classList.add('open');
+
+    document.querySelectorAll('[data-atab]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const t = btn.dataset.atab;
+        document.querySelectorAll('[data-atab]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('aTabManage').classList.toggle('hidden', t !== 'manage');
+        document.getElementById('aTabStatus').classList.toggle('hidden', t !== 'status');
+      });
     });
+
     document.querySelectorAll('[data-close]').forEach(btn => {
       btn.addEventListener('click', () => {
         document.getElementById(btn.dataset.close).classList.remove('open');
@@ -871,67 +1381,18 @@
       });
     });
 
-    // 공지 링크 복사
     document.getElementById('copyLinkBtn').addEventListener('click', async () => {
-      const shareText = `[우리교회 청년부] ${currentDetailNotice.title}\n${window.location.href}`;
+      const target = notices.find(n => n.id === currentDetailId);
+      const text = target ? `[우리교회 청년부] ${target.title}\n${window.location.href}` : window.location.href;
       try {
-        await navigator.clipboard.writeText(shareText);
-        showToast('공지 제목과 링크가 복사되었습니다!');
+        await navigator.clipboard.writeText(text);
+        showToast('공지 링크가 복사되었습니다!');
       } catch {
-        showToast('주소창의 링크를 복사해 공유해 주세요.');
+        showToast('주소창의 링크를 복사해 주세요.');
       }
     });
 
-    // 새 광고 저장
-    document.getElementById('saveNoticeBtn').addEventListener('click', () => {
-      const category = document.getElementById('noticeCategory').value;
-      const title = document.getElementById('noticeTitleInput').value.trim();
-      const body = document.getElementById('noticeBodyInput').value.trim();
-      const pinned = document.getElementById('noticePinInput').checked;
-      if (!title || !body) {
-        showToast('제목과 내용을 모두 입력해 주세요.');
-        return;
-      }
-      if (pinned) notices.forEach(n => n.pinned = false);
-      notices.unshift({ id: Date.now(), category, title, body, date: formatToday(), pinned });
-      persistData();
-      document.getElementById('noticeTitleInput').value = '';
-      document.getElementById('noticeBodyInput').value = '';
-      document.getElementById('noticePinInput').checked = false;
-      document.getElementById('noticeModal').classList.remove('open');
-      renderHome();
-      showToast('새 광고가 등록되었습니다!');
-    });
-
-    // 새 기도제목 저장
-    document.getElementById('savePrayerBtn').addEventListener('click', () => {
-      const author = document.getElementById('prayerAuthorInput').value.trim() || '익명';
-      const category = document.getElementById('prayerCategoryInput').value;
-      const body = document.getElementById('prayerBodyInput').value.trim();
-      if (!body) {
-        showToast('내용을 입력해 주세요.');
-        return;
-      }
-      prayers.unshift({
-        id: Date.now(),
-        author,
-        category,
-        body,
-        date: '방금 전',
-        prays: 0,
-        prayedByMe: false,
-        comments: []
-      });
-      persistData();
-      document.getElementById('prayerAuthorInput').value = '';
-      document.getElementById('prayerBodyInput').value = '';
-      document.getElementById('prayerModal').classList.remove('open');
-      renderCommunity();
-      showToast('기도제목이 등록되었습니다!');
-    });
-
-    renderHome();
-    renderCommunity();
+    applyScreen();
   </script>
 </body>
 </html>

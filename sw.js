@@ -1,4 +1,4 @@
-const CACHE_NAME = 'youth-church-app-v1';
+const CACHE_NAME = 'youth-church-app-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -7,7 +7,6 @@ const ASSETS_TO_CACHE = [
   './icon-512.png'
 ];
 
-// 설치 단계: 필수 파일 캐시 저장
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
@@ -15,7 +14,6 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// 활성화 단계: 이전 버전 캐시 정리
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
@@ -29,7 +27,6 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// 요청 처리: 네트워크 우선(최신 광고 반영), 오프라인 시 캐시 사용
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
