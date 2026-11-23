@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=117" />
+  <link rel="manifest" href="./manifest.json?v=118" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=117" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=117" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=118" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=118" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1561,7 +1561,7 @@
   <div class="app-shell">
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=117" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=118" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -2171,9 +2171,8 @@
       <h3 id="detailTitle" style="margin:0 0 6px; font-size:18px;"></h3>
       <div id="detailDate" class="card-date" style="margin-bottom:14px;"></div>
       <p id="detailBody" class="card-body" style="margin-bottom:18px;"></p>
-      <div style="display:flex; gap:8px;">
-        <button id="copyLinkBtn" class="btn-outline" style="flex:1;">🔗 링크 복사</button>
-        <button class="btn-outline" data-close="detailModal">닫기</button>
+      <div style="display:flex;">
+        <button class="btn-outline" style="width:100%; padding:11px;" data-close="detailModal">닫기</button>
       </div>
     </div>
   </div>
@@ -3088,7 +3087,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=117" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=118" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -3111,8 +3110,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=117', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=117', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=118', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=118', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -6108,7 +6107,7 @@
       } catch (err) { handleDbError(err, '역할 삭제'); }
     };
 
-    // 모달 닫기 & 링크 복사
+    // 모달 닫기
     document.querySelectorAll('[data-close]').forEach(btn => {
       btn.addEventListener('click', () => document.getElementById(btn.dataset.close).classList.remove('open'));
     });
@@ -6119,12 +6118,6 @@
           if (bg.id === 'quickLinksSheet') syncMoreTabActiveState();
         }
       });
-    });
-    document.getElementById('copyLinkBtn').addEventListener('click', async () => {
-      const target = notices.find(n => String(n.id) === String(currentDetailId));
-      const text = target ? `[라이트 청년부] ${target.title}\n${window.location.href}` : window.location.href;
-      try { await navigator.clipboard.writeText(text); showToast('공지 링크가 복사되었습니다!'); }
-      catch { showToast('주소창의 링크를 복사해 주세요.'); }
     });
 
     // ==================== 13. 관리자 코드 보기/복사 & 이용자 비밀번호 재설정/변경/탈퇴 ====================
