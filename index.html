@@ -7,7 +7,7 @@
 
   <!-- PWA 필수 설정 -->
   <link rel="manifest" href="./manifest.json" />
-  <meta name="theme-color" content="#111827" />
+  <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
@@ -20,7 +20,6 @@
       --primary-light: #2563EB;
       --primary-soft: #EFF6FF;
       --brand-gold: #F59E0B;
-      --brand-crimson: #DC2626;
       --admin-bg: #0B0F19;
       --admin-card: #1E293B;
       --admin-accent: #F59E0B;
@@ -54,7 +53,7 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      box-shadow: 0 0 30px rgba(15, 23, 42, 0.1);
+      box-shadow: 0 0 30px rgba(15, 23, 42, 0.12);
     }
 
     .hidden { display: none !important; }
@@ -69,6 +68,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
     .pwa-banner.show { display: flex; }
     .pwa-banner-text { line-height: 1.4; }
@@ -91,114 +91,148 @@
       cursor: pointer;
     }
 
-    /* ==================== 1. 첫 입장(역할 선택) 화면 ==================== */
-    .gate-screen {
+    /* ==================== 1. 통합 로그인 화면 ==================== */
+    .login-screen {
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 28px 20px;
-      background: linear-gradient(180deg, #111827 0%, #1F2937 32%, #F8FAFC 32%, #FFFFFF 100%);
+      padding: 32px 22px;
+      background: radial-gradient(circle at top center, #1F2937 0%, #0B0F19 52%, #09090B 100%);
+      color: #fff;
     }
-    .gate-brand {
+    .login-brand {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 26px;
     }
-    .gate-logo {
+    .login-logo {
       width: 96px;
       height: 96px;
       border-radius: 26px;
       object-fit: cover;
       background: #000;
-      border: 2px solid rgba(255, 255, 255, 0.18);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
-      margin-bottom: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5);
+      margin-bottom: 14px;
     }
-    .gate-title {
-      font-size: 24px;
+    .login-title {
+      font-size: 25px;
       font-weight: 800;
       color: #FFFFFF;
-      margin: 0 0 4px;
-      letter-spacing: -0.3px;
+      margin: 0 0 5px;
+      letter-spacing: -0.4px;
     }
-    .gate-sub {
+    .login-sub {
       font-size: 13px;
-      color: rgba(255, 255, 255, 0.78);
+      color: #94A3B8;
       margin: 0;
+    }
+
+    /* 하나의 통합 로그인 카드 */
+    .login-card {
+      background: #FFFFFF;
+      color: var(--text);
+      border-radius: 24px;
+      padding: 22px 20px 24px;
+      box-shadow: 0 20px 44px rgba(0, 0, 0, 0.42);
+    }
+
+    /* 예배자 / 관리자 전환 탭 */
+    .role-segment {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #F1F5F9;
+      border-radius: 14px;
+      padding: 4px;
+      margin-bottom: 20px;
+    }
+    .segment-btn {
+      border: none;
+      background: transparent;
+      border-radius: 11px;
+      padding: 11px 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #64748B;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .segment-btn.active {
+      background: #FFFFFF;
+      color: #0F172A;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    }
+    .segment-btn.admin-active {
+      background: #111827;
+      color: #FDE68A;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
+    }
+
+    .login-field-label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 7px;
+    }
+    .login-input-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+    .login-input {
+      width: 100%;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 13px;
+      padding: 13px 14px;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--text);
+      background: #F8FAFC;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .login-input:focus {
+      outline: none;
+      border-color: #111827;
+      background: #FFFFFF;
+    }
+    .login-input.admin-focus:focus {
+      border-color: #D97706;
+    }
+    .login-desc {
+      font-size: 12.5px;
+      color: #64748B;
+      margin: 0 0 16px;
       line-height: 1.45;
     }
-
-    .role-card {
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 14px;
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+    .login-error {
+      display: none;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--danger);
+      margin: -6px 0 14px;
     }
-    .role-card.worshipper-card {
-      border-color: #CBD5E1;
-    }
-    .role-card.admin-card {
-      background: var(--admin-bg);
-      border-color: #334155;
-      color: #fff;
-    }
-    .role-head {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-    .role-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-    }
-    .role-icon.dark { background: #F1F5F9; }
-    .role-icon.amber { background: rgba(245, 158, 11, 0.18); }
-    .role-name { font-size: 17px; font-weight: 800; margin: 0 0 3px; }
-    .role-desc { font-size: 12.5px; margin: 0; opacity: 0.78; line-height: 1.4; }
-
-    .gate-input {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 11px 13px;
-      font-size: 14px;
-      margin-bottom: 10px;
-      font-family: inherit;
-    }
-    .gate-input.dark {
-      background: #1E293B;
-      border-color: #334155;
-      color: #fff;
-    }
-    .gate-input.dark::placeholder { color: #94A3B8; }
+    .login-error.show { display: block; }
 
     .btn-full {
       width: 100%;
       border: none;
-      border-radius: 12px;
-      padding: 13px;
-      font-size: 14.5px;
-      font-weight: 700;
+      border-radius: 13px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 800;
       cursor: pointer;
+      transition: transform 0.1s;
     }
+    .btn-full:active { transform: scale(0.99); }
     .btn-dark { background: #111827; color: #fff; }
     .btn-amber { background: var(--admin-accent); color: #0F172A; }
 
-    .gate-hint {
+    .login-footer-hint {
       text-align: center;
       font-size: 12px;
-      color: var(--text-sub);
-      margin-top: 6px;
-      line-height: 1.5;
+      color: #94A3B8;
+      margin-top: 20px;
+      line-height: 1.55;
     }
 
     /* ==================== 2. 공통 헤더 & 탭바 ==================== */
@@ -617,43 +651,50 @@
       <button id="pwaBannerClose" class="pwa-banner-close" aria-label="닫기">✕</button>
     </div>
 
-    <!-- ==================== 1. 첫 입장 화면 (역할 완전 분리) ==================== -->
-    <section id="gateScreen" class="gate-screen">
-      <div class="gate-brand">
-        <img src="./icon-512.png" alt="라이트 청년부 로고" class="gate-logo" />
-        <h1 class="gate-title">라이트 청년부</h1>
-        <p class="gate-sub">구미제일감리교회 청년부<br>사용할 화면을 선택해 입장해 주세요.</p>
+    <!-- ==================== 1. 통합 로그인 화면 ==================== -->
+    <section id="loginScreen" class="login-screen">
+      <div class="login-brand">
+        <img src="./icon-512.png" alt="라이트 청년부 로고" class="login-logo" />
+        <h1 class="login-title">라이트 청년부</h1>
+        <p class="login-sub">구미제일감리교회 청년부</p>
       </div>
 
-      <!-- 예배자 입장 카드 -->
-      <div class="role-card worshipper-card">
-        <div class="role-head">
-          <div class="role-icon dark">🙏</div>
-          <div>
-            <h2 class="role-name">예배자 화면으로 입장</h2>
-            <p class="role-desc">광고·소식·공지 확인 및 예배/행사 체크 전용</p>
-          </div>
+      <!-- 하나의 로그인 창 -->
+      <div class="login-card">
+        <div class="role-segment" role="tablist">
+          <button id="segWorshipper" class="segment-btn active" type="button" onclick="selectLoginTab('worshipper')">
+            예배자
+          </button>
+          <button id="segAdmin" class="segment-btn" type="button" onclick="selectLoginTab('admin')">
+            관리자
+          </button>
         </div>
-        <input id="worshipperNameInput" class="gate-input" placeholder="이름 또는 셀 입력 (선택, 예: 2셀 지현)" />
-        <button id="enterWorshipperBtn" class="btn-full btn-dark">예배자로 시작하기</button>
-      </div>
 
-      <!-- 관리자 입장 카드 -->
-      <div class="role-card admin-card">
-        <div class="role-head">
-          <div class="role-icon amber">🔐</div>
-          <div>
-            <h2 class="role-name">관리자 화면으로 입장</h2>
-            <p class="role-desc">광고·소식·공지 등록/수정 및 체크 현황 관리</p>
+        <!-- 예배자 로그인 영역 -->
+        <div id="worshipperLoginForm">
+          <p class="login-desc">광고·소식·공지 확인 및 예배·행사 체크를 이용할 수 있습니다.</p>
+          <label class="login-field-label" for="worshipperNameInput">이름 또는 셀 (선택)</label>
+          <div class="login-input-wrap">
+            <input id="worshipperNameInput" class="login-input" placeholder="예: 2셀 지현 (비우면 '예배자')" />
           </div>
+          <button id="enterWorshipperBtn" class="btn-full btn-dark" type="button">예배자로 로그인</button>
         </div>
-        <input id="adminPinInput" type="password" inputmode="numeric" class="gate-input dark" placeholder="관리자 비밀번호 입력 (테스트용: 1234)" />
-        <button id="enterAdminBtn" class="btn-full btn-amber">관리자 인증 후 입장</button>
+
+        <!-- 관리자 로그인 영역 -->
+        <div id="adminLoginForm" class="hidden">
+          <p class="login-desc">관리자 코드를 입력하면 공지 등록·수정 및 체크 현황 관리 화면으로 입장합니다.</p>
+          <label class="login-field-label" for="adminPinInput">관리자 코드 (비밀번호)</label>
+          <div class="login-input-wrap">
+            <input id="adminPinInput" type="password" inputmode="numeric" class="login-input admin-focus" placeholder="관리자 코드를 입력하세요" />
+          </div>
+          <div id="adminLoginError" class="login-error">관리자 코드가 일치하지 않습니다. 다시 확인해 주세요.</div>
+          <button id="enterAdminBtn" class="btn-full btn-amber" type="button">관리자로 로그인</button>
+        </div>
       </div>
 
-      <div class="gate-hint">
-        🧪 <b>혼자 테스트 팁:</b> 관리자에서 공지를 올린 뒤<br>
-        상단 <b>[모드 나가기]</b>로 예배자 화면에 들어가면 바로 확인됩니다.
+      <div class="login-footer-hint">
+        테스트용 관리자 코드: <b>1234</b><br>
+        화면 상단 <b>[로그아웃]</b>으로 언제든 역할을 바꿔 테스트할 수 있습니다.
       </div>
     </section>
 
@@ -669,7 +710,7 @@
             <div id="worshipperWelcome" class="brand-sub">환영합니다!</div>
           </div>
         </div>
-        <button class="exit-btn light" onclick="exitMode()">모드 나가기</button>
+        <button class="exit-btn light" onclick="exitMode()">로그아웃</button>
       </header>
 
       <main class="main">
@@ -726,7 +767,7 @@
             <div class="brand-sub">광고 · 공지 · 체크 현황 관리</div>
           </div>
         </div>
-        <button class="exit-btn dark" onclick="exitMode()">모드 나가기</button>
+        <button class="exit-btn dark" onclick="exitMode()">로그아웃</button>
       </header>
 
       <main class="main">
@@ -836,7 +877,7 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    // 1. 서비스 워커 등록 및 자동 업데이트 확인
+    // 1. 서비스 워커 등록 및 자동 업데이트
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then((reg) => {
@@ -882,7 +923,7 @@
       pwaBanner.classList.remove('show');
     });
 
-    // 3. 상태 및 샘플 데이터
+    // 3. 상태 및 샘플 데이터 (기존 v2/v3 데이터 그대로 유지)
     const ADMIN_PIN = '1234';
     const STORAGE_KEY_NOTICES = 'youth_v2_notices';
     const STORAGE_KEY_SUNDAY = 'youth_v2_sunday_checks';
@@ -934,6 +975,7 @@
     let sundayChecks = JSON.parse(localStorage.getItem(STORAGE_KEY_SUNDAY) || 'null') || structuredClone(DEFAULT_SUNDAY);
     let currentRole = localStorage.getItem(STORAGE_KEY_ROLE) || null;
     let worshipperName = localStorage.getItem(STORAGE_KEY_WNAME) || '예배자';
+    let selectedLoginTab = 'worshipper';
     let currentFilter = '전체';
     let currentDetailId = null;
 
@@ -978,9 +1020,33 @@
       return '';
     }
 
-    // 4. 화면 전환
+    // 4. 통합 로그인 창 탭 전환 및 로그인 처리
+    window.selectLoginTab = (tab) => {
+      selectedLoginTab = tab;
+      const segW = document.getElementById('segWorshipper');
+      const segA = document.getElementById('segAdmin');
+      const formW = document.getElementById('worshipperLoginForm');
+      const formA = document.getElementById('adminLoginForm');
+      const errEl = document.getElementById('adminLoginError');
+
+      errEl.classList.remove('show');
+
+      if (tab === 'worshipper') {
+        segW.className = 'segment-btn active';
+        segA.className = 'segment-btn';
+        formW.classList.remove('hidden');
+        formA.classList.add('hidden');
+      } else {
+        segW.className = 'segment-btn';
+        segA.className = 'segment-btn admin-active';
+        formW.classList.add('hidden');
+        formA.classList.remove('hidden');
+        setTimeout(() => document.getElementById('adminPinInput').focus(), 50);
+      }
+    };
+
     function applyScreen() {
-      document.getElementById('gateScreen').classList.toggle('hidden', currentRole !== null);
+      document.getElementById('loginScreen').classList.toggle('hidden', currentRole !== null);
       document.getElementById('worshipperApp').classList.toggle('hidden', currentRole !== 'worshipper');
       document.getElementById('adminApp').classList.toggle('hidden', currentRole !== 'admin');
 
@@ -993,44 +1059,57 @@
         document.getElementById('worshipperWelcome').textContent = `${worshipperName}님, 환영합니다`;
         renderWorshipper();
       } else {
-        themeMeta.setAttribute('content', '#111827');
+        themeMeta.setAttribute('content', '#0B0F19');
         document.getElementById('worshipperNameInput').value = worshipperName === '예배자' ? '' : worshipperName;
         document.getElementById('adminPinInput').value = '';
+        document.getElementById('adminLoginError').classList.remove('show');
+        selectLoginTab('worshipper');
       }
     }
 
-    document.getElementById('enterWorshipperBtn').addEventListener('click', () => {
+    function tryWorshipperLogin() {
       const inputName = document.getElementById('worshipperNameInput').value.trim();
       worshipperName = inputName || '예배자';
       currentRole = 'worshipper';
       localStorage.setItem(STORAGE_KEY_ROLE, currentRole);
       localStorage.setItem(STORAGE_KEY_WNAME, worshipperName);
       applyScreen();
-      showToast('예배자 화면으로 입장했습니다.');
-    });
+      showToast(`${worshipperName}님, 환영합니다!`);
+    }
 
     function tryAdminLogin() {
       const pin = document.getElementById('adminPinInput').value.trim();
+      const errEl = document.getElementById('adminLoginError');
       if (pin !== ADMIN_PIN) {
-        showToast('비밀번호가 일치하지 않습니다. (테스트용: 1234)');
+        errEl.classList.add('show');
+        document.getElementById('adminPinInput').focus();
         return;
       }
+      errEl.classList.remove('show');
       currentRole = 'admin';
       localStorage.setItem(STORAGE_KEY_ROLE, currentRole);
       applyScreen();
-      showToast('관리자 화면으로 입장했습니다.');
+      showToast('관리자로 로그인했습니다.');
     }
+
+    document.getElementById('enterWorshipperBtn').addEventListener('click', tryWorshipperLogin);
+    document.getElementById('worshipperNameInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') tryWorshipperLogin();
+    });
 
     document.getElementById('enterAdminBtn').addEventListener('click', tryAdminLogin);
     document.getElementById('adminPinInput').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') tryAdminLogin();
+    });
+    document.getElementById('adminPinInput').addEventListener('input', () => {
+      document.getElementById('adminLoginError').classList.remove('show');
     });
 
     window.exitMode = () => {
       currentRole = null;
       localStorage.removeItem(STORAGE_KEY_ROLE);
       applyScreen();
-      showToast('처음 화면으로 이동했습니다.');
+      showToast('로그아웃되었습니다.');
     };
 
     // 5. 예배자 화면 렌더링
@@ -1319,7 +1398,7 @@
           confirmedBy: [],
           attendedBy: []
         });
-        showToast('새 글이 등록되었습니다! 예배자 화면에서 확인해 보세요.');
+        showToast('새 글이 등록되었습니다! 로그아웃 후 예배자 화면에서 확인해 보세요.');
       }
 
       saveAll();
