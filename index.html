@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>우리교회 청년부</title>
+
+  <!-- PWA 필수 설정 -->
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#312E81" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="우리청년부" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+  <link rel="icon" type="image/png" href="./icon-192.png" />
+
+  <style>
+    :root {
+      --primary: #312E81;
+      --primary-light: #4F46E5;
+      --primary-soft: #EEF2FF;
+      --accent: #F59E0B;
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --text: #0F172A;
+      --text-sub: #64748B;
+      --border: #E2E8F0;
+      --danger: #EF4444;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif;
+      background: #E2E8F0;
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 0 30px rgba(15, 23, 42, 0.08);
+    }
+
+    /* 상단 헤더 */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+    .brand-title { font-size: 17px; font-weight: 800; color: var(--primary); line-height: 1.1; }
+    .brand-sub { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
+
+    /* 임원 모드 스위치 */
+    .admin-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-sub);
+      cursor: pointer;
+      user-select: none;
+    }
+    .admin-toggle.active { color: var(--primary-light); }
+    .switch {
+      width: 38px;
+      height: 22px;
+      background: #CBD5E1;
+      border-radius: 999px;
+      position: relative;
+      transition: background 0.2s;
+    }
+    .switch::after {
+      content: "";
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .admin-toggle.active .switch { background: var(--primary-light); }
+    .admin-toggle.active .switch::after { transform: translateX(16px); }
+
+    /* 앱 설치 / 브라우저 안내 배너 */
+    .pwa-banner {
+      display: none;
+      background: #1E1B4B;
+      color: #fff;
+      padding: 12px 16px;
+      font-size: 13px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .pwa-banner.show { display: flex; }
+    .pwa-banner-text { line-height: 1.4; }
+    .pwa-banner-btn {
+      background: var(--accent);
+      color: #111827;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-weight: 700;
+      font-size: 12px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .pwa-banner-close {
+      background: transparent;
+      border: none;
+      color: #CBD5E1;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+
+    /* 메인 콘텐츠 */
+    .main {
+      flex: 1;
+      padding: 16px 16px calc(84px + var(--safe-bottom));
+    }
+
+    /* 상단 고정 배너 */
+    .hero-banner {
+      background: linear-gradient(135deg, #312E81 0%, #4F46E5 100%);
+      color: #fff;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 18px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(49, 46, 129, 0.2);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(251, 191, 36, 0.22);
+      color: #FDE68A;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+    .hero-title { font-size: 19px; font-weight: 800; margin: 0 0 6px; line-height: 1.3; }
+    .hero-desc { font-size: 13px; color: rgba(255,255,255,0.86); margin: 0; line-height: 1.45; }
+
+    /* 섹션 헤더 */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .section-title { font-size: 16px; font-weight: 800; margin: 0; }
+    .btn-primary {
+      background: var(--primary-light);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 13px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-outline {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-danger-sm {
+      background: #FEF2F2;
+      color: var(--danger);
+      border: 1px solid #FECACA;
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* 카드 리스트 */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    }
+    .card.clickable { cursor: pointer; transition: transform 0.12s; }
+    .card.clickable:active { transform: scale(0.99); }
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: var(--primary-soft);
+      color: var(--primary-light);
+    }
+    .tag.warm { background: #FEF3C7; color: #B45309; }
+    .tag.green { background: #DCFCE7; color: #15803D; }
+    .card-date { font-size: 12px; color: var(--text-sub); }
+    .card-title { font-size: 15px; font-weight: 700; margin: 0 0 6px; line-height: 1.35; }
+    .card-body {
+      font-size: 13.5px;
+      color: #334155;
+      line-height: 1.55;
+      margin: 0;
+      white-space: pre-line;
+    }
+    .card-body.clamp {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* 소통 카드 액션 */
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid #F1F5F9;
+    }
+    .pray-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .pray-btn.prayed {
+      background: var(--primary-soft);
+      border-color: #C7D2FE;
+      color: var(--primary-light);
+    }
+    .comment-box {
+      margin-top: 10px;
+      background: #F8FAFC;
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .comment-item {
+      font-size: 12.5px;
+      padding: 5px 0;
+      border-bottom: 1px solid #E2E8F0;
+    }
+    .comment-item:last-of-type { border-bottom: none; }
+    .comment-author { font-weight: 700; margin-right: 6px; color: var(--primary); }
+    .comment-form {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .comment-input {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 12.5px;
+      background: #fff;
+    }
+
+    /* 하단 탭바 */
+    .tabbar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      padding: 8px 12px calc(8px + var(--safe-bottom));
+      z-index: 25;
+    }
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-sub);
+      cursor: pointer;
+      padding: 4px 0;
+    }
+    .tab-btn.active { color: var(--primary-light); font-weight: 800; }
+    .tab-icon { font-size: 20px; line-height: 1; }
+
+    /* 모달 */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      z-index: 50;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      width: 100%;
+      max-width: 480px;
+      background: var(--surface);
+      border-radius: 22px 22px 0 0;
+      padding: 20px 18px calc(24px + var(--safe-bottom));
+      max-height: 86vh;
+      overflow-y: auto;
+    }
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .modal-title { font-size: 17px; font-weight: 800; margin: 0; }
+    .close-btn {
+      background: #F1F5F9;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .form-group { margin-bottom: 12px; }
+    .form-label { display: block; font-size: 12.5px; font-weight: 700; margin-bottom: 6px; color: #334155; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    .form-textarea { min-height: 100px; resize: vertical; }
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      margin: 10px 0 16px;
+    }
+
+    /* 토스트 */
+    .toast {
+      position: fixed;
+      bottom: calc(82px + var(--safe-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(15, 23, 42, 0.92);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- PWA 설치 / 카카오톡 브라우저 안내 배너 -->
+    <div id="pwaBanner" class="pwa-banner">
+      <div id="pwaBannerText" class="pwa-banner-text"></div>
+      <button id="pwaBannerAction" class="pwa-banner-btn hidden">앱 설치</button>
+      <button id="pwaBannerClose" class="pwa-banner-close" aria-label="닫기">✕</button>
+    </div>
+
+    <!-- 상단 헤더 -->
+    <header class="header">
+      <div class="brand">
+        <img src="./icon-192.png" alt="로고" class="brand-logo" />
+        <div>
+          <div class="brand-title">우리교회 청년부</div>
+          <div class="brand-sub">광고 · 기도제목 소통</div>
+        </div>
+      </div>
+      <div id="adminToggle" class="admin-toggle" role="button" tabindex="0">
+        <span>임원 모드</span>
+        <div class="switch"></div>
+      </div>
+    </header>
+
+    <!-- 메인 영역 -->
+    <main class="main">
+      <!-- 홈(광고) 탭 -->
+      <section id="tabHome">
+        <div id="heroBanner" class="hero-banner"></div>
+        <div class="section-head">
+          <h2 class="section-title">📢 이번 주 광고</h2>
+          <button id="openNoticeModalBtn" class="btn-primary hidden">+ 새 광고 올리기</button>
+        </div>
+        <div id="noticeList"></div>
+      </section>
+
+      <!-- 소통(기도) 탭 -->
+      <section id="tabCommunity" class="hidden">
+        <div class="section-head">
+          <h2 class="section-title">🙏 기도제목 · 나눔</h2>
+          <button id="openPrayerModalBtn" class="btn-primary">+ 글 남기기</button>
+        </div>
+        <div id="prayerList"></div>
+      </section>
+    </main>
+
+    <!-- 하단 탭바 -->
+    <nav class="tabbar">
+      <button class="tab-btn active" data-tab="home">
+        <span class="tab-icon">🏠</span>
+        <span>홈 (광고)</span>
+      </button>
+      <button class="tab-btn" data-tab="community">
+        <span class="tab-icon">💬</span>
+        <span>소통 (기도)</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- 광고 상세 모달 -->
+  <div id="detailModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <span id="detailTag" class="tag">공지</span>
+        <button class="close-btn" data-close="detailModal">✕</button>
+      </div>
+      <h3 id="detailTitle" style="margin:0 0 6px; font-size:18px;"></h3>
+      <div id="detailDate" class="card-date" style="margin-bottom:14px;"></div>
+      <p id="detailBody" class="card-body" style="margin-bottom:20px;"></p>
+      <div style="display:flex; gap:8px;">
+        <button id="copyLinkBtn" class="btn-primary" style="flex:1;">🔗 공지 링크 복사</button>
+        <button class="btn-outline" data-close="detailModal">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 새 광고 작성 모달 (임원 전용) -->
+  <div id="noticeModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 class="modal-title">새 광고 올리기</h3>
+        <button class="close-btn" data-close="noticeModal">✕</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">구분</label>
+        <select id="noticeCategory" class="form-select">
+          <option value="주일공지">주일공지</option>
+          <option value="수련회·행사">수련회·행사</option>
+          <option value="모집안내">모집안내</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">제목</label>
+        <input id="noticeTitleInput" class="form-input" placeholder="예: 12월 청년부 송년 예배 안내" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">내용</label>
+        <textarea id="noticeBodyInput" class="form-textarea" placeholder="일시, 장소, 준비물 등을 적어주세요."></textarea>
+      </div>
+      <label class="checkbox-row">
+        <input type="checkbox" id="noticePinInput" />
+        <span>홈 상단 배너로 고정하기</span>
+      </label>
+      <button id="saveNoticeBtn" class="btn-primary" style="width:100%; padding:12px;">광고 등록하기</button>
+    </div>
+  </div>
+
+  <!-- 기도제목 작성 모달 -->
+  <div id="prayerModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 class="modal-title">기도제목 · 나눔 올리기</h3>
+        <button class="close-btn" data-close="prayerModal">✕</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">이름 또는 닉네임</label>
+        <input id="prayerAuthorInput" class="form-input" placeholder="예: 3셀 김민수 (비우면 익명)" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">카테고리</label>
+        <select id="prayerCategoryInput" class="form-select">
+          <option value="기도제목">기도제목</option>
+          <option value="은혜나눔">은혜나눔</option>
+          <option value="자유소통">자유소통</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">내용</label>
+        <textarea id="prayerBodyInput" class="form-textarea" placeholder="함께 나누고 싶은 기도제목이나 이야기를 적어주세요."></textarea>
+      </div>
+      <button id="savePrayerBtn" class="btn-primary" style="width:100%; padding:12px;">올리기</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    // 1. 서비스 워커 등록 (PWA 정식 앱 설치를 위한 필수 코드)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch((err) => {
+          console.log('SW 등록 실패:', err);
+        });
+      });
+    }
+
+    // 2. PWA 앱 설치 배너 및 카카오톡 브라우저 안내 처리
+    let deferredPrompt = null;
+    const pwaBanner = document.getElementById('pwaBanner');
+    const pwaBannerText = document.getElementById('pwaBannerText');
+    const pwaBannerAction = document.getElementById('pwaBannerAction');
+    const pwaBannerClose = document.getElementById('pwaBannerClose');
+
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const ua = navigator.userAgent.toLowerCase();
+    const isKakao = ua.includes('kakaotalk');
+    const isIOS = /iphone|ipad|ipod/.test(ua);
+
+    if (!isStandalone) {
+      if (isKakao) {
+        pwaBannerText.innerHTML = '카톡 화면에서는 앱 설치가 안 돼요.<br>오른쪽 아래 <b>⋮ → 다른 브라우저로 열기</b>를 눌러주세요!';
+        pwaBanner.classList.add('show');
+      } else if (isIOS) {
+        pwaBannerText.innerHTML = '아이폰 앱 설치: 아래 <b>공유(□↑) → 홈 화면에 추가</b>를 눌러주세요!';
+        pwaBanner.classList.add('show');
+      }
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (!isStandalone) {
+        pwaBannerText.innerHTML = '<b>우리교회 청년부</b>를 스마트폰 앱으로 바로 설치해 보세요!';
+        pwaBannerAction.classList.remove('hidden');
+        pwaBanner.classList.add('show');
+      }
+    });
+
+    pwaBannerAction.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const result = await deferredPrompt.userChoice;
+      if (result.outcome === 'accepted') {
+        pwaBanner.classList.remove('show');
+        showToast('앱 설치가 시작되었습니다!');
+      }
+      deferredPrompt = null;
+    });
+
+    pwaBannerClose.addEventListener('click', () => {
+      pwaBanner.classList.remove('show');
+    });
+
+    // 3. 기본 샘플 데이터 (로컬 저장소 연동으로 앱 재실행 시에도 테스트 내용 유지)
+    const DEFAULT_NOTICES = [
+      {
+        id: 1,
+        category: '수련회·행사',
+        title: '2026 겨울 청년부 수련회 신청 안내',
+        body: '일시: 12월 26일(토) ~ 28일(월)\n장소: 은혜수양관\n회비: 30,000원 (새가족 무료)\n\n이번 주일까지 셀 리더에게 신청해 주세요!',
+        date: '2026.11.22',
+        pinned: true
+      },
+      {
+        id: 2,
+        category: '주일공지',
+        title: '이번 주 청년부 예배 및 셀 모임 안내',
+        body: '시간: 주일 오후 2시 본당 3층 비전홀\n예배 후 1층 카페에서 셀별 나눔이 진행됩니다. 새가족 환영 다과가 준비되어 있습니다.',
+        date: '2026.11.22',
+        pinned: false
+      },
+      {
+        id: 3,
+        category: '모집안내',
+        title: '찬양팀 · 미디어팀 새 봉사자 모집',
+        body: '음향, PPT, 촬영, 악기(건반·기타) 분야 봉사자를 모집합니다. 초보자도 환영하니 임원진에게 편하게 문의해 주세요.',
+        date: '2026.11.18',
+        pinned: false
+      }
+    ];
+
+    const DEFAULT_PRAYERS = [
+      {
+        id: 101,
+        author: '2셀 지현',
+        category: '기도제목',
+        body: '다음 주 최종 면접을 앞두고 있습니다. 긴장하지 않고 준비한 것들을 담대하게 잘 나누고 올 수 있도록 함께 기도해 주세요!',
+        date: '방금 전',
+        prays: 7,
+        prayedByMe: false,
+        comments: [
+          { author: '1셀 민수', text: '화이팅입니다! 꼭 좋은 결과 있기를 기도할게요 🙏' }
+        ]
+      },
+      {
+        id: 102,
+        author: '익명',
+        category: '은혜나눔',
+        body: '이번 주일 말씀 덕분에 한 주 동안 마음이 참 평안했습니다. 청년부 공동체가 있어서 감사해요.',
+        date: '어제',
+        prays: 12,
+        prayedByMe: false,
+        comments: []
+      }
+    ];
+
+    let notices = JSON.parse(localStorage.getItem('youth_notices_v1') || 'null') || DEFAULT_NOTICES;
+    let prayers = JSON.parse(localStorage.getItem('youth_prayers_v1') || 'null') || DEFAULT_PRAYERS;
+    let isAdmin = false;
+    let currentDetailNotice = null;
+
+    function persistData() {
+      localStorage.setItem('youth_notices_v1', JSON.stringify(notices));
+      localStorage.setItem('youth_prayers_v1', JSON.stringify(prayers));
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    function formatToday() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}.${m}.${day}`;
+    }
+
+    // 4. 화면 렌더링
+    function renderHome() {
+      const pinned = notices.find(n => n.pinned) || notices[0];
+      const hero = document.getElementById('heroBanner');
+      if (pinned) {
+        hero.classList.remove('hidden');
+        hero.innerHTML = `
+          <span class="hero-badge">📌 고정 공지 · ${pinned.category}</span>
+          <h2 class="hero-title">${escapeHtml(pinned.title)}</h2>
+          <p class="hero-desc">${escapeHtml(pinned.body.split('\n')[0])}</p>
+        `;
+        hero.onclick = () => openDetail(pinned);
+      } else {
+        hero.classList.add('hidden');
+      }
+
+      document.getElementById('openNoticeModalBtn').classList.toggle('hidden', !isAdmin);
+
+      const listEl = document.getElementById('noticeList');
+      if (notices.length === 0) {
+        listEl.innerHTML = '<div class="card" style="text-align:center;color:#64748B;">등록된 광고가 없습니다.</div>';
+        return;
+      }
+
+      listEl.innerHTML = notices.map(n => `
+        <div class="card clickable" onclick="openDetailById(${n.id})">
+          <div class="card-top">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="tag ${n.category === '수련회·행사' ? 'warm' : ''}">${escapeHtml(n.category)}</span>
+              ${n.pinned ? '<span class="tag green">배너고정</span>' : ''}
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="card-date">${escapeHtml(n.date)}</span>
+              ${isAdmin ? `<button class="btn-danger-sm" onclick="event.stopPropagation(); deleteNotice(${n.id})">삭제</button>` : ''}
+            </div>
+          </div>
+          <h3 class="card-title">${escapeHtml(n.title)}</h3>
+          <p class="card-body clamp">${escapeHtml(n.body)}</p>
+        </div>
+      `).join('');
+    }
+
+    function renderCommunity() {
+      const listEl = document.getElementById('prayerList');
+      if (prayers.length === 0) {
+        listEl.innerHTML = '<div class="card" style="text-align:center;color:#64748B;">첫 번째 기도제목을 남겨보세요!</div>';
+        return;
+      }
+
+      listEl.innerHTML = prayers.map(p => `
+        <div class="card">
+          <div class="card-top">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="tag ${p.category === '은혜나눔' ? 'green' : ''}">${escapeHtml(p.category)}</span>
+              <strong style="font-size:13px;">${escapeHtml(p.author)}</strong>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="card-date">${escapeHtml(p.date)}</span>
+              ${isAdmin ? `<button class="btn-danger-sm" onclick="deletePrayer(${p.id})">삭제</button>` : ''}
+            </div>
+          </div>
+          <p class="card-body">${escapeHtml(p.body)}</p>
+          <div class="card-actions">
+            <button class="pray-btn ${p.prayedByMe ? 'prayed' : ''}" onclick="togglePray(${p.id})">
+              🙏 함께 기도해요 <span>${p.prays}</span>
+            </button>
+          </div>
+          <div class="comment-box">
+            ${p.comments.map(c => `
+              <div class="comment-item">
+                <span class="comment-author">${escapeHtml(c.author)}</span>
+                <span>${escapeHtml(c.text)}</span>
+              </div>
+            `).join('')}
+            <div class="comment-form">
+              <input id="commentInput-${p.id}" class="comment-input" placeholder="응원의 댓글을 남겨주세요..." />
+              <button class="btn-primary" style="padding:6px 10px;font-size:12px;" onclick="addComment(${p.id})">등록</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // 5. 상호작용 핸들러
+    window.openDetailById = (id) => {
+      const target = notices.find(n => n.id === id);
+      if (target) openDetail(target);
+    };
+
+    function openDetail(notice) {
+      currentDetailNotice = notice;
+      document.getElementById('detailTag').textContent = notice.category;
+      document.getElementById('detailTitle').textContent = notice.title;
+      document.getElementById('detailDate').textContent = notice.date;
+      document.getElementById('detailBody').textContent = notice.body;
+      document.getElementById('detailModal').classList.add('open');
+    }
+
+    window.deleteNotice = (id) => {
+      if (!confirm('이 광고를 삭제할까요?')) return;
+      notices = notices.filter(n => n.id !== id);
+      persistData();
+      renderHome();
+      showToast('광고가 삭제되었습니다.');
+    };
+
+    window.deletePrayer = (id) => {
+      if (!confirm('이 글을 삭제할까요?')) return;
+      prayers = prayers.filter(p => p.id !== id);
+      persistData();
+      renderCommunity();
+      showToast('글이 삭제되었습니다.');
+    };
+
+    window.togglePray = (id) => {
+      const target = prayers.find(p => p.id === id);
+      if (!target) return;
+      target.prayedByMe = !target.prayedByMe;
+      target.prays += target.prayedByMe ? 1 : -1;
+      persistData();
+      renderCommunity();
+    };
+
+    window.addComment = (id) => {
+      const input = document.getElementById(`commentInput-${id}`);
+      const text = input.value.trim();
+      if (!text) return;
+      const target = prayers.find(p => p.id === id);
+      if (!target) return;
+      target.comments.push({ author: isAdmin ? '임원' : '청년', text });
+      persistData();
+      renderCommunity();
+      showToast('댓글이 등록되었습니다.');
+    };
+
+    // 임원 모드 전환
+    document.getElementById('adminToggle').addEventListener('click', function () {
+      isAdmin = !isAdmin;
+      this.classList.toggle('active', isAdmin);
+      renderHome();
+      renderCommunity();
+      showToast(isAdmin ? '임원(관리자) 모드가 켜졌습니다.' : '일반 청년 모드로 전환되었습니다.');
+    });
+
+    // 탭 전환
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tabHome').classList.toggle('hidden', tab !== 'home');
+        document.getElementById('tabCommunity').classList.toggle('hidden', tab !== 'community');
+      });
+    });
+
+    // 모달 열기/닫기
+    document.getElementById('openNoticeModalBtn').addEventListener('click', () => {
+      document.getElementById('noticeModal').classList.add('open');
+    });
+    document.getElementById('openPrayerModalBtn').addEventListener('click', () => {
+      document.getElementById('prayerModal').classList.add('open');
+    });
+    document.querySelectorAll('[data-close]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById(btn.dataset.close).classList.remove('open');
+      });
+    });
+    document.querySelectorAll('.modal-backdrop').forEach(bg => {
+      bg.addEventListener('click', (e) => {
+        if (e.target === bg) bg.classList.remove('open');
+      });
+    });
+
+    // 공지 링크 복사
+    document.getElementById('copyLinkBtn').addEventListener('click', async () => {
+      const shareText = `[우리교회 청년부] ${currentDetailNotice.title}\n${window.location.href}`;
+      try {
+        await navigator.clipboard.writeText(shareText);
+        showToast('공지 제목과 링크가 복사되었습니다!');
+      } catch {
+        showToast('주소창의 링크를 복사해 공유해 주세요.');
+      }
+    });
+
+    // 새 광고 저장
+    document.getElementById('saveNoticeBtn').addEventListener('click', () => {
+      const category = document.getElementById('noticeCategory').value;
+      const title = document.getElementById('noticeTitleInput').value.trim();
+      const body = document.getElementById('noticeBodyInput').value.trim();
+      const pinned = document.getElementById('noticePinInput').checked;
+      if (!title || !body) {
+        showToast('제목과 내용을 모두 입력해 주세요.');
+        return;
+      }
+      if (pinned) notices.forEach(n => n.pinned = false);
+      notices.unshift({ id: Date.now(), category, title, body, date: formatToday(), pinned });
+      persistData();
+      document.getElementById('noticeTitleInput').value = '';
+      document.getElementById('noticeBodyInput').value = '';
+      document.getElementById('noticePinInput').checked = false;
+      document.getElementById('noticeModal').classList.remove('open');
+      renderHome();
+      showToast('새 광고가 등록되었습니다!');
+    });
+
+    // 새 기도제목 저장
+    document.getElementById('savePrayerBtn').addEventListener('click', () => {
+      const author = document.getElementById('prayerAuthorInput').value.trim() || '익명';
+      const category = document.getElementById('prayerCategoryInput').value;
+      const body = document.getElementById('prayerBodyInput').value.trim();
+      if (!body) {
+        showToast('내용을 입력해 주세요.');
+        return;
+      }
+      prayers.unshift({
+        id: Date.now(),
+        author,
+        category,
+        body,
+        date: '방금 전',
+        prays: 0,
+        prayedByMe: false,
+        comments: []
+      });
+      persistData();
+      document.getElementById('prayerAuthorInput').value = '';
+      document.getElementById('prayerBodyInput').value = '';
+      document.getElementById('prayerModal').classList.remove('open');
+      renderCommunity();
+      showToast('기도제목이 등록되었습니다!');
+    });
+
+    renderHome();
+    renderCommunity();
+  </script>
+</body>
+</html>
