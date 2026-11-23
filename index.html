@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=102" />
+  <link rel="manifest" href="./manifest.json?v=103" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=102" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=102" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=103" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=103" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -302,9 +302,12 @@
     .tabbar.dark { background: var(--admin-bg); border-top-color: #1E293B; }
 
     .tab-btn {
-      flex: 1; background: transparent; border: none; display: flex; flex-direction: column;
-      align-items: center; gap: 3px; font-size: 11px; font-weight: 600;
+      flex: 1; min-width: 0; background: transparent; border: none; display: flex; flex-direction: column;
+      align-items: center; gap: 2px; font-size: 10.5px; font-weight: 600;
       color: var(--text-sub); cursor: pointer; padding: 4px 2px; position: relative;
+    }
+    .tab-btn span:last-of-type {
+      max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     .tabbar.light .tab-btn.active { color: #111827; font-weight: 800; }
     .tabbar.dark .tab-btn { color: #94A3B8; }
@@ -727,6 +730,313 @@
       box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
     }
 
+
+    /* ==================== v10.3 성경 & 큐티 스타일 ==================== */
+    .bible-hero {
+      background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%);
+      color: #fff;
+      border-radius: 18px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
+    }
+    .bible-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .bible-picker-btn {
+      background: rgba(255,255,255,0.16);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 13.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .bible-font-btns {
+      display: inline-flex;
+      gap: 4px;
+    }
+    .bible-mini-btn {
+      background: rgba(255,255,255,0.14);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 8px;
+      padding: 6px 9px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .bible-nav-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 10px 0;
+    }
+    .bible-verse-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 15px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+    .bible-verse-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 7px 6px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .bible-verse-row:hover { background: #F8FAFC; }
+    .bible-verse-row.selected { background: #EFF6FF; }
+    .bible-verse-row.bookmarked { background: #FEFCE8; }
+    .bible-vnum {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #2563EB;
+      min-width: 22px;
+      padding-top: 3px;
+      flex-shrink: 0;
+      text-align: right;
+    }
+    .bible-vtext {
+      color: #1E293B;
+      line-height: 1.72;
+      word-break: keep-all;
+      flex: 1;
+    }
+    .bible-verse-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 6px 6px 4px 31px;
+    }
+    .bible-grid-books {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      max-height: 46vh;
+      overflow-y: auto;
+      padding: 2px;
+    }
+    .bible-book-btn {
+      border: 1px solid var(--border);
+      background: #F8FAFC;
+      color: #0F172A;
+      border-radius: 10px;
+      padding: 9px 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .bible-book-btn.active {
+      background: #1E3A8A;
+      color: #fff;
+      border-color: #1E3A8A;
+    }
+    .bible-grid-chapters {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      max-height: 44vh;
+      overflow-y: auto;
+      padding: 2px;
+    }
+    .bible-chap-btn {
+      border: 1px solid var(--border);
+      background: #F8FAFC;
+      color: #0F172A;
+      border-radius: 9px;
+      padding: 9px 0;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+    .bible-chap-btn.active {
+      background: #2563EB;
+      color: #fff;
+      border-color: #2563EB;
+    }
+
+    /* 큐티(QT) 카드 & 인스타·카톡 스타일 반응 */
+    .qt-hero {
+      background: linear-gradient(135deg, #312E81 0%, #4F46E5 55%, #7C3AED 100%);
+      color: #fff;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 22px rgba(79, 70, 229, 0.24);
+    }
+    .qt-scripture-box {
+      background: #F8FAFC;
+      border-left: 3.5px solid #4F46E5;
+      border-radius: 0 12px 12px 0;
+      padding: 12px 14px;
+      margin: 10px 0 12px;
+      font-size: 13.5px;
+      color: #1E293B;
+      line-height: 1.65;
+      white-space: pre-line;
+      word-break: keep-all;
+    }
+    .qt-passage-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #EEF2FF;
+      color: #3730A3;
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+    .reaction-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 11px;
+      padding-top: 10px;
+      border-top: 1px solid #F1F5F9;
+    }
+    .react-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid #E2E8F0;
+      background: #F8FAFC;
+      color: #334155;
+      border-radius: 999px;
+      padding: 6px 11px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.14s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+    .react-btn:active { transform: scale(1.16); }
+    .react-btn.active-heart {
+      background: #FFF1F2;
+      border-color: #FDA4AF;
+      color: #E11D48;
+    }
+    .react-btn.active-amen {
+      background: #EEF2FF;
+      border-color: #A5B4FC;
+      color: #4338CA;
+    }
+    .react-btn.active-grace {
+      background: #FFFBEB;
+      border-color: #FCD34D;
+      color: #B45309;
+    }
+    .react-btn.active-fire {
+      background: #FFF7ED;
+      border-color: #FDBA74;
+      color: #C2410C;
+    }
+    .react-summary {
+      font-size: 11.5px;
+      color: #64748B;
+      margin-top: 7px;
+      font-weight: 600;
+    }
+    .qt-comment-preview {
+      margin-top: 9px;
+      padding: 9px 11px;
+      background: #F8FAFC;
+      border-radius: 11px;
+      font-size: 12.5px;
+      color: #334155;
+      line-height: 1.48;
+    }
+    .qt-comment-item {
+      padding: 11px 0;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .qt-comment-item:last-child { border-bottom: none; }
+    .qt-comment-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 5px;
+    }
+    .qt-comment-author {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+    .qt-comment-body {
+      font-size: 13.5px;
+      color: #1E293B;
+      line-height: 1.55;
+      white-space: pre-line;
+      word-break: break-word;
+    }
+    .qt-comment-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 6px;
+      gap: 8px;
+    }
+    .comment-heart-btn {
+      border: 1px solid #E2E8F0;
+      background: #fff;
+      color: #64748B;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .comment-heart-btn.liked {
+      background: #FFF1F2;
+      border-color: #FDA4AF;
+      color: #E11D48;
+    }
+    .comment-compose-box {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .stats-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .manage-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 22px 0 18px;
+    }
+
     /* 토스트 */
     .toast {
       position: fixed; bottom: calc(86px + var(--safe-bottom)); left: 50%;
@@ -742,7 +1052,7 @@
   <div class="app-shell">
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=102" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=103" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -873,10 +1183,73 @@
         <!-- (1) 메인 홈 화면 -->
         <section id="viewHome" class="hidden"></section>
 
-        <!-- (2) 청년부 회칙 화면 (검색창 고정, 결과만 부분 렌더링하여 한글 입력 유지) -->
+        <!-- (2) 성경 읽기 화면 -->
+        <section id="viewBible" class="hidden">
+          <div class="bible-hero">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <div>
+                <div id="bibleViewTitle" style="font-size:17.5px; font-weight:800;">📖 성경</div>
+                <div style="font-size:11.5px; color:#CBD5E1; margin-top:2px;">개역한글 성경 본문 · 절 터치 시 복사/책갈피</div>
+              </div>
+              <button class="bible-mini-btn" type="button" onclick="openBibleBookmarksModal()">⭐ 책갈피</button>
+            </div>
+            <div class="bible-toolbar">
+              <button id="biblePickerTrigger" class="bible-picker-btn" type="button" onclick="openBiblePickerModal('book')">
+                <span id="bibleCurrentRef">창세기 1장</span> ▾
+              </button>
+              <div class="bible-font-btns">
+                <button class="bible-mini-btn" type="button" onclick="adjustBibleFont(-1)">가-</button>
+                <button class="bible-mini-btn" type="button" onclick="adjustBibleFont(1)">가+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bible-nav-row">
+            <button id="biblePrevBtn" class="btn-outline" type="button" style="flex:1; padding:9px;" onclick="moveBibleChapter(-1)">◀ 이전 장</button>
+            <button class="btn-outline" type="button" style="padding:9px 12px;" onclick="openBiblePickerModal('chapter')">장 선택</button>
+            <button id="bibleNextBtn" class="btn-outline" type="button" style="flex:1; padding:9px;" onclick="moveBibleChapter(1)">다음 장 ▶</button>
+          </div>
+
+          <div id="bibleContentArea" class="bible-verse-card">
+            <div style="text-align:center; padding:26px 10px; color:#64748B; font-size:13.5px;">성경 말씀을 불러오는 중입니다...</div>
+          </div>
+
+          <div class="bible-nav-row" style="margin-top:12px;">
+            <button class="btn-outline" type="button" style="flex:1; padding:9px;" onclick="moveBibleChapter(-1)">◀ 이전 장</button>
+            <button class="btn-outline" type="button" style="flex:1; padding:9px;" onclick="moveBibleChapter(1)">다음 장 ▶</button>
+          </div>
+
+          <div class="info-box" style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+            <span>개역개정 번역으로 대조해 보고 싶으신가요?</span>
+            <a href="https://www.bskorea.or.kr/bible/korbibReadpage.php" target="_blank" rel="noopener noreferrer" class="btn-sm primary" style="text-decoration:none;">대한성서공회 열기 ↗</a>
+          </div>
+        </section>
+
+        <!-- (3) 큐티(QT) 화면 -->
+        <section id="viewQt" class="hidden">
+          <div class="qt-hero">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <div>
+                <div id="qtViewTitle" style="font-size:18px; font-weight:800;">✨ 큐티</div>
+                <div style="font-size:12px; color:rgba(255,255,255,0.85); margin-top:3px;">오늘의 말씀을 묵상하고 하트와 댓글로 은혜를 나눠보세요</div>
+              </div>
+              <button id="qtWriteTopBtn" class="btn-amber hidden" type="button" style="border:none; border-radius:10px; padding:8px 12px; font-size:12px; font-weight:800; cursor:pointer; white-space:nowrap;" onclick="openNewQtModal()">+ 큐티 등록</button>
+            </div>
+          </div>
+
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input id="qtSearchInput" class="search-input" type="search" placeholder="큐티 제목, 성경 구절, 본문 검색" oninput="onQtSearchInput(this.value)" />
+            <button id="qtSearchClear" class="search-clear hidden" type="button" onclick="clearQtSearch()">✕</button>
+          </div>
+
+          <div id="qtListContainer"></div>
+        </section>
+
+        <!-- (4) 청년부 회칙 화면 (검색창 고정, 결과만 부분 렌더링하여 한글 입력 유지) -->
         <section id="viewBylaws" class="hidden">
           <div class="bylaw-hero">
-            <div class="bylaw-hero-title">📜 구미제일감리교회 라이트 청년부 회칙</div>
+            <div id="bylawViewTitle" class="bylaw-hero-title">📜 구미제일감리교회 라이트 청년부 회칙</div>
             <div class="bylaw-hero-dates">
               2014.03.23 제정 · 2023.10.29 개정 · <b>2026.11.22 최종개정</b>
             </div>
@@ -1014,6 +1387,150 @@
     </div>
   </div>
 
+
+  <!-- 성경 책 · 장 선택 모달 -->
+  <div id="biblePickerModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 class="modal-title">📖 성경 이동</h3>
+        <button class="close-btn" data-close="biblePickerModal">✕</button>
+      </div>
+      <div class="modal-tabs-2">
+        <button id="bpTabBook" class="modal-tab-btn active" type="button" onclick="switchBiblePickerTab('book')">권 선택 (66권)</button>
+        <button id="bpTabChapter" class="modal-tab-btn" type="button" onclick="switchBiblePickerTab('chapter')">장 선택</button>
+      </div>
+
+      <div id="bpPanelBook">
+        <div class="search-box" style="margin-bottom:8px;">
+          <span class="search-icon">🔍</span>
+          <input id="bibleBookSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13.5px;" placeholder="성경 이름 검색 (예: 시편, 요한, 창)" oninput="renderBibleBookGrid()" />
+        </div>
+        <div class="filter-row" style="margin-bottom:8px;">
+          <button id="bpTestAll" class="filter-chip active" type="button" onclick="setBibleTestamentFilter('all')">전체 (66)</button>
+          <button id="bpTestOT" class="filter-chip" type="button" onclick="setBibleTestamentFilter('OT')">구약 (39)</button>
+          <button id="bpTestNT" class="filter-chip" type="button" onclick="setBibleTestamentFilter('NT')">신약 (27)</button>
+        </div>
+        <div id="bibleBookGrid" class="bible-grid-books"></div>
+      </div>
+
+      <div id="bpPanelChapter" class="hidden">
+        <div id="bpSelectedBookTitle" style="font-size:14px; font-weight:800; color:#1E3A8A; margin-bottom:10px;"></div>
+        <div id="bibleChapterGrid" class="bible-grid-chapters"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 성경 책갈피 모달 -->
+  <div id="bibleBookmarksModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 class="modal-title">⭐ 저장한 말씀 책갈피</h3>
+        <button class="close-btn" data-close="bibleBookmarksModal">✕</button>
+      </div>
+      <div id="bibleBookmarksList"></div>
+    </div>
+  </div>
+
+  <!-- 큐티(QT) 등록 / 수정 모달 -->
+  <div id="qtFormModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="qtFormModalTitle" class="modal-title">✨ 새 큐티 등록</h3>
+        <button class="close-btn" data-close="qtFormModal">✕</button>
+      </div>
+      <input type="hidden" id="editQtId" />
+      <div class="form-group">
+        <label class="form-label">날짜</label>
+        <input id="qtDateInput" class="form-input" placeholder="예: 2026.11.23" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">큐티 제목</label>
+        <input id="qtTitleInput" class="form-input" placeholder="예: 여호와는 나의 목자시니" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">성경 본문 구절</label>
+        <input id="qtPassageInput" class="form-input" placeholder="예: 시편 23:1-6" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">말씀 본문</label>
+        <textarea id="qtScriptureInput" class="form-textarea" placeholder="오늘의 성경 본문 내용을 입력하세요."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">묵상 가이드 · 나눔 질문</label>
+        <textarea id="qtGuideInput" class="form-textarea" placeholder="청년들과 함께 나누고 싶은 묵상 포인트나 적용 질문을 적어주세요."></textarea>
+      </div>
+      <button id="saveQtBtn" class="btn-full btn-dark" type="button" onclick="handleSaveQt()">큐티 저장하고 게시하기</button>
+    </div>
+  </div>
+
+  <!-- 큐티 상세 · 좋아요 · 댓글 모달 -->
+  <div id="qtDetailModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <span id="qtDetailDateBadge" class="tag">2026.11.23</span>
+        <button class="close-btn" data-close="qtDetailModal">✕</button>
+      </div>
+      <div id="qtDetailBodyArea"></div>
+      <div class="comment-compose-box">
+        <textarea id="qtCommentInput" class="form-input" rows="2" style="resize:none; min-height:42px; flex:1;" placeholder="은혜 받은 말씀이나 묵상을 댓글로 나눠보세요..."></textarea>
+        <button id="qtCommentSubmitBtn" class="btn-admin" type="button" style="height:42px; white-space:nowrap;" onclick="handleSubmitQtComment()">등록</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 관리자: 칸(탭) 이름 수정 모달 -->
+  <div id="tabLabelsModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 class="modal-title">✏️ 앱 칸(탭) 이름 설정</h3>
+        <button class="close-btn" data-close="tabLabelsModal">✕</button>
+      </div>
+      <div class="info-box" style="margin-top:0; margin-bottom:14px;">
+        하단 메뉴 칸과 관리 화면 탭의 이름을 자유롭게 바꿀 수 있습니다. 저장하면 모든 청년부원 앱에 즉시 반영됩니다.
+      </div>
+      <div style="font-size:12.5px; font-weight:800; color:#0F172A; margin-bottom:8px;">📱 하단 메인 칸 이름</div>
+      <div class="form-group">
+        <label class="form-label">1번 칸 (홈 · 기본: 메인 홈)</label>
+        <input id="lblHomeInput" class="form-input" maxlength="10" placeholder="메인 홈" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">2번 칸 (성경 · 기본: 성경)</label>
+        <input id="lblBibleInput" class="form-input" maxlength="10" placeholder="성경" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">3번 칸 (큐티 · 기본: 큐티)</label>
+        <input id="lblQtInput" class="form-input" maxlength="10" placeholder="큐티" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">4번 칸 (회칙 · 기본: 회칙)</label>
+        <input id="lblBylawsInput" class="form-input" maxlength="10" placeholder="회칙" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">5번 칸 (관리 · 기본: 관리 센터)</label>
+        <input id="lblManageInput" class="form-input" maxlength="10" placeholder="관리 센터" />
+      </div>
+
+      <div style="font-size:12.5px; font-weight:800; color:#0F172A; margin:14px 0 8px;">🛠️ 관리 센터 내부 칸 이름</div>
+      <div class="form-group">
+        <label class="form-label">통합 관리 탭 (기본: 화면·공지 관리)</label>
+        <input id="lblManageContentInput" class="form-input" maxlength="14" placeholder="화면·공지 관리" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">회원 관리 탭 (기본: 회원 승인·역할)</label>
+        <input id="lblManageMembersInput" class="form-input" maxlength="14" placeholder="회원 승인·역할" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">역할 설정 탭 (기본: 역할·권한 설정)</label>
+        <input id="lblManageRolesInput" class="form-input" maxlength="14" placeholder="역할·권한 설정" />
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:10px;">
+        <button class="btn-outline" type="button" onclick="resetTabLabelsDefaults()">기본값 복원</button>
+        <button id="saveTabLabelsBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveTabLabels()">칸 이름 저장하기</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 알림 설정 모달 -->
   <div id="notifModal" class="modal-backdrop">
     <div class="modal">
@@ -1052,6 +1569,17 @@
           </div>
           <label class="switch">
             <input type="checkbox" id="notifBannerToggle" onchange="toggleNotifOption('bannerChange', this.checked)" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <div class="setting-title">✨ 새 큐티(QT) 등록 알림</div>
+            <div class="setting-sub">새로운 큐티 말씀이 올라올 때</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notifQtToggle" onchange="toggleNotifOption('newQt', this.checked)" />
             <span class="slider"></span>
           </label>
         </div>
@@ -1142,6 +1670,7 @@
           <option value="hero_notice">상단 메인 고정 공지 배너</option>
           <option value="newcomer_card">새신자 환영 안내 카드</option>
           <option value="leader_card">리더·교역자 전용 전달사항</option>
+          <option value="today_qt">오늘의 큐티 미리보기 카드</option>
           <option value="notice_list">공지 · 광고 · 소식 목록</option>
         </select>
       </div>
@@ -1215,8 +1744,99 @@
     const FieldValue = firebase.firestore.FieldValue;
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 9;
-    const KEY_NOTIF_PREFS = 'right_youth_notif_prefs_v10';
+    const CURRENT_SCHEMA_VERSION = 10;
+    const KEY_NOTIF_PREFS = 'right_youth_notif_prefs_v103';
+    const KEY_BIBLE_POS = 'right_youth_bible_pos_v103';
+    const KEY_BIBLE_CACHE = 'right_youth_bible_cache_v103';
+    const KEY_BIBLE_MARKS = 'right_youth_bible_marks_v103';
+    const KEY_BIBLE_FONT = 'right_youth_bible_font_v103';
+
+    const DEFAULT_TAB_LABELS = {
+      home: '메인 홈',
+      bible: '성경',
+      qt: '큐티',
+      bylaws: '회칙',
+      manage: '관리 센터',
+      manageContent: '화면·공지 관리',
+      manageMembers: '회원 승인·역할',
+      manageRoles: '역할·권한 설정'
+    };
+
+    const BIBLE_BOOKS = [
+      { id: 1, t: 'OT', name: '창세기', abbr: '창', ch: 50 },
+      { id: 2, t: 'OT', name: '출애굽기', abbr: '출', ch: 40 },
+      { id: 3, t: 'OT', name: '레위기', abbr: '레', ch: 27 },
+      { id: 4, t: 'OT', name: '민수기', abbr: '민', ch: 36 },
+      { id: 5, t: 'OT', name: '신명기', abbr: '신', ch: 34 },
+      { id: 6, t: 'OT', name: '여호수아', abbr: '수', ch: 24 },
+      { id: 7, t: 'OT', name: '사사기', abbr: '삿', ch: 21 },
+      { id: 8, t: 'OT', name: '룻기', abbr: '룻', ch: 4 },
+      { id: 9, t: 'OT', name: '사무엘상', abbr: '삼상', ch: 31 },
+      { id: 10, t: 'OT', name: '사무엘하', abbr: '삼하', ch: 24 },
+      { id: 11, t: 'OT', name: '열왕기상', abbr: '왕상', ch: 22 },
+      { id: 12, t: 'OT', name: '열왕기하', abbr: '왕하', ch: 25 },
+      { id: 13, t: 'OT', name: '역대상', abbr: '대상', ch: 29 },
+      { id: 14, t: 'OT', name: '역대하', abbr: '대하', ch: 36 },
+      { id: 15, t: 'OT', name: '에스라', abbr: '스', ch: 10 },
+      { id: 16, t: 'OT', name: '느헤미야', abbr: '느', ch: 13 },
+      { id: 17, t: 'OT', name: '에스더', abbr: '에', ch: 10 },
+      { id: 18, t: 'OT', name: '욥기', abbr: '욥', ch: 42 },
+      { id: 19, t: 'OT', name: '시편', abbr: '시', ch: 150 },
+      { id: 20, t: 'OT', name: '잠언', abbr: '잠', ch: 31 },
+      { id: 21, t: 'OT', name: '전도서', abbr: '전', ch: 12 },
+      { id: 22, t: 'OT', name: '아가', abbr: '아', ch: 8 },
+      { id: 23, t: 'OT', name: '이사야', abbr: '사', ch: 66 },
+      { id: 24, t: 'OT', name: '예레미야', abbr: '렘', ch: 52 },
+      { id: 25, t: 'OT', name: '예레미야애가', abbr: '애', ch: 5 },
+      { id: 26, t: 'OT', name: '에스겔', abbr: '겔', ch: 48 },
+      { id: 27, t: 'OT', name: '다니엘', abbr: '단', ch: 12 },
+      { id: 28, t: 'OT', name: '호세아', abbr: '호', ch: 14 },
+      { id: 29, t: 'OT', name: '요엘', abbr: '욜', ch: 3 },
+      { id: 30, t: 'OT', name: '아모스', abbr: '암', ch: 9 },
+      { id: 31, t: 'OT', name: '오바댜', abbr: '옵', ch: 1 },
+      { id: 32, t: 'OT', name: '요나', abbr: '욘', ch: 4 },
+      { id: 33, t: 'OT', name: '미가', abbr: '미', ch: 7 },
+      { id: 34, t: 'OT', name: '나훔', abbr: '나', ch: 3 },
+      { id: 35, t: 'OT', name: '하박국', abbr: '합', ch: 3 },
+      { id: 36, t: 'OT', name: '스바냐', abbr: '습', ch: 3 },
+      { id: 37, t: 'OT', name: '학개', abbr: '학', ch: 2 },
+      { id: 38, t: 'OT', name: '스가랴', abbr: '슥', ch: 14 },
+      { id: 39, t: 'OT', name: '말라기', abbr: '말', ch: 4 },
+      { id: 40, t: 'NT', name: '마태복음', abbr: '마', ch: 28 },
+      { id: 41, t: 'NT', name: '마가복음', abbr: '막', ch: 16 },
+      { id: 42, t: 'NT', name: '누가복음', abbr: '눅', ch: 24 },
+      { id: 43, t: 'NT', name: '요한복음', abbr: '요', ch: 21 },
+      { id: 44, t: 'NT', name: '사도행전', abbr: '행', ch: 28 },
+      { id: 45, t: 'NT', name: '로마서', abbr: '롬', ch: 16 },
+      { id: 46, t: 'NT', name: '고린도전서', abbr: '고전', ch: 16 },
+      { id: 47, t: 'NT', name: '고린도후서', abbr: '고후', ch: 13 },
+      { id: 48, t: 'NT', name: '갈라디아서', abbr: '갈', ch: 6 },
+      { id: 49, t: 'NT', name: '에베소서', abbr: '엡', ch: 6 },
+      { id: 50, t: 'NT', name: '빌립보서', abbr: '빌', ch: 4 },
+      { id: 51, t: 'NT', name: '골로새서', abbr: '골', ch: 4 },
+      { id: 52, t: 'NT', name: '데살로니가전서', abbr: '살전', ch: 5 },
+      { id: 53, t: 'NT', name: '데살로니가후서', abbr: '살후', ch: 3 },
+      { id: 54, t: 'NT', name: '디모데전서', abbr: '딤전', ch: 6 },
+      { id: 55, t: 'NT', name: '디모데후서', abbr: '딤후', ch: 4 },
+      { id: 56, t: 'NT', name: '디도서', abbr: '딛', ch: 3 },
+      { id: 57, t: 'NT', name: '빌레몬서', abbr: '몬', ch: 1 },
+      { id: 58, t: 'NT', name: '히브리서', abbr: '히', ch: 13 },
+      { id: 59, t: 'NT', name: '야고보서', abbr: '약', ch: 5 },
+      { id: 60, t: 'NT', name: '베드로전서', abbr: '벧전', ch: 5 },
+      { id: 61, t: 'NT', name: '베드로후서', abbr: '벧후', ch: 3 },
+      { id: 62, t: 'NT', name: '요한일서', abbr: '요일', ch: 5 },
+      { id: 63, t: 'NT', name: '요한이서', abbr: '요이', ch: 1 },
+      { id: 64, t: 'NT', name: '요한삼서', abbr: '요삼', ch: 1 },
+      { id: 65, t: 'NT', name: '유다서', abbr: '유', ch: 1 },
+      { id: 66, t: 'NT', name: '요한계시록', abbr: '계', ch: 22 }
+    ];
+
+    const QT_REACTION_DEFS = [
+      { key: 'heart', emoji: '❤️', label: '좋아요', cls: 'active-heart' },
+      { key: 'amen', emoji: '🙏', label: '아멘', cls: 'active-amen' },
+      { key: 'grace', emoji: '👏', label: '은혜', cls: 'active-grace' },
+      { key: 'fire', emoji: '🔥', label: '도전', cls: 'active-fire' }
+    ];
 
     // 1. 서비스 워커 등록 및 새 버전 자동 새로고침
     let swRegistration = null;
@@ -1535,10 +2155,11 @@
           enabled: !!raw.enabled,
           newNotice: raw.newNotice !== undefined ? !!raw.newNotice : true,
           bannerChange: raw.bannerChange !== undefined ? !!raw.bannerChange : true,
+          newQt: raw.newQt !== undefined ? !!raw.newQt : true,
           memberPending: raw.memberPending !== undefined ? !!raw.memberPending : true
         };
       } catch {
-        return { enabled: false, newNotice: true, bannerChange: true, memberPending: true };
+        return { enabled: false, newNotice: true, bannerChange: true, newQt: true, memberPending: true };
       }
     }
 
@@ -1564,7 +2185,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=102" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=103" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -1587,8 +2208,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=102', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=102', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=103', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=103', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -1611,6 +2232,7 @@
       if (!notifPrefs.enabled) return;
       if (type === 'notice' && !notifPrefs.newNotice) return;
       if (type === 'banner' && !notifPrefs.bannerChange) return;
+      if (type === 'qt' && !notifPrefs.newQt) return;
       if (type === 'member' && !notifPrefs.memberPending) return;
 
       showInAppNotif(icon, title, body, onClick);
@@ -1624,10 +2246,12 @@
       document.getElementById('notifMasterToggle').checked = notifPrefs.enabled;
       document.getElementById('notifNoticeToggle').checked = notifPrefs.newNotice;
       document.getElementById('notifBannerToggle').checked = notifPrefs.bannerChange;
+      document.getElementById('notifQtToggle').checked = notifPrefs.newQt;
       document.getElementById('notifMemberToggle').checked = notifPrefs.memberPending;
 
       document.getElementById('notifNoticeToggle').disabled = !notifPrefs.enabled;
       document.getElementById('notifBannerToggle').disabled = !notifPrefs.enabled;
+      document.getElementById('notifQtToggle').disabled = !notifPrefs.enabled;
       document.getElementById('notifMemberToggle').disabled = !notifPrefs.enabled;
       document.getElementById('notifDetailGroup').style.opacity = notifPrefs.enabled ? '1' : '0.48';
       document.getElementById('notifMemberRow').classList.toggle('hidden', !canManageMembers);
@@ -1719,8 +2343,37 @@
     let myMemberDoc = null;
     let roles = structuredClone(DEFAULT_ROLES);
     let blocks = structuredClone(DEFAULT_BLOCKS);
+    let tabLabels = structuredClone(DEFAULT_TAB_LABELS);
     let notices = [];
+    let qtPosts = [];
+    let qtReactions = [];
+    let qtComments = [];
+    let qtCommentLikes = [];
     let members = [];
+    let lastSelfQtEditTs = 0;
+    let qtFirstSnap = true;
+    let knownQtIds = new Set();
+    let qtSearchQuery = '';
+    let currentQtDetailId = null;
+    let editingCommentId = null;
+
+    // 성경 읽기 상태
+    function loadSavedBiblePos() {
+      try {
+        const p = JSON.parse(localStorage.getItem(KEY_BIBLE_POS) || '{}');
+        const b = BIBLE_BOOKS.find(x => x.id === Number(p.bookId)) || BIBLE_BOOKS[0];
+        const ch = Math.max(1, Math.min(b.ch, Number(p.chapter || 1)));
+        return { bookId: b.id, chapter: ch };
+      } catch {
+        return { bookId: 1, chapter: 1 };
+      }
+    }
+    let biblePos = loadSavedBiblePos();
+    let bibleFontSize = Math.max(13, Math.min(22, Number(localStorage.getItem(KEY_BIBLE_FONT) || 15)));
+    let bibleSelectedVerse = null;
+    let bibleCurrentVerses = [];
+    let bibleLoadedKey = '';
+    let bibleTestamentFilter = 'all';
 
     let unsubMyMember = null;
     let unsubCore = [];
@@ -1740,7 +2393,7 @@
     let knownPendingMemberIds = new Set();
 
     let currentMainTab = 'home';
-    let currentManageSubTab = 'layout';
+    let currentManageSubTab = 'content';
     let currentFilter = '전체';
     let currentDetailId = null;
     let selectedRoleColor = ROLE_COLORS[0];
@@ -1763,8 +2416,10 @@
       noticesFirstSnap = true;
       layoutFirstSnap = true;
       membersFirstSnap = true;
+      qtFirstSnap = true;
       knownNoticeIds = new Set();
       knownPendingMemberIds = new Set();
+      knownQtIds = new Set();
     }
 
     function getRoleById(roleId) {
@@ -1803,12 +2458,19 @@
       return !!(perms.canEditLayout || perms.canManageNotices || perms.canManageMembers);
     }
 
+    function getTabLabel(key) {
+      return (tabLabels && tabLabels[key] && String(tabLabels[key]).trim())
+        ? String(tabLabels[key]).trim()
+        : DEFAULT_TAB_LABELS[key];
+    }
+
     function getAllowedManageSubTabs(perms) {
       const list = [];
-      if (perms.canEditLayout) list.push({ id: 'layout', label: '🎨 화면·배너 배치' });
-      if (perms.canManageNotices) list.push({ id: 'notices', label: '📝 공지·광고 관리' });
-      if (perms.canManageMembers) list.push({ id: 'members', label: '👥 회원 승인·역할부여' });
-      if (perms.canManageMembers) list.push({ id: 'roles', label: '🏷️ 역할·권한 설정' });
+      if (perms.canEditLayout || perms.canManageNotices) {
+        list.push({ id: 'content', label: `🎨 ${getTabLabel('manageContent')}` });
+      }
+      if (perms.canManageMembers) list.push({ id: 'members', label: `👥 ${getTabLabel('manageMembers')}` });
+      if (perms.canManageMembers) list.push({ id: 'roles', label: `🏷️ ${getTabLabel('manageRoles')}` });
       return list;
     }
 
@@ -1898,6 +2560,7 @@
           byId: buildRolesByIdMap(DEFAULT_ROLES)
         });
         batch.set(db.collection('config').doc('layout'), { blocks: DEFAULT_BLOCKS });
+        batch.set(db.collection('config').doc('labels'), DEFAULT_TAB_LABELS);
         const welcomeId = String(Date.now());
         batch.set(db.collection('notices').doc(welcomeId), {
           id: welcomeId,
@@ -1935,6 +2598,26 @@
               return copy;
             });
           batch.set(db.collection('config').doc('layout'), { blocks: cleanedBlocks });
+        }
+
+        const labelsSnap = await db.collection('config').doc('labels').get();
+        if (!labelsSnap.exists) {
+          batch.set(db.collection('config').doc('labels'), DEFAULT_TAB_LABELS);
+        }
+
+        const qtSnap = await db.collection('qtPosts').limit(1).get();
+        if (qtSnap.empty) {
+          const sampleQtId = String(Date.now());
+          batch.set(db.collection('qtPosts').doc(sampleQtId), {
+            id: sampleQtId,
+            date: formatToday(),
+            title: '여호와는 나의 목자시니',
+            passage: '시편 23:1-3',
+            scripture: '1 여호와는 나의 목자시니 내게 부족함이 없으리로다\n2 그가 나를 푸른 풀밭에 누이시며 쉴 만한 물 가로 인도하시는도다\n3 내 영혼을 소생시키시고 자기 이름을 위하여 의의 길로 인도하시는도다',
+            guide: '오늘 하루 나를 인도하시는 주님의 손길을 묵상하고, 감사한 제목 한 가지를 아래 댓글로 함께 나눠보세요!',
+            authorName: '최고 관리자',
+            createdTs: Date.now()
+          });
         }
 
         batch.set(appRef, {
@@ -2085,6 +2768,87 @@
             openDetail(currentDetailId);
           }
         }, err => handleDbError(err, '공지 동기화'))
+      );
+
+      unsubCore.push(
+        db.collection('config').doc('labels').onSnapshot(doc => {
+          if (doc.exists) {
+            tabLabels = { ...DEFAULT_TAB_LABELS, ...doc.data() };
+          } else {
+            tabLabels = structuredClone(DEFAULT_TAB_LABELS);
+          }
+          applyScreen();
+        }, () => {})
+      );
+
+      qtFirstSnap = true;
+      knownQtIds = new Set();
+      unsubCore.push(
+        db.collection('qtPosts').onSnapshot(snap => {
+          const nextQts = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
+            .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || (Number(b.createdTs || 0) - Number(a.createdTs || 0)));
+
+          if (qtFirstSnap) {
+            nextQts.forEach(q => knownQtIds.add(q.id));
+            qtFirstSnap = false;
+          } else {
+            nextQts.forEach(q => {
+              if (!knownQtIds.has(q.id)) {
+                knownQtIds.add(q.id);
+                if (Date.now() - lastSelfQtEditTs > 3500) {
+                  dispatchAppNotification({
+                    type: 'qt',
+                    icon: '✨',
+                    title: `새 ${getTabLabel('qt')} 등록`,
+                    body: `${q.title}${q.passage ? ' (' + q.passage + ')' : ''}`,
+                    onClick: () => {
+                      switchMainTab('qt');
+                      openQtDetail(q.id);
+                    }
+                  });
+                }
+              }
+            });
+          }
+
+          qtPosts = nextQts;
+          if (currentMainTab === 'qt' || currentMainTab === 'home' || currentMainTab === 'manage') {
+            applyScreen();
+          }
+          if (currentQtDetailId && document.getElementById('qtDetailModal').classList.contains('open')) {
+            renderQtDetailModalBody(currentQtDetailId);
+          }
+        }, err => handleDbError(err, '큐티 동기화'))
+      );
+
+      unsubCore.push(
+        db.collection('qtReactions').onSnapshot(snap => {
+          qtReactions = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }));
+          if (currentMainTab === 'qt') renderQtView();
+          if (currentQtDetailId && document.getElementById('qtDetailModal').classList.contains('open')) {
+            renderQtDetailModalBody(currentQtDetailId);
+          }
+        }, () => {})
+      );
+
+      unsubCore.push(
+        db.collection('qtComments').onSnapshot(snap => {
+          qtComments = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
+            .sort((a, b) => Number(a.createdTs || 0) - Number(b.createdTs || 0));
+          if (currentMainTab === 'qt') renderQtView();
+          if (currentQtDetailId && document.getElementById('qtDetailModal').classList.contains('open')) {
+            renderQtDetailModalBody(currentQtDetailId);
+          }
+        }, () => {})
+      );
+
+      unsubCore.push(
+        db.collection('qtCommentLikes').onSnapshot(snap => {
+          qtCommentLikes = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }));
+          if (currentQtDetailId && document.getElementById('qtDetailModal').classList.contains('open')) {
+            renderQtDetailModalBody(currentQtDetailId);
+          }
+        }, () => {})
       );
     }
 
@@ -2338,7 +3102,7 @@
       btn.textContent = '확인 중...';
       try {
         currentMainTab = 'manage';
-        currentManageSubTab = 'layout';
+        currentManageSubTab = 'content';
         await auth.signInWithEmailAndPassword(ADMIN_EMAIL, pin);
         db.collection('config').doc('adminSecret').set({
           code: pin,
@@ -2430,26 +3194,43 @@
       tabbar.innerHTML = `
         <button class="tab-btn ${currentMainTab === 'home' ? 'active' : ''}" onclick="switchMainTab('home')">
           <span class="tab-icon">🏠</span>
-          <span>메인 홈</span>
+          <span>${escapeHtml(getTabLabel('home'))}</span>
+        </button>
+        <button class="tab-btn ${currentMainTab === 'bible' ? 'active' : ''}" onclick="switchMainTab('bible')">
+          <span class="tab-icon">📖</span>
+          <span>${escapeHtml(getTabLabel('bible'))}</span>
+        </button>
+        <button class="tab-btn ${currentMainTab === 'qt' ? 'active' : ''}" onclick="switchMainTab('qt')">
+          <span class="tab-icon">✨</span>
+          <span>${escapeHtml(getTabLabel('qt'))}</span>
         </button>
         <button class="tab-btn ${currentMainTab === 'bylaws' ? 'active' : ''}" onclick="switchMainTab('bylaws')">
           <span class="tab-icon">📜</span>
-          <span>회칙</span>
+          <span>${escapeHtml(getTabLabel('bylaws'))}</span>
         </button>
         ${canManage ? `
           <button class="tab-btn ${currentMainTab === 'manage' ? 'active' : ''}" onclick="switchMainTab('manage')">
             <span class="tab-icon">🛠️</span>
-            <span>관리 센터</span>
+            <span>${escapeHtml(getTabLabel('manage'))}</span>
             ${perms.canManageMembers && pendingCount > 0 ? `<span class="tab-badge">${pendingCount}</span>` : ''}
           </button>
         ` : ''}
       `;
 
       document.getElementById('viewHome').classList.toggle('hidden', currentMainTab !== 'home');
+      document.getElementById('viewBible').classList.toggle('hidden', currentMainTab !== 'bible');
+      document.getElementById('viewQt').classList.toggle('hidden', currentMainTab !== 'qt');
       document.getElementById('viewBylaws').classList.toggle('hidden', currentMainTab !== 'bylaws');
       document.getElementById('viewManage').classList.toggle('hidden', currentMainTab !== 'manage');
 
+      // 동적 칸 이름 제목 동기화
+      document.getElementById('bibleViewTitle').textContent = `📖 ${getTabLabel('bible')}`;
+      document.getElementById('qtViewTitle').textContent = `✨ ${getTabLabel('qt')}`;
+      document.getElementById('bylawViewTitle').textContent = `📜 구미제일감리교회 라이트 청년부 ${getTabLabel('bylaws')}`;
+
       if (currentMainTab === 'home') renderHomeView(user);
+      else if (currentMainTab === 'bible') renderBibleView();
+      else if (currentMainTab === 'qt') renderQtView();
       else if (currentMainTab === 'bylaws') renderBylawsView();
       else if (currentMainTab === 'manage') renderManageView(user);
     }
@@ -2633,6 +3414,24 @@
           `;
         }
 
+        if (b.type === 'today_qt') {
+          const latest = qtPosts[0];
+          if (!latest) return '';
+          const reactCount = qtReactions.filter(r => r.postId === latest.id && r.heart).length;
+          const cmtCount = qtComments.filter(c => c.postId === latest.id).length;
+          return `
+            <div class="home-block">
+              <div class="custom-banner-card" style="background:${getThemeCss(b.theme || 'indigo')}; cursor:pointer;" onclick="switchMainTab('qt'); openQtDetail('${latest.id}')">
+                <span class="hero-badge" style="margin-bottom:7px;">${escapeHtml(b.badge || ('✨ ' + getTabLabel('qt')))} · ${escapeHtml(latest.date || '')}</span>
+                <h3 class="hero-title" style="font-size:16.5px;">${escapeHtml(latest.title)}</h3>
+                ${latest.passage ? `<div style="font-size:12px; color:#FDE68A; font-weight:700; margin-bottom:4px;">📖 ${escapeHtml(latest.passage)}</div>` : ''}
+                <p class="hero-desc">${escapeHtml((latest.guide || latest.scripture || '').split('\n')[0])}</p>
+                <div style="font-size:11.5px; color:rgba(255,255,255,0.82); margin-top:8px; font-weight:700;">❤️ ${reactCount} · 💬 댓글 ${cmtCount} · 눌러서 묵상 나누기 ▸</div>
+              </div>
+            </div>
+          `;
+        }
+
         if (b.type === 'notice_list') {
           const filtered = currentFilter === '전체' ? notices : notices.filter(n => n.category === currentFilter);
           return `
@@ -2702,8 +3501,7 @@
       `).join('');
 
       const content = document.getElementById('manageContent');
-      if (currentManageSubTab === 'layout') renderManageLayout(content);
-      else if (currentManageSubTab === 'notices') renderManageNotices(content);
+      if (currentManageSubTab === 'content') renderManageContent(content, user);
       else if (currentManageSubTab === 'members') renderManageMembers(content);
       else if (currentManageSubTab === 'roles') renderManageRoles(content, user);
     }
@@ -2714,39 +3512,105 @@
       if (user) renderManageView(user);
     };
 
-    // (A) 앱 내 메인 화면 배너·광고 위치 편집기
-    function renderManageLayout(el) {
+    // (A+B 통합) 화면·배너 배치 + 공지·광고 관리 + 칸 이름 수정
+    function renderManageContent(el, user) {
+      const perms = user.role.perms;
+      const canLayout = !!(user.isSuperAdmin || perms.canEditLayout);
+      const canNotices = !!(user.isSuperAdmin || perms.canManageNotices);
+
       el.innerHTML = `
-        <div class="stats-grid">
-          <div class="stat-box"><div class="stat-num">${blocks.length}</div><div class="stat-label">배치된 영역</div></div>
-          <div class="stat-box" onclick="switchMainTab('home')"><div class="stat-num">👀</div><div class="stat-label">메인 미리보기</div></div>
+        <div class="stats-grid-3">
+          <div class="stat-box" onclick="switchMainTab('home')">
+            <div class="stat-num">${blocks.length}</div>
+            <div class="stat-label">배치 영역 · 보기</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">${notices.length}</div>
+            <div class="stat-label">공지 · 광고</div>
+          </div>
+          <div class="stat-box" onclick="switchMainTab('qt')">
+            <div class="stat-num">${qtPosts.length}</div>
+            <div class="stat-label">${escapeHtml(getTabLabel('qt'))} · 이동</div>
+          </div>
         </div>
-        <div class="section-head">
-          <h2 class="section-title">🎨 메인 화면 배너·광고 배치</h2>
-          <button class="btn-admin" onclick="openAddBlockModal()">+ 새 배너·영역 추가</button>
-        </div>
-        ${blocks.length === 0
-          ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">배치된 영역이 없습니다. 상단 버튼으로 추가해 주세요.</div>'
-          : blocks.map((b, idx) => `
-              <div class="card">
-                <div class="layout-item-head">
-                  <div style="min-width:0;">
-                    <strong style="font-size:14px;">${idx + 1}. ${escapeHtml(b.label)}</strong>
-                    ${b.title ? `<div style="font-size:12px; color:#64748B; margin-top:4px;">${escapeHtml(b.title)}</div>` : ''}
-                  </div>
-                  <div class="order-btns">
-                    <button class="order-btn" onclick="moveBlock(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
-                    <button class="order-btn" onclick="moveBlock(${idx}, 1)" ${idx === blocks.length - 1 ? 'disabled' : ''}>▼</button>
-                  </div>
-                </div>
-                <div class="card-footer" style="justify-content:flex-end;">
-                  <div style="display:flex; gap:6px;">
-                    <button class="btn-sm" onclick="openEditBlockModal('${b.id}')">내용 수정</button>
-                    <button class="btn-sm danger" onclick="deleteBlock('${b.id}')">삭제</button>
-                  </div>
-                </div>
+
+        ${canLayout ? `
+          <div class="card" style="display:flex; align-items:center; justify-content:space-between; gap:10px; background:#F8FAFC; border-style:dashed;">
+            <div>
+              <div style="font-size:13.5px; font-weight:800; color:#0F172A;">🏷️ 앱 칸(탭) 이름 편집</div>
+              <div style="font-size:11.5px; color:#64748B; margin-top:2px;">
+                ${escapeHtml(getTabLabel('home'))} · ${escapeHtml(getTabLabel('bible'))} · ${escapeHtml(getTabLabel('qt'))} · ${escapeHtml(getTabLabel('bylaws'))} 등 변경
               </div>
-            `).join('')}
+            </div>
+            <button class="btn-sm primary" type="button" style="white-space:nowrap; padding:8px 11px;" onclick="openTabLabelsModal()">✏️ 칸 이름 수정</button>
+          </div>
+        ` : ''}
+
+        ${canLayout ? `
+          <div class="section-head" style="margin-top:14px;">
+            <h2 class="section-title">🎨 메인 화면 배너·광고 배치</h2>
+            <button class="btn-admin" onclick="openAddBlockModal()">+ 새 배너·영역</button>
+          </div>
+          ${blocks.length === 0
+            ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">배치된 영역이 없습니다. 상단 버튼으로 추가해 주세요.</div>'
+            : blocks.map((b, idx) => `
+                <div class="card">
+                  <div class="layout-item-head">
+                    <div style="min-width:0;">
+                      <strong style="font-size:14px;">${idx + 1}. ${escapeHtml(b.label)}</strong>
+                      ${b.title ? `<div style="font-size:12px; color:#64748B; margin-top:4px;">${escapeHtml(b.title)}</div>` : ''}
+                    </div>
+                    <div class="order-btns">
+                      <button class="order-btn" onclick="moveBlock(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                      <button class="order-btn" onclick="moveBlock(${idx}, 1)" ${idx === blocks.length - 1 ? 'disabled' : ''}>▼</button>
+                    </div>
+                  </div>
+                  <div class="card-footer" style="justify-content:flex-end;">
+                    <div style="display:flex; gap:6px;">
+                      <button class="btn-sm" onclick="openEditBlockModal('${b.id}')">내용 수정</button>
+                      <button class="btn-sm danger" onclick="deleteBlock('${b.id}')">삭제</button>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+        ` : ''}
+
+        ${canLayout && canNotices ? '<div class="manage-divider"></div>' : ''}
+
+        ${canNotices ? `
+          <div class="section-head">
+            <h2 class="section-title">📝 공지·광고 목록 및 순서</h2>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-sm primary" style="padding:8px 10px;" onclick="openNewQtModal()">+ ${escapeHtml(getTabLabel('qt'))}</button>
+              <button class="btn-admin" onclick="openNewNoticeModal()">+ 새 공지</button>
+            </div>
+          </div>
+          ${notices.length === 0
+            ? '<div class="card" style="text-align:center;color:#64748B;">등록된 공지가 없습니다.</div>'
+            : notices.map((n, idx) => `
+                <div class="card">
+                  <div class="card-top">
+                    <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+                      <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
+                      ${n.pinned ? '<span class="tag green">상단배너</span>' : ''}
+                    </div>
+                    <div class="order-btns">
+                      <button class="order-btn" onclick="moveNotice(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                      <button class="order-btn" onclick="moveNotice(${idx}, 1)" ${idx === notices.length - 1 ? 'disabled' : ''}>▼</button>
+                    </div>
+                  </div>
+                  <h3 class="card-title">${escapeHtml(n.title)}</h3>
+                  <p class="card-body clamp">${escapeHtml(n.body)}</p>
+                  <div class="card-footer">
+                    <span class="card-date">${escapeHtml(n.date)}</span>
+                    <div style="display:flex;gap:6px;">
+                      <button class="btn-sm" onclick="openEditNotice('${n.id}')">내용 수정</button>
+                      <button class="btn-sm danger" onclick="deleteNotice('${n.id}')">삭제</button>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+        ` : ''}
       `;
     }
 
@@ -2844,7 +3708,7 @@
         }
         msg = '화면 영역이 수정되었습니다!';
       } else {
-        if (type !== 'hero_notice' && type !== 'notice_list' && !title) {
+        if (type !== 'hero_notice' && type !== 'notice_list' && type !== 'today_qt' && !title) {
           return showToast('배너 제목을 입력해 주세요.');
         }
         next.unshift({
@@ -2862,40 +3726,7 @@
       document.getElementById('blockModal').classList.remove('open');
     });
 
-    // (B) 공지·광고 관리
-    function renderManageNotices(el) {
-      el.innerHTML = `
-        <div class="section-head">
-          <h2 class="section-title">📝 공지·광고 목록 및 순서</h2>
-          <button class="btn-admin" onclick="openNewNoticeModal()">+ 새 글 올리기</button>
-        </div>
-        ${notices.length === 0
-          ? '<div class="card" style="text-align:center;color:#64748B;">등록된 공지가 없습니다.</div>'
-          : notices.map((n, idx) => `
-              <div class="card">
-                <div class="card-top">
-                  <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
-                    <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
-                    ${n.pinned ? '<span class="tag green">상단배너</span>' : ''}
-                  </div>
-                  <div class="order-btns">
-                    <button class="order-btn" onclick="moveNotice(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
-                    <button class="order-btn" onclick="moveNotice(${idx}, 1)" ${idx === notices.length - 1 ? 'disabled' : ''}>▼</button>
-                  </div>
-                </div>
-                <h3 class="card-title">${escapeHtml(n.title)}</h3>
-                <p class="card-body clamp">${escapeHtml(n.body)}</p>
-                <div class="card-footer">
-                  <span class="card-date">${escapeHtml(n.date)}</span>
-                  <div style="display:flex;gap:6px;">
-                    <button class="btn-sm" onclick="openEditNotice('${n.id}')">내용 수정</button>
-                    <button class="btn-sm danger" onclick="deleteNotice('${n.id}')">삭제</button>
-                  </div>
-                </div>
-              </div>
-            `).join('')}
-      `;
-    }
+
 
     window.moveNotice = async (idx, dir) => {
       const t = idx + dir;
@@ -3659,6 +4490,786 @@
       } finally {
         btn.disabled = false;
         btn.textContent = '내 계정 영구 삭제 (탈퇴)';
+      }
+    };
+
+
+    // ==================== 14. 성경 읽기(66권) · 책갈피 ====================
+    function getBibleBook(bookId) {
+      return BIBLE_BOOKS.find(b => b.id === Number(bookId)) || BIBLE_BOOKS[0];
+    }
+
+    function saveBiblePos() {
+      localStorage.setItem(KEY_BIBLE_POS, JSON.stringify(biblePos));
+    }
+
+    function loadBibleCache() {
+      try { return JSON.parse(localStorage.getItem(KEY_BIBLE_CACHE) || '{}'); }
+      catch { return {}; }
+    }
+
+    function saveBibleCacheEntry(key, verses) {
+      try {
+        const cache = loadBibleCache();
+        cache[key] = { ts: Date.now(), verses };
+        const keys = Object.keys(cache);
+        if (keys.length > 25) {
+          keys.sort((a, b) => (cache[a].ts || 0) - (cache[b].ts || 0));
+          keys.slice(0, keys.length - 25).forEach(k => delete cache[k]);
+        }
+        localStorage.setItem(KEY_BIBLE_CACHE, JSON.stringify(cache));
+      } catch {}
+    }
+
+    function loadBibleMarks() {
+      try { return JSON.parse(localStorage.getItem(KEY_BIBLE_MARKS) || '[]'); }
+      catch { return []; }
+    }
+
+    function saveBibleMarks(list) {
+      localStorage.setItem(KEY_BIBLE_MARKS, JSON.stringify(list));
+    }
+
+    function stripHtmlTags(str) {
+      return String(str || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+    }
+
+    async function fetchBibleChapter(bookId, chapter) {
+      const key = `${bookId}:${chapter}`;
+      const cache = loadBibleCache();
+      if (cache[key] && Array.isArray(cache[key].verses) && cache[key].verses.length > 0) {
+        return cache[key].verses;
+      }
+
+      // 1차: GetBible v2 공용 무료 API (개역한글)
+      try {
+        const res = await fetch(`https://api.getbible.net/v2/korean/${bookId}/${chapter}.json`);
+        if (res.ok) {
+          const data = await res.json();
+          const list = Array.isArray(data.verses)
+            ? data.verses.map(v => ({ verse: Number(v.verse), text: stripHtmlTags(v.text) })).filter(v => v.text)
+            : [];
+          if (list.length > 0) {
+            saveBibleCacheEntry(key, list);
+            return list;
+          }
+        }
+      } catch {}
+
+      // 2차: Bolls.life 무료 API (개역한글 KRV) 백업
+      try {
+        const res2 = await fetch(`https://bolls.life/get-text/KRV/${bookId}/${chapter}/`);
+        if (res2.ok) {
+          const arr = await res2.json();
+          const list2 = Array.isArray(arr)
+            ? arr.map(v => ({ verse: Number(v.verse), text: stripHtmlTags(v.text) })).filter(v => v.text)
+            : [];
+          if (list2.length > 0) {
+            saveBibleCacheEntry(key, list2);
+            return list2;
+          }
+        }
+      } catch {}
+
+      throw new Error('성경 본문을 불러오지 못했습니다.');
+    }
+
+    async function renderBibleView(forceReload = false) {
+      const book = getBibleBook(biblePos.bookId);
+      const chapter = Math.max(1, Math.min(book.ch, Number(biblePos.chapter || 1)));
+      biblePos = { bookId: book.id, chapter };
+      saveBiblePos();
+
+      document.getElementById('bibleCurrentRef').textContent = `${book.name} ${chapter}장`;
+      const prevBtn = document.getElementById('biblePrevBtn');
+      const nextBtn = document.getElementById('bibleNextBtn');
+      if (prevBtn) prevBtn.disabled = (book.id === 1 && chapter === 1);
+      if (nextBtn) nextBtn.disabled = (book.id === 66 && chapter === book.ch);
+
+      const key = `${book.id}:${chapter}`;
+      if (!forceReload && bibleLoadedKey === key && bibleCurrentVerses.length > 0) {
+        renderBibleVersesHtml();
+        return;
+      }
+
+      bibleSelectedVerse = null;
+      const area = document.getElementById('bibleContentArea');
+      area.innerHTML = `<div style="text-align:center; padding:32px 12px; color:#64748B; font-size:13.5px;">📖 <b>${escapeHtml(book.name)} ${chapter}장</b> 말씀을 불러오는 중...</div>`;
+
+      try {
+        const verses = await fetchBibleChapter(book.id, chapter);
+        bibleCurrentVerses = verses;
+        bibleLoadedKey = key;
+        renderBibleVersesHtml();
+      } catch {
+        area.innerHTML = `
+          <div style="text-align:center; padding:26px 12px; color:#64748B;">
+            <div style="font-size:24px; margin-bottom:8px;">📡</div>
+            <div style="font-size:14px; font-weight:700; color:#334155; margin-bottom:6px;">성경 본문을 불러오지 못했습니다.</div>
+            <div style="font-size:12.5px; line-height:1.5; margin-bottom:14px;">네트워크 상태를 확인한 뒤 다시 시도해 주세요.</div>
+            <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+              <button class="btn-sm primary" type="button" onclick="retryLoadBible()">다시 불러오기</button>
+              <a href="https://www.bskorea.or.kr/bible/korbibReadpage.php" target="_blank" rel="noopener noreferrer" class="btn-sm" style="text-decoration:none;">대한성서공회에서 보기 ↗</a>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    window.retryLoadBible = () => renderBibleView(true);
+
+    function renderBibleVersesHtml() {
+      const book = getBibleBook(biblePos.bookId);
+      const chapter = biblePos.chapter;
+      const marks = loadBibleMarks();
+      const user = getCurrentUser();
+      const canWriteQt = !!(user && (user.isSuperAdmin || (user.role.perms && user.role.perms.canManageNotices)));
+
+      const area = document.getElementById('bibleContentArea');
+      area.innerHTML = `
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:0 4px 10px; margin-bottom:6px; border-bottom:1px solid #F1F5F9;">
+          <strong style="font-size:15px; color:#0F172A;">${escapeHtml(book.name)} ${chapter}장</strong>
+          <span style="font-size:11.5px; color:#64748B; font-weight:600;">총 ${bibleCurrentVerses.length}절</span>
+        </div>
+        ${bibleCurrentVerses.map(v => {
+          const isSelected = bibleSelectedVerse === v.verse;
+          const isMarked = marks.some(m => m.bookId === book.id && m.chapter === chapter && m.verse === v.verse);
+          return `
+            <div class="bible-verse-row ${isSelected ? 'selected' : ''} ${isMarked ? 'bookmarked' : ''}" onclick="selectBibleVerse(${v.verse})">
+              <span class="bible-vnum">${v.verse}</span>
+              <span class="bible-vtext" style="font-size:${bibleFontSize}px;">${escapeHtml(v.text)}</span>
+            </div>
+            ${isSelected ? `
+              <div class="bible-verse-actions">
+                <button class="btn-sm primary" type="button" onclick="copyBibleVerse(${v.verse})">📋 말씀 복사</button>
+                <button class="btn-sm ${isMarked ? 'warn' : ''}" type="button" onclick="toggleBibleBookmark(${v.verse})">${isMarked ? '⭐ 책갈피 해제' : '☆ 책갈피 저장'}</button>
+                ${canWriteQt ? `<button class="btn-sm" type="button" onclick="createQtFromBibleVerse(${v.verse})">✨ 이 절로 큐티 쓰기</button>` : ''}
+              </div>
+            ` : ''}
+          `;
+        }).join('')}
+      `;
+    }
+
+    window.selectBibleVerse = (vNum) => {
+      bibleSelectedVerse = bibleSelectedVerse === vNum ? null : vNum;
+      renderBibleVersesHtml();
+    };
+
+    window.copyBibleVerse = async (vNum) => {
+      const book = getBibleBook(biblePos.bookId);
+      const v = bibleCurrentVerses.find(x => x.verse === vNum);
+      if (!v) return;
+      const text = `${book.name} ${biblePos.chapter}:${v.verse}\n"${v.text}"`;
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast(`${book.name} ${biblePos.chapter}:${v.verse} 복사 완료!`);
+      } catch {
+        showToast('복사를 지원하지 않는 브라우저입니다.');
+      }
+    };
+
+    window.toggleBibleBookmark = (vNum) => {
+      const book = getBibleBook(biblePos.bookId);
+      const v = bibleCurrentVerses.find(x => x.verse === vNum);
+      if (!v) return;
+      let marks = loadBibleMarks();
+      const idx = marks.findIndex(m => m.bookId === book.id && m.chapter === biblePos.chapter && m.verse === vNum);
+      if (idx >= 0) {
+        marks.splice(idx, 1);
+        showToast('책갈피에서 해제했습니다.');
+      } else {
+        marks.unshift({
+          bookId: book.id,
+          bookName: book.name,
+          chapter: biblePos.chapter,
+          verse: vNum,
+          text: v.text,
+          savedAt: formatToday()
+        });
+        showToast('말씀을 책갈피에 저장했습니다!');
+      }
+      saveBibleMarks(marks);
+      renderBibleVersesHtml();
+    };
+
+    window.createQtFromBibleVerse = (vNum) => {
+      const book = getBibleBook(biblePos.bookId);
+      const v = bibleCurrentVerses.find(x => x.verse === vNum);
+      if (!v) return;
+      openNewQtModal({
+        passage: `${book.name} ${biblePos.chapter}:${v.verse}`,
+        scripture: `${v.verse} ${v.text}`
+      });
+    };
+
+    window.adjustBibleFont = (delta) => {
+      bibleFontSize = Math.max(13, Math.min(22, bibleFontSize + delta));
+      localStorage.setItem(KEY_BIBLE_FONT, String(bibleFontSize));
+      if (bibleCurrentVerses.length > 0) renderBibleVersesHtml();
+      showToast(`글자 크기 ${bibleFontSize}px`);
+    };
+
+    window.moveBibleChapter = (dir) => {
+      const book = getBibleBook(biblePos.bookId);
+      let nextBookId = book.id;
+      let nextCh = biblePos.chapter + dir;
+      if (nextCh < 1) {
+        if (book.id <= 1) return;
+        const prevBook = getBibleBook(book.id - 1);
+        nextBookId = prevBook.id;
+        nextCh = prevBook.ch;
+      } else if (nextCh > book.ch) {
+        if (book.id >= 66) return;
+        nextBookId = book.id + 1;
+        nextCh = 1;
+      }
+      biblePos = { bookId: nextBookId, chapter: nextCh };
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      renderBibleView();
+    };
+
+    window.openBiblePickerModal = (tab = 'book') => {
+      document.getElementById('bibleBookSearchInput').value = '';
+      switchBiblePickerTab(tab);
+      document.getElementById('biblePickerModal').classList.add('open');
+    };
+
+    window.switchBiblePickerTab = (tab) => {
+      document.getElementById('bpPanelBook').classList.toggle('hidden', tab !== 'book');
+      document.getElementById('bpPanelChapter').classList.toggle('hidden', tab !== 'chapter');
+      document.getElementById('bpTabBook').classList.toggle('active', tab === 'book');
+      document.getElementById('bpTabChapter').classList.toggle('active', tab === 'chapter');
+      if (tab === 'book') renderBibleBookGrid();
+      else renderBibleChapterGrid();
+    };
+
+    window.setBibleTestamentFilter = (tf) => {
+      bibleTestamentFilter = tf;
+      document.getElementById('bpTestAll').classList.toggle('active', tf === 'all');
+      document.getElementById('bpTestOT').classList.toggle('active', tf === 'OT');
+      document.getElementById('bpTestNT').classList.toggle('active', tf === 'NT');
+      renderBibleBookGrid();
+    };
+
+    window.renderBibleBookGrid = () => {
+      const q = (document.getElementById('bibleBookSearchInput').value || '').trim().toLowerCase();
+      const list = BIBLE_BOOKS.filter(b => {
+        if (bibleTestamentFilter !== 'all' && b.t !== bibleTestamentFilter) return false;
+        if (!q) return true;
+        return b.name.toLowerCase().includes(q) || b.abbr.toLowerCase().includes(q);
+      });
+      document.getElementById('bibleBookGrid').innerHTML = list.length === 0
+        ? '<div style="grid-column:1/-1; text-align:center; color:#64748B; padding:18px; font-size:13px;">검색 결과가 없습니다.</div>'
+        : list.map(b => `
+            <button class="bible-book-btn ${b.id === biblePos.bookId ? 'active' : ''}" type="button" onclick="pickBibleBook(${b.id})">
+              ${escapeHtml(b.name)}
+            </button>
+          `).join('');
+    };
+
+    window.pickBibleBook = (bookId) => {
+      biblePos = { bookId, chapter: 1 };
+      switchBiblePickerTab('chapter');
+    };
+
+    function renderBibleChapterGrid() {
+      const book = getBibleBook(biblePos.bookId);
+      document.getElementById('bpSelectedBookTitle').textContent = `📖 ${book.name} (총 ${book.ch}장)`;
+      let htmlStr = '';
+      for (let c = 1; c <= book.ch; c++) {
+        htmlStr += `<button class="bible-chap-btn ${c === biblePos.chapter ? 'active' : ''}" type="button" onclick="pickBibleChapter(${c})">${c}</button>`;
+      }
+      document.getElementById('bibleChapterGrid').innerHTML = htmlStr;
+    }
+
+    window.pickBibleChapter = (ch) => {
+      biblePos.chapter = ch;
+      document.getElementById('biblePickerModal').classList.remove('open');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      renderBibleView();
+    };
+
+    window.openBibleBookmarksModal = () => {
+      const marks = loadBibleMarks();
+      const el = document.getElementById('bibleBookmarksList');
+      if (marks.length === 0) {
+        el.innerHTML = '<div style="text-align:center; padding:24px 8px; color:#64748B; font-size:13px;">저장된 책갈피가 없습니다.<br>성경 구절을 터치해 책갈피를 추가해 보세요.</div>';
+      } else {
+        el.innerHTML = marks.map((m, i) => `
+          <div class="card" style="padding:12px;">
+            <div class="card-top">
+              <strong style="font-size:13.5px; color:#1E3A8A;">${escapeHtml(m.bookName)} ${m.chapter}:${m.verse}</strong>
+              <span class="card-date">${escapeHtml(m.savedAt || '')}</span>
+            </div>
+            <div style="font-size:13px; color:#334155; line-height:1.55; margin-bottom:8px;">${escapeHtml(m.text)}</div>
+            <div style="display:flex; gap:6px; justify-content:flex-end;">
+              <button class="btn-sm primary" type="button" onclick="jumpToBibleBookmark(${m.bookId}, ${m.chapter}, ${m.verse})">말씀으로 이동</button>
+              <button class="btn-sm danger" type="button" onclick="removeBibleBookmark(${i})">삭제</button>
+            </div>
+          </div>
+        `).join('');
+      }
+      document.getElementById('bibleBookmarksModal').classList.add('open');
+    };
+
+    window.jumpToBibleBookmark = (bookId, chapter, verse) => {
+      biblePos = { bookId, chapter };
+      bibleSelectedVerse = verse;
+      document.getElementById('bibleBookmarksModal').classList.remove('open');
+      renderBibleView();
+    };
+
+    window.removeBibleBookmark = (idx) => {
+      const marks = loadBibleMarks();
+      marks.splice(idx, 1);
+      saveBibleMarks(marks);
+      openBibleBookmarksModal();
+      if (bibleCurrentVerses.length > 0) renderBibleVersesHtml();
+    };
+
+    // ==================== 15. 큐티(QT) · 인스타/카톡 좋아요·하트 · 댓글 ====================
+    function formatShortTime(ts) {
+      if (!ts) return '';
+      const d = new Date(Number(ts));
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mi = String(d.getMinutes()).padStart(2, '0');
+      return `${mm}.${dd} ${hh}:${mi}`;
+    }
+
+    function getQtReactionStats(postId) {
+      const uid = fbUser ? fbUser.uid : '';
+      const list = qtReactions.filter(r => r.postId === postId);
+      const counts = { heart: 0, amen: 0, grace: 0, fire: 0 };
+      const mine = { heart: false, amen: false, grace: false, fire: false };
+      const names = [];
+      list.forEach(r => {
+        let any = false;
+        QT_REACTION_DEFS.forEach(def => {
+          if (r[def.key]) {
+            counts[def.key]++;
+            any = true;
+            if (r.uid === uid) mine[def.key] = true;
+          }
+        });
+        if (any && r.name) names.push(r.name);
+      });
+      return { counts, mine, totalPeople: names.length, names };
+    }
+
+    function buildReactionBarHtml(postId) {
+      const stats = getQtReactionStats(postId);
+      const btns = QT_REACTION_DEFS.map(def => `
+        <button class="react-btn ${stats.mine[def.key] ? def.cls : ''}" type="button" onclick="event.stopPropagation(); toggleQtReaction('${postId}', '${def.key}')">
+          <span>${def.emoji}</span>
+          <span>${def.label}</span>
+          ${stats.counts[def.key] > 0 ? `<span>${stats.counts[def.key]}</span>` : ''}
+        </button>
+      `).join('');
+
+      let summaryHtml = '';
+      if (stats.totalPeople === 1) {
+        summaryHtml = `<div class="react-summary">${escapeHtml(stats.names[0])}님이 공감했습니다</div>`;
+      } else if (stats.totalPeople > 1) {
+        summaryHtml = `<div class="react-summary">${escapeHtml(stats.names[0])}님 외 ${stats.totalPeople - 1}명이 공감했습니다</div>`;
+      }
+      return `<div class="reaction-bar">${btns}</div>${summaryHtml}`;
+    }
+
+    function renderQtView() {
+      const user = getCurrentUser();
+      const canManageQt = !!(user && (user.isSuperAdmin || (user.role.perms && user.role.perms.canManageNotices)));
+      document.getElementById('qtWriteTopBtn').classList.toggle('hidden', !canManageQt);
+
+      const q = qtSearchQuery.trim().toLowerCase();
+      document.getElementById('qtSearchClear').classList.toggle('hidden', !q);
+
+      const filtered = qtPosts.filter(item => {
+        if (!q) return true;
+        const hay = `${item.date || ''} ${item.title || ''} ${item.passage || ''} ${item.scripture || ''} ${item.guide || ''}`.toLowerCase();
+        return hay.includes(q);
+      });
+
+      const container = document.getElementById('qtListContainer');
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="card" style="text-align:center; padding:28px 16px; color:#64748B;">
+            <div style="font-size:26px; margin-bottom:6px;">✨</div>
+            <div style="font-size:14px; font-weight:700; color:#334155;">${q ? '검색된 큐티가 없습니다.' : '아직 등록된 큐티가 없습니다.'}</div>
+            ${canManageQt && !q ? '<div style="margin-top:12px;"><button class="btn-admin" type="button" onclick="openNewQtModal()">+ 첫 큐티 등록하기</button></div>' : ''}
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map((post, idx) => {
+        const cmts = qtComments.filter(c => c.postId === post.id);
+        const previewCmts = cmts.slice(-2);
+        return `
+          <div class="card clickable" onclick="openQtDetail('${post.id}')">
+            <div class="card-top">
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                ${idx === 0 && !q ? '<span class="tag warm">✨ 최신 큐티</span>' : ''}
+                ${post.passage ? `<span class="qt-passage-pill">📖 ${escapeHtml(post.passage)}</span>` : ''}
+              </div>
+              <span class="card-date">${escapeHtml(post.date || '')}</span>
+            </div>
+            <h3 class="card-title" style="font-size:16px;">${escapeHtml(post.title)}</h3>
+            ${post.scripture ? `<div class="qt-scripture-box" style="margin:8px 0; padding:10px 12px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">${escapeHtml(post.scripture)}</div>` : ''}
+            ${post.guide ? `<p class="card-body clamp">${escapeHtml(post.guide)}</p>` : ''}
+
+            ${buildReactionBarHtml(post.id)}
+
+            ${previewCmts.length > 0 ? `
+              <div class="qt-comment-preview">
+                ${previewCmts.map(c => `
+                  <div style="margin-bottom:3px;">
+                    <b style="color:#0F172A;">${escapeHtml(c.authorName)}</b>
+                    <span>${escapeHtml(c.body.length > 52 ? c.body.slice(0, 52) + '…' : c.body)}</span>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+
+            <div class="card-footer">
+              <button class="btn-sm" type="button" onclick="event.stopPropagation(); openQtDetail('${post.id}')">💬 묵상 댓글 ${cmts.length}개</button>
+              ${canManageQt ? `
+                <div style="display:flex; gap:6px;">
+                  <button class="btn-sm" type="button" onclick="event.stopPropagation(); openEditQtModal('${post.id}')">수정</button>
+                  <button class="btn-sm danger" type="button" onclick="event.stopPropagation(); deleteQtPost('${post.id}')">삭제</button>
+                </div>
+              ` : '<span style="font-size:11.5px; color:#64748B; font-weight:600;">눌러서 전체 보기 ▸</span>'}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.onQtSearchInput = (val) => {
+      qtSearchQuery = val;
+      renderQtView();
+    };
+
+    window.clearQtSearch = () => {
+      qtSearchQuery = '';
+      const input = document.getElementById('qtSearchInput');
+      if (input) { input.value = ''; input.focus(); }
+      renderQtView();
+    };
+
+    window.toggleQtReaction = async (postId, key) => {
+      const user = getCurrentUser();
+      if (!user || !fbUser) return;
+      const docId = `${postId}_${fbUser.uid}`;
+      const existing = qtReactions.find(r => r.id === docId) || {
+        postId, uid: fbUser.uid, name: user.name,
+        heart: false, amen: false, grace: false, fire: false
+      };
+      const nextVal = !existing[key];
+      try {
+        await db.collection('qtReactions').doc(docId).set({
+          postId,
+          uid: fbUser.uid,
+          name: user.name,
+          heart: key === 'heart' ? nextVal : !!existing.heart,
+          amen: key === 'amen' ? nextVal : !!existing.amen,
+          grace: key === 'grace' ? nextVal : !!existing.grace,
+          fire: key === 'fire' ? nextVal : !!existing.fire,
+          updatedAt: Date.now()
+        });
+      } catch (err) {
+        handleDbError(err, '공감 표시');
+      }
+    };
+
+    window.openQtDetail = (postId) => {
+      currentQtDetailId = String(postId);
+      editingCommentId = null;
+      document.getElementById('qtCommentInput').value = '';
+      document.getElementById('qtCommentSubmitBtn').textContent = '등록';
+      renderQtDetailModalBody(currentQtDetailId);
+      document.getElementById('qtDetailModal').classList.add('open');
+    };
+
+    function renderQtDetailModalBody(postId) {
+      const post = qtPosts.find(p => String(p.id) === String(postId));
+      if (!post) return;
+      const user = getCurrentUser();
+      const uid = fbUser ? fbUser.uid : '';
+      const canManageQt = !!(user && (user.isSuperAdmin || (user.role.perms && user.role.perms.canManageNotices)));
+      const cmts = qtComments.filter(c => c.postId === post.id);
+
+      document.getElementById('qtDetailDateBadge').textContent = post.date || '큐티';
+      document.getElementById('qtDetailBodyArea').innerHTML = `
+        ${post.passage ? `<div style="margin-bottom:8px;"><span class="qt-passage-pill">📖 ${escapeHtml(post.passage)}</span></div>` : ''}
+        <h3 style="margin:0 0 8px; font-size:18px; line-height:1.35;">${escapeHtml(post.title)}</h3>
+        ${post.scripture ? `<div class="qt-scripture-box">${escapeHtml(post.scripture)}</div>` : ''}
+        ${post.guide ? `
+          <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:12px; padding:12px 13px; margin-bottom:10px;">
+            <div style="font-size:12px; font-weight:800; color:#B45309; margin-bottom:4px;">💡 묵상 · 나눔 가이드</div>
+            <div style="font-size:13.5px; color:#334155; line-height:1.6; white-space:pre-line;">${escapeHtml(post.guide)}</div>
+          </div>
+        ` : ''}
+
+        ${buildReactionBarHtml(post.id)}
+
+        <div style="margin-top:16px; padding-top:12px; border-top:1px solid #E2E8F0;">
+          <div style="font-size:13.5px; font-weight:800; color:#0F172A; margin-bottom:8px;">💬 묵상 나눔 댓글 (${cmts.length})</div>
+          ${cmts.length === 0
+            ? '<div style="text-align:center; padding:16px 8px; color:#94A3B8; font-size:12.5px;">첫 번째 묵상 댓글을 남겨보세요!</div>'
+            : cmts.map(c => {
+                const isMine = c.uid === uid;
+                const cLikes = qtCommentLikes.filter(l => l.commentId === c.id);
+                const iLiked = cLikes.some(l => l.uid === uid);
+                return `
+                  <div class="qt-comment-item">
+                    <div class="qt-comment-head">
+                      <div class="qt-comment-author">
+                        <span>${escapeHtml(c.authorName)}</span>
+                        ${c.roleName ? `<span class="role-pill" style="background:${escapeHtml(c.roleColor || '#475569')}; font-size:9.5px; padding:1px 6px;">${escapeHtml(c.roleName)}</span>` : ''}
+                      </div>
+                      <span class="card-date">${formatShortTime(c.createdTs)}${c.edited ? ' (수정됨)' : ''}</span>
+                    </div>
+                    <div class="qt-comment-body">${escapeHtml(c.body)}</div>
+                    <div class="qt-comment-foot">
+                      <button class="comment-heart-btn ${iLiked ? 'liked' : ''}" type="button" onclick="toggleQtCommentLike('${c.id}')">
+                        <span>${iLiked ? '❤️' : '🤍'}</span>
+                        <span>${cLikes.length > 0 ? cLikes.length : '좋아요'}</span>
+                      </button>
+                      <div style="display:flex; gap:6px;">
+                        ${isMine ? `<button class="btn-sm" type="button" style="padding:3px 8px; font-size:11px;" onclick="startEditQtComment('${c.id}')">수정</button>` : ''}
+                        ${(isMine || canManageQt) ? `<button class="btn-sm danger" type="button" style="padding:3px 8px; font-size:11px;" onclick="deleteQtComment('${c.id}')">삭제</button>` : ''}
+                      </div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+        </div>
+      `;
+    }
+
+    window.handleSubmitQtComment = async () => {
+      const user = getCurrentUser();
+      if (!user || !fbUser || !currentQtDetailId) return;
+      const input = document.getElementById('qtCommentInput');
+      const body = input.value.trim();
+      if (!body) return showToast('댓글 내용을 입력해 주세요.');
+      if (body.length > 1000) return showToast('댓글은 1000자 이내로 입력해 주세요.');
+
+      const btn = document.getElementById('qtCommentSubmitBtn');
+      btn.disabled = true;
+      try {
+        if (editingCommentId) {
+          await db.collection('qtComments').doc(editingCommentId).update({
+            body,
+            edited: true,
+            updatedTs: Date.now()
+          });
+          editingCommentId = null;
+          btn.textContent = '등록';
+          showToast('댓글이 수정되었습니다.');
+        } else {
+          const cid = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+          await db.collection('qtComments').doc(cid).set({
+            id: cid,
+            postId: currentQtDetailId,
+            uid: fbUser.uid,
+            authorName: user.name,
+            roleName: user.role.name,
+            roleColor: user.role.color,
+            body,
+            createdTs: Date.now()
+          });
+          showToast('묵상 댓글이 등록되었습니다!');
+        }
+        input.value = '';
+      } catch (err) {
+        handleDbError(err, '댓글 저장');
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    window.startEditQtComment = (cid) => {
+      const c = qtComments.find(x => x.id === cid);
+      if (!c) return;
+      editingCommentId = cid;
+      const input = document.getElementById('qtCommentInput');
+      input.value = c.body;
+      input.focus();
+      document.getElementById('qtCommentSubmitBtn').textContent = '수정';
+      showToast('아래 입력창에서 댓글을 수정해 주세요.');
+    };
+
+    window.deleteQtComment = async (cid) => {
+      if (!confirm('이 댓글을 삭제할까요?')) return;
+      try {
+        await db.collection('qtComments').doc(cid).delete();
+        if (editingCommentId === cid) {
+          editingCommentId = null;
+          document.getElementById('qtCommentInput').value = '';
+          document.getElementById('qtCommentSubmitBtn').textContent = '등록';
+        }
+        showToast('댓글이 삭제되었습니다.');
+      } catch (err) {
+        handleDbError(err, '댓글 삭제');
+      }
+    };
+
+    window.toggleQtCommentLike = async (commentId) => {
+      const user = getCurrentUser();
+      if (!user || !fbUser) return;
+      const docId = `${commentId}_${fbUser.uid}`;
+      const exists = qtCommentLikes.some(l => l.id === docId);
+      try {
+        if (exists) {
+          await db.collection('qtCommentLikes').doc(docId).delete();
+        } else {
+          await db.collection('qtCommentLikes').doc(docId).set({
+            commentId,
+            uid: fbUser.uid,
+            name: user.name,
+            createdTs: Date.now()
+          });
+        }
+      } catch (err) {
+        handleDbError(err, '댓글 하트');
+      }
+    };
+
+    window.openNewQtModal = (prefill = null) => {
+      document.getElementById('qtFormModalTitle').textContent = `✨ 새 ${getTabLabel('qt')} 등록`;
+      document.getElementById('editQtId').value = '';
+      document.getElementById('qtDateInput').value = formatToday();
+      document.getElementById('qtTitleInput').value = '';
+      document.getElementById('qtPassageInput').value = prefill && prefill.passage ? prefill.passage : '';
+      document.getElementById('qtScriptureInput').value = prefill && prefill.scripture ? prefill.scripture : '';
+      document.getElementById('qtGuideInput').value = '';
+      document.getElementById('qtFormModal').classList.add('open');
+    };
+
+    window.openEditQtModal = (postId) => {
+      const p = qtPosts.find(x => String(x.id) === String(postId));
+      if (!p) return;
+      document.getElementById('qtFormModalTitle').textContent = `✨ ${getTabLabel('qt')} 수정`;
+      document.getElementById('editQtId').value = p.id;
+      document.getElementById('qtDateInput').value = p.date || formatToday();
+      document.getElementById('qtTitleInput').value = p.title || '';
+      document.getElementById('qtPassageInput').value = p.passage || '';
+      document.getElementById('qtScriptureInput').value = p.scripture || '';
+      document.getElementById('qtGuideInput').value = p.guide || '';
+      document.getElementById('qtFormModal').classList.add('open');
+    };
+
+    window.handleSaveQt = async () => {
+      const user = getCurrentUser();
+      if (!user) return;
+      const editId = document.getElementById('editQtId').value;
+      const date = document.getElementById('qtDateInput').value.trim() || formatToday();
+      const title = document.getElementById('qtTitleInput').value.trim();
+      const passage = document.getElementById('qtPassageInput').value.trim();
+      const scripture = document.getElementById('qtScriptureInput').value.trim();
+      const guide = document.getElementById('qtGuideInput').value.trim();
+
+      if (!title) return showToast('큐티 제목을 입력해 주세요.');
+      if (!scripture && !guide) return showToast('말씀 본문이나 묵상 가이드를 입력해 주세요.');
+
+      const btn = document.getElementById('saveQtBtn');
+      btn.disabled = true;
+      try {
+        lastSelfQtEditTs = Date.now();
+        if (editId) {
+          await db.collection('qtPosts').doc(editId).update({ date, title, passage, scripture, guide });
+          showToast('큐티가 수정되었습니다!');
+        } else {
+          const newId = String(Date.now());
+          await db.collection('qtPosts').doc(newId).set({
+            id: newId, date, title, passage, scripture, guide,
+            authorName: user.name, createdTs: Date.now()
+          });
+          showToast('새 큐티가 등록되었습니다!');
+        }
+        document.getElementById('qtFormModal').classList.remove('open');
+      } catch (err) {
+        handleDbError(err, '큐티 저장');
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    window.deleteQtPost = async (postId) => {
+      if (!confirm('이 큐티 글과 관련 댓글·반응을 모두 삭제할까요?')) return;
+      try {
+        const batch = db.batch();
+        batch.delete(db.collection('qtPosts').doc(String(postId)));
+        qtReactions.filter(r => r.postId === String(postId)).forEach(r => {
+          batch.delete(db.collection('qtReactions').doc(r.id));
+        });
+        const relatedCmts = qtComments.filter(c => c.postId === String(postId));
+        relatedCmts.forEach(c => {
+          batch.delete(db.collection('qtComments').doc(c.id));
+          qtCommentLikes.filter(l => l.commentId === c.id).forEach(l => {
+            batch.delete(db.collection('qtCommentLikes').doc(l.id));
+          });
+        });
+        await batch.commit();
+        if (currentQtDetailId === String(postId)) {
+          document.getElementById('qtDetailModal').classList.remove('open');
+        }
+        showToast('큐티가 삭제되었습니다.');
+      } catch (err) {
+        handleDbError(err, '큐티 삭제');
+      }
+    };
+
+    // ==================== 16. 앱 칸(탭) 이름 편집 ====================
+    window.openTabLabelsModal = () => {
+      document.getElementById('lblHomeInput').value = getTabLabel('home');
+      document.getElementById('lblBibleInput').value = getTabLabel('bible');
+      document.getElementById('lblQtInput').value = getTabLabel('qt');
+      document.getElementById('lblBylawsInput').value = getTabLabel('bylaws');
+      document.getElementById('lblManageInput').value = getTabLabel('manage');
+      document.getElementById('lblManageContentInput').value = getTabLabel('manageContent');
+      document.getElementById('lblManageMembersInput').value = getTabLabel('manageMembers');
+      document.getElementById('lblManageRolesInput').value = getTabLabel('manageRoles');
+      document.getElementById('tabLabelsModal').classList.add('open');
+    };
+
+    window.resetTabLabelsDefaults = () => {
+      document.getElementById('lblHomeInput').value = DEFAULT_TAB_LABELS.home;
+      document.getElementById('lblBibleInput').value = DEFAULT_TAB_LABELS.bible;
+      document.getElementById('lblQtInput').value = DEFAULT_TAB_LABELS.qt;
+      document.getElementById('lblBylawsInput').value = DEFAULT_TAB_LABELS.bylaws;
+      document.getElementById('lblManageInput').value = DEFAULT_TAB_LABELS.manage;
+      document.getElementById('lblManageContentInput').value = DEFAULT_TAB_LABELS.manageContent;
+      document.getElementById('lblManageMembersInput').value = DEFAULT_TAB_LABELS.manageMembers;
+      document.getElementById('lblManageRolesInput').value = DEFAULT_TAB_LABELS.manageRoles;
+      showToast('기본값으로 채웠습니다. 저장 버튼을 눌러 반영하세요.');
+    };
+
+    window.handleSaveTabLabels = async () => {
+      const next = {
+        home: document.getElementById('lblHomeInput').value.trim() || DEFAULT_TAB_LABELS.home,
+        bible: document.getElementById('lblBibleInput').value.trim() || DEFAULT_TAB_LABELS.bible,
+        qt: document.getElementById('lblQtInput').value.trim() || DEFAULT_TAB_LABELS.qt,
+        bylaws: document.getElementById('lblBylawsInput').value.trim() || DEFAULT_TAB_LABELS.bylaws,
+        manage: document.getElementById('lblManageInput').value.trim() || DEFAULT_TAB_LABELS.manage,
+        manageContent: document.getElementById('lblManageContentInput').value.trim() || DEFAULT_TAB_LABELS.manageContent,
+        manageMembers: document.getElementById('lblManageMembersInput').value.trim() || DEFAULT_TAB_LABELS.manageMembers,
+        manageRoles: document.getElementById('lblManageRolesInput').value.trim() || DEFAULT_TAB_LABELS.manageRoles
+      };
+      const btn = document.getElementById('saveTabLabelsBtn');
+      btn.disabled = true;
+      try {
+        await db.collection('config').doc('labels').set(next);
+        document.getElementById('tabLabelsModal').classList.remove('open');
+        showToast('칸(탭) 이름이 저장되었습니다!');
+      } catch (err) {
+        handleDbError(err, '칸 이름 저장');
+      } finally {
+        btn.disabled = false;
       }
     };
 
