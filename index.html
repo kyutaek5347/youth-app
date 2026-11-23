@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=110" />
+  <link rel="manifest" href="./manifest.json?v=111" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=110" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=110" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=111" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=111" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1342,7 +1342,7 @@
   <div class="app-shell">
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=110" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=111" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -2081,6 +2081,7 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
     const FieldValue = firebase.firestore.FieldValue;
+    const authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 15;
@@ -2149,6 +2150,7 @@
       { title: '내가 너를 지명하여 불렀나니 너는 내 것이라', passage: '이사야 43:1', scripture: '야곱아 너를 창조하신 여호와께서 지금 말씀하시느니라 이스라엘아 너를 지으신 이가 말씀하시느니라 너는 두려워하지 말라 내가 너를 구속하였고 내가 너를 지명하여 불렀나니 너는 내 것이라', guide: '내 이름을 아시고 "너는 내 것이라" 말씀하시는 주님의 음성을 묵상하며 아멘으로 화답해 보세요.' }
     ];
     const KEY_NOTIF_PREFS = 'right_youth_notif_prefs_v103';
+    const KEY_MEMBER_CACHE = 'right_youth_member_cache_v1';
     const KEY_BIBLE_POS = 'right_youth_bible_pos_v103';
     const KEY_BIBLE_CACHE = 'right_youth_bible_cache_v103';
     const KEY_BIBLE_MARKS = 'right_youth_bible_marks_v103';
@@ -2310,15 +2312,19 @@
       { key: 'fire', emoji: '🔥', label: '도전', cls: 'active-fire' }
     ];
 
-    // 1. 서비스 워커 등록 및 새 버전 자동 새로고침
+    // 1. 서비스 워커 등록 및 새 버전 안전 새로고침 (로그인 세션 유지)
     let swRegistration = null;
     if ('serviceWorker' in navigator) {
+      const hadSwController = !!navigator.serviceWorker.controller;
       let swReloaded = false;
       navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (!swReloaded) {
-          swReloaded = true;
+        if (!hadSwController || swReloaded) return;
+        if (typeof isSigningUp !== 'undefined' && isSigningUp) return;
+        if (typeof isCompletingReset !== 'undefined' && isCompletingReset) return;
+        swReloaded = true;
+        setTimeout(() => {
           window.location.reload();
-        }
+        }, 300);
       });
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then((reg) => {
@@ -2686,7 +2692,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=110" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=111" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -2709,8 +2715,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=110', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=110', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=111', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=111', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -2877,6 +2883,34 @@
     let bibleTestamentFilter = 'all';
 
     let unsubMyMember = null;
+    let memberProfileRetryTimer = null;
+
+    function loadCachedMember(uid) {
+      if (!uid) return null;
+      try {
+        const raw = JSON.parse(localStorage.getItem(KEY_MEMBER_CACHE) || 'null');
+        if (raw && String(raw.id) === String(uid)) return raw;
+      } catch {}
+      return null;
+    }
+
+    function saveCachedMember(member) {
+      if (!member || !member.id) return;
+      try {
+        localStorage.setItem(KEY_MEMBER_CACHE, JSON.stringify({
+          id: String(member.id),
+          name: member.name || '',
+          status: member.status || 'pending',
+          roleId: member.roleId || 'role_youth',
+          authVer: Number(member.authVer || 0),
+          createdAt: member.createdAt || ''
+        }));
+      } catch {}
+    }
+
+    function clearCachedMember() {
+      try { localStorage.removeItem(KEY_MEMBER_CACHE); } catch {}
+    }
     let unsubCore = [];
     let unsubMembersAll = null;
     let unsubAdminSecret = null;
@@ -2906,6 +2940,7 @@
 
     function clearSubscriptions() {
       if (unsubMyMember) { unsubMyMember(); unsubMyMember = null; }
+      if (memberProfileRetryTimer) { clearTimeout(memberProfileRetryTimer); memberProfileRetryTimer = null; }
       unsubCore.forEach(fn => { try { fn(); } catch {} });
       unsubCore = [];
       coreDataSubscribed = false;
@@ -3404,18 +3439,72 @@
       );
     }
 
-    function attachMemberProfileListener(uid) {
+    function scheduleMemberProfileRetry(uid, retryCount = 0) {
+      if (memberProfileRetryTimer) { clearTimeout(memberProfileRetryTimer); memberProfileRetryTimer = null; }
+      if (!auth.currentUser || auth.currentUser.uid !== uid) return;
+      const delays = [1500, 3000, 5000, 8000, 10000];
+      if (retryCount >= delays.length) {
+        if (!myMemberDoc) {
+          const msgEl = document.getElementById('loadingMsg');
+          const retryBtn = document.getElementById('retryInitBtn');
+          if (msgEl) msgEl.textContent = '네트워크 연결이 불안정합니다. 아래 버튼을 눌러 다시 연결해 주세요.';
+          if (retryBtn) retryBtn.classList.remove('hidden');
+        }
+        return;
+      }
+      memberProfileRetryTimer = setTimeout(async () => {
+        memberProfileRetryTimer = null;
+        if (!auth.currentUser || auth.currentUser.uid !== uid) return;
+        try { await auth.currentUser.getIdToken(true); } catch {}
+        attachMemberProfileListener(uid, retryCount + 1);
+      }, delays[retryCount]);
+    }
+
+    function attachMemberProfileListener(uid, retryCount = 0) {
       if (unsubMyMember) { unsubMyMember(); unsubMyMember = null; }
-      unsubMyMember = db.collection('members').doc(uid).onSnapshot(doc => {
+      if (memberProfileRetryTimer) { clearTimeout(memberProfileRetryTimer); memberProfileRetryTimer = null; }
+
+      unsubMyMember = db.collection('members').doc(uid).onSnapshot(async (doc) => {
         if (!doc.exists) {
-          if (isSigningUp) return;
+          if (isSigningUp || isCompletingReset) return;
+          // 업데이트/새로고침 직후 캐시 미스로 인한 일시적 빈 스냅샷은 무시 (자동 로그아웃 방지)
+          if (doc.metadata && doc.metadata.fromCache) return;
+
+          // 실제 서버에서 계정이 삭제된 것이 맞는지 한 번 더 직접 검증
+          if (auth.currentUser && auth.currentUser.uid === uid) {
+            try {
+              await auth.currentUser.getIdToken(true);
+              const serverSnap = await db.collection('members').doc(uid).get({ source: 'server' });
+              if (serverSnap.exists) {
+                const verified = { ...serverSnap.data(), id: String(serverSnap.id) };
+                myMemberDoc = verified;
+                saveCachedMember(verified);
+                if (verified.status === 'approved') {
+                  subscribeCoreData();
+                  syncMembersAllSubscription();
+                }
+                document.getElementById('loadingScreen').classList.add('hidden');
+                applyScreen();
+                return;
+              }
+            } catch (verifyErr) {
+              // 일시적 네트워크·토큰 갱신 오류 시 절대 로그아웃하지 않고 재연결
+              console.warn('Server profile verify retry:', verifyErr);
+              scheduleMemberProfileRetry(uid, retryCount);
+              return;
+            }
+          }
+
+          clearCachedMember();
           myMemberDoc = null;
           auth.signOut().catch(() => {});
           showToast('등록되지 않았거나 삭제된 계정입니다.');
           return;
         }
+
         const prevStatus = myMemberDoc ? myMemberDoc.status : null;
         myMemberDoc = { ...doc.data(), id: String(doc.id) };
+        saveCachedMember(myMemberDoc);
 
         if (myMemberDoc.status === 'approved') {
           if (prevStatus && prevStatus !== 'approved') {
@@ -3429,17 +3518,27 @@
           unsubCore = [];
           coreDataSubscribed = false;
           if (unsubMembersAll) { unsubMembersAll(); unsubMembersAll = null; }
-      if (unsubAdminSecret) { unsubAdminSecret(); unsubAdminSecret = null; }
-      sharedAdminCode = '';
-      sharedAdminCodeUpdatedAt = '';
-      showSharedAdminCode = false;
+          if (unsubAdminSecret) { unsubAdminSecret(); unsubAdminSecret = null; }
+          sharedAdminCode = '';
+          sharedAdminCodeUpdatedAt = '';
+          showSharedAdminCode = false;
         }
         document.getElementById('loadingScreen').classList.add('hidden');
+        document.getElementById('retryInitBtn').classList.add('hidden');
         applyScreen();
-      }, err => {
+      }, async (err) => {
         console.error('Profile listener error:', err);
-        document.getElementById('loadingScreen').classList.add('hidden');
-        handleDbError(err, '계정 상태 확인');
+        if (auth.currentUser && auth.currentUser.uid === uid) {
+          // 업데이트 직후 토큰 갱신/네트워크 재연결 오류 시 로그아웃시키지 않고 자동 재시도
+          if (!myMemberDoc) {
+            const msgEl = document.getElementById('loadingMsg');
+            if (msgEl) msgEl.textContent = '로그인 상태를 확인하고 다시 연결하는 중입니다...';
+          }
+          scheduleMemberProfileRetry(uid, retryCount);
+        } else {
+          document.getElementById('loadingScreen').classList.add('hidden');
+          applyScreen();
+        }
       });
     }
 
@@ -3450,6 +3549,7 @@
       myMemberDoc = null;
 
       if (!user) {
+        clearCachedMember();
         document.getElementById('loadingScreen').classList.add('hidden');
         applyScreen();
         return;
@@ -3467,7 +3567,18 @@
         document.getElementById('loadingScreen').classList.add('hidden');
         applyScreen();
       } else {
-        attachMemberProfileListener(user.uid);
+        // 업데이트/재실행 시 캐시된 회원 정보로 즉시 로그인 상태 유지 후 서버와 실시간 동기화
+        const cached = loadCachedMember(user.uid);
+        if (cached) {
+          myMemberDoc = cached;
+          if (cached.status === 'approved') {
+            subscribeCoreData();
+            syncMembersAllSubscription();
+          }
+          document.getElementById('loadingScreen').classList.add('hidden');
+          applyScreen();
+        }
+        attachMemberProfileListener(user.uid, 0);
       }
     });
 
@@ -3586,6 +3697,8 @@
         const nameHex = nameToHex(name);
         const authVer = await getAuthVerForHex(nameHex);
         const authEmail = hexToAuthEmail(nameHex, authVer);
+        await authPersistenceReady;
+        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
         const cred = await auth.createUserWithEmailAndPassword(authEmail, pw);
         const uid = cred.user.uid;
         const newMember = {
@@ -3600,6 +3713,7 @@
         await db.collection('members').doc(uid).set(newMember);
         fbUser = cred.user;
         myMemberDoc = newMember;
+        saveCachedMember(newMember);
 
         document.getElementById('signupNameInput').value = '';
         document.getElementById('signupPwInput').value = '';
@@ -3633,6 +3747,8 @@
         currentMainTab = 'home';
         const nameHex = nameToHex(name);
         const authVer = await getAuthVerForHex(nameHex);
+        await authPersistenceReady;
+        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
         await auth.signInWithEmailAndPassword(hexToAuthEmail(nameHex, authVer), pw);
         document.getElementById('loginNameInput').value = '';
         document.getElementById('loginPwInput').value = '';
@@ -3655,6 +3771,8 @@
       try {
         currentMainTab = 'manage';
         currentManageSubTab = 'content';
+        await authPersistenceReady;
+        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
         await auth.signInWithEmailAndPassword(ADMIN_EMAIL, pin);
         db.collection('config').doc('adminSecret').set({
           code: pin,
@@ -3680,6 +3798,7 @@
 
     window.logout = async () => {
       clearSubscriptions();
+      clearCachedMember();
       fbUser = null;
       myMemberDoc = null;
       members = [];
@@ -3697,6 +3816,14 @@
       const loginEl = document.getElementById('loginScreen');
       const mainAppEl = document.getElementById('mainApp');
       const themeMeta = document.querySelector('meta[name="theme-color"]');
+
+      if (fbUser && (fbUser.email || '').toLowerCase() !== ADMIN_EMAIL && !myMemberDoc) {
+        // 로그인된 일반 회원의 프로필을 불러오는 중에는 로그인 화면을 띄우지 않음
+        document.getElementById('loadingScreen').classList.remove('hidden');
+        loginEl.classList.add('hidden');
+        mainAppEl.classList.add('hidden');
+        return;
+      }
 
       if (fbUser && (fbUser.email || '').toLowerCase() !== ADMIN_EMAIL && myMemberDoc && myMemberDoc.status !== 'approved') {
         loginEl.classList.remove('hidden');
@@ -5117,6 +5244,8 @@
         const nextVer = Number(rData.nextVer || 1);
         const newEmail = hexToAuthEmail(nameHex, nextVer);
 
+        await authPersistenceReady;
+        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
         const cred = await auth.createUserWithEmailAndPassword(newEmail, newPw);
         createdUser = cred.user;
         const newUid = createdUser.uid;
@@ -5153,6 +5282,7 @@
 
         fbUser = createdUser;
         myMemberDoc = newMember;
+        saveCachedMember(newMember);
         currentMainTab = 'home';
 
         document.getElementById('resetNameInput').value = '';
@@ -5256,6 +5386,7 @@
         document.getElementById('accDeletePwInput').value = '';
         document.getElementById('accountModal').classList.remove('open');
         clearSubscriptions();
+        clearCachedMember();
         fbUser = null;
         myMemberDoc = null;
         members = [];
