@@ -1,4 +1,4 @@
-const CACHE_NAME = 'right-youth-app-v8';
+const CACHE_NAME = 'right-youth-app-v10';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -31,7 +31,7 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
   const url = new URL(event.request.url);
-  // 외부 API(Firebase Firestore, CDN 등)는 서비스 워커가 가로채지 않고 직접 통신
+  // 외부 API(Firebase Auth, Firestore, CDN 등)는 가로채지 않고 직접 통신
   if (url.origin !== self.location.origin) return;
 
   const isHtml =
@@ -50,5 +50,17 @@ self.addEventListener('fetch', (event) => {
         return response;
       })
       .catch(() => caches.match(event.request))
+  );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if ('focus' in client) return client.focus();
+      }
+      if (clients.openWindow) return clients.openWindow('./');
+    })
   );
 });

@@ -14,8 +14,9 @@
   <link rel="apple-touch-icon" href="./icon-192.png" />
   <link rel="icon" type="image/png" href="./icon-192.png" />
 
-  <!-- Firebase SDK (Compat CDN - 안정적인 실시간 Firestore 연동) -->
+  <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <style>
@@ -61,7 +62,7 @@
 
     .hidden { display: none !important; }
 
-    /* 초기 서버 연결 로딩 화면 */
+    /* 초기 로딩 화면 */
     .loading-screen {
       flex: 1;
       display: flex;
@@ -74,8 +75,8 @@
       text-align: center;
     }
     .spinner {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border: 3px solid rgba(255, 255, 255, 0.18);
       border-top-color: #F59E0B;
       border-radius: 50%;
@@ -84,21 +85,39 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .sync-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 10.5px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: rgba(22, 163, 74, 0.16);
-      color: #4ADE80;
-      margin-top: 6px;
+    /* 인앱 실시간 알림 팝업 배너 */
+    .inapp-notif {
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-130%);
+      width: calc(100% - 24px);
+      max-width: 452px;
+      background: #0F172A;
+      color: #fff;
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      border-radius: 16px;
+      padding: 13px 15px;
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.35);
+      z-index: 120;
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      cursor: pointer;
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .sync-pill.error {
-      background: rgba(239, 68, 68, 0.2);
-      color: #FCA5A5;
+    .inapp-notif.show { transform: translateX(-50%) translateY(0); }
+    .inapp-notif-icon {
+      width: 34px; height: 34px; border-radius: 10px;
+      background: rgba(245, 158, 11, 0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; flex-shrink: 0;
+    }
+    .inapp-notif-title { font-size: 13px; font-weight: 800; color: #FDE68A; margin: 0 0 2px; }
+    .inapp-notif-body { font-size: 12.5px; color: #E2E8F0; margin: 0; line-height: 1.4; }
+    .inapp-notif-close {
+      background: transparent; border: none; color: #94A3B8; font-size: 15px;
+      padding: 0 2px; cursor: pointer; margin-left: auto; flex-shrink: 0;
     }
 
     /* PWA 배너 */
@@ -140,15 +159,15 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 26px 20px;
+      padding: 28px 20px;
       background: radial-gradient(circle at top center, #1F2937 0%, #0B0F19 52%, #09090B 100%);
       color: #fff;
     }
-    .login-brand { text-align: center; margin-bottom: 20px; }
+    .login-brand { text-align: center; margin-bottom: 24px; }
     .login-logo {
-      width: 84px; height: 84px; border-radius: 22px; object-fit: cover;
-      background: #000; border: 2px solid rgba(255, 255, 255, 0.14);
-      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5); margin-bottom: 10px;
+      width: 96px; height: 96px; border-radius: 50%; object-fit: cover;
+      background: #000; border: 2px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55); margin-bottom: 12px;
     }
     .login-title { font-size: 24px; font-weight: 800; color: #fff; margin: 0 0 4px; letter-spacing: -0.4px; }
     .login-sub { font-size: 13px; color: #94A3B8; margin: 0; }
@@ -172,7 +191,7 @@
     .auth-tab-btn.admin-active { background: #111827; color: #FDE68A; box-shadow: 0 2px 8px rgba(15,23,42,0.24); }
 
     .login-field-label { display: block; font-size: 12.5px; font-weight: 700; color: #334155; margin-bottom: 6px; }
-    .login-input-wrap { margin-bottom: 12px; }
+    .login-input-wrap { margin-bottom: 13px; }
     .login-input {
       width: 100%; border: 1.5px solid #E2E8F0; border-radius: 13px; padding: 12px 14px;
       font-size: 15px; font-family: inherit; color: var(--text); background: #F8FAFC;
@@ -181,16 +200,11 @@
     .login-input.blue-focus:focus { border-color: #2563EB; }
     .login-input.admin-focus:focus { border-color: #D97706; }
 
-    .login-desc { font-size: 12.5px; color: #64748B; margin: 0 0 14px; line-height: 1.48; }
     .login-error {
       display: none; font-size: 12.5px; font-weight: 600; color: var(--danger);
       background: var(--danger-soft); border-radius: 10px; padding: 9px 12px; margin: 0 0 12px; line-height: 1.45;
     }
     .login-error.show { display: block; }
-    .auto-login-note {
-      display: flex; align-items: center; gap: 6px; font-size: 12px; color: #475569;
-      background: #F8FAFC; border-radius: 10px; padding: 9px 11px; margin: 0 0 14px; line-height: 1.4;
-    }
 
     .btn-full {
       width: 100%; border: none; border-radius: 13px; padding: 13.5px;
@@ -200,12 +214,6 @@
     .btn-dark { background: #111827; color: #fff; }
     .btn-blue { background: #2563EB; color: #fff; }
     .btn-amber { background: var(--admin-accent); color: #0F172A; }
-
-    .login-footer-hint { text-align: center; font-size: 11.5px; color: #94A3B8; margin-top: 16px; line-height: 1.65; }
-    .version-pill {
-      display: inline-block; margin-top: 6px; padding: 2px 10px; border-radius: 999px;
-      background: rgba(255,255,255,0.1); color: #CBD5E1; font-size: 11px; font-weight: 700;
-    }
 
     /* 승인 대기 상태 */
     .status-box { text-align: center; padding: 8px 4px 2px; }
@@ -226,14 +234,14 @@
     .header {
       position: sticky; top: 0; z-index: 20; padding: 12px 16px;
       display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--border); gap: 8px;
     }
     .header.light { background: var(--surface); color: var(--text); }
     .header.dark { background: var(--admin-bg); color: #fff; border-bottom-color: #1E293B; }
 
     .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
     .brand-logo {
-      width: 38px; height: 38px; border-radius: 10px; object-fit: cover;
+      width: 38px; height: 38px; border-radius: 50%; object-fit: cover;
       background: #000; border: 1px solid rgba(15,23,42,0.12); flex-shrink: 0;
     }
     .header.dark .brand-logo { border-color: rgba(255,255,255,0.2); }
@@ -244,6 +252,32 @@
       display: inline-flex; align-items: center; font-size: 10.5px; font-weight: 800;
       padding: 2px 8px; border-radius: 999px; color: #fff;
     }
+
+    .header-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .icon-btn {
+      position: relative;
+      border-radius: 9px;
+      width: 34px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .icon-btn.light { background: #F1F5F9; color: #334155; border: 1px solid var(--border); }
+    .icon-btn.dark { background: #1E293B; color: #E2E8F0; border: 1px solid #334155; }
+    .notif-dot {
+      position: absolute;
+      top: 4px;
+      right: 5px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #16A34A;
+      border: 1.5px solid #fff;
+    }
+    .icon-btn.dark .notif-dot { border-color: #1E293B; }
 
     .exit-btn {
       border-radius: 9px; padding: 7px 11px; font-size: 12px; font-weight: 700;
@@ -309,17 +343,174 @@
       box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
     }
 
-    .worship-check-card {
-      background: linear-gradient(135deg, #111827 0%, #1E293B 100%);
-      color: #fff; border-radius: 18px; padding: 18px;
-      border: 1px solid rgba(245, 158, 11, 0.35);
+    /* ==================== 4. 회칙 검색·열람 화면 ==================== */
+    .bylaw-hero {
+      background: linear-gradient(135deg, #0B0F19 0%, #1E293B 100%);
+      color: #fff;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
     }
-    .worship-check-btn {
-      width: 100%; margin-top: 12px; border: none; border-radius: 12px; padding: 12px;
-      font-size: 14px; font-weight: 800; cursor: pointer; background: var(--admin-accent); color: #111827;
+    .bylaw-hero-title { font-size: 17.5px; font-weight: 800; margin: 0 0 6px; }
+    .bylaw-hero-dates { font-size: 11.5px; color: #CBD5E1; line-height: 1.55; }
+
+    .search-box {
+      position: relative;
+      margin-bottom: 10px;
     }
-    .worship-check-btn.done {
-      background: rgba(255,255,255,0.16); color: #fff; border: 1.5px solid rgba(255,255,255,0.45);
+    .search-input {
+      width: 100%;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 14px;
+      padding: 12px 38px 12px 40px;
+      font-size: 14.5px;
+      font-family: inherit;
+      background: #fff;
+      color: var(--text);
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+    }
+    .search-input:focus { outline: none; border-color: #111827; }
+    .search-icon {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      pointer-events: none;
+    }
+    .search-clear {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: #E2E8F0;
+      color: #475569;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .quick-tags {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+    }
+    .quick-tag {
+      border: 1px solid #DBEAFE;
+      background: #EFF6FF;
+      color: #1D4ED8;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 11.5px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .bylaw-chapter-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 16px 0 8px;
+      padding-left: 2px;
+    }
+    .bylaw-chapter-badge {
+      background: #111827;
+      color: #FDE68A;
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+    .bylaw-article-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 14px 15px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    }
+    .bylaw-article-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .bylaw-article-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+    .bylaw-article-body {
+      font-size: 13.5px;
+      color: #334155;
+      line-height: 1.65;
+      white-space: pre-line;
+      word-break: keep-all;
+    }
+    mark.bylaw-mark {
+      background: #FEF08A;
+      color: #0F172A;
+      padding: 0 2px;
+      border-radius: 3px;
+      font-weight: 700;
+    }
+
+    /* 알림 설정 토글 스위치 */
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 0;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .setting-sub { font-size: 12px; color: var(--text-sub); margin-top: 2px; line-height: 1.4; }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer; inset: 0;
+      background: #CBD5E1; border-radius: 999px; transition: 0.2s;
+    }
+    .slider:before {
+      position: absolute; content: ""; height: 20px; width: 20px;
+      left: 3px; bottom: 3px; background: #fff; border-radius: 50%;
+      transition: 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+    .switch input:checked + .slider { background: #16A34A; }
+    .switch input:checked + .slider:before { transform: translateX(20px); }
+    .switch input:disabled + .slider { opacity: 0.45; cursor: not-allowed; }
+
+    .info-box {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.55;
+      margin-top: 12px;
+    }
+    .info-box.warn {
+      background: #FFFBEB;
+      border-color: #FDE68A;
+      color: #92400E;
     }
 
     /* 공통 카드 & 컨트롤 */
@@ -339,7 +530,6 @@
     }
     .card.clickable { cursor: pointer; }
     .card.highlight-pending { border-color: #FCD34D; background: #FFFBEB; }
-    .card.dimmed { opacity: 0.56; background: #F8FAFC; }
 
     .card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 7px; flex-wrap: wrap; }
     .tag {
@@ -360,14 +550,6 @@
       margin-top: 11px; padding-top: 10px; border-top: 1px solid #F1F5F9; flex-wrap: wrap;
     }
 
-    .check-btn {
-      display: inline-flex; align-items: center; gap: 5px; background: #F8FAFC;
-      border: 1px solid var(--border); border-radius: 10px; padding: 7px 11px;
-      font-size: 12px; font-weight: 700; color: #334155; cursor: pointer;
-    }
-    .check-btn.checked { background: var(--success-soft); border-color: #86EFAC; color: #15803D; }
-    .check-btn.attend.checked { background: #FEF3C7; border-color: #FCD34D; color: #B45309; }
-
     .btn-admin {
       background: var(--admin-bg); color: #fff; border: none; border-radius: 10px;
       padding: 8px 13px; font-size: 12.5px; font-weight: 700; cursor: pointer;
@@ -377,7 +559,7 @@
       border-radius: 10px; padding: 8px 12px; font-size: 13px; font-weight: 600; cursor: pointer;
     }
     .btn-sm {
-      border-radius: 8px; padding: 6px 9px; font-size: 11.5px; font-weight: 700;
+      border-radius: 8px; padding: 6px 10px; font-size: 11.5px; font-weight: 700;
       cursor: pointer; border: 1px solid var(--border); background: #F8FAFC; color: #334155;
     }
     .btn-sm.approve { background: #16A34A; color: #fff; border-color: #16A34A; }
@@ -394,16 +576,16 @@
     }
     .sub-tab-btn.active { background: #111827; color: #FDE68A; border-color: #111827; }
 
-    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
     .stat-box {
       background: var(--admin-bg); color: #fff; border-radius: 14px;
-      padding: 13px 6px; text-align: center; cursor: pointer;
+      padding: 13px 8px; text-align: center; cursor: pointer;
     }
     .stat-num { font-size: 20px; font-weight: 800; color: var(--admin-accent); }
-    .stat-label { font-size: 11px; color: #CBD5E1; margin-top: 3px; }
+    .stat-label { font-size: 11.5px; color: #CBD5E1; margin-top: 3px; }
 
     .layout-item-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .order-btns { display: flex; gap: 4px; }
+    .order-btns { display: flex; gap: 4px; flex-shrink: 0; }
     .order-btn {
       width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border);
       background: #F8FAFC; font-weight: 800; font-size: 12px; cursor: pointer;
@@ -413,9 +595,8 @@
     .perm-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
     .perm-chip {
       font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px;
-      background: #F1F5F9; color: #334155;
+      background: #EEF2FF; color: #3730A3;
     }
-    .perm-chip.on { background: #EEF2FF; color: #3730A3; }
 
     .member-row {
       display: flex; align-items: center; justify-content: space-between; gap: 8px;
@@ -428,12 +609,6 @@
       border: 1px solid var(--border); border-radius: 8px; padding: 5px 8px;
       font-size: 12px; font-weight: 700; background: #F8FAFC; font-family: inherit;
     }
-
-    .log-item {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 9px 0; border-bottom: 1px solid #F1F5F9; font-size: 13px;
-    }
-    .log-item:last-child { border-bottom: none; }
 
     /* 모달 */
     .modal-backdrop {
@@ -482,6 +657,16 @@
 </head>
 <body>
   <div class="app-shell">
+    <!-- 인앱 실시간 알림 팝업 배너 -->
+    <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
+      <div id="inAppNotifIcon" class="inapp-notif-icon">🔔</div>
+      <div style="min-width:0; flex:1;">
+        <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
+        <div id="inAppNotifBody" class="inapp-notif-body"></div>
+      </div>
+      <button class="inapp-notif-close" type="button" onclick="event.stopPropagation(); hideInAppNotif()">✕</button>
+    </div>
+
     <!-- PWA 설치 배너 -->
     <div id="pwaBanner" class="pwa-banner">
       <div id="pwaBannerText" class="pwa-banner-text"></div>
@@ -489,16 +674,16 @@
       <button id="pwaBannerClose" class="pwa-banner-close" aria-label="닫기">✕</button>
     </div>
 
-    <!-- ==================== 0. 초기 서버 연결 화면 ==================== -->
+    <!-- ==================== 0. 초기 연결 화면 ==================== -->
     <section id="loadingScreen" class="loading-screen">
       <img src="./icon-512.png" alt="라이트 청년부 로고" class="login-logo" />
       <h1 class="login-title">라이트 청년부</h1>
       <div class="spinner"></div>
       <p id="loadingMsg" style="font-size:13px; color:#CBD5E1; margin:0; line-height:1.5;">
-        실시간 서버에 연결하고 있습니다...
+        앱을 불러오고 있습니다...
       </p>
       <button id="retryInitBtn" class="btn-amber hidden" style="margin-top:16px; border:none; border-radius:10px; padding:10px 18px; font-weight:800; cursor:pointer;" onclick="location.reload()">
-        다시 연결하기
+        다시 시도하기
       </button>
     </section>
 
@@ -508,7 +693,6 @@
         <img src="./icon-512.png" alt="라이트 청년부 로고" class="login-logo" />
         <h1 class="login-title">라이트 청년부</h1>
         <p class="login-sub">구미제일감리교회 청년부</p>
-        <div id="syncStatusPill" class="sync-pill">🟢 실시간 서버 연결됨</div>
       </div>
 
       <div class="login-card">
@@ -520,7 +704,6 @@
 
         <!-- 로그인 -->
         <div id="panelLogin">
-          <p class="login-desc">승인된 <b>본인 성명(아이디)</b>과 <b>비밀번호</b>로 로그인합니다.<br>부여받은 역할에 따라 이용 가능한 메뉴가 자동으로 구성됩니다.</p>
           <label class="login-field-label" for="loginNameInput">아이디 (본인 성명)</label>
           <div class="login-input-wrap">
             <input id="loginNameInput" class="login-input" placeholder="본인 성명을 입력하세요" autocomplete="username" />
@@ -530,22 +713,18 @@
             <input id="loginPwInput" type="password" class="login-input" placeholder="비밀번호 입력" autocomplete="current-password" />
           </div>
           <div id="loginError" class="login-error"></div>
-          <div class="auto-login-note">
-            <span>🔓</span><span>한 번 로그인하면 앱 업데이트 후에도 <b>자동 로그인</b>이 유지됩니다.</span>
-          </div>
           <button id="submitLoginBtn" class="btn-full btn-dark" type="button">로그인</button>
         </div>
 
         <!-- 회원가입 -->
         <div id="panelSignup" class="hidden">
-          <p class="login-desc">별도 이메일 없이 <b>본인 성명</b>을 아이디로 사용합니다.<br>가입 신청 후 관리자가 승인하면 즉시 이용 가능합니다.</p>
           <label class="login-field-label" for="signupNameInput">아이디 (본인 성명)</label>
           <div class="login-input-wrap">
             <input id="signupNameInput" class="login-input blue-focus" placeholder="본인 성명을 입력하세요" />
           </div>
           <label class="login-field-label" for="signupPwInput">비밀번호 설정</label>
           <div class="login-input-wrap">
-            <input id="signupPwInput" type="password" class="login-input blue-focus" placeholder="사용할 비밀번호 (4자리 이상)" />
+            <input id="signupPwInput" type="password" class="login-input blue-focus" placeholder="영문·숫자 포함 6자리 이상 권장" />
           </div>
           <label class="login-field-label" for="signupPwConfirmInput">비밀번호 확인</label>
           <div class="login-input-wrap">
@@ -557,10 +736,9 @@
 
         <!-- 최고 관리자 로그인 -->
         <div id="panelAdmin" class="hidden">
-          <p class="login-desc">관리자 코드를 입력하면 <b>화면 배치 편집 · 역할 관리 · 회원 승인</b>을 포함한 전체 관리 화면으로 입장합니다.</p>
           <label class="login-field-label" for="adminPinInput">관리자 코드</label>
           <div class="login-input-wrap">
-            <input id="adminPinInput" type="password" inputmode="numeric" class="login-input admin-focus" placeholder="관리자 코드 입력 (초기값: 1234)" />
+            <input id="adminPinInput" type="password" class="login-input admin-focus" placeholder="관리자 코드 입력" autocomplete="current-password" />
           </div>
           <div id="adminError" class="login-error"></div>
           <button id="submitAdminBtn" class="btn-full btn-amber" type="button">최고 관리자로 로그인</button>
@@ -574,14 +752,9 @@
             <p id="statusDesc" class="status-desc"></p>
             <div id="statusMeta" class="status-meta"></div>
             <button id="recheckStatusBtn" class="btn-full btn-dark" type="button" style="margin-bottom:8px;">승인 상태 새로고침</button>
-            <button id="switchAccountBtn" class="btn-outline" type="button" style="width:100%; padding:12px;">다른 계정 · 관리자 로그인</button>
+            <button id="switchAccountBtn" class="btn-outline" type="button" style="width:100%; padding:12px;">로그아웃 · 다른 계정 로그인</button>
           </div>
         </div>
-      </div>
-
-      <div class="login-footer-hint">
-        회원·공지·역할 데이터는 클라우드 서버에 안전하게 영구 보관됩니다.<br>
-        <span class="version-pill">라이트 청년부 · v8 (실시간 서버 연동)</span>
       </div>
     </section>
 
@@ -598,15 +771,49 @@
             <div id="headerSubText" class="brand-sub">환영합니다</div>
           </div>
         </div>
-        <button id="headerLogoutBtn" class="exit-btn light" onclick="logout()">로그아웃</button>
+        <div class="header-actions">
+          <button id="headerNotifBtn" class="icon-btn light" type="button" title="알림 설정" onclick="openNotifModal()">
+            <span>🔔</span>
+            <span id="headerNotifDot" class="notif-dot hidden"></span>
+          </button>
+          <button id="headerLogoutBtn" class="exit-btn light" onclick="logout()">로그아웃</button>
+        </div>
       </header>
 
-      <main class="main">
+      <main id="appMain" class="main">
         <!-- (1) 메인 홈 화면 -->
         <section id="viewHome" class="hidden"></section>
 
-        <!-- (2) 예배 · 행사 체크 화면 -->
-        <section id="viewCheck" class="hidden"></section>
+        <!-- (2) 청년부 회칙 화면 (검색창 고정, 결과만 부분 렌더링하여 한글 입력 유지) -->
+        <section id="viewBylaws" class="hidden">
+          <div class="bylaw-hero">
+            <div class="bylaw-hero-title">📜 구미제일감리교회 라이트 청년부 회칙</div>
+            <div class="bylaw-hero-dates">
+              2014.03.23 제정 · 2023.10.29 개정 · <b>2026.11.22 최종개정</b>
+            </div>
+          </div>
+
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input id="bylawSearchInput" class="search-input" type="search" placeholder="조항 번호 또는 키워드 검색 (예: 제5조, 임기, 선거, 재정)" oninput="onBylawSearchInput(this.value)" />
+            <button id="bylawSearchClear" class="search-clear hidden" type="button" onclick="clearBylawSearch()">✕</button>
+          </div>
+
+          <div class="quick-tags">
+            <button class="quick-tag" type="button" onclick="quickSearchBylaw('회원')">#회원자격</button>
+            <button class="quick-tag" type="button" onclick="quickSearchBylaw('선거권')">#선거권</button>
+            <button class="quick-tag" type="button" onclick="quickSearchBylaw('임기')">#임기</button>
+            <button class="quick-tag" type="button" onclick="quickSearchBylaw('팀장')">#팀장</button>
+            <button class="quick-tag" type="button" onclick="quickSearchBylaw('셀장')">#셀장</button>
+            <button class="quick-tag" type="button" onclick="quickSearchBylaw('정기총회')">#정기총회</button>
+            <button class="quick-tag" type="button" onclick="quickSearchBylaw('재정')">#재정</button>
+            <button class="quick-tag" type="button" onclick="quickSearchBylaw('회칙개정')">#회칙개정</button>
+          </div>
+
+          <div id="bylawChapterChips" class="filter-row"></div>
+          <div id="bylawSummaryBar" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
+          <div id="bylawsResults"></div>
+        </section>
 
         <!-- (3) 관리 센터 -->
         <section id="viewManage" class="hidden">
@@ -616,6 +823,69 @@
       </main>
 
       <nav id="appTabbar" class="tabbar light"></nav>
+    </div>
+  </div>
+
+  <!-- 알림 설정 모달 -->
+  <div id="notifModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 class="modal-title">🔔 알림 설정</h3>
+        <button class="close-btn" data-close="notifModal">✕</button>
+      </div>
+
+      <div class="setting-row" style="padding-top:4px;">
+        <div>
+          <div class="setting-title">알림 받기</div>
+          <div class="setting-sub">라이트 청년부의 새 소식을 실시간으로 받아봅니다.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="notifMasterToggle" onchange="toggleNotifMaster(this.checked)" />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div id="notifDetailGroup">
+        <div class="setting-row">
+          <div>
+            <div class="setting-title">📢 새 공지 · 광고 알림</div>
+            <div class="setting-sub">새로운 공지, 광고, 소식, 행사 글이 등록될 때</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notifNoticeToggle" onchange="toggleNotifOption('newNotice', this.checked)" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <div class="setting-title">📌 메인 배너 변경 알림</div>
+            <div class="setting-sub">메인 화면 중요 배너나 홍보 내용이 업데이트될 때</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notifBannerToggle" onchange="toggleNotifOption('bannerChange', this.checked)" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row hidden" id="notifMemberRow">
+          <div>
+            <div class="setting-title">👤 신규 회원가입 신청 알림</div>
+            <div class="setting-sub">새 회원이 가입 승인을 요청했을 때 (관리자 전용)</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notifMemberToggle" onchange="toggleNotifOption('memberPending', this.checked)" />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div id="notifPermissionBox" class="info-box"></div>
+
+      <div style="display:flex; gap:8px; margin-top:14px;">
+        <button id="reqPermBtn" class="btn-full btn-dark hidden" type="button" style="flex:1; padding:11px; font-size:13.5px;" onclick="requestDeviceNotifPermission()">기기 알림 허용하기</button>
+        <button class="btn-outline" type="button" style="flex:1; padding:11px; font-size:13.5px;" onclick="sendTestNotification()">🔔 테스트 알림</button>
+      </div>
     </div>
   </div>
 
@@ -629,7 +899,6 @@
       <h3 id="detailTitle" style="margin:0 0 6px; font-size:18px;"></h3>
       <div id="detailDate" class="card-date" style="margin-bottom:14px;"></div>
       <p id="detailBody" class="card-body" style="margin-bottom:18px;"></p>
-      <div id="detailCheckArea" style="display:flex; gap:8px; margin-bottom:10px;"></div>
       <div style="display:flex; gap:8px;">
         <button id="copyLinkBtn" class="btn-outline" style="flex:1;">🔗 링크 복사</button>
         <button class="btn-outline" data-close="detailModal">닫기</button>
@@ -662,13 +931,9 @@
         <label class="form-label">내용</label>
         <textarea id="noticeBodyInput" class="form-textarea" placeholder="일시, 장소, 준비물 등을 적어주세요."></textarea>
       </div>
-      <label class="checkbox-row">
+      <label class="checkbox-row" style="margin-bottom:16px;">
         <input type="checkbox" id="noticePinInput" />
         <span>메인 상단 고정 공지 배너에 연결하기</span>
-      </label>
-      <label class="checkbox-row" style="margin-bottom:16px;">
-        <input type="checkbox" id="noticeAttendInput" />
-        <span>예배자 '참석 체크' 버튼 함께 받기</span>
       </label>
       <button id="saveNoticeBtn" class="btn-full btn-dark" type="button">저장하고 게시하기</button>
     </div>
@@ -682,20 +947,30 @@
         <button class="close-btn" data-close="blockModal">✕</button>
       </div>
       <input type="hidden" id="editBlockId" />
+      <div class="form-group" id="blockTypeGroup">
+        <label class="form-label">영역 유형</label>
+        <select id="blockTypeSelect" class="form-select" onchange="onBlockTypeChange()">
+          <option value="custom_ad">홍보 배너 · 광고</option>
+          <option value="hero_notice">상단 메인 고정 공지 배너</option>
+          <option value="newcomer_card">새신자 환영 안내 카드</option>
+          <option value="leader_card">리더·교역자 전용 전달사항</option>
+          <option value="notice_list">공지 · 광고 · 소식 목록</option>
+        </select>
+      </div>
       <div class="form-group">
         <label class="form-label">관리용 블록 이름</label>
         <input id="blockLabelInput" class="form-input" placeholder="예: 겨울 수련회 특별 배너" />
       </div>
       <div id="blockContentFields">
-        <div class="form-group">
+        <div class="form-group" id="blockBadgeGroup">
           <label class="form-label">배지 문구 (상단 작은 글씨)</label>
           <input id="blockBadgeInput" class="form-input" placeholder="예: 📌 이번 주 안내 / ✨ 특별 광고" />
         </div>
         <div class="form-group">
           <label class="form-label">제목</label>
-          <input id="blockTitleInput" class="form-input" placeholder="배너에 크게 표시될 제목" />
+          <input id="blockTitleInput" class="form-input" placeholder="배너에 표시될 제목" />
         </div>
-        <div class="form-group">
+        <div class="form-group" id="blockDescGroup">
           <label class="form-label">내용</label>
           <textarea id="blockDescInput" class="form-textarea" placeholder="배너 설명이나 전달 내용을 입력하세요."></textarea>
         </div>
@@ -704,11 +979,7 @@
           <div id="blockColorPalette" class="color-palette"></div>
         </div>
       </div>
-      <label class="checkbox-row" style="margin-bottom:16px;">
-        <input type="checkbox" id="blockVisibleInput" checked />
-        <span>메인 화면에 표시하기 (체크 해제 시 숨김)</span>
-      </label>
-      <button id="saveBlockBtn" class="btn-full btn-dark" type="button">화면 설정 저장</button>
+      <button id="saveBlockBtn" class="btn-full btn-dark" type="button" style="margin-top:6px;">화면 설정 저장</button>
     </div>
   </div>
 
@@ -751,10 +1022,16 @@
     };
 
     firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
     const db = firebase.firestore();
     const FieldValue = firebase.firestore.FieldValue;
 
+    const ADMIN_EMAIL = 'admin@right-youth.app';
+    const CURRENT_SCHEMA_VERSION = 9;
+    const KEY_NOTIF_PREFS = 'right_youth_notif_prefs_v10';
+
     // 1. 서비스 워커 등록 및 새 버전 자동 새로고침
+    let swRegistration = null;
     if ('serviceWorker' in navigator) {
       let swReloaded = false;
       navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -764,7 +1041,10 @@
         }
       });
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').then((reg) => reg.update()).catch(() => {});
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          swRegistration = reg;
+          reg.update();
+        }).catch(() => {});
       });
     }
 
@@ -775,12 +1055,13 @@
     const pwaBannerAction = document.getElementById('pwaBannerAction');
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     const ua = navigator.userAgent.toLowerCase();
+    const isIOS = /iphone|ipad|ipod/.test(ua);
 
     if (!isStandalone) {
       if (ua.includes('kakaotalk')) {
         pwaBannerText.innerHTML = '카톡 창에서는 설치가 안 돼요.<br>오른쪽 아래 <b>⋮ → 다른 브라우저로 열기</b>를 눌러주세요!';
         pwaBanner.classList.add('show');
-      } else if (/iphone|ipad|ipod/.test(ua)) {
+      } else if (isIOS) {
         pwaBannerText.innerHTML = '아이폰·아이패드 설치: <b>공유(□↑) → 홈 화면에 추가</b>';
         pwaBanner.classList.add('show');
       }
@@ -805,17 +1086,147 @@
       pwaBanner.classList.remove('show');
     });
 
-    // 3. 상수 · 기본 역할 7종 · 기본 화면 블록 · 영구 세션 키 (업데이트해도 유지됨)
-    const KEY_SESSION = 'right_youth_app_session';
-    const KEY_PENDING_ID = 'right_youth_app_pending_id';
+    // ==================== 3. 라이트 청년부 회칙 전문 (2026.11.22 최종개정) ====================
+    const BYLAWS_CHAPTERS = [
+      { id: 'all', label: '전체' },
+      { id: 'ch1', label: '제1장 총칙' },
+      { id: 'ch2', label: '제2장 회원' },
+      { id: 'ch3', label: '제3장 조직' },
+      { id: 'ch4', label: '제4장 임원 선거·임기' },
+      { id: 'ch5', label: '제5장 회의·집회' },
+      { id: 'ch6', label: '제6장 재정' },
+      { id: 'ch7', label: '제7장 부칙' }
+    ];
 
+    const BYLAWS_ARTICLES = [
+      // 제1장 총칙
+      {
+        chapterId: 'ch1', chapter: '제1장 총칙', num: '제1조', title: '제1조 (명칭)',
+        body: "본회는 기독교대한감리회 구미제일교회 청년부라 칭한다. (이하 '본회'라 한다.)"
+      },
+      {
+        chapterId: 'ch1', chapter: '제1장 총칙', num: '제2조', title: '제2조 (위치)',
+        body: "본회는 '기독교대한감리회 구미제일교회'(이하 '본교회'라 한다.) 내의 기관의 하나이며, 본교회 내에 둔다."
+      },
+      {
+        chapterId: 'ch1', chapter: '제1장 총칙', num: '제3조', title: '제3조 (목적)',
+        body: "본회는 교회 내 청년부서간의 친교, 선교, 교육에 관한 협의와 그 실천에 있으며 성경과 신앙에 입각하여 예수 그리스도의 영광을 드러내고 전도와 봉사에 열과 성을 다하여 기독 청년의 사명을 수행함을 목적으로 한다."
+      },
+      // 제2장 회원
+      {
+        chapterId: 'ch2', chapter: '제2장 회원', num: '제4조', title: '제4조 (자격)',
+        body: "① 본회의 회원은 본회에 등록하여 출석하는 20세 이상 40세 미만의 미혼남녀로 구성한다.\n② 회원의 등록, 소속 변경 및 자격 상실에 관한 사항은 지도교역자와 부장 및 회장이 확인하여 회원명부에 반영한다."
+      },
+      {
+        chapterId: 'ch2', chapter: '제2장 회원', num: '제5조', title: '제5조 (권리)',
+        body: "① 본회의 모든 회원은 총회에 참석하여 발언할 권리를 가진다.\n② 본회의 회원 중 새가족교육을 수료하여 셀에 배정되어 정식 회원 명부에 등록된 회원은 선거권과 의결권을 가진다.\n③ 본회의 선거권을 가진 회원 중 세례교인으로서 본회에 정식 등록 후 1년 이상 된 회원은 회장 피선거권을 가진다.\n④ 임명직 임원의 자격은 제10조에 따른다."
+      },
+      {
+        chapterId: 'ch2', chapter: '제2장 회원', num: '제6조', title: '제6조 (의무)',
+        body: "① 본회 회원은 예배와 교육에 참여하며 당회를 비롯한 교회질서를 따라야 한다.\n② 본회 회원은 회칙을 준수하며 본회 운영을 위하여 필요시 회비를 납부하여야 한다."
+      },
+      // 제3장 조직
+      {
+        chapterId: 'ch3', chapter: '제3장 조직', num: '제7조', title: '제7조 (임원)',
+        body: "① 본회의 임원은 회장과 각 팀장으로 구성한다. 회장은 정기총회에서 선출하며, 각 팀장은 회장과 지도교역자 및 부장이 협의하여 임명한다.\n② 본회의 임원의 구성은 다음과 같다.\n1. 회 장 : 1인으로 하며, 청년부를 대표하며 청년부와 관련한 운영전반을 총괄한다.\n2. 팀장 : 각 팀별 1인으로 하며, 담당 부서의 운영과 사역을 총괄하고 회장 및 다른 팀장들과 협력한다.\n3. 팀은 예배, 행정(사무·재무), 교육, 미션(선교·전도), 문화, 새가족, 관리팀으로 구성한다.\n4. 회의기록, 문서관리, 재정 출납, 회계장부 관리와 재정보고는 행정팀 내에서 총괄하며, 필요한 경우 업무 담당자를 별도로 둘 수 있다.\n③ 본회의 사역과 운영상 필요에 따라 회장과 지도교역자 및 부장이 협의하여 팀의 구성을 조정할 수 있다."
+      },
+      {
+        chapterId: 'ch3', chapter: '제3장 조직', num: '제8조', title: '제8조 (셀장)',
+        body: "① 본회의 셀장은 세례교인으로 본회에 등록한 지 1년 이상 된 회원 중 신앙생활에 모범이 되고 공동체에 덕을 세우며 셀원을 섬기고 양육할 수 있는 자로 한다.\n② 셀의 조직과 운영은 다음 각 호에 따른다.\n1. 셀장은 지도교역자와 부장, 회장 및 교육팀장이 협의하여 임명하고, 셀원은 각 셀에 배치한다.\n2. 셀장은 부셀장을 둘 수 있으며, 셀모임, 청년부 열린모임 등을 주관하며 셀원을 섬기고 관리하며 양육한다.\n③ 셀장의 임기는 별도로 정하지 아니하되, 사역 수행과 공동체의 필요를 고려하여 재임 여부를 정기적으로 검토할 수 있다. 사임이나 직무 수행의 어려움 등 사역상 필요한 사유가 발생할 경우 제2항제1호의 임명 절차에 따라 교체할 수 있다."
+      },
+      // 제4장 임원 선거 및 임기
+      {
+        chapterId: 'ch4', chapter: '제4장 임원 선거 및 임기', num: '제9조', title: '제9조 (회장의 선출)',
+        body: "회장은 정기총회에서 선출하되, 회장 임기가 만료되는 연도에 선거를 실시한다. 단, 회장이 궐위된 경우 임시총회에서 보선한다."
+      },
+      {
+        chapterId: 'ch4', chapter: '제4장 임원 선거 및 임기', num: '제10조', title: '제10조 (임원의 자격)',
+        body: "① 회장 후보자는 제5조제3항의 피선거권을 가진 회원으로 한다.\n② 회장 후보자는 원칙적으로 선거가 실시되는 총회에 참석하여야 한다. 다만 부득이한 사유로 참석할 수 없는 경우에는 사전에 지도교역자와 부장에게 알리고 후보 자격을 유지할 수 있다.\n③ 팀장은 본회의 회원 중 세례교인으로 본회에 등록한 지 1년 이상 된 자로서 담당 사역을 수행할 수 있는 자를 임명한다."
+      },
+      {
+        chapterId: 'ch4', chapter: '제4장 임원 선거 및 임기', num: '제11조', title: '제11조 (임원의 임기)',
+        body: "① 본회 회장의 임기는 2년으로 하며, 취임연도 1월 1일부터 다음 해 12월 31일까지로 한다.\n② 본회 팀장의 임기는 별도로 정하지 아니한다.\n③ 회장과 지도교역자 및 부장은 팀장의 사역 수행과 공동체의 필요에 따라 연 1회 이상 재임 여부를 검토할 수 있으며, 사임·직무 수행 곤란 또는 기타 사역상 필요한 사유가 발생하면 제7조제1항의 임명 절차에 따라 교체할 수 있다.\n④ 회장이 사임하거나 직무를 수행할 수 없게 된 경우에는 지도교역자와 부장 및 팀장회의가 협의하여 팀장 중 1인을 직무대행으로 정하고, 제15조에 따라 임시총회를 소집하여 후임 회장을 선출한다."
+      },
+      {
+        chapterId: 'ch4', chapter: '제4장 임원 선거 및 임기', num: '제12조', title: '제12조 (후보 추천 및 선출방법)',
+        body: "① 회장 후보는 제10조의 자격을 갖춘 회원 중 본인이 자원하거나 선거권을 가진 회원의 추천으로 정한다. 선거권자는 최대 2인을 추천할 수 있으며, 추천받은 자의 출마 동의를 얻어 후보를 확정한다.\n② 후보자가 2인 이상인 경우 무기명 비밀투표로 선출하고, 유효투표 중 최다 득표자를 당선자로 확정한다.\n③ 최다 득표자가 2인 이상인 경우 동수 득표자를 대상으로 결선투표를 진행한다.\n④ 후보자가 1인인 경우 무기명 동의투표로 진행하며, 출석한 선거권자 과반수의 동의를 얻으면 당선자로 확정한다. 이 경우 개표는 담당교역자와 부장이 담당하며, 공동체의 화합과 덕을 위하여 총 투표수와 당선요건 충족 여부만 공표하고 세부 득표 내역은 공개하지 아니한다. 단, 담당교역자와 부장은 정확한 개표 결과를 상호 확인하고 기록하여 보존한다.\n⑤ 후보자가 없거나 단일 후보가 부결된 경우에는 후보를 다시 추천하여 선거를 실시한다.\n⑥ 선거의 개회정족수는 제14조 제3항을 따른다."
+      },
+      {
+        chapterId: 'ch4', chapter: '제4장 임원 선거 및 임기', num: '제13조', title: '제13조 (보선자의 임기)',
+        body: "① 보선된 회장의 임기는 전임자의 잔여 임기로 한다.\n② 임명직 임원이 궐위된 경우 제7조에 따른 임명 절차로 후임자를 임명한다."
+      },
+      // 제5장 회의 및 집회
+      {
+        chapterId: 'ch5', chapter: '제5장 회의 및 집회', num: '제14조', title: '제14조 (정기총회)',
+        body: "① 정기총회는 매년 11월 중 회장이 소집하며, 총회 3주 전에 공고한다. 회장이 의장이 되어 진행한다.\n② 정기총회는 사업보고, 재정 및 결산보고, 회장 선거(해당 연도), 회칙개정 및 기타 안건을 심의·의결한다.\n③ 정기총회는 선거권을 가진 재적회원 과반수의 출석으로 개회하며, 일반 안건은 출석한 선거권자 과반수의 찬성으로 의결한다. 단, 회칙의 제정 또는 개정은 출석한 선거권자 3분의 2 이상의 찬성으로 의결한다.\n④ 선거권을 가진 재적회원의 기준일은 정기총회 개최 1주일 전으로 하며, 회원명부는 지도교역자와 회장 및 행정팀장이 확인하여 확정한다.\n⑤ 모든 회원은 총회에 참석하여 발언할 수 있으나, 의결권과 선거권은 제5조에 따른 자격을 가진 회원에게만 부여한다."
+      },
+      {
+        chapterId: 'ch5', chapter: '제5장 회의 및 집회', num: '제15조', title: '제15조 (임시총회)',
+        body: "① 임시총회는 팀장회의의 요청 또는 선거권을 가진 재적회원 3분의 1 이상의 요구가 있을 경우 회장이 소집한다.\n② 임시총회는 소집 목적과 주요 안건을 명시하여 개최 1주 전에 공고하며, 회장이 의장이 되어 진행한다.\n③ 임시총회의 개회와 진행, 의결은 정기총회와 같다.\n④ 회장이 궐위되거나 정당한 사유 없이 소집하지 않는 경우에는 지도교역자와 부장이 협의하여 임시총회를 소집할 수 있다."
+      },
+      {
+        chapterId: 'ch5', chapter: '제5장 회의 및 집회', num: '제16조', title: '제16조 (총회 순서)',
+        body: "순서는 다음과 같다.\n1. 기도 : 회장(의장)\n2. 회원 정족수 확인 : 사무팀장\n3. 개회선언 : 회장(의장)\n4. 사업보고 : 회장(의장)\n5. 재정 및 결산보고 : 재무팀장\n6. 회칙개정 및 기타 안건\n7. 회장 선거 : 해당 연도\n8. 신임 회장 소개 및 인사\n9. 말씀 및 기도 : 지도교역자\n10. 폐회선언 : 회장(의장)\n11. 주기도문 : 회장(의장)"
+      },
+      {
+        chapterId: 'ch5', chapter: '제5장 회의 및 집회', num: '제17조', title: '제17조 (회의)',
+        body: "① 팀장회의는 정기적으로 매월 첫째 주 주일에 모이며, 본회의 사업계획과 운영에 관한 사항을 논의하고 결정한다. 단, 사정에 따라 회의 일정을 조정할 수 있다.\n② 셀장회의는 정기적으로 매월 마지막 주 토요일에 모이며, 지도교역자와 회장, 교육팀장을 중심으로 셀 사역 및 목양에 관한 사항을 논의하고 기도한다. 단, 사정에 따라 일정을 조정할 수 있다.\n③ 지도교역자와 부장은 팀장회의 또는 셀장회의에 참석하여 사역의 방향과 운영에 관한 지도 및 자문을 할 수 있다."
+      },
+      {
+        chapterId: 'ch5', chapter: '제5장 회의 및 집회', num: '제18조', title: '제18조 (회의의 기록 및 보고)',
+        body: "① 팀장회의에서 논의하고 결정한 주요 사항은 행정팀에서 기록하고 보관한다.\n② 팀장회의의 주요 결정사항 및 사역 진행상황은 지도교역자와 부장에게 보고한다.\n③ 회원의 권리와 의무 또는 본회의 공동 운영에 중요한 영향을 미치는 사항은 회원들에게 적절한 방법으로 공지한다. 단, 개인의 신앙생활 및 상담과 관련된 비밀사항은 보호한다."
+      },
+      // 제6장 재정
+      {
+        chapterId: 'ch6', chapter: '제6장 재정', num: '제19조', title: '제19조 (회계연도)',
+        body: "본회의 회계연도는 매년 1월 1일부터 12월 31일까지 한다."
+      },
+      {
+        chapterId: 'ch6', chapter: '제6장 재정', num: '제20조', title: '제20조 (재정조달)',
+        body: "본회의 재정은 본교회 본예산, 회비, 헌신예배헌금, 찬조 후원금 및 기타 사업수입금 등으로 충당한다."
+      },
+      {
+        chapterId: 'ch6', chapter: '제6장 재정', num: '제21조', title: '제21조 (재정지출)',
+        body: "① 본회의 재정지출은 사업계획과 확정된 예산에 의하여야 한다.\n② 본 교회에서 승인된 예산에 포함되지 않은 특별재정지출 및 예산 변경이 필요한 지출은 팀장회의에서 공유되며 지도교역자와 부장의 승인을 받은 후 집행한다.\n③ 모든 재정지출은 관련 증빙자료를 갖추어 기록하고 관리하여야 한다."
+      },
+      {
+        chapterId: 'ch6', chapter: '제6장 재정', num: '제22조', title: '제22조 (재정보고)',
+        body: "① 재무팀장은 본회의 재정 수입과 지출을 관리하며, 재정 현황을 매월 지도교역자와 부장 및 회장에게 보고하여야 한다.\n② 본회의 재정 운영현황은 정기총회에서 회원들에게 보고하여야 한다."
+      },
+      {
+        chapterId: 'ch6', chapter: '제6장 재정', num: '제23조', title: '제23조 (결산보고)',
+        body: "① 정기총회에서는 전년도 확정 결산과 당해연도 재정 집행현황을 보고한다.\n② 당해연도의 최종 결산은 회계연도 종료 후 작성하여 지도교역자와 부장에게 보고하고, 본교회의 감사 절차를 거친다."
+      },
+      {
+        chapterId: 'ch6', chapter: '제6장 재정', num: '제24조', title: '제24조 (감사)',
+        body: "본회의 재정의 수입과 지출에 관한 결산보고는 본교회에서 지정한 감사원으로부터 연 1회 감사를 받는다."
+      },
+      // 제7장 부칙
+      {
+        chapterId: 'ch7', chapter: '제7장 부칙', num: '제25조', title: '제25조 (회칙개정)',
+        body: "① 회칙개정안은 회장, 팀장 및 셀장회의 또는 선거권을 가진 회원 5인 이상의 공동발의로 제안할 수 있다.\n② 제안된 회칙개정안은 지도교역자 및 부장과의 검토를 거쳐 정기총회 또는 임시총회에 상정한다.\n③ 회칙개정은 정기총회 또는 임시총회에서 출석한 선거권자 3분의 2 이상의 찬성으로 의결한다."
+      },
+      {
+        chapterId: 'ch7', chapter: '제7장 부칙', num: '제26조', title: '제26조 (미비사항)',
+        body: "본 회칙에서 정하지 않은 운영상의 사항은 지도교역자, 부장 및 회장의 협의를 거쳐 팀장회의에서 결정한다. 단, 회원의 기본적인 권리와 의무, 회장의 선출, 회칙개정 및 기타 총회 고유 권한에 관한 사항은 총회의 의결을 따른다."
+      },
+      {
+        chapterId: 'ch7', chapter: '제7장 부칙', num: '제27조', title: '제27조 (효력)',
+        body: "본 회칙은 정기총회 또는 임시총회 통과 즉시 효력을 발생한다. 다만 임원 임기와 조직개편에 관한 사항은 제28조의 경과규정에 따른다."
+      },
+      {
+        chapterId: 'ch7', chapter: '제7장 부칙', num: '제28조', title: '제28조 (경과규정)',
+        body: "① 본 회칙 개정에 따른 새로운 임원체계와 임기 규정은 2027년 1월 1일부터 적용한다.\n② 2026년 11월 정기총회에서 선출되는 회장의 임기는 2027년 1월 1일부터 2028년 12월 31일까지로 한다.\n③ 2026년 11월 정기총회에서 회칙개정안의 의결은 개정 전 회칙을 적용하며, 개정안 통과 이후 실시하는 회장 선거에는 개정된 제5조의 선거권 및 피선거권 기준을 적용한다."
+      }
+    ];
+
+    // 4. 기본 역할 7종 · 기본 화면 블록
     const PERMISSION_DEFS = [
-      { key: 'canViewHome', label: '공지·광고 열람 및 출석·행사 체크 (기본)' },
+      { key: 'canViewHome', label: '공지·광고 열람 (기본)' },
       { key: 'canViewNewcomer', label: '새신자 환영 안내 카드 보기' },
       { key: 'canViewLeaderBoard', label: '임원·리더 전용 전달사항 보기' },
       { key: 'canManageNotices', label: '공지·광고 작성, 수정, 삭제 및 순서 변경' },
       { key: 'canEditLayout', label: '앱 메인 화면 배너·광고 위치 편집 및 추가/삭제' },
-      { key: 'canViewCheckStatus', label: '주일 출석 및 행사 참석 체크 현황 보기' },
       { key: 'canManageMembers', label: '회원 가입 승인, 역할 부여 및 역할 생성/수정/삭제' }
     ];
 
@@ -831,78 +1242,287 @@
     const DEFAULT_ROLES = [
       {
         id: 'role_pastor', name: '목사', color: '#7C3AED',
-        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: true, canViewCheckStatus: true, canManageMembers: true }
+        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: true, canManageMembers: true }
       },
       {
         id: 'role_director', name: '부장', color: '#1E3A8A',
-        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: false, canViewCheckStatus: true, canManageMembers: true }
+        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: false, canManageMembers: true }
       },
       {
         id: 'role_teacher', name: '교사', color: '#059669',
-        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: false, canViewCheckStatus: true, canManageMembers: false }
+        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: false, canManageMembers: false }
       },
       {
         id: 'role_president', name: '회장', color: '#D97706',
-        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: true, canViewCheckStatus: true, canManageMembers: true }
+        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: true, canManageMembers: true }
       },
       {
         id: 'role_leader', name: '팀장', color: '#2563EB',
-        perms: { canViewHome: true, canViewNewcomer: false, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: false, canViewCheckStatus: true, canManageMembers: false }
+        perms: { canViewHome: true, canViewNewcomer: false, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: false, canManageMembers: false }
       },
       {
         id: 'role_youth', name: '청년', color: '#475569',
-        perms: { canViewHome: true, canViewNewcomer: false, canViewLeaderBoard: false, canManageNotices: false, canEditLayout: false, canViewCheckStatus: false, canManageMembers: false }
+        perms: { canViewHome: true, canViewNewcomer: false, canViewLeaderBoard: false, canManageNotices: false, canEditLayout: false, canManageMembers: false }
       },
       {
         id: 'role_newcomer', name: '새신자', color: '#DB2777',
-        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: false, canManageNotices: false, canEditLayout: false, canViewCheckStatus: false, canManageMembers: false }
+        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: false, canManageNotices: false, canEditLayout: false, canManageMembers: false }
       }
     ];
 
     const DEFAULT_BLOCKS = [
       {
         id: 'blk_hero', type: 'hero_notice', label: '상단 메인 고정 배너',
-        visible: true, badge: '📌 중요 공지', title: '고정 공지 자동 연동',
+        badge: '📌 중요 공지', title: '고정 공지 자동 연동',
         desc: '공지 관리에서 상단 배너로 고정한 글이 자동으로 표시됩니다.', theme: 'dark'
       },
       {
-        id: 'blk_newcomer', type: 'newcomer_card', label: '새신자 환영 안내 (권한 대상자 노출)',
-        visible: true, badge: '💐 새가족 환영', title: '라이트 청년부에 오신 것을 환영합니다!',
+        id: 'blk_newcomer', type: 'newcomer_card', label: '새신자 환영 안내',
+        badge: '💐 새가족 환영', title: '라이트 청년부에 오신 것을 환영합니다!',
         desc: '예배 시간: 주일 오후 2시 · 본당 비전홀\n예배 후 새가족 다과 및 소개 시간이 준비되어 있습니다. 궁금한 점은 언제든 임원에게 편하게 물어보세요!', theme: 'rose'
       },
       {
         id: 'blk_leader', type: 'leader_card', label: '리더·교역자 전용 전달사항',
-        visible: true, badge: '🔐 리더 전용 공지', title: '이번 주 임원·팀장 모임 안내',
+        badge: '🔐 리더 전용 공지', title: '이번 주 임원·팀장 모임 안내',
         desc: '주일 예배 시작 30분 전(오후 1시 30분) 소예배실에서 기도회 및 주간 점검 모임이 있습니다.', theme: 'dark'
       },
       {
         id: 'blk_ad_1', type: 'custom_ad', label: '홍보 배너 · 라이트 청년부',
-        visible: true, badge: '✨ 홍보 배너', title: '구미제일감리교회 라이트 청년부',
+        badge: '✨ 홍보 배너', title: '구미제일감리교회 라이트 청년부',
         desc: '관리자 화면에서 배너 위치와 내용을 언제든 자유롭게 수정·삭제할 수 있습니다.', theme: 'gold'
       },
       {
-        id: 'blk_quick_check', type: 'quick_check', label: '주일 예배 빠른 출석 체크',
-        visible: true, badge: '⛪ 이번 주 주일 예배', title: '구미제일감리교회 청년부 예배',
-        desc: '예배당 도착 후 아래 버튼을 눌러 바로 출석을 체크해 주세요.', theme: 'dark'
-      },
-      {
         id: 'blk_notices', type: 'notice_list', label: '공지 · 광고 · 소식 목록',
-        visible: true, badge: '', title: '📢 공지 · 광고 · 소식', desc: '', theme: 'dark'
+        badge: '', title: '📢 공지 · 광고 · 소식', desc: '', theme: 'dark'
       }
     ];
 
-    // 실시간 상태 (Firestore에서 실시간 동기화됨)
-    let adminPin = '1234';
+    function buildRolesByIdMap(roleList) {
+      const map = {};
+      roleList.forEach(r => {
+        map[r.id] = {
+          canViewHome: true,
+          canViewNewcomer: !!(r.perms && r.perms.canViewNewcomer),
+          canViewLeaderBoard: !!(r.perms && r.perms.canViewLeaderBoard),
+          canManageNotices: !!(r.perms && r.perms.canManageNotices),
+          canEditLayout: !!(r.perms && r.perms.canEditLayout),
+          canManageMembers: !!(r.perms && r.perms.canManageMembers)
+        };
+      });
+      return map;
+    }
+
+    function nameToAuthEmail(name) {
+      const normalized = name.trim().replace(/\s+/g, '').toLowerCase();
+      const bytes = new TextEncoder().encode(normalized);
+      let hex = '';
+      for (const b of bytes) hex += b.toString(16).padStart(2, '0');
+      return `u_${hex}@member.right-youth.app`;
+    }
+
+    // ==================== 5. 알림 설정 상태 & 실시간 알림 엔진 ====================
+    function loadNotifPrefs() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(KEY_NOTIF_PREFS) || '{}');
+        return {
+          enabled: !!raw.enabled,
+          newNotice: raw.newNotice !== undefined ? !!raw.newNotice : true,
+          bannerChange: raw.bannerChange !== undefined ? !!raw.bannerChange : true,
+          memberPending: raw.memberPending !== undefined ? !!raw.memberPending : true
+        };
+      } catch {
+        return { enabled: false, newNotice: true, bannerChange: true, memberPending: true };
+      }
+    }
+
+    let notifPrefs = loadNotifPrefs();
+    let inAppNotifTimer = null;
+    let inAppNotifAction = null;
+    let lastSelfLayoutEditTs = 0;
+    let lastSelfNoticeEditTs = 0;
+
+    function saveNotifPrefs() {
+      localStorage.setItem(KEY_NOTIF_PREFS, JSON.stringify(notifPrefs));
+      updateHeaderNotifDot();
+    }
+
+    function updateHeaderNotifDot() {
+      const dot = document.getElementById('headerNotifDot');
+      if (dot) dot.classList.toggle('hidden', !notifPrefs.enabled);
+    }
+
+    function getNotifPermissionState() {
+      if (typeof Notification === 'undefined') return 'unsupported';
+      return Notification.permission; // 'default' | 'granted' | 'denied'
+    }
+
+    function showInAppNotif(icon, title, body, onClickAction) {
+      document.getElementById('inAppNotifIcon').textContent = icon || '🔔';
+      document.getElementById('inAppNotifTitle').textContent = title;
+      document.getElementById('inAppNotifBody').textContent = body;
+      inAppNotifAction = onClickAction || null;
+      const el = document.getElementById('inAppNotif');
+      el.classList.add('show');
+      if (inAppNotifTimer) clearTimeout(inAppNotifTimer);
+      inAppNotifTimer = setTimeout(() => hideInAppNotif(), 4800);
+    }
+
+    window.hideInAppNotif = () => {
+      document.getElementById('inAppNotif').classList.remove('show');
+      if (inAppNotifTimer) { clearTimeout(inAppNotifTimer); inAppNotifTimer = null; }
+    };
+
+    window.handleInAppNotifClick = () => {
+      const fn = inAppNotifAction;
+      hideInAppNotif();
+      if (typeof fn === 'function') fn();
+    };
+
+    async function sendDeviceNotification(title, body) {
+      if (getNotifPermissionState() !== 'granted') return false;
+      try {
+        if (swRegistration && typeof swRegistration.showNotification === 'function') {
+          await swRegistration.showNotification(title, {
+            body,
+            icon: './icon-192.png',
+            badge: './icon-192.png',
+            tag: 'right-youth-' + Date.now()
+          });
+          return true;
+        }
+        new Notification(title, { body, icon: './icon-192.png' });
+        return true;
+      } catch (err) {
+        console.warn('Device notification fallback error:', err);
+        return false;
+      }
+    }
+
+    function dispatchAppNotification({ type, icon, title, body, onClick }) {
+      if (!notifPrefs.enabled) return;
+      if (type === 'notice' && !notifPrefs.newNotice) return;
+      if (type === 'banner' && !notifPrefs.bannerChange) return;
+      if (type === 'member' && !notifPrefs.memberPending) return;
+
+      showInAppNotif(icon, title, body, onClick);
+      sendDeviceNotification(title, body);
+    }
+
+    function renderNotifModalState() {
+      const user = getCurrentUser();
+      const canManageMembers = !!(user && (user.isSuperAdmin || (user.role.perms && user.role.perms.canManageMembers)));
+
+      document.getElementById('notifMasterToggle').checked = notifPrefs.enabled;
+      document.getElementById('notifNoticeToggle').checked = notifPrefs.newNotice;
+      document.getElementById('notifBannerToggle').checked = notifPrefs.bannerChange;
+      document.getElementById('notifMemberToggle').checked = notifPrefs.memberPending;
+
+      document.getElementById('notifNoticeToggle').disabled = !notifPrefs.enabled;
+      document.getElementById('notifBannerToggle').disabled = !notifPrefs.enabled;
+      document.getElementById('notifMemberToggle').disabled = !notifPrefs.enabled;
+      document.getElementById('notifDetailGroup').style.opacity = notifPrefs.enabled ? '1' : '0.48';
+      document.getElementById('notifMemberRow').classList.toggle('hidden', !canManageMembers);
+
+      const perm = getNotifPermissionState();
+      const box = document.getElementById('notifPermissionBox');
+      const reqBtn = document.getElementById('reqPermBtn');
+
+      if (perm === 'granted') {
+        box.className = 'info-box';
+        box.innerHTML = '✅ <b>기기 알림 권한이 허용되어 있습니다.</b><br>앱이 열려 있거나 실행 중인 동안 새 소식이 올라오면 즉시 알림을 띄워 드립니다.';
+        reqBtn.classList.add('hidden');
+      } else if (perm === 'denied') {
+        box.className = 'info-box warn';
+        box.innerHTML = '⚠️ <b>기기 알림이 차단되어 있습니다.</b><br>스마트폰 설정 → 알림(또는 브라우저 사이트 설정)에서 허용해 주시면 기기 알림도 함께 받을 수 있습니다. (앱 내 팝업 알림은 정상 작동합니다.)';
+        reqBtn.classList.add('hidden');
+      } else if (perm === 'unsupported') {
+        box.className = 'info-box warn';
+        box.innerHTML = isIOS && !isStandalone
+          ? '📱 <b>아이폰·아이패드 안내:</b> 사파리 화면에서 <b>공유(□↑) → 홈 화면에 추가</b>로 설치한 앱에서 열면 기기 알림을 켤 수 있어요. (현재도 앱 내 알림은 작동합니다.)'
+          : 'ℹ️ 현재 브라우저에서는 기기 시스템 알림을 지원하지 않아 <b>앱 내 상단 팝업 알림</b>으로만 안내해 드립니다.';
+        reqBtn.classList.add('hidden');
+      } else {
+        box.className = 'info-box';
+        box.innerHTML = '🔔 아래 <b>기기 알림 허용하기</b>를 누르면 앱 사용 중 새 공지·승인 요청을 기기 알림으로도 받을 수 있습니다.';
+        reqBtn.classList.remove('hidden');
+      }
+    }
+
+    window.openNotifModal = () => {
+      renderNotifModalState();
+      document.getElementById('notifModal').classList.add('open');
+    };
+
+    window.toggleNotifMaster = async (checked) => {
+      notifPrefs.enabled = checked;
+      saveNotifPrefs();
+      if (checked && getNotifPermissionState() === 'default') {
+        try {
+          await Notification.requestPermission();
+        } catch {}
+      }
+      renderNotifModalState();
+      showToast(checked ? '알림이 켜졌습니다.' : '알림이 꺼졌습니다.');
+    };
+
+    window.toggleNotifOption = (key, checked) => {
+      notifPrefs[key] = checked;
+      saveNotifPrefs();
+      renderNotifModalState();
+    };
+
+    window.requestDeviceNotifPermission = async () => {
+      if (typeof Notification === 'undefined') {
+        showToast('현재 환경에서는 홈 화면에 추가 후 이용해 주세요.');
+        return;
+      }
+      try {
+        const result = await Notification.requestPermission();
+        if (result === 'granted') {
+          notifPrefs.enabled = true;
+          saveNotifPrefs();
+          showToast('기기 알림이 허용되었습니다!');
+        } else if (result === 'denied') {
+          showToast('알림 권한이 거부되었습니다.');
+        }
+      } catch {
+        showToast('알림 권한 요청 중 문제가 발생했습니다.');
+      }
+      renderNotifModalState();
+    };
+
+    window.sendTestNotification = async () => {
+      if (!notifPrefs.enabled) {
+        notifPrefs.enabled = true;
+        saveNotifPrefs();
+        renderNotifModalState();
+      }
+      showInAppNotif('🔔', '라이트 청년부 테스트 알림', '알림이 정상적으로 작동하고 있습니다!', () => {
+        switchMainTab('home');
+      });
+      const sentOs = await sendDeviceNotification('라이트 청년부', '테스트 알림이 정상적으로 도착했습니다!');
+      showToast(sentOs ? '기기 알림과 앱 내 알림을 보냈습니다.' : '앱 내 테스트 알림을 표시했습니다.');
+    };
+
+    // ==================== 6. 실시간 앱 상태 ====================
+    let fbUser = null;
+    let isSigningUp = false;
+    let myMemberDoc = null;
     let roles = structuredClone(DEFAULT_ROLES);
     let blocks = structuredClone(DEFAULT_BLOCKS);
     let notices = [];
-    let sundayChecks = [];
     let members = [];
-    let isReady = false;
-    let initLoadedFlags = { app: false, roles: false, layout: false, members: false, notices: false, sunday: false };
 
-    let session = JSON.parse(localStorage.getItem(KEY_SESSION) || 'null');
-    let pendingMemberId = JSON.parse(localStorage.getItem(KEY_PENDING_ID) || 'null');
+    let unsubMyMember = null;
+    let unsubCore = [];
+    let unsubMembersAll = null;
+    let coreDataSubscribed = false;
+
+    let noticesFirstSnap = true;
+    let layoutFirstSnap = true;
+    let membersFirstSnap = true;
+    let knownNoticeIds = new Set();
+    let knownPendingMemberIds = new Set();
 
     let currentMainTab = 'home';
     let currentManageSubTab = 'layout';
@@ -911,48 +1531,57 @@
     let selectedRoleColor = ROLE_COLORS[0];
     let selectedBlockTheme = 'dark';
 
-    function saveSession(s) {
-      session = s;
-      if (s) localStorage.setItem(KEY_SESSION, JSON.stringify(s));
-      else localStorage.removeItem(KEY_SESSION);
-    }
+    // 회칙 화면 필터 상태
+    let bylawSearchQuery = '';
+    let bylawChapterFilter = 'all';
 
-    function savePendingId(id) {
-      pendingMemberId = id;
-      if (id) localStorage.setItem(KEY_PENDING_ID, JSON.stringify(id));
-      else localStorage.removeItem(KEY_PENDING_ID);
+    function clearSubscriptions() {
+      if (unsubMyMember) { unsubMyMember(); unsubMyMember = null; }
+      unsubCore.forEach(fn => { try { fn(); } catch {} });
+      unsubCore = [];
+      coreDataSubscribed = false;
+      if (unsubMembersAll) { unsubMembersAll(); unsubMembersAll = null; }
+      noticesFirstSnap = true;
+      layoutFirstSnap = true;
+      membersFirstSnap = true;
+      knownNoticeIds = new Set();
+      knownPendingMemberIds = new Set();
     }
 
     function getRoleById(roleId) {
       return roles.find(r => r.id === roleId) || roles.find(r => r.name === '청년') || roles[0] || {
         id: 'fallback', name: '청년', color: '#475569',
-        perms: { canViewHome: true, canViewNewcomer: false, canViewLeaderBoard: false, canManageNotices: false, canEditLayout: false, canViewCheckStatus: false, canManageMembers: false }
+        perms: { canViewHome: true, canViewNewcomer: false, canViewLeaderBoard: false, canManageNotices: false, canEditLayout: false, canManageMembers: false }
       };
     }
 
     function getCurrentUser() {
-      if (!session) return null;
-      if (session.role === 'super_admin') {
+      if (!fbUser) return null;
+      if (fbUser.email === ADMIN_EMAIL) {
         return {
           isSuperAdmin: true,
-          uid: 'super_admin',
+          uid: fbUser.uid,
           name: '최고 관리자',
           role: {
             id: 'super_admin', name: '최고 관리자', color: '#D97706',
-            perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: true, canViewCheckStatus: true, canManageMembers: true }
+            perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: true, canManageMembers: true }
           }
         };
       }
-      if (session.role === 'member') {
-        const m = members.find(x => String(x.id) === String(session.memberId));
-        if (!m) return null;
-        return { isSuperAdmin: false, uid: String(m.id), member: m, name: m.name, role: getRoleById(m.roleId) };
+      if (myMemberDoc && myMemberDoc.status === 'approved') {
+        return {
+          isSuperAdmin: false,
+          uid: fbUser.uid,
+          member: myMemberDoc,
+          name: myMemberDoc.name,
+          role: getRoleById(myMemberDoc.roleId)
+        };
       }
       return null;
     }
 
     function hasAnyManagePerm(perms) {
-      return !!(perms.canEditLayout || perms.canManageNotices || perms.canViewCheckStatus || perms.canManageMembers);
+      return !!(perms.canEditLayout || perms.canManageNotices || perms.canManageMembers);
     }
 
     function getAllowedManageSubTabs(perms) {
@@ -961,7 +1590,6 @@
       if (perms.canManageNotices) list.push({ id: 'notices', label: '📝 공지·광고 관리' });
       if (perms.canManageMembers) list.push({ id: 'members', label: '👥 회원 승인·역할부여' });
       if (perms.canManageMembers) list.push({ id: 'roles', label: '🏷️ 역할·권한 설정' });
-      if (perms.canViewCheckStatus) list.push({ id: 'status', label: '📊 체크 현황' });
       return list;
     }
 
@@ -977,16 +1605,13 @@
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
+    function escapeRegExp(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
     function formatToday() {
       const d = new Date();
       return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
-    }
-
-    function formatNowTime() {
-      const d = new Date();
-      const h = d.getHours();
-      const m = String(d.getMinutes()).padStart(2, '0');
-      return `${h >= 12 ? '오후' : '오전'} ${h % 12 || 12}:${m}`;
     }
 
     function tagColor(cat) {
@@ -1013,109 +1638,280 @@
     function handleDbError(err, actionLabel) {
       console.error(err);
       if (err && err.code === 'permission-denied') {
-        showToast('서버 권한 만료: Firebase 규칙을 확인해 주세요.');
-        const pill = document.getElementById('syncStatusPill');
-        if (pill) { pill.className = 'sync-pill error'; pill.textContent = '🔴 서버 보안 규칙 확인 필요'; }
+        showToast('접근 권한이 없습니다. 관리자 설정을 확인해 주세요.');
       } else {
-        showToast(`${actionLabel || '저장'} 중 오류가 발생했습니다. 네트워크를 확인해 주세요.`);
+        showToast(`${actionLabel || '처리'} 중 오류가 발생했습니다. 네트워크를 확인해 주세요.`);
       }
     }
 
-    // ==================== 4. Firestore 최초 시드 & 실시간 구독 ====================
-    async function ensureInitialSeed() {
+    function authErrorToKorean(err, isAdmin) {
+      const code = err && err.code ? err.code : '';
+      if (code === 'auth/wrong-password' || code === 'auth/invalid-credential' || code === 'auth/invalid-login-credentials') {
+        return isAdmin ? '관리자 코드가 일치하지 않습니다.' : '성명 또는 비밀번호가 일치하지 않습니다.';
+      }
+      if (code === 'auth/user-not-found') {
+        return isAdmin ? 'Firebase에 관리자 계정이 등록되지 않았습니다.' : '등록되지 않은 성명입니다. 회원가입 탭에서 가입 신청을 해주세요.';
+      }
+      if (code === 'auth/email-already-in-use') {
+        return '이미 등록된 성명입니다. 동명이인은 이름 뒤에 생년 등을 붙여주세요. (예: 홍길동01)';
+      }
+      if (code === 'auth/weak-password') {
+        return '비밀번호는 6자리 이상으로 입력해 주세요.';
+      }
+      if (code === 'auth/too-many-requests') {
+        return '로그인 시도가 너무 많습니다. 잠시 후 다시 시도해 주세요.';
+      }
+      if (code === 'auth/network-request-failed') {
+        return '인터넷 연결을 확인한 뒤 다시 시도해 주세요.';
+      }
+      return '인증 처리 중 오류가 발생했습니다. 다시 시도해 주세요.';
+    }
+
+    // ==================== 7. 인증 상태 감지 및 실시간 Firestore 구독 ====================
+    async function ensureInitialSeedAndMigrate() {
       const appRef = db.collection('config').doc('app');
-      const snap = await appRef.get();
-      if (!snap.exists) {
+      const appSnap = await appRef.get();
+      if (!appSnap.exists) {
         const batch = db.batch();
-        batch.set(appRef, { adminPin: '1234', initialized: true, createdAt: formatToday() });
-        batch.set(db.collection('config').doc('roles'), { items: DEFAULT_ROLES });
+        batch.set(appRef, { initialized: true, schemaVersion: CURRENT_SCHEMA_VERSION, createdAt: formatToday() });
+        batch.set(db.collection('config').doc('roles'), {
+          items: DEFAULT_ROLES,
+          byId: buildRolesByIdMap(DEFAULT_ROLES)
+        });
         batch.set(db.collection('config').doc('layout'), { blocks: DEFAULT_BLOCKS });
         const welcomeId = String(Date.now());
         batch.set(db.collection('notices').doc(welcomeId), {
           id: welcomeId,
           category: '공지',
           title: '라이트 청년부 앱 오픈 안내',
-          body: '구미제일감리교회 라이트 청년부 앱이 실시간 서버와 연결되었습니다.\n관리자 화면에서 공지·광고·배너를 자유롭게 수정해 사용해 주세요!',
+          body: '구미제일감리교회 라이트 청년부 앱이 준비되었습니다.\n관리자 화면에서 공지·광고·배너를 자유롭게 수정해 사용해 주세요!',
           date: formatToday(),
           pinned: true,
-          needAttend: false,
-          order: 0,
-          confirmedBy: [],
-          attendedBy: []
+          order: 0
         });
+        await batch.commit();
+      } else if ((appSnap.data().schemaVersion || 0) < CURRENT_SCHEMA_VERSION) {
+        const batch = db.batch();
+        const rolesSnap = await db.collection('config').doc('roles').get();
+        let currentRoles = rolesSnap.exists && Array.isArray(rolesSnap.data().items) && rolesSnap.data().items.length > 0
+          ? rolesSnap.data().items
+          : DEFAULT_ROLES;
+        currentRoles = currentRoles.map(r => {
+          const cleanPerms = { ...(r.perms || { canViewHome: true }) };
+          delete cleanPerms.canViewCheckStatus;
+          return { ...r, perms: cleanPerms };
+        });
+        batch.set(db.collection('config').doc('roles'), {
+          items: currentRoles,
+          byId: buildRolesByIdMap(currentRoles)
+        });
+
+        const layoutSnap = await db.collection('config').doc('layout').get();
+        if (layoutSnap.exists && Array.isArray(layoutSnap.data().blocks)) {
+          const cleanedBlocks = layoutSnap.data().blocks
+            .filter(b => b.type !== 'quick_check')
+            .map(b => {
+              const copy = { ...b };
+              delete copy.visible;
+              return copy;
+            });
+          batch.set(db.collection('config').doc('layout'), { blocks: cleanedBlocks });
+        }
+
+        batch.set(appRef, {
+          initialized: true,
+          schemaVersion: CURRENT_SCHEMA_VERSION,
+          adminPin: FieldValue.delete()
+        }, { merge: true });
         await batch.commit();
       }
     }
 
-    function markLoaded(key) {
-      initLoadedFlags[key] = true;
-      const allDone = Object.values(initLoadedFlags).every(Boolean);
-      if (allDone && !isReady) {
-        isReady = true;
-        document.getElementById('loadingScreen').classList.add('hidden');
-        applyScreen();
-      } else if (isReady) {
-        applyScreen();
-        if (currentDetailId && document.getElementById('detailModal').classList.contains('open')) {
-          openDetail(currentDetailId);
-        }
+    function syncMembersAllSubscription() {
+      const user = getCurrentUser();
+      const needsAllMembers = !!(user && (user.isSuperAdmin || (user.role.perms && user.role.perms.canManageMembers)));
+      if (needsAllMembers && !unsubMembersAll) {
+        membersFirstSnap = true;
+        knownPendingMemberIds = new Set();
+        unsubMembersAll = db.collection('members').onSnapshot(snap => {
+          const nextMembers = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
+            .sort((a, b) => Number(b.createdTs || 0) - Number(a.createdTs || 0));
+
+          if (membersFirstSnap) {
+            nextMembers.forEach(m => { if (m.status === 'pending') knownPendingMemberIds.add(m.id); });
+            membersFirstSnap = false;
+          } else {
+            nextMembers.forEach(m => {
+              if (m.status === 'pending' && !knownPendingMemberIds.has(m.id)) {
+                knownPendingMemberIds.add(m.id);
+                dispatchAppNotification({
+                  type: 'member',
+                  icon: '👤',
+                  title: '새 회원가입 승인 요청',
+                  body: `${m.name}님이 가입 승인을 기다리고 있습니다.`,
+                  onClick: () => {
+                    currentMainTab = 'manage';
+                    currentManageSubTab = 'members';
+                    applyScreen();
+                  }
+                });
+              }
+            });
+          }
+
+          members = nextMembers;
+          applyScreen();
+        }, err => handleDbError(err, '회원 목록 동기화'));
+      } else if (!needsAllMembers && unsubMembersAll) {
+        unsubMembersAll();
+        unsubMembersAll = null;
+        members = [];
+        membersFirstSnap = true;
+        knownPendingMemberIds = new Set();
       }
     }
 
-    async function startRealtimeSync() {
-      try {
-        await ensureInitialSeed();
-      } catch (err) {
-        console.error('Seed error:', err);
-        document.getElementById('loadingMsg').innerHTML =
-          err && err.code === 'permission-denied'
-            ? 'Firestore 보안 규칙이 만료되었거나 차단되었습니다.<br>Firebase 콘솔 → Firestore → 규칙 탭을 확인해 주세요.'
-            : '서버 연결에 실패했습니다.<br>인터넷 연결을 확인한 뒤 다시 시도해 주세요.';
-        document.getElementById('retryInitBtn').classList.remove('hidden');
+    function subscribeCoreData() {
+      if (coreDataSubscribed) return;
+      coreDataSubscribed = true;
+      noticesFirstSnap = true;
+      layoutFirstSnap = true;
+      knownNoticeIds = new Set();
+
+      unsubCore.push(
+        db.collection('config').doc('roles').onSnapshot(doc => {
+          if (doc.exists && Array.isArray(doc.data().items) && doc.data().items.length > 0) {
+            roles = doc.data().items;
+          }
+          syncMembersAllSubscription();
+          applyScreen();
+        }, err => handleDbError(err, '역할 동기화'))
+      );
+
+      unsubCore.push(
+        db.collection('config').doc('layout').onSnapshot(doc => {
+          if (doc.exists && Array.isArray(doc.data().blocks)) {
+            blocks = doc.data().blocks.filter(b => b.type !== 'quick_check');
+            if (layoutFirstSnap) {
+              layoutFirstSnap = false;
+            } else if (Date.now() - lastSelfLayoutEditTs > 3500) {
+              dispatchAppNotification({
+                type: 'banner',
+                icon: '📌',
+                title: '메인 배너 · 화면 업데이트',
+                body: '라이트 청년부 메인 화면 배너가 새로 업데이트되었습니다.',
+                onClick: () => { switchMainTab('home'); }
+              });
+            }
+          }
+          applyScreen();
+        }, err => handleDbError(err, '배치 동기화'))
+      );
+
+      unsubCore.push(
+        db.collection('notices').onSnapshot(snap => {
+          const nextNotices = snap.docs.map(d => ({
+            order: 9999,
+            ...d.data(),
+            id: String(d.id)
+          })).sort((a, b) => (a.order - b.order) || (Number(b.id) - Number(a.id)));
+
+          if (noticesFirstSnap) {
+            nextNotices.forEach(n => knownNoticeIds.add(n.id));
+            noticesFirstSnap = false;
+          } else {
+            nextNotices.forEach(n => {
+              if (!knownNoticeIds.has(n.id)) {
+                knownNoticeIds.add(n.id);
+                if (Date.now() - lastSelfNoticeEditTs > 3500) {
+                  dispatchAppNotification({
+                    type: 'notice',
+                    icon: '📢',
+                    title: `새 ${n.category || '공지'} 등록`,
+                    body: n.title,
+                    onClick: () => {
+                      switchMainTab('home');
+                      openDetail(n.id);
+                    }
+                  });
+                }
+              }
+            });
+          }
+
+          notices = nextNotices;
+          applyScreen();
+          if (currentDetailId && document.getElementById('detailModal').classList.contains('open')) {
+            openDetail(currentDetailId);
+          }
+        }, err => handleDbError(err, '공지 동기화'))
+      );
+    }
+
+    function attachMemberProfileListener(uid) {
+      if (unsubMyMember) { unsubMyMember(); unsubMyMember = null; }
+      unsubMyMember = db.collection('members').doc(uid).onSnapshot(doc => {
+        if (!doc.exists) {
+          if (isSigningUp) return;
+          myMemberDoc = null;
+          auth.signOut().catch(() => {});
+          showToast('등록되지 않았거나 삭제된 계정입니다.');
+          return;
+        }
+        const prevStatus = myMemberDoc ? myMemberDoc.status : null;
+        myMemberDoc = { ...doc.data(), id: String(doc.id) };
+
+        if (myMemberDoc.status === 'approved') {
+          if (prevStatus && prevStatus !== 'approved') {
+            currentMainTab = 'home';
+            showToast(`가입이 승인되었습니다! ${myMemberDoc.name}님 환영합니다.`);
+          }
+          subscribeCoreData();
+          syncMembersAllSubscription();
+        } else {
+          unsubCore.forEach(fn => { try { fn(); } catch {} });
+          unsubCore = [];
+          coreDataSubscribed = false;
+          if (unsubMembersAll) { unsubMembersAll(); unsubMembersAll = null; }
+        }
+        document.getElementById('loadingScreen').classList.add('hidden');
+        applyScreen();
+      }, err => {
+        console.error('Profile listener error:', err);
+        document.getElementById('loadingScreen').classList.add('hidden');
+        handleDbError(err, '계정 상태 확인');
+      });
+    }
+
+    auth.onAuthStateChanged(async (user) => {
+      if (isSigningUp) return;
+      clearSubscriptions();
+      fbUser = user;
+      myMemberDoc = null;
+
+      if (!user) {
+        document.getElementById('loadingScreen').classList.add('hidden');
+        applyScreen();
         return;
       }
 
-      db.collection('config').doc('app').onSnapshot(doc => {
-        if (doc.exists && doc.data().adminPin) adminPin = String(doc.data().adminPin);
-        markLoaded('app');
-      }, err => handleDbError(err, '설정 동기화'));
-
-      db.collection('config').doc('roles').onSnapshot(doc => {
-        if (doc.exists && Array.isArray(doc.data().items) && doc.data().items.length > 0) {
-          roles = doc.data().items;
+      if (user.email === ADMIN_EMAIL) {
+        try {
+          await ensureInitialSeedAndMigrate();
+        } catch (err) {
+          console.error('Seed/Migrate error:', err);
+          handleDbError(err, '초기화');
         }
-        markLoaded('roles');
-      }, err => handleDbError(err, '역할 동기화'));
+        subscribeCoreData();
+        syncMembersAllSubscription();
+        document.getElementById('loadingScreen').classList.add('hidden');
+        applyScreen();
+      } else {
+        attachMemberProfileListener(user.uid);
+      }
+    });
 
-      db.collection('config').doc('layout').onSnapshot(doc => {
-        if (doc.exists && Array.isArray(doc.data().blocks)) {
-          blocks = doc.data().blocks;
-        }
-        markLoaded('layout');
-      }, err => handleDbError(err, '배치 동기화'));
-
-      db.collection('members').onSnapshot(snap => {
-        members = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
-          .sort((a, b) => Number(b.createdTs || 0) - Number(a.createdTs || 0));
-        markLoaded('members');
-      }, err => handleDbError(err, '회원 동기화'));
-
-      db.collection('notices').onSnapshot(snap => {
-        notices = snap.docs.map(d => ({
-          confirmedBy: [], attendedBy: [], order: 9999,
-          ...d.data(), id: String(d.id)
-        })).sort((a, b) => (a.order - b.order) || (Number(b.id) - Number(a.id)));
-        markLoaded('notices');
-      }, err => handleDbError(err, '공지 동기화'));
-
-      db.collection('sundayChecks').onSnapshot(snap => {
-        sundayChecks = snap.docs.map(d => ({ ...d.data(), uid: String(d.id) }))
-          .sort((a, b) => Number(b.timestamp || 0) - Number(a.timestamp || 0));
-        markLoaded('sunday');
-      }, err => handleDbError(err, '출석 동기화'));
-    }
-
-    // ==================== 5. 인증 탭 및 로그인/회원가입 ====================
+    // ==================== 8. 인증 탭 및 로그인/회원가입 ====================
     window.switchAuthTab = (tab) => {
       clearErrors();
       document.getElementById('authTabs').classList.remove('hidden');
@@ -1149,28 +1945,26 @@
         emoji.className = 'status-emoji pending';
         emoji.textContent = '⏳';
         title.textContent = '관리자 승인 대기 중';
-        desc.innerHTML = `<b>${escapeHtml(member.name)}</b>님의 회원가입 신청이 서버에 접수되었습니다.<br>관리자가 승인하면 <b>자동으로 바로 입장</b>됩니다.`;
+        desc.innerHTML = `<b>${escapeHtml(member.name)}</b>님의 회원가입 신청이 접수되었습니다.<br>관리자가 승인하면 <b>자동으로 바로 입장</b>됩니다.`;
         recheckBtn.textContent = '승인 여부 다시 확인';
-        recheckBtn.onclick = () => {
-          const latest = members.find(m => String(m.id) === String(member.id));
-          if (!latest) { savePendingId(null); switchAuthTab('login'); return; }
-          if (latest.status === 'approved') {
-            savePendingId(null);
-            saveSession({ role: 'member', memberId: latest.id });
-            currentMainTab = 'home';
-            applyScreen();
-            showToast(`승인 완료! ${latest.name}님 환영합니다.`);
-          } else if (latest.status === 'rejected') {
-            showStatusPanel(latest);
-          } else {
-            showToast('아직 관리자 승인 대기 중입니다.');
-          }
+        recheckBtn.onclick = async () => {
+          try {
+            const snap = await db.collection('members').doc(member.id).get();
+            if (snap.exists && snap.data().status === 'approved') {
+              myMemberDoc = { ...snap.data(), id: snap.id };
+              subscribeCoreData();
+              syncMembersAllSubscription();
+              applyScreen();
+            } else {
+              showToast('아직 관리자 승인 대기 중입니다.');
+            }
+          } catch (err) { handleDbError(err, '승인 확인'); }
         };
       } else {
         emoji.className = 'status-emoji rejected';
         emoji.textContent = '🚫';
         title.textContent = '가입 승인이 보류되었습니다';
-        desc.innerHTML = `<b>${escapeHtml(member.name)}</b>님의 가입 신청이 거절되었습니다.`;
+        desc.innerHTML = `<b>${escapeHtml(member.name)}</b>님의 가입 신청이 보류되었습니다.`;
         recheckBtn.textContent = '다시 가입 신청하기';
         recheckBtn.onclick = async () => {
           try {
@@ -1185,13 +1979,12 @@
       meta.innerHTML = `
         <div><b>아이디 (성명):</b> ${escapeHtml(member.name)}</div>
         <div><b>신청일:</b> ${escapeHtml(member.createdAt)}</div>
-        <div><b>현재 상태:</b> ${member.status === 'pending' ? '관리자 승인 대기 (실시간 연동 중)' : '거절/보류'}</div>
+        <div><b>현재 상태:</b> ${member.status === 'pending' ? '관리자 승인 대기' : '보류/거절'}</div>
       `;
     }
 
     document.getElementById('switchAccountBtn').addEventListener('click', () => {
-      savePendingId(null);
-      switchAuthTab('login');
+      logout();
     });
 
     async function handleSignup() {
@@ -1199,76 +1992,99 @@
       const name = document.getElementById('signupNameInput').value.trim();
       const pw = document.getElementById('signupPwInput').value.trim();
       const pw2 = document.getElementById('signupPwConfirmInput').value.trim();
-      if (name.length < 2) return showError('signupError', '본인 성명을 2글자 이상 입력해 주세요.');
-      if (pw.length < 4) return showError('signupError', '비밀번호는 4자리 이상 입력해 주세요.');
-      if (pw !== pw2) return showError('signupError', '비밀번호 확인이 일치하지 않습니다.');
 
-      const dup = members.find(m => m.name === name);
-      if (dup) {
-        return showError('signupError', dup.status === 'pending'
-          ? `'${name}'님은 이미 승인 대기 중입니다.`
-          : `이미 등록된 성명입니다. 동명이인은 뒤에 생년 등을 붙여주세요. (예: ${name}01)`);
+      if (name.length < 2 || name.length > 10) {
+        return showError('signupError', '본인 성명을 2~10글자 이내로 입력해 주세요.');
+      }
+      if (pw.length < 6) {
+        return showError('signupError', '비밀번호는 보안을 위해 6자리 이상 입력해 주세요.');
+      }
+      if (pw !== pw2) {
+        return showError('signupError', '비밀번호 확인이 일치하지 않습니다.');
       }
 
       const btn = document.getElementById('submitSignupBtn');
       btn.disabled = true;
       btn.textContent = '신청 접수 중...';
+      isSigningUp = true;
+
       try {
-        const defaultYouth = roles.find(r => r.name === '청년') || roles[0];
-        const newId = String(Date.now());
+        const authEmail = nameToAuthEmail(name);
+        const cred = await auth.createUserWithEmailAndPassword(authEmail, pw);
+        const uid = cred.user.uid;
         const newMember = {
-          id: newId, name, password: pw, status: 'pending',
-          roleId: defaultYouth.id, createdAt: formatToday(), createdTs: Date.now()
+          id: uid,
+          name,
+          status: 'pending',
+          roleId: 'role_youth',
+          createdAt: formatToday(),
+          createdTs: Date.now()
         };
-        await db.collection('members').doc(newId).set(newMember);
-        savePendingId(newId);
+        await db.collection('members').doc(uid).set(newMember);
+        fbUser = cred.user;
+        myMemberDoc = newMember;
+
         document.getElementById('signupNameInput').value = '';
         document.getElementById('signupPwInput').value = '';
         document.getElementById('signupPwConfirmInput').value = '';
-        showToast('회원가입 신청이 서버에 등록되었습니다!');
-        showStatusPanel(newMember);
+        showToast('회원가입 신청이 접수되었습니다!');
+        isSigningUp = false;
+        attachMemberProfileListener(uid);
+        applyScreen();
       } catch (err) {
-        handleDbError(err, '회원가입 신청');
+        isSigningUp = false;
+        if (auth.currentUser && !myMemberDoc) {
+          await auth.signOut().catch(() => {});
+        }
+        showError('signupError', authErrorToKorean(err, false));
       } finally {
         btn.disabled = false;
         btn.textContent = '회원가입 신청하기';
       }
     }
 
-    function handleMemberLogin() {
+    async function handleMemberLogin() {
       clearErrors();
       const name = document.getElementById('loginNameInput').value.trim();
       const pw = document.getElementById('loginPwInput').value.trim();
       if (!name || !pw) return showError('loginError', '성명과 비밀번호를 모두 입력해 주세요.');
 
-      const member = members.find(m => m.name === name);
-      if (!member) return showError('loginError', '등록되지 않은 성명입니다. 상단 [회원가입] 탭에서 가입 신청을 해주세요.');
-      if (member.password !== pw) return showError('loginError', '비밀번호가 일치하지 않습니다.');
-      if (member.status !== 'approved') {
-        savePendingId(member.id);
-        showStatusPanel(member);
-        return;
+      const btn = document.getElementById('submitLoginBtn');
+      btn.disabled = true;
+      btn.textContent = '로그인 중...';
+      try {
+        currentMainTab = 'home';
+        await auth.signInWithEmailAndPassword(nameToAuthEmail(name), pw);
+        document.getElementById('loginNameInput').value = '';
+        document.getElementById('loginPwInput').value = '';
+      } catch (err) {
+        showError('loginError', authErrorToKorean(err, false));
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '로그인';
       }
-
-      savePendingId(null);
-      saveSession({ role: 'member', memberId: member.id });
-      currentMainTab = 'home';
-      applyScreen();
-      showToast(`${member.name}님(${getRoleById(member.roleId).name}) 환영합니다!`);
     }
 
-    function handleAdminLogin() {
+    async function handleAdminLogin() {
       clearErrors();
       const pin = document.getElementById('adminPinInput').value.trim();
-      if (pin !== adminPin) {
-        showError('adminError', '관리자 코드가 일치하지 않습니다.');
-        return;
+      if (!pin) return showError('adminError', '관리자 코드를 입력해 주세요.');
+
+      const btn = document.getElementById('submitAdminBtn');
+      btn.disabled = true;
+      btn.textContent = '확인 중...';
+      try {
+        currentMainTab = 'manage';
+        currentManageSubTab = 'layout';
+        await auth.signInWithEmailAndPassword(ADMIN_EMAIL, pin);
+        document.getElementById('adminPinInput').value = '';
+        showToast('최고 관리자로 로그인했습니다.');
+      } catch (err) {
+        showError('adminError', authErrorToKorean(err, true));
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '최고 관리자로 로그인';
       }
-      saveSession({ role: 'super_admin' });
-      currentMainTab = 'manage';
-      currentManageSubTab = 'layout';
-      applyScreen();
-      showToast('최고 관리자로 로그인했습니다.');
     }
 
     document.getElementById('submitSignupBtn').addEventListener('click', handleSignup);
@@ -1278,8 +2094,12 @@
     document.getElementById('submitAdminBtn').addEventListener('click', handleAdminLogin);
     document.getElementById('adminPinInput').addEventListener('keydown', e => { if (e.key === 'Enter') handleAdminLogin(); });
 
-    window.logout = () => {
-      saveSession(null);
+    window.logout = async () => {
+      clearSubscriptions();
+      fbUser = null;
+      myMemberDoc = null;
+      members = [];
+      try { await auth.signOut(); } catch {}
       document.getElementById('loginNameInput').value = '';
       document.getElementById('loginPwInput').value = '';
       document.getElementById('adminPinInput').value = '';
@@ -1288,51 +2108,28 @@
       showToast('로그아웃되었습니다.');
     };
 
-    // ==================== 6. 메인 화면 라우팅 및 권한 기반 UI ====================
+    // ==================== 9. 메인 화면 라우팅 및 권한 기반 UI ====================
     function applyScreen() {
-      if (!isReady) return;
       const loginEl = document.getElementById('loginScreen');
       const mainAppEl = document.getElementById('mainApp');
       const themeMeta = document.querySelector('meta[name="theme-color"]');
 
-      // 승인 대기였던 기기가 실시간으로 승인 완료되면 즉시 자동 로그인!
-      if (!session && pendingMemberId) {
-        const pm = members.find(m => String(m.id) === String(pendingMemberId));
-        if (pm && pm.status === 'approved') {
-          savePendingId(null);
-          saveSession({ role: 'member', memberId: pm.id });
-          currentMainTab = 'home';
-          showToast(`가입이 승인되었습니다! ${pm.name}님 환영합니다.`);
-        } else if (pm) {
-          loginEl.classList.remove('hidden');
-          mainAppEl.classList.add('hidden');
-          themeMeta.setAttribute('content', '#0B0F19');
-          showStatusPanel(pm);
-          return;
-        } else {
-          savePendingId(null);
-        }
+      if (fbUser && fbUser.email !== ADMIN_EMAIL && myMemberDoc && myMemberDoc.status !== 'approved') {
+        loginEl.classList.remove('hidden');
+        mainAppEl.classList.add('hidden');
+        themeMeta.setAttribute('content', '#0B0F19');
+        showStatusPanel(myMemberDoc);
+        return;
       }
 
       const user = getCurrentUser();
       if (!user) {
-        saveSession(null);
         loginEl.classList.remove('hidden');
         mainAppEl.classList.add('hidden');
         themeMeta.setAttribute('content', '#0B0F19');
-        // 이미 로그인 탭이 열려 있고 사용자가 입력 중일 수 있으므로, 상태 화면일 때만 초기화
         if (!document.getElementById('panelStatus').classList.contains('hidden')) {
           switchAuthTab('login');
         }
-        return;
-      }
-
-      if (!user.isSuperAdmin && user.member.status !== 'approved') {
-        saveSession(null);
-        savePendingId(user.member.id);
-        loginEl.classList.remove('hidden');
-        mainAppEl.classList.add('hidden');
-        showStatusPanel(user.member);
         return;
       }
 
@@ -1348,12 +2145,14 @@
 
       const header = document.getElementById('appHeader');
       header.className = `header ${isManageMode ? 'dark' : 'light'}`;
+      document.getElementById('headerNotifBtn').className = `icon-btn ${isManageMode ? 'dark' : 'light'}`;
       document.getElementById('headerLogoutBtn').className = `exit-btn ${isManageMode ? 'dark' : 'light'}`;
+      updateHeaderNotifDot();
 
       const badge = document.getElementById('headerRoleBadge');
       badge.textContent = user.role.name;
       badge.style.background = user.role.color;
-      document.getElementById('headerSubText').textContent = `${user.name}님 · 🟢 실시간 연동`;
+      document.getElementById('headerSubText').textContent = `${user.name}님`;
 
       const pendingCount = members.filter(m => m.status === 'pending').length;
       const tabbar = document.getElementById('appTabbar');
@@ -1363,9 +2162,9 @@
           <span class="tab-icon">🏠</span>
           <span>메인 홈</span>
         </button>
-        <button class="tab-btn ${currentMainTab === 'check' ? 'active' : ''}" onclick="switchMainTab('check')">
-          <span class="tab-icon">✅</span>
-          <span>예배·행사 체크</span>
+        <button class="tab-btn ${currentMainTab === 'bylaws' ? 'active' : ''}" onclick="switchMainTab('bylaws')">
+          <span class="tab-icon">📜</span>
+          <span>회칙</span>
         </button>
         ${canManage ? `
           <button class="tab-btn ${currentMainTab === 'manage' ? 'active' : ''}" onclick="switchMainTab('manage')">
@@ -1377,11 +2176,11 @@
       `;
 
       document.getElementById('viewHome').classList.toggle('hidden', currentMainTab !== 'home');
-      document.getElementById('viewCheck').classList.toggle('hidden', currentMainTab !== 'check');
+      document.getElementById('viewBylaws').classList.toggle('hidden', currentMainTab !== 'bylaws');
       document.getElementById('viewManage').classList.toggle('hidden', currentMainTab !== 'manage');
 
       if (currentMainTab === 'home') renderHomeView(user);
-      else if (currentMainTab === 'check') renderCheckView(user);
+      else if (currentMainTab === 'bylaws') renderBylawsView();
       else if (currentMainTab === 'manage') renderManageView(user);
     }
 
@@ -1390,19 +2189,128 @@
       applyScreen();
     };
 
-    // ==================== 7. 메인 홈 화면 렌더링 ====================
-    function renderHomeView(user) {
-      const perms = user.role.perms;
-      const myName = user.name;
-      const container = document.getElementById('viewHome');
+    // ==================== 10. 회칙 검색 및 렌더링 ====================
+    function highlightText(rawText, query) {
+      const safe = escapeHtml(rawText);
+      const q = (query || '').trim();
+      if (!q) return safe;
+      const tokens = q.split(/\s+/).filter(Boolean);
+      if (tokens.length === 0) return safe;
+      const pattern = new RegExp(`(${tokens.map(escapeRegExp).join('|')})`, 'gi');
+      return safe.replace(pattern, '<mark class="bylaw-mark">$1</mark>');
+    }
 
-      const visibleBlocks = blocks.filter(b => b.visible);
-      if (visibleBlocks.length === 0) {
-        container.innerHTML = '<div class="card" style="text-align:center;color:#64748B;">표시할 메인 화면 영역이 없습니다. 관리 센터 → 화면·배너 배치에서 켜주세요.</div>';
+    function renderBylawsView() {
+      const chipsEl = document.getElementById('bylawChapterChips');
+      chipsEl.innerHTML = BYLAWS_CHAPTERS.map(ch => `
+        <button class="filter-chip ${bylawChapterFilter === ch.id ? 'active' : ''}" type="button" onclick="setBylawChapter('${ch.id}')">
+          ${escapeHtml(ch.label)}
+        </button>
+      `).join('');
+
+      const q = bylawSearchQuery.trim();
+      document.getElementById('bylawSearchClear').classList.toggle('hidden', !q);
+
+      const qCompact = q.replace(/\s+/g, '').toLowerCase();
+      const qTokens = q.toLowerCase().split(/\s+/).filter(Boolean);
+
+      const matched = BYLAWS_ARTICLES.filter(art => {
+        if (bylawChapterFilter !== 'all' && art.chapterId !== bylawChapterFilter) return false;
+        if (!q) return true;
+        const hay = `${art.chapter} ${art.num} ${art.title} ${art.body}`.toLowerCase();
+        const hayCompact = hay.replace(/\s+/g, '');
+        return hayCompact.includes(qCompact) || qTokens.every(tok => hay.includes(tok));
+      });
+
+      const summaryEl = document.getElementById('bylawSummaryBar');
+      summaryEl.textContent = q
+        ? `'${q}' 검색 결과 ${matched.length}개 조항`
+        : `총 ${matched.length}개 조항`;
+
+      const resEl = document.getElementById('bylawsResults');
+      if (matched.length === 0) {
+        resEl.innerHTML = `
+          <div class="card" style="text-align:center; padding:26px 16px; color:#64748B;">
+            <div style="font-size:24px; margin-bottom:6px;">🔎</div>
+            <div style="font-size:14px; font-weight:700; color:#334155;">일치하는 회칙 조항이 없습니다.</div>
+            <div style="font-size:12.5px; margin-top:4px;">다른 키워드나 조항 번호(예: 제5조, 임기, 총회)로 검색해 보세요.</div>
+          </div>
+        `;
         return;
       }
 
-      container.innerHTML = visibleBlocks.map(b => {
+      let lastChapter = '';
+      resEl.innerHTML = matched.map(art => {
+        let headerHtml = '';
+        if (art.chapter !== lastChapter) {
+          lastChapter = art.chapter;
+          headerHtml = `
+            <div class="bylaw-chapter-head">
+              <span class="bylaw-chapter-badge">${escapeHtml(art.chapter)}</span>
+            </div>
+          `;
+        }
+        return `
+          ${headerHtml}
+          <div class="bylaw-article-card">
+            <div class="bylaw-article-head">
+              <span class="bylaw-article-title">${highlightText(art.title, q)}</span>
+              <button class="btn-sm" type="button" onclick="copyBylawArticle('${art.num}')">복사</button>
+            </div>
+            <div class="bylaw-article-body">${highlightText(art.body, q)}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.onBylawSearchInput = (val) => {
+      bylawSearchQuery = val;
+      renderBylawsView();
+    };
+
+    window.clearBylawSearch = () => {
+      bylawSearchQuery = '';
+      const input = document.getElementById('bylawSearchInput');
+      if (input) { input.value = ''; input.focus(); }
+      renderBylawsView();
+    };
+
+    window.quickSearchBylaw = (keyword) => {
+      bylawChapterFilter = 'all';
+      bylawSearchQuery = keyword;
+      const input = document.getElementById('bylawSearchInput');
+      if (input) input.value = keyword;
+      renderBylawsView();
+    };
+
+    window.setBylawChapter = (chId) => {
+      bylawChapterFilter = chId;
+      renderBylawsView();
+    };
+
+    window.copyBylawArticle = async (num) => {
+      const art = BYLAWS_ARTICLES.find(a => a.num === num);
+      if (!art) return;
+      const text = `[라이트 청년부 회칙 · ${art.chapter}]\n${art.title}\n${art.body}`;
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast(`${art.title} 내용이 복사되었습니다.`);
+      } catch {
+        showToast('복사 기능을 지원하지 않는 브라우저입니다.');
+      }
+    };
+
+    // ==================== 11. 메인 홈 화면 렌더링 ====================
+    function renderHomeView(user) {
+      const perms = user.role.perms;
+      const container = document.getElementById('viewHome');
+
+      if (blocks.length === 0) {
+        container.innerHTML = '<div class="card" style="text-align:center;color:#64748B;">표시할 메인 화면 영역이 없습니다. 관리 센터 → 화면·배너 배치에서 추가해 주세요.</div>';
+        return;
+      }
+
+      container.innerHTML = blocks.map(b => {
         if (b.type === 'hero_notice') {
           const pinned = notices.find(n => n.pinned) || notices[0];
           if (!pinned) return '';
@@ -1422,7 +2330,7 @@
           return `
             <div class="home-block">
               <div class="newcomer-card" style="background:${getThemeCss(b.theme)};">
-                <span class="hero-badge" style="background:rgba(255,255,255,0.22);color:#fff;">${escapeHtml(b.badge || '💐 새신자 안내')}</span>
+                ${b.badge ? `<span class="hero-badge" style="background:rgba(255,255,255,0.22);color:#fff;">${escapeHtml(b.badge)}</span>` : ''}
                 <h3 class="hero-title" style="font-size:17px;">${escapeHtml(b.title)}</h3>
                 <p class="hero-desc">${escapeHtml(b.desc)}</p>
               </div>
@@ -1435,7 +2343,7 @@
           return `
             <div class="home-block">
               <div class="leader-card" style="background:${getThemeCss(b.theme)};">
-                <span class="hero-badge">${escapeHtml(b.badge || '🔐 리더 전용')}</span>
+                ${b.badge ? `<span class="hero-badge">${escapeHtml(b.badge)}</span>` : ''}
                 <h3 class="hero-title" style="font-size:16.5px;">${escapeHtml(b.title)}</h3>
                 <p class="hero-desc">${escapeHtml(b.desc)}</p>
               </div>
@@ -1450,22 +2358,6 @@
                 ${b.badge ? `<span class="hero-badge" style="margin-bottom:7px;">${escapeHtml(b.badge)}</span>` : ''}
                 <h3 class="hero-title" style="font-size:16.5px;">${escapeHtml(b.title)}</h3>
                 <p class="hero-desc">${escapeHtml(b.desc)}</p>
-              </div>
-            </div>
-          `;
-        }
-
-        if (b.type === 'quick_check') {
-          const checked = sundayChecks.some(c => c.uid === user.uid);
-          return `
-            <div class="home-block">
-              <div class="worship-check-card" style="background:${getThemeCss(b.theme)};">
-                <div style="font-size:11.5px; font-weight:700; color:#FDE68A;">${escapeHtml(b.badge || '⛪ 주일 예배')}</div>
-                <div style="font-size:18px; font-weight:800; margin-top:4px;">${escapeHtml(b.title)}</div>
-                <div style="font-size:12.5px; opacity:0.86; margin-top:4px;">${escapeHtml(b.desc)}</div>
-                <button class="worship-check-btn ${checked ? 'done' : ''}" onclick="toggleSundayCheck()">
-                  ${checked ? `✅ ${escapeHtml(myName)}님 출석 체크 완료 (누르면 취소)` : '☑️ 이번 주 주일 예배 출석 체크하기'}
-                </button>
               </div>
             </div>
           `;
@@ -1486,33 +2378,19 @@
               </div>
               ${filtered.length === 0
                 ? '<div class="card" style="text-align:center;color:#64748B;">해당 구분의 글이 없습니다.</div>'
-                : filtered.map(n => {
-                    const isConfirmed = (n.confirmedBy || []).includes(myName);
-                    const isAttended = (n.attendedBy || []).includes(myName);
-                    return `
-                      <div class="card clickable" onclick="openDetail('${n.id}')">
-                        <div class="card-top">
-                          <div style="display:flex;align-items:center;gap:6px;">
-                            <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
-                            ${n.pinned ? '<span class="tag green">배너고정</span>' : ''}
-                          </div>
-                          <span class="card-date">${escapeHtml(n.date)}</span>
+                : filtered.map(n => `
+                    <div class="card clickable" onclick="openDetail('${n.id}')">
+                      <div class="card-top">
+                        <div style="display:flex;align-items:center;gap:6px;">
+                          <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
+                          ${n.pinned ? '<span class="tag green">배너고정</span>' : ''}
                         </div>
-                        <h3 class="card-title">${escapeHtml(n.title)}</h3>
-                        <p class="card-body clamp">${escapeHtml(n.body)}</p>
-                        <div class="card-footer" onclick="event.stopPropagation()">
-                          <button class="check-btn ${isConfirmed ? 'checked' : ''}" onclick="toggleConfirm('${n.id}')">
-                            ${isConfirmed ? '✅ 확인 완료' : '☑️ 확인했어요'} (${(n.confirmedBy || []).length})
-                          </button>
-                          ${n.needAttend ? `
-                            <button class="check-btn attend ${isAttended ? 'checked' : ''}" onclick="toggleAttend('${n.id}')">
-                              ${isAttended ? '🙋 참석 체크됨' : '🙋 참석 체크'} (${(n.attendedBy || []).length})
-                            </button>
-                          ` : ''}
-                        </div>
+                        <span class="card-date">${escapeHtml(n.date)}</span>
                       </div>
-                    `;
-                  }).join('')}
+                      <h3 class="card-title">${escapeHtml(n.title)}</h3>
+                      <p class="card-body clamp">${escapeHtml(n.body)}</p>
+                    </div>
+                  `).join('')}
             </div>
           `;
         }
@@ -1526,108 +2404,7 @@
       if (user) renderHomeView(user);
     };
 
-    // ==================== 8. 예배·행사 체크 화면 ====================
-    function renderCheckView(user) {
-      const myName = user.name;
-      const checked = sundayChecks.some(c => c.uid === user.uid);
-      const events = notices.filter(n => n.needAttend);
-
-      document.getElementById('viewCheck').innerHTML = `
-        <div class="worship-check-card" style="margin-bottom:16px;">
-          <div style="font-size:12px; font-weight:700; color:#FDE68A;">라이트 청년부 주일 예배</div>
-          <div style="font-size:20px; font-weight:800; margin-top:4px;">구미제일감리교회 청년부 예배</div>
-          <div style="font-size:13px; opacity:0.86; margin-top:4px;">예배당 도착 후 아래 버튼을 눌러 출석을 체크해 주세요.</div>
-          <button class="worship-check-btn ${checked ? 'done' : ''}" onclick="toggleSundayCheck()">
-            ${checked ? `✅ ${escapeHtml(myName)}님 출석 체크 완료 (누르면 취소)` : '☑️ 이번 주 주일 예배 출석 체크하기'}
-          </button>
-        </div>
-        <div class="section-head">
-          <h2 class="section-title">📋 참석 체크가 필요한 행사</h2>
-        </div>
-        ${events.length === 0
-          ? '<div class="card" style="text-align:center;color:#64748B;">현재 참석 체크 중인 행사가 없습니다.</div>'
-          : events.map(n => {
-              const isAttended = (n.attendedBy || []).includes(myName);
-              return `
-                <div class="card">
-                  <div class="card-top">
-                    <span class="tag warm">${escapeHtml(n.category)}</span>
-                    <span class="card-date">${escapeHtml(n.date)}</span>
-                  </div>
-                  <h3 class="card-title">${escapeHtml(n.title)}</h3>
-                  <p class="card-body clamp" style="margin-bottom:12px;">${escapeHtml(n.body)}</p>
-                  <button class="btn-full ${isAttended ? 'btn-outline' : 'btn-dark'}" onclick="toggleAttend('${n.id}')">
-                    ${isAttended ? '✅ 참석 체크 완료 (누르면 취소)' : '🙋 이 행사에 참석 체크하기'}
-                  </button>
-                </div>
-              `;
-            }).join('')}
-      `;
-    }
-
-    // 예배자 체크 액션 (Firestore Atomic arrayUnion / arrayRemove)
-    window.toggleConfirm = async (id) => {
-      const user = getCurrentUser();
-      if (!user) return;
-      const target = notices.find(n => String(n.id) === String(id));
-      if (!target) return;
-      const isConfirmed = (target.confirmedBy || []).includes(user.name);
-      try {
-        await db.collection('notices').doc(String(id)).update({
-          confirmedBy: isConfirmed ? FieldValue.arrayRemove(user.name) : FieldValue.arrayUnion(user.name)
-        });
-        showToast(isConfirmed ? '확인을 취소했습니다.' : '공지를 확인했습니다!');
-      } catch (err) { handleDbError(err, '공지 확인'); }
-    };
-
-    window.toggleAttend = async (id) => {
-      const user = getCurrentUser();
-      if (!user) return;
-      const target = notices.find(n => String(n.id) === String(id));
-      if (!target) return;
-      const isAttended = (target.attendedBy || []).includes(user.name);
-      try {
-        if (isAttended) {
-          await db.collection('notices').doc(String(id)).update({
-            attendedBy: FieldValue.arrayRemove(user.name)
-          });
-          showToast('참석 체크를 취소했습니다.');
-        } else {
-          await db.collection('notices').doc(String(id)).update({
-            attendedBy: FieldValue.arrayUnion(user.name),
-            confirmedBy: FieldValue.arrayUnion(user.name)
-          });
-          showToast('행사 참석이 체크되었습니다!');
-        }
-      } catch (err) { handleDbError(err, '참석 체크'); }
-    };
-
-    window.toggleSundayCheck = async () => {
-      const user = getCurrentUser();
-      if (!user) return;
-      const docRef = db.collection('sundayChecks').doc(user.uid);
-      const already = sundayChecks.some(c => c.uid === user.uid);
-      try {
-        if (already) {
-          await docRef.delete();
-          showToast('주일 출석 체크를 취소했습니다.');
-        } else {
-          await docRef.set({
-            uid: user.uid,
-            name: user.name,
-            roleName: user.role.name,
-            time: formatNowTime(),
-            date: formatToday(),
-            timestamp: Date.now()
-          });
-          showToast('주일 예배 출석이 체크되었습니다!');
-        }
-      } catch (err) { handleDbError(err, '출석 체크'); }
-    };
-
     window.openDetail = (id) => {
-      const user = getCurrentUser();
-      if (!user) return;
       const n = notices.find(item => String(item.id) === String(id));
       if (!n) return;
       currentDetailId = String(id);
@@ -1635,23 +2412,10 @@
       document.getElementById('detailTitle').textContent = n.title;
       document.getElementById('detailDate').textContent = n.date;
       document.getElementById('detailBody').textContent = n.body;
-
-      const isConfirmed = (n.confirmedBy || []).includes(user.name);
-      const isAttended = (n.attendedBy || []).includes(user.name);
-      document.getElementById('detailCheckArea').innerHTML = `
-        <button class="check-btn ${isConfirmed ? 'checked' : ''}" style="flex:1;justify-content:center;" onclick="toggleConfirm('${n.id}')">
-          ${isConfirmed ? '✅ 확인 완료' : '☑️ 확인했어요'} (${(n.confirmedBy || []).length})
-        </button>
-        ${n.needAttend ? `
-          <button class="check-btn attend ${isAttended ? 'checked' : ''}" style="flex:1;justify-content:center;" onclick="toggleAttend('${n.id}')">
-            ${isAttended ? '🙋 참석 체크됨' : '🙋 참석 체크'} (${(n.attendedBy || []).length})
-          </button>
-        ` : ''}
-      `;
       document.getElementById('detailModal').classList.add('open');
     };
 
-    // ==================== 9. 관리 센터 ====================
+    // ==================== 12. 관리 센터 ====================
     function renderManageView(user) {
       const perms = user.role.perms;
       const allowed = getAllowedManageSubTabs(perms);
@@ -1671,8 +2435,7 @@
       if (currentManageSubTab === 'layout') renderManageLayout(content);
       else if (currentManageSubTab === 'notices') renderManageNotices(content);
       else if (currentManageSubTab === 'members') renderManageMembers(content);
-      else if (currentManageSubTab === 'roles') renderManageRoles(content);
-      else if (currentManageSubTab === 'status') renderManageStatus(content);
+      else if (currentManageSubTab === 'roles') renderManageRoles(content, user);
     }
 
     window.switchManageSubTab = (sub) => {
@@ -1683,49 +2446,43 @@
 
     // (A) 앱 내 메인 화면 배너·광고 위치 편집기
     function renderManageLayout(el) {
-      const visibleCnt = blocks.filter(b => b.visible).length;
       el.innerHTML = `
         <div class="stats-grid">
-          <div class="stat-box"><div class="stat-num">${blocks.length}</div><div class="stat-label">전체 영역</div></div>
-          <div class="stat-box"><div class="stat-num">${visibleCnt}</div><div class="stat-label">현재 노출 중</div></div>
+          <div class="stat-box"><div class="stat-num">${blocks.length}</div><div class="stat-label">배치된 영역</div></div>
           <div class="stat-box" onclick="switchMainTab('home')"><div class="stat-num">👀</div><div class="stat-label">메인 미리보기</div></div>
         </div>
         <div class="section-head">
           <h2 class="section-title">🎨 메인 화면 배너·광고 배치</h2>
-          <button class="btn-admin" onclick="openAddBlockModal()">+ 새 배너·광고 추가</button>
+          <button class="btn-admin" onclick="openAddBlockModal()">+ 새 배너·영역 추가</button>
         </div>
-        <p style="font-size:12.5px; color:#64748B; margin:0 0 12px; line-height:1.45;">
-          여기서 수정한 배너 위치와 문구는 <b>모든 청년부원의 앱에 실시간으로 반영</b>됩니다.
-        </p>
-        ${blocks.map((b, idx) => `
-          <div class="card ${b.visible ? '' : 'dimmed'}">
-            <div class="layout-item-head">
-              <div style="min-width:0;">
-                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                  <span class="tag ${b.visible ? 'green' : 'slate'}">${b.visible ? '노출 중' : '숨김'}</span>
-                  <strong style="font-size:14px;">${idx + 1}. ${escapeHtml(b.label)}</strong>
+        ${blocks.length === 0
+          ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">배치된 영역이 없습니다. 상단 버튼으로 추가해 주세요.</div>'
+          : blocks.map((b, idx) => `
+              <div class="card">
+                <div class="layout-item-head">
+                  <div style="min-width:0;">
+                    <strong style="font-size:14px;">${idx + 1}. ${escapeHtml(b.label)}</strong>
+                    ${b.title ? `<div style="font-size:12px; color:#64748B; margin-top:4px;">${escapeHtml(b.title)}</div>` : ''}
+                  </div>
+                  <div class="order-btns">
+                    <button class="order-btn" onclick="moveBlock(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                    <button class="order-btn" onclick="moveBlock(${idx}, 1)" ${idx === blocks.length - 1 ? 'disabled' : ''}>▼</button>
+                  </div>
                 </div>
-                ${b.title ? `<div style="font-size:12px; color:#64748B; margin-top:4px;">${escapeHtml(b.title)}</div>` : ''}
+                <div class="card-footer" style="justify-content:flex-end;">
+                  <div style="display:flex; gap:6px;">
+                    <button class="btn-sm" onclick="openEditBlockModal('${b.id}')">내용 수정</button>
+                    <button class="btn-sm danger" onclick="deleteBlock('${b.id}')">삭제</button>
+                  </div>
+                </div>
               </div>
-              <div class="order-btns">
-                <button class="order-btn" onclick="moveBlock(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
-                <button class="order-btn" onclick="moveBlock(${idx}, 1)" ${idx === blocks.length - 1 ? 'disabled' : ''}>▼</button>
-              </div>
-            </div>
-            <div class="card-footer">
-              <button class="btn-sm" onclick="toggleBlockVisible('${b.id}')">${b.visible ? '🙈 숨기기' : '👁️ 보이게 하기'}</button>
-              <div style="display:flex; gap:6px;">
-                <button class="btn-sm" onclick="openEditBlockModal('${b.id}')">내용 수정</button>
-                ${b.type === 'custom_ad' ? `<button class="btn-sm danger" onclick="deleteBlock('${b.id}')">삭제</button>` : ''}
-              </div>
-            </div>
-          </div>
-        `).join('')}
+            `).join('')}
       `;
     }
 
     async function saveBlocksToCloud(nextBlocks, msg) {
       try {
+        lastSelfLayoutEditTs = Date.now();
         await db.collection('config').doc('layout').set({ blocks: nextBlocks });
         if (msg) showToast(msg);
       } catch (err) { handleDbError(err, '화면 배치 저장'); }
@@ -1736,21 +2493,14 @@
       if (targetIdx < 0 || targetIdx >= blocks.length) return;
       const next = structuredClone(blocks);
       [next[idx], next[targetIdx]] = [next[targetIdx], next[idx]];
-      await saveBlocksToCloud(next, '메인 화면 배치가 실시간 반영되었습니다.');
-    };
-
-    window.toggleBlockVisible = async (id) => {
-      const next = structuredClone(blocks);
-      const b = next.find(x => x.id === id);
-      if (!b) return;
-      b.visible = !b.visible;
-      await saveBlocksToCloud(next, b.visible ? '메인 화면에 표시됩니다.' : '메인 화면에서 숨겼습니다.');
+      await saveBlocksToCloud(next, '메인 화면 배치가 변경되었습니다.');
     };
 
     window.deleteBlock = async (id) => {
-      if (!confirm('이 배너·광고 영역을 삭제할까요?')) return;
+      const b = blocks.find(x => x.id === id);
+      if (!b || !confirm(`[${b.label}] 영역을 삭제할까요?`)) return;
       const next = blocks.filter(x => x.id !== id);
-      await saveBlocksToCloud(next, '배너가 삭제되었습니다.');
+      await saveBlocksToCloud(next, '영역이 삭제되었습니다.');
     };
 
     function renderBlockThemePalette() {
@@ -1762,18 +2512,26 @@
     }
     window.selectBlockTheme = (id) => { selectedBlockTheme = id; renderBlockThemePalette(); };
 
+    window.onBlockTypeChange = () => {
+      const type = document.getElementById('blockTypeSelect').value;
+      const isNoticeList = type === 'notice_list';
+      document.getElementById('blockBadgeGroup').classList.toggle('hidden', isNoticeList);
+      document.getElementById('blockDescGroup').classList.toggle('hidden', isNoticeList);
+      document.getElementById('blockColorGroup').classList.toggle('hidden', isNoticeList);
+    };
+
     window.openAddBlockModal = () => {
-      document.getElementById('blockModalTitle').textContent = '새 홍보 배너 · 광고 영역 추가';
+      document.getElementById('blockModalTitle').textContent = '새 배너 · 영역 추가';
       document.getElementById('editBlockId').value = '';
+      document.getElementById('blockTypeGroup').classList.remove('hidden');
+      document.getElementById('blockTypeSelect').value = 'custom_ad';
       document.getElementById('blockLabelInput').value = '';
       document.getElementById('blockBadgeInput').value = '✨ 특별 광고';
       document.getElementById('blockTitleInput').value = '';
       document.getElementById('blockDescInput').value = '';
-      document.getElementById('blockVisibleInput').checked = true;
-      document.getElementById('blockContentFields').classList.remove('hidden');
-      document.getElementById('blockColorGroup').classList.remove('hidden');
       selectedBlockTheme = 'gold';
       renderBlockThemePalette();
+      onBlockTypeChange();
       document.getElementById('blockModal').classList.add('open');
     };
 
@@ -1782,37 +2540,53 @@
       if (!b) return;
       document.getElementById('blockModalTitle').textContent = '배너 · 영역 편집';
       document.getElementById('editBlockId').value = b.id;
+      document.getElementById('blockTypeGroup').classList.add('hidden');
+      document.getElementById('blockTypeSelect').value = b.type || 'custom_ad';
       document.getElementById('blockLabelInput').value = b.label || '';
       document.getElementById('blockBadgeInput').value = b.badge || '';
       document.getElementById('blockTitleInput').value = b.title || '';
       document.getElementById('blockDescInput').value = b.desc || '';
-      document.getElementById('blockVisibleInput').checked = !!b.visible;
-      document.getElementById('blockContentFields').classList.remove('hidden');
-      document.getElementById('blockColorGroup').classList.toggle('hidden', b.type === 'notice_list');
       selectedBlockTheme = b.theme || 'dark';
       renderBlockThemePalette();
+      onBlockTypeChange();
       document.getElementById('blockModal').classList.add('open');
     };
 
     document.getElementById('saveBlockBtn').addEventListener('click', async () => {
       const id = document.getElementById('editBlockId').value;
+      const type = document.getElementById('blockTypeSelect').value;
       const label = document.getElementById('blockLabelInput').value.trim();
       const badge = document.getElementById('blockBadgeInput').value.trim();
       const title = document.getElementById('blockTitleInput').value.trim();
       const desc = document.getElementById('blockDescInput').value.trim();
-      const visible = document.getElementById('blockVisibleInput').checked;
       if (!label) return showToast('관리용 블록 이름을 입력해 주세요.');
 
       const next = structuredClone(blocks);
       let msg = '';
       if (id) {
         const b = next.find(x => x.id === id);
-        if (b) { b.label = label; b.badge = badge; b.title = title; b.desc = desc; b.visible = visible; b.theme = selectedBlockTheme; }
+        if (b) {
+          b.label = label;
+          b.badge = badge;
+          b.title = title;
+          b.desc = desc;
+          b.theme = selectedBlockTheme;
+        }
         msg = '화면 영역이 수정되었습니다!';
       } else {
-        if (!title) return showToast('배너 제목을 입력해 주세요.');
-        next.unshift({ id: 'blk_custom_' + Date.now(), type: 'custom_ad', label, badge, title, desc, visible, theme: selectedBlockTheme });
-        msg = '새 배너가 메인 화면 상단에 추가되었습니다!';
+        if (type !== 'hero_notice' && type !== 'notice_list' && !title) {
+          return showToast('배너 제목을 입력해 주세요.');
+        }
+        next.unshift({
+          id: 'blk_' + Date.now(),
+          type,
+          label,
+          badge,
+          title: title || (type === 'notice_list' ? '📢 공지 · 광고 · 소식' : ''),
+          desc,
+          theme: selectedBlockTheme
+        });
+        msg = '새 영역이 메인 화면에 추가되었습니다!';
       }
       await saveBlocksToCloud(next, msg);
       document.getElementById('blockModal').classList.remove('open');
@@ -1833,7 +2607,6 @@
                   <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
                     <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
                     ${n.pinned ? '<span class="tag green">상단배너</span>' : ''}
-                    ${n.needAttend ? '<span class="tag warm">참석체크</span>' : ''}
                   </div>
                   <div class="order-btns">
                     <button class="order-btn" onclick="moveNotice(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
@@ -1843,9 +2616,9 @@
                 <h3 class="card-title">${escapeHtml(n.title)}</h3>
                 <p class="card-body clamp">${escapeHtml(n.body)}</p>
                 <div class="card-footer">
-                  <span style="font-size:12px;color:#475569;font-weight:600;">확인 ${(n.confirmedBy || []).length}명 ${n.needAttend ? `· 참석 ${(n.attendedBy || []).length}명` : ''}</span>
+                  <span class="card-date">${escapeHtml(n.date)}</span>
                   <div style="display:flex;gap:6px;">
-                    <button class="btn-sm" onclick="openEditNotice('${n.id}')">수정</button>
+                    <button class="btn-sm" onclick="openEditNotice('${n.id}')">내용 수정</button>
                     <button class="btn-sm danger" onclick="deleteNotice('${n.id}')">삭제</button>
                   </div>
                 </div>
@@ -1876,7 +2649,6 @@
       document.getElementById('noticeTitleInput').value = '';
       document.getElementById('noticeBodyInput').value = '';
       document.getElementById('noticePinInput').checked = false;
-      document.getElementById('noticeAttendInput').checked = false;
       document.getElementById('noticeModal').classList.add('open');
     };
 
@@ -1889,7 +2661,6 @@
       document.getElementById('noticeTitleInput').value = n.title;
       document.getElementById('noticeBodyInput').value = n.body;
       document.getElementById('noticePinInput').checked = !!n.pinned;
-      document.getElementById('noticeAttendInput').checked = !!n.needAttend;
       document.getElementById('noticeModal').classList.add('open');
     };
 
@@ -1899,12 +2670,12 @@
       const title = document.getElementById('noticeTitleInput').value.trim();
       const body = document.getElementById('noticeBodyInput').value.trim();
       const pinned = document.getElementById('noticePinInput').checked;
-      const needAttend = document.getElementById('noticeAttendInput').checked;
       if (!title || !body) return showToast('제목과 내용을 모두 입력해 주세요.');
 
       const btn = document.getElementById('saveNoticeBtn');
       btn.disabled = true;
       try {
+        lastSelfNoticeEditTs = Date.now();
         const batch = db.batch();
         if (pinned) {
           notices.forEach(n => {
@@ -1915,7 +2686,7 @@
         }
 
         if (editId) {
-          batch.update(db.collection('notices').doc(String(editId)), { category, title, body, pinned, needAttend });
+          batch.update(db.collection('notices').doc(String(editId)), { category, title, body, pinned });
           await batch.commit();
           showToast('공지가 수정되었습니다!');
         } else {
@@ -1923,7 +2694,7 @@
           const minOrder = notices.length > 0 ? Math.min(...notices.map(n => Number(n.order || 0))) - 1 : 0;
           batch.set(db.collection('notices').doc(newId), {
             id: newId, category, title, body, date: formatToday(),
-            pinned, needAttend, order: minOrder, confirmedBy: [], attendedBy: []
+            pinned, order: minOrder
           });
           await batch.commit();
           showToast('새 공지가 등록되었습니다!');
@@ -1948,6 +2719,7 @@
     function renderManageMembers(el) {
       const pending = members.filter(m => m.status === 'pending');
       const approved = members.filter(m => m.status === 'approved');
+      const rejected = members.filter(m => m.status === 'rejected');
 
       const roleOptionsHtml = (selectedId) => roles.map(r => `
         <option value="${r.id}" ${r.id === selectedId ? 'selected' : ''}>${escapeHtml(r.name)}</option>
@@ -1955,7 +2727,7 @@
 
       el.innerHTML = `
         <div class="section-head">
-          <h2 class="section-title">⏳ 가입 승인 대기 (역할 선택 후 승인)</h2>
+          <h2 class="section-title">⏳ 가입 승인 대기</h2>
           <span class="tag warm">${pending.length}명</span>
         </div>
         ${pending.length === 0
@@ -1972,9 +2744,10 @@
                     ${roleOptionsHtml(m.roleId)}
                   </select>
                 </div>
-                <div style="display:flex; gap:8px; margin-top:10px;">
+                <div style="display:flex; gap:6px; margin-top:10px;">
                   <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberWithRole('${m.id}')">✅ 역할 부여 및 승인</button>
-                  <button class="btn-sm danger" style="padding:9px 14px;" onclick="rejectMember('${m.id}')">거절</button>
+                  <button class="btn-sm" style="padding:9px 11px;" onclick="rejectMember('${m.id}')">보류</button>
+                  <button class="btn-sm danger" style="padding:9px 11px;" onclick="deleteMember('${m.id}')">삭제</button>
                 </div>
               </div>
             `).join('')}
@@ -1985,7 +2758,7 @@
         </div>
         <div class="card">
           ${approved.length === 0
-            ? '<div style="text-align:center;color:#64748B;font-size:13px;padding:8px 0;">아직 승인된 회원이 없습니다.<br>회원가입 탭에서 가입 신청 후 승인해 보세요.</div>'
+            ? '<div style="text-align:center;color:#64748B;font-size:13px;padding:8px 0;">아직 승인된 회원이 없습니다.</div>'
             : approved.map(m => {
                 const r = getRoleById(m.roleId);
                 return `
@@ -1997,17 +2770,37 @@
                       </div>
                       <div class="member-meta">가입일 ${escapeHtml(m.createdAt)}</div>
                     </div>
-                    <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                       <select class="role-select" onchange="changeMemberRole('${m.id}', this.value)">
                         ${roleOptionsHtml(m.roleId)}
                       </select>
-                      <button class="btn-sm" onclick="resetMemberPw('${m.id}')">비번초기화</button>
                       <button class="btn-sm danger" onclick="deleteMember('${m.id}')">삭제</button>
                     </div>
                   </div>
                 `;
               }).join('')}
         </div>
+
+        ${rejected.length > 0 ? `
+          <div class="section-head" style="margin-top:20px;">
+            <h2 class="section-title">🚫 보류된 신청</h2>
+            <span class="tag red">${rejected.length}명</span>
+          </div>
+          <div class="card">
+            ${rejected.map(m => `
+              <div class="member-row">
+                <div>
+                  <div class="member-name">${escapeHtml(m.name)}</div>
+                  <div class="member-meta">${escapeHtml(m.createdAt)} 신청</div>
+                </div>
+                <div style="display:flex; gap:6px;">
+                  <button class="btn-sm approve" onclick="approveMemberWithRole('${m.id}')">승인</button>
+                  <button class="btn-sm danger" onclick="deleteMember('${m.id}')">삭제</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
       `;
     }
 
@@ -2015,7 +2808,7 @@
       const m = members.find(x => String(x.id) === String(id));
       if (!m) return;
       const sel = document.getElementById(`approveRole-${id}`);
-      const roleId = sel ? sel.value : m.roleId;
+      const roleId = sel ? sel.value : (m.roleId || 'role_youth');
       try {
         await db.collection('members').doc(String(id)).update({ status: 'approved', roleId });
         showToast(`${m.name}님을 [${getRoleById(roleId).name}] 역할로 승인했습니다!`);
@@ -2033,44 +2826,34 @@
 
     window.rejectMember = async (id) => {
       const m = members.find(x => String(x.id) === String(id));
-      if (!m || !confirm(`${m.name}님의 가입을 거절할까요?`)) return;
+      if (!m || !confirm(`${m.name}님의 가입을 보류할까요?`)) return;
       try {
         await db.collection('members').doc(String(id)).update({ status: 'rejected' });
-        showToast('가입 신청을 거절했습니다.');
-      } catch (err) { handleDbError(err, '가입 거절'); }
-    };
-
-    window.resetMemberPw = async (id) => {
-      const m = members.find(x => String(x.id) === String(id));
-      if (!m || !confirm(`${m.name}님의 비밀번호를 '1234'로 초기화할까요?`)) return;
-      try {
-        await db.collection('members').doc(String(id)).update({ password: '1234' });
-        showToast('비밀번호가 1234로 초기화되었습니다.');
-      } catch (err) { handleDbError(err, '비밀번호 초기화'); }
+        showToast('가입 신청을 보류했습니다.');
+      } catch (err) { handleDbError(err, '가입 보류'); }
     };
 
     window.deleteMember = async (id) => {
       const m = members.find(x => String(x.id) === String(id));
-      if (!m || !confirm(`${m.name}님을 회원 목록에서 삭제할까요?`)) return;
+      if (!m || !confirm(`${m.name}님을 회원 목록에서 삭제할까요?\n삭제 시 해당 계정의 앱 접근이 차단됩니다.`)) return;
       try {
         await db.collection('members').doc(String(id)).delete();
         showToast('회원을 삭제했습니다.');
       } catch (err) { handleDbError(err, '회원 삭제'); }
     };
 
-    // (D) 역할 관리 + 최고 관리자 코드 변경
-    function renderManageRoles(el) {
-      const prevPinEl = document.getElementById('newAdminPinInput');
-      const prevPinDraft = prevPinEl ? prevPinEl.value : '';
-      const wasPinFocused = prevPinEl && document.activeElement === prevPinEl;
+    // (D) 역할 관리 + 최고 관리자 비밀번호 변경
+    function renderManageRoles(el, user) {
+      const prevCurEl = document.getElementById('curAdminPwInput');
+      const prevNewEl = document.getElementById('newAdminPwInput');
+      const prevCur = prevCurEl ? prevCurEl.value : '';
+      const prevNew = prevNewEl ? prevNewEl.value : '';
+
       el.innerHTML = `
         <div class="section-head">
           <h2 class="section-title">🏷️ 역할 목록 및 권한 (${roles.length}개)</h2>
           <button class="btn-admin" onclick="openAddRoleModal()">+ 새 역할 만들기</button>
         </div>
-        <p style="font-size:12.5px; color:#64748B; margin:0 0 12px; line-height:1.45;">
-          기본 7개 역할(목사·부장·교사·회장·팀장·청년·새신자)의 권한을 수정하거나 새 역할을 자유롭게 추가·삭제할 수 있습니다.
-        </p>
         ${roles.map(r => {
           const count = members.filter(m => m.status === 'approved' && m.roleId === r.id).length;
           const activePerms = PERMISSION_DEFS.filter(p => r.perms && r.perms[p.key]);
@@ -2082,42 +2865,53 @@
                   <span style="font-size:12px; color:#64748B; font-weight:600;">소속 ${count}명</span>
                 </div>
                 <div style="display:flex; gap:6px;">
-                  <button class="btn-sm" onclick="openEditRoleModal('${r.id}')">권한 수정</button>
+                  <button class="btn-sm" onclick="openEditRoleModal('${r.id}')">내용 수정</button>
                   <button class="btn-sm danger" onclick="deleteRole('${r.id}')" ${roles.length <= 1 ? 'disabled' : ''}>삭제</button>
                 </div>
               </div>
               <div class="perm-chips">
-                ${activePerms.map(p => `<span class="perm-chip on">${escapeHtml(p.label.split(' (')[0])}</span>`).join('')}
+                ${activePerms.map(p => `<span class="perm-chip">${escapeHtml(p.label.split(' (')[0])}</span>`).join('')}
               </div>
             </div>
           `;
         }).join('')}
 
-        <div class="card" style="margin-top:16px; border-color:#CBD5E1;">
-          <div class="card-top">
-            <strong style="font-size:14.5px;">🔐 최고 관리자 코드 변경</strong>
-            <span class="tag slate">현재: ${escapeHtml(adminPin)}</span>
+        ${user && user.isSuperAdmin ? `
+          <div class="card" style="margin-top:16px; border-color:#CBD5E1;">
+            <div class="card-top">
+              <strong style="font-size:14.5px;">🔐 최고 관리자 코드 변경</strong>
+            </div>
+            <div class="form-group" style="margin-bottom:8px;">
+              <input id="curAdminPwInput" type="password" class="form-input" placeholder="현재 관리자 코드 입력" />
+            </div>
+            <div style="display:flex; gap:8px;">
+              <input id="newAdminPwInput" type="password" class="form-input" placeholder="새 관리자 코드 (6자리 이상)" style="flex:1;" />
+              <button class="btn-admin" onclick="changeAdminPassword()">변경</button>
+            </div>
           </div>
-          <p style="font-size:12px; color:#64748B; margin:0 0 10px;">로그인 화면 [관리자] 탭에서 사용하는 비밀번호를 앱에서 바로 변경할 수 있습니다.</p>
-          <div style="display:flex; gap:8px;">
-            <input id="newAdminPinInput" class="form-input" placeholder="새 관리자 코드 (4자리 이상)" style="flex:1;" />
-            <button class="btn-admin" onclick="changeAdminPin()">변경</button>
-          </div>
-        </div>
+        ` : ''}
       `;
-      const newPinEl = document.getElementById('newAdminPinInput');
-      if (newPinEl && prevPinDraft) newPinEl.value = prevPinDraft;
-      if (newPinEl && wasPinFocused) newPinEl.focus();
+
+      if (prevCur && document.getElementById('curAdminPwInput')) document.getElementById('curAdminPwInput').value = prevCur;
+      if (prevNew && document.getElementById('newAdminPwInput')) document.getElementById('newAdminPwInput').value = prevNew;
     }
 
-    window.changeAdminPin = async () => {
-      const val = (document.getElementById('newAdminPinInput').value || '').trim();
-      if (val.length < 4) return showToast('관리자 코드는 4자리 이상 입력해 주세요.');
+    window.changeAdminPassword = async () => {
+      const curPw = (document.getElementById('curAdminPwInput').value || '').trim();
+      const newPw = (document.getElementById('newAdminPwInput').value || '').trim();
+      if (!curPw) return showToast('현재 관리자 코드를 입력해 주세요.');
+      if (newPw.length < 6) return showToast('새 관리자 코드는 6자리 이상 입력해 주세요.');
+
       try {
-        await db.collection('config').doc('app').set({ adminPin: val }, { merge: true });
-        document.getElementById('newAdminPinInput').value = '';
+        const cred = firebase.auth.EmailAuthProvider.credential(ADMIN_EMAIL, curPw);
+        await auth.currentUser.reauthenticateWithCredential(cred);
+        await auth.currentUser.updatePassword(newPw);
+        document.getElementById('curAdminPwInput').value = '';
+        document.getElementById('newAdminPwInput').value = '';
         showToast('최고 관리자 코드가 변경되었습니다!');
-      } catch (err) { handleDbError(err, '관리자 코드 변경'); }
+      } catch (err) {
+        showToast(authErrorToKorean(err, true));
+      }
     };
 
     function renderRoleColorPalette() {
@@ -2181,7 +2975,10 @@
         msg = `[${name}] 새 역할이 추가되었습니다!`;
       }
       try {
-        await db.collection('config').doc('roles').set({ items: next });
+        await db.collection('config').doc('roles').set({
+          items: next,
+          byId: buildRolesByIdMap(next)
+        });
         document.getElementById('roleModal').classList.remove('open');
         showToast(msg);
       } catch (err) { handleDbError(err, '역할 저장'); }
@@ -2195,7 +2992,10 @@
       const fallback = next.find(x => x.name === '청년') || next[0];
       try {
         const batch = db.batch();
-        batch.set(db.collection('config').doc('roles'), { items: next });
+        batch.set(db.collection('config').doc('roles'), {
+          items: next,
+          byId: buildRolesByIdMap(next)
+        });
         members.forEach(m => {
           if (m.roleId === roleId) {
             batch.update(db.collection('members').doc(String(m.id)), { roleId: fallback.id });
@@ -2204,58 +3004,6 @@
         await batch.commit();
         showToast(`[${r.name}] 역할이 삭제되었습니다.`);
       } catch (err) { handleDbError(err, '역할 삭제'); }
-    };
-
-    // (E) 체크 현황 (주일 출석만 주간 초기화 가능 - 회원/공지는 건드리지 않음)
-    function renderManageStatus(el) {
-      const events = notices.filter(n => n.needAttend);
-      el.innerHTML = `
-        <div class="section-head">
-          <h2 class="section-title">📊 예배 · 행사 체크 현황</h2>
-          <button class="btn-sm danger" onclick="clearSundayChecks()">주일 출석만 초기화</button>
-        </div>
-        <div class="card">
-          <div class="card-top">
-            <strong style="font-size:15px;">⛪ 이번 주 주일 예배 출석 체크</strong>
-            <span class="tag green">${sundayChecks.length}명</span>
-          </div>
-          ${sundayChecks.length === 0
-            ? '<div style="font-size:13px;color:#64748B;padding:8px 0;">아직 출석 체크한 예배자가 없습니다.</div>'
-            : sundayChecks.map(c => `
-                <div class="log-item">
-                  <span><strong>${escapeHtml(c.name)}</strong> ${c.roleName ? `<span class="tag slate" style="margin-left:4px;">${escapeHtml(c.roleName)}</span>` : ''}</span>
-                  <span class="card-date">${escapeHtml(c.time)} 체크</span>
-                </div>
-              `).join('')}
-        </div>
-        <div class="card">
-          <div class="card-top"><strong style="font-size:15px;">🙋 행사별 참석 체크 명단</strong></div>
-          ${events.length === 0
-            ? '<div style="font-size:13px;color:#64748B;padding:8px 0;">참석 체크를 받는 행사가 없습니다.</div>'
-            : events.map(ev => `
-                <div style="padding:10px 0; border-bottom:1px solid #F1F5F9;">
-                  <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-                    <strong style="font-size:13.5px;">${escapeHtml(ev.title)}</strong>
-                    <span class="tag warm">${(ev.attendedBy || []).length}명</span>
-                  </div>
-                  <div style="font-size:12.5px; color:#475569;">
-                    ${(ev.attendedBy || []).length ? ev.attendedBy.map(escapeHtml).join(', ') : '아직 참석 체크 인원이 없습니다.'}
-                  </div>
-                </div>
-              `).join('')}
-        </div>
-      `;
-    }
-
-    window.clearSundayChecks = async () => {
-      if (sundayChecks.length === 0) return showToast('초기화할 주일 출석 기록이 없습니다.');
-      if (!confirm('새 주일을 시작하기 위해 주일 예배 출석 기록만 비울까요?\n(회원과 공지는 유지됩니다.)')) return;
-      try {
-        const batch = db.batch();
-        sundayChecks.forEach(c => batch.delete(db.collection('sundayChecks').doc(c.uid)));
-        await batch.commit();
-        showToast('이번 주 주일 출석 기록을 초기화했습니다.');
-      } catch (err) { handleDbError(err, '출석 초기화'); }
     };
 
     // 모달 닫기 & 링크 복사
@@ -2271,9 +3019,6 @@
       try { await navigator.clipboard.writeText(text); showToast('공지 링크가 복사되었습니다!'); }
       catch { showToast('주소창의 링크를 복사해 주세요.'); }
     });
-
-    // 앱 시작: Firebase 실시간 연결 시작
-    startRealtimeSync();
   </script>
 </body>
 </html>
