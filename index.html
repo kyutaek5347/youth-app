@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=107" />
+  <link rel="manifest" href="./manifest.json?v=108" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=107" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=107" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=108" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=108" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1136,6 +1136,36 @@
       line-height: 1.55;
     }
 
+
+    /* ==================== v10.8 하단 메뉴 순서·이름 편집 ==================== */
+    .tab-order-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+    }
+    .tab-order-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #111827;
+      color: #FDE68A;
+      font-size: 11px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .tab-order-icon {
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+
     /* 토스트 */
     .toast {
       position: fixed; bottom: calc(86px + var(--safe-bottom)); left: 50%;
@@ -1151,7 +1181,7 @@
   <div class="app-shell">
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=107" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=108" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -1574,37 +1604,18 @@
     </div>
   </div>
 
-  <!-- 관리자: 칸(탭) 이름 수정 모달 -->
+  <!-- 관리자: 하단 메뉴 칸 순서 · 이름 설정 모달 -->
   <div id="tabLabelsModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">✏️ 앱 칸(탭) 이름 설정</h3>
+        <h3 class="modal-title">✏️ 메뉴 칸 순서 · 이름 설정</h3>
         <button class="close-btn" data-close="tabLabelsModal">✕</button>
       </div>
       <div class="info-box" style="margin-top:0; margin-bottom:14px;">
-        하단 메뉴 칸과 관리 화면 탭의 이름을 자유롭게 바꿀 수 있습니다. 저장하면 모든 청년부원 앱에 즉시 반영됩니다.
+        하단 메뉴 칸의 <b>순서(▲/▼)</b>와 <b>이름</b>을 자유롭게 바꿀 수 있습니다. 저장하면 모든 청년부원 앱에 즉시 반영됩니다.
       </div>
-      <div style="font-size:12.5px; font-weight:800; color:#0F172A; margin-bottom:8px;">📱 하단 메인 칸 이름</div>
-      <div class="form-group">
-        <label class="form-label">1번 칸 (홈 · 기본: 메인 홈)</label>
-        <input id="lblHomeInput" class="form-input" maxlength="10" placeholder="메인 홈" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">2번 칸 (성경 · 기본: 성경)</label>
-        <input id="lblBibleInput" class="form-input" maxlength="10" placeholder="성경" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">3번 칸 (말씀 · 기본: 오늘의 말씀)</label>
-        <input id="lblQtInput" class="form-input" maxlength="10" placeholder="오늘의 말씀" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">4번 칸 (회칙 · 기본: 회칙)</label>
-        <input id="lblBylawsInput" class="form-input" maxlength="10" placeholder="회칙" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">5번 칸 (관리 · 기본: 관리 센터)</label>
-        <input id="lblManageInput" class="form-input" maxlength="10" placeholder="관리 센터" />
-      </div>
+      <div style="font-size:12.5px; font-weight:800; color:#0F172A; margin-bottom:8px;">📱 하단 메뉴 칸 순서 및 이름 (왼쪽 → 오른쪽 순)</div>
+      <div id="tabOrderEditorList" style="margin-bottom:14px;"></div>
 
       <div style="font-size:12.5px; font-weight:800; color:#0F172A; margin:14px 0 8px;">🛠️ 관리 센터 내부 칸 이름</div>
       <div class="form-group">
@@ -1622,7 +1633,7 @@
 
       <div style="display:flex; gap:8px; margin-top:10px;">
         <button class="btn-outline" type="button" onclick="resetTabLabelsDefaults()">기본값 복원</button>
-        <button id="saveTabLabelsBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveTabLabels()">칸 이름 저장하기</button>
+        <button id="saveTabLabelsBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveTabLabels()">순서 · 이름 저장하기</button>
       </div>
     </div>
   </div>
@@ -1939,6 +1950,14 @@
     const KEY_BIBLE_MARKS = 'right_youth_bible_marks_v103';
     const KEY_BIBLE_FONT = 'right_youth_bible_font_v103';
 
+    const DEFAULT_TAB_ORDER = ['home', 'bible', 'qt', 'bylaws', 'manage'];
+    const TAB_META_DEFS = {
+      home: { icon: '🏠', roleHint: '메인 홈' },
+      bible: { icon: '📖', roleHint: '성경' },
+      qt: { icon: '✨', roleHint: '오늘의 말씀' },
+      bylaws: { icon: '📜', roleHint: '회칙' },
+      manage: { icon: '🛠️', roleHint: '관리자 전용' }
+    };
     const DEFAULT_TAB_LABELS = {
       home: '메인 홈',
       bible: '성경',
@@ -1947,7 +1966,8 @@
       manage: '관리 센터',
       manageContent: '화면·공지 관리',
       manageMembers: '회원 승인·역할',
-      manageRoles: '역할·권한 설정'
+      manageRoles: '역할·권한 설정',
+      tabOrder: DEFAULT_TAB_ORDER
     };
 
     const BIBLE_BOOKS = [
@@ -2400,7 +2420,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=107" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=108" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -2423,8 +2443,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=107', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=107', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=108', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=108', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -2686,6 +2706,18 @@
       return (tabLabels && tabLabels[key] && String(tabLabels[key]).trim())
         ? String(tabLabels[key]).trim()
         : DEFAULT_TAB_LABELS[key];
+    }
+
+    function getValidTabOrder(rawOrder) {
+      const src = Array.isArray(rawOrder) ? rawOrder : (tabLabels && Array.isArray(tabLabels.tabOrder) ? tabLabels.tabOrder : DEFAULT_TAB_ORDER);
+      const valid = [];
+      src.forEach(k => {
+        if (DEFAULT_TAB_ORDER.includes(k) && !valid.includes(k)) valid.push(k);
+      });
+      DEFAULT_TAB_ORDER.forEach(k => {
+        if (!valid.includes(k)) valid.push(k);
+      });
+      return valid;
     }
 
     function getAllowedManageSubTabs(perms) {
@@ -3432,31 +3464,20 @@
       const pendingCount = members.filter(m => m.status === 'pending').length;
       const tabbar = document.getElementById('appTabbar');
       tabbar.className = `tabbar ${isManageMode ? 'dark' : 'light'}`;
-      tabbar.innerHTML = `
-        <button class="tab-btn ${currentMainTab === 'home' ? 'active' : ''}" onclick="switchMainTab('home')">
-          <span class="tab-icon">🏠</span>
-          <span>${escapeHtml(getTabLabel('home'))}</span>
-        </button>
-        <button class="tab-btn ${currentMainTab === 'bible' ? 'active' : ''}" onclick="switchMainTab('bible')">
-          <span class="tab-icon">📖</span>
-          <span>${escapeHtml(getTabLabel('bible'))}</span>
-        </button>
-        <button class="tab-btn ${currentMainTab === 'qt' ? 'active' : ''}" onclick="switchMainTab('qt')">
-          <span class="tab-icon">✨</span>
-          <span>${escapeHtml(getTabLabel('qt'))}</span>
-        </button>
-        <button class="tab-btn ${currentMainTab === 'bylaws' ? 'active' : ''}" onclick="switchMainTab('bylaws')">
-          <span class="tab-icon">📜</span>
-          <span>${escapeHtml(getTabLabel('bylaws'))}</span>
-        </button>
-        ${canManage ? `
-          <button class="tab-btn ${currentMainTab === 'manage' ? 'active' : ''}" onclick="switchMainTab('manage')">
-            <span class="tab-icon">🛠️</span>
-            <span>${escapeHtml(getTabLabel('manage'))}</span>
-            ${perms.canManageMembers && pendingCount > 0 ? `<span class="tab-badge">${pendingCount}</span>` : ''}
+      const orderedTabs = getValidTabOrder().filter(k => k !== 'manage' || canManage);
+      tabbar.innerHTML = orderedTabs.map(key => {
+        const meta = TAB_META_DEFS[key] || { icon: '•' };
+        const badgeHtml = (key === 'manage' && perms.canManageMembers && pendingCount > 0)
+          ? `<span class="tab-badge">${pendingCount}</span>`
+          : '';
+        return `
+          <button class="tab-btn ${currentMainTab === key ? 'active' : ''}" onclick="switchMainTab('${key}')">
+            <span class="tab-icon">${meta.icon}</span>
+            <span>${escapeHtml(getTabLabel(key))}</span>
+            ${badgeHtml}
           </button>
-        ` : ''}
-      `;
+        `;
+      }).join('');
 
       document.getElementById('viewHome').classList.toggle('hidden', currentMainTab !== 'home');
       document.getElementById('viewBible').classList.toggle('hidden', currentMainTab !== 'bible');
@@ -3775,13 +3796,13 @@
 
         ${canLayout ? `
           <div class="card" style="display:flex; align-items:center; justify-content:space-between; gap:10px; background:#F8FAFC; border-style:dashed;">
-            <div>
-              <div style="font-size:13.5px; font-weight:800; color:#0F172A;">🏷️ 앱 칸(탭) 이름 편집</div>
-              <div style="font-size:11.5px; color:#64748B; margin-top:2px;">
-                ${escapeHtml(getTabLabel('home'))} · ${escapeHtml(getTabLabel('bible'))} · ${escapeHtml(getTabLabel('qt'))} · ${escapeHtml(getTabLabel('bylaws'))} 등 변경
+            <div style="min-width:0;">
+              <div style="font-size:13.5px; font-weight:800; color:#0F172A;">🏷️ 하단 메뉴 칸 순서 · 이름 편집</div>
+              <div style="font-size:11.5px; color:#64748B; margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                ${getValidTabOrder().map((k, idx) => `${idx + 1}.${escapeHtml(getTabLabel(k))}`).join(' → ')}
               </div>
             </div>
-            <button class="btn-sm primary" type="button" style="white-space:nowrap; padding:8px 11px;" onclick="openTabLabelsModal()">✏️ 칸 이름 수정</button>
+            <button class="btn-sm primary" type="button" style="white-space:nowrap; padding:8px 11px;" onclick="openTabLabelsModal()">✏️ 순서·이름 수정</button>
           </div>
         ` : ''}
 
@@ -4106,7 +4127,7 @@
               type,
               label,
               badge,
-              title: title || (type === 'notice_list' ? '📢 공지 · 광고 · 소식'),
+              title: title || (type === 'notice_list' ? '📢 공지 · 광고 · 소식' : ''),
               desc,
               theme: selectedBlockTheme,
               audience,
@@ -5587,6 +5608,7 @@
       if (!post) return;
       const user = getCurrentUser();
       const uid = fbUser ? fbUser.uid : '';
+      const canManageQt = hasUserPerm(user, 'canManageQt');
       const cmts = qtComments.filter(c => c.postId === post.id);
 
       const verseText = post.scripture || post.guide || post.title || '';
@@ -5803,13 +5825,51 @@
       }
     };
 
-    // ==================== 16. 앱 칸(탭) 이름 편집 ====================
+    // ==================== 16. 하단 메뉴 칸 순서 · 이름 편집 ====================
+    let draftTabOrder = [...DEFAULT_TAB_ORDER];
+    let draftTabNames = {};
+
+    function renderTabOrderEditor() {
+      const el = document.getElementById('tabOrderEditorList');
+      el.innerHTML = draftTabOrder.map((key, idx) => {
+        const meta = TAB_META_DEFS[key] || { icon: '•', roleHint: '' };
+        const val = draftTabNames[key] !== undefined ? draftTabNames[key] : getTabLabel(key);
+        return `
+          <div class="tab-order-row">
+            <span class="tab-order-num">${idx + 1}</span>
+            <span class="tab-order-icon">${meta.icon}</span>
+            <div style="flex:1; min-width:0;">
+              <input class="form-input" style="padding:7px 10px; font-size:13.5px;" maxlength="10"
+                     value="${escapeHtml(val)}"
+                     placeholder="${escapeHtml(DEFAULT_TAB_LABELS[key])}"
+                     oninput="onDraftTabNameInput('${key}', this.value)" />
+              <div style="font-size:10.5px; color:#64748B; margin-top:2px; padding-left:2px;">기본: ${escapeHtml(meta.roleHint)}</div>
+            </div>
+            <div class="order-btns">
+              <button class="order-btn" type="button" onclick="moveDraftTabOrder(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+              <button class="order-btn" type="button" onclick="moveDraftTabOrder(${idx}, 1)" ${idx === draftTabOrder.length - 1 ? 'disabled' : ''}>▼</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.onDraftTabNameInput = (key, val) => {
+      draftTabNames[key] = val;
+    };
+
+    window.moveDraftTabOrder = (idx, dir) => {
+      const t = idx + dir;
+      if (t < 0 || t >= draftTabOrder.length) return;
+      [draftTabOrder[idx], draftTabOrder[t]] = [draftTabOrder[t], draftTabOrder[idx]];
+      renderTabOrderEditor();
+    };
+
     window.openTabLabelsModal = () => {
-      document.getElementById('lblHomeInput').value = getTabLabel('home');
-      document.getElementById('lblBibleInput').value = getTabLabel('bible');
-      document.getElementById('lblQtInput').value = getTabLabel('qt');
-      document.getElementById('lblBylawsInput').value = getTabLabel('bylaws');
-      document.getElementById('lblManageInput').value = getTabLabel('manage');
+      draftTabOrder = getValidTabOrder();
+      draftTabNames = {};
+      DEFAULT_TAB_ORDER.forEach(k => { draftTabNames[k] = getTabLabel(k); });
+      renderTabOrderEditor();
       document.getElementById('lblManageContentInput').value = getTabLabel('manageContent');
       document.getElementById('lblManageMembersInput').value = getTabLabel('manageMembers');
       document.getElementById('lblManageRolesInput').value = getTabLabel('manageRoles');
@@ -5817,36 +5877,36 @@
     };
 
     window.resetTabLabelsDefaults = () => {
-      document.getElementById('lblHomeInput').value = DEFAULT_TAB_LABELS.home;
-      document.getElementById('lblBibleInput').value = DEFAULT_TAB_LABELS.bible;
-      document.getElementById('lblQtInput').value = DEFAULT_TAB_LABELS.qt;
-      document.getElementById('lblBylawsInput').value = DEFAULT_TAB_LABELS.bylaws;
-      document.getElementById('lblManageInput').value = DEFAULT_TAB_LABELS.manage;
+      draftTabOrder = [...DEFAULT_TAB_ORDER];
+      draftTabNames = {};
+      DEFAULT_TAB_ORDER.forEach(k => { draftTabNames[k] = DEFAULT_TAB_LABELS[k]; });
+      renderTabOrderEditor();
       document.getElementById('lblManageContentInput').value = DEFAULT_TAB_LABELS.manageContent;
       document.getElementById('lblManageMembersInput').value = DEFAULT_TAB_LABELS.manageMembers;
       document.getElementById('lblManageRolesInput').value = DEFAULT_TAB_LABELS.manageRoles;
-      showToast('기본값으로 채웠습니다. 저장 버튼을 눌러 반영하세요.');
+      showToast('기본 순서와 이름으로 복원했습니다. 저장 버튼을 눌러 반영하세요.');
     };
 
     window.handleSaveTabLabels = async () => {
       const next = {
-        home: document.getElementById('lblHomeInput').value.trim() || DEFAULT_TAB_LABELS.home,
-        bible: document.getElementById('lblBibleInput').value.trim() || DEFAULT_TAB_LABELS.bible,
-        qt: document.getElementById('lblQtInput').value.trim() || DEFAULT_TAB_LABELS.qt,
-        bylaws: document.getElementById('lblBylawsInput').value.trim() || DEFAULT_TAB_LABELS.bylaws,
-        manage: document.getElementById('lblManageInput').value.trim() || DEFAULT_TAB_LABELS.manage,
+        home: String(draftTabNames.home || '').trim() || DEFAULT_TAB_LABELS.home,
+        bible: String(draftTabNames.bible || '').trim() || DEFAULT_TAB_LABELS.bible,
+        qt: String(draftTabNames.qt || '').trim() || DEFAULT_TAB_LABELS.qt,
+        bylaws: String(draftTabNames.bylaws || '').trim() || DEFAULT_TAB_LABELS.bylaws,
+        manage: String(draftTabNames.manage || '').trim() || DEFAULT_TAB_LABELS.manage,
         manageContent: document.getElementById('lblManageContentInput').value.trim() || DEFAULT_TAB_LABELS.manageContent,
         manageMembers: document.getElementById('lblManageMembersInput').value.trim() || DEFAULT_TAB_LABELS.manageMembers,
-        manageRoles: document.getElementById('lblManageRolesInput').value.trim() || DEFAULT_TAB_LABELS.manageRoles
+        manageRoles: document.getElementById('lblManageRolesInput').value.trim() || DEFAULT_TAB_LABELS.manageRoles,
+        tabOrder: getValidTabOrder(draftTabOrder)
       };
       const btn = document.getElementById('saveTabLabelsBtn');
       btn.disabled = true;
       try {
         await db.collection('config').doc('labels').set(next);
         document.getElementById('tabLabelsModal').classList.remove('open');
-        showToast('칸(탭) 이름이 저장되었습니다!');
+        showToast('메뉴 칸 순서와 이름이 저장되었습니다!');
       } catch (err) {
-        handleDbError(err, '칸 이름 저장');
+        handleDbError(err, '메뉴 순서·이름 저장');
       } finally {
         btn.disabled = false;
       }
