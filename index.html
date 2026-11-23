@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=118" />
+  <link rel="manifest" href="./manifest.json?v=119" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=118" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=118" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=119" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=119" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1546,6 +1546,70 @@
       margin: 6px 0 9px;
     }
 
+
+    /* ==================== v10.19 성경 메모 말씀 바로가기 스타일 ==================== */
+    @keyframes bibleVersePulse {
+      0% { box-shadow: 0 0 0 2px #2563EB inset; background: #DBEAFE; }
+      65% { box-shadow: 0 0 0 2px #3B82F6 inset; background: #EFF6FF; }
+      100% { box-shadow: inset 0 0 0 1.5px #93C5FD; }
+    }
+    .bible-verse-row.jump-flash {
+      animation: bibleVersePulse 1.5s ease-out;
+    }
+    .bible-memo-link-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 10px;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: #1E3A8A;
+      font-weight: 700;
+      flex-wrap: wrap;
+    }
+    .bible-memo-saved-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: #ECFDF5;
+      border: 1.5px solid #6EE7B7;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      font-size: 12.5px;
+      color: #065F46;
+      font-weight: 700;
+      flex-wrap: wrap;
+    }
+    .bible-memo-ref-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #EFF6FF;
+      color: #1D4ED8;
+      border: 1px solid #BFDBFE;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-bottom: 5px;
+    }
+    .bible-memo-verse-quote {
+      background: #F8FAFC;
+      border-left: 3px solid #93C5FD;
+      border-radius: 0 8px 8px 0;
+      padding: 7px 10px;
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.5;
+      margin: 4px 0 7px;
+    }
+
     /* 토스트 */
     .toast {
       position: fixed; bottom: calc(86px + var(--safe-bottom)); left: 50%;
@@ -1561,7 +1625,7 @@
   <div class="app-shell">
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=118" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=119" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -1970,14 +2034,19 @@
         <h3 id="bibleMemoModalTitle" class="modal-title">📝 성경 메모장</h3>
         <button class="close-btn" data-close="bibleMemoModal">✕</button>
       </div>
+      <div id="bibleMemoSavedBanner" class="bible-memo-saved-banner hidden"></div>
       <div class="bible-memo-editor-card">
         <input type="hidden" id="editBibleMemoId" />
         <input type="hidden" id="bibleMemoLinkBookId" />
         <input type="hidden" id="bibleMemoLinkChapter" />
         <input type="hidden" id="bibleMemoLinkVerse" />
+        <div class="bible-memo-link-bar">
+          <span id="bibleMemoLinkDisplay">📖 연결 말씀: 창세기 1장</span>
+          <button class="btn-sm" type="button" style="padding:4px 8px; font-size:11px;" onclick="linkCurrentBiblePosToMemo()">현재 보는 말씀으로 맞추기</button>
+        </div>
         <div class="form-group" style="margin-bottom:8px;">
           <label class="form-label" for="bibleMemoTitleInput">제목 또는 말씀 구절 (선택)</label>
-          <input id="bibleMemoTitleInput" class="form-input" style="background:#fff;" maxlength="50" placeholder="예: 시편 23:1 / 주일 설교 메모" />
+          <input id="bibleMemoTitleInput" class="form-input" style="background:#fff;" maxlength="50" placeholder="예: 시편 23:1 / 주일 설교 메모" oninput="onBibleMemoTitleInput()" />
         </div>
         <div class="form-group" style="margin-bottom:9px;">
           <label class="form-label" for="bibleMemoBodyInput">메모 내용</label>
@@ -3087,7 +3156,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=118" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=119" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -3110,8 +3179,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=118', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=118', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=119', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=119', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -6488,11 +6557,29 @@
       throw new Error('성경 본문을 불러오지 못했습니다.');
     }
 
-    async function renderBibleView(forceReload = false) {
+    function scrollToSelectedBibleVerse(flash = true) {
+      setTimeout(() => {
+        const selEl = document.querySelector('#bibleContentArea .bible-verse-row.selected');
+        if (selEl) {
+          selEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (flash) {
+            selEl.classList.remove('jump-flash');
+            void selEl.offsetWidth;
+            selEl.classList.add('jump-flash');
+          }
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 90);
+    }
+
+    async function renderBibleView(forceReload = false, targetVerse = null) {
       const book = getBibleBook(biblePos.bookId);
       const chapter = Math.max(1, Math.min(book.ch, Number(biblePos.chapter || 1)));
       biblePos = { bookId: book.id, chapter };
       saveBiblePos();
+
+      const hasTargetVerse = targetVerse !== null && targetVerse !== undefined && Number(targetVerse) > 0;
 
       document.getElementById('bibleCurrentRef').textContent = `${book.name} ${chapter}장`;
       const prevBtn = document.getElementById('biblePrevBtn');
@@ -6502,11 +6589,13 @@
 
       const key = `${book.id}:${chapter}`;
       if (!forceReload && bibleLoadedKey === key && bibleCurrentVerses.length > 0) {
+        if (hasTargetVerse) bibleSelectedVerse = Number(targetVerse);
         renderBibleVersesHtml();
+        if (hasTargetVerse) scrollToSelectedBibleVerse(true);
         return;
       }
 
-      bibleSelectedVerse = null;
+      bibleSelectedVerse = hasTargetVerse ? Number(targetVerse) : null;
       const area = document.getElementById('bibleContentArea');
       area.innerHTML = `<div style="text-align:center; padding:32px 12px; color:#64748B; font-size:13.5px;">📖 <b>${escapeHtml(book.name)} ${chapter}장</b> 말씀을 불러오는 중...</div>`;
 
@@ -6514,7 +6603,9 @@
         const verses = await fetchBibleChapter(book.id, chapter);
         bibleCurrentVerses = verses;
         bibleLoadedKey = key;
+        if (hasTargetVerse) bibleSelectedVerse = Number(targetVerse);
         renderBibleVersesHtml();
+        if (hasTargetVerse) scrollToSelectedBibleVerse(true);
       } catch {
         area.innerHTML = `
           <div style="text-align:center; padding:26px 12px; color:#64748B;">
@@ -6831,11 +6922,14 @@
       showToast(`[${getBookmarkColorObj(colorId).label}] 색으로 변경했습니다.`);
     };
 
-    window.jumpToBibleBookmark = (bookId, chapter, verse) => {
-      biblePos = { bookId, chapter };
-      bibleSelectedVerse = verse;
+    window.jumpToBibleBookmark = async (bookId, chapter, verse) => {
+      biblePos = { bookId: Number(bookId), chapter: Number(chapter || 1) };
       document.getElementById('bibleBookmarksModal').classList.remove('open');
-      renderBibleView();
+      if (currentMainTab !== 'bible') {
+        currentMainTab = 'bible';
+        applyScreen();
+      }
+      await renderBibleView(false, verse ? Number(verse) : null);
     };
 
     window.removeBibleBookmark = (idx) => {
@@ -6846,19 +6940,92 @@
       if (bibleCurrentVerses.length > 0) renderBibleVersesHtml();
     };
 
-    // 성경 메모장 (자유 작성 · 절 연결 · 검색 · 수정 · 삭제)
+    // 성경 메모장 (말씀 자동 연결 · 구절 인식 · 바로가기 · 검색 · 수정 · 삭제)
+    function formatBibleRefLabel(bookId, chapter, verse) {
+      if (!bookId || !chapter) return '';
+      const b = getBibleBook(bookId);
+      return verse ? `${b.name} ${chapter}:${verse}` : `${b.name} ${chapter}장`;
+    }
+
+    function extractBibleRefFromText(raw) {
+      const text = String(raw || '').trim();
+      if (!text) return null;
+      const sortedBooks = [...BIBLE_BOOKS].sort((a, b) => Math.max(b.name.length, b.abbr.length) - Math.max(a.name.length, a.abbr.length));
+      for (const b of sortedBooks) {
+        const names = [b.name, b.abbr].filter((v, i, arr) => arr.indexOf(v) === i).sort((a, c) => c.length - a.length);
+        for (const nm of names) {
+          const isShort = nm.length === 1;
+          const prefix = isShort ? '(?:^|[\s\[\(\/,·])' : '';
+          const esc = escapeRegExp(nm);
+          const re = new RegExp(`${prefix}${esc}\s*(\d{1,3})\s*(?:(?:장\s*(\d{1,3})\s*절?)|(?::\s*(\d{1,3})(?:\s*[-~]\s*\d{1,3})?)|장)`);
+          const m = text.match(re);
+          if (m) {
+            const ch = Math.max(1, Math.min(b.ch, Number(m[1])));
+            const vs = Number(m[2] || m[3] || 0) || null;
+            return { bookId: b.id, chapter: ch, verse: vs };
+          }
+        }
+      }
+      return null;
+    }
+
+    function resolveMemoBibleRef(m) {
+      if (m && m.bookId && m.chapter) {
+        return { bookId: Number(m.bookId), chapter: Number(m.chapter), verse: m.verse ? Number(m.verse) : null };
+      }
+      return extractBibleRefFromText(m && m.title) || extractBibleRefFromText(m && m.body) || null;
+    }
+
+    function updateBibleMemoLinkDisplay() {
+      const disp = document.getElementById('bibleMemoLinkDisplay');
+      if (!disp) return;
+      const bookId = Number(document.getElementById('bibleMemoLinkBookId').value || 0);
+      const chapter = Number(document.getElementById('bibleMemoLinkChapter').value || 0);
+      const verse = Number(document.getElementById('bibleMemoLinkVerse').value || 0);
+      const label = formatBibleRefLabel(bookId, chapter, verse);
+      disp.textContent = label ? `📖 연결 말씀: ${label}` : '📖 연결 말씀: 없음';
+    }
+
+    window.linkCurrentBiblePosToMemo = () => {
+      const book = getBibleBook(biblePos.bookId);
+      const ch = biblePos.chapter;
+      const vs = bibleSelectedVerse ? Number(bibleSelectedVerse) : 0;
+      document.getElementById('bibleMemoLinkBookId').value = String(book.id);
+      document.getElementById('bibleMemoLinkChapter').value = String(ch);
+      document.getElementById('bibleMemoLinkVerse').value = vs ? String(vs) : '';
+      updateBibleMemoLinkDisplay();
+      showToast(`연결 말씀을 [${formatBibleRefLabel(book.id, ch, vs)}]로 맞췄습니다.`);
+    };
+
+    window.onBibleMemoTitleInput = () => {
+      const val = document.getElementById('bibleMemoTitleInput').value.trim();
+      const parsed = extractBibleRefFromText(val);
+      if (parsed) {
+        document.getElementById('bibleMemoLinkBookId').value = String(parsed.bookId);
+        document.getElementById('bibleMemoLinkChapter').value = String(parsed.chapter);
+        document.getElementById('bibleMemoLinkVerse').value = parsed.verse ? String(parsed.verse) : '';
+        updateBibleMemoLinkDisplay();
+      }
+    };
+
     window.resetBibleMemoForm = () => {
+      const book = getBibleBook(biblePos.bookId);
+      const ch = biblePos.chapter;
+      const vs = bibleSelectedVerse ? Number(bibleSelectedVerse) : 0;
       document.getElementById('editBibleMemoId').value = '';
-      document.getElementById('bibleMemoLinkBookId').value = '';
-      document.getElementById('bibleMemoLinkChapter').value = '';
-      document.getElementById('bibleMemoLinkVerse').value = '';
+      document.getElementById('bibleMemoLinkBookId').value = String(book.id);
+      document.getElementById('bibleMemoLinkChapter').value = String(ch);
+      document.getElementById('bibleMemoLinkVerse').value = vs ? String(vs) : '';
       document.getElementById('bibleMemoTitleInput').value = '';
       document.getElementById('bibleMemoBodyInput').value = '';
       document.getElementById('saveBibleMemoBtn').textContent = '💾 메모 저장';
       document.getElementById('cancelEditBibleMemoBtn').classList.add('hidden');
+      updateBibleMemoLinkDisplay();
     };
 
     window.openBibleMemoModal = () => {
+      const banner = document.getElementById('bibleMemoSavedBanner');
+      if (banner) { banner.classList.add('hidden'); banner.innerHTML = ''; }
       resetBibleMemoForm();
       document.getElementById('bibleMemoSearchInput').value = '';
       renderBibleMemoList();
@@ -6866,6 +7033,8 @@
     };
 
     window.openBibleMemoForVerse = (vNum) => {
+      const banner = document.getElementById('bibleMemoSavedBanner');
+      if (banner) { banner.classList.add('hidden'); banner.innerHTML = ''; }
       const book = getBibleBook(biblePos.bookId);
       const memos = loadBibleMemos();
       const existing = memos.find(mm => Number(mm.bookId) === book.id && Number(mm.chapter) === biblePos.chapter && Number(mm.verse) === Number(vNum));
@@ -6878,22 +7047,57 @@
         document.getElementById('bibleMemoLinkChapter').value = String(biblePos.chapter);
         document.getElementById('bibleMemoLinkVerse').value = String(vNum);
         document.getElementById('bibleMemoTitleInput').value = `${book.name} ${biblePos.chapter}:${vNum}`;
+        updateBibleMemoLinkDisplay();
       }
       renderBibleMemoList();
       document.getElementById('bibleMemoModal').classList.add('open');
       setTimeout(() => document.getElementById('bibleMemoBodyInput').focus(), 60);
     };
 
+    function showMemoSavedJumpBanner(ref, isEdit) {
+      const banner = document.getElementById('bibleMemoSavedBanner');
+      if (!banner) return;
+      if (!ref || !ref.bookId || !ref.chapter) {
+        banner.classList.add('hidden');
+        return;
+      }
+      const refLabel = formatBibleRefLabel(ref.bookId, ref.chapter, ref.verse);
+      banner.innerHTML = `
+        <span>✅ 메모가 ${isEdit ? '수정' : '저장'}되었습니다!</span>
+        <button class="btn-sm approve" type="button" onclick="jumpToBibleMemoRef(${ref.bookId}, ${ref.chapter}, ${ref.verse || 0})">📖 ${escapeHtml(refLabel)} 바로가기</button>
+      `;
+      banner.classList.remove('hidden');
+    }
+
     window.handleSaveBibleMemo = () => {
       const editId = document.getElementById('editBibleMemoId').value;
       const title = document.getElementById('bibleMemoTitleInput').value.trim();
       const body = document.getElementById('bibleMemoBodyInput').value.trim();
-      const bookId = Number(document.getElementById('bibleMemoLinkBookId').value || 0);
-      const chapter = Number(document.getElementById('bibleMemoLinkChapter').value || 0);
-      const verse = Number(document.getElementById('bibleMemoLinkVerse').value || 0);
+      let bookId = Number(document.getElementById('bibleMemoLinkBookId').value || 0);
+      let chapter = Number(document.getElementById('bibleMemoLinkChapter').value || 0);
+      let verse = Number(document.getElementById('bibleMemoLinkVerse').value || 0);
 
       if (!body) return showToast('메모 내용을 입력해 주세요.');
 
+      // 제목이나 내용에 성경 구절이 적혀 있으면 우선 연결, 없으면 현재 읽고 있는 성경 위치 자동 연결
+      const parsedFromInput = extractBibleRefFromText(title) || extractBibleRefFromText(body);
+      if (parsedFromInput) {
+        bookId = parsedFromInput.bookId;
+        chapter = parsedFromInput.chapter;
+        verse = parsedFromInput.verse || 0;
+      } else if (!bookId || !chapter) {
+        bookId = biblePos.bookId;
+        chapter = biblePos.chapter;
+        verse = bibleSelectedVerse ? Number(bibleSelectedVerse) : 0;
+      }
+
+      let verseText = '';
+      if (bookId === biblePos.bookId && chapter === biblePos.chapter && verse) {
+        const foundV = bibleCurrentVerses.find(x => x.verse === verse);
+        if (foundV) verseText = foundV.text;
+      }
+
+      const defaultTitle = formatBibleRefLabel(bookId, chapter, verse) || '성경 메모';
       const memos = loadBibleMemos();
       const nowTs = Date.now();
       const nowLabel = `${formatToday()} ${String(new Date().getHours()).padStart(2, '0')}:${String(new Date().getMinutes()).padStart(2, '0')}`;
@@ -6901,8 +7105,12 @@
       if (editId) {
         const target = memos.find(x => String(x.id) === String(editId));
         if (target) {
-          target.title = title || '성경 메모';
+          target.title = title || defaultTitle;
           target.body = body;
+          target.bookId = bookId || null;
+          target.chapter = chapter || null;
+          target.verse = verse || null;
+          if (verseText) target.verseText = verseText;
           target.updatedAt = nowLabel;
           target.updatedTs = nowTs;
         }
@@ -6910,11 +7118,12 @@
       } else {
         memos.unshift({
           id: 'memo_' + nowTs,
-          title: title || '성경 메모',
+          title: title || defaultTitle,
           body,
           bookId: bookId || null,
           chapter: chapter || null,
           verse: verse || null,
+          verseText: verseText || '',
           updatedAt: nowLabel,
           updatedTs: nowTs
         });
@@ -6923,6 +7132,7 @@
 
       saveBibleMemos(memos);
       resetBibleMemoForm();
+      showMemoSavedJumpBanner({ bookId, chapter, verse }, !!editId);
       renderBibleMemoList();
       if (bibleCurrentVerses.length > 0) renderBibleVersesHtml();
     };
@@ -6931,14 +7141,16 @@
       const memos = loadBibleMemos();
       const m = memos.find(x => String(x.id) === String(id));
       if (!m) return;
+      const ref = resolveMemoBibleRef(m);
       document.getElementById('editBibleMemoId').value = m.id;
-      document.getElementById('bibleMemoLinkBookId').value = m.bookId ? String(m.bookId) : '';
-      document.getElementById('bibleMemoLinkChapter').value = m.chapter ? String(m.chapter) : '';
-      document.getElementById('bibleMemoLinkVerse').value = m.verse ? String(m.verse) : '';
+      document.getElementById('bibleMemoLinkBookId').value = ref ? String(ref.bookId) : String(biblePos.bookId);
+      document.getElementById('bibleMemoLinkChapter').value = ref ? String(ref.chapter) : String(biblePos.chapter);
+      document.getElementById('bibleMemoLinkVerse').value = (ref && ref.verse) ? String(ref.verse) : '';
       document.getElementById('bibleMemoTitleInput').value = m.title || '';
       document.getElementById('bibleMemoBodyInput').value = m.body || '';
       document.getElementById('saveBibleMemoBtn').textContent = '✏️ 메모 수정 저장';
       document.getElementById('cancelEditBibleMemoBtn').classList.remove('hidden');
+      updateBibleMemoLinkDisplay();
       const modalBody = document.querySelector('#bibleMemoModal .modal');
       if (modalBody) modalBody.scrollTo({ top: 0, behavior: 'smooth' });
       document.getElementById('bibleMemoBodyInput').focus();
@@ -6969,18 +7181,23 @@ ${m.body}`;
       showToast('메모가 삭제되었습니다.');
     };
 
-    window.jumpToBibleMemoRef = (bookId, chapter, verse) => {
+    window.jumpToBibleMemoRef = async (bookId, chapter, verse) => {
       biblePos = { bookId: Number(bookId), chapter: Number(chapter || 1) };
-      bibleSelectedVerse = verse ? Number(verse) : null;
       document.getElementById('bibleMemoModal').classList.remove('open');
-      renderBibleView();
+      if (currentMainTab !== 'bible') {
+        currentMainTab = 'bible';
+        applyScreen();
+      }
+      await renderBibleView(false, verse ? Number(verse) : null);
+      const label = formatBibleRefLabel(bookId, chapter, verse);
+      if (label) showToast(`📖 ${label} 말씀으로 이동했습니다.`);
     };
 
     window.renderBibleMemoList = () => {
       const memos = loadBibleMemos();
       const q = (document.getElementById('bibleMemoSearchInput').value || '').trim().toLowerCase();
       const filtered = q
-        ? memos.filter(m => `${m.title} ${m.body}`.toLowerCase().includes(q))
+        ? memos.filter(m => `${m.title} ${m.body} ${m.verseText || ''}`.toLowerCase().includes(q))
         : memos;
 
       const el = document.getElementById('bibleMemoList');
@@ -6995,21 +7212,27 @@ ${m.body}`;
 
       el.innerHTML = `
         <div style="font-size:12px; font-weight:800; color:#64748B; margin-bottom:8px;">저장된 메모 (${filtered.length}개)</div>
-        ${filtered.map(m => `
-          <div class="bible-memo-card">
-            <div class="card-top" style="margin-bottom:4px;">
-              <strong style="font-size:14px; color:#0F172A;">📝 ${escapeHtml(m.title || '성경 메모')}</strong>
-              <span class="card-date">${escapeHtml(m.updatedAt || '')}</span>
+        ${filtered.map(m => {
+          const ref = resolveMemoBibleRef(m);
+          const refLabel = ref ? formatBibleRefLabel(ref.bookId, ref.chapter, ref.verse) : '';
+          return `
+            <div class="bible-memo-card">
+              <div class="card-top" style="margin-bottom:4px;">
+                <strong style="font-size:14px; color:#0F172A;">📝 ${escapeHtml(m.title || '성경 메모')}</strong>
+                <span class="card-date">${escapeHtml(m.updatedAt || '')}</span>
+              </div>
+              ${refLabel ? `<div class="bible-memo-ref-pill">📖 ${escapeHtml(refLabel)}</div>` : ''}
+              ${m.verseText ? `<div class="bible-memo-verse-quote">"${escapeHtml(m.verseText)}"</div>` : ''}
+              <div class="bible-memo-body">${escapeHtml(m.body)}</div>
+              <div style="display:flex; gap:6px; justify-content:flex-end; flex-wrap:wrap;">
+                ${ref ? `<button class="btn-sm primary" type="button" onclick="jumpToBibleMemoRef(${ref.bookId}, ${ref.chapter}, ${ref.verse || 0})">📖 말씀 바로가기</button>` : ''}
+                <button class="btn-sm" type="button" onclick="copyBibleMemo('${m.id}')">복사</button>
+                <button class="btn-sm" type="button" onclick="startEditBibleMemo('${m.id}')">수정</button>
+                <button class="btn-sm danger" type="button" onclick="deleteBibleMemo('${m.id}')">삭제</button>
+              </div>
             </div>
-            <div class="bible-memo-body">${escapeHtml(m.body)}</div>
-            <div style="display:flex; gap:6px; justify-content:flex-end; flex-wrap:wrap;">
-              ${m.bookId && m.chapter ? `<button class="btn-sm primary" type="button" onclick="jumpToBibleMemoRef(${m.bookId}, ${m.chapter}, ${m.verse || 0})">📖 말씀 이동</button>` : ''}
-              <button class="btn-sm" type="button" onclick="copyBibleMemo('${m.id}')">복사</button>
-              <button class="btn-sm" type="button" onclick="startEditBibleMemo('${m.id}')">수정</button>
-              <button class="btn-sm danger" type="button" onclick="deleteBibleMemo('${m.id}')">삭제</button>
-            </div>
-          </div>
-        `).join('')}
+          `;
+        }).join('')}
       `;
     };
 
@@ -7144,17 +7367,10 @@ ${m.body}`;
 
     window.jumpToBibleRef = async (bookId, chapter, verse) => {
       biblePos = { bookId: Number(bookId), chapter: Number(chapter || 1) };
-      bibleSelectedVerse = verse ? Number(verse) : null;
       document.getElementById('bibleQuickSearchInput').value = '';
       document.getElementById('bibleQuickSearchClear').classList.add('hidden');
       document.getElementById('bibleQuickSearchResults').classList.add('hidden');
-      await renderBibleView();
-      if (verse) {
-        setTimeout(() => {
-          const selEl = document.querySelector('#bibleContentArea .bible-verse-row.selected');
-          if (selEl) selEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 120);
-      }
+      await renderBibleView(false, verse ? Number(verse) : null);
     };
 
     window.focusBibleVerseInCurrent = (vNum) => {
