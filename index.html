@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=108" />
+  <link rel="manifest" href="./manifest.json?v=109" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=108" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=108" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=109" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=109" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1181,7 +1181,7 @@
   <div class="app-shell">
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=108" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=109" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -1676,30 +1676,19 @@
       <div id="notifDetailGroup">
         <div class="setting-row">
           <div>
-            <div class="setting-title">📢 새 공지 · 광고 알림</div>
-            <div class="setting-sub">새로운 공지, 광고, 소식, 행사 글이 등록될 때</div>
+            <div class="setting-title">📢 메인 화면 새 소식 알림</div>
+            <div class="setting-sub">메인 화면에 새 공지·광고나 배너가 올라올 때</div>
           </div>
           <label class="switch">
-            <input type="checkbox" id="notifNoticeToggle" onchange="toggleNotifOption('newNotice', this.checked)" />
+            <input type="checkbox" id="notifHomeToggle" onchange="toggleNotifOption('homeNews', this.checked)" />
             <span class="slider"></span>
           </label>
         </div>
 
         <div class="setting-row">
           <div>
-            <div class="setting-title">📌 메인 배너 변경 알림</div>
-            <div class="setting-sub">메인 화면 중요 배너나 홍보 내용이 업데이트될 때</div>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="notifBannerToggle" onchange="toggleNotifOption('bannerChange', this.checked)" />
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="setting-row">
-          <div>
-            <div class="setting-title">✨ 새 큐티(QT) 등록 알림</div>
-            <div class="setting-sub">새로운 큐티 말씀이 올라올 때</div>
+            <div class="setting-title">✨ 오늘의 말씀 알림</div>
+            <div class="setting-sub">새로운 오늘의 말씀이 올라올 때</div>
           </div>
           <label class="switch">
             <input type="checkbox" id="notifQtToggle" onchange="toggleNotifOption('newQt', this.checked)" />
@@ -2386,15 +2375,17 @@
     function loadNotifPrefs() {
       try {
         const raw = JSON.parse(localStorage.getItem(KEY_NOTIF_PREFS) || '{}');
+        const legacyHome = (raw.newNotice !== undefined || raw.bannerChange !== undefined)
+          ? !!(raw.newNotice || raw.bannerChange)
+          : true;
         return {
           enabled: raw.enabled !== undefined ? !!raw.enabled : true,
-          newNotice: raw.newNotice !== undefined ? !!raw.newNotice : true,
-          bannerChange: raw.bannerChange !== undefined ? !!raw.bannerChange : true,
+          homeNews: raw.homeNews !== undefined ? !!raw.homeNews : legacyHome,
           newQt: raw.newQt !== undefined ? !!raw.newQt : true,
           memberPending: raw.memberPending !== undefined ? !!raw.memberPending : true
         };
       } catch {
-        return { enabled: true, newNotice: true, bannerChange: true, newQt: true, memberPending: true };
+        return { enabled: true, homeNews: true, newQt: true, memberPending: true };
       }
     }
 
@@ -2420,7 +2411,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=108" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=109" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -2443,8 +2434,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=108', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=108', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=109', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=109', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -2465,8 +2456,7 @@
 
     function dispatchAppNotification({ type, icon, title, body, onClick }) {
       if (!notifPrefs.enabled) return;
-      if (type === 'notice' && !notifPrefs.newNotice) return;
-      if (type === 'banner' && !notifPrefs.bannerChange) return;
+      if ((type === 'notice' || type === 'banner') && !notifPrefs.homeNews) return;
       if (type === 'qt' && !notifPrefs.newQt) return;
       if (type === 'member' && !notifPrefs.memberPending) return;
 
@@ -2479,13 +2469,11 @@
       const canManageMembers = !!(user && (user.isSuperAdmin || (user.role.perms && user.role.perms.canManageMembers)));
 
       document.getElementById('notifMasterToggle').checked = notifPrefs.enabled;
-      document.getElementById('notifNoticeToggle').checked = notifPrefs.newNotice;
-      document.getElementById('notifBannerToggle').checked = notifPrefs.bannerChange;
+      document.getElementById('notifHomeToggle').checked = notifPrefs.homeNews;
       document.getElementById('notifQtToggle').checked = notifPrefs.newQt;
       document.getElementById('notifMemberToggle').checked = notifPrefs.memberPending;
 
-      document.getElementById('notifNoticeToggle').disabled = !notifPrefs.enabled;
-      document.getElementById('notifBannerToggle').disabled = !notifPrefs.enabled;
+      document.getElementById('notifHomeToggle').disabled = !notifPrefs.enabled;
       document.getElementById('notifQtToggle').disabled = !notifPrefs.enabled;
       document.getElementById('notifMemberToggle').disabled = !notifPrefs.enabled;
       document.getElementById('notifDetailGroup').style.opacity = notifPrefs.enabled ? '1' : '0.48';
@@ -3020,11 +3008,11 @@
               knownNoticeIds.add(n.id);
               knownNoticeAlertMap.set(n.id, curAlertTs);
 
-              if ((isNew && curAlertTs >= 0) || (curAlertTs > prevAlertTs && curAlertTs > 0)) {
+              if ((isNew && curAlertTs > 0) || (curAlertTs > prevAlertTs && curAlertTs > 0)) {
                 dispatchAppNotification({
                   type: 'notice',
                   icon: '📢',
-                  title: isNew ? `새 ${n.category || '공지'} · 배너 등록` : `${n.category || '공지'} 안내 업데이트`,
+                  title: isNew ? `메인 화면 새 ${n.category || '소식'}` : `메인 화면 ${n.category || '소식'} 업데이트`,
                   body: n.title,
                   onClick: () => {
                     switchMainTab('home');
@@ -3072,7 +3060,7 @@
                   dispatchAppNotification({
                     type: 'qt',
                     icon: '✨',
-                    title: `새 ${getTabLabel('qt')} 등록`,
+                    title: `${getTabLabel('qt')} 알림`,
                     body: q.passage || (q.scripture || '').split('\n')[0] || '새 말씀이 등록되었습니다.',
                     onClick: () => {
                       switchMainTab('qt');
