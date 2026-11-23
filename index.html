@@ -31,6 +31,7 @@
       --success: #16A34A;
       --success-soft: #DCFCE7;
       --danger: #EF4444;
+      --danger-soft: #FEF2F2;
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
 
@@ -91,35 +92,35 @@
       cursor: pointer;
     }
 
-    /* ==================== 1. 통합 로그인 화면 ==================== */
+    /* ==================== 1. 통합 로그인 / 회원가입 화면 ==================== */
     .login-screen {
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 32px 22px;
+      padding: 28px 22px;
       background: radial-gradient(circle at top center, #1F2937 0%, #0B0F19 52%, #09090B 100%);
       color: #fff;
     }
     .login-brand {
       text-align: center;
-      margin-bottom: 26px;
+      margin-bottom: 22px;
     }
     .login-logo {
-      width: 96px;
-      height: 96px;
-      border-radius: 26px;
+      width: 88px;
+      height: 88px;
+      border-radius: 24px;
       object-fit: cover;
       background: #000;
       border: 2px solid rgba(255, 255, 255, 0.14);
       box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .login-title {
-      font-size: 25px;
+      font-size: 24px;
       font-weight: 800;
       color: #FFFFFF;
-      margin: 0 0 5px;
+      margin: 0 0 4px;
       letter-spacing: -0.4px;
     }
     .login-sub {
@@ -128,12 +129,12 @@
       margin: 0;
     }
 
-    /* 하나의 통합 로그인 카드 */
+    /* 통합 로그인 카드 */
     .login-card {
       background: #FFFFFF;
       color: var(--text);
       border-radius: 24px;
-      padding: 22px 20px 24px;
+      padding: 22px 20px 22px;
       box-shadow: 0 20px 44px rgba(0, 0, 0, 0.42);
     }
 
@@ -144,7 +145,7 @@
       background: #F1F5F9;
       border-radius: 14px;
       padding: 4px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
     .segment-btn {
       border: none;
@@ -173,17 +174,16 @@
       font-size: 12.5px;
       font-weight: 700;
       color: #334155;
-      margin-bottom: 7px;
+      margin-bottom: 6px;
     }
     .login-input-wrap {
-      position: relative;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .login-input {
       width: 100%;
       border: 1.5px solid #E2E8F0;
       border-radius: 13px;
-      padding: 13px 14px;
+      padding: 12px 14px;
       font-size: 15px;
       font-family: inherit;
       color: var(--text);
@@ -201,7 +201,7 @@
     .login-desc {
       font-size: 12.5px;
       color: #64748B;
-      margin: 0 0 16px;
+      margin: 0 0 14px;
       line-height: 1.45;
     }
     .login-error {
@@ -209,15 +209,28 @@
       font-size: 12.5px;
       font-weight: 600;
       color: var(--danger);
-      margin: -6px 0 14px;
+      background: var(--danger-soft);
+      border-radius: 10px;
+      padding: 9px 12px;
+      margin: 0 0 12px;
+      line-height: 1.4;
     }
     .login-error.show { display: block; }
+
+    .auto-login-note {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #475569;
+      margin: 0 0 14px;
+    }
 
     .btn-full {
       width: 100%;
       border: none;
       border-radius: 13px;
-      padding: 14px;
+      padding: 13.5px;
       font-size: 15px;
       font-weight: 800;
       cursor: pointer;
@@ -227,12 +240,62 @@
     .btn-dark { background: #111827; color: #fff; }
     .btn-amber { background: var(--admin-accent); color: #0F172A; }
 
+    .auth-switch-row {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #F1F5F9;
+      text-align: center;
+      font-size: 13px;
+      color: #64748B;
+    }
+    .text-link-btn {
+      background: transparent;
+      border: none;
+      color: #111827;
+      font-weight: 800;
+      font-size: 13px;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 2px 4px;
+    }
+
     .login-footer-hint {
       text-align: center;
       font-size: 12px;
       color: #94A3B8;
-      margin-top: 20px;
+      margin-top: 18px;
       line-height: 1.55;
+    }
+
+    /* 승인 대기 / 거절 상태 카드 */
+    .status-box {
+      text-align: center;
+      padding: 10px 4px 4px;
+    }
+    .status-emoji {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .status-emoji.pending { background: #FEF3C7; }
+    .status-emoji.rejected { background: #FEF2F2; }
+    .status-title { font-size: 18px; font-weight: 800; margin: 0 0 8px; }
+    .status-desc { font-size: 13px; color: #475569; line-height: 1.55; margin: 0 0 18px; }
+    .status-meta {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 12.5px;
+      color: #334155;
+      margin-bottom: 16px;
+      text-align: left;
+      line-height: 1.6;
     }
 
     /* ==================== 2. 공통 헤더 & 탭바 ==================== */
@@ -313,7 +376,7 @@
       width: 100%;
       max-width: 480px;
       display: flex;
-      padding: 8px 12px calc(8px + var(--safe-bottom));
+      padding: 8px 10px calc(8px + var(--safe-bottom));
       z-index: 25;
       border-top: 1px solid var(--border);
     }
@@ -333,11 +396,28 @@
       color: var(--text-sub);
       cursor: pointer;
       padding: 4px 0;
+      position: relative;
     }
     .tabbar.worshipper .tab-btn.active { color: #111827; font-weight: 800; }
     .tabbar.admin .tab-btn { color: #94A3B8; }
     .tabbar.admin .tab-btn.active { color: var(--admin-accent); font-weight: 800; }
     .tab-icon { font-size: 20px; line-height: 1; }
+    .tab-badge {
+      position: absolute;
+      top: 0;
+      right: calc(50% - 24px);
+      background: var(--danger);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      min-width: 17px;
+      height: 17px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+    }
 
     /* ==================== 3. 콘텐츠 컴포넌트 ==================== */
     .hero-banner {
@@ -363,7 +443,6 @@
     .hero-title { font-size: 18.5px; font-weight: 800; margin: 0 0 6px; line-height: 1.3; }
     .hero-desc { font-size: 13px; color: rgba(255,255,255,0.86); margin: 0; line-height: 1.45; }
 
-    /* 필터 칩 */
     .filter-row {
       display: flex;
       gap: 6px;
@@ -406,6 +485,10 @@
       box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
     }
     .card.clickable { cursor: pointer; }
+    .card.highlight-pending {
+      border-color: #FCD34D;
+      background: #FFFBEB;
+    }
     .card-top {
       display: flex;
       align-items: center;
@@ -424,6 +507,7 @@
     .tag.warm { background: #FEF3C7; color: #B45309; }
     .tag.green { background: #DCFCE7; color: #15803D; }
     .tag.slate { background: #F1F5F9; color: #475569; }
+    .tag.red { background: #FEE2E2; color: #DC2626; }
     .card-date { font-size: 12px; color: var(--text-sub); }
     .card-title { font-size: 15px; font-weight: 700; margin: 0 0 6px; line-height: 1.35; }
     .card-body {
@@ -440,7 +524,6 @@
       overflow: hidden;
     }
 
-    /* 체크 버튼 & 액션 */
     .card-footer {
       display: flex;
       align-items: center;
@@ -497,13 +580,18 @@
     }
     .btn-sm {
       border-radius: 8px;
-      padding: 5px 9px;
-      font-size: 11.5px;
+      padding: 6px 10px;
+      font-size: 12px;
       font-weight: 700;
       cursor: pointer;
       border: 1px solid var(--border);
       background: #F8FAFC;
       color: #334155;
+    }
+    .btn-sm.approve {
+      background: #16A34A;
+      color: #fff;
+      border-color: #16A34A;
     }
     .btn-sm.danger {
       background: #FEF2F2;
@@ -522,11 +610,24 @@
       background: var(--admin-bg);
       color: #fff;
       border-radius: 14px;
-      padding: 14px 10px;
+      padding: 14px 8px;
       text-align: center;
     }
     .stat-num { font-size: 22px; font-weight: 800; color: var(--admin-accent); }
     .stat-label { font-size: 11px; color: #CBD5E1; margin-top: 3px; }
+
+    /* 회원 목록 행 */
+    .member-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .member-row:last-child { border-bottom: none; padding-bottom: 2px; }
+    .member-name { font-size: 14.5px; font-weight: 800; color: var(--text); }
+    .member-meta { font-size: 12px; color: var(--text-sub); margin-top: 2px; }
 
     /* 주일 예배 체크 카드 */
     .worship-check-card {
@@ -651,7 +752,7 @@
       <button id="pwaBannerClose" class="pwa-banner-close" aria-label="닫기">✕</button>
     </div>
 
-    <!-- ==================== 1. 통합 로그인 화면 ==================== -->
+    <!-- ==================== 1. 통합 로그인 / 회원가입 / 승인대기 화면 ==================== -->
     <section id="loginScreen" class="login-screen">
       <div class="login-brand">
         <img src="./icon-512.png" alt="라이트 청년부 로고" class="login-logo" />
@@ -659,9 +760,10 @@
         <p class="login-sub">구미제일감리교회 청년부</p>
       </div>
 
-      <!-- 하나의 로그인 창 -->
+      <!-- 통합 인증 카드 -->
       <div class="login-card">
-        <div class="role-segment" role="tablist">
+        <!-- 역할 선택 탭 (승인 대기 화면에서는 숨김) -->
+        <div id="roleSegment" class="role-segment" role="tablist">
           <button id="segWorshipper" class="segment-btn active" type="button" onclick="selectLoginTab('worshipper')">
             예배자
           </button>
@@ -670,31 +772,104 @@
           </button>
         </div>
 
-        <!-- 예배자 로그인 영역 -->
+        <!-- (A) 예배자 로그인 폼 -->
         <div id="worshipperLoginForm">
-          <p class="login-desc">광고·소식·공지 확인 및 예배·행사 체크를 이용할 수 있습니다.</p>
-          <label class="login-field-label" for="worshipperNameInput">이름 또는 셀 (선택)</label>
+          <p class="login-desc">등록된 <b>성명</b>과 <b>비밀번호</b>로 로그인해 주세요.</p>
+
+          <label class="login-field-label" for="loginNameInput">성명 (아이디 대신 사용)</label>
           <div class="login-input-wrap">
-            <input id="worshipperNameInput" class="login-input" placeholder="예: 2셀 지현 (비우면 '예배자')" />
+            <input id="loginNameInput" class="login-input" placeholder="예: 홍길동" autocomplete="name" />
           </div>
+
+          <label class="login-field-label" for="loginPwInput">비밀번호</label>
+          <div class="login-input-wrap">
+            <input id="loginPwInput" type="password" class="login-input" placeholder="비밀번호 입력" autocomplete="current-password" />
+          </div>
+
+          <div id="worshipperLoginError" class="login-error"></div>
+
+          <div class="auto-login-note">
+            <span>✅</span>
+            <span>한 번 로그인하면 다음부터는 <b>자동으로 로그인</b>됩니다.</span>
+          </div>
+
           <button id="enterWorshipperBtn" class="btn-full btn-dark" type="button">예배자로 로그인</button>
+
+          <div class="auth-switch-row">
+            아직 등록하지 않으셨나요?
+            <button type="button" class="text-link-btn" onclick="openSignupMode()">회원가입 신청</button>
+          </div>
         </div>
 
-        <!-- 관리자 로그인 영역 -->
+        <!-- (B) 예배자 회원가입 신청 폼 (성명 = 아이디) -->
+        <div id="worshipperSignupForm" class="hidden">
+          <p class="login-desc">이메일 없이 <b>성명</b>으로 간편 가입합니다.<br>가입 신청 후 <b>관리자 승인</b>이 완료되면 이용할 수 있어요.</p>
+
+          <label class="login-field-label" for="signupNameInput">성명 (필수 · 로그인 시 사용)</label>
+          <div class="login-input-wrap">
+            <input id="signupNameInput" class="login-input" placeholder="실명을 입력해 주세요 (예: 김하늘)" />
+          </div>
+
+          <label class="login-field-label" for="signupCellInput">셀 또는 또래 (선택 · 본인 확인용)</label>
+          <div class="login-input-wrap">
+            <input id="signupCellInput" class="login-input" placeholder="예: 2셀 / 01또래 (새가족은 '새가족')" />
+          </div>
+
+          <label class="login-field-label" for="signupPwInput">비밀번호 (4자리 이상)</label>
+          <div class="login-input-wrap">
+            <input id="signupPwInput" type="password" class="login-input" placeholder="사용할 비밀번호 입력" />
+          </div>
+
+          <label class="login-field-label" for="signupPwConfirmInput">비밀번호 확인</label>
+          <div class="login-input-wrap">
+            <input id="signupPwConfirmInput" type="password" class="login-input" placeholder="비밀번호를 한 번 더 입력" />
+          </div>
+
+          <div id="signupError" class="login-error"></div>
+
+          <button id="submitSignupBtn" class="btn-full btn-dark" type="button">회원가입 신청하기</button>
+
+          <div class="auth-switch-row">
+            이미 가입하셨나요?
+            <button type="button" class="text-link-btn" onclick="openLoginMode()">로그인으로 돌아가기</button>
+          </div>
+        </div>
+
+        <!-- (C) 관리자 로그인 폼 -->
         <div id="adminLoginForm" class="hidden">
-          <p class="login-desc">관리자 코드를 입력하면 공지 등록·수정 및 체크 현황 관리 화면으로 입장합니다.</p>
+          <p class="login-desc">관리자 코드를 입력하면 공지 관리·회원 승인 화면으로 입장합니다.</p>
+
           <label class="login-field-label" for="adminPinInput">관리자 코드 (비밀번호)</label>
           <div class="login-input-wrap">
             <input id="adminPinInput" type="password" inputmode="numeric" class="login-input admin-focus" placeholder="관리자 코드를 입력하세요" />
           </div>
+
           <div id="adminLoginError" class="login-error">관리자 코드가 일치하지 않습니다. 다시 확인해 주세요.</div>
+
+          <div class="auto-login-note">
+            <span>✅</span>
+            <span>관리자도 로그인 후 <b>자동 로그인</b>이 유지됩니다.</span>
+          </div>
+
           <button id="enterAdminBtn" class="btn-full btn-amber" type="button">관리자로 로그인</button>
+        </div>
+
+        <!-- (D) 승인 대기 / 보류 안내 화면 -->
+        <div id="pendingStatusView" class="hidden">
+          <div class="status-box">
+            <div id="statusEmoji" class="status-emoji pending">⏳</div>
+            <h2 id="statusTitle" class="status-title">관리자 승인 대기 중</h2>
+            <p id="statusDesc" class="status-desc"></p>
+            <div id="statusMeta" class="status-meta"></div>
+            <button id="recheckStatusBtn" class="btn-full btn-dark" type="button" style="margin-bottom:8px;">승인 상태 다시 확인</button>
+            <button id="backToLoginFromStatusBtn" class="btn-outline" type="button" style="width:100%; padding:12px;">로그인 화면으로 돌아가기</button>
+          </div>
         </div>
       </div>
 
       <div class="login-footer-hint">
-        테스트용 관리자 코드: <b>1234</b><br>
-        화면 상단 <b>[로그아웃]</b>으로 언제든 역할을 바꿔 테스트할 수 있습니다.
+        테스트용 관리자 코드: <b>1234</b> · 샘플 예배자: <b>김민수 / 1234</b><br>
+        회원가입 신청 후 관리자(1234) → <b>회원 관리</b>에서 승인할 수 있습니다.
       </div>
     </section>
 
@@ -764,7 +939,7 @@
             <div class="brand-title">
               라이트 청년부 <span class="mode-badge admin">관리자</span>
             </div>
-            <div class="brand-sub">광고 · 공지 · 체크 현황 관리</div>
+            <div class="brand-sub">광고 · 회원 승인 · 체크 현황 관리</div>
           </div>
         </div>
         <button class="exit-btn dark" onclick="exitMode()">로그아웃</button>
@@ -804,16 +979,38 @@
             <div id="adminEventStatusList"></div>
           </div>
         </section>
+
+        <!-- 관리자 탭 3: 회원 가입 승인 및 관리 -->
+        <section id="aTabMembers" class="hidden">
+          <div class="section-head">
+            <h2 class="section-title">⏳ 가입 승인 대기</h2>
+            <span id="pendingCountTag" class="tag warm">0명</span>
+          </div>
+          <div id="pendingMemberList"></div>
+
+          <div class="section-head" style="margin-top:20px;">
+            <h2 class="section-title">👥 승인된 예배자 목록</h2>
+            <span id="approvedCountTag" class="tag green">0명</span>
+          </div>
+          <div class="card" id="approvedMemberCard">
+            <div id="approvedMemberList"></div>
+          </div>
+        </section>
       </main>
 
       <nav class="tabbar admin">
         <button class="tab-btn active" data-atab="manage">
           <span class="tab-icon">🛠️</span>
-          <span>공지·광고 관리</span>
+          <span>공지 관리</span>
         </button>
         <button class="tab-btn" data-atab="status">
           <span class="tab-icon">📊</span>
           <span>체크 현황</span>
+        </button>
+        <button class="tab-btn" data-atab="members">
+          <span class="tab-icon">👥</span>
+          <span>회원 관리</span>
+          <span id="pendingNavBadge" class="tab-badge hidden">0</span>
         </button>
       </nav>
     </div>
@@ -923,12 +1120,12 @@
       pwaBanner.classList.remove('show');
     });
 
-    // 3. 상태 및 샘플 데이터 (기존 v2/v3 데이터 그대로 유지)
+    // 3. 상태 및 저장소 키 (자동 로그인 + 회원 승인 시스템)
     const ADMIN_PIN = '1234';
     const STORAGE_KEY_NOTICES = 'youth_v2_notices';
     const STORAGE_KEY_SUNDAY = 'youth_v2_sunday_checks';
-    const STORAGE_KEY_ROLE = 'youth_v2_role';
-    const STORAGE_KEY_WNAME = 'youth_v2_wname';
+    const STORAGE_KEY_MEMBERS = 'youth_v5_members';
+    const STORAGE_KEY_SESSION = 'youth_v5_session'; // { role: 'worshipper'|'admin', memberId?: number }
 
     const DEFAULT_NOTICES = [
       {
@@ -939,8 +1136,8 @@
         date: '2026.11.23',
         pinned: true,
         needAttend: true,
-        confirmedBy: ['1셀 민수', '2셀 지현'],
-        attendedBy: ['1셀 민수']
+        confirmedBy: ['김민수'],
+        attendedBy: ['김민수']
       },
       {
         id: 2,
@@ -950,7 +1147,7 @@
         date: '2026.11.23',
         pinned: false,
         needAttend: false,
-        confirmedBy: ['1셀 민수'],
+        confirmedBy: ['김민수'],
         attendedBy: []
       },
       {
@@ -967,28 +1164,68 @@
     ];
 
     const DEFAULT_SUNDAY = [
-      { name: '1셀 민수', time: '오후 1:52' },
-      { name: '2셀 지현', time: '오후 1:58' }
+      { name: '김민수', time: '오후 1:52' }
+    ];
+
+    const DEFAULT_MEMBERS = [
+      {
+        id: 1001,
+        name: '김민수',
+        cell: '1셀',
+        password: '1234',
+        status: 'approved', // 'pending' | 'approved' | 'rejected'
+        createdAt: '2026.11.20'
+      },
+      {
+        id: 1002,
+        name: '이지현',
+        cell: '2셀',
+        password: '1234',
+        status: 'pending',
+        createdAt: '2026.11.23'
+      }
     ];
 
     let notices = JSON.parse(localStorage.getItem(STORAGE_KEY_NOTICES) || 'null') || structuredClone(DEFAULT_NOTICES);
     let sundayChecks = JSON.parse(localStorage.getItem(STORAGE_KEY_SUNDAY) || 'null') || structuredClone(DEFAULT_SUNDAY);
-    let currentRole = localStorage.getItem(STORAGE_KEY_ROLE) || null;
-    let worshipperName = localStorage.getItem(STORAGE_KEY_WNAME) || '예배자';
-    let selectedLoginTab = 'worshipper';
+    let members = JSON.parse(localStorage.getItem(STORAGE_KEY_MEMBERS) || 'null') || structuredClone(DEFAULT_MEMBERS);
+    let session = JSON.parse(localStorage.getItem(STORAGE_KEY_SESSION) || 'null'); // 자동 로그인 세션
+
     let currentFilter = '전체';
     let currentDetailId = null;
+    let viewingStatusMemberId = null;
 
     function saveAll() {
       localStorage.setItem(STORAGE_KEY_NOTICES, JSON.stringify(notices));
       localStorage.setItem(STORAGE_KEY_SUNDAY, JSON.stringify(sundayChecks));
+      localStorage.setItem(STORAGE_KEY_MEMBERS, JSON.stringify(members));
+    }
+
+    function saveSession(newSession) {
+      session = newSession;
+      if (newSession) {
+        localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(newSession));
+      } else {
+        localStorage.removeItem(STORAGE_KEY_SESSION);
+      }
+    }
+
+    function getLoggedInMember() {
+      if (!session || session.role !== 'worshipper') return null;
+      return members.find(m => m.id === session.memberId) || null;
+    }
+
+    function getCurrentWorshipperLabel() {
+      const m = getLoggedInMember();
+      if (!m) return '예배자';
+      return m.cell ? `${m.name} (${m.cell})` : m.name;
     }
 
     function showToast(msg) {
       const el = document.getElementById('toast');
       el.textContent = msg;
       el.classList.add('show');
-      setTimeout(() => el.classList.remove('show'), 2200);
+      setTimeout(() => el.classList.remove('show'), 2300);
     }
 
     function escapeHtml(str) {
@@ -1020,100 +1257,285 @@
       return '';
     }
 
-    // 4. 통합 로그인 창 탭 전환 및 로그인 처리
+    function showError(elId, msg) {
+      const el = document.getElementById(elId);
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+
+    function clearAllErrors() {
+      ['worshipperLoginError', 'signupError', 'adminLoginError'].forEach(id => {
+        document.getElementById(id).classList.remove('show');
+      });
+    }
+
+    // 4. 로그인 / 회원가입 / 승인 대기 UI 전환
     window.selectLoginTab = (tab) => {
-      selectedLoginTab = tab;
+      clearAllErrors();
+      viewingStatusMemberId = null;
+      document.getElementById('roleSegment').classList.remove('hidden');
+      document.getElementById('pendingStatusView').classList.add('hidden');
+
       const segW = document.getElementById('segWorshipper');
       const segA = document.getElementById('segAdmin');
       const formW = document.getElementById('worshipperLoginForm');
+      const formS = document.getElementById('worshipperSignupForm');
       const formA = document.getElementById('adminLoginForm');
-      const errEl = document.getElementById('adminLoginError');
-
-      errEl.classList.remove('show');
 
       if (tab === 'worshipper') {
         segW.className = 'segment-btn active';
         segA.className = 'segment-btn';
         formW.classList.remove('hidden');
+        formS.classList.add('hidden');
         formA.classList.add('hidden');
       } else {
         segW.className = 'segment-btn';
         segA.className = 'segment-btn admin-active';
         formW.classList.add('hidden');
+        formS.classList.add('hidden');
         formA.classList.remove('hidden');
         setTimeout(() => document.getElementById('adminPinInput').focus(), 50);
       }
     };
 
-    function applyScreen() {
-      document.getElementById('loginScreen').classList.toggle('hidden', currentRole !== null);
-      document.getElementById('worshipperApp').classList.toggle('hidden', currentRole !== 'worshipper');
-      document.getElementById('adminApp').classList.toggle('hidden', currentRole !== 'admin');
+    window.openSignupMode = () => {
+      clearAllErrors();
+      document.getElementById('worshipperLoginForm').classList.add('hidden');
+      document.getElementById('worshipperSignupForm').classList.remove('hidden');
+      document.getElementById('signupNameInput').value = '';
+      document.getElementById('signupCellInput').value = '';
+      document.getElementById('signupPwInput').value = '';
+      document.getElementById('signupPwConfirmInput').value = '';
+      setTimeout(() => document.getElementById('signupNameInput').focus(), 50);
+    };
 
-      const themeMeta = document.querySelector('meta[name="theme-color"]');
-      if (currentRole === 'admin') {
-        themeMeta.setAttribute('content', '#0B0F19');
-        renderAdmin();
-      } else if (currentRole === 'worshipper') {
-        themeMeta.setAttribute('content', '#111827');
-        document.getElementById('worshipperWelcome').textContent = `${worshipperName}님, 환영합니다`;
-        renderWorshipper();
+    window.openLoginMode = () => {
+      selectLoginTab('worshipper');
+    };
+
+    function showMemberStatusView(member) {
+      viewingStatusMemberId = member.id;
+      document.getElementById('roleSegment').classList.add('hidden');
+      document.getElementById('worshipperLoginForm').classList.add('hidden');
+      document.getElementById('worshipperSignupForm').classList.add('hidden');
+      document.getElementById('adminLoginForm').classList.add('hidden');
+      document.getElementById('pendingStatusView').classList.remove('hidden');
+
+      const emoji = document.getElementById('statusEmoji');
+      const title = document.getElementById('statusTitle');
+      const desc = document.getElementById('statusDesc');
+      const meta = document.getElementById('statusMeta');
+      const recheckBtn = document.getElementById('recheckStatusBtn');
+
+      if (member.status === 'pending') {
+        emoji.className = 'status-emoji pending';
+        emoji.textContent = '⏳';
+        title.textContent = '관리자 승인 대기 중';
+        desc.innerHTML = `<b>${escapeHtml(member.name)}</b>님의 회원가입 신청이 접수되었습니다.<br>관리자가 승인하면 다음부터는 별도 로그인 없이 바로 입장됩니다.`;
+        recheckBtn.textContent = '승인 여부 다시 확인';
+        recheckBtn.onclick = () => {
+          members = JSON.parse(localStorage.getItem(STORAGE_KEY_MEMBERS) || 'null') || members;
+          const latest = members.find(m => m.id === member.id);
+          if (!latest) {
+            showToast('신청 내역을 찾을 수 없습니다.');
+            selectLoginTab('worshipper');
+            return;
+          }
+          if (latest.status === 'approved') {
+            saveSession({ role: 'worshipper', memberId: latest.id });
+            applyScreen();
+            showToast(`승인이 완료되었습니다! ${latest.name}님 환영합니다.`);
+          } else if (latest.status === 'rejected') {
+            showMemberStatusView(latest);
+          } else {
+            showToast('아직 관리자 승인 대기 중입니다.');
+          }
+        };
       } else {
-        themeMeta.setAttribute('content', '#0B0F19');
-        document.getElementById('worshipperNameInput').value = worshipperName === '예배자' ? '' : worshipperName;
-        document.getElementById('adminPinInput').value = '';
-        document.getElementById('adminLoginError').classList.remove('show');
-        selectLoginTab('worshipper');
+        emoji.className = 'status-emoji rejected';
+        emoji.textContent = '🚫';
+        title.textContent = '가입 승인이 보류되었습니다';
+        desc.innerHTML = `<b>${escapeHtml(member.name)}</b>님의 가입 신청이 거절/보류되었습니다.<br>청년부 임원에게 문의하시거나 다시 신청해 주세요.`;
+        recheckBtn.textContent = '다시 가입 신청하기';
+        recheckBtn.onclick = () => {
+          member.status = 'pending';
+          member.createdAt = formatToday();
+          saveAll();
+          showMemberStatusView(member);
+          showToast('가입 승인을 다시 요청했습니다.');
+        };
       }
+
+      meta.innerHTML = `
+        <div><b>신청 성명:</b> ${escapeHtml(member.name)}</div>
+        <div><b>셀/또래:</b> ${escapeHtml(member.cell || '미입력')}</div>
+        <div><b>신청일:</b> ${escapeHtml(member.createdAt)}</div>
+      `;
     }
 
-    function tryWorshipperLogin() {
-      const inputName = document.getElementById('worshipperNameInput').value.trim();
-      worshipperName = inputName || '예배자';
-      currentRole = 'worshipper';
-      localStorage.setItem(STORAGE_KEY_ROLE, currentRole);
-      localStorage.setItem(STORAGE_KEY_WNAME, worshipperName);
-      applyScreen();
-      showToast(`${worshipperName}님, 환영합니다!`);
-    }
+    document.getElementById('backToLoginFromStatusBtn').addEventListener('click', () => {
+      selectLoginTab('worshipper');
+    });
 
-    function tryAdminLogin() {
-      const pin = document.getElementById('adminPinInput').value.trim();
-      const errEl = document.getElementById('adminLoginError');
-      if (pin !== ADMIN_PIN) {
-        errEl.classList.add('show');
-        document.getElementById('adminPinInput').focus();
+    // 5. 회원가입 신청 처리 (성명 = 아이디)
+    function handleSignup() {
+      clearAllErrors();
+      const name = document.getElementById('signupNameInput').value.trim();
+      const cell = document.getElementById('signupCellInput').value.trim();
+      const pw = document.getElementById('signupPwInput').value.trim();
+      const pw2 = document.getElementById('signupPwConfirmInput').value.trim();
+
+      if (name.length < 2) {
+        showError('signupError', '성명을 2글자 이상 입력해 주세요.');
         return;
       }
-      errEl.classList.remove('show');
-      currentRole = 'admin';
-      localStorage.setItem(STORAGE_KEY_ROLE, currentRole);
+      if (pw.length < 4) {
+        showError('signupError', '비밀번호는 4자리 이상 입력해 주세요.');
+        return;
+      }
+      if (pw !== pw2) {
+        showError('signupError', '비밀번호 확인이 일치하지 않습니다.');
+        return;
+      }
+
+      const duplicate = members.find(m => m.name === name);
+      if (duplicate) {
+        if (duplicate.status === 'pending') {
+          showError('signupError', `'${name}'님은 이미 승인 대기 중입니다. 로그인 화면에서 상태를 확인해 주세요.`);
+        } else {
+          showError('signupError', `이미 등록된 성명입니다. 동명이인이라면 이름 뒤에 또래를 붙여주세요. (예: ${name}01)`);
+        }
+        return;
+      }
+
+      const newMember = {
+        id: Date.now(),
+        name,
+        cell,
+        password: pw,
+        status: 'pending',
+        createdAt: formatToday()
+      };
+      members.unshift(newMember);
+      saveAll();
+      showToast('회원가입 신청이 완료되었습니다!');
+      showMemberStatusView(newMember);
+    }
+
+    document.getElementById('submitSignupBtn').addEventListener('click', handleSignup);
+
+    // 6. 예배자 로그인 처리 (승인 확인 + 자동 로그인 저장)
+    function tryWorshipperLogin() {
+      clearAllErrors();
+      const name = document.getElementById('loginNameInput').value.trim();
+      const pw = document.getElementById('loginPwInput').value.trim();
+
+      if (!name || !pw) {
+        showError('worshipperLoginError', '성명과 비밀번호를 모두 입력해 주세요.');
+        return;
+      }
+
+      const member = members.find(m => m.name === name);
+      if (!member) {
+        showError('worshipperLoginError', '등록되지 않은 성명입니다. 아래 [회원가입 신청]을 먼저 진행해 주세요.');
+        return;
+      }
+      if (member.password !== pw) {
+        showError('worshipperLoginError', '비밀번호가 일치하지 않습니다.');
+        return;
+      }
+
+      if (member.status !== 'approved') {
+        showMemberStatusView(member);
+        return;
+      }
+
+      // 승인 완료된 회원 → 자동 로그인 세션 저장
+      saveSession({ role: 'worshipper', memberId: member.id });
       applyScreen();
-      showToast('관리자로 로그인했습니다.');
+      showToast(`${member.name}님, 환영합니다! (자동 로그인 설정됨)`);
     }
 
     document.getElementById('enterWorshipperBtn').addEventListener('click', tryWorshipperLogin);
-    document.getElementById('worshipperNameInput').addEventListener('keydown', (e) => {
+    document.getElementById('loginPwInput').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') tryWorshipperLogin();
     });
+
+    // 7. 관리자 로그인 처리 (자동 로그인 저장)
+    function tryAdminLogin() {
+      clearAllErrors();
+      const pin = document.getElementById('adminPinInput').value.trim();
+      if (pin !== ADMIN_PIN) {
+        showError('adminLoginError', '관리자 코드가 일치하지 않습니다. (테스트용: 1234)');
+        document.getElementById('adminPinInput').focus();
+        return;
+      }
+      saveSession({ role: 'admin' });
+      applyScreen();
+      showToast('관리자로 로그인했습니다.');
+    }
 
     document.getElementById('enterAdminBtn').addEventListener('click', tryAdminLogin);
     document.getElementById('adminPinInput').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') tryAdminLogin();
     });
-    document.getElementById('adminPinInput').addEventListener('input', () => {
-      document.getElementById('adminLoginError').classList.remove('show');
-    });
 
+    // 로그아웃 (직접 눌렀을 때만 자동 로그인 해제)
     window.exitMode = () => {
-      currentRole = null;
-      localStorage.removeItem(STORAGE_KEY_ROLE);
+      saveSession(null);
       applyScreen();
       showToast('로그아웃되었습니다.');
     };
 
-    // 5. 예배자 화면 렌더링
+    // 8. 자동 로그인 상태 판별 및 화면 라우팅
+    function applyScreen() {
+      const loginEl = document.getElementById('loginScreen');
+      const wAppEl = document.getElementById('worshipperApp');
+      const aAppEl = document.getElementById('adminApp');
+      const themeMeta = document.querySelector('meta[name="theme-color"]');
+
+      // 예배자 자동 로그인 세션 검증 (삭제되었거나 승인 취소된 경우 차단)
+      if (session && session.role === 'worshipper') {
+        const m = getLoggedInMember();
+        if (!m) {
+          saveSession(null);
+        } else if (m.status !== 'approved') {
+          saveSession(null);
+          loginEl.classList.remove('hidden');
+          wAppEl.classList.add('hidden');
+          aAppEl.classList.add('hidden');
+          themeMeta.setAttribute('content', '#0B0F19');
+          showMemberStatusView(m);
+          return;
+        }
+      }
+
+      const role = session ? session.role : null;
+      loginEl.classList.toggle('hidden', role !== null);
+      wAppEl.classList.toggle('hidden', role !== 'worshipper');
+      aAppEl.classList.toggle('hidden', role !== 'admin');
+
+      if (role === 'admin') {
+        themeMeta.setAttribute('content', '#0B0F19');
+        renderAdmin();
+      } else if (role === 'worshipper') {
+        themeMeta.setAttribute('content', '#111827');
+        const m = getLoggedInMember();
+        const label = m.cell ? `${m.name} (${m.cell})` : m.name;
+        document.getElementById('worshipperWelcome').textContent = `${label}님 · 자동 로그인 중`;
+        renderWorshipper();
+      } else {
+        themeMeta.setAttribute('content', '#0B0F19');
+        document.getElementById('loginNameInput').value = '';
+        document.getElementById('loginPwInput').value = '';
+        document.getElementById('adminPinInput').value = '';
+        selectLoginTab('worshipper');
+      }
+    }
+
+    // 9. 예배자 화면 렌더링
     function renderWorshipper() {
+      const myLabel = getCurrentWorshipperLabel();
       const pinned = notices.find(n => n.pinned) || notices[0];
       const hero = document.getElementById('wHeroBanner');
       if (pinned) {
@@ -1135,8 +1557,8 @@
         listEl.innerHTML = '<div class="card" style="text-align:center;color:#64748B;">해당 구분의 글이 없습니다.</div>';
       } else {
         listEl.innerHTML = filtered.map(n => {
-          const isConfirmed = n.confirmedBy.includes(worshipperName);
-          const isAttended = n.attendedBy.includes(worshipperName);
+          const isConfirmed = n.confirmedBy.includes(myLabel);
+          const isAttended = n.attendedBy.includes(myLabel);
           return `
             <div class="card clickable" onclick="openDetail(${n.id})">
               <div class="card-top">
@@ -1163,11 +1585,11 @@
         }).join('');
       }
 
-      const alreadyChecked = sundayChecks.some(c => c.name === worshipperName);
+      const alreadyChecked = sundayChecks.some(c => c.name === myLabel);
       const sundayBtn = document.getElementById('sundayCheckBtn');
       sundayBtn.classList.toggle('done', alreadyChecked);
       sundayBtn.textContent = alreadyChecked
-        ? `✅ ${worshipperName}님 출석 체크 완료 (누르면 취소)`
+        ? `✅ ${myLabel}님 출석 체크 완료 (누르면 취소)`
         : '☑️ 이번 주 주일 예배 출석 체크하기';
 
       const events = notices.filter(n => n.needAttend);
@@ -1176,7 +1598,7 @@
         evEl.innerHTML = '<div class="card" style="text-align:center;color:#64748B;">현재 참석 체크 중인 행사가 없습니다.</div>';
       } else {
         evEl.innerHTML = events.map(n => {
-          const isAttended = n.attendedBy.includes(worshipperName);
+          const isAttended = n.attendedBy.includes(myLabel);
           return `
             <div class="card">
               <div class="card-top">
@@ -1195,14 +1617,15 @@
     }
 
     window.toggleConfirm = (id) => {
+      const myLabel = getCurrentWorshipperLabel();
       const target = notices.find(n => n.id === id);
       if (!target) return;
-      const idx = target.confirmedBy.indexOf(worshipperName);
+      const idx = target.confirmedBy.indexOf(myLabel);
       if (idx >= 0) {
         target.confirmedBy.splice(idx, 1);
         showToast('확인을 취소했습니다.');
       } else {
-        target.confirmedBy.push(worshipperName);
+        target.confirmedBy.push(myLabel);
         showToast('공지를 확인했습니다!');
       }
       saveAll();
@@ -1211,15 +1634,16 @@
     };
 
     window.toggleAttend = (id) => {
+      const myLabel = getCurrentWorshipperLabel();
       const target = notices.find(n => n.id === id);
       if (!target) return;
-      const idx = target.attendedBy.indexOf(worshipperName);
+      const idx = target.attendedBy.indexOf(myLabel);
       if (idx >= 0) {
         target.attendedBy.splice(idx, 1);
         showToast('참석 체크를 취소했습니다.');
       } else {
-        target.attendedBy.push(worshipperName);
-        if (!target.confirmedBy.includes(worshipperName)) target.confirmedBy.push(worshipperName);
+        target.attendedBy.push(myLabel);
+        if (!target.confirmedBy.includes(myLabel)) target.confirmedBy.push(myLabel);
         showToast('행사 참석이 체크되었습니다!');
       }
       saveAll();
@@ -1228,12 +1652,13 @@
     };
 
     window.toggleSundayCheck = () => {
-      const idx = sundayChecks.findIndex(c => c.name === worshipperName);
+      const myLabel = getCurrentWorshipperLabel();
+      const idx = sundayChecks.findIndex(c => c.name === myLabel);
       if (idx >= 0) {
         sundayChecks.splice(idx, 1);
         showToast('주일 출석 체크를 취소했습니다.');
       } else {
-        sundayChecks.unshift({ name: worshipperName, time: formatNowTime() });
+        sundayChecks.unshift({ name: myLabel, time: formatNowTime() });
         showToast('이번 주 주일 예배 출석이 체크되었습니다!');
       }
       saveAll();
@@ -1241,6 +1666,7 @@
     };
 
     window.openDetail = (id) => {
+      const myLabel = getCurrentWorshipperLabel();
       const n = notices.find(item => item.id === id);
       if (!n) return;
       currentDetailId = id;
@@ -1249,8 +1675,8 @@
       document.getElementById('detailDate').textContent = n.date;
       document.getElementById('detailBody').textContent = n.body;
 
-      const isConfirmed = n.confirmedBy.includes(worshipperName);
-      const isAttended = n.attendedBy.includes(worshipperName);
+      const isConfirmed = n.confirmedBy.includes(myLabel);
+      const isAttended = n.attendedBy.includes(myLabel);
       document.getElementById('detailCheckArea').innerHTML = `
         <button class="check-btn ${isConfirmed ? 'checked' : ''}" style="flex:1;justify-content:center;" onclick="toggleConfirm(${n.id})">
           ${isConfirmed ? '✅ 확인 완료' : '☑️ 확인했어요'} (${n.confirmedBy.length})
@@ -1264,24 +1690,36 @@
       document.getElementById('detailModal').classList.add('open');
     };
 
-    // 6. 관리자 화면 렌더링
+    // 10. 관리자 화면 렌더링 (공지 + 체크 현황 + 회원 승인 관리)
     function renderAdmin() {
-      const totalConfirm = notices.reduce((sum, n) => sum + n.confirmedBy.length, 0);
+      const pendingList = members.filter(m => m.status === 'pending');
+      const approvedList = members.filter(m => m.status === 'approved');
+
+      // 하단 회원 관리 탭 알림 배지
+      const badgeEl = document.getElementById('pendingNavBadge');
+      if (pendingList.length > 0) {
+        badgeEl.textContent = pendingList.length;
+        badgeEl.classList.remove('hidden');
+      } else {
+        badgeEl.classList.add('hidden');
+      }
+
       document.getElementById('adminStatsGrid').innerHTML = `
         <div class="stat-box">
           <div class="stat-num">${notices.length}</div>
           <div class="stat-label">게시된 공지</div>
         </div>
         <div class="stat-box">
-          <div class="stat-num">${sundayChecks.length}</div>
-          <div class="stat-label">주일 출석체크</div>
+          <div class="stat-num">${pendingList.length}</div>
+          <div class="stat-label">가입 승인 대기</div>
         </div>
         <div class="stat-box">
-          <div class="stat-num">${totalConfirm}</div>
-          <div class="stat-label">공지 확인 합계</div>
+          <div class="stat-num">${approvedList.length}</div>
+          <div class="stat-label">승인된 예배자</div>
         </div>
       `;
 
+      // 공지 목록
       const listEl = document.getElementById('aNoticeList');
       if (notices.length === 0) {
         listEl.innerHTML = '<div class="card" style="text-align:center;color:#64748B;">등록된 공지·광고가 없습니다. 새 글을 올려보세요.</div>';
@@ -1311,6 +1749,7 @@
         `).join('');
       }
 
+      // 주일 출석 현황
       document.getElementById('adminSundayCount').textContent = `${sundayChecks.length}명`;
       document.getElementById('adminSundayList').innerHTML = sundayChecks.length === 0
         ? '<div style="font-size:13px;color:#64748B;padding:8px 0;">아직 출석 체크한 예배자가 없습니다.</div>'
@@ -1321,6 +1760,7 @@
             </div>
           `).join('');
 
+      // 행사 참석 현황
       const events = notices.filter(n => n.needAttend);
       document.getElementById('adminEventStatusList').innerHTML = events.length === 0
         ? '<div style="font-size:13px;color:#64748B;padding:8px 0;">참석 체크를 받는 행사가 없습니다.</div>'
@@ -1335,9 +1775,94 @@
               </div>
             </div>
           `).join('');
+
+      // 회원 관리 탭: 승인 대기 목록
+      document.getElementById('pendingCountTag').textContent = `${pendingList.length}명`;
+      const pendingEl = document.getElementById('pendingMemberList');
+      if (pendingList.length === 0) {
+        pendingEl.innerHTML = '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">현재 승인 대기 중인 신청자가 없습니다.</div>';
+      } else {
+        pendingEl.innerHTML = pendingList.map(m => `
+          <div class="card highlight-pending">
+            <div class="card-top">
+              <div>
+                <span class="member-name">${escapeHtml(m.name)}</span>
+                ${m.cell ? `<span class="tag slate" style="margin-left:6px;">${escapeHtml(m.cell)}</span>` : ''}
+              </div>
+              <span class="card-date">${escapeHtml(m.createdAt)} 신청</span>
+            </div>
+            <div style="display:flex; gap:8px; margin-top:10px;">
+              <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMember(${m.id})">✅ 가입 승인</button>
+              <button class="btn-sm danger" style="padding:9px 14px;" onclick="rejectMember(${m.id})">거절</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 회원 관리 탭: 승인된 예배자 목록
+      document.getElementById('approvedCountTag').textContent = `${approvedList.length}명`;
+      const approvedEl = document.getElementById('approvedMemberList');
+      if (approvedList.length === 0) {
+        approvedEl.innerHTML = '<div style="text-align:center;color:#64748B;font-size:13px;padding:8px 0;">승인된 예배자가 없습니다.</div>';
+      } else {
+        approvedEl.innerHTML = approvedList.map(m => `
+          <div class="member-row">
+            <div>
+              <div class="member-name">
+                ${escapeHtml(m.name)}
+                ${m.cell ? `<span class="tag slate" style="margin-left:5px;">${escapeHtml(m.cell)}</span>` : ''}
+              </div>
+              <div class="member-meta">가입일: ${escapeHtml(m.createdAt)}</div>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-sm" onclick="resetMemberPw(${m.id})">비번초기화</button>
+              <button class="btn-sm danger" onclick="deleteMember(${m.id})">삭제</button>
+            </div>
+          </div>
+        `).join('');
+      }
     }
 
-    // 관리자 글 등록/수정/삭제
+    // 관리자 회원 승인 / 거절 / 삭제 / 비밀번호 초기화
+    window.approveMember = (id) => {
+      const m = members.find(x => x.id === id);
+      if (!m) return;
+      m.status = 'approved';
+      saveAll();
+      renderAdmin();
+      showToast(`${m.name}님의 가입을 승인했습니다!`);
+    };
+
+    window.rejectMember = (id) => {
+      const m = members.find(x => x.id === id);
+      if (!m) return;
+      if (!confirm(`${m.name}님의 가입 신청을 거절할까요?`)) return;
+      m.status = 'rejected';
+      saveAll();
+      renderAdmin();
+      showToast(`${m.name}님의 가입을 거절했습니다.`);
+    };
+
+    window.resetMemberPw = (id) => {
+      const m = members.find(x => x.id === id);
+      if (!m) return;
+      if (!confirm(`${m.name}님의 비밀번호를 '1234'로 초기화할까요?`)) return;
+      m.password = '1234';
+      saveAll();
+      showToast(`${m.name}님의 비밀번호가 1234로 초기화되었습니다.`);
+    };
+
+    window.deleteMember = (id) => {
+      const m = members.find(x => x.id === id);
+      if (!m) return;
+      if (!confirm(`${m.name}님을 회원 목록에서 삭제할까요?`)) return;
+      members = members.filter(x => x.id !== id);
+      saveAll();
+      renderAdmin();
+      showToast(`${m.name}님을 삭제했습니다.`);
+    };
+
+    // 관리자 공지 등록/수정/삭제
     document.getElementById('openNewNoticeBtn').addEventListener('click', () => {
       document.getElementById('noticeModalTitle').textContent = '새 광고 · 공지 올리기';
       document.getElementById('editNoticeId').value = '';
@@ -1398,7 +1923,7 @@
           confirmedBy: [],
           attendedBy: []
         });
-        showToast('새 글이 등록되었습니다! 로그아웃 후 예배자 화면에서 확인해 보세요.');
+        showToast('새 글이 등록되었습니다!');
       }
 
       saveAll();
@@ -1415,9 +1940,10 @@
     };
 
     window.resetDemoData = () => {
-      if (!confirm('테스트 데이터를 초기 샘플 상태로 되돌릴까요?')) return;
+      if (!confirm('공지·체크·회원 테스트 데이터를 초기 상태로 되돌릴까요?')) return;
       notices = structuredClone(DEFAULT_NOTICES);
       sundayChecks = structuredClone(DEFAULT_SUNDAY);
+      members = structuredClone(DEFAULT_MEMBERS);
       saveAll();
       renderAdmin();
       showToast('테스트 데이터가 초기화되었습니다.');
@@ -1450,6 +1976,7 @@
         btn.classList.add('active');
         document.getElementById('aTabManage').classList.toggle('hidden', t !== 'manage');
         document.getElementById('aTabStatus').classList.toggle('hidden', t !== 'status');
+        document.getElementById('aTabMembers').classList.toggle('hidden', t !== 'members');
       });
     });
 
