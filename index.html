@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=104" />
+  <link rel="manifest" href="./manifest.json?v=105" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=104" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=104" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=105" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=105" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1074,6 +1074,68 @@
       border-top: 1px dashed #E2E8F0;
     }
 
+
+    /* ==================== v10.5 성경 빠른 검색 & 메인 게시 확인 모달 ==================== */
+    .bible-quick-results {
+      background: #FFFFFF;
+      border: 1.5px solid #BFDBFE;
+      border-radius: 14px;
+      padding: 11px 12px;
+      margin: -2px 0 12px;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.08);
+    }
+    .bible-quick-jump-btn {
+      width: 100%;
+      border: none;
+      background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+      color: #fff;
+      border-radius: 11px;
+      padding: 11px 13px;
+      font-size: 13.5px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .bible-quick-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .bible-quick-chip {
+      border: 1px solid #DBEAFE;
+      background: #EFF6FF;
+      color: #1E40AF;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .bible-quick-verse-hit {
+      padding: 8px 6px;
+      border-bottom: 1px solid #F1F5F9;
+      cursor: pointer;
+      font-size: 12.5px;
+      color: #334155;
+      line-height: 1.5;
+    }
+    .bible-quick-verse-hit:last-child { border-bottom: none; padding-bottom: 2px; }
+    .publish-confirm-box {
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 14px;
+      padding: 13px 14px;
+      margin-bottom: 14px;
+      font-size: 13.5px;
+      color: #1E3A8A;
+      line-height: 1.55;
+    }
+
     /* 토스트 */
     .toast {
       position: fixed; bottom: calc(86px + var(--safe-bottom)); left: 50%;
@@ -1089,7 +1151,7 @@
   <div class="app-shell">
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=104" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=105" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -1241,6 +1303,13 @@
             </div>
           </div>
 
+          <div class="search-box" style="margin-bottom:8px;">
+            <span class="search-icon">🔍</span>
+            <input id="bibleQuickSearchInput" class="search-input" type="search" placeholder="성경 빠른 검색 (예: 시편 23:1, 요3:16, 창세기, 사랑)" oninput="onBibleQuickSearchInput(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault(); executeBibleQuickJump();}" />
+            <button id="bibleQuickSearchClear" class="search-clear hidden" type="button" onclick="clearBibleQuickSearch()">✕</button>
+          </div>
+          <div id="bibleQuickSearchResults" class="bible-quick-results hidden"></div>
+
           <div class="bible-nav-row">
             <button id="biblePrevBtn" class="btn-outline" type="button" style="flex:1; padding:9px;" onclick="moveBibleChapter(-1)">◀ 이전 장</button>
             <button class="btn-outline" type="button" style="padding:9px 12px;" onclick="openBiblePickerModal('chapter')">장 선택</button>
@@ -1262,22 +1331,16 @@
           </div>
         </section>
 
-        <!-- (3) 큐티(QT) 화면 -->
+        <!-- (3) 오늘의 말씀 (큐티) 화면 -->
         <section id="viewQt" class="hidden">
           <div class="qt-hero">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
               <div>
-                <div id="qtViewTitle" style="font-size:18px; font-weight:800;">✨ 큐티</div>
+                <div id="qtViewTitle" style="font-size:18px; font-weight:800;">✨ 오늘의 말씀</div>
                 <div style="font-size:12px; color:rgba(255,255,255,0.85); margin-top:3px;">오늘의 말씀을 묵상하고 하트와 댓글로 은혜를 나눠보세요</div>
               </div>
               <button id="qtWriteTopBtn" class="btn-amber hidden" type="button" style="border:none; border-radius:10px; padding:8px 12px; font-size:12px; font-weight:800; cursor:pointer; white-space:nowrap;" onclick="openNewQtModal()">+ 큐티 등록</button>
             </div>
-          </div>
-
-          <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input id="qtSearchInput" class="search-input" type="search" placeholder="큐티 제목, 성경 구절, 본문 검색" oninput="onQtSearchInput(this.value)" />
-            <button id="qtSearchClear" class="search-clear hidden" type="button" onclick="clearQtSearch()">✕</button>
           </div>
 
           <div id="qtListContainer"></div>
@@ -1496,15 +1559,11 @@
         <label class="form-label">묵상 가이드 · 나눔 질문</label>
         <textarea id="qtGuideInput" class="form-textarea" placeholder="청년들과 함께 나누고 싶은 묵상 포인트나 적용 질문을 적어주세요."></textarea>
       </div>
-            <label class="checkbox-row" style="margin-bottom:8px;">
-        <input type="checkbox" id="qtFeatureHomeInput" checked />
-        <span>메인 홈 [하루 큐티] 칸에 이 말씀으로 바로 띄우기</span>
-      </label>
       <label class="checkbox-row" style="margin-bottom:14px;">
         <input type="checkbox" id="qtNotifyInput" checked />
-        <span>등록 시 회원들에게 새 큐티 알림 띄우기</span>
+        <span>등록 시 회원들에게 새 말씀 알림 띄우기</span>
       </label>
-      <button id="saveQtBtn" class="btn-full btn-dark" type="button" onclick="handleSaveQt()">큐티 저장하고 게시하기</button>
+      <button id="saveQtBtn" class="btn-full btn-dark" type="button" onclick="requestSaveQt()">저장하고 게시하기</button>
     </div>
   </div>
 
@@ -1543,8 +1602,8 @@
         <input id="lblBibleInput" class="form-input" maxlength="10" placeholder="성경" />
       </div>
       <div class="form-group">
-        <label class="form-label">3번 칸 (큐티 · 기본: 큐티)</label>
-        <input id="lblQtInput" class="form-input" maxlength="10" placeholder="큐티" />
+        <label class="form-label">3번 칸 (말씀 · 기본: 오늘의 말씀)</label>
+        <input id="lblQtInput" class="form-input" maxlength="10" placeholder="오늘의 말씀" />
       </div>
       <div class="form-group">
         <label class="form-label">4번 칸 (회칙 · 기본: 회칙)</label>
@@ -1572,6 +1631,22 @@
       <div style="display:flex; gap:8px; margin-top:10px;">
         <button class="btn-outline" type="button" onclick="resetTabLabelsDefaults()">기본값 복원</button>
         <button id="saveTabLabelsBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveTabLabels()">칸 이름 저장하기</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 관리자: 메인 화면에 바로 띄울지 1차 확인 모달 -->
+  <div id="homePublishConfirmModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 class="modal-title">📌 메인 화면에 띄우시겠습니까?</h3>
+        <button class="close-btn" data-close="homePublishConfirmModal">✕</button>
+      </div>
+      <div id="homePublishConfirmDesc" class="publish-confirm-box"></div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button id="confirmPublishYesBtn" class="btn-full btn-blue" type="button" onclick="executePendingPublish(true)">✅ 네, 메인 화면에 바로 띄우기</button>
+        <button id="confirmPublishNoBtn" class="btn-outline" type="button" style="width:100%; padding:12px;" onclick="executePendingPublish(false)">목록에만 저장 (메인 화면엔 안 띄움)</button>
       </div>
     </div>
   </div>
@@ -1692,10 +1767,7 @@
         <label class="form-label">내용</label>
         <textarea id="noticeBodyInput" class="form-textarea" placeholder="일시, 장소, 준비물 등을 적어주세요."></textarea>
       </div>
-      <label class="checkbox-row" style="margin-bottom:8px;">
-        <input type="checkbox" id="noticePinInput" checked />
-        <span>메인 홈 상단 고정 공지 배너에 바로 표시하기</span>
-      </label>
+
       <label class="checkbox-row" style="margin-bottom:16px;">
         <input type="checkbox" id="noticeNotifyInput" checked />
         <span>게시 시 회원들에게 알림 띄우기</span>
@@ -1717,7 +1789,7 @@
         <select id="blockTypeSelect" class="form-select" onchange="onBlockTypeChange()">
           <option value="custom_ad">광고 · 홍보 배너 칸</option>
           <option value="hero_notice">상단 메인 고정 공지 배너</option>
-          <option value="today_qt">하루 큐티 (일일 랜덤/관리자 말씀) 칸</option>
+          <option value="today_qt">오늘의 말씀 (일일 자동/목회자·관리자 큐티) 칸</option>
           <option value="newcomer_card">새신자 소식 · 환영 안내 칸</option>
           <option value="leader_card">리더·교역자 전용 소식 칸</option>
           <option value="notice_list">공지 · 광고 · 소식 목록</option>
@@ -1805,7 +1877,7 @@
     const FieldValue = firebase.firestore.FieldValue;
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 11;
+    const CURRENT_SCHEMA_VERSION = 12;
 
     // 매일 자정(KST) 자동 변경되는 일일 큐티 성경말씀 풀 (60편)
     const DAILY_QT_POOL = [
@@ -1879,7 +1951,7 @@
     const DEFAULT_TAB_LABELS = {
       home: '메인 홈',
       bible: '성경',
-      qt: '큐티',
+      qt: '오늘의 말씀',
       bylaws: '회칙',
       manage: '관리 센터',
       manageContent: '화면·공지 관리',
@@ -2154,14 +2226,59 @@
     ];
 
     // 4. 기본 역할 7종 · 기본 화면 블록
+    // 앞으로 업데이트로 새 기능 권한을 여기에 추가하면 최고 관리자·기존 관리자 역할에 자동 부여되고,
+    // 역할·권한 설정 화면에도 자동으로 체크박스가 생성되어 다른 역할에 자유롭게 부여할 수 있습니다.
     const PERMISSION_DEFS = [
-      { key: 'canViewHome', label: '공지·광고 열람 (기본)' },
-      { key: 'canViewNewcomer', label: '새신자 환영 안내 카드 보기' },
-      { key: 'canViewLeaderBoard', label: '임원·리더 전용 전달사항 보기' },
-      { key: 'canManageNotices', label: '공지·광고 작성, 수정, 삭제 및 순서 변경' },
-      { key: 'canEditLayout', label: '앱 메인 화면 배너·광고 위치 편집 및 추가/삭제' },
-      { key: 'canManageMembers', label: '회원 가입 승인, 역할 부여 및 역할 생성/수정/삭제' }
+      { key: 'canViewHome', label: '공지·광고·오늘의 말씀 열람 (기본)', defaultAll: true, autoGrantToAdmins: true },
+      { key: 'canViewNewcomer', label: '새신자 소식·환영 안내 카드 보기', autoGrantToAdmins: true },
+      { key: 'canViewLeaderBoard', label: '임원·리더 전용 소식 보기', autoGrantToAdmins: true },
+      { key: 'canManageNotices', label: '공지·광고 작성, 수정, 삭제 및 순서 변경', autoGrantToAdmins: true },
+      { key: 'canManageQt', label: '오늘의 말씀(큐티) 작성, 수정, 삭제 및 메인 표시 관리', autoGrantToAdmins: true },
+      { key: 'canEditLayout', label: '앱 메인 화면 배너·칸 편집, 추가/삭제 및 칸 이름 변경', autoGrantToAdmins: true },
+      { key: 'canManageMembers', label: '회원 가입 승인, 역할 부여 및 역할·권한 설정', autoGrantToAdmins: false }
     ];
+
+    function buildAllPermsTrue() {
+      const obj = {};
+      PERMISSION_DEFS.forEach(p => { obj[p.key] = true; });
+      return obj;
+    }
+
+    function isAdminTierRole(role) {
+      if (!role) return false;
+      const adminIds = ['role_pastor', 'role_director', 'role_president'];
+      if (adminIds.includes(role.id)) return true;
+      return !!(role.perms && role.perms.canManageMembers);
+    }
+
+    function normalizeRolePermissions(roleList) {
+      let changed = false;
+      const next = (Array.isArray(roleList) ? roleList : []).map(r => {
+        const perms = { ...(r.perms || {}) };
+        if ('canViewCheckStatus' in perms) {
+          delete perms.canViewCheckStatus;
+          changed = true;
+        }
+        const isAdminRole = isAdminTierRole(r);
+        PERMISSION_DEFS.forEach(p => {
+          if (perms[p.key] === undefined) {
+            if (p.defaultAll) {
+              perms[p.key] = true;
+            } else if (isAdminRole && p.autoGrantToAdmins) {
+              perms[p.key] = true;
+            } else if (p.key === 'canManageQt' && perms.canManageNotices) {
+              // 기존 공지/큐티 작성 권한을 갖고 있던 교사·팀장 역할에도 자연스럽게 승계
+              perms[p.key] = true;
+            } else {
+              perms[p.key] = false;
+            }
+            changed = true;
+          }
+        });
+        return { ...r, perms };
+      });
+      return { items: next, changed };
+    }
 
     const ROLE_COLORS = ['#7C3AED', '#1E3A8A', '#059669', '#D97706', '#2563EB', '#475569', '#DB2777', '#DC2626', '#0D9488'];
     const BANNER_THEMES = [
@@ -2175,31 +2292,31 @@
     const DEFAULT_ROLES = [
       {
         id: 'role_pastor', name: '목사', color: '#7C3AED',
-        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: true, canManageMembers: true }
+        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canManageQt: true, canEditLayout: true, canManageMembers: true }
       },
       {
         id: 'role_director', name: '부장', color: '#1E3A8A',
-        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: false, canManageMembers: true }
+        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canManageQt: true, canEditLayout: true, canManageMembers: true }
       },
       {
         id: 'role_teacher', name: '교사', color: '#059669',
-        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: false, canManageMembers: false }
+        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canManageQt: true, canEditLayout: false, canManageMembers: false }
       },
       {
         id: 'role_president', name: '회장', color: '#D97706',
-        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: true, canManageMembers: true }
+        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canManageQt: true, canEditLayout: true, canManageMembers: true }
       },
       {
         id: 'role_leader', name: '팀장', color: '#2563EB',
-        perms: { canViewHome: true, canViewNewcomer: false, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: false, canManageMembers: false }
+        perms: { canViewHome: true, canViewNewcomer: false, canViewLeaderBoard: true, canManageNotices: true, canManageQt: true, canEditLayout: false, canManageMembers: false }
       },
       {
         id: 'role_youth', name: '청년', color: '#475569',
-        perms: { canViewHome: true, canViewNewcomer: false, canViewLeaderBoard: false, canManageNotices: false, canEditLayout: false, canManageMembers: false }
+        perms: { canViewHome: true, canViewNewcomer: false, canViewLeaderBoard: false, canManageNotices: false, canManageQt: false, canEditLayout: false, canManageMembers: false }
       },
       {
         id: 'role_newcomer', name: '새신자', color: '#DB2777',
-        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: false, canManageNotices: false, canEditLayout: false, canManageMembers: false }
+        perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: false, canManageNotices: false, canManageQt: false, canEditLayout: false, canManageMembers: false }
       }
     ];
 
@@ -2210,9 +2327,9 @@
         desc: '화면·공지 관리에서 올린 공지·광고가 상단 배너에 자동으로 표시됩니다.', theme: 'dark', audience: 'all'
       },
       {
-        id: 'blk_today_qt', type: 'today_qt', label: '하루 큐티 (일일 말씀)',
-        badge: '✨ 하루 큐티', title: '오늘의 일일 큐티',
-        desc: '매일 자정 새로운 성경말씀이 자동으로 뜨며, 관리자가 직접 큐티를 등록해 띄울 수도 있습니다.', theme: 'indigo', audience: 'all'
+        id: 'blk_today_qt', type: 'today_qt', label: '오늘의 말씀',
+        badge: '✨ 오늘의 말씀', title: '오늘의 말씀',
+        desc: '매일 새로운 성경말씀이 자동으로 올라오며, 목회자와 관리자가 큐티를 추가할 수 있습니다.', theme: 'indigo', audience: 'all'
       },
       {
         id: 'blk_newcomer', type: 'newcomer_card', label: '새신자 소식 · 환영 안내',
@@ -2238,14 +2355,11 @@
     function buildRolesByIdMap(roleList) {
       const map = {};
       roleList.forEach(r => {
-        map[r.id] = {
-          canViewHome: true,
-          canViewNewcomer: !!(r.perms && r.perms.canViewNewcomer),
-          canViewLeaderBoard: !!(r.perms && r.perms.canViewLeaderBoard),
-          canManageNotices: !!(r.perms && r.perms.canManageNotices),
-          canEditLayout: !!(r.perms && r.perms.canEditLayout),
-          canManageMembers: !!(r.perms && r.perms.canManageMembers)
-        };
+        const entry = { canViewHome: true };
+        PERMISSION_DEFS.forEach(p => {
+          entry[p.key] = p.defaultAll ? true : !!(r.perms && r.perms[p.key]);
+        });
+        map[r.id] = entry;
       });
       return map;
     }
@@ -2315,7 +2429,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=104" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=105" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -2338,8 +2452,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=104', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=104', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=105', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=105', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -2486,7 +2600,6 @@
     let lastSelfQtEditTs = 0;
     let qtFirstSnap = true;
     let knownQtIds = new Set();
-    let qtSearchQuery = '';
     let currentQtDetailId = null;
     let editingCommentId = null;
 
@@ -2574,7 +2687,7 @@
           name: '최고 관리자',
           role: {
             id: 'super_admin', name: '최고 관리자', color: '#D97706',
-            perms: { canViewHome: true, canViewNewcomer: true, canViewLeaderBoard: true, canManageNotices: true, canEditLayout: true, canManageMembers: true }
+            perms: buildAllPermsTrue()
           }
         };
       }
@@ -2590,8 +2703,17 @@
       return null;
     }
 
+    function hasUserPerm(user, key) {
+      if (!user) return false;
+      if (user.isSuperAdmin) return true;
+      if (key === 'canManageQt') {
+        return !!(user.role && user.role.perms && (user.role.perms.canManageQt || user.role.perms.canManageNotices));
+      }
+      return !!(user.role && user.role.perms && user.role.perms[key]);
+    }
+
     function hasAnyManagePerm(perms) {
-      return !!(perms.canEditLayout || perms.canManageNotices || perms.canManageMembers);
+      return !!(perms.canEditLayout || perms.canManageNotices || perms.canManageQt || perms.canManageMembers);
     }
 
     function getTabLabel(key) {
@@ -2602,7 +2724,7 @@
 
     function getAllowedManageSubTabs(perms) {
       const list = [];
-      if (perms.canEditLayout || perms.canManageNotices) {
+      if (perms.canEditLayout || perms.canManageNotices || perms.canManageQt) {
         list.push({ id: 'content', label: `🎨 ${getTabLabel('manageContent')}` });
       }
       if (perms.canManageMembers) list.push({ id: 'members', label: `👥 ${getTabLabel('manageMembers')}` });
@@ -2655,7 +2777,12 @@
     function handleDbError(err, actionLabel) {
       console.error(err);
       if (err && err.code === 'permission-denied') {
-        showToast('접근 권한이 없습니다. 관리자 설정을 확인해 주세요.');
+        const u = getCurrentUser();
+        if (u && u.isSuperAdmin) {
+          showToast('Firebase Firestore 규칙 게시가 필요합니다. (규칙을 최신 버전으로 게시해 주세요)');
+        } else {
+          showToast('접근 권한이 없습니다. 관리자에게 역할 권한을 확인해 주세요.');
+        }
       } else {
         showToast(`${actionLabel || '처리'} 중 오류가 발생했습니다. 네트워크를 확인해 주세요.`);
       }
@@ -2709,76 +2836,81 @@
         });
         await batch.commit();
       } else if ((appSnap.data().schemaVersion || 0) < CURRENT_SCHEMA_VERSION) {
-        const batch = db.batch();
+        // 1) 역할 권한 자동 동기화 (신규 업데이트 권한을 기존 관리자 역할에 자동 부여 + 모든 역할에 항목 추가)
         const rolesSnap = await db.collection('config').doc('roles').get();
-        let currentRoles = rolesSnap.exists && Array.isArray(rolesSnap.data().items) && rolesSnap.data().items.length > 0
+        const rawRoles = rolesSnap.exists && Array.isArray(rolesSnap.data().items) && rolesSnap.data().items.length > 0
           ? rolesSnap.data().items
           : DEFAULT_ROLES;
-        currentRoles = currentRoles.map(r => {
-          const cleanPerms = { ...(r.perms || { canViewHome: true }) };
-          delete cleanPerms.canViewCheckStatus;
-          return { ...r, perms: cleanPerms };
-        });
-        batch.set(db.collection('config').doc('roles'), {
-          items: currentRoles,
-          byId: buildRolesByIdMap(currentRoles)
+        const normalizedRoles = normalizeRolePermissions(rawRoles).items;
+        await db.collection('config').doc('roles').set({
+          items: normalizedRoles,
+          byId: buildRolesByIdMap(normalizedRoles)
         });
 
+        // 2) 메인 화면 배치 정리 (비어 있으면 기본 칸 자동 복원, 오늘의 말씀 칸 자동 보강)
         const layoutSnap = await db.collection('config').doc('layout').get();
-        if (layoutSnap.exists && Array.isArray(layoutSnap.data().blocks)) {
-          let cleanedBlocks = layoutSnap.data().blocks
+        let cleanedBlocks = [];
+        if (layoutSnap.exists && Array.isArray(layoutSnap.data().blocks) && layoutSnap.data().blocks.length > 0) {
+          cleanedBlocks = layoutSnap.data().blocks
             .filter(b => b.type !== 'quick_check')
             .map(b => {
               const copy = { ...b };
               delete copy.visible;
-              if (!copy.audience) {
-                copy.audience = copy.type === 'leader_card' ? 'leader' : 'all';
+              if (!copy.audience) copy.audience = copy.type === 'leader_card' ? 'leader' : 'all';
+              if (copy.type === 'today_qt') {
+                copy.label = '오늘의 말씀';
+                copy.badge = '✨ 오늘의 말씀';
+                copy.title = '오늘의 말씀';
               }
               return copy;
             });
           if (!cleanedBlocks.some(b => b.type === 'today_qt')) {
             const heroIdx = cleanedBlocks.findIndex(b => b.type === 'hero_notice');
-            const qtBlock = {
+            cleanedBlocks.splice(heroIdx >= 0 ? heroIdx + 1 : 0, 0, {
               id: 'blk_today_qt',
               type: 'today_qt',
-              label: '하루 큐티 (일일 말씀)',
-              badge: '✨ 하루 큐티',
-              title: '오늘의 일일 큐티',
-              desc: '매일 자정 새로운 성경말씀이 자동으로 뜨며, 관리자가 직접 큐티를 등록해 띄울 수도 있습니다.',
+              label: '오늘의 말씀',
+              badge: '✨ 오늘의 말씀',
+              title: '오늘의 말씀',
+              desc: '매일 새로운 성경말씀이 자동으로 올라오며, 목회자와 관리자가 큐티를 추가할 수 있습니다.',
               theme: 'indigo',
               audience: 'all'
-            };
-            cleanedBlocks.splice(heroIdx >= 0 ? heroIdx + 1 : 0, 0, qtBlock);
+            });
           }
-          batch.set(db.collection('config').doc('layout'), { blocks: cleanedBlocks }, { merge: true });
+        } else {
+          cleanedBlocks = structuredClone(DEFAULT_BLOCKS);
         }
+        await db.collection('config').doc('layout').set({ blocks: cleanedBlocks }, { merge: true });
 
-        const labelsSnap = await db.collection('config').doc('labels').get();
-        if (!labelsSnap.exists) {
-          batch.set(db.collection('config').doc('labels'), DEFAULT_TAB_LABELS);
-        }
+        // 3) 칸(탭) 이름 기본값 동기화 ('큐티' -> '오늘의 말씀')
+        try {
+          const labelsSnap = await db.collection('config').doc('labels').get();
+          if (!labelsSnap.exists) {
+            await db.collection('config').doc('labels').set(DEFAULT_TAB_LABELS);
+          } else if (labelsSnap.data().qt === '큐티') {
+            await db.collection('config').doc('labels').set({ qt: '오늘의 말씀' }, { merge: true });
+          }
+        } catch (lblErr) { console.warn('Labels migration skipped:', lblErr); }
 
-        const qtSnap = await db.collection('qtPosts').limit(1).get();
-        if (qtSnap.empty) {
-          const sampleQtId = String(Date.now());
-          batch.set(db.collection('qtPosts').doc(sampleQtId), {
-            id: sampleQtId,
-            date: formatToday(),
-            title: '여호와는 나의 목자시니',
-            passage: '시편 23:1-3',
-            scripture: '1 여호와는 나의 목자시니 내게 부족함이 없으리로다\n2 그가 나를 푸른 풀밭에 누이시며 쉴 만한 물 가로 인도하시는도다\n3 내 영혼을 소생시키시고 자기 이름을 위하여 의의 길로 인도하시는도다',
-            guide: '오늘 하루 나를 인도하시는 주님의 손길을 묵상하고, 감사한 제목 한 가지를 아래 댓글로 함께 나눠보세요!',
-            authorName: '최고 관리자',
-            createdTs: Date.now()
-          });
-        }
-
-        batch.set(appRef, {
+        await appRef.set({
           initialized: true,
           schemaVersion: CURRENT_SCHEMA_VERSION,
           adminPin: FieldValue.delete()
         }, { merge: true });
-        await batch.commit();
+      } else {
+        // 스키마 버전이 같더라도 새 권한 키가 추가됐으면 자동으로 역할에 반영
+        try {
+          const rolesSnap = await db.collection('config').doc('roles').get();
+          if (rolesSnap.exists && Array.isArray(rolesSnap.data().items)) {
+            const res = normalizeRolePermissions(rolesSnap.data().items);
+            if (res.changed) {
+              await db.collection('config').doc('roles').set({
+                items: res.items,
+                byId: buildRolesByIdMap(res.items)
+              });
+            }
+          }
+        } catch {}
       }
     }
 
@@ -3534,12 +3666,8 @@
       const perms = user.role.perms;
       const container = document.getElementById('viewHome');
 
-      if (blocks.length === 0) {
-        container.innerHTML = '<div class="card" style="text-align:center;color:#64748B;">표시할 메인 화면 영역이 없습니다. 관리 센터 → 화면·배너 배치에서 추가해 주세요.</div>';
-        return;
-      }
-
       function canSeeBlock(b) {
+        if (b.hiddenOnHome) return false;
         if (user.isSuperAdmin) return true;
         const aud = b.audience || (b.type === 'leader_card' ? 'leader' : 'all');
         if (aud === 'leader') return !!perms.canViewLeaderBoard;
@@ -3547,10 +3675,17 @@
         return true;
       }
 
-      const canManageQt = !!(user.isSuperAdmin || perms.canManageNotices);
+      const canManageQt = hasUserPerm(user, 'canManageQt');
+      const visibleBlocks = blocks.filter(canSeeBlock);
 
-      container.innerHTML = blocks.map(b => {
-        if (!canSeeBlock(b)) return '';
+      // 배치된 칸이 비어 있어도 빈 화면이 되지 않도록 기본 구성(공지 배너 + 오늘의 말씀 + 공지 목록)으로 안전 표시
+      const renderTargets = visibleBlocks.length > 0 ? visibleBlocks : [
+        { id: 'fallback_hero', type: 'hero_notice', badge: '📌 중요 공지', theme: 'dark', audience: 'all' },
+        { id: 'fallback_qt', type: 'today_qt', badge: '✨ 오늘의 말씀', theme: 'indigo', audience: 'all' },
+        { id: 'fallback_notices', type: 'notice_list', title: '📢 공지 · 광고 · 소식', theme: 'dark', audience: 'all' }
+      ];
+
+      container.innerHTML = renderTargets.map(b => {
 
         if (b.type === 'hero_notice') {
           const pinned = notices.find(n => n.pinned) || notices[0];
@@ -3611,8 +3746,8 @@
               <div class="home-qt-card">
                 <div class="home-qt-head" onclick="openQtDetail('${daily.id}')" style="cursor:pointer;">
                   <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                    <span class="home-qt-badge">${escapeHtml(b.badge || ('✨ 하루 ' + getTabLabel('qt')))}</span>
-                    <span class="tag ${daily.isAuto ? 'slate' : 'warm'}">${daily.isAuto ? '🎲 매일 랜덤 말씀' : '✍️ 관리자 큐티'}</span>
+                    <span class="home-qt-badge">✨ 오늘의 말씀</span>
+                    ${!daily.isAuto ? '<span class="tag warm">✍️ 목회자·관리자 큐티</span>' : ''}
                   </div>
                   <span class="card-date">${escapeHtml(daily.date)}</span>
                 </div>
@@ -3639,14 +3774,13 @@
 
                 <div class="card-footer">
                   <button class="btn-sm primary" type="button" onclick="openQtDetail('${daily.id}')">💬 묵상 댓글 ${cmts.length}개 · 참여하기</button>
-                  <button class="btn-sm" type="button" onclick="switchMainTab('qt')">전체 큐티 보기 ▸</button>
+                  <button class="btn-sm" type="button" onclick="switchMainTab('qt')">말씀 전체 보기 ▸</button>
                 </div>
 
                 ${canManageQt ? `
                   <div class="home-qt-admin-bar">
-                    <button class="btn-sm" type="button" onclick="rerollDailyRandomQt()">🎲 오늘 말씀 새로 뽑기</button>
-                    <button class="btn-sm primary" type="button" onclick="openNewQtModal()">✍️ 직접 큐티 띄우기</button>
-                    ${!daily.isAuto ? `<button class="btn-sm warn" type="button" onclick="switchBackToAutoDailyQt()">🔄 랜덤 말씀으로 복귀</button>` : ''}
+                    <button class="btn-sm primary" type="button" onclick="openNewQtModal()">✍️ 목회자·관리자 큐티 추가</button>
+                    ${!daily.isAuto ? `<button class="btn-sm warn" type="button" onclick="switchBackToAutoDailyQt()">🔄 오늘의 자동 말씀으로 복귀</button>` : ''}
                   </div>
                 ` : ''}
               </div>
@@ -3734,24 +3868,24 @@
       if (user) renderManageView(user);
     };
 
-    // (A+B 통합) 화면·배너 배치 + 공지·광고 관리 + 칸 이름 수정
+    // (A+B 통합) 화면·배너 배치 + 공지·광고 관리 + 오늘의 말씀 관리 + 칸 이름 수정
     function renderManageContent(el, user) {
-      const perms = user.role.perms;
-      const canLayout = !!(user.isSuperAdmin || perms.canEditLayout);
-      const canNotices = !!(user.isSuperAdmin || perms.canManageNotices);
+      const canLayout = hasUserPerm(user, 'canEditLayout');
+      const canNotices = hasUserPerm(user, 'canManageNotices');
+      const canQt = hasUserPerm(user, 'canManageQt');
 
       el.innerHTML = `
         <div class="stats-grid-3">
           <div class="stat-box" onclick="switchMainTab('home')">
-            <div class="stat-num">${blocks.length}</div>
-            <div class="stat-label">배치 영역 · 보기</div>
+            <div class="stat-num">${blocks.filter(b => !b.hiddenOnHome).length}</div>
+            <div class="stat-label">메인 표시 칸 · 보기</div>
           </div>
           <div class="stat-box">
             <div class="stat-num">${notices.length}</div>
             <div class="stat-label">공지 · 광고</div>
           </div>
           <div class="stat-box" onclick="switchMainTab('qt')">
-            <div class="stat-num">${qtPosts.length}</div>
+            <div class="stat-num">${qtPosts.length + 1}</div>
             <div class="stat-label">${escapeHtml(getTabLabel('qt'))} · 이동</div>
           </div>
         </div>
@@ -3770,16 +3904,25 @@
 
         ${canLayout ? `
           <div class="section-head" style="margin-top:14px;">
-            <h2 class="section-title">🎨 메인 화면 배너·광고 배치</h2>
-            <button class="btn-admin" onclick="openAddBlockModal()">+ 새 배너·영역</button>
+            <h2 class="section-title">🎨 메인 화면 배너·칸 배치</h2>
+            <button class="btn-admin" onclick="openAddBlockModal()">+ 새 배너·칸</button>
           </div>
           ${blocks.length === 0
-            ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">배치된 영역이 없습니다. 상단 버튼으로 추가해 주세요.</div>'
+            ? `<div class="card" style="text-align:center;color:#64748B;font-size:13px;">
+                 <div>배치된 영역이 없습니다.</div>
+                 <div style="margin-top:10px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+                   <button class="btn-sm primary" type="button" onclick="restoreDefaultLayoutBlocks()">✨ 기본 메인 칸 자동 채우기</button>
+                   <button class="btn-sm" type="button" onclick="openAddBlockModal()">+ 직접 칸 추가</button>
+                 </div>
+               </div>`
             : blocks.map((b, idx) => `
-                <div class="card">
+                <div class="card" style="${b.hiddenOnHome ? 'opacity:0.72; background:#F8FAFC;' : ''}">
                   <div class="layout-item-head">
                     <div style="min-width:0;">
-                      <strong style="font-size:14px;">${idx + 1}. ${escapeHtml(b.label)}</strong>
+                      <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                        <strong style="font-size:14px;">${idx + 1}. ${escapeHtml(b.label)}</strong>
+                        ${b.hiddenOnHome ? '<span class="tag slate">숨김</span>' : '<span class="tag green">메인 표시중</span>'}
+                      </div>
                       ${b.title ? `<div style="font-size:12px; color:#64748B; margin-top:4px;">${escapeHtml(b.title)}</div>` : ''}
                     </div>
                     <div class="order-btns">
@@ -3787,7 +3930,8 @@
                       <button class="order-btn" onclick="moveBlock(${idx}, 1)" ${idx === blocks.length - 1 ? 'disabled' : ''}>▼</button>
                     </div>
                   </div>
-                  <div class="card-footer" style="justify-content:flex-end;">
+                  <div class="card-footer">
+                    <button class="btn-sm ${b.hiddenOnHome ? 'approve' : ''}" onclick="toggleBlockHomeVisibility('${b.id}')">${b.hiddenOnHome ? '📌 메인에 띄우기' : '숨기기'}</button>
                     <div style="display:flex; gap:6px;">
                       <button class="btn-sm" onclick="openEditBlockModal('${b.id}')">내용 수정</button>
                       <button class="btn-sm danger" onclick="deleteBlock('${b.id}')">삭제</button>
@@ -3802,10 +3946,7 @@
         ${canNotices ? `
           <div class="section-head">
             <h2 class="section-title">📝 공지·광고 목록 및 순서</h2>
-            <div style="display:flex; gap:6px;">
-              <button class="btn-sm primary" style="padding:8px 10px;" onclick="openNewQtModal()">+ ${escapeHtml(getTabLabel('qt'))}</button>
-              <button class="btn-admin" onclick="openNewNoticeModal()">+ 새 공지</button>
-            </div>
+            <button class="btn-admin" onclick="openNewNoticeModal()">+ 새 공지·광고</button>
           </div>
           ${notices.length === 0
             ? '<div class="card" style="text-align:center;color:#64748B;">등록된 공지가 없습니다.</div>'
@@ -3814,7 +3955,7 @@
                   <div class="card-top">
                     <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
                       <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
-                      ${n.pinned ? '<span class="tag green">상단배너</span>' : ''}
+                      ${n.pinned ? '<span class="tag green">메인 배너 표시중</span>' : ''}
                     </div>
                     <div class="order-btns">
                       <button class="order-btn" onclick="moveNotice(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
@@ -3826,49 +3967,48 @@
                   <div class="card-footer">
                     <span class="card-date">${escapeHtml(n.date)}</span>
                     <div style="display:flex;gap:6px;">
+                      ${!n.pinned ? `<button class="btn-sm primary" onclick="pinNoticeToHomeBanner('${n.id}')">📌 메인 띄우기</button>` : ''}
                       <button class="btn-sm" onclick="openEditNotice('${n.id}')">내용 수정</button>
                       <button class="btn-sm danger" onclick="deleteNotice('${n.id}')">삭제</button>
                     </div>
                   </div>
                 </div>
               `).join('')}
+        ` : ''}
 
-          <div class="manage-divider"></div>
+        ${(canLayout || canNotices) && canQt ? '<div class="manage-divider"></div>' : ''}
 
+        ${canQt ? `
           <div class="section-head">
-            <h2 class="section-title">✨ 하루 큐티 · 말씀 관리</h2>
-            <div style="display:flex; gap:6px;">
-              <button class="btn-sm" style="padding:8px 10px;" onclick="rerollDailyRandomQt()">🎲 말씀 새로 뽑기</button>
-              <button class="btn-admin" onclick="openNewQtModal()">+ 큐티 등록</button>
-            </div>
+            <h2 class="section-title">✨ 오늘의 말씀 · 큐티 관리</h2>
+            <button class="btn-admin" onclick="openNewQtModal()">+ 큐티 추가</button>
           </div>
           ${(() => {
             const activeQt = getTodayActiveQt();
             return `
               <div class="card" style="border-color:#C7D2FE; background:#F5F7FF;">
                 <div class="card-top">
-                  <strong style="font-size:13.5px; color:#3730A3;">📌 현재 메인 홈 [하루 큐티] 표시 중</strong>
-                  <span class="tag ${activeQt.isAuto ? 'slate' : 'warm'}">${activeQt.isAuto ? '일일 자동 랜덤' : '관리자 직접 지정'}</span>
+                  <strong style="font-size:13.5px; color:#3730A3;">📌 현재 메인 홈 [오늘의 말씀] 표시 중</strong>
+                  <span class="tag ${activeQt.isAuto ? 'green' : 'warm'}">${activeQt.isAuto ? '매일 자동 말씀' : '목회자·관리자 큐티'}</span>
                 </div>
                 <div style="font-size:14.5px; font-weight:800; color:#0F172A; margin-bottom:3px;">${escapeHtml(activeQt.title)}</div>
                 <div style="font-size:12px; color:#475569; margin-bottom:10px;">📖 ${escapeHtml(activeQt.passage || '')} · ${escapeHtml(activeQt.date)}</div>
                 <div style="display:flex; gap:6px; flex-wrap:wrap;">
                   <button class="btn-sm primary" onclick="openQtDetail('${activeQt.id}')">💬 댓글·하트 보기</button>
-                  <button class="btn-sm" onclick="rerollDailyRandomQt()">🎲 다른 랜덤 말씀 뽑기</button>
-                  ${!activeQt.isAuto ? `<button class="btn-sm warn" onclick="switchBackToAutoDailyQt()">🔄 자동 랜덤으로 전환</button>` : ''}
+                  ${!activeQt.isAuto ? `<button class="btn-sm warn" onclick="switchBackToAutoDailyQt()">🔄 오늘의 자동 말씀으로 복귀</button>` : ''}
                 </div>
               </div>
             `;
           })()}
           ${qtPosts.length === 0
-            ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">관리자가 직접 작성한 큐티가 없습니다. (매일 자동 랜덤 성경말씀이 메인 홈에 표시됩니다.)</div>'
-            : qtPosts.slice(0, 6).map(q => {
-                const isFeatured = dailyQtConfig && dailyQtConfig.mode === 'custom' && dailyQtConfig.postId === q.id && dailyQtConfig.date === formatToday();
+            ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">목회자·관리자가 추가한 큐티가 없습니다.<br>(매일 자동 말씀 1편은 자동으로 올라갑니다.)</div>'
+            : qtPosts.slice(0, 8).map(q => {
+                const isFeatured = dailyQtConfig && dailyQtConfig.mode === 'custom' && dailyQtConfig.postId === q.id && dailyQtConfig.date === getKstDateParts().dot;
                 return `
                   <div class="card">
                     <div class="card-top">
                       <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                        <span class="qt-passage-pill">📖 ${escapeHtml(q.passage || '큐티')}</span>
+                        <span class="qt-passage-pill">📖 ${escapeHtml(q.passage || '오늘의 말씀')}</span>
                         ${isFeatured ? '<span class="tag green">메인홈 표시중</span>' : ''}
                       </div>
                       <span class="card-date">${escapeHtml(q.date || '')}</span>
@@ -3972,7 +4112,87 @@
       document.getElementById('blockModal').classList.add('open');
     };
 
-    document.getElementById('saveBlockBtn').addEventListener('click', async () => {
+    let pendingPublishAction = null;
+
+    function openHomePublishConfirm(descHtml, yesLabel, noLabel, actionFn) {
+      pendingPublishAction = actionFn;
+      document.getElementById('homePublishConfirmDesc').innerHTML = descHtml;
+      document.getElementById('confirmPublishYesBtn').textContent = yesLabel || '✅ 네, 메인 화면에 바로 띄우기';
+      document.getElementById('confirmPublishNoBtn').textContent = noLabel || '목록에만 저장 (메인 화면엔 안 띄움)';
+      document.getElementById('homePublishConfirmModal').classList.add('open');
+    }
+
+    window.executePendingPublish = async (showOnHome) => {
+      const fn = pendingPublishAction;
+      pendingPublishAction = null;
+      document.getElementById('homePublishConfirmModal').classList.remove('open');
+      if (typeof fn === 'function') await fn(showOnHome);
+    };
+
+    async function ensureHomeBlocksExistForTypes(requiredTypes) {
+      let changed = false;
+      const next = structuredClone(blocks);
+
+      requiredTypes.forEach(reqType => {
+        const existing = next.find(b => b.type === reqType);
+        if (existing) {
+          if (existing.hiddenOnHome) {
+            existing.hiddenOnHome = false;
+            changed = true;
+          }
+        } else {
+          const tpl = DEFAULT_BLOCKS.find(d => d.type === reqType);
+          if (tpl) {
+            const copy = structuredClone(tpl);
+            copy.hiddenOnHome = false;
+            if (reqType === 'hero_notice') next.unshift(copy);
+            else if (reqType === 'today_qt') {
+              const heroIdx = next.findIndex(b => b.type === 'hero_notice');
+              next.splice(heroIdx >= 0 ? heroIdx + 1 : 0, 0, copy);
+            } else {
+              next.push(copy);
+            }
+            changed = true;
+          }
+        }
+      });
+
+      if (changed) {
+        await db.collection('config').doc('layout').set({ blocks: next }, { merge: true });
+      }
+    }
+
+    window.restoreDefaultLayoutBlocks = async () => {
+      await saveBlocksToCloud(structuredClone(DEFAULT_BLOCKS), '기본 메인 화면 칸이 복원되었습니다!');
+    };
+
+    window.toggleBlockHomeVisibility = async (id) => {
+      const next = structuredClone(blocks);
+      const b = next.find(x => x.id === id);
+      if (!b) return;
+      b.hiddenOnHome = !b.hiddenOnHome;
+      const alertObj = !b.hiddenOnHome ? { title: `📌 ${b.label}`, body: b.title || '메인 화면에 새 칸이 표시되었습니다.' } : null;
+      await saveBlocksToCloud(next, b.hiddenOnHome ? `[${b.label}] 칸을 숨겼습니다.` : `[${b.label}] 칸을 메인 화면에 띄웠습니다!`, alertObj);
+    };
+
+    window.pinNoticeToHomeBanner = async (id) => {
+      const n = notices.find(x => String(x.id) === String(id));
+      if (!n) return;
+      try {
+        const batch = db.batch();
+        notices.forEach(item => {
+          if (item.pinned && String(item.id) !== String(id)) {
+            batch.update(db.collection('notices').doc(String(item.id)), { pinned: false });
+          }
+        });
+        batch.update(db.collection('notices').doc(String(id)), { pinned: true, alertTs: Date.now() });
+        await batch.commit();
+        await ensureHomeBlocksExistForTypes(['hero_notice', 'notice_list']);
+        showToast('메인 화면 상단 배너에 바로 띄웠습니다!');
+      } catch (err) { handleDbError(err, '배너 고정'); }
+    };
+
+    document.getElementById('saveBlockBtn').addEventListener('click', () => {
       const id = document.getElementById('editBlockId').value;
       const type = document.getElementById('blockTypeSelect').value;
       const label = document.getElementById('blockLabelInput').value.trim();
@@ -3982,42 +4202,48 @@
       const audience = document.getElementById('blockAudienceSelect').value || 'all';
       const notify = document.getElementById('blockNotifyInput').checked;
       if (!label) return showToast('관리용 블록 이름을 입력해 주세요.');
-
-      const next = structuredClone(blocks);
-      let msg = '';
-      if (id) {
-        const b = next.find(x => x.id === id);
-        if (b) {
-          b.label = label;
-          b.badge = badge;
-          b.title = title;
-          b.desc = desc;
-          b.theme = selectedBlockTheme;
-          b.audience = audience;
-        }
-        msg = '메인 홈 칸이 수정되었습니다!';
-      } else {
-        if (type !== 'hero_notice' && type !== 'notice_list' && type !== 'today_qt' && !title) {
-          return showToast('배너 제목을 입력해 주세요.');
-        }
-        next.unshift({
-          id: 'blk_' + Date.now(),
-          type,
-          label,
-          badge,
-          title: title || (type === 'notice_list' ? '📢 공지 · 광고 · 소식' : (type === 'today_qt' ? '오늘의 일일 큐티' : '')),
-          desc,
-          theme: selectedBlockTheme,
-          audience
-        });
-        msg = '새 칸이 메인 홈에 추가되었습니다!';
+      if (!id && type !== 'hero_notice' && type !== 'notice_list' && type !== 'today_qt' && !title) {
+        return showToast('배너 제목을 입력해 주세요.');
       }
-      const alertObj = notify ? {
-        title: `📌 ${label}`,
-        body: title || desc || '메인 홈 배너가 업데이트되었습니다.'
-      } : null;
-      await saveBlocksToCloud(next, msg, alertObj);
+
       document.getElementById('blockModal').classList.remove('open');
+      openHomePublishConfirm(
+        `<b>[${escapeHtml(label)}]</b> 칸을 메인 화면에 바로 띄우시겠습니까?<br><span style="font-size:12px; color:#475569;">띄우기를 누르면 메인 홈에 즉시 표시되고 알림이 전송됩니다.</span>`,
+        '✅ 네, 메인 화면에 바로 띄우기',
+        '숨김 상태로 저장 (나중에 띄우기)',
+        async (showOnHome) => {
+          const next = structuredClone(blocks);
+          if (id) {
+            const b = next.find(x => x.id === id);
+            if (b) {
+              b.label = label;
+              b.badge = badge;
+              b.title = title;
+              b.desc = desc;
+              b.theme = selectedBlockTheme;
+              b.audience = audience;
+              b.hiddenOnHome = !showOnHome;
+            }
+          } else {
+            next.unshift({
+              id: 'blk_' + Date.now(),
+              type,
+              label,
+              badge,
+              title: title || (type === 'notice_list' ? '📢 공지 · 광고 · 소식' : (type === 'today_qt' ? '오늘의 말씀' : '')),
+              desc,
+              theme: selectedBlockTheme,
+              audience,
+              hiddenOnHome: !showOnHome
+            });
+          }
+          const alertObj = (showOnHome && notify) ? {
+            title: `📌 ${label}`,
+            body: title || desc || '메인 홈 배너가 업데이트되었습니다.'
+          } : null;
+          await saveBlocksToCloud(next, showOnHome ? '메인 화면에 바로 띄웠습니다!' : '숨김 상태로 저장했습니다.', alertObj);
+        }
+      );
     });
 
 
@@ -4043,7 +4269,6 @@
       document.getElementById('noticeCategory').value = '공지';
       document.getElementById('noticeTitleInput').value = '';
       document.getElementById('noticeBodyInput').value = '';
-      document.getElementById('noticePinInput').checked = true;
       document.getElementById('noticeNotifyInput').checked = true;
       document.getElementById('noticeModal').classList.add('open');
     };
@@ -4056,56 +4281,63 @@
       document.getElementById('noticeCategory').value = n.category;
       document.getElementById('noticeTitleInput').value = n.title;
       document.getElementById('noticeBodyInput').value = n.body;
-      document.getElementById('noticePinInput').checked = !!n.pinned;
       document.getElementById('noticeNotifyInput').checked = true;
       document.getElementById('noticeModal').classList.add('open');
     };
 
-    document.getElementById('saveNoticeBtn').addEventListener('click', async () => {
+    document.getElementById('saveNoticeBtn').addEventListener('click', () => {
       const editId = document.getElementById('editNoticeId').value;
       const category = document.getElementById('noticeCategory').value;
       const title = document.getElementById('noticeTitleInput').value.trim();
       const body = document.getElementById('noticeBodyInput').value.trim();
-      const pinned = document.getElementById('noticePinInput').checked;
       const notify = document.getElementById('noticeNotifyInput').checked;
       if (!title || !body) return showToast('제목과 내용을 모두 입력해 주세요.');
 
-      const btn = document.getElementById('saveNoticeBtn');
-      btn.disabled = true;
-      try {
-        lastSelfNoticeEditTs = Date.now();
-        const alertTs = notify ? Date.now() : 0;
-        const batch = db.batch();
-        if (pinned) {
-          notices.forEach(n => {
-            if (n.pinned && String(n.id) !== String(editId)) {
-              batch.update(db.collection('notices').doc(String(n.id)), { pinned: false });
+      document.getElementById('noticeModal').classList.remove('open');
+      openHomePublishConfirm(
+        `<b>[${escapeHtml(category)}] ${escapeHtml(title)}</b><br>이 글을 메인 화면 상단 배너에 바로 띄우시겠습니까?`,
+        '✅ 네, 메인 화면에 바로 띄우기',
+        '공지 목록에만 저장',
+        async (showOnHome) => {
+          try {
+            lastSelfNoticeEditTs = Date.now();
+            const pinned = !!showOnHome;
+            const alertTs = (notify && showOnHome) ? Date.now() : 0;
+            const batch = db.batch();
+            if (pinned) {
+              notices.forEach(n => {
+                if (n.pinned && String(n.id) !== String(editId)) {
+                  batch.update(db.collection('notices').doc(String(n.id)), { pinned: false });
+                }
+              });
             }
-          });
-        }
 
-        if (editId) {
-          const updateData = { category, title, body, pinned };
-          if (notify) updateData.alertTs = alertTs;
-          batch.update(db.collection('notices').doc(String(editId)), updateData);
-          await batch.commit();
-          showToast(pinned ? '공지가 수정되어 메인 홈 배너에 반영되었습니다!' : '공지가 수정되었습니다!');
-        } else {
-          const newId = String(Date.now());
-          const minOrder = notices.length > 0 ? Math.min(...notices.map(n => Number(n.order || 0))) - 1 : 0;
-          batch.set(db.collection('notices').doc(newId), {
-            id: newId, category, title, body, date: formatToday(),
-            pinned, order: minOrder, alertTs
-          });
-          await batch.commit();
-          showToast(pinned ? '새 공지가 메인 홈 배너에 등록되었습니다!' : '새 공지가 등록되었습니다!');
+            if (editId) {
+              const updateData = { category, title, body, pinned };
+              if (alertTs) updateData.alertTs = alertTs;
+              batch.update(db.collection('notices').doc(String(editId)), updateData);
+              await batch.commit();
+            } else {
+              const newId = String(Date.now());
+              const minOrder = notices.length > 0 ? Math.min(...notices.map(n => Number(n.order || 0))) - 1 : 0;
+              batch.set(db.collection('notices').doc(newId), {
+                id: newId, category, title, body, date: formatToday(),
+                pinned, order: minOrder, alertTs
+              });
+              await batch.commit();
+            }
+
+            if (showOnHome) {
+              await ensureHomeBlocksExistForTypes(['hero_notice', 'notice_list']);
+              showToast('메인 화면 배너에 바로 띄웠습니다!');
+            } else {
+              showToast('공지 목록에 저장되었습니다.');
+            }
+          } catch (err) {
+            handleDbError(err, '공지 저장');
+          }
         }
-        document.getElementById('noticeModal').classList.remove('open');
-      } catch (err) {
-        handleDbError(err, '공지 저장');
-      } finally {
-        btn.disabled = false;
-      }
+      );
     });
 
     window.deleteNotice = async (id) => {
@@ -4923,7 +5155,7 @@
       const chapter = biblePos.chapter;
       const marks = loadBibleMarks();
       const user = getCurrentUser();
-      const canWriteQt = !!(user && (user.isSuperAdmin || (user.role.perms && user.role.perms.canManageNotices)));
+      const canWriteQt = hasUserPerm(user, 'canManageQt');
 
       const area = document.getElementById('bibleContentArea');
       area.innerHTML = `
@@ -5128,6 +5360,160 @@
       if (bibleCurrentVerses.length > 0) renderBibleVersesHtml();
     };
 
+    // 성경 빠른 검색 (책이름+장:절 바로 이동 + 책 필터 + 현재 장 & 주요 말씀 검색)
+    function parseBibleRefQuery(raw) {
+      const q = String(raw || '').trim();
+      if (!q) return null;
+      const sortedBooks = [...BIBLE_BOOKS].sort((a, b) => Math.max(b.name.length, b.abbr.length) - Math.max(a.name.length, a.abbr.length));
+      for (const b of sortedBooks) {
+        const candidates = [b.name, b.abbr].sort((a, c) => c.length - a.length);
+        for (const cand of candidates) {
+          if (q.startsWith(cand)) {
+            const rest = q.slice(cand.length).trim();
+            if (!rest) return { book: b, chapter: 1, verse: null, exactRef: false };
+            const m = rest.match(/^(\d{1,3})\s*(?:장|:|\s)\s*(\d{1,3})?\s*절?$/);
+            if (m) {
+              const ch = Math.max(1, Math.min(b.ch, Number(m[1])));
+              const vs = m[2] ? Math.max(1, Number(m[2])) : null;
+              return { book: b, chapter: ch, verse: vs, exactRef: true };
+            }
+            const mOnlyCh = rest.match(/^(\d{1,3})장?$/);
+            if (mOnlyCh) {
+              const ch = Math.max(1, Math.min(b.ch, Number(mOnlyCh[1])));
+              return { book: b, chapter: ch, verse: null, exactRef: true };
+            }
+          }
+        }
+      }
+      return null;
+    }
+
+    window.onBibleQuickSearchInput = (val) => {
+      const q = String(val || '').trim();
+      const clearBtn = document.getElementById('bibleQuickSearchClear');
+      const box = document.getElementById('bibleQuickSearchResults');
+      clearBtn.classList.toggle('hidden', !q);
+      if (!q) {
+        box.classList.add('hidden');
+        box.innerHTML = '';
+        return;
+      }
+
+      const parts = [];
+      // 1) 구절 바로 이동 매칭 (예: 시편 23:1, 요3:16, 창 1장)
+      const parsed = parseBibleRefQuery(q);
+      if (parsed && parsed.exactRef) {
+        const label = `${parsed.book.name} ${parsed.chapter}장${parsed.verse ? ' ' + parsed.verse + '절' : ''}`;
+        parts.push(`
+          <button class="bible-quick-jump-btn" type="button" onclick="jumpToBibleRef(${parsed.book.id}, ${parsed.chapter}, ${parsed.verse || 0})">
+            <span>📖 ${escapeHtml(label)} 바로 이동</span>
+            <span>이동 ▸</span>
+          </button>
+        `);
+      }
+
+      // 2) 성경 권 이름 빠른 선택 (최대 8권)
+      const qLower = q.toLowerCase().replace(/\s+/g, '');
+      const matchedBooks = BIBLE_BOOKS.filter(b =>
+        b.name.toLowerCase().includes(qLower) || b.abbr.toLowerCase().includes(qLower)
+      ).slice(0, 8);
+      if (matchedBooks.length > 0) {
+        parts.push(`
+          <div style="font-size:11.5px; font-weight:700; color:#64748B; margin-bottom:5px;">성경 권 바로 이동</div>
+          <div class="bible-quick-chips">
+            ${matchedBooks.map(b => `
+              <button class="bible-quick-chip" type="button" onclick="jumpToBibleRef(${b.id}, 1, 0)">${escapeHtml(b.name)} (${b.ch}장)</button>
+            `).join('')}
+          </div>
+        `);
+      }
+
+      // 3) 현재 펼쳐진 장 본문 내 키워드 검색
+      const curBook = getBibleBook(biblePos.bookId);
+      const curHits = bibleCurrentVerses.filter(v => v.text.toLowerCase().includes(q.toLowerCase())).slice(0, 5);
+      if (curHits.length > 0) {
+        parts.push(`
+          <div style="font-size:11.5px; font-weight:700; color:#64748B; margin:6px 0 4px;">현재 장(${escapeHtml(curBook.name)} ${biblePos.chapter}장) 내 검색</div>
+          ${curHits.map(v => `
+            <div class="bible-quick-verse-hit" onclick="focusBibleVerseInCurrent(${v.verse})">
+              <strong style="color:#1E40AF;">${v.verse}절</strong> ${highlightText(v.text, q)}
+            </div>
+          `).join('')}
+        `);
+      }
+
+      // 4) 대표 말씀(60편) 키워드 검색
+      const poolHits = DAILY_QT_POOL.filter(item =>
+        `${item.title} ${item.passage} ${item.scripture}`.toLowerCase().includes(q.toLowerCase())
+      ).slice(0, 4);
+      if (poolHits.length > 0) {
+        parts.push(`
+          <div style="font-size:11.5px; font-weight:700; color:#64748B; margin:6px 0 4px;">주요 성경 말씀 검색</div>
+          ${poolHits.map(item => {
+            const ref = parseBibleRefQuery(item.passage.split('-')[0]);
+            const clickAttr = ref ? `onclick="jumpToBibleRef(${ref.book.id}, ${ref.chapter}, ${ref.verse || 0})"` : '';
+            return `
+              <div class="bible-quick-verse-hit" ${clickAttr}>
+                <strong style="color:#4F46E5;">${escapeHtml(item.passage)}</strong> · ${highlightText(item.title, q)}
+              </div>
+            `;
+          }).join('')}
+        `);
+      }
+
+      if (parts.length === 0) {
+        parts.push(`<div style="text-align:center; padding:8px 4px; font-size:12.5px; color:#64748B;">일치하는 성경이나 구절이 없습니다.<br>예: <b>시편 23:1</b>, <b>요 3:16</b>, <b>창세기</b>처럼 입력해 보세요.</div>`);
+      }
+
+      box.innerHTML = parts.join('');
+      box.classList.remove('hidden');
+    };
+
+    window.executeBibleQuickJump = () => {
+      const q = (document.getElementById('bibleQuickSearchInput').value || '').trim();
+      if (!q) return;
+      const parsed = parseBibleRefQuery(q);
+      if (parsed) {
+        jumpToBibleRef(parsed.book.id, parsed.chapter, parsed.verse || 0);
+        return;
+      }
+      const firstBook = BIBLE_BOOKS.find(b => b.name.includes(q) || b.abbr === q);
+      if (firstBook) jumpToBibleRef(firstBook.id, 1, 0);
+    };
+
+    window.clearBibleQuickSearch = () => {
+      const input = document.getElementById('bibleQuickSearchInput');
+      if (input) { input.value = ''; input.focus(); }
+      document.getElementById('bibleQuickSearchClear').classList.add('hidden');
+      document.getElementById('bibleQuickSearchResults').classList.add('hidden');
+      document.getElementById('bibleQuickSearchResults').innerHTML = '';
+    };
+
+    window.jumpToBibleRef = async (bookId, chapter, verse) => {
+      biblePos = { bookId: Number(bookId), chapter: Number(chapter || 1) };
+      bibleSelectedVerse = verse ? Number(verse) : null;
+      document.getElementById('bibleQuickSearchInput').value = '';
+      document.getElementById('bibleQuickSearchClear').classList.add('hidden');
+      document.getElementById('bibleQuickSearchResults').classList.add('hidden');
+      await renderBibleView();
+      if (verse) {
+        setTimeout(() => {
+          const selEl = document.querySelector('#bibleContentArea .bible-verse-row.selected');
+          if (selEl) selEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 120);
+      }
+    };
+
+    window.focusBibleVerseInCurrent = (vNum) => {
+      bibleSelectedVerse = Number(vNum);
+      document.getElementById('bibleQuickSearchResults').classList.add('hidden');
+      renderBibleVersesHtml();
+      setTimeout(() => {
+        const selEl = document.querySelector('#bibleContentArea .bible-verse-row.selected');
+        if (selEl) selEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 60);
+    };
+
     // ==================== 15. 큐티(QT) · 인스타/카톡 좋아요·하트 · 댓글 ====================
     function formatShortTime(ts) {
       if (!ts) return '';
@@ -5187,15 +5573,11 @@
       return { y, m, d, dot: `${y}.${m}.${d}`, compact: `${y}${m}${d}`, dayNumber };
     }
 
-    function getAutoDailyQtForToday(offsetOverride = null) {
+    function getAutoDailyQtForToday() {
       const { dot, compact, dayNumber } = getKstDateParts();
-      const cfgOffset = (dailyQtConfig && dailyQtConfig.date === dot && typeof dailyQtConfig.offset === 'number')
-        ? dailyQtConfig.offset
-        : 0;
-      const offset = offsetOverride !== null ? offsetOverride : cfgOffset;
-      // 60편 전체를 하루마다 겹치지 않게 순환하는 결정적 의사난수 인덱스 (60과 서로소인 17 사용)
+      // 60편 말씀을 매일 자정(KST)마다 겹치지 않게 자동 업로드
       const n = DAILY_QT_POOL.length;
-      const idx = ((dayNumber * 17 + 7 + offset) % n + n) % n;
+      const idx = ((dayNumber * 17 + 7) % n + n) % n;
       const item = DAILY_QT_POOL[idx];
       return {
         id: `auto_qt_${compact}_${idx}`,
@@ -5206,30 +5588,25 @@
         passage: item.passage,
         scripture: item.scripture,
         guide: item.guide,
-        authorName: '일일 랜덤 큐티'
+        authorName: '오늘의 말씀'
       };
     }
 
     function getTodayActiveQt() {
       const { dot } = getKstDateParts();
-      // 1) 관리자가 오늘 날짜로 명시적으로 메인홈에 띄운 커스텀 큐티
+      // 1) 목회자·관리자가 오늘 날짜로 메인 화면에 띄우도록 지정한 큐티
       if (dailyQtConfig && dailyQtConfig.mode === 'custom' && dailyQtConfig.date === dot && dailyQtConfig.postId) {
         const found = qtPosts.find(p => String(p.id) === String(dailyQtConfig.postId));
         if (found) return { ...found, isAuto: false };
       }
-      // 2) 관리자가 자동 모드로 명시적으로 되돌린 경우가 아니라면, 오늘 날짜로 작성된 최신 관리자 큐티 우선
-      if (!(dailyQtConfig && dailyQtConfig.mode === 'auto' && dailyQtConfig.date === dot)) {
-        const todayAdminPost = qtPosts.find(p => String(p.date || '').trim() === dot);
-        if (todayAdminPost) return { ...todayAdminPost, isAuto: false };
-      }
-      // 3) 기본: 매일 자정 자동 변경되는 랜덤 일일 성경말씀 큐티
+      // 2) 기본: 매일 자정 자동으로 올라오는 오늘의 말씀 1편
       return getAutoDailyQtForToday();
     }
 
     function findQtById(postId) {
       const pid = String(postId || '');
-      const active = getTodayActiveQt();
-      if (active && active.id === pid) return active;
+      const autoToday = getAutoDailyQtForToday();
+      if (autoToday && autoToday.id === pid) return autoToday;
       const custom = qtPosts.find(p => String(p.id) === pid);
       if (custom) return { ...custom, isAuto: false };
       const m = pid.match(/^auto_qt_(\d{4})(\d{2})(\d{2})_(\d+)$/);
@@ -5246,63 +5623,33 @@
             passage: item.passage,
             scripture: item.scripture,
             guide: item.guide,
-            authorName: '일일 랜덤 큐티'
+            authorName: '오늘의 말씀'
           };
         }
       }
       return null;
     }
 
-    window.rerollDailyRandomQt = async () => {
-      const user = getCurrentUser();
-      if (!user || !(user.isSuperAdmin || (user.role.perms && user.role.perms.canManageNotices))) {
-        return showToast('큐티 관리 권한이 필요합니다.');
-      }
-      const { dot } = getKstDateParts();
-      const prevOffset = (dailyQtConfig && dailyQtConfig.date === dot && typeof dailyQtConfig.offset === 'number')
-        ? dailyQtConfig.offset
-        : 0;
-      // 1~19 사이 랜덤 간격으로 새 말씀 선택
-      const step = 1 + Math.floor(Math.random() * 19);
-      const nextOffset = (prevOffset + step) % DAILY_QT_POOL.length;
-      try {
-        await db.collection('config').doc('dailyQt').set({
-          mode: 'auto',
-          date: dot,
-          offset: nextOffset,
-          postId: '',
-          updatedAt: Date.now()
-        });
-        showToast('오늘의 랜덤 성경말씀을 새로 뽑았습니다!');
-      } catch (err) {
-        handleDbError(err, '랜덤 말씀 변경');
-      }
-    };
-
     window.switchBackToAutoDailyQt = async () => {
       const user = getCurrentUser();
-      if (!user || !(user.isSuperAdmin || (user.role.perms && user.role.perms.canManageNotices))) return;
+      if (!hasUserPerm(user, 'canManageQt')) return;
       const { dot } = getKstDateParts();
-      const prevOffset = (dailyQtConfig && dailyQtConfig.date === dot && typeof dailyQtConfig.offset === 'number')
-        ? dailyQtConfig.offset
-        : 0;
       try {
         await db.collection('config').doc('dailyQt').set({
           mode: 'auto',
           date: dot,
-          offset: prevOffset,
           postId: '',
           updatedAt: Date.now()
         });
-        showToast('메인 홈 하루 큐티를 일일 랜덤 말씀으로 전환했습니다.');
+        showToast('메인 홈을 오늘의 자동 말씀으로 되돌렸습니다.');
       } catch (err) {
-        handleDbError(err, '랜덤 말씀 전환');
+        handleDbError(err, '말씀 전환');
       }
     };
 
     window.featureQtOnHome = async (postId) => {
       const user = getCurrentUser();
-      if (!user || !(user.isSuperAdmin || (user.role.perms && user.role.perms.canManageNotices))) return;
+      if (!hasUserPerm(user, 'canManageQt')) return;
       const { dot } = getKstDateParts();
       try {
         await db.collection('config').doc('dailyQt').set({
@@ -5311,7 +5658,8 @@
           postId: String(postId),
           updatedAt: Date.now()
         });
-        showToast('선택한 큐티가 오늘의 메인 홈 [하루 큐티]에 표시됩니다!');
+        await ensureHomeBlocksExistForTypes(['today_qt']);
+        showToast('선택한 큐티를 메인 화면 [오늘의 말씀]에 띄웠습니다!');
       } catch (err) {
         handleDbError(err, '메인홈 큐티 지정');
       }
@@ -5319,37 +5667,27 @@
 
     function renderQtView() {
       const user = getCurrentUser();
-      const canManageQt = !!(user && (user.isSuperAdmin || (user.role.perms && user.role.perms.canManageNotices)));
+      const canManageQt = hasUserPerm(user, 'canManageQt');
       document.getElementById('qtWriteTopBtn').classList.toggle('hidden', !canManageQt);
 
-      const q = qtSearchQuery.trim().toLowerCase();
-      document.getElementById('qtSearchClear').classList.toggle('hidden', !q);
-
       const activeToday = getTodayActiveQt();
-      const combined = [];
-      if (activeToday.isAuto) {
-        combined.push(activeToday);
-      }
-      qtPosts.forEach(p => combined.push({ ...p, isAuto: false }));
+      const autoToday = getAutoDailyQtForToday();
 
-      const filtered = combined.filter(item => {
-        if (!q) return true;
-        const hay = `${item.date || ''} ${item.title || ''} ${item.passage || ''} ${item.scripture || ''} ${item.guide || ''}`.toLowerCase();
-        return hay.includes(q);
-      });
+      // 매일 자동 올라오는 오늘의 말씀 1편 + 목회자/관리자가 추가한 큐티 목록을 모두 표시
+      const combined = [];
+      if (!activeToday.isAuto) {
+        combined.push(activeToday);
+        combined.push(autoToday);
+        qtPosts.forEach(p => {
+          if (p.id !== activeToday.id) combined.push({ ...p, isAuto: false });
+        });
+      } else {
+        combined.push(autoToday);
+        qtPosts.forEach(p => combined.push({ ...p, isAuto: false }));
+      }
 
       const container = document.getElementById('qtListContainer');
-      if (filtered.length === 0) {
-        container.innerHTML = `
-          <div class="card" style="text-align:center; padding:28px 16px; color:#64748B;">
-            <div style="font-size:26px; margin-bottom:6px;">✨</div>
-            <div style="font-size:14px; font-weight:700; color:#334155;">검색된 큐티가 없습니다.</div>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = filtered.map((post) => {
+      container.innerHTML = combined.map((post) => {
         const isCurrentHome = post.id === activeToday.id;
         const cmts = qtComments.filter(c => c.postId === post.id);
         const previewCmts = cmts.slice(-2);
@@ -5357,8 +5695,7 @@
           <div class="card clickable" style="${isCurrentHome ? 'border-color:#A5B4FC;' : ''}" onclick="openQtDetail('${post.id}')">
             <div class="card-top">
               <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                ${isCurrentHome ? '<span class="tag warm">✨ 오늘의 하루 큐티</span>' : ''}
-                ${post.isAuto ? '<span class="tag slate">🎲 자동 랜덤 말씀</span>' : ''}
+                ${isCurrentHome ? '<span class="tag warm">✨ 오늘의 말씀</span>' : (!post.isAuto ? '<span class="tag">✍️ 목회자·관리자 큐티</span>' : '<span class="tag warm">✨ 오늘의 말씀</span>')}
                 ${post.passage ? `<span class="qt-passage-pill">📖 ${escapeHtml(post.passage)}</span>` : ''}
               </div>
               <span class="card-date">${escapeHtml(post.date || '')}</span>
@@ -5384,8 +5721,8 @@
               <button class="btn-sm" type="button" onclick="event.stopPropagation(); openQtDetail('${post.id}')">💬 묵상 댓글 ${cmts.length}개</button>
               ${canManageQt ? (post.isAuto ? `
                 <div style="display:flex; gap:6px;">
-                  <button class="btn-sm" type="button" onclick="event.stopPropagation(); rerollDailyRandomQt()">🎲 말씀 바꾸기</button>
-                  <button class="btn-sm primary" type="button" onclick="event.stopPropagation(); openNewQtModal()">+ 직접 작성</button>
+                  ${!isCurrentHome ? `<button class="btn-sm" type="button" onclick="event.stopPropagation(); switchBackToAutoDailyQt()">📌 메인홈 표시</button>` : ''}
+                  <button class="btn-sm primary" type="button" onclick="event.stopPropagation(); openNewQtModal()">+ 큐티 추가</button>
                 </div>
               ` : `
                 <div style="display:flex; gap:6px;">
@@ -5399,18 +5736,6 @@
         `;
       }).join('');
     }
-
-    window.onQtSearchInput = (val) => {
-      qtSearchQuery = val;
-      renderQtView();
-    };
-
-    window.clearQtSearch = () => {
-      qtSearchQuery = '';
-      const input = document.getElementById('qtSearchInput');
-      if (input) { input.value = ''; input.focus(); }
-      renderQtView();
-    };
 
     window.toggleQtReaction = async (postId, key) => {
       const user = getCurrentUser();
@@ -5451,7 +5776,7 @@
       if (!post) return;
       const user = getCurrentUser();
       const uid = fbUser ? fbUser.uid : '';
-      const canManageQt = !!(user && (user.isSuperAdmin || (user.role.perms && user.role.perms.canManageNotices)));
+      const canManageQt = hasUserPerm(user, 'canManageQt');
       const cmts = qtComments.filter(c => c.postId === post.id);
 
       document.getElementById('qtDetailDateBadge').textContent = post.date || '큐티';
@@ -5600,7 +5925,6 @@
       document.getElementById('qtPassageInput').value = prefill && prefill.passage ? prefill.passage : '';
       document.getElementById('qtScriptureInput').value = prefill && prefill.scripture ? prefill.scripture : '';
       document.getElementById('qtGuideInput').value = '';
-      document.getElementById('qtFeatureHomeInput').checked = true;
       document.getElementById('qtNotifyInput').checked = true;
       document.getElementById('qtFormModal').classList.add('open');
     };
@@ -5615,12 +5939,11 @@
       document.getElementById('qtPassageInput').value = p.passage || '';
       document.getElementById('qtScriptureInput').value = p.scripture || '';
       document.getElementById('qtGuideInput').value = p.guide || '';
-      document.getElementById('qtFeatureHomeInput').checked = !!(dailyQtConfig && dailyQtConfig.mode === 'custom' && dailyQtConfig.postId === p.id);
       document.getElementById('qtNotifyInput').checked = false;
       document.getElementById('qtFormModal').classList.add('open');
     };
 
-    window.handleSaveQt = async () => {
+    window.requestSaveQt = () => {
       const user = getCurrentUser();
       if (!user) return;
       const editId = document.getElementById('editQtId').value;
@@ -5629,42 +5952,46 @@
       const passage = document.getElementById('qtPassageInput').value.trim();
       const scripture = document.getElementById('qtScriptureInput').value.trim();
       const guide = document.getElementById('qtGuideInput').value.trim();
-      const featureOnHome = document.getElementById('qtFeatureHomeInput').checked;
       const notifyOnPublish = document.getElementById('qtNotifyInput').checked;
 
       if (!title) return showToast('큐티 제목을 입력해 주세요.');
       if (!scripture && !guide) return showToast('말씀 본문이나 묵상 가이드를 입력해 주세요.');
 
-      const btn = document.getElementById('saveQtBtn');
-      btn.disabled = true;
-      try {
-        lastSelfQtEditTs = Date.now();
-        let targetId = editId;
-        if (editId) {
-          await db.collection('qtPosts').doc(editId).update({ date, title, passage, scripture, guide });
-          showToast('큐티가 수정되었습니다!');
-        } else {
-          targetId = String(Date.now());
-          await db.collection('qtPosts').doc(targetId).set({
-            id: targetId, date, title, passage, scripture, guide,
-            authorName: user.name, notifyOnPublish, createdTs: Date.now()
-          });
-          showToast(featureOnHome ? '새 큐티가 메인 홈 [하루 큐티]에 게시되었습니다!' : '새 큐티가 등록되었습니다!');
+      document.getElementById('qtFormModal').classList.remove('open');
+      openHomePublishConfirm(
+        `<b>[오늘의 말씀] ${escapeHtml(title)}</b>${passage ? ' (' + escapeHtml(passage) + ')' : ''}<br>이 큐티를 메인 화면에 바로 띄우시겠습니까?`,
+        '✅ 네, 메인 화면에 바로 띄우기',
+        '오늘의 말씀 목록에만 저장',
+        async (showOnHome) => {
+          try {
+            lastSelfQtEditTs = Date.now();
+            let targetId = editId;
+            if (editId) {
+              await db.collection('qtPosts').doc(editId).update({ date, title, passage, scripture, guide });
+            } else {
+              targetId = String(Date.now());
+              await db.collection('qtPosts').doc(targetId).set({
+                id: targetId, date, title, passage, scripture, guide,
+                authorName: user.name, notifyOnPublish: notifyOnPublish && showOnHome, createdTs: Date.now()
+              });
+            }
+            if (showOnHome && targetId) {
+              await db.collection('config').doc('dailyQt').set({
+                mode: 'custom',
+                date: getKstDateParts().dot,
+                postId: targetId,
+                updatedAt: Date.now()
+              });
+              await ensureHomeBlocksExistForTypes(['today_qt']);
+              showToast('메인 화면 [오늘의 말씀]에 바로 띄웠습니다!');
+            } else {
+              showToast('오늘의 말씀 목록에 저장되었습니다.');
+            }
+          } catch (err) {
+            handleDbError(err, '큐티 저장');
+          }
         }
-        if (featureOnHome && targetId) {
-          await db.collection('config').doc('dailyQt').set({
-            mode: 'custom',
-            date: getKstDateParts().dot,
-            postId: targetId,
-            updatedAt: Date.now()
-          });
-        }
-        document.getElementById('qtFormModal').classList.remove('open');
-      } catch (err) {
-        handleDbError(err, '큐티 저장');
-      } finally {
-        btn.disabled = false;
-      }
+      );
     };
 
     window.deleteQtPost = async (postId) => {
