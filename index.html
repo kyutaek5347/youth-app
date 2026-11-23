@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=112" />
+  <link rel="manifest" href="./manifest.json?v=114" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=112" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=112" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=114" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=114" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1327,6 +1327,103 @@
       height: 19px;
     }
 
+
+    /* ==================== v10.13 생일 축하 배너 & 회원가입 역할 선택 ==================== */
+    .birthday-banner {
+      background: linear-gradient(135deg, #F59E0B 0%, #EC4899 55%, #8B5CF6 100%);
+      color: #FFFFFF;
+      border-radius: 20px;
+      padding: 18px 18px 19px;
+      box-shadow: 0 10px 24px rgba(236, 72, 153, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      position: relative;
+      overflow: hidden;
+    }
+    .birthday-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.24);
+      color: #FFFFFF;
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 9px;
+    }
+    .birthday-title {
+      font-size: 18px;
+      font-weight: 900;
+      margin: 0 0 6px;
+      line-height: 1.35;
+      letter-spacing: -0.2px;
+    }
+    .birthday-desc {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.92);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .signup-role-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 7px;
+    }
+    .signup-role-chip {
+      border: 1px solid #CBD5E1;
+      background: #F8FAFC;
+      color: #334155;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.14s ease;
+    }
+    .signup-role-chip.active,
+    .signup-role-chip:active {
+      background: #2563EB;
+      border-color: #2563EB;
+      color: #FFFFFF;
+    }
+
+
+    /* ==================== v10.14 새신자 자동 환영 배너 ==================== */
+    .newcomer-auto-banner {
+      background: linear-gradient(135deg, #EC4899 0%, #9333EA 58%, #4F46E5 100%);
+      color: #FFFFFF;
+      border-radius: 20px;
+      padding: 18px 18px 19px;
+      box-shadow: 0 10px 24px rgba(147, 51, 234, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+    }
+    .newcomer-auto-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.22);
+      color: #FFFFFF;
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 9px;
+    }
+    .newcomer-auto-title {
+      font-size: 18px;
+      font-weight: 900;
+      margin: 0 0 6px;
+      line-height: 1.35;
+      letter-spacing: -0.2px;
+    }
+    .newcomer-auto-desc {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.92);
+      margin: 0;
+      line-height: 1.5;
+    }
+
     /* 토스트 */
     .toast {
       position: fixed; bottom: calc(86px + var(--safe-bottom)); left: 50%;
@@ -1342,7 +1439,7 @@
   <div class="app-shell">
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=112" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=114" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -1407,6 +1504,16 @@
           <label class="login-field-label" for="signupNameInput">아이디 (본인 성명)</label>
           <div class="login-input-wrap">
             <input id="signupNameInput" class="login-input blue-focus" placeholder="본인 성명을 입력하세요" />
+          </div>
+          <label class="login-field-label" for="signupBirthInput">생년월일 (필수)</label>
+          <div class="login-input-wrap">
+            <input id="signupBirthInput" type="date" class="login-input blue-focus" min="1940-01-01" />
+          </div>
+          <label class="login-field-label" for="signupRoleSelect">역할 선택 (필수)</label>
+          <div class="login-input-wrap">
+            <select id="signupRoleSelect" class="login-input blue-focus">
+              <option value="">역할을 선택해 주세요</option>
+            </select>
           </div>
           <label class="login-field-label" for="signupPwInput">비밀번호 설정</label>
           <div class="login-input-wrap">
@@ -1639,7 +1746,14 @@
         <h3 class="modal-title">👤 내 계정 관리</h3>
         <button class="close-btn" data-close="accountModal">✕</button>
       </div>
-      <div id="accountSummaryBox" class="status-meta" style="margin-bottom:14px;"></div>
+      <div id="accountSummaryBox" class="status-meta" style="margin-bottom:10px;"></div>
+      <div class="form-group" style="background:#F8FAFC; border:1px solid var(--border); border-radius:12px; padding:10px 12px; margin-bottom:14px;">
+        <label class="form-label" for="accBirthInput" style="margin-bottom:6px;">🎂 내 생일 등록 · 수정</label>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <input id="accBirthInput" type="date" class="form-input" style="flex:1; background:#fff;" min="1940-01-01" />
+          <button id="saveAccBirthBtn" class="btn-sm primary" type="button" style="padding:10px 13px; white-space:nowrap;" onclick="handleSaveMyBirthday()">저장</button>
+        </div>
+      </div>
       <div class="modal-tabs-2">
         <button id="accTabPw" class="modal-tab-btn active" type="button" onclick="switchAccountTab('pw')">비밀번호 변경</button>
         <button id="accTabDelete" class="modal-tab-btn" type="button" onclick="switchAccountTab('delete')">계정 삭제</button>
@@ -1839,7 +1953,7 @@
         <div class="setting-row">
           <div>
             <div class="setting-title">📢 메인 화면 새 소식 알림</div>
-            <div class="setting-sub">메인 화면에 새 공지·광고나 배너가 올라올 때</div>
+            <div class="setting-sub">메인 화면에 새 공지·광고·배너, 생일·새신자 소식이 올라올 때</div>
           </div>
           <label class="switch">
             <input type="checkbox" id="notifHomeToggle" onchange="toggleNotifOption('homeNews', this.checked)" />
@@ -2063,6 +2177,47 @@
     </div>
   </div>
 
+
+  <!-- 관리자: 회원 생일 등록/수정 모달 -->
+  <div id="memberBirthdayModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="memberBdayModalTitle" class="modal-title">🎂 회원 생일 수정</h3>
+        <button class="close-btn" data-close="memberBirthdayModal">✕</button>
+      </div>
+      <input type="hidden" id="editMemberBdayId" />
+      <div class="form-group">
+        <label class="form-label" for="adminMemberBdayInput">생년월일</label>
+        <input id="adminMemberBdayInput" type="date" class="form-input" min="1940-01-01" />
+      </div>
+      <div style="display:flex; gap:8px; margin-top:8px;">
+        <button id="saveAdminMemberBdayBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveAdminMemberBirthday()">생일 저장</button>
+        <button class="btn-outline" type="button" data-close="memberBirthdayModal">취소</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 관리자: 새신자 역할 해제 및 다른 역할 지정 모달 -->
+  <div id="releaseNewcomerModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="releaseNewcomerModalTitle" class="modal-title">💐 새신자 역할 해제</h3>
+        <button class="close-btn" data-close="releaseNewcomerModal">✕</button>
+      </div>
+      <input type="hidden" id="releaseNewcomerMemberId" />
+      <div id="releaseNewcomerDesc" class="info-box" style="margin-top:0; margin-bottom:12px;"></div>
+      <div class="form-group">
+        <label class="form-label" for="releaseNewcomerRoleSelect">새로 부여할 역할 선택</label>
+        <select id="releaseNewcomerRoleSelect" class="form-select"></select>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:10px;">
+        <button id="confirmReleaseNewcomerBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleConfirmReleaseNewcomer()">새신자 해제 및 역할 변경</button>
+        <button class="btn-outline" type="button" data-close="releaseNewcomerModal">취소</button>
+      </div>
+    </div>
+  </div>
+
   <div id="toast" class="toast"></div>
 
   <script>
@@ -2084,7 +2239,7 @@
     const authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 16;
+    const CURRENT_SCHEMA_VERSION = 18;
 
     // 매일 자정(KST) 자동 변경되는 일일 큐티 성경말씀 풀 (60편)
     const DAILY_QT_POOL = [
@@ -2151,6 +2306,8 @@
     ];
     const KEY_NOTIF_PREFS = 'right_youth_notif_prefs_v103';
     const KEY_MEMBER_CACHE = 'right_youth_member_cache_v1';
+    const KEY_BDAY_NOTIFIED = 'right_youth_bday_notified_v1';
+    const KEY_NEWCOMER_NOTIFIED = 'right_youth_newcomer_notified_v1';
     const KEY_BIBLE_POS = 'right_youth_bible_pos_v103';
     const KEY_BIBLE_CACHE = 'right_youth_bible_cache_v103';
     const KEY_BIBLE_MARKS = 'right_youth_bible_marks_v103';
@@ -2539,6 +2696,17 @@
       return map;
     }
 
+    function isNewcomerRoleObj(r) {
+      if (!r) return false;
+      return String(r.id) === 'role_newcomer' || String(r.name || '').trim().includes('새신자');
+    }
+
+    function isNewcomerRoleId(roleId) {
+      const r = roles.find(x => String(x.id) === String(roleId));
+      if (r) return isNewcomerRoleObj(r);
+      return String(roleId) === 'role_newcomer';
+    }
+
     function generateResetCode() {
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
       const arr = new Uint32Array(8);
@@ -2553,6 +2721,25 @@
     }
 
     const RESET_CODE_TTL_MS = 24 * 60 * 60 * 1000;
+
+    function isValidBirthdayStr(str) {
+      const s = String(str || '').trim();
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+      const [y, m, d] = s.split('-').map(Number);
+      const curYear = new Date().getFullYear();
+      if (y < 1940 || y > curYear || m < 1 || m > 12 || d < 1 || d > 31) return false;
+      const dt = new Date(Date.UTC(y, m - 1, d));
+      return dt.getUTCFullYear() === y && (dt.getUTCMonth() + 1) === m && dt.getUTCDate() === d;
+    }
+
+    function birthdayToMd(str) {
+      return isValidBirthdayStr(str) ? String(str).trim().slice(5, 10) : '';
+    }
+
+    function formatBirthdayDisplay(str) {
+      if (!isValidBirthdayStr(str)) return '미등록';
+      return String(str).trim().replace(/-/g, '.');
+    }
 
     const ROLE_COLORS = ['#7C3AED', '#1E3A8A', '#059669', '#D97706', '#2563EB', '#475569', '#DB2777', '#DC2626', '#0D9488'];
     const BANNER_THEMES = [
@@ -2569,6 +2756,7 @@
       { id: 'role_teacher', name: '교사', color: '#059669' },
       { id: 'role_president', name: '회장', color: '#D97706' },
       { id: 'role_leader', name: '팀장', color: '#2563EB' },
+      { id: 'role_cell_leader', name: '셀장', color: '#0D9488' },
       { id: 'role_youth', name: '청년', color: '#475569' },
       { id: 'role_newcomer', name: '새신자', color: '#DB2777' }
     ];
@@ -2667,7 +2855,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=112" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=114" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -2690,8 +2878,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=112', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=112', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=114', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=114', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -2833,6 +3021,11 @@
     let lastSeenLayoutAlertTs = 0;
     let knownNoticeAlertMap = new Map();
     let members = [];
+    let birthdayList = [];
+    let newcomerList = [];
+    let adminBdaySyncedOnce = false;
+    let adminNewcomerSyncedOnce = false;
+    let publicRolesSubscribed = false;
     let lastSelfQtEditTs = 0;
     let qtFirstSnap = true;
     let knownQtIds = new Set();
@@ -2878,6 +3071,9 @@
           status: member.status || 'pending',
           roleId: member.roleId || 'role_youth',
           authVer: Number(member.authVer || 0),
+          birthday: member.birthday || '',
+          requestedRoleId: member.requestedRoleId || '',
+          requestedRole: member.requestedRole || '',
           createdAt: member.createdAt || ''
         }));
       } catch {}
@@ -2933,6 +3129,10 @@
       knownQtIds = new Set();
       knownNoticeAlertMap = new Map();
       lastSeenLayoutAlertTs = 0;
+      birthdayList = [];
+      newcomerList = [];
+      adminBdaySyncedOnce = false;
+      adminNewcomerSyncedOnce = false;
     }
 
     function getRoleById(roleId) {
@@ -3197,7 +3397,7 @@
                   type: 'member',
                   icon: '👤',
                   title: '새 회원가입 승인 요청',
-                  body: `${m.name}님이 가입 승인을 기다리고 있습니다.`,
+                  body: `${m.name}님이${m.requestedRole ? ` [${m.requestedRole}] 역할로` : ''} 가입 승인을 기다리고 있습니다.`,
                   onClick: () => {
                     currentMainTab = 'manage';
                     currentManageSubTab = 'members';
@@ -3209,6 +3409,14 @@
           }
 
           members = nextMembers;
+          if (!adminBdaySyncedOnce) {
+            adminBdaySyncedOnce = true;
+            syncAdminBirthdaysCollection(nextMembers).catch(() => {});
+          }
+          if (!adminNewcomerSyncedOnce) {
+            adminNewcomerSyncedOnce = true;
+            syncAdminNewcomersCollection(nextMembers).catch(() => {});
+          }
           applyScreen();
         }, err => handleDbError(err, '회원 목록 동기화'));
       } else if (!needsAllMembers && unsubMembersAll) {
@@ -3248,14 +3456,29 @@
       layoutFirstSnap = true;
       knownNoticeIds = new Set();
 
+      subscribePublicRoles();
+
       unsubCore.push(
-        db.collection('config').doc('roles').onSnapshot(doc => {
-          if (doc.exists && Array.isArray(doc.data().items) && doc.data().items.length > 0) {
-            roles = doc.data().items;
+        db.collection('birthdays').onSnapshot(snap => {
+          birthdayList = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }));
+          checkAndNotifyTodayBirthdays();
+          if (currentMainTab === 'home') {
+            const u = getCurrentUser();
+            if (u) renderHomeView(u);
           }
-          syncMembersAllSubscription();
-          applyScreen();
-        }, err => handleDbError(err, '역할 동기화'))
+        }, () => {})
+      );
+
+      unsubCore.push(
+        db.collection('newcomers').onSnapshot(snap => {
+          newcomerList = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
+            .sort((a, b) => Number(b.addedTs || 0) - Number(a.addedTs || 0));
+          checkAndNotifyNewcomers();
+          if (currentMainTab === 'home') {
+            const u = getCurrentUser();
+            if (u) renderHomeView(u);
+          }
+        }, () => {})
       );
 
       let quickLinksDedicatedLoaded = false;
@@ -3535,6 +3758,38 @@
       });
     }
 
+    function renderSignupRoleOptions() {
+      const sel = document.getElementById('signupRoleSelect');
+      if (!sel) return;
+      const prevVal = sel.value;
+      const list = sanitizeRolesList(roles);
+      sel.innerHTML = '<option value="">역할을 선택해 주세요</option>' + list.map(r => `
+        <option value="${escapeHtml(r.id)}">${escapeHtml(r.name)}</option>
+      `).join('');
+      if (prevVal && list.some(r => r.id === prevVal)) {
+        sel.value = prevVal;
+      }
+    }
+
+    function subscribePublicRoles() {
+      if (publicRolesSubscribed) return;
+      publicRolesSubscribed = true;
+      renderSignupRoleOptions();
+      db.collection('config').doc('roles').onSnapshot(doc => {
+        if (doc.exists && Array.isArray(doc.data().items) && doc.data().items.length > 0) {
+          roles = sanitizeRolesList(doc.data().items);
+        }
+        renderSignupRoleOptions();
+        if (getCurrentUser()) {
+          syncMembersAllSubscription();
+          applyScreen();
+        }
+      }, () => {
+        renderSignupRoleOptions();
+      });
+    }
+    subscribePublicRoles();
+
     auth.onAuthStateChanged(async (user) => {
       if (isSigningUp || isCompletingReset) return;
       clearSubscriptions();
@@ -3588,7 +3843,10 @@
       document.getElementById('tabBtnSignup').className = tab === 'signup' ? 'auth-tab-btn signup-active' : 'auth-tab-btn';
       document.getElementById('tabBtnAdmin').className = tab === 'admin' ? 'auth-tab-btn admin-active' : 'auth-tab-btn';
 
-      if (tab === 'signup') setTimeout(() => document.getElementById('signupNameInput').focus(), 40);
+      if (tab === 'signup') {
+        renderSignupRoleOptions();
+        setTimeout(() => document.getElementById('signupNameInput').focus(), 40);
+      }
       if (tab === 'admin') setTimeout(() => document.getElementById('adminPinInput').focus(), 40);
     };
 
@@ -3656,6 +3914,8 @@
         : (member.status === 'reset_pending' ? '비밀번호 초기화 대기' : '보류/거절');
       meta.innerHTML = `
         <div><b>아이디 (성명):</b> ${escapeHtml(member.name)}</div>
+        ${member.birthday ? `<div><b>생년월일:</b> ${escapeHtml(formatBirthdayDisplay(member.birthday))}</div>` : ''}
+        ${member.requestedRole ? `<div><b>신청 역할:</b> ${escapeHtml(member.requestedRole)}</div>` : ''}
         <div><b>신청일:</b> ${escapeHtml(member.createdAt)}</div>
         <div><b>현재 상태:</b> ${statusLabel}</div>
       `;
@@ -3668,11 +3928,20 @@
     async function handleSignup() {
       clearErrors();
       const name = document.getElementById('signupNameInput').value.trim();
+      const birthday = (document.getElementById('signupBirthInput').value || '').trim();
+      const selectedRoleId = (document.getElementById('signupRoleSelect').value || '').trim();
+      const selectedRoleObj = roles.find(r => String(r.id) === selectedRoleId);
       const pw = document.getElementById('signupPwInput').value.trim();
       const pw2 = document.getElementById('signupPwConfirmInput').value.trim();
 
       if (name.length < 2 || name.length > 10) {
         return showError('signupError', '본인 성명을 2~10글자 이내로 입력해 주세요.');
+      }
+      if (!isValidBirthdayStr(birthday)) {
+        return showError('signupError', '생년월일을 올바르게 선택해 주세요.');
+      }
+      if (!selectedRoleObj) {
+        return showError('signupError', '역할 선택 칸에서 본인의 역할을 선택해 주세요.');
       }
       if (pw.length < 6) {
         return showError('signupError', '비밀번호는 보안을 위해 6자리 이상 입력해 주세요.');
@@ -3697,6 +3966,9 @@
         const newMember = {
           id: uid,
           name,
+          birthday,
+          requestedRoleId: selectedRoleObj.id,
+          requestedRole: selectedRoleObj.name,
           status: 'pending',
           roleId: 'role_youth',
           authVer,
@@ -3709,6 +3981,8 @@
         saveCachedMember(newMember);
 
         document.getElementById('signupNameInput').value = '';
+        document.getElementById('signupBirthInput').value = '';
+        document.getElementById('signupRoleSelect').value = '';
         document.getElementById('signupPwInput').value = '';
         document.getElementById('signupPwConfirmInput').value = '';
         showToast('회원가입 신청이 접수되었습니다!');
@@ -4028,7 +4302,215 @@
       }
     };
 
-    // ==================== 11. 메인 홈 화면 렌더링 ====================
+    // ==================== 11. 메인 홈 화면 렌더링 (+ 오늘의 생일 자동 안내 · 알림) ====================
+    function getTodayBirthdays() {
+      const { m, d } = getKstDateParts();
+      const todayMd = `${m}-${d}`;
+      const seenNames = new Set();
+      const result = [];
+      birthdayList.forEach(item => {
+        const name = String(item.name || '').trim();
+        if (item.md === todayMd && name && !seenNames.has(name)) {
+          seenNames.add(name);
+          result.push({ uid: item.uid || item.id, name, md: item.md });
+        }
+      });
+      return result.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+    }
+
+    function checkAndNotifyTodayBirthdays() {
+      const user = getCurrentUser();
+      if (!user) return;
+      const todayBdays = getTodayBirthdays();
+      if (todayBdays.length === 0) return;
+
+      const { compact } = getKstDateParts();
+      const namesArr = todayBdays.map(b => b.name);
+      const sig = `${compact}:${namesArr.join(',')}`;
+      try {
+        if (localStorage.getItem(KEY_BDAY_NOTIFIED) === sig) return;
+      } catch {}
+
+      if (notifPrefs.enabled && notifPrefs.homeNews) {
+        try { localStorage.setItem(KEY_BDAY_NOTIFIED, sig); } catch {}
+        const namesText = namesArr.join(', ');
+        dispatchAppNotification({
+          type: 'notice',
+          icon: '🎂',
+          title: '🎂 오늘의 생일을 축하합니다!',
+          body: `오늘은 ${namesText}님의 생일입니다! 따뜻한 축하를 전해 주세요 🎉`,
+          onClick: () => { switchMainTab('home'); }
+        });
+      }
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        checkAndNotifyTodayBirthdays();
+        checkAndNotifyNewcomers();
+        const u = getCurrentUser();
+        if (u && currentMainTab === 'home') renderHomeView(u);
+      }
+    });
+
+    async function syncAdminBirthdaysCollection(memberList) {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      try {
+        const snap = await db.collection('birthdays').get();
+        const existingMap = new Map();
+        snap.docs.forEach(d => existingMap.set(String(d.id), d.data()));
+
+        const approvedWithBday = new Map();
+        memberList.forEach(m => {
+          if (m.status === 'approved' && isValidBirthdayStr(m.birthday)) {
+            approvedWithBday.set(String(m.id), {
+              uid: String(m.id),
+              name: m.name,
+              md: birthdayToMd(m.birthday)
+            });
+          }
+        });
+
+        const batch = db.batch();
+        let ops = 0;
+
+        approvedWithBday.forEach((val, uid) => {
+          const cur = existingMap.get(uid);
+          if (!cur || cur.name !== val.name || cur.md !== val.md) {
+            batch.set(db.collection('birthdays').doc(uid), { ...val, updatedAt: Date.now() });
+            ops++;
+          }
+        });
+
+        existingMap.forEach((_, uid) => {
+          if (!approvedWithBday.has(uid)) {
+            batch.delete(db.collection('birthdays').doc(uid));
+            ops++;
+          }
+        });
+
+        if (ops > 0) await batch.commit();
+      } catch (err) {
+        console.warn('Birthday sync skipped:', err);
+      }
+    }
+
+    function checkAndNotifyNewcomers() {
+      const user = getCurrentUser();
+      if (!user) return;
+      const validList = newcomerList.filter(item => item && String(item.name || '').trim());
+      const curIds = validList.map(item => String(item.uid || item.id));
+      let notifiedIds = [];
+      try {
+        notifiedIds = JSON.parse(localStorage.getItem(KEY_NEWCOMER_NOTIFIED) || '[]');
+        if (!Array.isArray(notifiedIds)) notifiedIds = [];
+      } catch {
+        notifiedIds = [];
+      }
+
+      const notifiedSet = new Set(notifiedIds);
+      const freshNewcomers = validList.filter(item => !notifiedSet.has(String(item.uid || item.id)));
+
+      // 현재 목록에 남아 있는 ID만 유지하여 해제 후 재등록 시 다시 알림 가능
+      const pruned = notifiedIds.filter(id => curIds.includes(id));
+
+      if (freshNewcomers.length === 0) {
+        try { localStorage.setItem(KEY_NEWCOMER_NOTIFIED, JSON.stringify(pruned)); } catch {}
+        return;
+      }
+
+      if (notifPrefs.enabled && notifPrefs.homeNews) {
+        const nextNotified = Array.from(new Set([...pruned, ...freshNewcomers.map(x => String(x.uid || x.id))]));
+        try { localStorage.setItem(KEY_NEWCOMER_NOTIFIED, JSON.stringify(nextNotified)); } catch {}
+        const namesText = freshNewcomers.map(x => String(x.name).trim()).join(', ');
+        dispatchAppNotification({
+          type: 'notice',
+          icon: '💐',
+          title: '💐 새신자 환영 소식',
+          body: `라이트 청년부에 새신자 ${namesText}님이 함께하게 되었습니다! 반갑게 환영해 주세요 🎉`,
+          onClick: () => { switchMainTab('home'); }
+        });
+      }
+    }
+
+    async function syncAdminNewcomersCollection(memberList) {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      try {
+        const snap = await db.collection('newcomers').get();
+        const existingMap = new Map();
+        snap.docs.forEach(d => existingMap.set(String(d.id), d.data()));
+
+        const activeNewcomers = new Map();
+        memberList.forEach(m => {
+          if (m.status === 'approved' && isNewcomerRoleId(m.roleId)) {
+            activeNewcomers.set(String(m.id), {
+              uid: String(m.id),
+              name: m.name,
+              joinedAt: m.createdAt || formatToday()
+            });
+          }
+        });
+
+        const batch = db.batch();
+        let ops = 0;
+
+        activeNewcomers.forEach((val, uid) => {
+          const cur = existingMap.get(uid);
+          if (!cur || cur.name !== val.name) {
+            batch.set(db.collection('newcomers').doc(uid), {
+              ...val,
+              addedTs: (cur && cur.addedTs) ? cur.addedTs : Date.now()
+            });
+            ops++;
+          }
+        });
+
+        existingMap.forEach((_, uid) => {
+          if (!activeNewcomers.has(uid)) {
+            batch.delete(db.collection('newcomers').doc(uid));
+            ops++;
+          }
+        });
+
+        if (ops > 0) await batch.commit();
+      } catch (err) {
+        console.warn('Newcomers sync skipped:', err);
+      }
+    }
+
+    function buildBirthdayBannerHtml() {
+      const todayBdays = getTodayBirthdays();
+      if (todayBdays.length === 0) return '';
+      const { m, d } = getKstDateParts();
+      const namesText = todayBdays.map(b => b.name).join(', ');
+      return `
+        <div class="home-block">
+          <div class="birthday-banner">
+            <span class="birthday-badge">🎉 오늘의 생일 · ${Number(m)}월 ${Number(d)}일</span>
+            <h2 class="birthday-title">🎂 ${escapeHtml(namesText)}님의 생일을 축하합니다!</h2>
+            <p class="birthday-desc">오늘은 라이트 청년부 지체의 생일입니다. 따뜻한 축하와 축복의 마음을 전해 주세요! 💐</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function buildNewcomerAutoBannerHtml() {
+      const valid = newcomerList.filter(item => item && String(item.name || '').trim());
+      if (valid.length === 0) return '';
+      const namesText = valid.map(item => String(item.name).trim()).join(', ');
+      return `
+        <div class="home-block">
+          <div class="newcomer-auto-banner">
+            <span class="newcomer-auto-badge">💐 새신자 환영 · ${valid.length}명</span>
+            <h2 class="newcomer-auto-title">🎉 새신자 ${escapeHtml(namesText)}님을 환영합니다!</h2>
+            <p class="newcomer-auto-desc">라이트 청년부의 새 가족이 되신 것을 진심으로 축복합니다. 만나면 반갑게 인사해 주세요! 😊</p>
+          </div>
+        </div>
+      `;
+    }
+
     function renderHomeView(user) {
       const perms = user.role.perms;
       const container = document.getElementById('viewHome');
@@ -4041,9 +4523,11 @@
         return true;
       }
 
+      const birthdayHtml = buildBirthdayBannerHtml();
+      const newcomerHtml = buildNewcomerAutoBannerHtml();
       const visibleBlocks = blocks.filter(canSeeBlock);
 
-      if (visibleBlocks.length === 0) {
+      if (!birthdayHtml && !newcomerHtml && visibleBlocks.length === 0) {
         container.innerHTML = `
           <div class="card" style="text-align:center; padding:42px 20px; color:#64748B;">
             <div style="font-size:30px; margin-bottom:10px;">✨</div>
@@ -4054,7 +4538,7 @@
         return;
       }
 
-      container.innerHTML = visibleBlocks.map(b => {
+      container.innerHTML = birthdayHtml + newcomerHtml + visibleBlocks.map(b => {
 
         if (b.type === 'hero_notice') {
           const pinned = notices.find(n => n.pinned) || notices[0];
@@ -4723,25 +5207,35 @@
         </div>
         ${pending.length === 0
           ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">현재 승인 대기 중인 신청자가 없습니다.</div>'
-          : pending.map(m => `
-              <div class="card highlight-pending">
-                <div class="card-top">
-                  <strong style="font-size:15px;">${escapeHtml(m.name)}</strong>
-                  <span class="card-date">${escapeHtml(m.createdAt)} 신청</span>
+          : pending.map(m => {
+              const reqRoleById = m.requestedRoleId ? roles.find(r => String(r.id) === String(m.requestedRoleId)) : null;
+              const reqRoleName = String(reqRoleById ? reqRoleById.name : (m.requestedRole || '')).trim();
+              const matchedRole = reqRoleById || (reqRoleName ? roles.find(r => r.name.trim() === reqRoleName) : null);
+              const defaultApproveVal = matchedRole ? matchedRole.id : (m.roleId || (roles[0] ? roles[0].id : 'role_youth'));
+              return `
+                <div class="card highlight-pending">
+                  <div class="card-top">
+                    <strong style="font-size:15px;">${escapeHtml(m.name)}</strong>
+                    <span class="card-date">${escapeHtml(m.createdAt)} 신청</span>
+                  </div>
+                  <div style="font-size:12.5px; color:#475569; margin-top:4px; line-height:1.55;">
+                    <div>🎂 <b>생일:</b> ${escapeHtml(formatBirthdayDisplay(m.birthday))}</div>
+                    ${reqRoleName ? `<div>🏷️ <b>신청 역할:</b> <span class="tag" style="margin-left:2px;">${escapeHtml(reqRoleName)}</span></div>` : ''}
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px; margin-top:9px;">
+                    <span style="font-size:12px; font-weight:700; color:#475569;">부여 역할:</span>
+                    <select id="approveRole-${m.id}" class="role-select" style="flex:1;">
+                      ${roleOptionsHtml(defaultApproveVal)}
+                    </select>
+                  </div>
+                  <div style="display:flex; gap:6px; margin-top:10px;">
+                    <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberWithRole('${m.id}')">✅ 역할 부여 및 승인</button>
+                    <button class="btn-sm" style="padding:9px 11px;" onclick="rejectMember('${m.id}')">보류</button>
+                    <button class="btn-sm danger" style="padding:9px 11px;" onclick="deleteMember('${m.id}')">삭제</button>
+                  </div>
                 </div>
-                <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
-                  <span style="font-size:12px; font-weight:700; color:#475569;">부여 역할:</span>
-                  <select id="approveRole-${m.id}" class="role-select" style="flex:1;">
-                    ${roleOptionsHtml(m.roleId)}
-                  </select>
-                </div>
-                <div style="display:flex; gap:6px; margin-top:10px;">
-                  <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberWithRole('${m.id}')">✅ 역할 부여 및 승인</button>
-                  <button class="btn-sm" style="padding:9px 11px;" onclick="rejectMember('${m.id}')">보류</button>
-                  <button class="btn-sm danger" style="padding:9px 11px;" onclick="deleteMember('${m.id}')">삭제</button>
-                </div>
-              </div>
-            `).join('')}
+              `;
+            }).join('')}
 
         ${resetPending.length > 0 ? `
           <div class="section-head" style="margin-top:20px;">
@@ -4789,19 +5283,23 @@
             : approved.map(m => {
                 const r = getRoleById(m.roleId);
                 const isSelf = fbUser && m.id === fbUser.uid;
+                const isNewcomer = isNewcomerRoleId(m.roleId);
                 return `
                   <div class="member-row">
                     <div>
                       <div class="member-name">
                         <span>${escapeHtml(m.name)}</span>
                         <span class="role-pill" style="background:${r.color};">${escapeHtml(r.name)}</span>
+                        ${isNewcomer ? '<span class="tag warm" style="font-size:10px; padding:2px 6px;">메인 표시중</span>' : ''}
                       </div>
-                      <div class="member-meta">가입일 ${escapeHtml(m.createdAt)}</div>
+                      <div class="member-meta">가입일 ${escapeHtml(m.createdAt)} · 🎂 ${escapeHtml(formatBirthdayDisplay(m.birthday))}</div>
                     </div>
                     <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
                       <select class="role-select" onchange="changeMemberRole('${m.id}', this.value)">
                         ${roleOptionsHtml(m.roleId)}
                       </select>
+                      ${isNewcomer ? `<button class="btn-sm primary" onclick="openReleaseNewcomerModal('${m.id}')">💐 새신자 해제</button>` : ''}
+                      <button class="btn-sm" onclick="openEditMemberBirthdayModal('${m.id}')">🎂 생일</button>
                       ${!isSelf ? `<button class="btn-sm warn" onclick="initMemberPasswordReset('${m.id}')">비번 초기화</button>` : ''}
                       ${!isSelf ? `<button class="btn-sm danger" onclick="deleteMember('${m.id}')">삭제</button>` : ''}
                     </div>
@@ -4837,27 +5335,148 @@
       const m = members.find(x => String(x.id) === String(id));
       if (!m) return;
       const sel = document.getElementById(`approveRole-${id}`);
-      const roleId = sel ? sel.value : (m.roleId || 'role_youth');
+      const roleId = sel ? sel.value : (m.requestedRoleId || m.roleId || 'role_youth');
+      const assignedRoleName = getRoleById(roleId).name;
+
       try {
-        await db.collection('members').doc(String(id)).update({ status: 'approved', roleId });
-        showToast(`${m.name}님을 [${getRoleById(roleId).name}] 역할로 승인했습니다!`);
+        const batch = db.batch();
+        batch.update(db.collection('members').doc(String(id)), { status: 'approved', roleId });
+        if (isValidBirthdayStr(m.birthday)) {
+          batch.set(db.collection('birthdays').doc(String(id)), {
+            uid: String(id),
+            name: m.name,
+            md: birthdayToMd(m.birthday),
+            updatedAt: Date.now()
+          });
+        }
+        if (isNewcomerRoleId(roleId)) {
+          batch.set(db.collection('newcomers').doc(String(id)), {
+            uid: String(id),
+            name: m.name,
+            joinedAt: formatToday(),
+            addedTs: Date.now()
+          });
+        } else {
+          batch.delete(db.collection('newcomers').doc(String(id)));
+        }
+        await batch.commit();
+        showToast(isNewcomerRoleId(roleId)
+          ? `${m.name}님을 [${assignedRoleName}]로 승인했습니다! 메인 화면에 환영 배너가 추가됩니다.`
+          : `${m.name}님을 [${assignedRoleName}] 역할로 승인했습니다!`);
       } catch (err) { handleDbError(err, '회원 승인'); }
+    };
+
+    window.openEditMemberBirthdayModal = (id) => {
+      const m = members.find(x => String(x.id) === String(id));
+      if (!m) return;
+      document.getElementById('memberBdayModalTitle').textContent = `🎂 ${m.name}님 생일 설정`;
+      document.getElementById('editMemberBdayId').value = m.id;
+      document.getElementById('adminMemberBdayInput').value = isValidBirthdayStr(m.birthday) ? m.birthday : '';
+      document.getElementById('memberBirthdayModal').classList.add('open');
+    };
+
+    window.handleSaveAdminMemberBirthday = async () => {
+      const id = document.getElementById('editMemberBdayId').value;
+      const m = members.find(x => String(x.id) === String(id));
+      if (!m) return;
+      const birthday = (document.getElementById('adminMemberBdayInput').value || '').trim();
+      if (!isValidBirthdayStr(birthday)) {
+        return showToast('올바른 생년월일을 선택해 주세요.');
+      }
+      const btn = document.getElementById('saveAdminMemberBdayBtn');
+      btn.disabled = true;
+      try {
+        const batch = db.batch();
+        batch.update(db.collection('members').doc(String(id)), { birthday });
+        if (m.status === 'approved') {
+          batch.set(db.collection('birthdays').doc(String(id)), {
+            uid: String(id),
+            name: m.name,
+            md: birthdayToMd(birthday),
+            updatedAt: Date.now()
+          });
+        }
+        await batch.commit();
+        document.getElementById('memberBirthdayModal').classList.remove('open');
+        showToast(`${m.name}님의 생일이 저장되었습니다!`);
+      } catch (err) {
+        handleDbError(err, '생일 저장');
+      } finally {
+        btn.disabled = false;
+      }
     };
 
     window.changeMemberRole = async (id, newRoleId) => {
       const m = members.find(x => String(x.id) === String(id));
       if (!m) return;
+      const wasNewcomer = isNewcomerRoleId(m.roleId);
+      const willBeNewcomer = isNewcomerRoleId(newRoleId);
       try {
-        await db.collection('members').doc(String(id)).update({ roleId: newRoleId });
-        showToast(`${m.name}님의 역할이 [${getRoleById(newRoleId).name}](으)로 변경되었습니다.`);
+        const batch = db.batch();
+        batch.update(db.collection('members').doc(String(id)), { roleId: newRoleId });
+        if (m.status === 'approved' && willBeNewcomer) {
+          batch.set(db.collection('newcomers').doc(String(id)), {
+            uid: String(id),
+            name: m.name,
+            joinedAt: m.createdAt || formatToday(),
+            addedTs: Date.now()
+          });
+        } else {
+          batch.delete(db.collection('newcomers').doc(String(id)));
+        }
+        await batch.commit();
+        const roleName = getRoleById(newRoleId).name;
+        if (wasNewcomer && !willBeNewcomer) {
+          showToast(`${m.name}님의 새신자 역할을 해제하고 [${roleName}](으)로 변경했습니다.`);
+        } else if (!wasNewcomer && willBeNewcomer) {
+          showToast(`${m.name}님을 [${roleName}] 역할로 변경했습니다. 메인 화면에 환영 배너가 표시됩니다.`);
+        } else {
+          showToast(`${m.name}님의 역할이 [${roleName}](으)로 변경되었습니다.`);
+        }
       } catch (err) { handleDbError(err, '역할 변경'); }
+    };
+
+    window.openReleaseNewcomerModal = (id) => {
+      const m = members.find(x => String(x.id) === String(id));
+      if (!m) return;
+      const nonNewcomerRoles = roles.filter(r => !isNewcomerRoleObj(r));
+      if (nonNewcomerRoles.length === 0) {
+        return showToast('변경할 다른 역할이 없습니다. 먼저 [역할 설정]에서 역할을 만들어 주세요.');
+      }
+      document.getElementById('releaseNewcomerModalTitle').textContent = `💐 ${m.name}님 새신자 해제`;
+      document.getElementById('releaseNewcomerMemberId').value = m.id;
+      document.getElementById('releaseNewcomerDesc').innerHTML = `<b>${escapeHtml(m.name)}</b>님의 새신자 역할을 해제하면 메인 화면의 새신자 환영 안내에서 자동으로 내려가고, 아래에서 선택한 새 역할이 부여됩니다.`;
+      const defaultNext = nonNewcomerRoles.find(r => r.name === '청년') || nonNewcomerRoles[0];
+      document.getElementById('releaseNewcomerRoleSelect').innerHTML = nonNewcomerRoles.map(r => `
+        <option value="${escapeHtml(r.id)}" ${r.id === defaultNext.id ? 'selected' : ''}>${escapeHtml(r.name)}</option>
+      `).join('');
+      document.getElementById('releaseNewcomerModal').classList.add('open');
+    };
+
+    window.handleConfirmReleaseNewcomer = async () => {
+      const id = document.getElementById('releaseNewcomerMemberId').value;
+      const newRoleId = document.getElementById('releaseNewcomerRoleSelect').value;
+      if (!id || !newRoleId) return;
+      const btn = document.getElementById('confirmReleaseNewcomerBtn');
+      btn.disabled = true;
+      try {
+        await changeMemberRole(id, newRoleId);
+        document.getElementById('releaseNewcomerModal').classList.remove('open');
+      } finally {
+        btn.disabled = false;
+      }
     };
 
     window.rejectMember = async (id) => {
       const m = members.find(x => String(x.id) === String(id));
       if (!m || !confirm(`${m.name}님의 가입을 보류할까요?`)) return;
       try {
-        await db.collection('members').doc(String(id)).update({ status: 'rejected' });
+        const batch = db.batch();
+        batch.update(db.collection('members').doc(String(id)), { status: 'rejected' });
+        batch.delete(db.collection('birthdays').doc(String(id)));
+        batch.delete(db.collection('newcomers').doc(String(id)));
+        batch.delete(db.collection('newcomers').doc(String(id)));
+        await batch.commit();
         showToast('가입 신청을 보류했습니다.');
       } catch (err) { handleDbError(err, '가입 보류'); }
     };
@@ -4885,6 +5504,8 @@
           name: m.name,
           nameHex,
           roleId: m.roleId || 'role_youth',
+          birthday: m.birthday || '',
+          requestedRole: m.requestedRole || '',
           origStatus,
           createdAt: m.createdAt || formatToday(),
           nextVer,
@@ -4967,6 +5588,7 @@
         const curVer = Math.max(await getAuthVerForHex(nameHex), Number(m.authVer || 0));
         const batch = db.batch();
         batch.delete(db.collection('members').doc(String(id)));
+        batch.delete(db.collection('birthdays').doc(String(id)));
         if (m.resetKey) {
           batch.delete(db.collection('passwordResets').doc(String(m.resetKey)));
         }
@@ -4992,17 +5614,25 @@
           <button class="btn-admin" onclick="openAddRoleModal()">+ 새 역할 만들기</button>
         </div>
         <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-          역할은 회원 이름 옆에 표시되는 직분 배지이며, 별도의 관리 권한은 부여되지 않습니다. 앱 수정·삭제·게시·승인은 <b>최고 관리자 전용</b>입니다.
+          여기서 추가·수정·삭제·순서 변경(▲/▼)한 역할 목록이 <b>회원가입 역할 선택창</b>에 그대로 자동 반영됩니다.
         </div>
-        ${roles.map(r => {
+        ${roles.map((r, idx) => {
           const count = members.filter(m => m.status === 'approved' && m.roleId === r.id).length;
           return `
             <div class="card">
-              <div class="card-top" style="margin-bottom:0;">
-                <div style="display:flex; align-items:center; gap:8px;">
+              <div class="layout-item-head">
+                <div style="display:flex; align-items:center; gap:8px; min-width:0; flex-wrap:wrap;">
+                  <strong style="font-size:13px; color:#64748B;">${idx + 1}.</strong>
                   <span class="role-pill" style="background:${r.color}; font-size:12px; padding:4px 10px;">${escapeHtml(r.name)}</span>
                   <span style="font-size:12px; color:#64748B; font-weight:600;">소속 ${count}명</span>
                 </div>
+                <div class="order-btns">
+                  <button class="order-btn" type="button" onclick="moveRole(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                  <button class="order-btn" type="button" onclick="moveRole(${idx}, 1)" ${idx === roles.length - 1 ? 'disabled' : ''}>▼</button>
+                </div>
+              </div>
+              <div class="card-footer">
+                <span style="font-size:11.5px; color:#64748B;">${isNewcomerRoleObj(r) ? '💐 선택 승인 시 메인 자동 환영' : '직분 배지 표시'}</span>
                 <div style="display:flex; gap:6px;">
                   <button class="btn-sm" onclick="openEditRoleModal('${r.id}')">수정</button>
                   <button class="btn-sm danger" onclick="deleteRole('${r.id}')" ${roles.length <= 1 ? 'disabled' : ''}>삭제</button>
@@ -5129,12 +5759,29 @@
       } catch (err) { handleDbError(err, '역할 저장'); }
     });
 
+    window.moveRole = async (idx, dir) => {
+      const t = idx + dir;
+      if (t < 0 || t >= roles.length) return;
+      const next = sanitizeRolesList(roles);
+      [next[idx], next[t]] = [next[t], next[idx]];
+      try {
+        await db.collection('config').doc('roles').set({
+          items: next,
+          metaById: buildRolesMetaByIdMap(next)
+        });
+        showToast('역할 순서가 변경되었습니다.');
+      } catch (err) {
+        handleDbError(err, '역할 순서 변경');
+      }
+    };
+
     window.deleteRole = async (roleId) => {
       if (roles.length <= 1) return showToast('최소 1개의 역할은 남아 있어야 합니다.');
       const r = roles.find(x => x.id === roleId);
       if (!r || !confirm(`[${r.name}] 역할을 삭제할까요?\n소속 회원은 기본 역할로 자동 변경됩니다.`)) return;
       const next = sanitizeRolesList(roles.filter(x => x.id !== roleId));
       const fallback = next.find(x => x.name === '청년') || next[0];
+      const deletedWasNewcomer = isNewcomerRoleObj(r);
       try {
         const batch = db.batch();
         batch.set(db.collection('config').doc('roles'), {
@@ -5144,6 +5791,9 @@
         members.forEach(m => {
           if (m.roleId === roleId) {
             batch.update(db.collection('members').doc(String(m.id)), { roleId: fallback.id });
+            if (deletedWasNewcomer && !isNewcomerRoleObj(fallback)) {
+              batch.delete(db.collection('newcomers').doc(String(m.id)));
+            }
           }
         });
         await batch.commit();
@@ -5250,6 +5900,8 @@
         const newMember = {
           id: newUid,
           name: rData.name,
+          birthday: rData.birthday || '',
+          requestedRole: rData.requestedRole || '',
           status: rData.origStatus || 'approved',
           roleId: rData.roleId || 'role_youth',
           authVer: nextVer,
@@ -5273,9 +5925,25 @@
         });
         await batch.commit();
 
-        // 2단계: 기존 초기화 대기 회원 문서 자동 정리
+        // 2단계: 기존 초기화 대기 회원 문서 정리 및 생일 정보 동기화
         if (rData.oldUid && String(rData.oldUid) !== String(newUid)) {
           await db.collection('members').doc(String(rData.oldUid)).delete().catch(() => {});
+        }
+        if (newMember.status === 'approved' && isValidBirthdayStr(newMember.birthday)) {
+          await db.collection('birthdays').doc(newUid).set({
+            uid: newUid,
+            name: newMember.name,
+            md: birthdayToMd(newMember.birthday),
+            updatedAt: Date.now()
+          }).catch(() => {});
+        }
+        if (newMember.status === 'approved' && isNewcomerRoleId(newMember.roleId)) {
+          await db.collection('newcomers').doc(newUid).set({
+            uid: newUid,
+            name: newMember.name,
+            joinedAt: newMember.createdAt || formatToday(),
+            addedTs: Date.now()
+          }).catch(() => {});
         }
 
         fbUser = createdUser;
@@ -5316,12 +5984,50 @@
       if (!user || user.isSuperAdmin) return;
       document.getElementById('accPwError').classList.remove('show');
       document.getElementById('accDeleteError').classList.remove('show');
+      const curBday = (myMemberDoc && isValidBirthdayStr(myMemberDoc.birthday)) ? myMemberDoc.birthday : '';
       document.getElementById('accountSummaryBox').innerHTML = `
         <div><b>아이디 (성명):</b> ${escapeHtml(user.name)}</div>
         <div><b>역할:</b> ${escapeHtml(user.role.name)}</div>
+        <div><b>생년월일:</b> ${escapeHtml(formatBirthdayDisplay(curBday))}</div>
       `;
+      document.getElementById('accBirthInput').value = curBday;
       switchAccountTab(tab);
       document.getElementById('accountModal').classList.add('open');
+    };
+
+    window.handleSaveMyBirthday = async () => {
+      const user = getCurrentUser();
+      if (!user || user.isSuperAdmin || !fbUser) return;
+      const birthday = (document.getElementById('accBirthInput').value || '').trim();
+      if (!isValidBirthdayStr(birthday)) {
+        return showToast('올바른 생년월일을 선택해 주세요.');
+      }
+      const btn = document.getElementById('saveAccBirthBtn');
+      btn.disabled = true;
+      try {
+        const uid = fbUser.uid;
+        await db.collection('members').doc(uid).update({ birthday });
+        await db.collection('birthdays').doc(uid).set({
+          uid,
+          name: user.name,
+          md: birthdayToMd(birthday),
+          updatedAt: Date.now()
+        });
+        if (myMemberDoc) {
+          myMemberDoc.birthday = birthday;
+          saveCachedMember(myMemberDoc);
+        }
+        document.getElementById('accountSummaryBox').innerHTML = `
+          <div><b>아이디 (성명):</b> ${escapeHtml(user.name)}</div>
+          <div><b>역할:</b> ${escapeHtml(user.role.name)}</div>
+          <div><b>생년월일:</b> ${escapeHtml(formatBirthdayDisplay(birthday))}</div>
+        `;
+        showToast('생일이 저장되었습니다!');
+      } catch (err) {
+        handleDbError(err, '생일 저장');
+      } finally {
+        btn.disabled = false;
+      }
     };
 
     window.switchAccountTab = (tab) => {
@@ -5378,6 +6084,8 @@
         const uid = fbUser.uid;
         const cred = firebase.auth.EmailAuthProvider.credential(fbUser.email, curPw);
         await auth.currentUser.reauthenticateWithCredential(cred);
+        await db.collection('birthdays').doc(uid).delete().catch(() => {});
+        await db.collection('newcomers').doc(uid).delete().catch(() => {});
         await db.collection('members').doc(uid).delete();
         await auth.currentUser.delete();
 
