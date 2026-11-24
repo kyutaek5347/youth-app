@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=137" />
+  <link rel="manifest" href="./manifest.json?v=138" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=137" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=137" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=138" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=138" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2637,7 +2637,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=137" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=138" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3948,7 +3948,9 @@
       { key: 'manage', defaultIcon: '🛠️', defaultLabel: '관리 센터', roleHint: '관리자 전용' }
     ];
     const MANAGE_SUBTAB_REGISTRY = [
-      { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', permCheck: p => !!(p.canEditLayout || p.canManageNotices || p.canManageQt) },
+      { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', permCheck: p => !!(p.canEditLayout || p.canManageNotices) },
+      { id: 'quicklinks', labelKey: 'manageQuickLinks', defaultIcon: '🔗', defaultLabel: '사이트 바로가기 관리', permCheck: p => !!p.canEditLayout },
+      { id: 'qt', labelKey: 'manageQt', defaultIcon: '✨', defaultLabel: '오늘의 말씀 관리', permCheck: p => !!p.canManageQt },
       { id: 'worship', labelKey: 'manageWorship', defaultIcon: '⛪', defaultLabel: '예배 관리', permCheck: p => !!p.canManageMembers },
       { id: 'qr', labelKey: 'manageQr', defaultIcon: '📲', defaultLabel: 'QR 관리', permCheck: p => !!p.canManageMembers },
       { id: 'members', labelKey: 'manageMembers', defaultIcon: '👥', defaultLabel: '회원 승인·역할', permCheck: p => !!p.canManageMembers },
@@ -4694,7 +4696,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=137" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=138" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -4717,8 +4719,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=137', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=137', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=138', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=138', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -7589,6 +7591,8 @@
 
       const content = document.getElementById('manageContent');
       if (currentManageSubTab === 'content') renderManageContent(content, user);
+      else if (currentManageSubTab === 'quicklinks') renderManageQuickLinks(content, user);
+      else if (currentManageSubTab === 'qt') renderManageQt(content, user);
       else if (currentManageSubTab === 'worship') renderManageWorship(content, user);
       else if (currentManageSubTab === 'qr') renderManageQr(content, user);
       else if (currentManageSubTab === 'members') renderManageMembers(content);
@@ -7605,25 +7609,29 @@
       applyScreen();
     };
 
-    // (A+B 통합) 화면·배너 배치 + 공지·광고 관리 + 오늘의 말씀 관리 + 칸 이름 수정
+    // (A) 화면·공지 관리 (메인 배너·칸 배치 + 생일·새신자 멘트 + 공지·광고 목록)
     function renderManageContent(el, user) {
       const canLayout = hasUserPerm(user, 'canEditLayout');
       const canNotices = hasUserPerm(user, 'canManageNotices');
-      const canQt = hasUserPerm(user, 'canManageQt');
+      const liveBlockCount = blocks.filter(b => getPublishState(b) === 'live').length;
+      const liveNoticeCount = notices.filter(n => getPublishState(n) === 'live').length;
+      const pendingOrDraftCount =
+        blocks.filter(b => getPublishState(b) !== 'live').length +
+        notices.filter(n => getPublishState(n) !== 'live').length;
 
       el.innerHTML = `
         <div class="stats-grid-3">
           <div class="stat-box" onclick="switchMainTab('home')">
-            <div class="stat-num">${blocks.filter(b => getPublishState(b) === 'live').length}</div>
+            <div class="stat-num">${liveBlockCount}</div>
             <div class="stat-label">메인 표시</div>
           </div>
           <div class="stat-box">
-            <div class="stat-num">${notices.length}</div>
-            <div class="stat-label">공지·광고</div>
+            <div class="stat-num">${liveNoticeCount}</div>
+            <div class="stat-label">게시 공지</div>
           </div>
-          <div class="stat-box" onclick="switchMainTab('qt')">
-            <div class="stat-num">${isAutoTodayQtHiddenOrReplaced() ? qtPosts.length : (qtPosts.length + 1)}</div>
-            <div class="stat-label">${escapeHtml(getTabLabel('qt'))}</div>
+          <div class="stat-box">
+            <div class="stat-num">${pendingOrDraftCount}</div>
+            <div class="stat-label">임시·예약</div>
           </div>
         </div>
 
@@ -7685,52 +7693,6 @@
               }).join('')}
         ` : ''}
 
-        ${canLayout ? `
-          <div class="manage-divider"></div>
-          <div class="section-head">
-            <h2 class="section-title">🔗 사이트 바로가기 관리 (☰ ${escapeHtml(getTabLabel('more'))})</h2>
-            <button class="btn-admin" onclick="openAddQuickLinkModal()">+ 새 사이트</button>
-          </div>
-          ${quickLinks.length === 0
-            ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">등록된 사이트 바로가기가 없습니다.<br>인스타·유튜브·교회 홈페이지 등을 추가해 보세요.</div>'
-            : quickLinks.map((ql, idx) => {
-                const theme = getQuickLinkTheme(ql.theme);
-                const safeManageUrl = normalizeExternalUrl(ql.url);
-                const hasUrl = !!safeManageUrl;
-                return `
-                  <div class="card">
-                    <div class="layout-item-head">
-                      <div style="display:flex; align-items:center; gap:9px; min-width:0; flex:1;">
-                        <span style="width:34px; height:34px; border-radius:10px; background:${theme.css}; color:${theme.darkText ? '#191919' : '#fff'}; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">${theme.svg}</span>
-                        <div style="min-width:0; flex:1;">
-                          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                            <strong style="font-size:14px;">${idx + 1}. ${escapeHtml(ql.label)}</strong>
-                            ${hasUrl ? '<span class="tag green">연결됨</span>' : '<span class="tag warm">주소 미등록</span>'}
-                          </div>
-                          <div style="font-size:11.5px; color:#64748B; margin-top:3px; word-break:break-all; line-height:1.4;">
-                            ${hasUrl ? escapeHtml(ql.url) : '수정 버튼을 눌러 사이트 주소를 입력해 주세요'}
-                          </div>
-                        </div>
-                      </div>
-                      <div class="order-btns">
-                        <button class="order-btn" onclick="moveQuickLink(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
-                        <button class="order-btn" onclick="moveQuickLink(${idx}, 1)" ${idx === quickLinks.length - 1 ? 'disabled' : ''}>▼</button>
-                      </div>
-                    </div>
-                    <div class="card-footer">
-                      ${hasUrl
-                        ? `<a href="${escapeHtml(safeManageUrl)}" target="_blank" rel="noopener noreferrer" class="btn-sm" style="text-decoration:none;">열기 테스트 ↗</a>`
-                        : `<button class="btn-sm primary" type="button" onclick="openEditQuickLinkModal('${escapeJsAttr(ql.id)}')">주소 입력하기</button>`}
-                      <div style="display:flex; gap:6px;">
-                        <button class="btn-sm" onclick="openEditQuickLinkModal('${escapeJsAttr(ql.id)}')">수정</button>
-                        <button class="btn-sm danger" onclick="deleteQuickLink('${escapeJsAttr(ql.id)}')">삭제</button>
-                      </div>
-                    </div>
-                  </div>
-                `;
-              }).join('')}
-        ` : ''}
-
         ${canLayout && canNotices ? '<div class="manage-divider"></div>' : ''}
 
         ${canNotices ? `
@@ -7771,72 +7733,126 @@
                 `;
               }).join('')}
         ` : ''}
+      `;
+    }
 
-        ${(canLayout || canNotices) && canQt ? '<div class="manage-divider"></div>' : ''}
+    // (A-2) 사이트 바로가기 관리 (독립 탭)
+    function renderManageQuickLinks(el, user) {
+      el.innerHTML = `
+        <div class="section-head">
+          <h2 class="section-title">${escapeHtml(getTabIcon('manageQuickLinks'))} ${escapeHtml(getTabLabel('manageQuickLinks'))}</h2>
+          <button class="btn-admin" onclick="openAddQuickLinkModal()">+ 새 사이트</button>
+        </div>
+        <div class="info-box" style="margin-top:0; margin-bottom:12px;">
+          여기서 추가·수정·순서 변경(▲/▼)한 사이트 목록이 하단 <b>${escapeHtml(getTabIcon('more'))} ${escapeHtml(getTabLabel('more'))}</b> 메뉴에 실시간 반영됩니다.
+        </div>
+        ${quickLinks.length === 0
+          ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">등록된 사이트 바로가기가 없습니다.<br>인스타·유튜브·교회 홈페이지 등을 추가해 보세요.</div>'
+          : quickLinks.map((ql, idx) => {
+              const theme = getQuickLinkTheme(ql.theme);
+              const safeManageUrl = normalizeExternalUrl(ql.url);
+              const hasUrl = !!safeManageUrl;
+              return `
+                <div class="card">
+                  <div class="layout-item-head">
+                    <div style="display:flex; align-items:center; gap:9px; min-width:0; flex:1;">
+                      <span style="width:34px; height:34px; border-radius:10px; background:${theme.css}; color:${theme.darkText ? '#191919' : '#fff'}; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">${theme.svg}</span>
+                      <div style="min-width:0; flex:1;">
+                        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                          <strong style="font-size:14px;">${idx + 1}. ${escapeHtml(ql.label)}</strong>
+                          ${hasUrl ? '<span class="tag green">연결됨</span>' : '<span class="tag warm">주소 미등록</span>'}
+                        </div>
+                        <div style="font-size:11.5px; color:#64748B; margin-top:3px; word-break:break-all; line-height:1.4;">
+                          ${hasUrl ? escapeHtml(ql.url) : '수정 버튼을 눌러 사이트 주소를 입력해 주세요'}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="order-btns">
+                      <button class="order-btn" onclick="moveQuickLink(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                      <button class="order-btn" onclick="moveQuickLink(${idx}, 1)" ${idx === quickLinks.length - 1 ? 'disabled' : ''}>▼</button>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    ${hasUrl
+                      ? `<a href="${escapeHtml(safeManageUrl)}" target="_blank" rel="noopener noreferrer" class="btn-sm" style="text-decoration:none;">열기 테스트 ↗</a>`
+                      : `<button class="btn-sm primary" type="button" onclick="openEditQuickLinkModal('${escapeJsAttr(ql.id)}')">주소 입력하기</button>`}
+                    <div style="display:flex; gap:6px;">
+                      <button class="btn-sm" onclick="openEditQuickLinkModal('${escapeJsAttr(ql.id)}')">수정</button>
+                      <button class="btn-sm danger" onclick="deleteQuickLink('${escapeJsAttr(ql.id)}')">삭제</button>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+      `;
+    }
 
-        ${canQt ? `
-          <div class="section-head">
-            <h2 class="section-title">✨ 오늘의 말씀 관리</h2>
-            <button class="btn-admin" onclick="openNewQtModal()">+ 말씀·글 추가</button>
+    // (A-3) 오늘의 말씀 관리 (독립 탭)
+    function renderManageQt(el, user) {
+      const autoToday = getAutoDailyQtForToday();
+      const isReplaced = hasTodayReplaceQt();
+      const isHiddenManually = isAutoTodayQtHiddenManually();
+      const isSuppressed = isReplaced || isHiddenManually;
+      const statusTag = isReplaced
+        ? '<span class="tag warm">관리자 글로 대체됨</span>'
+        : (isHiddenManually
+          ? '<span class="tag slate">오늘 자동 말씀 숨김됨</span>'
+          : '<span class="tag green">매일 00:00(KST) 자동 표시중</span>');
+
+      el.innerHTML = `
+        <div class="section-head">
+          <h2 class="section-title">${escapeHtml(getTabIcon('manageQt'))} ${escapeHtml(getTabLabel('manageQt'))}</h2>
+          <button class="btn-admin" onclick="openNewQtModal()">+ 말씀·글 추가</button>
+        </div>
+        <div class="info-box" style="margin-top:0; margin-bottom:12px;">
+          하단 <b>${escapeHtml(getTabIcon('qt'))} ${escapeHtml(getTabLabel('qt'))}</b> 메뉴에 표시되는 매일 자동 말씀과 관리자 작성 글을 관리합니다.
+        </div>
+
+        <div class="card" style="border-color:${isSuppressed ? '#CBD5E1' : '#C7D2FE'}; background:${isSuppressed ? '#F8FAFC' : '#F5F7FF'}; ${isSuppressed ? 'opacity:0.82;' : ''}">
+          <div class="card-top">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span class="qt-passage-pill">📖 ${escapeHtml(autoToday.passage)}</span>
+              ${statusTag}
+            </div>
+            <span class="card-date">${escapeHtml(autoToday.date)}</span>
           </div>
-          ${(() => {
-            const autoToday = getAutoDailyQtForToday();
-            const isReplaced = hasTodayReplaceQt();
-            const isHiddenManually = isAutoTodayQtHiddenManually();
-            const isSuppressed = isReplaced || isHiddenManually;
-            const statusTag = isReplaced
-              ? '<span class="tag warm">관리자 글로 대체됨</span>'
-              : (isHiddenManually
-                ? '<span class="tag slate">오늘 자동 말씀 숨김됨</span>'
-                : '<span class="tag green">매일 00:00(KST) 자동 표시중</span>');
-            return `
-              <div class="card" style="border-color:${isSuppressed ? '#CBD5E1' : '#C7D2FE'}; background:${isSuppressed ? '#F8FAFC' : '#F5F7FF'}; ${isSuppressed ? 'opacity:0.82;' : ''}">
-                <div class="card-top">
-                  <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                    <span class="qt-passage-pill">📖 ${escapeHtml(autoToday.passage)}</span>
-                    ${statusTag}
-                  </div>
-                  <span class="card-date">${escapeHtml(autoToday.date)}</span>
-                </div>
-                <p class="card-body" style="margin-bottom:10px;">${escapeHtml(autoToday.scripture)}</p>
-                ${isReplaced ? '<div style="font-size:11.5px; color:#92400E; margin-bottom:9px;">오늘은 관리자가 올린 대체 글이 오늘의 말씀 자리에 표시됩니다. (언제든 수정·삭제 가능, 내일 00:00 새 자동 말씀 전환)</div>' : ''}
-                ${(!isReplaced && isHiddenManually) ? '<div style="font-size:11.5px; color:#475569; margin-bottom:9px;">오늘의 자동 말씀이 숨겨져 있습니다. 아래 [자동 말씀 복원]으로 다시 표시할 수 있습니다.</div>' : ''}
-                <div class="qt-manage-actions">
-                  <button class="btn-sm primary" onclick="openQtDetail('${autoToday.id}')">💬 댓글·하트</button>
-                  <button class="btn-sm" onclick="openEditAutoTodayQtModal()">✏️ 수정(대체)</button>
-                  ${isHiddenManually
-                    ? `<button class="btn-sm approve" onclick="restoreAutoTodayQt()">🔄 복원</button>`
-                    : `<button class="btn-sm danger" onclick="hideAutoTodayQt()">삭제(숨김)</button>`}
-                </div>
-              </div>
-            `;
-          })()}
-          ${qtPosts.length === 0
-            ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">관리자가 추가한 말씀이 없습니다.<br>(매일 자동 말씀 1편은 하단 오늘의 말씀 칸에 올라갑니다.)</div>'
-            : qtPosts.slice(0, 30).map(q => {
-                const isReplace = q.displayMode === 'replace';
-                const isTodayPost = normalizeDotDate(q.date) === getKstDateParts().dot;
-                return `
-                  <div class="card">
-                    <div class="card-top">
-                      <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                        <span class="tag ${isReplace ? 'warm' : 'slate'}">${isReplace ? (isTodayPost ? '🔄 오늘의 말씀 대체중' : '🔄 대체 게시') : '📌 말씀과 함께 게시'}</span>
-                        ${q.passage ? `<span class="qt-passage-pill">📖 ${escapeHtml(q.passage)}</span>` : ''}
-                      </div>
-                      <span class="card-date">${escapeHtml(q.date || '')}</span>
+          <p class="card-body" style="margin-bottom:10px;">${escapeHtml(autoToday.scripture)}</p>
+          ${isReplaced ? '<div style="font-size:11.5px; color:#92400E; margin-bottom:9px;">오늘은 관리자가 올린 대체 글이 오늘의 말씀 자리에 표시됩니다. (언제든 수정·삭제 가능, 내일 00:00 새 자동 말씀 전환)</div>' : ''}
+          ${(!isReplaced && isHiddenManually) ? '<div style="font-size:11.5px; color:#475569; margin-bottom:9px;">오늘의 자동 말씀이 숨겨져 있습니다. 아래 [복원] 버튼으로 다시 표시할 수 있습니다.</div>' : ''}
+          <div class="qt-manage-actions">
+            <button class="btn-sm primary" onclick="openQtDetail('${autoToday.id}')">💬 댓글·하트</button>
+            <button class="btn-sm" onclick="openEditAutoTodayQtModal()">✏️ 수정(대체)</button>
+            ${isHiddenManually
+              ? `<button class="btn-sm approve" onclick="restoreAutoTodayQt()">🔄 복원</button>`
+              : `<button class="btn-sm danger" onclick="hideAutoTodayQt()">삭제(숨김)</button>`}
+          </div>
+        </div>
+
+        ${qtPosts.length === 0
+          ? `<div class="card" style="text-align:center;color:#64748B;font-size:13px;">관리자가 추가한 말씀이 없습니다.<br>(매일 자동 말씀 1편은 하단 ${escapeHtml(getTabLabel('qt'))} 칸에 올라갑니다.)</div>`
+          : qtPosts.slice(0, 30).map(q => {
+              const isReplace = q.displayMode === 'replace';
+              const isTodayPost = normalizeDotDate(q.date) === getKstDateParts().dot;
+              return `
+                <div class="card">
+                  <div class="card-top">
+                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                      <span class="tag ${isReplace ? 'warm' : 'slate'}">${isReplace ? (isTodayPost ? '🔄 오늘의 말씀 대체중' : '🔄 대체 게시') : '📌 말씀과 함께 게시'}</span>
+                      ${q.passage ? `<span class="qt-passage-pill">📖 ${escapeHtml(q.passage)}</span>` : ''}
                     </div>
-                    <p class="card-body">${escapeHtml(q.scripture || q.title || '')}</p>
-                    <div class="card-footer">
-                      <button class="btn-sm" onclick="openQtDetail('${escapeJsAttr(q.id)}')">💬 댓글·하트</button>
-                      <div style="display:flex; gap:6px;">
-                        <button class="btn-sm" onclick="openEditQtModal('${escapeJsAttr(q.id)}')">수정</button>
-                        <button class="btn-sm danger" onclick="deleteQtPost('${escapeJsAttr(q.id)}')">삭제</button>
-                      </div>
+                    <span class="card-date">${escapeHtml(q.date || '')}</span>
+                  </div>
+                  <p class="card-body">${escapeHtml(q.scripture || q.title || '')}</p>
+                  <div class="card-footer">
+                    <button class="btn-sm" onclick="openQtDetail('${escapeJsAttr(q.id)}')">💬 댓글·하트</button>
+                    <div style="display:flex; gap:6px;">
+                      <button class="btn-sm" onclick="openEditQtModal('${escapeJsAttr(q.id)}')">수정</button>
+                      <button class="btn-sm danger" onclick="deleteQtPost('${escapeJsAttr(q.id)}')">삭제</button>
                     </div>
                   </div>
-                `;
-              }).join('')}
-        ` : ''}
+                </div>
+              `;
+            }).join('')}
       `;
     }
 
@@ -11457,7 +11473,7 @@ ${m.body}`;
     window.goToQuickLinksManage = () => {
       closeQuickLinksSheet();
       currentMainTab = 'manage';
-      currentManageSubTab = 'content';
+      currentManageSubTab = 'quicklinks';
       applyScreen();
     };
 
@@ -12487,6 +12503,8 @@ ${m.body}`;
         renderHomeView(u);
       } else if (currentMainTab === 'manage' && currentManageSubTab === 'content') {
         renderManageContent(document.getElementById('manageContent'), u);
+      } else if (currentMainTab === 'manage' && currentManageSubTab === 'qt') {
+        renderManageQt(document.getElementById('manageContent'), u);
       }
     }, 30000);
 
