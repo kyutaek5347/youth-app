@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=122" />
+  <link rel="manifest" href="./manifest.json?v=123" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=122" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=122" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=123" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=123" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1868,7 +1868,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=122" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=123" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3600,7 +3600,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=122" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=123" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -3623,8 +3623,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=122', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=122', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=123', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=123', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -4895,6 +4895,12 @@
       if ((user.email || '').toLowerCase() === ADMIN_EMAIL) {
         const savedName = (localStorage.getItem(KEY_ADMIN_NAME) || '').trim();
         if (!savedName) {
+          fbUser = null;
+          currentAdminName = '';
+          pendingAdminStatus = null;
+          document.getElementById('loadingScreen').classList.add('hidden');
+          applyScreen();
+          switchAuthTab('admin');
           await auth.signOut().catch(() => {});
           return;
         }
@@ -4921,6 +4927,14 @@
         attachMemberProfileListener(user.uid, 0);
       }
     });
+
+    setTimeout(() => {
+      const ls = document.getElementById('loadingScreen');
+      if (ls && !ls.classList.contains('hidden')) {
+        ls.classList.add('hidden');
+        applyScreen();
+      }
+    }, 6000);
 
     // ==================== 8. 인증 탭 및 로그인/회원가입 ====================
     window.switchAuthTab = (tab) => {
