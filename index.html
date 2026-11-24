@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=147" />
+  <link rel="manifest" href="./manifest.json?v=148" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=147" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=147" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=148" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=148" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2863,7 +2863,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=147" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=148" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4992,7 +4992,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=147" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=148" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5015,8 +5015,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=147', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=147', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=148', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=148', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -7942,7 +7942,7 @@
           '<b>출석 명단 관리:</b> 날짜/예배를 선택해 출석 인원을 확인하고, 누락된 회원은 <b>[+ 출석 추가]</b>, 시각 오기는 <b>[수정]</b>, 잘못된 기록은 <b>[삭제]</b>할 수 있습니다. <b>[✏️ 예배명 변경]</b>으로 특정 주일을 절기 예배 이름으로 바꿀 수 있습니다.',
           '<b>정기 예배 · 특별 행사 설정:</b> 정기 예배 요일·시간(기본 주일 14:00~15:30)을 바꾸거나 <b>[+ 행사 추가]</b>로 수련회·금요기도회 등 특별 출석 일정을 등록합니다.',
           '<b>구글 시트 Apps Script 배포 방법:</b> 구글 시트 상단 <b>[확장 프로그램 → Apps Script]</b>에 최신 8탭 스크립트를 붙여넣고 저장한 뒤, 우측 상단 <b>[배포 → 배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]</b>를 완료합니다. (웹 앱 URL은 <b>[⛪ 예배 관리]</b> 하단에 입력 후 저장)',
-          '<b>자동 저장 & 전체 동기화:</b> 평소 출석·회원·관리자·보안 로그가 자동으로 각 전용 시트 탭에 분리 저장되며, <b>[🔄 전체 시트 동기화]</b>를 누르면 8개 탭 전체가 중복 없이 최신 상태로 맞춰집니다.'
+          '<b>자동 저장 · 전체 동기화 · 버전 전환 시트 재정비:</b> 평소 출석·회원·관리자·보안 로그가 자동으로 각 전용 시트 탭에 분리 저장됩니다. 향후 업데이트로 시트 양식이 바뀌거나 테스트 흔적이 남았을 때는 <b>[⛪ 예배 관리 → 🛠️ 시트 재정비]</b> 버튼으로 <b>출석부·회원 명단·관리자 명단</b>을 최신 양식으로 안전하게 재생성할 수 있습니다. (5개 감사 로그 탭은 삭제 불가 유지)'
         ],
         sheetTabs: [
           { name: '1. 출석부', desc: '예배·행사별 출석 시각 & 누적 출석' },
@@ -15550,6 +15550,20 @@ ${m.body}`;
             <button class="btn-sm approve" type="button" style="padding:9px 11px;" onclick="handleSyncAllToGoogleSheet()">🔄 전체 시트 동기화</button>
             <button class="btn-sm danger" type="button" style="width:100%; padding:9px;" onclick="handleCleanupZeroSheetEntries()">🧹 출석 0인 날짜·인원(테스트 흔적) 시트에서 정리</button>
           </div>
+
+          <div style="margin-top:14px; padding-top:12px; border-top:1px dashed #CBD5E1;">
+            <div style="font-size:12.5px; font-weight:800; color:#0F172A; margin-bottom:4px;">🛠️ 버전 업데이트 · 구버전 양식 시트 재정비 (현황 3개 탭)</div>
+            <div style="font-size:11.5px; color:#64748B; line-height:1.5; margin-bottom:9px;">
+              앱 업데이트 후 구버전 양식이나 테스트·오류 행이 남아 있을 때, 시트를 직접 지우지 않고 <b>앱 원본 데이터로 최신 양식 재생성</b>을 실행합니다.<br>
+              <span style="color:#0F172A; font-weight:700;">🔒 5개 보안 감사 로그 탭은 위변조 방지를 위해 초기화되지 않고 그대로 보존됩니다.</span>
+            </div>
+            <div class="form-grid-2" style="gap:6px;">
+              <button class="btn-sm warn" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['attendance'])">🔄 출석부 재정비</button>
+              <button class="btn-sm warn" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['members'])">🔄 회원 명단 재정비</button>
+              <button class="btn-sm warn" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['admins'])">🔄 관리자 명단 재정비</button>
+              <button class="btn-sm primary" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['attendance','members','admins'])">✨ 현황 3개 탭 일괄 재정비</button>
+            </div>
+          </div>
         </div>
       `;
     }
@@ -15773,6 +15787,11 @@ ${m.body}`;
       return Number(data.tabCount || 0) >= 8 || String(data.version || '').includes('8tab');
     }
 
+    function isSheetResponseRebuildCapable(data) {
+      if (!data || typeof data !== 'object') return false;
+      return data.supportsRebuild === true || String(data.version || '').includes('v10.48');
+    }
+
     function warnIfOldAppsScript(res) {
       if (res && res.readable && res.data && !isSheetResponseMultiTab(res.data)) {
         alert('⚠️ 구글 시트의 Apps Script가 아직 예전 버전으로 배포되어 있습니다!\n\n구글 시트 → 확장 프로그램 → Apps Script에서:\n1) 최신 8개 세부 탭 코드를 붙여넣고 저장한 뒤\n2) 오른쪽 위 [배포 → 배포 관리 → ✏️(수정) → 버전: 새 버전 → 배포]를 꼭 눌러주세요.\n(저장만 해서는 새 버전이 반영되지 않습니다.)');
@@ -15835,11 +15854,95 @@ ${m.body}`;
       const res = await postToGoogleSheet({ action: 'test', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url, true);
       if (warnIfOldAppsScript(res)) return;
       if (res.ok && res.readable && res.data && isSheetResponseEightTab(res.data)) {
-        showToast('✅ 구글 시트 8개 세부 탭 자동 분리 연동 정상!');
+        const legacy = Array.isArray(res.data.legacyDetected) ? res.data.legacyDetected : [];
+        if (legacy.length > 0) {
+          showToast(`⚠️ 8탭 연동 정상! 단 [${legacy.join(', ')}]에 구버전 양식이 남아 있어 아래 재정비 버튼을 눌러 주세요.`);
+        } else if (isSheetResponseRebuildCapable(res.data)) {
+          showToast('✅ 구글 시트 8개 세부 탭 + 앱 내 재정비 기능 모두 정상!');
+        } else {
+          showToast('✅ 구글 시트 8개 세부 탭 연동 정상! (v10.48 스크립트 배포 시 앱 내 재정비 가능)');
+        }
       } else if (res.ok && res.readable && res.data && isSheetResponseMultiTab(res.data)) {
         showToast('✅ 연동 정상 (현재 예전 3탭 버전 · 최신 8탭 Apps Script 배포 시 세부 탭이 자동 생성됩니다)');
       } else {
         showToast(res.ok ? '구글 시트로 테스트 신호를 보냈습니다! 시트 하단 탭을 확인해 보세요.' : '전송에 실패했습니다. URL을 확인해 주세요.');
+      }
+    };
+
+    window.handleRebuildSheetTabs = async (targets) => {
+      const url = (document.getElementById('cfgSheetUrlInput') ? document.getElementById('cfgSheetUrlInput').value.trim() : '') || getAdminSheetUrl();
+      if (!url) return showToast('먼저 Apps Script 웹 앱 URL을 입력하고 저장해 주세요.');
+
+      const validTargets = (Array.isArray(targets) ? targets : []).filter(t => ['attendance', 'members', 'admins'].includes(t));
+      if (validTargets.length === 0) return;
+
+      const labelMap = { attendance: '출석부', members: '회원 명단', admins: '관리자 명단' };
+      const targetNames = validTargets.map(t => labelMap[t]).join(' · ');
+
+      const ok1 = confirm(
+        `[${targetNames}] 시트를 최신 양식으로 재정비할까요?\n\n` +
+        `• 선택한 탭의 기존 내용(구버전 양식 · 테스트 흔적 포함)을 비우고, 현재 앱(Firebase) 원본 데이터로 깨끗하게 다시 작성합니다.\n` +
+        `• 5개 보안 감사 로그 탭은 절대 삭제·초기화되지 않고 그대로 보존됩니다.`
+      );
+      if (!ok1) return;
+
+      showToast(`[${targetNames}] 시트를 최신 양식으로 재정비하는 중...`);
+      const full = buildFullSheetSyncPayload();
+      const payload = {
+        action: 'rebuild_tabs',
+        targets: validTargets,
+        attendance: validTargets.includes('attendance') ? full.attendance : [],
+        members: validTargets.includes('members') ? full.members : [],
+        admins: validTargets.includes('admins') ? full.admins : []
+      };
+
+      const res = await postToGoogleSheet(payload, url, true);
+      if (warnIfOldAppsScript(res)) return;
+
+      if (res.readable && res.data && !isSheetResponseRebuildCapable(res.data)) {
+        alert(
+          '⚠️ 구글 시트의 Apps Script가 아직 재정비 기능(v10.48) 이전 버전입니다!\n\n' +
+          '구글 시트 → 확장 프로그램 → Apps Script에서:\n' +
+          '1) 최신 v10.48 스크립트 코드를 붙여넣고 저장한 뒤\n' +
+          '2) 오른쪽 위 [배포 → 배포 관리 → ✏️(수정) → 버전: 새 버전 → 배포]를 완료해 주세요.'
+        );
+        return;
+      }
+
+      if (res.ok) {
+        if (validTargets.includes('attendance')) {
+          for (const r of attendanceRecords) {
+            if (r.sheetSynced !== true) {
+              db.collection('attendance').doc(String(r.id)).update({ sheetSynced: true }).catch(() => {});
+            }
+          }
+        }
+        if (validTargets.includes('members')) {
+          for (const m of members) {
+            const isRe = !!m.isRejoin || memberHistoryMap.has(nameToHex(m.name));
+            const st = m.status === 'pending'
+              ? (isRe ? '재가입 대기' : '가입 대기')
+              : (m.status === 'approved' ? (isRe ? '재가입 승인' : '승인') : (m.status === 'rejected' ? '보류' : m.status));
+            if (m.sheetSyncedStatus !== st) {
+              db.collection('members').doc(String(m.id)).update({ sheetSyncedStatus: st }).catch(() => {});
+            }
+          }
+        }
+        const rebuiltCounts = (res.data && res.data.result && res.data.result.counts) ? res.data.result.counts : null;
+        const countSummary = rebuiltCounts
+          ? validTargets.map(t => `${labelMap[t]} ${Number(rebuiltCounts[t] || 0)}건`).join(' · ')
+          : targetNames;
+
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '구글 시트 현황 탭 재정비',
+          target: targetNames,
+          detail: `최신 양식 초기화 후 재작성 (${countSummary})`
+        });
+        showToast(`✅ [${targetNames}] 재정비 완료! (${countSummary})`);
+      } else {
+        showToast('시트 재정비 요청에 실패했습니다. URL과 Apps Script 배포 상태를 확인해 주세요.');
       }
     };
 
@@ -16438,7 +16541,14 @@ ${m.body}`;
             } else if (res.readable && res.data && !isSheetResponseMultiTab(res.data)) {
               setDiagResult(id, 'err', 'Apps Script가 예전 1탭 버전입니다. Apps Script에서 [배포 관리 → ✏️ 수정 → 새 버전 → 배포]를 진행해 주세요.');
             } else if (res.readable && res.data && isSheetResponseEightTab(res.data)) {
-              setDiagResult(id, 'ok', `🔐 관리자 전용 URL 격리 정상 · 구글 시트 8개 세부 탭 자동 분리 응답 확인 (${res.data.version || '8탭'})`);
+              const legacy = Array.isArray(res.data.legacyDetected) ? res.data.legacyDetected : [];
+              if (legacy.length > 0) {
+                setDiagResult(id, 'warn', `8탭 연동 정상(${res.data.version}) · 단 [${legacy.join(', ')}]에 구버전 양식·테스트 흔적이 감지되었습니다. [${getTabLabel('manageWorship')} → 시트 재정비] 버튼을 눌러 최신 양식으로 정리해 주세요.`);
+              } else if (isSheetResponseRebuildCapable(res.data)) {
+                setDiagResult(id, 'ok', `🔐 관리자 전용 URL 격리 정상 · 8개 세부 탭 자동 분리 + 앱 내 시트 재정비 지원 확인 (${res.data.version})`);
+              } else {
+                setDiagResult(id, 'warn', `8개 세부 탭 연동 정상(${res.data.version}) · 앱 내 시트 재정비 기능을 쓰려면 Apps Script v10.48로 새 버전 배포해 주세요.`);
+              }
             } else if (res.readable && res.data && isSheetResponseMultiTab(res.data)) {
               setDiagResult(id, 'warn', `연동은 정상이나 예전 3탭 버전(${res.data.version || '3탭'})입니다. 최신 8탭 Apps Script를 배포하면 로그가 항목별 탭으로 자동 분리됩니다.`);
             } else {
