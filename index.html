@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=138" />
+  <link rel="manifest" href="./manifest.json?v=139" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=138" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=138" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=139" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=139" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2637,7 +2637,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=138" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=139" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3955,6 +3955,7 @@
       { id: 'qr', labelKey: 'manageQr', defaultIcon: '📲', defaultLabel: 'QR 관리', permCheck: p => !!p.canManageMembers },
       { id: 'members', labelKey: 'manageMembers', defaultIcon: '👥', defaultLabel: '회원 승인·역할', permCheck: p => !!p.canManageMembers },
       { id: 'roles', labelKey: 'manageRoles', defaultIcon: '🏷️', defaultLabel: '역할 설정', permCheck: p => !!p.canManageMembers },
+      { id: 'admincode', labelKey: 'manageAdminCode', defaultIcon: '🔐', defaultLabel: '관리자 코드', permCheck: p => !!p.canManageMembers },
       { id: 'labels', labelKey: 'manageLabels', defaultIcon: '✏️', defaultLabel: '메뉴·이름', permCheck: p => !!p.canEditLayout },
       { id: 'diagnostics', labelKey: 'manageDiagnostics', defaultIcon: '🧪', defaultLabel: '기능 점검', permCheck: p => !!p.canManageMembers }
     ];
@@ -4696,7 +4697,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=138" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=139" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -4719,8 +4720,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=138', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=138', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=139', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=139', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5570,7 +5571,7 @@
             sharedAdminCode = '';
             sharedAdminCodeUpdatedAt = '';
           }
-          if (currentMainTab === 'manage' && currentManageSubTab === 'roles') {
+          if (currentMainTab === 'manage' && currentManageSubTab === 'admincode') {
             applyScreen();
           }
         }, () => {});
@@ -7597,6 +7598,7 @@
       else if (currentManageSubTab === 'qr') renderManageQr(content, user);
       else if (currentManageSubTab === 'members') renderManageMembers(content);
       else if (currentManageSubTab === 'roles') renderManageRoles(content, user);
+      else if (currentManageSubTab === 'admincode') renderManageAdminCode(content, user);
       else if (currentManageSubTab === 'labels') renderManageLabels(content, user);
       else if (currentManageSubTab === 'diagnostics') renderManageDiagnostics(content, user);
     }
@@ -9093,13 +9095,8 @@
       } catch (err) { handleDbError(err, '회원 삭제'); }
     };
 
-    // (D) 역할 관리 (표시용 직분 배지) + 최고 관리자 비밀번호 변경
+    // (D) 역할 관리 (표시용 직분 배지)
     function renderManageRoles(el, user) {
-      const prevCurEl = document.getElementById('curAdminPwInput');
-      const prevNewEl = document.getElementById('newAdminPwInput');
-      const prevCur = prevCurEl ? prevCurEl.value : '';
-      const prevNew = prevNewEl ? prevNewEl.value : '';
-
       el.innerHTML = `
         <div class="section-head">
           <h2 class="section-title">${escapeHtml(getTabIcon('manageRoles'))} ${escapeHtml(getTabLabel('manageRoles'))} (${roles.length}개)</h2>
@@ -9138,17 +9135,32 @@
             </div>
           `;
         }).join('')}
+      `;
+    }
 
-        <div class="card" style="margin-top:16px; border-color:#CBD5E1;">
+    // (D-2) 최고 관리자 코드 관리 (독립 탭)
+    function renderManageAdminCode(el, user) {
+      const prevCurEl = document.getElementById('curAdminPwInput');
+      const prevNewEl = document.getElementById('newAdminPwInput');
+      const prevCur = prevCurEl ? prevCurEl.value : '';
+      const prevNew = prevNewEl ? prevNewEl.value : '';
+
+      el.innerHTML = `
+        <div class="section-head">
+          <h2 class="section-title">${escapeHtml(getTabIcon('manageAdminCode'))} ${escapeHtml(getTabLabel('manageAdminCode'))}</h2>
+          ${sharedAdminCodeUpdatedAt ? `<span class="tag slate">${escapeHtml(sharedAdminCodeUpdatedAt)} 업데이트</span>` : ''}
+        </div>
+        <div class="info-box" style="margin-top:0; margin-bottom:12px;">
+          최고 관리자 계정으로 로그인했을 때만 현재 관리자 코드를 확인·복사하고 새 코드로 생성·변경할 수 있습니다.<br>
+          코드를 변경하면 관리자 로그인 비밀번호와 공유용 코드가 함께 업데이트됩니다.
+        </div>
+
+        <div class="card" style="border-color:#CBD5E1;">
           <div class="card-top">
-            <strong style="font-size:14.5px;">🔐 최고 관리자 코드</strong>
-            ${sharedAdminCodeUpdatedAt ? `<span class="card-date">${escapeHtml(sharedAdminCodeUpdatedAt)} 업데이트</span>` : ''}
-          </div>
-          <div style="font-size:12px; color:#64748B; margin-bottom:10px; line-height:1.5;">
-            최고 관리자 계정으로 로그인했을 때만 확인 및 변경할 수 있습니다.
+            <strong style="font-size:14.5px;">🔑 현재 최고 관리자 코드</strong>
           </div>
           ${sharedAdminCode ? `
-            <div class="secret-code-row">
+            <div class="secret-code-row" style="margin-bottom:0;">
               <span class="secret-code-val">${showSharedAdminCode ? escapeHtml(sharedAdminCode) : '••••••••'}</span>
               <div style="display:flex; gap:5px; flex-shrink:0;">
                 <button class="btn-sm" type="button" onclick="toggleSharedAdminCodeView()">${showSharedAdminCode ? '숨기기' : '👁️ 보기'}</button>
@@ -9156,28 +9168,57 @@
               </div>
             </div>
           ` : `
-            <div class="info-box" style="margin-top:0; margin-bottom:10px;">
-              아직 공유용 코드가 등록되지 않았습니다. 최고 관리자가 한 번 로그아웃 후 다시 로그인하거나 아래에서 코드를 변경하면 자동으로 표시됩니다.
+            <div class="info-box" style="margin-top:0;">
+              아직 공유용 코드가 등록되지 않았습니다. 최고 관리자가 한 번 로그아웃 후 다시 로그인하거나 아래에서 새 코드를 생성·변경하면 자동으로 표시됩니다.
             </div>
           `}
-          ${user && user.isSuperAdmin ? `
-            <div style="margin-top:12px; padding-top:12px; border-top:1px solid #F1F5F9;">
-              <div style="font-size:12.5px; font-weight:700; color:#334155; margin-bottom:8px;">최고 관리자 코드 변경</div>
-              <div class="form-group" style="margin-bottom:8px;">
-                <input id="curAdminPwInput" type="password" class="form-input" placeholder="현재 관리자 코드 입력" />
-              </div>
-              <div style="display:flex; gap:8px;">
-                <input id="newAdminPwInput" type="password" class="form-input" placeholder="새 관리자 코드 (6자리 이상)" style="flex:1;" />
-                <button class="btn-admin" onclick="changeAdminPassword()">변경</button>
+        </div>
+
+        ${user && user.isSuperAdmin ? `
+          <div class="card" style="border-color:#CBD5E1;">
+            <div class="card-top">
+              <strong style="font-size:14.5px;">🔄 새 최고 관리자 코드 생성 · 변경</strong>
+              <button class="btn-sm" type="button" onclick="fillRandomAdminCode()">🎲 자동 생성</button>
+            </div>
+            <div class="form-group" style="margin-bottom:8px;">
+              <label class="form-label" for="curAdminPwInput">현재 관리자 코드</label>
+              <input id="curAdminPwInput" type="password" class="form-input" placeholder="현재 관리자 코드 입력" />
+            </div>
+            <div class="form-group" style="margin-bottom:10px;">
+              <label class="form-label" for="newAdminPwInput">새 관리자 코드 (6자리 이상)</label>
+              <div style="display:flex; gap:6px;">
+                <input id="newAdminPwInput" type="password" class="form-input" placeholder="직접 입력하거나 [🎲 자동 생성] 클릭" style="flex:1;" />
+                <button id="toggleNewAdminPwBtn" class="btn-sm" type="button" style="white-space:nowrap;" onclick="toggleNewAdminPwVisibility()">👁️ 보기</button>
               </div>
             </div>
-          ` : ''}
-        </div>
+            <button class="btn-full btn-dark" type="button" style="padding:12px; font-size:14px;" onclick="changeAdminPassword()">💾 새 관리자 코드로 변경</button>
+          </div>
+        ` : ''}
       `;
 
       if (prevCur && document.getElementById('curAdminPwInput')) document.getElementById('curAdminPwInput').value = prevCur;
       if (prevNew && document.getElementById('newAdminPwInput')) document.getElementById('newAdminPwInput').value = prevNew;
     }
+
+    window.fillRandomAdminCode = () => {
+      const inp = document.getElementById('newAdminPwInput');
+      const btn = document.getElementById('toggleNewAdminPwBtn');
+      if (!inp) return;
+      const code = generateResetCode();
+      inp.value = code;
+      inp.type = 'text';
+      if (btn) btn.textContent = '숨기기';
+      showToast('새 추천 코드가 입력되었습니다. 확인 후 변경 버튼을 눌러 주세요.');
+    };
+
+    window.toggleNewAdminPwVisibility = () => {
+      const inp = document.getElementById('newAdminPwInput');
+      const btn = document.getElementById('toggleNewAdminPwBtn');
+      if (!inp) return;
+      const show = inp.type === 'password';
+      inp.type = show ? 'text' : 'password';
+      if (btn) btn.textContent = show ? '숨기기' : '👁️ 보기';
+    };
 
     window.changeAdminPassword = async () => {
       const curPw = (document.getElementById('curAdminPwInput').value || '').trim();
@@ -9196,6 +9237,9 @@
         }, { merge: true });
         document.getElementById('curAdminPwInput').value = '';
         document.getElementById('newAdminPwInput').value = '';
+        document.getElementById('newAdminPwInput').type = 'password';
+        const tBtn = document.getElementById('toggleNewAdminPwBtn');
+        if (tBtn) tBtn.textContent = '👁️ 보기';
         showToast('최고 관리자 코드가 변경 및 공유 업데이트되었습니다!');
       } catch (err) {
         showToast(authErrorToKorean(err, true));
