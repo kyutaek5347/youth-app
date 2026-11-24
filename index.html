@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=120" />
+  <link rel="manifest" href="./manifest.json?v=122" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=120" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=120" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=122" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=122" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1743,6 +1743,110 @@
     }
     .att-record-row:last-child { border-bottom: none; padding-bottom: 2px; }
 
+
+    /* ==================== v10.22 기능 점검 · 선택+입력 병행 · 메뉴/이모지 편집 스타일 ==================== */
+    .preview-member-bar {
+      background: linear-gradient(90deg, #D97706 0%, #F59E0B 100%);
+      color: #0F172A;
+      padding: 9px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: 0 3px 10px rgba(217, 119, 6, 0.25);
+    }
+    .preview-member-exit {
+      border: none;
+      background: #0F172A;
+      color: #FDE68A;
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .combo-input-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+    }
+    .combo-picker-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #F1F5F9;
+      color: #334155;
+      font-size: 17px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .combo-picker-btn:active { background: #E2E8F0; }
+    .hidden-native-picker {
+      position: absolute;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+      pointer-events: none;
+      right: 8px;
+      top: 50%;
+    }
+    .emoji-input {
+      width: 46px;
+      text-align: center;
+      font-size: 18px;
+      padding: 6px 4px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      flex-shrink: 0;
+    }
+    .diag-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 13px 14px;
+      margin-bottom: 9px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    }
+    .diag-card.ok { border-left: 4px solid #16A34A; }
+    .diag-card.warn { border-left: 4px solid #F59E0B; }
+    .diag-card.err { border-left: 4px solid #EF4444; }
+    .diag-card.idle { border-left: 4px solid #CBD5E1; }
+    .diag-msg {
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.5;
+      margin-top: 6px;
+      white-space: pre-line;
+    }
+    .diag-sim-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .diag-sim-btn {
+      border: 1px solid var(--border);
+      background: #F8FAFC;
+      color: #0F172A;
+      border-radius: 13px;
+      padding: 12px 10px;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .diag-sim-btn:active { background: #EFF6FF; border-color: #93C5FD; }
+
     /* 토스트 */
     .toast {
       position: fixed; bottom: calc(86px + var(--safe-bottom)); left: 50%;
@@ -1756,9 +1860,15 @@
 </head>
 <body>
   <div class="app-shell">
+    <!-- 일반 회원 시점 미리보기 배너 (관리자 기능 점검용) -->
+    <div id="previewMemberBar" class="preview-member-bar hidden">
+      <span>👁️ 일반 회원 시점 미리보기 중 (관리자 전용 칸·관리 탭 숨김)</span>
+      <button class="preview-member-exit" type="button" onclick="toggleMemberPreviewMode(false)">관리자 복귀</button>
+    </div>
+
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=120" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=122" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -1834,12 +1944,15 @@
             <div class="login-input-wrap">
               <input id="signupNameInput" class="login-input blue-focus" placeholder="본인 성명을 입력하세요" />
             </div>
-            <label class="login-field-label" for="signupBirthInput">생년월일 (필수)</label>
-            <div class="login-input-wrap">
-              <input id="signupBirthInput" type="date" class="login-input blue-focus" min="1940-01-01" />
+            <label class="login-field-label" for="signupBirthInput">생년월일 (필수 · 직접 입력 또는 달력 선택)</label>
+            <div class="login-input-wrap combo-input-row">
+              <input id="signupBirthInput" type="text" inputmode="numeric" maxlength="10" autocomplete="bday" class="login-input blue-focus" style="flex:1;" placeholder="예: 1998.01.16 (숫자 8자리)" oninput="formatBirthdayTyping(this)" />
+              <button class="combo-picker-btn" type="button" title="달력에서 선택" onclick="openNativePicker('signupBirthDatePicker', 'signupBirthInput', 'date')">📅</button>
+              <input id="signupBirthDatePicker" type="date" class="hidden-native-picker" min="1940-01-01" onchange="syncPickerToText('signupBirthDatePicker', 'signupBirthInput', 'date')" />
             </div>
-            <label class="login-field-label" for="signupRoleSelect">역할 선택 (필수)</label>
+            <label class="login-field-label" for="signupRoleSelect">역할 선택 (필수 · 검색 입력 또는 목록 선택)</label>
             <div class="login-input-wrap">
+              <input id="signupRoleSearchInput" type="text" class="login-input blue-focus" style="margin-bottom:6px; padding:9px 12px; font-size:13.5px;" placeholder="역할 검색 입력 (예: 청년, 새신자, 셀장)" oninput="filterSignupRoleOptions(this.value)" />
               <select id="signupRoleSelect" class="login-input blue-focus">
                 <option value="">역할을 선택해 주세요</option>
               </select>
@@ -2098,8 +2211,10 @@
       <div id="accountAttendanceBox" class="att-history-box"></div>
       <div class="form-group" style="background:#F8FAFC; border:1px solid var(--border); border-radius:12px; padding:10px 12px; margin-bottom:14px;">
         <label class="form-label" for="accBirthInput" style="margin-bottom:6px;">🎂 내 생일 등록 · 수정</label>
-        <div style="display:flex; gap:8px; align-items:center;">
-          <input id="accBirthInput" type="date" class="form-input" style="flex:1; background:#fff;" min="1940-01-01" />
+        <div class="combo-input-row">
+          <input id="accBirthInput" type="text" inputmode="numeric" maxlength="10" autocomplete="bday" class="form-input" style="flex:1; background:#fff;" placeholder="예: 1998.01.16 (숫자 8자리)" oninput="formatBirthdayTyping(this)" />
+          <button class="combo-picker-btn" type="button" title="달력에서 선택" onclick="openNativePicker('accBirthDatePicker', 'accBirthInput', 'date')">📅</button>
+          <input id="accBirthDatePicker" type="date" class="hidden-native-picker" min="1940-01-01" onchange="syncPickerToText('accBirthDatePicker', 'accBirthInput', 'date')" />
           <button id="saveAccBirthBtn" class="btn-sm primary" type="button" style="padding:10px 13px; white-space:nowrap;" onclick="handleSaveMyBirthday()">저장</button>
         </div>
       </div>
@@ -2415,13 +2530,15 @@
       </div>
       <input type="hidden" id="editNoticeId" />
       <div class="form-group">
-        <label class="form-label">구분</label>
-        <select id="noticeCategory" class="form-select">
+        <label class="form-label" for="noticeCategory">구분 (선택 또는 직접 입력)</label>
+        <select id="noticeCategory" class="form-select" onchange="onNoticeCategorySelectChange()">
           <option value="공지">공지</option>
           <option value="광고">광고</option>
           <option value="소식">소식</option>
           <option value="행사">행사</option>
+          <option value="__custom__">✏️ 직접 입력...</option>
         </select>
+        <input id="noticeCategoryCustomInput" class="form-input hidden" style="margin-top:6px;" maxlength="12" placeholder="원하는 구분 입력 (예: 수련회, 기도제목)" />
       </div>
       <div class="form-group">
         <label class="form-label">제목</label>
@@ -2583,8 +2700,12 @@
       </div>
       <input type="hidden" id="editMemberBdayId" />
       <div class="form-group">
-        <label class="form-label" for="adminMemberBdayInput">생년월일</label>
-        <input id="adminMemberBdayInput" type="date" class="form-input" min="1940-01-01" />
+        <label class="form-label" for="adminMemberBdayInput">생년월일 (직접 입력 또는 달력 선택)</label>
+        <div class="combo-input-row">
+          <input id="adminMemberBdayInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1;" placeholder="예: 1998.01.16 (숫자 8자리)" oninput="formatBirthdayTyping(this)" />
+          <button class="combo-picker-btn" type="button" title="달력에서 선택" onclick="openNativePicker('adminMemberBdayPicker', 'adminMemberBdayInput', 'date')">📅</button>
+          <input id="adminMemberBdayPicker" type="date" class="hidden-native-picker" min="1940-01-01" onchange="syncPickerToText('adminMemberBdayPicker', 'adminMemberBdayInput', 'date')" />
+        </div>
       </div>
       <div style="display:flex; gap:8px; margin-top:8px;">
         <button id="saveAdminMemberBdayBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveAdminMemberBirthday()">생일 저장</button>
@@ -2604,8 +2725,9 @@
       <input type="hidden" id="releaseNewcomerMemberId" />
       <div id="releaseNewcomerDesc" class="info-box" style="margin-top:0; margin-bottom:12px;"></div>
       <div class="form-group">
-        <label class="form-label" for="releaseNewcomerRoleSelect">새로 부여할 역할 선택</label>
-        <select id="releaseNewcomerRoleSelect" class="form-select"></select>
+        <label class="form-label" for="releaseNewcomerRoleSelect">새로 부여할 역할 (선택 또는 직접 입력)</label>
+        <select id="releaseNewcomerRoleSelect" class="form-select" style="margin-bottom:6px;"></select>
+        <input id="releaseNewcomerCustomRoleInput" class="form-input" maxlength="16" placeholder="목록에 없는 역할이면 여기에 직접 입력 (선택)" />
       </div>
       <div style="display:flex; gap:8px; margin-top:10px;">
         <button id="confirmReleaseNewcomerBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleConfirmReleaseNewcomer()">새신자 해제 및 역할 변경</button>
@@ -2675,7 +2797,7 @@
         <div id="inviteQrValidMeta" class="qr-meta-pill">⏳ QR 준비 중...</div>
       </div>
       <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-        • 처음 가입하는 지인·새신자에게 이 QR을 스캔하도록 안내해 주세요.<br>
+        • 처음 가입을 원하는 가입자에게 이 QR을 스캔하도록 안내해 주세요.<br>
         • <b>한국시간 00:00</b>이 지나면 자동으로 새 QR로 바뀌며, 지난 QR로는 가입할 수 없습니다.<br>
         • 기존 가입 완료 회원은 QR 없이 평소처럼 바로 로그인합니다.
       </div>
@@ -2704,12 +2826,17 @@
       <input type="hidden" id="editAttLabel" />
       <div id="adminAttTargetInfo" class="info-box" style="margin-top:0; margin-bottom:12px;"></div>
       <div class="form-group" id="adminAttMemberSelectGroup">
-        <label class="form-label" for="adminAttMemberSelect">출석 추가할 회원 선택</label>
+        <label class="form-label" for="adminAttMemberSelect">출석 추가할 회원 (검색 입력 또는 목록 선택)</label>
+        <input id="adminAttMemberSearchInput" class="form-input" style="margin-bottom:6px; padding:8px 11px; font-size:13px;" placeholder="회원 이름 검색..." oninput="filterAdminAttMemberSelect(this.value)" />
         <select id="adminAttMemberSelect" class="form-select"></select>
       </div>
       <div class="form-group">
-        <label class="form-label" for="adminAttTimeInput">출석 시각 (HH:MM)</label>
-        <input id="adminAttTimeInput" type="time" class="form-input" />
+        <label class="form-label" for="adminAttTimeInput">출석 시각 (직접 입력 또는 시계 선택)</label>
+        <div class="combo-input-row">
+          <input id="adminAttTimeInput" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1;" placeholder="예: 14:05" oninput="formatTimeTyping(this)" />
+          <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('adminAttTimePicker', 'adminAttTimeInput', 'time')">🕒</button>
+          <input id="adminAttTimePicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('adminAttTimePicker', 'adminAttTimeInput', 'time')" />
+        </div>
       </div>
       <div style="display:flex; gap:8px; margin-top:8px;">
         <button id="saveAdminAttBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveAdminAttendance()">저장 (구글 시트 자동 반영)</button>
@@ -2730,20 +2857,44 @@
         <input id="spEventTitleInput" class="form-input" maxlength="24" placeholder="예: 겨울 수련회 1일차 / 금요 기도회" />
       </div>
       <div class="form-group">
-        <label class="form-label" for="spEventDateInput">출석 날짜</label>
-        <input id="spEventDateInput" type="date" class="form-input" />
+        <label class="form-label" for="spEventDateInput">출석 날짜 (직접 입력 또는 달력 선택)</label>
+        <div class="combo-input-row">
+          <input id="spEventDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1;" placeholder="예: 2026.12.25" oninput="formatBirthdayTyping(this)" />
+          <button class="combo-picker-btn" type="button" title="달력에서 선택" onclick="openNativePicker('spEventDatePicker', 'spEventDateInput', 'date')">📅</button>
+          <input id="spEventDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('spEventDatePicker', 'spEventDateInput', 'date')" />
+        </div>
       </div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
         <div class="form-group">
           <label class="form-label" for="spEventStartInput">시작 시간</label>
-          <input id="spEventStartInput" type="time" class="form-input" value="19:00" />
+          <div class="combo-input-row">
+            <input id="spEventStartInput" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1;" value="19:00" placeholder="19:00" oninput="formatTimeTyping(this)" />
+            <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('spEventStartPicker', 'spEventStartInput', 'time')">🕒</button>
+            <input id="spEventStartPicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('spEventStartPicker', 'spEventStartInput', 'time')" />
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label" for="spEventEndInput">종료 시간</label>
-          <input id="spEventEndInput" type="time" class="form-input" value="21:00" />
+          <div class="combo-input-row">
+            <input id="spEventEndInput" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1;" value="21:00" placeholder="21:00" oninput="formatTimeTyping(this)" />
+            <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('spEventEndPicker', 'spEventEndInput', 'time')">🕒</button>
+            <input id="spEventEndPicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('spEventEndPicker', 'spEventEndInput', 'time')" />
+          </div>
         </div>
       </div>
       <button id="saveSpEventBtn" class="btn-full btn-dark" type="button" onclick="handleSaveSpecialEvent()">행사 출석 일정 추가</button>
+    </div>
+  </div>
+
+
+  <!-- 관리자: 기능 점검 안전 시뮬레이션 모달 -->
+  <div id="diagSimModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="diagSimModalTitle" class="modal-title">🧪 기능 시뮬레이션</h3>
+        <button class="close-btn" data-close="diagSimModal">✕</button>
+      </div>
+      <div id="diagSimModalBody"></div>
     </div>
   </div>
 
@@ -2866,27 +3017,35 @@
       { id: 'orange', label: '주황', bg: '#FFEDD5', border: '#FB923C', dot: '#F97316', text: '#9A3412' }
     ];
 
-    const DEFAULT_TAB_ORDER = ['home', 'bible', 'qt', 'bylaws', 'more', 'manage'];
-    const TAB_META_DEFS = {
-      home: { icon: '🏠', roleHint: '메인 홈' },
-      bible: { icon: '📖', roleHint: '성경' },
-      qt: { icon: '✨', roleHint: '오늘의 말씀' },
-      bylaws: { icon: '📜', roleHint: '회칙' },
-      more: { icon: '☰', roleHint: '더보기 (사이트 바로가기)' },
-      manage: { icon: '🛠️', roleHint: '관리자 전용' }
-    };
-    const DEFAULT_TAB_LABELS = {
-      home: '메인 홈',
-      bible: '성경',
-      qt: '오늘의 말씀',
-      bylaws: '회칙',
-      more: '더보기',
-      manage: '관리 센터',
-      manageContent: '화면·공지 관리',
-      manageMembers: '회원 승인·역할',
-      manageRoles: '역할 설정',
-      tabOrder: DEFAULT_TAB_ORDER
-    };
+    // 중앙 탭 레지스트리: 여기에 새 탭을 추가하면 실제 메뉴와 [✏️ 메뉴·이름] 편집 화면에 자동 반영됩니다.
+    const BOTTOM_TAB_REGISTRY = [
+      { key: 'home', defaultIcon: '🏠', defaultLabel: '메인 홈', roleHint: '메인 홈' },
+      { key: 'bible', defaultIcon: '📖', defaultLabel: '성경', roleHint: '성경' },
+      { key: 'qt', defaultIcon: '✨', defaultLabel: '오늘의 말씀', roleHint: '오늘의 말씀' },
+      { key: 'bylaws', defaultIcon: '📜', defaultLabel: '회칙', roleHint: '회칙' },
+      { key: 'more', defaultIcon: '☰', defaultLabel: '더보기', roleHint: '더보기 (사이트 바로가기)' },
+      { key: 'manage', defaultIcon: '🛠️', defaultLabel: '관리 센터', roleHint: '관리자 전용' }
+    ];
+    const MANAGE_SUBTAB_REGISTRY = [
+      { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', permCheck: p => !!(p.canEditLayout || p.canManageNotices || p.canManageQt) },
+      { id: 'attendance', labelKey: 'manageAttendance', defaultIcon: '✅', defaultLabel: '출석·QR 관리', permCheck: p => !!p.canManageMembers },
+      { id: 'members', labelKey: 'manageMembers', defaultIcon: '👥', defaultLabel: '회원 승인·역할', permCheck: p => !!p.canManageMembers },
+      { id: 'roles', labelKey: 'manageRoles', defaultIcon: '🏷️', defaultLabel: '역할 설정', permCheck: p => !!p.canManageMembers },
+      { id: 'labels', labelKey: 'manageLabels', defaultIcon: '✏️', defaultLabel: '메뉴·이름', permCheck: p => !!p.canEditLayout },
+      { id: 'diagnostics', labelKey: 'manageDiagnostics', defaultIcon: '🧪', defaultLabel: '기능 점검', permCheck: p => !!p.canManageMembers }
+    ];
+    const DEFAULT_TAB_ORDER = BOTTOM_TAB_REGISTRY.map(t => t.key);
+    const TAB_META_DEFS = Object.fromEntries(BOTTOM_TAB_REGISTRY.map(t => [t.key, { icon: t.defaultIcon, roleHint: t.roleHint }]));
+    const DEFAULT_TAB_ICONS = Object.assign(
+      {},
+      Object.fromEntries(BOTTOM_TAB_REGISTRY.map(t => [t.key, t.defaultIcon])),
+      Object.fromEntries(MANAGE_SUBTAB_REGISTRY.map(t => [t.labelKey, t.defaultIcon]))
+    );
+    const DEFAULT_TAB_LABELS = Object.assign(
+      { tabOrder: DEFAULT_TAB_ORDER, icons: DEFAULT_TAB_ICONS },
+      Object.fromEntries(BOTTOM_TAB_REGISTRY.map(t => [t.key, t.defaultLabel])),
+      Object.fromEntries(MANAGE_SUBTAB_REGISTRY.map(t => [t.labelKey, t.defaultLabel]))
+    );
 
     const QUICK_LINK_THEMES = [
       {
@@ -3282,8 +3441,34 @@
 
     const RESET_CODE_TTL_MS = 24 * 60 * 60 * 1000;
 
+    function normalizeBirthdayInput(raw) {
+      const s = String(raw || '').trim();
+      if (!s) return '';
+      const digits = s.replace(/\D/g, '');
+      if (digits.length === 8) {
+        return `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`;
+      }
+      const m = s.match(/^(\d{4})[.\-\/\s]+(\d{1,2})[.\-\/\s]+(\d{1,2})$/);
+      if (m) {
+        return `${m[1]}-${String(Number(m[2])).padStart(2, '0')}-${String(Number(m[3])).padStart(2, '0')}`;
+      }
+      return s;
+    }
+
+    window.formatBirthdayTyping = (el) => {
+      if (!el) return;
+      const digits = String(el.value || '').replace(/\D/g, '').slice(0, 8);
+      let formatted = digits;
+      if (digits.length > 6) {
+        formatted = `${digits.slice(0, 4)}.${digits.slice(4, 6)}.${digits.slice(6)}`;
+      } else if (digits.length > 4) {
+        formatted = `${digits.slice(0, 4)}.${digits.slice(4)}`;
+      }
+      el.value = formatted;
+    };
+
     function isValidBirthdayStr(str) {
-      const s = String(str || '').trim();
+      const s = normalizeBirthdayInput(str);
       if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
       const [y, m, d] = s.split('-').map(Number);
       const curYear = new Date().getFullYear();
@@ -3415,7 +3600,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=120" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=122" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -3438,8 +3623,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=120', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=120', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=122', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=122', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -3606,6 +3791,11 @@
     let knownPendingAdminIds = new Set();
     let isLoggingInAdmin = false;
     let sessionEpochResetDone = false;
+    let previewAsMemberMode = false;
+    let diagResults = {};
+    let diagRunningAll = false;
+    let adminAttCandidateMembers = [];
+    let adminAttSessionSearchQuery = '';
     let lastSelfQtEditTs = 0;
     let qtFirstSnap = true;
     let knownQtIds = new Set();
@@ -3738,6 +3928,18 @@
       if (!fbUser) return null;
       if ((fbUser.email || '').toLowerCase() === ADMIN_EMAIL) {
         if (!currentAdminName || pendingAdminStatus === 'pending') return null;
+        if (previewAsMemberMode) {
+          return {
+            isSuperAdmin: false,
+            isPreviewMember: true,
+            uid: fbUser.uid,
+            name: currentAdminName,
+            role: {
+              id: 'role_youth', name: '청년 (미리보기)', color: '#475569',
+              perms: MEMBER_PERMS_READONLY
+            }
+          };
+        }
         return {
           isSuperAdmin: true,
           uid: fbUser.uid,
@@ -3773,7 +3975,14 @@
     function getTabLabel(key) {
       return (tabLabels && tabLabels[key] && String(tabLabels[key]).trim())
         ? String(tabLabels[key]).trim()
-        : DEFAULT_TAB_LABELS[key];
+        : (DEFAULT_TAB_LABELS[key] || key);
+    }
+
+    function getTabIcon(key) {
+      const custom = tabLabels && tabLabels.icons && tabLabels.icons[key];
+      return (custom && String(custom).trim())
+        ? String(custom).trim()
+        : (DEFAULT_TAB_ICONS[key] || '•');
     }
 
     function getValidTabOrder(rawOrder) {
@@ -3789,14 +3998,12 @@
     }
 
     function getAllowedManageSubTabs(perms) {
-      const list = [];
-      if (perms.canEditLayout || perms.canManageNotices || perms.canManageQt) {
-        list.push({ id: 'content', label: `🎨 ${getTabLabel('manageContent')}` });
-      }
-      if (perms.canManageMembers) list.push({ id: 'attendance', label: '✅ 출석·QR 관리' });
-      if (perms.canManageMembers) list.push({ id: 'members', label: `👥 ${getTabLabel('manageMembers')}` });
-      if (perms.canManageMembers) list.push({ id: 'roles', label: `🏷️ ${getTabLabel('manageRoles')}` });
-      return list;
+      return MANAGE_SUBTAB_REGISTRY
+        .filter(t => t.permCheck(perms))
+        .map(t => ({
+          id: t.id,
+          label: `${getTabIcon(t.labelKey)} ${getTabLabel(t.labelKey)}`
+        }));
     }
 
     function showToast(msg) {
@@ -4150,6 +4357,10 @@
           } else {
             attendanceConfig = structuredClone(DEFAULT_ATTENDANCE_CONFIG);
           }
+          // sheetUrl이 나중에 로드되어도 미동기화 회원을 즉시 구글 시트에 자동 반영
+          if (attendanceConfig.sheetUrl && members.length > 0) {
+            syncUnsyncedMembersToSheet(members).catch(() => {});
+          }
           if (currentMainTab === 'home' || (currentMainTab === 'manage' && currentManageSubTab === 'attendance')) {
             applyScreen();
           }
@@ -4296,7 +4507,12 @@
       unsubCore.push(
         db.collection('config').doc('labels').onSnapshot(doc => {
           if (doc.exists) {
-            tabLabels = { ...DEFAULT_TAB_LABELS, ...doc.data() };
+            const d = doc.data() || {};
+            tabLabels = {
+              ...DEFAULT_TAB_LABELS,
+              ...d,
+              icons: { ...DEFAULT_TAB_ICONS, ...(d.icons || {}) }
+            };
           } else {
             tabLabels = structuredClone(DEFAULT_TAB_LABELS);
           }
@@ -4807,7 +5023,7 @@
     async function handleSignup() {
       clearErrors();
       const name = document.getElementById('signupNameInput').value.trim();
-      const birthday = (document.getElementById('signupBirthInput').value || '').trim();
+      const birthday = normalizeBirthdayInput(document.getElementById('signupBirthInput').value);
       const selectedRoleId = (document.getElementById('signupRoleSelect').value || '').trim();
       const selectedRoleObj = roles.find(r => String(r.id) === selectedRoleId);
       const pw = document.getElementById('signupPwInput').value.trim();
@@ -4821,7 +5037,7 @@
         return showError('signupError', '본인 성명을 2~10글자 이내로 입력해 주세요.');
       }
       if (!isValidBirthdayStr(birthday)) {
-        return showError('signupError', '생년월일을 올바르게 선택해 주세요.');
+        return showError('signupError', '생년월일 8자리(예: 1998.01.16)를 올바르게 입력해 주세요.');
       }
       if (!selectedRoleObj) {
         return showError('signupError', '역할 선택 칸에서 본인의 역할을 선택해 주세요.');
@@ -5078,6 +5294,7 @@
       try { localStorage.removeItem(KEY_ADMIN_NAME); } catch {}
       currentAdminName = '';
       pendingAdminStatus = null;
+      previewAsMemberMode = false;
       fbUser = null;
       myMemberDoc = null;
       members = [];
@@ -5141,12 +5358,15 @@
       const isManageMode = currentMainTab === 'manage';
       themeMeta.setAttribute('content', isManageMode ? '#0B0F19' : '#111827');
 
+      const previewBar = document.getElementById('previewMemberBar');
+      if (previewBar) previewBar.classList.toggle('hidden', !previewAsMemberMode);
+
       const header = document.getElementById('appHeader');
       header.className = `header ${isManageMode ? 'dark' : 'light'}`;
       const qrBtn = document.getElementById('headerQrBtn');
       if (qrBtn) qrBtn.className = `icon-btn ${isManageMode ? 'dark' : 'light'}`;
       const accBtn = document.getElementById('headerAccountBtn');
-      accBtn.className = `icon-btn ${isManageMode ? 'dark' : 'light'}${user.isSuperAdmin ? ' hidden' : ''}`;
+      accBtn.className = `icon-btn ${isManageMode ? 'dark' : 'light'}${(user.isSuperAdmin || user.isPreviewMember) ? ' hidden' : ''}`;
       document.getElementById('headerNotifBtn').className = `icon-btn ${isManageMode ? 'dark' : 'light'}`;
       document.getElementById('headerLogoutBtn').className = `exit-btn ${isManageMode ? 'dark' : 'light'}`;
       updateHeaderNotifDot();
@@ -5162,17 +5382,20 @@
       const orderedTabs = getValidTabOrder().filter(k => k !== 'manage' || canManage);
       const isMoreOpen = document.getElementById('quickLinksSheet').classList.contains('open');
       tabbar.innerHTML = orderedTabs.map(key => {
-        const meta = TAB_META_DEFS[key] || { icon: '•' };
+        const iconVal = getTabIcon(key);
         if (key === 'more') {
-          return `
-            <button id="tabBtnMore" class="tab-btn ${isMoreOpen ? 'more-active' : ''}" onclick="toggleQuickLinksSheet()">
-              <span class="tab-icon tab-icon-bars">
+          const moreIconHtml = iconVal === '☰'
+            ? `<span class="tab-icon tab-icon-bars">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
                   <line x1="4" y1="6.5" x2="20" y2="6.5"></line>
                   <line x1="4" y1="12" x2="20" y2="12"></line>
                   <line x1="4" y1="17.5" x2="20" y2="17.5"></line>
                 </svg>
-              </span>
+              </span>`
+            : `<span class="tab-icon">${escapeHtml(iconVal)}</span>`;
+          return `
+            <button id="tabBtnMore" class="tab-btn ${isMoreOpen ? 'more-active' : ''}" onclick="toggleQuickLinksSheet()">
+              ${moreIconHtml}
               <span>${escapeHtml(getTabLabel('more'))}</span>
             </button>
           `;
@@ -5182,7 +5405,7 @@
           : '';
         return `
           <button class="tab-btn ${!isMoreOpen && currentMainTab === key ? 'active' : ''}" onclick="switchMainTab('${key}')">
-            <span class="tab-icon">${meta.icon}</span>
+            <span class="tab-icon">${escapeHtml(iconVal)}</span>
             <span>${escapeHtml(getTabLabel(key))}</span>
             ${badgeHtml}
           </button>
@@ -5195,10 +5418,10 @@
       document.getElementById('viewBylaws').classList.toggle('hidden', currentMainTab !== 'bylaws');
       document.getElementById('viewManage').classList.toggle('hidden', currentMainTab !== 'manage');
 
-      // 동적 칸 이름 제목 동기화
-      document.getElementById('bibleViewTitle').textContent = `📖 ${getTabLabel('bible')}`;
-      document.getElementById('qtViewTitle').textContent = `✨ ${getTabLabel('qt')}`;
-      document.getElementById('bylawViewTitle').textContent = `📜 구미제일감리교회 라이트 청년부 ${getTabLabel('bylaws')}`;
+      // 동적 칸 이모지 + 이름 제목 동기화
+      document.getElementById('bibleViewTitle').textContent = `${getTabIcon('bible')} ${getTabLabel('bible')}`;
+      document.getElementById('qtViewTitle').textContent = `${getTabIcon('qt')} ${getTabLabel('qt')}`;
+      document.getElementById('bylawViewTitle').textContent = `${getTabIcon('bylaws')} 구미제일감리교회 라이트 청년부 ${getTabLabel('bylaws')}`;
 
       if (currentMainTab === 'home') renderHomeView(user);
       else if (currentMainTab === 'bible') renderBibleView();
@@ -5654,8 +5877,8 @@
                 ${perms.canManageNotices ? `<button class="btn-sm primary" onclick="openNewNoticeModal()">+ 글쓰기</button>` : ''}
               </div>
               <div class="filter-row">
-                ${['전체', '공지', '광고', '소식', '행사'].map(cat => `
-                  <button class="filter-chip ${currentFilter === cat ? 'active' : ''}" onclick="setFilter('${cat}')">${cat}</button>
+                ${Array.from(new Set(['전체', '공지', '광고', '소식', '행사', ...notices.map(n => n.category).filter(Boolean)])).map(cat => `
+                  <button class="filter-chip ${currentFilter === cat ? 'active' : ''}" onclick="setFilter('${escapeHtml(cat)}')">${escapeHtml(cat)}</button>
                 `).join('')}
               </div>
               ${filtered.length === 0
@@ -5718,6 +5941,8 @@
       else if (currentManageSubTab === 'attendance') renderManageAttendance(content, user);
       else if (currentManageSubTab === 'members') renderManageMembers(content);
       else if (currentManageSubTab === 'roles') renderManageRoles(content, user);
+      else if (currentManageSubTab === 'labels') renderManageLabels(content, user);
+      else if (currentManageSubTab === 'diagnostics') renderManageDiagnostics(content, user);
     }
 
     window.switchManageSubTab = (sub) => {
@@ -5749,16 +5974,6 @@
         </div>
 
         ${canLayout ? `
-          <div class="card" style="display:flex; align-items:center; justify-content:space-between; gap:10px; background:#F8FAFC; border-style:dashed;">
-            <div style="min-width:0;">
-              <div style="font-size:13.5px; font-weight:800; color:#0F172A;">🏷️ 하단 메뉴 칸 순서 · 이름 편집</div>
-              <div style="font-size:11.5px; color:#64748B; margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-                ${getValidTabOrder().map((k, idx) => `${idx + 1}.${escapeHtml(getTabLabel(k))}`).join(' → ')}
-              </div>
-            </div>
-            <button class="btn-sm primary" type="button" style="white-space:nowrap; padding:8px 11px;" onclick="openTabLabelsModal()">✏️ 순서·이름 수정</button>
-          </div>
-
           <div class="card" style="display:flex; align-items:center; justify-content:space-between; gap:10px; background:#FFFBEB; border:1px dashed #F59E0B;">
             <div style="min-width:0;">
               <div style="font-size:13.5px; font-weight:800; color:#0F172A;">🎉 생일 · 새신자 축하 멘트 편집</div>
@@ -6193,10 +6408,21 @@
       } catch (err) { handleDbError(err, '순서 변경'); }
     };
 
+    window.onNoticeCategorySelectChange = () => {
+      const sel = document.getElementById('noticeCategory');
+      const customEl = document.getElementById('noticeCategoryCustomInput');
+      if (!sel || !customEl) return;
+      const isCustom = sel.value === '__custom__';
+      customEl.classList.toggle('hidden', !isCustom);
+      if (isCustom) setTimeout(() => customEl.focus(), 40);
+    };
+
     window.openNewNoticeModal = () => {
       document.getElementById('noticeModalTitle').textContent = '새 공지 · 광고 등록';
       document.getElementById('editNoticeId').value = '';
       document.getElementById('noticeCategory').value = '공지';
+      document.getElementById('noticeCategoryCustomInput').value = '';
+      onNoticeCategorySelectChange();
       document.getElementById('noticeTitleInput').value = '';
       document.getElementById('noticeBodyInput').value = '';
       document.getElementById('noticeNotifyInput').checked = true;
@@ -6208,7 +6434,15 @@
       if (!n) return;
       document.getElementById('noticeModalTitle').textContent = '공지 · 광고 수정';
       document.getElementById('editNoticeId').value = n.id;
-      document.getElementById('noticeCategory').value = n.category;
+      const baseCats = ['공지', '광고', '소식', '행사'];
+      if (baseCats.includes(n.category)) {
+        document.getElementById('noticeCategory').value = n.category;
+        document.getElementById('noticeCategoryCustomInput').value = '';
+      } else {
+        document.getElementById('noticeCategory').value = '__custom__';
+        document.getElementById('noticeCategoryCustomInput').value = n.category || '';
+      }
+      onNoticeCategorySelectChange();
       document.getElementById('noticeTitleInput').value = n.title;
       document.getElementById('noticeBodyInput').value = n.body;
       document.getElementById('noticeNotifyInput').checked = true;
@@ -6217,7 +6451,11 @@
 
     document.getElementById('saveNoticeBtn').addEventListener('click', () => {
       const editId = document.getElementById('editNoticeId').value;
-      const category = document.getElementById('noticeCategory').value;
+      const rawCat = document.getElementById('noticeCategory').value;
+      const category = rawCat === '__custom__'
+        ? (document.getElementById('noticeCategoryCustomInput').value || '').trim()
+        : rawCat;
+      if (!category) return showToast('구분을 선택하거나 직접 입력해 주세요.');
       const title = document.getElementById('noticeTitleInput').value.trim();
       const body = document.getElementById('noticeBodyInput').value.trim();
       const notify = document.getElementById('noticeNotifyInput').checked;
@@ -6388,11 +6626,12 @@
                     <div>🎂 <b>생일:</b> ${escapeHtml(formatBirthdayDisplay(m.birthday))}</div>
                     ${reqRoleName ? `<div>🏷️ <b>신청 역할:</b> <span class="tag" style="margin-left:2px;">${escapeHtml(reqRoleName)}</span></div>` : ''}
                   </div>
-                  <div style="display:flex; align-items:center; gap:8px; margin-top:9px;">
+                  <div style="display:flex; align-items:center; gap:6px; margin-top:9px; flex-wrap:wrap;">
                     <span style="font-size:12px; font-weight:700; color:#475569;">부여 역할:</span>
-                    <select id="approveRole-${m.id}" class="role-select" style="flex:1;">
+                    <select id="approveRole-${m.id}" class="role-select" style="flex:1; min-width:110px;">
                       ${roleOptionsHtml(defaultApproveVal)}
                     </select>
+                    <input id="approveRoleCustom-${m.id}" class="form-input" style="flex:1; min-width:110px; padding:5px 8px; font-size:12px;" maxlength="16" placeholder="또는 새 역할 직접 입력" />
                   </div>
                   <div style="display:flex; gap:6px; margin-top:10px;">
                     <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberWithRole('${m.id}')">✅ 역할 부여 및 승인</button>
@@ -6464,6 +6703,7 @@
                       <select class="role-select" onchange="changeMemberRole('${m.id}', this.value)">
                         ${roleOptionsHtml(m.roleId)}
                       </select>
+                      <button class="btn-sm" type="button" title="역할 직접 입력" onclick="promptCustomRoleForMember('${m.id}')">✏️ 역할입력</button>
                       ${isNewcomer ? `<button class="btn-sm primary" onclick="openReleaseNewcomerModal('${m.id}')">💐 새신자 해제</button>` : ''}
                       <button class="btn-sm" onclick="openEditMemberBirthdayModal('${m.id}')">🎂 생일</button>
                       ${!isSelf ? `<button class="btn-sm warn" onclick="initMemberPasswordReset('${m.id}')">비번 초기화</button>` : ''}
@@ -6500,8 +6740,14 @@
     window.approveMemberWithRole = async (id) => {
       const m = members.find(x => String(x.id) === String(id));
       if (!m) return;
+      const customEl = document.getElementById(`approveRoleCustom-${id}`);
+      const customRoleName = customEl ? customEl.value.trim() : '';
       const sel = document.getElementById(`approveRole-${id}`);
-      const roleId = sel ? sel.value : (m.requestedRoleId || m.roleId || 'role_youth');
+      let roleId = sel ? sel.value : (m.requestedRoleId || m.roleId || 'role_youth');
+      if (customRoleName) {
+        roleId = await findOrCreateRoleByName(customRoleName);
+        if (!roleId) return;
+      }
       const assignedRoleName = getRoleById(roleId).name;
 
       try {
@@ -6559,7 +6805,7 @@
       if (!m) return;
       document.getElementById('memberBdayModalTitle').textContent = `🎂 ${m.name}님 생일 설정`;
       document.getElementById('editMemberBdayId').value = m.id;
-      document.getElementById('adminMemberBdayInput').value = isValidBirthdayStr(m.birthday) ? m.birthday : '';
+      document.getElementById('adminMemberBdayInput').value = isValidBirthdayStr(m.birthday) ? formatBirthdayDisplay(m.birthday) : '';
       document.getElementById('memberBirthdayModal').classList.add('open');
     };
 
@@ -6567,9 +6813,9 @@
       const id = document.getElementById('editMemberBdayId').value;
       const m = members.find(x => String(x.id) === String(id));
       if (!m) return;
-      const birthday = (document.getElementById('adminMemberBdayInput').value || '').trim();
+      const birthday = normalizeBirthdayInput(document.getElementById('adminMemberBdayInput').value);
       if (!isValidBirthdayStr(birthday)) {
-        return showToast('올바른 생년월일을 선택해 주세요.');
+        return showToast('생년월일 8자리(예: 1998.01.16)를 올바르게 입력해 주세요.');
       }
       const btn = document.getElementById('saveAdminMemberBdayBtn');
       btn.disabled = true;
@@ -6644,13 +6890,19 @@
       document.getElementById('releaseNewcomerRoleSelect').innerHTML = nonNewcomerRoles.map(r => `
         <option value="${escapeHtml(r.id)}" ${r.id === defaultNext.id ? 'selected' : ''}>${escapeHtml(r.name)}</option>
       `).join('');
+      document.getElementById('releaseNewcomerCustomRoleInput').value = '';
       document.getElementById('releaseNewcomerModal').classList.add('open');
     };
 
     window.handleConfirmReleaseNewcomer = async () => {
       const id = document.getElementById('releaseNewcomerMemberId').value;
-      const newRoleId = document.getElementById('releaseNewcomerRoleSelect').value;
-      if (!id || !newRoleId) return;
+      const customRoleName = (document.getElementById('releaseNewcomerCustomRoleInput').value || '').trim();
+      let newRoleId = document.getElementById('releaseNewcomerRoleSelect').value;
+      if (!id) return;
+      if (customRoleName) {
+        newRoleId = await findOrCreateRoleByName(customRoleName);
+      }
+      if (!newRoleId) return;
       const btn = document.getElementById('confirmReleaseNewcomerBtn');
       btn.disabled = true;
       try {
@@ -7205,7 +7457,7 @@
         <div><b>역할:</b> ${escapeHtml(user.role.name)}</div>
         <div><b>생년월일:</b> ${escapeHtml(formatBirthdayDisplay(curBday))}</div>
       `;
-      document.getElementById('accBirthInput').value = curBday;
+      document.getElementById('accBirthInput').value = curBday ? formatBirthdayDisplay(curBday) : '';
       renderAccountAttendanceBox();
       switchAccountTab(tab);
       document.getElementById('accountModal').classList.add('open');
@@ -7214,9 +7466,9 @@
     window.handleSaveMyBirthday = async () => {
       const user = getCurrentUser();
       if (!user || user.isSuperAdmin || !fbUser) return;
-      const birthday = (document.getElementById('accBirthInput').value || '').trim();
+      const birthday = normalizeBirthdayInput(document.getElementById('accBirthInput').value);
       if (!isValidBirthdayStr(birthday)) {
-        return showToast('올바른 생년월일을 선택해 주세요.');
+        return showToast('생년월일 8자리(예: 1998.01.16)를 올바르게 입력해 주세요.');
       }
       const btn = document.getElementById('saveAccBirthBtn');
       btn.disabled = true;
@@ -8786,91 +9038,160 @@ ${m.body}`;
       }
     };
 
-    // ==================== 16. 하단 메뉴 칸 순서 · 이름 편집 ====================
+    // ==================== 16. 전용 [✏️ 메뉴·이름] 탭 (중앙 레지스트리 자동 연동 · 이모지/이름/순서 편집) ====================
     let draftTabOrder = [...DEFAULT_TAB_ORDER];
     let draftTabNames = {};
+    let draftTabIcons = {};
+    let draftTabInitialized = false;
 
-    function renderTabOrderEditor() {
-      const el = document.getElementById('tabOrderEditorList');
-      el.innerHTML = draftTabOrder.map((key, idx) => {
-        const meta = TAB_META_DEFS[key] || { icon: '•', roleHint: '' };
-        const val = draftTabNames[key] !== undefined ? draftTabNames[key] : getTabLabel(key);
-        return `
-          <div class="tab-order-row">
-            <span class="tab-order-num">${idx + 1}</span>
-            <span class="tab-order-icon">${meta.icon}</span>
-            <div style="flex:1; min-width:0;">
-              <input class="form-input" style="padding:7px 10px; font-size:13.5px;" maxlength="10"
-                     value="${escapeHtml(val)}"
-                     placeholder="${escapeHtml(DEFAULT_TAB_LABELS[key])}"
-                     oninput="onDraftTabNameInput('${key}', this.value)" />
-              <div style="font-size:10.5px; color:#64748B; margin-top:2px; padding-left:2px;">기본: ${escapeHtml(meta.roleHint)}</div>
-            </div>
-            <div class="order-btns">
-              <button class="order-btn" type="button" onclick="moveDraftTabOrder(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
-              <button class="order-btn" type="button" onclick="moveDraftTabOrder(${idx}, 1)" ${idx === draftTabOrder.length - 1 ? 'disabled' : ''}>▼</button>
-            </div>
+    function initDraftTabEditorFromCurrent(force = false) {
+      if (draftTabInitialized && !force) return;
+      draftTabOrder = getValidTabOrder();
+      draftTabNames = {};
+      draftTabIcons = {};
+      BOTTOM_TAB_REGISTRY.forEach(t => {
+        draftTabNames[t.key] = getTabLabel(t.key);
+        draftTabIcons[t.key] = getTabIcon(t.key);
+      });
+      MANAGE_SUBTAB_REGISTRY.forEach(t => {
+        draftTabNames[t.labelKey] = getTabLabel(t.labelKey);
+        draftTabIcons[t.labelKey] = getTabIcon(t.labelKey);
+      });
+      draftTabInitialized = true;
+    }
+
+    function renderManageLabels(el, user) {
+      initDraftTabEditorFromCurrent(false);
+      el.innerHTML = `
+        <div class="section-head">
+          <h2 class="section-title">✏️ 전체 메뉴 · 이모지 · 순서 편집</h2>
+          <button class="btn-sm" type="button" onclick="resetTabLabelsDefaults()">기본값 복원</button>
+        </div>
+        <div class="info-box" style="margin-top:0; margin-bottom:14px;">
+          하단 메뉴와 관리 센터의 모든 탭 <b>이모지 · 이름 · 순서(▲/▼)</b>를 한곳에서 변경할 수 있습니다.<br>
+          추후 새 탭이 업데이트되어도 이 화면에 자동으로 추가됩니다.
+        </div>
+
+        <div class="card">
+          <div style="font-size:13.5px; font-weight:800; color:#0F172A; margin-bottom:10px;">📱 하단 메뉴 칸 (왼쪽 → 오른쪽 순)</div>
+          <div id="inlineBottomTabEditor">
+            ${draftTabOrder.map((key, idx) => {
+              const meta = BOTTOM_TAB_REGISTRY.find(t => t.key === key) || { defaultIcon: '•', defaultLabel: key, roleHint: '' };
+              const curName = draftTabNames[key] !== undefined ? draftTabNames[key] : getTabLabel(key);
+              const curIcon = draftTabIcons[key] !== undefined ? draftTabIcons[key] : getTabIcon(key);
+              return `
+                <div class="tab-order-row">
+                  <span class="tab-order-num">${idx + 1}</span>
+                  <input class="emoji-input" maxlength="4" value="${escapeHtml(curIcon)}" title="이모지 변경"
+                         oninput="onDraftTabIconInput('${key}', this.value)" />
+                  <div style="flex:1; min-width:0;">
+                    <input class="form-input" style="padding:7px 10px; font-size:13.5px;" maxlength="10"
+                           value="${escapeHtml(curName)}"
+                           placeholder="${escapeHtml(meta.defaultLabel)}"
+                           oninput="onDraftTabNameInput('${key}', this.value)" />
+                    <div style="font-size:10.5px; color:#64748B; margin-top:2px; padding-left:2px;">기본: ${escapeHtml(meta.defaultIcon)} ${escapeHtml(meta.roleHint)}</div>
+                  </div>
+                  <div class="order-btns">
+                    <button class="order-btn" type="button" onclick="moveDraftTabOrder(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                    <button class="order-btn" type="button" onclick="moveDraftTabOrder(${idx}, 1)" ${idx === draftTabOrder.length - 1 ? 'disabled' : ''}>▼</button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
           </div>
-        `;
-      }).join('');
+        </div>
+
+        <div class="card">
+          <div style="font-size:13.5px; font-weight:800; color:#0F172A; margin-bottom:10px;">🛠️ 관리 센터 상단 탭 (${MANAGE_SUBTAB_REGISTRY.length}개 자동 연동)</div>
+          ${MANAGE_SUBTAB_REGISTRY.map(t => {
+            const curName = draftTabNames[t.labelKey] !== undefined ? draftTabNames[t.labelKey] : getTabLabel(t.labelKey);
+            const curIcon = draftTabIcons[t.labelKey] !== undefined ? draftTabIcons[t.labelKey] : getTabIcon(t.labelKey);
+            return `
+              <div class="tab-order-row">
+                <input class="emoji-input" maxlength="4" value="${escapeHtml(curIcon)}" title="이모지 변경"
+                       oninput="onDraftTabIconInput('${t.labelKey}', this.value)" />
+                <div style="flex:1; min-width:0;">
+                  <input class="form-input" style="padding:7px 10px; font-size:13.5px;" maxlength="14"
+                         value="${escapeHtml(curName)}"
+                         placeholder="${escapeHtml(t.defaultLabel)}"
+                         oninput="onDraftTabNameInput('${t.labelKey}', this.value)" />
+                  <div style="font-size:10.5px; color:#64748B; margin-top:2px; padding-left:2px;">기본: ${escapeHtml(t.defaultIcon)} ${escapeHtml(t.defaultLabel)}</div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+
+        <button id="saveTabLabelsInlineBtn" class="btn-full btn-dark" type="button" onclick="handleSaveTabLabels()">💾 전체 메뉴 이모지 · 이름 · 순서 저장하기</button>
+      `;
     }
 
     window.onDraftTabNameInput = (key, val) => {
       draftTabNames[key] = val;
     };
 
+    window.onDraftTabIconInput = (key, val) => {
+      draftTabIcons[key] = val;
+    };
+
     window.moveDraftTabOrder = (idx, dir) => {
       const t = idx + dir;
       if (t < 0 || t >= draftTabOrder.length) return;
       [draftTabOrder[idx], draftTabOrder[t]] = [draftTabOrder[t], draftTabOrder[idx]];
-      renderTabOrderEditor();
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'labels') {
+        renderManageLabels(document.getElementById('manageContent'), u);
+      }
     };
 
     window.openTabLabelsModal = () => {
-      draftTabOrder = getValidTabOrder();
-      draftTabNames = {};
-      DEFAULT_TAB_ORDER.forEach(k => { draftTabNames[k] = getTabLabel(k); });
-      renderTabOrderEditor();
-      document.getElementById('lblManageContentInput').value = getTabLabel('manageContent');
-      document.getElementById('lblManageMembersInput').value = getTabLabel('manageMembers');
-      document.getElementById('lblManageRolesInput').value = getTabLabel('manageRoles');
-      document.getElementById('tabLabelsModal').classList.add('open');
+      draftTabInitialized = false;
+      currentMainTab = 'manage';
+      currentManageSubTab = 'labels';
+      applyScreen();
     };
 
     window.resetTabLabelsDefaults = () => {
       draftTabOrder = [...DEFAULT_TAB_ORDER];
       draftTabNames = {};
-      DEFAULT_TAB_ORDER.forEach(k => { draftTabNames[k] = DEFAULT_TAB_LABELS[k]; });
-      renderTabOrderEditor();
-      document.getElementById('lblManageContentInput').value = DEFAULT_TAB_LABELS.manageContent;
-      document.getElementById('lblManageMembersInput').value = DEFAULT_TAB_LABELS.manageMembers;
-      document.getElementById('lblManageRolesInput').value = DEFAULT_TAB_LABELS.manageRoles;
-      showToast('기본 순서와 이름으로 복원했습니다. 저장 버튼을 눌러 반영하세요.');
+      draftTabIcons = {};
+      BOTTOM_TAB_REGISTRY.forEach(t => {
+        draftTabNames[t.key] = t.defaultLabel;
+        draftTabIcons[t.key] = t.defaultIcon;
+      });
+      MANAGE_SUBTAB_REGISTRY.forEach(t => {
+        draftTabNames[t.labelKey] = t.defaultLabel;
+        draftTabIcons[t.labelKey] = t.defaultIcon;
+      });
+      draftTabInitialized = true;
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'labels') {
+        renderManageLabels(document.getElementById('manageContent'), u);
+      }
+      showToast('기본 이모지·이름·순서로 복원했습니다. 저장 버튼을 눌러 반영하세요.');
     };
 
     window.handleSaveTabLabels = async () => {
-      const next = {
-        home: String(draftTabNames.home || '').trim() || DEFAULT_TAB_LABELS.home,
-        bible: String(draftTabNames.bible || '').trim() || DEFAULT_TAB_LABELS.bible,
-        qt: String(draftTabNames.qt || '').trim() || DEFAULT_TAB_LABELS.qt,
-        bylaws: String(draftTabNames.bylaws || '').trim() || DEFAULT_TAB_LABELS.bylaws,
-        more: String(draftTabNames.more || '').trim() || DEFAULT_TAB_LABELS.more,
-        manage: String(draftTabNames.manage || '').trim() || DEFAULT_TAB_LABELS.manage,
-        manageContent: document.getElementById('lblManageContentInput').value.trim() || DEFAULT_TAB_LABELS.manageContent,
-        manageMembers: document.getElementById('lblManageMembersInput').value.trim() || DEFAULT_TAB_LABELS.manageMembers,
-        manageRoles: document.getElementById('lblManageRolesInput').value.trim() || DEFAULT_TAB_LABELS.manageRoles,
-        tabOrder: getValidTabOrder(draftTabOrder)
-      };
-      const btn = document.getElementById('saveTabLabelsBtn');
-      btn.disabled = true;
+      const next = { tabOrder: getValidTabOrder(draftTabOrder), icons: {} };
+      BOTTOM_TAB_REGISTRY.forEach(t => {
+        next[t.key] = String(draftTabNames[t.key] ?? '').trim() || t.defaultLabel;
+        next.icons[t.key] = String(draftTabIcons[t.key] ?? '').trim() || t.defaultIcon;
+      });
+      MANAGE_SUBTAB_REGISTRY.forEach(t => {
+        next[t.labelKey] = String(draftTabNames[t.labelKey] ?? '').trim() || t.defaultLabel;
+        next.icons[t.labelKey] = String(draftTabIcons[t.labelKey] ?? '').trim() || t.defaultIcon;
+      });
+
+      const btn = document.getElementById('saveTabLabelsInlineBtn') || document.getElementById('saveTabLabelsBtn');
+      if (btn) btn.disabled = true;
       try {
         await db.collection('config').doc('labels').set(next);
-        document.getElementById('tabLabelsModal').classList.remove('open');
-        showToast('메뉴 칸 순서와 이름이 저장되었습니다!');
+        draftTabInitialized = false;
+        showToast('전체 메뉴 이모지 · 이름 · 순서가 저장되었습니다!');
       } catch (err) {
         handleDbError(err, '메뉴 순서·이름 저장');
       } finally {
-        btn.disabled = false;
+        if (btn) btn.disabled = false;
       }
     };
 
@@ -9699,22 +10020,39 @@ ${m.body}`;
       await downloadInviteQrImage();
     };
 
-    // --- Google Sheet Apps Script POST Helper ---
-    async function postToGoogleSheet(payload, overrideUrl = '') {
+    // --- Google Sheet Apps Script POST Helper (응답 확인 + 구버전 감지 + no-cors 자동 폴백) ---
+    async function postToGoogleSheet(payload, overrideUrl = '', returnDetail = false) {
       const url = String(overrideUrl || (attendanceConfig && attendanceConfig.sheetUrl) || '').trim();
-      if (!url || !/^https:\/\/script\.google\.com\//i.test(url)) return false;
+      if (!url || !/^https:\/\/script\.google\.com\//i.test(url)) {
+        return returnDetail ? { ok: false, reason: 'invalid_url' } : false;
+      }
       try {
-        await fetch(url, {
+        const res = await fetch(url, {
           method: 'POST',
-          mode: 'no-cors',
+          redirect: 'follow',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify(payload)
         });
-        return true;
-      } catch (err) {
-        console.warn('Google Sheet POST error:', err);
-        return false;
+        if (res.ok) {
+          let data = null;
+          try { data = await res.json(); } catch {}
+          return returnDetail ? { ok: true, readable: true, data } : true;
+        }
+      } catch (corsErr) {
+        try {
+          await fetch(url, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+          });
+          return returnDetail ? { ok: true, readable: false, data: null } : true;
+        } catch (err) {
+          console.warn('Google Sheet POST error:', err);
+          return returnDetail ? { ok: false, reason: 'network' } : false;
+        }
       }
+      return returnDetail ? { ok: false, reason: 'http_error' } : false;
     }
 
     function syncMemberEventToSheet(item) {
@@ -10172,9 +10510,10 @@ ${m.body}`;
         </div>
         <div class="card">
           <div class="form-group" style="margin-bottom:10px;">
-            <label class="form-label" for="adminAttSessionSelect">조회할 예배 · 행사 선택</label>
+            <label class="form-label" for="adminAttSessionSelect">조회할 예배 · 행사 (검색 입력 또는 목록 선택)</label>
+            <input id="adminAttSessionSearchInput" class="form-input" style="margin-bottom:6px; padding:8px 11px; font-size:13px;" value="${escapeHtml(adminAttSessionSearchQuery)}" placeholder="날짜 또는 행사명 검색 (예: 2026.11, 수련회)" oninput="onAdminAttSessionSearchInput(this.value)" />
             <select id="adminAttSessionSelect" class="form-select" onchange="onSelectAdminAttSession(this.value)">
-              ${sessions.map(s => `
+              ${sessions.filter(s => !adminAttSessionSearchQuery || s.colTitle.toLowerCase().includes(adminAttSessionSearchQuery.toLowerCase())).map(s => `
                 <option value="${escapeHtml(s.sessionId)}" ${s.sessionId === selectedAdminAttSessionKey ? 'selected' : ''}>${escapeHtml(s.colTitle)}</option>
               `).join('')}
             </select>
@@ -10224,10 +10563,11 @@ ${m.body}`;
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
             <div class="form-group">
-              <label class="form-label" for="cfgAttRegularDay">정기 요일</label>
-              <select id="cfgAttRegularDay" class="form-select">
+              <label class="form-label" for="cfgAttRegularDay">정기 요일 (선택·입력)</label>
+              <select id="cfgAttRegularDay" class="form-select" style="margin-bottom:5px;" onchange="syncRegularDaySelectToText()">
                 ${DAY_NAMES_KO.map((dn, i) => `<option value="${i}" ${Number(cfg.regularDay ?? 0) === i ? 'selected' : ''}>매주 ${dn}</option>`).join('')}
               </select>
+              <input id="cfgAttRegularDayText" class="form-input" style="padding:7px 10px; font-size:12.5px;" maxlength="6" value="${escapeHtml(DAY_NAMES_KO[Number(cfg.regularDay ?? 0)] || '일요일')}" placeholder="직접 입력 (예: 일요일)" oninput="onRegularDayTextInput(this.value)" />
             </div>
             <div class="form-group">
               <label class="form-label" for="cfgAttRegularLabel">예배 명칭</label>
@@ -10237,11 +10577,19 @@ ${m.body}`;
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
             <div class="form-group">
               <label class="form-label" for="cfgAttRegularStart">시작 시간 (KST)</label>
-              <input id="cfgAttRegularStart" type="time" class="form-input" value="${escapeHtml(cfg.regularStart || '14:00')}" />
+              <div class="combo-input-row">
+                <input id="cfgAttRegularStart" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1;" value="${escapeHtml(cfg.regularStart || '14:00')}" placeholder="14:00" oninput="formatTimeTyping(this)" />
+                <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('cfgAttRegularStartPicker', 'cfgAttRegularStart', 'time')">🕒</button>
+                <input id="cfgAttRegularStartPicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('cfgAttRegularStartPicker', 'cfgAttRegularStart', 'time')" />
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label" for="cfgAttRegularEnd">종료 시간 (KST)</label>
-              <input id="cfgAttRegularEnd" type="time" class="form-input" value="${escapeHtml(cfg.regularEnd || '15:30')}" />
+              <div class="combo-input-row">
+                <input id="cfgAttRegularEnd" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1;" value="${escapeHtml(cfg.regularEnd || '15:30')}" placeholder="15:30" oninput="formatTimeTyping(this)" />
+                <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('cfgAttRegularEndPicker', 'cfgAttRegularEnd', 'time')">🕒</button>
+                <input id="cfgAttRegularEndPicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('cfgAttRegularEndPicker', 'cfgAttRegularEnd', 'time')" />
+              </div>
             </div>
           </div>
           <button id="saveAttScheduleBtn" class="btn-full btn-dark" type="button" style="padding:11px; font-size:13.5px;" onclick="handleSaveAttendanceSchedule()">정기 출석 시간 저장</button>
@@ -10296,8 +10644,9 @@ ${m.body}`;
       const regularEnabled = document.getElementById('cfgAttRegularEnabled').checked;
       const regularDay = Number(document.getElementById('cfgAttRegularDay').value);
       const regularLabel = document.getElementById('cfgAttRegularLabel').value.trim() || '주일 예배';
-      const regularStart = document.getElementById('cfgAttRegularStart').value || '14:00';
-      const regularEnd = document.getElementById('cfgAttRegularEnd').value || '15:30';
+      const regularStart = normalizeTimeInput(document.getElementById('cfgAttRegularStart').value);
+      const regularEnd = normalizeTimeInput(document.getElementById('cfgAttRegularEnd').value);
+      if (!regularStart || !regularEnd) return showToast('시간을 HH:MM 형식(예: 14:00)으로 올바르게 입력해 주세요.');
       if (regularStart >= regularEnd) return showToast('종료 시간은 시작 시간보다 뒤여야 합니다.');
 
       const btn = document.getElementById('saveAttScheduleBtn');
@@ -10316,7 +10665,7 @@ ${m.body}`;
 
     window.openSpecialEventModal = () => {
       document.getElementById('spEventTitleInput').value = '';
-      document.getElementById('spEventDateInput').value = getKstNowInfo().iso;
+      document.getElementById('spEventDateInput').value = getKstNowInfo().dot;
       document.getElementById('spEventStartInput').value = '19:00';
       document.getElementById('spEventEndInput').value = '21:00';
       document.getElementById('specialEventModal').classList.add('open');
@@ -10324,12 +10673,12 @@ ${m.body}`;
 
     window.handleSaveSpecialEvent = async () => {
       const title = document.getElementById('spEventTitleInput').value.trim();
-      const date = document.getElementById('spEventDateInput').value.trim();
-      const start = document.getElementById('spEventStartInput').value.trim();
-      const end = document.getElementById('spEventEndInput').value.trim();
+      const date = normalizeDateAnyInput(document.getElementById('spEventDateInput').value);
+      const start = normalizeTimeInput(document.getElementById('spEventStartInput').value);
+      const end = normalizeTimeInput(document.getElementById('spEventEndInput').value);
       if (!title) return showToast('행사 이름을 입력해 주세요.');
-      if (!date) return showToast('출석 날짜를 선택해 주세요.');
-      if (!start || !end || start >= end) return showToast('시작·종료 시간을 올바르게 입력해 주세요.');
+      if (!date) return showToast('출석 날짜 8자리(예: 2026.12.25)를 올바르게 입력해 주세요.');
+      if (!start || !end || start >= end) return showToast('시작·종료 시간(예: 19:00 ~ 21:00)을 올바르게 입력해 주세요.');
 
       const nextEvents = [...(attendanceConfig.specialEvents || []), {
         id: 'evt_' + Date.now(),
@@ -10358,34 +10707,7 @@ ${m.body}`;
       } catch (err) { handleDbError(err, '행사 일정 삭제'); }
     };
 
-    window.handleSaveSheetUrl = async () => {
-      const url = document.getElementById('cfgSheetUrlInput').value.trim();
-      if (url && !/^https:\/\/script\.google\.com\/macros\/s\//i.test(url)) {
-        return showToast('올바른 Google Apps Script 웹 앱 주소(https://script.google.com/macros/s/...)를 입력해 주세요.');
-      }
-      const btn = document.getElementById('saveSheetUrlBtn');
-      btn.disabled = true;
-      try {
-        await db.collection('config').doc('attendance').set({ sheetUrl: url }, { merge: true });
-        showToast(url ? '구글 시트 연동 주소가 저장되었습니다!' : '구글 시트 연동이 해제되었습니다.');
-      } catch (err) {
-        handleDbError(err, '연동 주소 저장');
-      } finally {
-        btn.disabled = false;
-      }
-    };
-
-    window.handleTestSheetConnection = async () => {
-      const url = document.getElementById('cfgSheetUrlInput').value.trim() || attendanceConfig.sheetUrl;
-      if (!url) return showToast('먼저 Apps Script 웹 앱 URL을 입력해 주세요.');
-      const ok = await postToGoogleSheet({ action: 'test', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url);
-      showToast(ok ? '구글 시트로 연동 테스트 신호를 보냈습니다! 시트를 확인해 보세요.' : '전송에 실패했습니다. URL을 확인해 주세요.');
-    };
-
-    window.handleSyncAllToGoogleSheet = async () => {
-      const url = document.getElementById('cfgSheetUrlInput').value.trim() || attendanceConfig.sheetUrl;
-      if (!url) return showToast('먼저 Apps Script 웹 앱 URL을 입력하고 저장해 주세요.');
-      showToast('출석부 · 회원 · 관리자 전체 데이터를 시트로 동기화 중...');
+    function buildFullSheetSyncPayload() {
       const attPayload = attendanceRecords.map(r => ({
         colTitle: r.colTitle || r.date,
         date: r.date,
@@ -10402,23 +10724,94 @@ ${m.body}`;
         return {
           name: m.name,
           role: m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미정'),
-          joinedAt: m.createdAt || '',
+          joinedAt: m.createdAt || formatKstDateTime(),
           status: st
         };
       });
       const adminPayload = (adminRegistry.items || []).map(a => ({
         name: a.name,
         status: a.status === 'active' ? '활성' : (a.status === 'pending' ? '승인 대기' : '해제'),
-        time: a.lastLoginAt || a.registeredAt || '',
+        time: a.lastLoginAt || a.registeredAt || formatKstDateTime(),
         note: a.approvedBy ? `승인자: ${a.approvedBy}` : (a.removedBy ? `해제자: ${a.removedBy}` : '등록')
       }));
-      const ok = await postToGoogleSheet({
+      return {
         action: 'sync_all',
         attendance: attPayload,
         members: memberPayload,
         admins: adminPayload
-      }, url);
-      showToast(ok ? '구글 시트 전체 동기화 요청을 완료했습니다!' : '동기화에 실패했습니다.');
+      };
+    }
+
+    function warnIfOldAppsScript(res) {
+      if (res && res.readable && res.data && !res.data.multiTab) {
+        alert('⚠️ 구글 시트의 Apps Script가 아직 예전(1탭) 버전으로 배포되어 있습니다!
+
+구글 시트 → 확장 프로그램 → Apps Script에서:
+1) 최신 3탭 코드를 붙여넣고 저장한 뒤
+2) 오른쪽 위 [배포 → 배포 관리 → ✏️(수정) → 버전: 새 버전 → 배포]를 꼭 눌러주세요.
+(저장만 해서는 새 버전이 반영되지 않습니다.)');
+        return true;
+      }
+      return false;
+    }
+
+    window.handleSaveSheetUrl = async () => {
+      const url = document.getElementById('cfgSheetUrlInput').value.trim();
+      if (url && !/^https:\/\/script\.google\.com\/macros\/s\//i.test(url)) {
+        return showToast('올바른 Google Apps Script 웹 앱 주소(https://script.google.com/macros/s/...)를 입력해 주세요.');
+      }
+      const btn = document.getElementById('saveSheetUrlBtn');
+      btn.disabled = true;
+      try {
+        await db.collection('config').doc('attendance').set({ sheetUrl: url }, { merge: true });
+        if (url) {
+          const res = await postToGoogleSheet(buildFullSheetSyncPayload(), url, true);
+          if (!warnIfOldAppsScript(res)) {
+            showToast(res.ok ? '연동 주소 저장 및 시트 전체 동기화가 완료되었습니다!' : '주소는 저장되었으나 시트 전송을 확인해 주세요.');
+          }
+        } else {
+          showToast('구글 시트 연동이 해제되었습니다.');
+        }
+      } catch (err) {
+        handleDbError(err, '연동 주소 저장');
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    window.handleTestSheetConnection = async () => {
+      const url = document.getElementById('cfgSheetUrlInput').value.trim() || attendanceConfig.sheetUrl;
+      if (!url) return showToast('먼저 Apps Script 웹 앱 URL을 입력해 주세요.');
+      const res = await postToGoogleSheet({ action: 'test', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url, true);
+      if (warnIfOldAppsScript(res)) return;
+      if (res.ok && res.readable && res.data && res.data.multiTab) {
+        showToast('✅ 구글 시트 3개 탭(출석부·회원 명단·관리자 명단) 연동 정상!');
+      } else {
+        showToast(res.ok ? '구글 시트로 테스트 신호를 보냈습니다! 시트 하단 3개 탭을 확인해 보세요.' : '전송에 실패했습니다. URL을 확인해 주세요.');
+      }
+    };
+
+    window.handleSyncAllToGoogleSheet = async () => {
+      const url = document.getElementById('cfgSheetUrlInput').value.trim() || attendanceConfig.sheetUrl;
+      if (!url) return showToast('먼저 Apps Script 웹 앱 URL을 입력하고 저장해 주세요.');
+      showToast('출석부 · 회원 명단 · 관리자 명단을 동기화 중...');
+      const res = await postToGoogleSheet(buildFullSheetSyncPayload(), url, true);
+      if (warnIfOldAppsScript(res)) return;
+      if (res.ok) {
+        // 모든 회원 동기화 완료 상태 반영
+        for (const m of members) {
+          const isRe = !!m.isRejoin || memberHistoryMap.has(nameToHex(m.name));
+          const st = m.status === 'pending'
+            ? (isRe ? '재가입 대기' : '가입 대기')
+            : (m.status === 'approved' ? (isRe ? '재가입 승인' : '승인') : (m.status === 'rejected' ? '보류' : m.status));
+          if (m.sheetSyncedStatus !== st) {
+            db.collection('members').doc(String(m.id)).update({ sheetSyncedStatus: st }).catch(() => {});
+          }
+        }
+        showToast('✅ 출석부 · 회원 명단 · 관리자 명단 전체 동기화 완료!');
+      } else {
+        showToast('동기화에 실패했습니다. URL과 Apps Script 배포 상태를 확인해 주세요.');
+      }
     };
 
     // --- Admin Attendance Add / Edit / Delete (+ Google Sheet Real-time Sync) ---
@@ -10440,10 +10833,10 @@ ${m.body}`;
       document.getElementById('editAttDateDot').value = curSess.date;
       document.getElementById('editAttLabel').value = curSess.label;
       document.getElementById('adminAttTargetInfo').innerHTML = `<b>대상 일정:</b> ${escapeHtml(curSess.colTitle)}<br><b>처리 관리자:</b> ${escapeHtml(currentAdminName || '관리자')}`;
+      adminAttCandidateMembers = candidates;
       document.getElementById('adminAttMemberSelectGroup').classList.remove('hidden');
-      document.getElementById('adminAttMemberSelect').innerHTML = candidates.map(m => `
-        <option value="${escapeHtml(m.id)}">${escapeHtml(m.name)} (${escapeHtml(getRoleById(m.roleId).name)})</option>
-      `).join('');
+      document.getElementById('adminAttMemberSearchInput').value = '';
+      filterAdminAttMemberSelect('');
       document.getElementById('adminAttTimeInput').value = getKstNowInfo().hhmm;
       document.getElementById('adminAttendanceModal').classList.add('open');
     };
@@ -10469,7 +10862,9 @@ ${m.body}`;
       const colTitle = document.getElementById('editAttColTitle').value;
       const dateDot = document.getElementById('editAttDateDot').value;
       const label = document.getElementById('editAttLabel').value;
-      const timeVal = (document.getElementById('adminAttTimeInput').value || '').trim() || getKstNowInfo().hhmm;
+      const rawTime = (document.getElementById('adminAttTimeInput').value || '').trim();
+      const timeVal = rawTime ? normalizeTimeInput(rawTime) : getKstNowInfo().hhmm;
+      if (!timeVal) return showToast('출석 시각을 HH:MM 형식(예: 14:05)으로 입력해 주세요.');
       const adminActor = currentAdminName || '관리자';
       const nowStr = formatKstDateTime();
 
@@ -10556,6 +10951,510 @@ ${m.body}`;
       } catch (err) {
         handleDbError(err, '출석 삭제');
       }
+    };
+
+    // ==================== 20. 선택+입력 병행 도우미 · 기능 점검(일괄 + 개별 + 안전 시뮬레이션) ====================
+    window.formatTimeTyping = (el) => {
+      if (!el) return;
+      const digits = String(el.value || '').replace(/\D/g, '').slice(0, 4);
+      el.value = digits.length > 2 ? `${digits.slice(0, 2)}:${digits.slice(2)}` : digits;
+    };
+
+    function normalizeTimeInput(raw) {
+      const s = String(raw || '').trim();
+      if (!s) return '';
+      const digits = s.replace(/\D/g, '');
+      let h = -1, m = -1;
+      if (digits.length === 4) {
+        h = Number(digits.slice(0, 2));
+        m = Number(digits.slice(2, 4));
+      } else {
+        const match = s.match(/^(\d{1,2})\s*[:시\s]\s*(\d{1,2})$/);
+        if (match) {
+          h = Number(match[1]);
+          m = Number(match[2]);
+        }
+      }
+      if (h < 0 || h > 23 || m < 0 || m > 59) return '';
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    }
+
+    function normalizeDateAnyInput(raw) {
+      const s = normalizeBirthdayInput(raw);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return '';
+      const [y, m, d] = s.split('-').map(Number);
+      if (y < 1940 || y > 2100 || m < 1 || m > 12 || d < 1 || d > 31) return '';
+      const dt = new Date(Date.UTC(y, m - 1, d));
+      return (dt.getUTCFullYear() === y && (dt.getUTCMonth() + 1) === m && dt.getUTCDate() === d) ? s : '';
+    }
+
+    window.openNativePicker = (pickerId, textId, mode) => {
+      const picker = document.getElementById(pickerId);
+      const txt = document.getElementById(textId);
+      if (!picker || !txt) return;
+      if (mode === 'date') {
+        const iso = normalizeDateAnyInput(txt.value);
+        if (iso) picker.value = iso;
+      } else if (mode === 'time') {
+        const hhmm = normalizeTimeInput(txt.value);
+        if (hhmm) picker.value = hhmm;
+      }
+      if (typeof picker.showPicker === 'function') {
+        try { picker.showPicker(); return; } catch {}
+      }
+      picker.focus();
+      picker.click();
+    };
+
+    window.syncPickerToText = (pickerId, textId, mode) => {
+      const picker = document.getElementById(pickerId);
+      const txt = document.getElementById(textId);
+      if (!picker || !txt || !picker.value) return;
+      if (mode === 'date') {
+        txt.value = picker.value.replace(/-/g, '.');
+      } else {
+        txt.value = picker.value;
+      }
+    };
+
+    window.filterSignupRoleOptions = (query) => {
+      const sel = document.getElementById('signupRoleSelect');
+      if (!sel) return;
+      const q = String(query || '').trim().toLowerCase();
+      const list = sanitizeRolesList(roles);
+      const filtered = q ? list.filter(r => r.name.toLowerCase().includes(q)) : list;
+      sel.innerHTML = '<option value="">역할을 선택해 주세요</option>' + filtered.map(r => `
+        <option value="${escapeHtml(r.id)}">${escapeHtml(r.name)}</option>
+      `).join('');
+      const exact = filtered.find(r => r.name.toLowerCase() === q);
+      if (exact) sel.value = exact.id;
+      else if (filtered.length === 1 && q) sel.value = filtered[0].id;
+    };
+
+    window.onAdminAttSessionSearchInput = (val) => {
+      adminAttSessionSearchQuery = String(val || '');
+      const sel = document.getElementById('adminAttSessionSelect');
+      if (!sel) return;
+      const sessions = getAllAttendanceSessionOptions();
+      const q = adminAttSessionSearchQuery.trim().toLowerCase();
+      const filtered = q ? sessions.filter(s => s.colTitle.toLowerCase().includes(q)) : sessions;
+      sel.innerHTML = filtered.length === 0
+        ? '<option value="">검색 결과 없음</option>'
+        : filtered.map(s => `<option value="${escapeHtml(s.sessionId)}" ${s.sessionId === selectedAdminAttSessionKey ? 'selected' : ''}>${escapeHtml(s.colTitle)}</option>`).join('');
+      if (filtered.length > 0 && !filtered.some(s => s.sessionId === selectedAdminAttSessionKey)) {
+        selectedAdminAttSessionKey = filtered[0].sessionId;
+        sel.value = selectedAdminAttSessionKey;
+        const u = getCurrentUser();
+        if (u) renderManageView(u);
+      }
+    };
+
+    window.filterAdminAttMemberSelect = (query) => {
+      const sel = document.getElementById('adminAttMemberSelect');
+      if (!sel) return;
+      const q = String(query || '').trim().toLowerCase();
+      const filtered = q
+        ? adminAttCandidateMembers.filter(m => `${m.name} ${getRoleById(m.roleId).name}`.toLowerCase().includes(q))
+        : adminAttCandidateMembers;
+      sel.innerHTML = filtered.length === 0
+        ? '<option value="">검색 결과 없음</option>'
+        : filtered.map(m => `<option value="${escapeHtml(m.id)}">${escapeHtml(m.name)} (${escapeHtml(getRoleById(m.roleId).name)})</option>`).join('');
+    };
+
+    window.syncRegularDaySelectToText = () => {
+      const sel = document.getElementById('cfgAttRegularDay');
+      const txt = document.getElementById('cfgAttRegularDayText');
+      if (sel && txt) txt.value = DAY_NAMES_KO[Number(sel.value)] || '일요일';
+    };
+
+    window.onRegularDayTextInput = (val) => {
+      const s = String(val || '').trim();
+      const sel = document.getElementById('cfgAttRegularDay');
+      if (!sel || !s) return;
+      const idx = DAY_NAMES_KO.findIndex(dn => dn.startsWith(s) || dn === s || dn[0] === s[0]);
+      if (idx >= 0) sel.value = String(idx);
+    };
+
+    async function findOrCreateRoleByName(rawName) {
+      const name = String(rawName || '').trim();
+      if (!name) return '';
+      const existing = roles.find(r => r.name.trim() === name);
+      if (existing) return existing.id;
+      const newRole = {
+        id: 'role_' + Date.now(),
+        name,
+        color: ROLE_COLORS[roles.length % ROLE_COLORS.length]
+      };
+      const next = [...sanitizeRolesList(roles), newRole];
+      try {
+        await db.collection('config').doc('roles').set({
+          items: next,
+          metaById: buildRolesMetaByIdMap(next)
+        });
+        roles = next;
+        showToast(`[${name}] 새 역할이 자동 등록되었습니다!`);
+        return newRole.id;
+      } catch (err) {
+        handleDbError(err, '새 역할 자동 생성');
+        return '';
+      }
+    }
+
+    window.promptCustomRoleForMember = async (memberId) => {
+      const m = members.find(x => String(x.id) === String(memberId));
+      if (!m) return;
+      const curRole = getRoleById(m.roleId).name;
+      const input = prompt(`[${m.name}]님에게 부여할 역할 이름을 직접 입력해 주세요.\n(기존 역할과 일치하면 바로 적용, 새 이름이면 자동 생성됩니다.)`, curRole);
+      if (input === null) return;
+      const trimmed = input.trim();
+      if (!trimmed) return showToast('역할 이름을 입력해 주세요.');
+      const roleId = await findOrCreateRoleByName(trimmed);
+      if (roleId) await changeMemberRole(memberId, roleId);
+    };
+
+    // ==================== 21. 관리 센터 [🧪 기능 점검] (일괄 + 개별 + 안전 시뮬레이션) ====================
+    const DIAG_ITEMS = [
+      { id: 'firebase', title: '1. Firebase 서버 연결 · 관리자 인증', desc: 'DB 연결, 최고 관리자 인증 상태, 스키마 버전을 점검합니다.' },
+      { id: 'sheet', title: '2. 구글 시트 3개 탭 연동 상태', desc: 'Apps Script 웹 앱 URL 연결 및 출석부·회원·관리자 3탭 배포 여부를 점검합니다.' },
+      { id: 'qr', title: '3. 오늘의 초대 QR 유효성 · 생성 점검', desc: '한국시간 오늘 날짜 토큰 존재 여부와 QR 이미지 생성을 점검합니다.' },
+      { id: 'bible', title: '4. 성경 본문 불러오기 API 점검', desc: '개역한글 성경 본문(창세기 1장) 실시간 로딩을 점검합니다.' },
+      { id: 'notif', title: '5. 알림 설정 · 앱 내 팝업 점검', desc: '기기 알림 권한 상태와 앱 내 상단 팝업 알림 작동을 점검합니다.' },
+      { id: 'config', title: '6. 핵심 설정 데이터 무결성 점검', desc: '역할, 메인 배치, 바로가기, 메뉴 이름, 출석 일정, 관리자 명단을 점검합니다.' }
+    ];
+
+    function renderManageDiagnostics(el, user) {
+      const okCnt = DIAG_ITEMS.filter(it => diagResults[it.id] && diagResults[it.id].status === 'ok').length;
+      const warnCnt = DIAG_ITEMS.filter(it => diagResults[it.id] && diagResults[it.id].status === 'warn').length;
+      const errCnt = DIAG_ITEMS.filter(it => diagResults[it.id] && diagResults[it.id].status === 'err').length;
+
+      el.innerHTML = `
+        <div class="section-head">
+          <h2 class="section-title">🧪 전체 기능 점검 센터</h2>
+          <span class="tag ${errCnt > 0 ? 'red' : (okCnt === DIAG_ITEMS.length ? 'green' : 'slate')}">
+            정상 ${okCnt} · 주의 ${warnCnt} · 오류 ${errCnt}
+          </span>
+        </div>
+
+        <div class="card" style="background:#0F172A; color:#fff; border-color:#1E293B;">
+          <div style="font-size:14.5px; font-weight:800; color:#FDE68A; margin-bottom:5px;">🚀 통합 일괄 점검 & 항목별 개별 테스트</div>
+          <div style="font-size:12px; color:#CBD5E1; line-height:1.5; margin-bottom:12px;">
+            전체 일괄 점검으로 앱 상태를 한 번에 확인하고, 문제가 발견된 항목은 아래 <b>개별 테스트</b> 버튼으로 원인을 바로 재확인할 수 있습니다.
+          </div>
+          <button id="runAllDiagBtn" class="btn-full btn-amber" type="button" style="padding:12px; font-size:14px;" ${diagRunningAll ? 'disabled' : ''} onclick="runAllDiagnostics()">
+            ${diagRunningAll ? '⏳ 전체 기능 일괄 점검 중...' : '🚀 전체 일괄 점검 실행 (6개 항목)'}
+          </button>
+        </div>
+
+        <div class="section-head" style="margin-top:14px;">
+          <h2 class="section-title">🔍 항목별 자동 진단</h2>
+          <span style="font-size:11.5px; color:#64748B;">개별 실행 가능</span>
+        </div>
+
+        ${DIAG_ITEMS.map(item => {
+          const res = diagResults[item.id] || { status: 'idle', msg: item.desc, ts: '' };
+          const badgeMap = {
+            idle: '<span class="tag slate">대기</span>',
+            running: '<span class="tag warm">점검 중...</span>',
+            ok: '<span class="tag green">✅ 정상</span>',
+            warn: '<span class="tag warm">⚠️ 주의</span>',
+            err: '<span class="tag red">❌ 오류</span>'
+          };
+          return `
+            <div class="diag-card ${res.status}">
+              <div class="layout-item-head">
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; min-width:0;">
+                  <strong style="font-size:13.5px; color:#0F172A;">${escapeHtml(item.title)}</strong>
+                  ${badgeMap[res.status] || badgeMap.idle}
+                </div>
+                <button class="btn-sm primary" type="button" style="white-space:nowrap;" onclick="runSingleDiagnostic('${item.id}')">개별 테스트</button>
+              </div>
+              <div class="diag-msg">${escapeHtml(res.msg)}</div>
+              ${res.ts ? `<div style="font-size:10.5px; color:#94A3B8; margin-top:4px;">최근 점검: ${escapeHtml(res.ts)}</div>` : ''}
+            </div>
+          `;
+        }).join('')}
+
+        <div class="manage-divider"></div>
+
+        <div class="section-head">
+          <h2 class="section-title">🎭 안전 화면 · 흐름 시뮬레이션</h2>
+          <span class="tag green">실제 데이터 무영향</span>
+        </div>
+        <div class="info-box" style="margin-top:0; margin-bottom:10px;">
+          아래 체험 테스트는 <b>내 화면에서만 안전하게 실행</b>되며, 실제 청년부원에게 알림이 가거나 DB 기록이 오염되지 않습니다.
+        </div>
+        <div class="diag-sim-grid" style="margin-bottom:12px;">
+          <button class="diag-sim-btn" type="button" onclick="toggleMemberPreviewMode(true)">
+            <div style="font-size:18px; margin-bottom:4px;">👁️</div>
+            <div style="font-size:13px; font-weight:800;">일반 회원 시점 미리보기</div>
+            <div style="font-size:11px; color:#64748B; margin-top:2px;">관리자 전용 칸·관리 탭 숨김 확인</div>
+          </button>
+          <button class="diag-sim-btn" type="button" onclick="openDiagSimAttendance()">
+            <div style="font-size:18px; margin-bottom:4px;">✅</div>
+            <div style="font-size:13px; font-weight:800;">출석 · 중복 차단 체험</div>
+            <div style="font-size:11px; color:#64748B; margin-top:2px;">완료 안내·숨김·중복 경고 확인</div>
+          </button>
+          <button class="diag-sim-btn" type="button" onclick="openDiagSimQrGate()">
+            <div style="font-size:18px; margin-bottom:4px;">📲</div>
+            <div style="font-size:13px; font-weight:800;">QR 가입/만료 화면 체험</div>
+            <div style="font-size:11px; color:#64748B; margin-top:2px;">유효 QR vs 만료 차단 화면 확인</div>
+          </button>
+          <button class="diag-sim-btn" type="button" onclick="openDiagSimCelebration()">
+            <div style="font-size:18px; margin-bottom:4px;">🎉</div>
+            <div style="font-size:13px; font-weight:800;">생일·새신자 배너 체험</div>
+            <div style="font-size:11px; color:#64748B; margin-top:2px;">축하 배너·팝업 알림 미리보기</div>
+          </button>
+        </div>
+
+        <div class="card" style="background:#F8FAFC;">
+          <div style="font-size:13.5px; font-weight:800; color:#0F172A; margin-bottom:4px;">📊 구글 시트 실전 쓰기 · 삭제 테스트</div>
+          <div style="font-size:11.5px; color:#64748B; line-height:1.5; margin-bottom:10px;">
+            실제 구글 시트 <b>출석부</b>에 <code>[테스트점검]</code> 행을 써서 연동이 잘 되는지 확인한 뒤, 오른쪽 버튼으로 테스트 흔적을 깔끔하게 지울 수 있습니다.
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button class="btn-sm primary" type="button" style="flex:1; padding:9px;" onclick="runSheetLiveWriteTest()">📝 시트에 테스트 출석 쓰기</button>
+            <button class="btn-sm danger" type="button" style="flex:1; padding:9px;" onclick="runSheetLiveCleanupTest()">🧹 테스트 기록 삭제</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function setDiagResult(id, status, msg) {
+      diagResults[id] = { status, msg, ts: formatKstDateTime() };
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'diagnostics') {
+        renderManageDiagnostics(document.getElementById('manageContent'), u);
+      }
+    }
+
+    window.runSingleDiagnostic = async (id) => {
+      setDiagResult(id, 'running', '점검을 실행하고 있습니다...');
+      try {
+        if (id === 'firebase') {
+          const snap = await db.collection('config').doc('app').get({ source: 'server' });
+          if (snap.exists) {
+            const ver = snap.data().schemaVersion || '-';
+            setDiagResult(id, 'ok', `Firebase 서버 연결 정상 · 관리자(${currentAdminName}) 인증 완료 · 스키마 v${ver}`);
+          } else {
+            setDiagResult(id, 'warn', '서버 연결은 정상이지만 초기 설정 문서(config/app)가 비어 있습니다.');
+          }
+        } else if (id === 'sheet') {
+          const url = String((attendanceConfig && attendanceConfig.sheetUrl) || '').trim();
+          if (!url) {
+            setDiagResult(id, 'warn', '구글 시트 연동 URL이 아직 등록되지 않았습니다. [출석·QR 관리]에서 URL을 입력해 주세요.');
+          } else {
+            const res = await postToGoogleSheet({ action: 'test', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url, true);
+            if (!res.ok) {
+              setDiagResult(id, 'err', '구글 시트 전송 실패: URL 오타 또는 네트워크 오류를 확인해 주세요.');
+            } else if (res.readable && res.data && !res.data.multiTab) {
+              setDiagResult(id, 'err', 'Apps Script가 예전 1탭 버전입니다. Apps Script에서 [배포 관리 → ✏️ 수정 → 새 버전 → 배포]를 진행해 주세요.');
+            } else if (res.readable && res.data && res.data.multiTab) {
+              setDiagResult(id, 'ok', `구글 시트 3개 탭(출석부·회원 명단·관리자 명단) 정상 응답 확인 (${res.data.version || '최신'})`);
+            } else {
+              setDiagResult(id, 'ok', '구글 시트 전송 성공 (브라우저 보안 정책으로 응답 본문은 숨겨졌으나 시트로 정상 전송됨)');
+            }
+          }
+        } else if (id === 'qr') {
+          await ensureTodayInviteQrExists();
+          const todayDot = getKstDateParts().dot;
+          if (!inviteQrDoc || String(inviteQrDoc.date) !== todayDot || !inviteQrDoc.token) {
+            setDiagResult(id, 'err', '오늘 날짜의 초대 QR 토큰이 생성되지 않았습니다. Firestore 보안 규칙을 확인해 주세요.');
+          } else {
+            const grid = generateQrMatrix(getCurrentInviteUrl());
+            setDiagResult(id, 'ok', `오늘(${todayDot}) 초대 QR 정상 · 토큰 길이 ${inviteQrDoc.token.length}자 · QR 매트릭스 ${grid.length}×${grid.length} 생성 완료`);
+          }
+        } else if (id === 'bible') {
+          const verses = await fetchBibleChapter(1, 1);
+          if (Array.isArray(verses) && verses.length >= 30) {
+            setDiagResult(id, 'ok', `성경 본문 API 정상 · 창세기 1장 총 ${verses.length}절 불러오기 성공`);
+          } else {
+            setDiagResult(id, 'warn', '성경 본문이 일부만 불러와졌습니다. 네트워크 상태를 확인해 주세요.');
+          }
+        } else if (id === 'notif') {
+          const perm = getNotifPermissionState();
+          showInAppNotif('🧪', '기능 점검 테스트 알림', '앱 내 실시간 상단 팝업 알림이 정상 작동 중입니다.', () => {});
+          if (perm === 'granted' && notifPrefs.enabled) {
+            setDiagResult(id, 'ok', '기기 알림 권한 허용됨 · 앱 내 알림 켜짐 · 상단 테스트 팝업 표시 완료');
+          } else if (perm === 'denied') {
+            setDiagResult(id, 'warn', '앱 내 팝업 알림은 정상이나, 기기 시스템 알림이 차단되어 있습니다. (기기 설정에서 허용 가능)');
+          } else {
+            setDiagResult(id, 'warn', `앱 내 팝업 알림 정상 · 기기 알림 상태: ${perm === 'default' ? '미허용(우측 상단 🔔에서 허용 가능)' : '미지원 환경(홈 화면 추가 권장)'}`);
+          }
+        } else if (id === 'config') {
+          const activeAdmins = (adminRegistry.items || []).filter(a => a.status === 'active').length;
+          const issues = [];
+          if (!roles || roles.length === 0) issues.push('역할 목록 비어 있음');
+          if (!blocks || blocks.length === 0) issues.push('메인 화면 블록 없음');
+          if (activeAdmins === 0) issues.push('활성 관리자 0명');
+          if (issues.length > 0) {
+            setDiagResult(id, 'warn', `점검 필요: ${issues.join(', ')}`);
+          } else {
+            setDiagResult(id, 'ok', `역할 ${roles.length}개 · 메인 칸 ${blocks.length}개 · 바로가기 ${quickLinks.length}개 · 활성 관리자 ${activeAdmins}명 · 승인 회원 ${members.filter(m => m.status === 'approved').length}명`);
+          }
+        }
+      } catch (err) {
+        setDiagResult(id, 'err', `오류 발생: ${err && err.message ? err.message : String(err)}`);
+      }
+    };
+
+    window.runAllDiagnostics = async () => {
+      if (diagRunningAll) return;
+      diagRunningAll = true;
+      const u = getCurrentUser();
+      if (u) renderManageDiagnostics(document.getElementById('manageContent'), u);
+      for (const item of DIAG_ITEMS) {
+        await runSingleDiagnostic(item.id);
+      }
+      diagRunningAll = false;
+      const u2 = getCurrentUser();
+      if (u2 && currentMainTab === 'manage' && currentManageSubTab === 'diagnostics') {
+        renderManageDiagnostics(document.getElementById('manageContent'), u2);
+      }
+      showToast('전체 6개 항목 일괄 점검이 완료되었습니다!');
+    };
+
+    window.toggleMemberPreviewMode = (enable) => {
+      previewAsMemberMode = !!enable;
+      if (previewAsMemberMode) {
+        currentMainTab = 'home';
+        showToast('일반 회원 시점으로 전환했습니다. 상단 [관리자 복귀]로 언제든 돌아올 수 있습니다.');
+      } else {
+        currentMainTab = 'manage';
+        currentManageSubTab = 'diagnostics';
+        showToast('관리자 화면으로 복귀했습니다.');
+      }
+      applyScreen();
+    };
+
+    let diagSimAttCheckedTime = '';
+    window.openDiagSimAttendance = () => {
+      diagSimAttCheckedTime = '';
+      renderDiagSimAttendanceBody();
+      document.getElementById('diagSimModalTitle').textContent = '✅ 주일 출석 · 중복 차단 시뮬레이션';
+      document.getElementById('diagSimModal').classList.add('open');
+    };
+
+    function renderDiagSimAttendanceBody() {
+      const body = document.getElementById('diagSimModalBody');
+      if (!diagSimAttCheckedTime) {
+        body.innerHTML = `
+          <div class="info-box" style="margin-top:0; margin-bottom:12px;">
+            실제 주일 예배 시간(14:00~15:30)에 일반 회원 메인 홈 최상단에 뜨는 출석 카드입니다. 아래 버튼을 눌러 동작을 체험해 보세요. (실제 DB 저장 없음)
+          </div>
+          <div class="attendance-home-card" style="margin-bottom:12px;">
+            <span class="attendance-live-badge"><span class="attendance-live-dot"></span> 주일 예배 출석 진행 중 · 14:00~15:30</span>
+            <h2 class="attendance-home-title">오늘 주일 예배에 참석하셨나요?</h2>
+            <p class="attendance-home-desc">출석 버튼을 누르면 출석부에 자동 기록됩니다. (1인 1회 · 완료 후 버튼 자동 숨김)</p>
+            <button class="btn-attendance-cta" type="button" onclick="simulateDiagAttendanceClick()">✅ 주일 예배 출석하기 (체험)</button>
+          </div>
+        `;
+      } else {
+        body.innerHTML = `
+          <div class="att-history-box" style="margin-bottom:12px;">
+            <b>✅ 출석 완료 후 화면 상태 (방식 A)</b><br>
+            메인 화면에서 출석 카드가 자동으로 사라졌으며, 상단 <b>👤 내 계정</b>에는 아래처럼 표시됩니다:<br>
+            • 오늘 주일 예배 출석 완료 (<b>${escapeHtml(diagSimAttCheckedTime)}</b>)
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn-full btn-amber" type="button" style="flex:1; padding:11px; font-size:13px;" onclick="simulateDiagAttendanceDuplicate()">🔁 중복 출석 시도 테스트</button>
+            <button class="btn-outline" type="button" onclick="openDiagSimAttendance()">초기화</button>
+          </div>
+        `;
+      }
+    }
+
+    window.simulateDiagAttendanceClick = () => {
+      diagSimAttCheckedTime = getKstNowInfo().hhmm;
+      alert(`[체험] 출석이 완료되었습니다! (${diagSimAttCheckedTime})\n이후 출석 여부는 내 계정에서 확인해 주세요.`);
+      renderDiagSimAttendanceBody();
+    };
+
+    window.simulateDiagAttendanceDuplicate = () => {
+      alert(`[체험] 이미 오늘 출석 버튼을 눌렀습니다. (최초 출석: ${diagSimAttCheckedTime})`);
+    };
+
+    window.openDiagSimQrGate = (mode = 'valid') => {
+      document.getElementById('diagSimModalTitle').textContent = '📲 초대 QR 가입/만료 화면 체험';
+      const isValid = mode === 'valid';
+      document.getElementById('diagSimModalBody').innerHTML = `
+        <div class="modal-tabs-2">
+          <button class="modal-tab-btn ${isValid ? 'active' : ''}" type="button" onclick="openDiagSimQrGate('valid')">✅ 유효한 오늘 QR</button>
+          <button class="modal-tab-btn ${!isValid ? 'active' : ''}" type="button" onclick="openDiagSimQrGate('expired')">🔒 QR 없음 / 만료됨</button>
+        </div>
+        ${isValid ? `
+          <div class="signup-qr-ok-badge">✅ 오늘의 초대 QR 인증 완료 · 회원가입 가능</div>
+          <div class="info-box" style="margin-top:0;">
+            오늘 유효한 초대 QR을 스캔해 접속하면 <b>회원가입 탭이 자동으로 열리고</b>, 성명·생년월일(직접 입력/달력)·역할·비밀번호를 입력해 가입을 신청할 수 있습니다.
+          </div>
+        ` : `
+          <div class="signup-qr-lock-box">
+            <div style="font-size:28px; margin-bottom:6px;">🔒</div>
+            <div style="font-size:15px; font-weight:800; margin-bottom:5px;">만료되었거나 폐기된 초대 QR입니다</div>
+            <div style="font-size:12px; line-height:1.5; color:#7F1D1D;">
+              초대 QR은 <b>한국시간 당일 자정(00:00)</b>까지만 유효하며, 관리자가 재발급하면 이전 QR은 즉시 만료됩니다.<br>오늘 새로 공유된 초대 QR을 스캔해 주세요.
+            </div>
+          </div>
+        `}
+      `;
+      document.getElementById('diagSimModal').classList.add('open');
+    };
+
+    window.openDiagSimCelebration = () => {
+      const sample = '홍길동';
+      const bTitle = renderCelebrationText(getCelebrationMsg('birthdayTitle'), sample);
+      const bDesc = renderCelebrationText(getCelebrationMsg('birthdayDesc'), sample);
+      const nTitle = renderCelebrationText(getCelebrationMsg('newcomerTitle'), sample);
+      const nDesc = renderCelebrationText(getCelebrationMsg('newcomerDesc'), sample);
+      document.getElementById('diagSimModalTitle').textContent = '🎉 생일 · 새신자 자동 배너 체험';
+      document.getElementById('diagSimModalBody').innerHTML = `
+        <div class="birthday-banner" style="margin-bottom:10px;">
+          <span class="birthday-badge">🎉 오늘의 생일 · 미리보기</span>
+          <h2 class="birthday-title">${escapeHtml(bTitle)}</h2>
+          <p class="birthday-desc">${escapeHtml(bDesc)}</p>
+        </div>
+        <div class="newcomer-auto-banner" style="margin-bottom:12px;">
+          <span class="newcomer-auto-badge">💐 새신자 환영 · 미리보기</span>
+          <h2 class="newcomer-auto-title">${escapeHtml(nTitle)}</h2>
+          <p class="newcomer-auto-desc">${escapeHtml(nDesc)}</p>
+        </div>
+        <button class="btn-full btn-dark" type="button" style="padding:11px; font-size:13.5px;" onclick="showInAppNotif('🎂', '${escapeHtml(bTitle)}', '${escapeHtml(bDesc.replace(/\s*\n\s*/g, ' '))}', () => {}); showToast('상단 팝업 알림 미리보기를 띄웠습니다!');">🔔 생일 축하 팝업 알림 띄워보기</button>
+      `;
+      document.getElementById('diagSimModal').classList.add('open');
+    };
+
+    window.runSheetLiveWriteTest = async () => {
+      const url = String((attendanceConfig && attendanceConfig.sheetUrl) || '').trim();
+      if (!url) return showToast('먼저 [출석·QR 관리]에서 구글 시트 URL을 저장해 주세요.');
+      const now = getKstNowInfo();
+      const colTitle = `${now.dot} (기능점검 테스트)`;
+      const res = await postToGoogleSheet({
+        action: 'attendance_upsert',
+        colTitle,
+        date: now.dot,
+        name: '[테스트점검]',
+        role: '점검용',
+        time: now.hhmm,
+        modifiedBy: `기능점검 테스트: ${currentAdminName || '관리자'} (${now.dateTime})`,
+        forceUpdate: true
+      }, url, true);
+      if (warnIfOldAppsScript(res)) return;
+      showToast(res.ok ? '✅ 구글 시트 출석부에 [테스트점검] 기록을 썼습니다! 시트에서 확인 후 삭제해 보세요.' : '전송 실패: URL을 확인해 주세요.');
+    };
+
+    window.runSheetLiveCleanupTest = async () => {
+      const url = String((attendanceConfig && attendanceConfig.sheetUrl) || '').trim();
+      if (!url) return showToast('구글 시트 URL이 설정되어 있지 않습니다.');
+      const now = getKstNowInfo();
+      const colTitle = `${now.dot} (기능점검 테스트)`;
+      const res = await postToGoogleSheet({
+        action: 'attendance_delete',
+        colTitle,
+        date: now.dot,
+        name: '[테스트점검]',
+        modifiedBy: ''
+      }, url, true);
+      if (warnIfOldAppsScript(res)) return;
+      showToast(res.ok ? '🧹 구글 시트의 [테스트점검] 출석 표시를 깔끔하게 지웠습니다!' : '삭제 요청 실패');
     };
 
   </script>
