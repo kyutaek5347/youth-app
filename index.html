@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=132" />
+  <link rel="manifest" href="./manifest.json?v=133" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=132" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=132" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=133" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=133" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2437,6 +2437,111 @@
         max-width: 560px;
       }
     }
+
+    /* ==================== v10.33 모바일 글자 잘림(ellipsis·스크롤 컷) 전면 제거 ==================== */
+    /* 더보기 사이트 바로가기: 긴 사이트 이름도 '...' 없이 끝까지 깔끔하게 표시 */
+    .quick-link-label {
+      overflow: visible !important;
+      text-overflow: clip !important;
+      white-space: normal !important;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      line-height: 1.36;
+    }
+    .quick-sheet-admin-btn {
+      white-space: nowrap;
+      padding: 10px 8px;
+      font-size: 12px;
+    }
+
+    /* 태그·필터 칩·관리자 서브탭: 오른쪽 끝에서 글자가 반쯤 잘리지 않도록 깔끔한 줄바꿈 */
+    .quick-tags,
+    .filter-row,
+    .sub-tabs {
+      flex-wrap: wrap;
+      overflow-x: visible;
+      padding-bottom: 0;
+      gap: 6px;
+    }
+
+    /* 생일·새신자 축하 멘트 관리 카드 */
+    .celeb-manage-card {
+      background: #FFFBEB;
+      border: 1px dashed #F59E0B;
+    }
+
+    /* 오늘의 말씀 관리 버튼 3개 1줄 정렬 */
+    .qt-manage-actions {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .qt-manage-actions .btn-sm {
+      flex: 1 1 auto;
+      text-align: center;
+      padding: 7px 6px;
+      font-size: 11.5px;
+    }
+
+    @media (max-width: 440px) {
+      .search-input {
+        padding: 11px 34px 11px 36px;
+        font-size: 13.5px;
+      }
+      .search-icon {
+        left: 11px;
+        font-size: 15px;
+      }
+      .quick-tag {
+        padding: 5px 9px;
+        font-size: 11.5px;
+      }
+      .filter-chip {
+        padding: 5.5px 10px;
+        font-size: 11.5px;
+      }
+      .sub-tab-btn {
+        padding: 6.5px 9px;
+        font-size: 11.5px;
+      }
+      .quick-link-btn {
+        padding: 13px 13px;
+        font-size: 13.8px;
+        gap: 10px;
+      }
+      .quick-link-left {
+        gap: 9px;
+      }
+      .form-input, .form-select, .form-textarea, .login-input {
+        font-size: 13.5px;
+      }
+      .section-title {
+        font-size: 14.5px;
+      }
+      .btn-admin {
+        padding: 7px 11px;
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .search-input {
+        font-size: 12.8px;
+        padding: 10px 32px 10px 34px;
+      }
+      .quick-link-btn {
+        font-size: 13px;
+        padding: 12px 12px;
+      }
+      .quick-sheet-admin-btn {
+        font-size: 11.5px;
+        padding: 9px 6px;
+      }
+      .sub-tab-btn {
+        padding: 6px 8px;
+        font-size: 11px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -2449,7 +2554,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=132" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=133" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -2533,7 +2638,7 @@
             </div>
             <label class="login-field-label" for="signupRoleSelect">역할 선택 (필수 · 검색 입력 또는 목록 선택)</label>
             <div class="login-input-wrap">
-              <input id="signupRoleSearchInput" type="text" class="login-input blue-focus" style="margin-bottom:6px; padding:9px 12px; font-size:13.5px;" placeholder="역할 검색 입력 (예: 청년, 새신자, 셀장)" oninput="filterSignupRoleOptions(this.value)" />
+              <input id="signupRoleSearchInput" type="text" class="login-input blue-focus" style="margin-bottom:6px; padding:9px 12px; font-size:13.5px;" placeholder="역할 검색 (예: 청년, 새신자, 셀장)" oninput="filterSignupRoleOptions(this.value)" />
               <select id="signupRoleSelect" class="login-input blue-focus">
                 <option value="">역할을 선택해 주세요</option>
               </select>
@@ -2645,7 +2750,7 @@
 
           <div class="search-box" style="margin-bottom:8px;">
             <span class="search-icon">🔍</span>
-            <input id="bibleQuickSearchInput" class="search-input" type="search" placeholder="성경 빠른 검색 (예: 시편 23:1, 요3:16, 창세기, 사랑)" oninput="onBibleQuickSearchInput(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault(); executeBibleQuickJump();}" />
+            <input id="bibleQuickSearchInput" class="search-input" type="search" placeholder="성경 검색 (예: 시편 23:1, 요3:16)" oninput="onBibleQuickSearchInput(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault(); executeBibleQuickJump();}" />
             <button id="bibleQuickSearchClear" class="search-clear hidden" type="button" onclick="clearBibleQuickSearch()">✕</button>
           </div>
           <div id="bibleQuickSearchResults" class="bible-quick-results hidden"></div>
@@ -2691,13 +2796,13 @@
           <div class="bylaw-hero">
             <div id="bylawViewTitle" class="bylaw-hero-title">📜 구미제일감리교회 라이트 청년부 회칙</div>
             <div class="bylaw-hero-dates">
-              2014.03.23 제정 · 2023.10.29 개정 · <b>2026.11.22 최종개정</b>
+              <span style="white-space:nowrap;">2014.03.23 제정</span> · <span style="white-space:nowrap;">2023.10.29 개정</span> · <span style="white-space:nowrap;"><b>2026.11.22 최종개정</b></span>
             </div>
           </div>
 
           <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input id="bylawSearchInput" class="search-input" type="search" placeholder="조항 번호 또는 키워드 검색 (예: 제5조, 임기, 선거, 재정)" oninput="onBylawSearchInput(this.value)" />
+            <input id="bylawSearchInput" class="search-input" type="search" placeholder="조항·키워드 검색 (예: 제5조, 임기)" oninput="onBylawSearchInput(this.value)" />
             <button id="bylawSearchClear" class="search-clear hidden" type="button" onclick="clearBylawSearch()">✕</button>
           </div>
 
@@ -2854,7 +2959,7 @@
       <div id="bpPanelBook">
         <div class="search-box" style="margin-bottom:8px;">
           <span class="search-icon">🔍</span>
-          <input id="bibleBookSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13.5px;" placeholder="성경 이름 검색 (예: 시편, 요한, 창)" oninput="renderBibleBookGrid()" />
+          <input id="bibleBookSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13.5px;" placeholder="성경 이름 검색 (예: 시편, 요한)" oninput="renderBibleBookGrid()" />
         </div>
         <div class="filter-row" style="margin-bottom:8px;">
           <button id="bpTestAll" class="filter-chip active" type="button" onclick="setBibleTestamentFilter('all')">전체 (66)</button>
@@ -2944,7 +3049,7 @@
       </div>
       <div class="form-group">
         <label class="form-label" for="qtPassageInput">제목 또는 성경 구절 (선택)</label>
-        <input id="qtPassageInput" class="form-input" placeholder="예: 시편 23:1-3 또는 글 제목 (비워도 등록 가능)" />
+        <input id="qtPassageInput" class="form-input" placeholder="예: 시편 23:1-3 또는 제목 (선택)" />
       </div>
       <div class="form-group">
         <label class="form-label" for="qtScriptureInput">말씀 · 작성 글 내용 (필수)</label>
@@ -2967,7 +3072,7 @@
       </div>
       <div id="qtDetailBodyArea"></div>
       <div class="comment-compose-box">
-        <textarea id="qtCommentInput" class="form-input" rows="2" style="resize:none; min-height:42px; flex:1;" placeholder="은혜 받은 말씀이나 묵상을 댓글로 나눠보세요..."></textarea>
+        <textarea id="qtCommentInput" class="form-input" rows="2" style="resize:none; min-height:42px; flex:1;" placeholder="묵상이나 은혜를 댓글로 나눠보세요..."></textarea>
         <button id="qtCommentSubmitBtn" class="btn-admin" type="button" style="height:42px; white-space:nowrap;" onclick="handleSubmitQtComment()">등록</button>
       </div>
     </div>
@@ -3119,7 +3224,7 @@
           <option value="행사">행사</option>
           <option value="__custom__">✏️ 직접 입력...</option>
         </select>
-        <input id="noticeCategoryCustomInput" class="form-input hidden" style="margin-top:6px;" maxlength="12" placeholder="원하는 구분 입력 (예: 수련회, 기도제목)" />
+        <input id="noticeCategoryCustomInput" class="form-input hidden" style="margin-top:6px;" maxlength="12" placeholder="구분 직접 입력 (예: 수련회)" />
       </div>
       <div class="form-group">
         <label class="form-label">제목</label>
@@ -3325,7 +3430,7 @@
       <div id="quickLinksSheetList"></div>
       <div id="quickLinksSheetAdminBar" class="quick-sheet-admin-bar hidden">
         <button class="quick-sheet-admin-btn" type="button" onclick="openAddQuickLinkFromSheet()">+ 사이트 추가</button>
-        <button class="quick-sheet-admin-btn" type="button" onclick="goToQuickLinksManage()">⚙️ 관리 센터에서 편집</button>
+        <button class="quick-sheet-admin-btn" type="button" onclick="goToQuickLinksManage()">⚙️ 관리 센터 편집</button>
       </div>
     </div>
   </div>
@@ -3354,7 +3459,7 @@
       </div>
       <div class="form-group">
         <label class="form-label">연결할 사이트 주소 (URL)</label>
-        <input id="quickLinkUrlInput" type="url" class="form-input" placeholder="예: https://www.instagram.com/아이디" />
+        <input id="quickLinkUrlInput" type="url" class="form-input" placeholder="예: https://instagram.com/아이디" />
         <div style="font-size:11.5px; color:#64748B; margin-top:4px; line-height:1.45;">
           인스타그램·유튜브 주소를 넣으면 앱이 설치된 스마트폰에서 해당 앱으로 바로 열립니다.
         </div>
@@ -3404,7 +3509,7 @@
       <div class="form-group">
         <label class="form-label" for="releaseNewcomerRoleSelect">새로 부여할 역할 (선택 또는 직접 입력)</label>
         <select id="releaseNewcomerRoleSelect" class="form-select" style="margin-bottom:6px;"></select>
-        <input id="releaseNewcomerCustomRoleInput" class="form-input" maxlength="16" placeholder="목록에 없는 역할이면 여기에 직접 입력 (선택)" />
+        <input id="releaseNewcomerCustomRoleInput" class="form-input" maxlength="16" placeholder="목록에 없으면 직접 입력 (선택)" />
       </div>
       <div style="display:flex; gap:8px; margin-top:10px;">
         <button id="confirmReleaseNewcomerBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleConfirmReleaseNewcomer()">새신자 해제 및 역할 변경</button>
@@ -3531,7 +3636,7 @@
       </div>
       <div class="form-group">
         <label class="form-label" for="spEventTitleInput">행사 이름</label>
-        <input id="spEventTitleInput" class="form-input" maxlength="24" placeholder="예: 겨울 수련회 1일차 / 금요 기도회" />
+        <input id="spEventTitleInput" class="form-input" maxlength="24" placeholder="예: 겨울 수련회 / 금요 기도회" />
       </div>
       <div class="form-group">
         <label class="form-label" for="spEventDateInput">출석 날짜 (직접 입력 또는 달력 선택)</label>
@@ -4453,7 +4558,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=132" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=133" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -4476,8 +4581,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=132', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=132', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=133', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=133', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -6894,27 +6999,28 @@
         <div class="stats-grid-3">
           <div class="stat-box" onclick="switchMainTab('home')">
             <div class="stat-num">${blocks.filter(b => getPublishState(b) === 'live').length}</div>
-            <div class="stat-label">메인 표시 칸 · 보기</div>
+            <div class="stat-label">메인 표시</div>
           </div>
           <div class="stat-box">
             <div class="stat-num">${notices.length}</div>
-            <div class="stat-label">공지 · 광고</div>
+            <div class="stat-label">공지·광고</div>
           </div>
           <div class="stat-box" onclick="switchMainTab('qt')">
             <div class="stat-num">${isAutoTodayQtHiddenOrReplaced() ? qtPosts.length : (qtPosts.length + 1)}</div>
-            <div class="stat-label">${escapeHtml(getTabLabel('qt'))} · 이동</div>
+            <div class="stat-label">${escapeHtml(getTabLabel('qt'))}</div>
           </div>
         </div>
 
         ${canLayout ? `
-          <div class="card" style="display:flex; align-items:center; justify-content:space-between; gap:10px; background:#FFFBEB; border:1px dashed #F59E0B;">
-            <div style="min-width:0;">
-              <div style="font-size:13.5px; font-weight:800; color:#0F172A;">🎉 생일 · 새신자 축하 멘트 편집</div>
-              <div style="font-size:11.5px; color:#64748B; margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-                🎂 ${escapeHtml(getCelebrationMsg('birthdayTitle'))} · 💐 ${escapeHtml(getCelebrationMsg('newcomerTitle'))}
-              </div>
+          <div class="card celeb-manage-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+              <div style="font-size:13.5px; font-weight:800; color:#0F172A;">🎉 생일·새신자 축하 멘트</div>
+              <button class="btn-sm primary" type="button" style="padding:6px 10px;" onclick="openCelebrationMsgsModal()">✏️ 멘트 수정</button>
             </div>
-            <button class="btn-sm primary" type="button" style="white-space:nowrap; padding:8px 11px;" onclick="openCelebrationMsgsModal()">✏️ 멘트 수정</button>
+            <div style="font-size:12px; color:#475569; line-height:1.5; word-break:keep-all;">
+              <div>${escapeHtml(getCelebrationMsg('birthdayTitle'))}</div>
+              <div style="margin-top:2px;">${escapeHtml(getCelebrationMsg('newcomerTitle'))}</div>
+            </div>
           </div>
         ` : ''}
 
@@ -6985,7 +7091,7 @@
                             <strong style="font-size:14px;">${idx + 1}. ${escapeHtml(ql.label)}</strong>
                             ${hasUrl ? '<span class="tag green">연결됨</span>' : '<span class="tag warm">주소 미등록</span>'}
                           </div>
-                          <div style="font-size:11.5px; color:#64748B; margin-top:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                          <div style="font-size:11.5px; color:#64748B; margin-top:3px; word-break:break-all; line-height:1.4;">
                             ${hasUrl ? escapeHtml(ql.url) : '수정 버튼을 눌러 사이트 주소를 입력해 주세요'}
                           </div>
                         </div>
@@ -7076,14 +7182,14 @@
                   </div>
                   <span class="card-date">${escapeHtml(autoToday.date)}</span>
                 </div>
-                <p class="card-body clamp" style="margin-bottom:10px;">${escapeHtml(autoToday.scripture)}</p>
+                <p class="card-body" style="margin-bottom:10px;">${escapeHtml(autoToday.scripture)}</p>
                 ${isReplaced ? '<div style="font-size:11.5px; color:#92400E; margin-bottom:9px;">오늘은 관리자가 올린 대체 글이 오늘의 말씀 자리에 표시됩니다. (언제든 수정·삭제 가능, 내일 00:00 새 자동 말씀 전환)</div>' : ''}
                 ${(!isReplaced && isHiddenManually) ? '<div style="font-size:11.5px; color:#475569; margin-bottom:9px;">오늘의 자동 말씀이 숨겨져 있습니다. 아래 [자동 말씀 복원]으로 다시 표시할 수 있습니다.</div>' : ''}
-                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <div class="qt-manage-actions">
                   <button class="btn-sm primary" onclick="openQtDetail('${autoToday.id}')">💬 댓글·하트</button>
                   <button class="btn-sm" onclick="openEditAutoTodayQtModal()">✏️ 수정(대체)</button>
                   ${isHiddenManually
-                    ? `<button class="btn-sm approve" onclick="restoreAutoTodayQt()">🔄 자동 말씀 복원</button>`
+                    ? `<button class="btn-sm approve" onclick="restoreAutoTodayQt()">🔄 복원</button>`
                     : `<button class="btn-sm danger" onclick="hideAutoTodayQt()">삭제(숨김)</button>`}
                 </div>
               </div>
@@ -7103,7 +7209,7 @@
                       </div>
                       <span class="card-date">${escapeHtml(q.date || '')}</span>
                     </div>
-                    <p class="card-body clamp">${escapeHtml(q.scripture || q.title || '')}</p>
+                    <p class="card-body">${escapeHtml(q.scripture || q.title || '')}</p>
                     <div class="card-footer">
                       <button class="btn-sm" onclick="openQtDetail('${escapeJsAttr(q.id)}')">💬 댓글·하트</button>
                       <div style="display:flex; gap:6px;">
@@ -11842,10 +11948,10 @@ ${m.body}`;
         <div class="card">
           <div class="form-group" style="margin-bottom:10px;">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:6px;">
-              <label class="form-label" for="adminAttSessionSelect" style="margin-bottom:0;">예배 · 행사 선택 (한국시간 실제 요일 자동 표시)</label>
+              <label class="form-label" for="adminAttSessionSelect" style="margin-bottom:0;">예배·행사 선택 (한국시간 기준)</label>
               ${curSess ? `<button class="btn-sm" type="button" style="padding:4px 8px; font-size:11px;" onclick="renameSelectedWorshipSession()">✏️ 예배명 변경</button>` : ''}
             </div>
-            <input id="adminAttSessionSearchInput" class="form-input" style="margin-bottom:6px; padding:8px 11px; font-size:13px;" value="${escapeHtml(adminAttSessionSearchQuery)}" placeholder="날짜 또는 예배·행사명 검색 (예: 2026.11, 주일, 수련회)" oninput="onAdminAttSessionSearchInput(this.value)" />
+            <input id="adminAttSessionSearchInput" class="form-input" style="margin-bottom:6px; padding:8px 11px; font-size:13px;" value="${escapeHtml(adminAttSessionSearchQuery)}" placeholder="날짜·예배명 검색 (예: 2026.11, 주일)" oninput="onAdminAttSessionSearchInput(this.value)" />
             <select id="adminAttSessionSelect" class="form-select" onchange="onSelectAdminAttSession(this.value)">
               ${filteredSessions.map(s => `
                 <option value="${escapeHtml(s.sessionId)}" ${s.sessionId === selectedAdminAttSessionKey ? 'selected' : ''}>${escapeHtml(s.displayTitle || s.colTitle)}</option>
@@ -11881,8 +11987,8 @@ ${m.body}`;
 
         <!-- 2) 정기 예배 · 특별 행사 출석 시간 설정 -->
         <div class="section-head">
-          <h2 class="section-title">⏰ 정기 예배 · 특별 행사 설정</h2>
-          <button class="btn-admin" type="button" onclick="openSpecialEventModal()">+ 수련회·행사 추가</button>
+          <h2 class="section-title">⏰ 정기 예배·행사 설정</h2>
+          <button class="btn-admin" type="button" onclick="openSpecialEventModal()">+ 행사 추가</button>
         </div>
         <div class="card">
           <div class="setting-row" style="padding-top:0; margin-bottom:10px;">
@@ -11957,7 +12063,7 @@ ${m.body}`;
         <div class="card">
           <div class="form-group">
             <label class="form-label" for="cfgSheetUrlInput">Google Apps Script 웹 앱 URL</label>
-            <input id="cfgSheetUrlInput" type="url" class="form-input" value="${escapeHtml(cfg.sheetUrl || '')}" placeholder="https://script.google.com/macros/s/.../exec" />
+            <input id="cfgSheetUrlInput" type="url" class="form-input" value="${escapeHtml(cfg.sheetUrl || '')}" placeholder="구글 앱스 스크립트 웹앱 URL 입력" />
           </div>
           <div style="font-size:11.5px; color:#64748B; line-height:1.5; margin-bottom:10px;">
             연동하면 <b>출석부(추가·수정·삭제)</b>, <b>회원 명단(가입·재가입·승인·삭제)</b>, <b>관리자 명단(등록·해제·재입장)</b>이 구글 시트에 자동으로 기록됩니다.
