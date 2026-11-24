@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=123" />
+  <link rel="manifest" href="./manifest.json?v=124" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=123" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=123" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=124" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=124" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1868,7 +1868,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=123" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=124" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3600,7 +3600,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=123" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=124" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -3623,8 +3623,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=123', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=123', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=124', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=124', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -4792,17 +4792,9 @@
     }
     subscribePublicInviteQr();
 
-    // v10.20 업데이트 최초 실행 시 기존 로그인 세션 일괄 초기화 (선택 3-A)
+    // 세션 에포크 기록만 갱신하고 기존 로그인 세션은 절대 끊지 않음
     try {
-      if (localStorage.getItem(KEY_SESSION_EPOCH) !== SESSION_EPOCH) {
-        localStorage.removeItem(KEY_MEMBER_CACHE);
-        localStorage.removeItem(KEY_ADMIN_NAME);
-        localStorage.removeItem(KEY_BDAY_NOTIFIED);
-        localStorage.removeItem(KEY_NEWCOMER_NOTIFIED);
-        localStorage.setItem(KEY_SESSION_EPOCH, SESSION_EPOCH);
-        sessionEpochResetDone = true;
-        auth.signOut().catch(() => {});
-      }
+      localStorage.setItem(KEY_SESSION_EPOCH, SESSION_EPOCH);
     } catch {}
 
     function attachAdminRegistryListener() {
@@ -4875,56 +4867,73 @@
     }
 
     auth.onAuthStateChanged(async (user) => {
-      if (isSigningUp || isCompletingReset || isLoggingInAdmin) return;
-      clearSubscriptions();
-      fbUser = user;
-      myMemberDoc = null;
-
-      if (!user) {
-        currentAdminName = '';
-        pendingAdminStatus = null;
-        clearCachedMember();
-        document.getElementById('loadingScreen').classList.add('hidden');
-        applyScreen();
-        if (isCurrentInviteValid()) {
-          switchAuthTab('signup');
-        }
-        return;
-      }
-
-      if ((user.email || '').toLowerCase() === ADMIN_EMAIL) {
-        const savedName = (localStorage.getItem(KEY_ADMIN_NAME) || '').trim();
-        if (!savedName) {
-          fbUser = null;
-          currentAdminName = '';
-          pendingAdminStatus = null;
+      try {
+        if (isSigningUp || isCompletingReset || isLoggingInAdmin) {
           document.getElementById('loadingScreen').classList.add('hidden');
-          applyScreen();
-          switchAuthTab('admin');
-          await auth.signOut().catch(() => {});
           return;
         }
-        currentAdminName = savedName;
-        try {
-          await ensureInitialSeedAndMigrate();
-        } catch (err) {
-          console.error('Seed/Migrate error:', err);
-          handleDbError(err, '초기화');
-        }
-        attachAdminRegistryListener();
-      } else {
-        // 업데이트/재실행 시 캐시된 회원 정보로 즉시 로그인 상태 유지 후 서버와 실시간 동기화
-        const cached = loadCachedMember(user.uid);
-        if (cached) {
-          myMemberDoc = cached;
-          if (cached.status === 'approved') {
-            subscribeCoreData();
-            syncMembersAllSubscription();
-          }
+        clearSubscriptions();
+        fbUser = user;
+        myMemberDoc = null;
+
+        if (!user) {
+          currentAdminName = '';
+          pendingAdminStatus = null;
+          clearCachedMember();
           document.getElementById('loadingScreen').classList.add('hidden');
           applyScreen();
+          if (isCurrentInviteValid()) {
+            switchAuthTab('signup');
+          }
+          return;
         }
-        attachMemberProfileListener(user.uid, 0);
+
+        if ((user.email || '').toLowerCase() === ADMIN_EMAIL) {
+          const savedName = (localStorage.getItem(KEY_ADMIN_NAME) || '').trim();
+          if (!savedName) {
+            fbUser = null;
+            currentAdminName = '';
+            pendingAdminStatus = null;
+            document.getElementById('loadingScreen').classList.add('hidden');
+            applyScreen();
+            switchAuthTab('admin');
+            auth.signOut().catch(() => {});
+            return;
+          }
+          currentAdminName = savedName;
+          document.getElementById('loadingScreen').classList.add('hidden');
+          applyScreen();
+          attachAdminRegistryListener();
+          ensureInitialSeedAndMigrate().catch(err => {
+            console.warn('Seed/Migrate background:', err);
+          });
+        } else {
+          const cached = loadCachedMember(user.uid);
+          if (cached) {
+            myMemberDoc = cached;
+            if (cached.status === 'approved') {
+              subscribeCoreData();
+              syncMembersAllSubscription();
+            }
+            document.getElementById('loadingScreen').classList.add('hidden');
+            applyScreen();
+          }
+          attachMemberProfileListener(user.uid, 0);
+          // 2.5초 내 Firestore 스냅샷이 응답하지 않으면(예: 규칙·캐시 지연) 로그인 화면으로 즉시 해제
+          setTimeout(() => {
+            const ls = document.getElementById('loadingScreen');
+            if (ls && !ls.classList.contains('hidden') && !myMemberDoc) {
+              fbUser = null;
+              ls.classList.add('hidden');
+              applyScreen();
+            }
+          }, 2500);
+        }
+      } catch (authErr) {
+        console.error('onAuthStateChanged error:', authErr);
+        fbUser = null;
+        document.getElementById('loadingScreen').classList.add('hidden');
+        applyScreen();
       }
     });
 
@@ -4934,7 +4943,7 @@
         ls.classList.add('hidden');
         applyScreen();
       }
-    }, 6000);
+    }, 3000);
 
     // ==================== 8. 인증 탭 및 로그인/회원가입 ====================
     window.switchAuthTab = (tab) => {
