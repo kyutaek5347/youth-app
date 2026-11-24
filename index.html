@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=146" />
+  <link rel="manifest" href="./manifest.json?v=147" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=146" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=146" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=147" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=147" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2863,7 +2863,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=146" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=147" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4992,7 +4992,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=146" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=147" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5015,8 +5015,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=146', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=146', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=147', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=147', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5146,7 +5146,10 @@
     let isSigningUp = false;
     let myMemberDoc = null;
     let roles = structuredClone(DEFAULT_ROLES);
-    let blocks = structuredClone(DEFAULT_BLOCKS);
+    let blocks = [];
+    let homeBlocksLoaded = false;
+    let homeNoticesLoaded = false;
+    let homeContentPermError = false;
     let quickLinks = structuredClone(DEFAULT_QUICK_LINKS);
     let selectedQuickLinkTheme = 'instagram';
     let tabLabels = structuredClone(DEFAULT_TAB_LABELS);
@@ -6010,6 +6013,11 @@
       unsubScopedContent.forEach(fn => { try { fn(); } catch {} });
       unsubScopedContent = [];
       scopedSubMode = '';
+      blocks = [];
+      notices = [];
+      homeBlocksLoaded = false;
+      homeNoticesLoaded = false;
+      homeContentPermError = false;
       publicNoticesMap = new Map();
       roleOrAdminNoticesMap = new Map();
       publicBlocksMap = new Map();
@@ -6070,6 +6078,8 @@
       }
 
       notices = nextNotices;
+      homeNoticesLoaded = true;
+      homeContentPermError = false;
       applyScreen();
       if (currentDetailId && document.getElementById('detailModal').classList.contains('open')) {
         openDetail(currentDetailId);
@@ -6114,6 +6124,8 @@
       }
 
       blocks = nextBlocks;
+      homeBlocksLoaded = true;
+      homeContentPermError = false;
       applyScreen();
     }
 
@@ -6249,6 +6261,13 @@
           checkAndPromoteDueScheduledItems();
         }, 30000);
       } else {
+        const onMemberScopedErr = (err, label) => {
+          if (err && err.code === 'permission-denied') {
+            homeContentPermError = true;
+            applyScreen();
+          }
+          handleDbError(err, label);
+        };
         // 일반 승인 회원: 서버 규칙으로 검증된 본인 허용 문서만 쿼리 (임시저장·예약·타역할 문서 원천 차단)
         unsubScopedContent.push(
           db.collection('notices').where('visibleTo', 'array-contains', '__all__').onSnapshot(snap => {
@@ -6256,7 +6275,7 @@
             snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'notices' }));
             publicNoticesMap = mp;
             rebuildMergedNotices(true);
-          }, err => handleDbError(err, '전체 공지 동기화'))
+          }, err => onMemberScopedErr(err, '전체 공지 동기화'))
         );
         unsubScopedContent.push(
           db.collection('notices').where('visibleTo', 'array-contains', myRoleId).onSnapshot(snap => {
@@ -6264,7 +6283,7 @@
             snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'notices' }));
             roleOrAdminNoticesMap = mp;
             rebuildMergedNotices(true);
-          }, err => handleDbError(err, '역할 공지 동기화'))
+          }, err => onMemberScopedErr(err, '역할 공지 동기화'))
         );
         unsubScopedContent.push(
           db.collection('homeBlocks').where('visibleTo', 'array-contains', '__all__').onSnapshot(snap => {
@@ -6272,7 +6291,7 @@
             snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'homeBlocks' }));
             publicBlocksMap = mp;
             rebuildMergedBlocks(true);
-          }, err => handleDbError(err, '전체 화면 동기화'))
+          }, err => onMemberScopedErr(err, '전체 화면 동기화'))
         );
         unsubScopedContent.push(
           db.collection('homeBlocks').where('visibleTo', 'array-contains', myRoleId).onSnapshot(snap => {
@@ -6280,7 +6299,7 @@
             snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'homeBlocks' }));
             roleOrAdminBlocksMap = mp;
             rebuildMergedBlocks(true);
-          }, err => handleDbError(err, '역할 화면 동기화'))
+          }, err => onMemberScopedErr(err, '역할 화면 동기화'))
         );
       }
     }
@@ -8366,10 +8385,35 @@
         return `<div class="sched-preview-pill">⏰ 예약 미리보기 · ${escapeHtml(p ? p.shortLabel : '')} 자동 공개</div>`;
       }
 
-      const visibleNotices = notices.filter(canSeeItemOnHome);
       const attendanceHtml = buildAttendanceHomeCardHtml(user);
       const birthdayHtml = buildBirthdayBannerHtml(user);
       const newcomerHtml = buildNewcomerAutoBannerHtml(user);
+
+      if (homeContentPermError && !homeBlocksLoaded) {
+        container.innerHTML = attendanceHtml + birthdayHtml + newcomerHtml + `
+          <div class="card" style="text-align:center; padding:30px 18px; border-color:#FECACA; background:#FEF2F2;">
+            <div style="font-size:26px; margin-bottom:8px;">🔒</div>
+            <div style="font-size:14.5px; font-weight:800; color:#991B1B; margin-bottom:6px;">메인 소식을 불러올 권한이 필요합니다</div>
+            <div style="font-size:12.5px; color:#7F1D1D; line-height:1.55; margin-bottom:14px;">
+              관리자에게 Firebase Firestore 보안 규칙을 최신 버전으로 게시해 달라고 요청해 주세요.
+            </div>
+            <button class="btn-sm primary" type="button" style="padding:9px 14px;" onclick="retryLoadHomeContent()">🔄 다시 불러오기</button>
+          </div>
+        `;
+        return;
+      }
+
+      if (!homeBlocksLoaded || !homeNoticesLoaded) {
+        container.innerHTML = attendanceHtml + birthdayHtml + newcomerHtml + `
+          <div class="card" style="text-align:center; padding:38px 20px; color:#64748B;">
+            <div class="spinner" style="margin:0 auto 12px; border-color:#E2E8F0; border-top-color:#111827;"></div>
+            <div style="font-size:13.5px; font-weight:700; color:#334155;">메인 화면을 불러오는 중입니다...</div>
+          </div>
+        `;
+        return;
+      }
+
+      const visibleNotices = notices.filter(canSeeItemOnHome);
       const visibleBlocks = blocks.filter(canSeeItemOnHome);
 
       if (!attendanceHtml && !birthdayHtml && !newcomerHtml && visibleBlocks.length === 0) {
@@ -8479,6 +8523,12 @@
       currentFilter = cat;
       const user = getCurrentUser();
       if (user) renderHomeView(user);
+    };
+
+    window.retryLoadHomeContent = () => {
+      clearScopedContentSubscriptions();
+      syncScopedContentSubscriptions();
+      applyScreen();
     };
 
     window.openDetail = (id) => {
