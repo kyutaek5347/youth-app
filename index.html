@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=134" />
+  <link rel="manifest" href="./manifest.json?v=135" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=134" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=134" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=135" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=135" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2554,7 +2554,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=134" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=135" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3731,7 +3731,7 @@
     const authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 21;
+    const CURRENT_SCHEMA_VERSION = 22;
 
     // 매일 자정(KST) 자동 변경되는 일일 큐티 성경말씀 풀 (60편)
     const DAILY_QT_POOL = [
@@ -3812,7 +3812,6 @@
       notice_list: '공지 · 광고 · 소식 목록'
     };
     const DEFAULT_ATTENDANCE_CONFIG = {
-      sheetUrl: '',
       regularEnabled: true,
       regularDay: 0,
       regularLabel: '주일 예배',
@@ -4594,7 +4593,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=134" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=135" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -4617,8 +4616,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=134', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=134', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=135', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=135', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -4862,6 +4861,9 @@
     let unsubCore = [];
     let unsubMembersAll = null;
     let unsubAdminSecret = null;
+    let unsubSheetSecret = null;
+    let adminSheetUrl = '';
+    let isSyncingUnsyncedAtt = false;
     let coreDataSubscribed = false;
     let isCompletingReset = false;
     let sharedAdminCode = '';
@@ -4895,6 +4897,9 @@
       coreDataSubscribed = false;
       if (unsubMembersAll) { unsubMembersAll(); unsubMembersAll = null; }
       if (unsubAdminSecret) { unsubAdminSecret(); unsubAdminSecret = null; }
+      if (unsubSheetSecret) { unsubSheetSecret(); unsubSheetSecret = null; }
+      adminSheetUrl = '';
+      isSyncingUnsyncedAtt = false;
       sharedAdminCode = '';
       sharedAdminCodeUpdatedAt = '';
       showSharedAdminCode = false;
@@ -5345,6 +5350,35 @@
           }
         }
 
+        // 8) v10.35 (schemaVersion 22): 구글 시트 웹앱 URL을 관리자 전용 보안 문서(config/sheetSecret)로 격리 이관
+        if ((appSnap.data().schemaVersion || 0) < 22) {
+          try {
+            const attSnap22 = await db.collection('config').doc('attendance').get();
+            const legacySheetUrl = (attSnap22.exists && attSnap22.data().sheetUrl)
+              ? String(attSnap22.data().sheetUrl).trim()
+              : '';
+            if (legacySheetUrl) {
+              const secRef = db.collection('config').doc('sheetSecret');
+              const secSnap = await secRef.get();
+              if (!secSnap.exists || !secSnap.data().url) {
+                await secRef.set({
+                  url: legacySheetUrl,
+                  updatedAt: formatKstDateTime(),
+                  updatedTs: Date.now(),
+                  updatedBy: currentAdminName || '자동 이관'
+                }, { merge: true });
+              }
+            }
+            if (attSnap22.exists && attSnap22.data().sheetUrl !== undefined) {
+              await db.collection('config').doc('attendance').set({
+                sheetUrl: FieldValue.delete()
+              }, { merge: true });
+            }
+          } catch (v22Err) {
+            console.warn('v10.35 sheetSecret migration error:', v22Err);
+          }
+        }
+
         await appRef.set({
           initialized: true,
           schemaVersion: CURRENT_SCHEMA_VERSION,
@@ -5426,10 +5460,30 @@
         showSharedAdminCode = false;
       }
 
+      if (needsAllMembers && !unsubSheetSecret) {
+        unsubSheetSecret = db.collection('config').doc('sheetSecret').onSnapshot(doc => {
+          adminSheetUrl = (doc.exists && doc.data().url) ? String(doc.data().url).trim() : '';
+          if (adminSheetUrl) {
+            if (members.length > 0) syncUnsyncedMembersToSheet(members).catch(() => {});
+            if (attendanceRecords.length > 0) syncUnsyncedAttendanceToSheet(attendanceRecords).catch(() => {});
+          }
+          if (currentMainTab === 'manage' && (currentManageSubTab === 'worship' || currentManageSubTab === 'diagnostics')) {
+            applyScreen();
+          }
+        }, () => {});
+      } else if (!needsAllMembers && unsubSheetSecret) {
+        unsubSheetSecret();
+        unsubSheetSecret = null;
+        adminSheetUrl = '';
+      }
+
       if (needsAllMembers && !unsubAttendanceAdmin) {
         unsubAttendanceAdmin = db.collection('attendance').onSnapshot(snap => {
           attendanceRecords = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
             .sort((a, b) => Number(b.ts || 0) - Number(a.ts || 0));
+          if (adminSheetUrl) {
+            syncUnsyncedAttendanceToSheet(attendanceRecords).catch(() => {});
+          }
           if (currentMainTab === 'manage' && currentManageSubTab === 'worship') {
             applyScreen();
           }
@@ -5753,10 +5807,7 @@
           } else {
             attendanceConfig = structuredClone(DEFAULT_ATTENDANCE_CONFIG);
           }
-          // sheetUrl이 나중에 로드되어도 미동기화 회원을 즉시 구글 시트에 자동 반영
-          if (attendanceConfig.sheetUrl && members.length > 0) {
-            syncUnsyncedMembersToSheet(members).catch(() => {});
-          }
+          // sheetUrl은 관리자 전용 문서(config/sheetSecret)에서 별도 격리 동기화
           if (currentMainTab === 'home' || (currentMainTab === 'manage' && currentManageSubTab === 'worship')) {
             applyScreen();
           }
@@ -6011,6 +6062,8 @@
           coreDataSubscribed = false;
           if (unsubMembersAll) { unsubMembersAll(); unsubMembersAll = null; }
           if (unsubAdminSecret) { unsubAdminSecret(); unsubAdminSecret = null; }
+          if (unsubSheetSecret) { unsubSheetSecret(); unsubSheetSecret = null; }
+          adminSheetUrl = '';
           sharedAdminCode = '';
           sharedAdminCodeUpdatedAt = '';
           showSharedAdminCode = false;
@@ -6623,8 +6676,12 @@
         await regRef.set({ lockAutoRegister: lockAuto, items });
 
         if (sheetLogStatus) {
-          const attSnap = await db.collection('config').doc('attendance').get().catch(() => null);
-          const sUrl = (attSnap && attSnap.exists && attSnap.data().sheetUrl) ? attSnap.data().sheetUrl : '';
+          const secSnap = await db.collection('config').doc('sheetSecret').get().catch(() => null);
+          let sUrl = (secSnap && secSnap.exists && secSnap.data().url) ? String(secSnap.data().url).trim() : '';
+          if (!sUrl) {
+            const attSnap = await db.collection('config').doc('attendance').get().catch(() => null);
+            sUrl = (attSnap && attSnap.exists && attSnap.data().sheetUrl) ? String(attSnap.data().sheetUrl).trim() : '';
+          }
           if (sUrl) {
             postToGoogleSheet({
               action: 'admin_log',
@@ -11811,9 +11868,13 @@ ${m.body}`;
       await downloadInviteQrImage();
     };
 
-    // --- Google Sheet Apps Script POST Helper (응답 확인 + 구버전 감지 + no-cors 자동 폴백) ---
+    function getAdminSheetUrl() {
+      return String(adminSheetUrl || '').trim();
+    }
+
+    // --- Google Sheet Apps Script POST Helper (관리자 전용 격리 URL 사용 · 응답 확인 + no-cors 자동 폴백) ---
     async function postToGoogleSheet(payload, overrideUrl = '', returnDetail = false) {
-      const url = String(overrideUrl || (attendanceConfig && attendanceConfig.sheetUrl) || '').trim();
+      const url = String(overrideUrl || getAdminSheetUrl() || '').trim();
       if (!url || !/^https:\/\/script\.google\.com\//i.test(url)) {
         return returnDetail ? { ok: false, reason: 'invalid_url' } : false;
       }
@@ -11847,7 +11908,7 @@ ${m.body}`;
     }
 
     function syncMemberEventToSheet(item) {
-      const url = String((attendanceConfig && attendanceConfig.sheetUrl) || '').trim();
+      const url = getAdminSheetUrl();
       if (!url) return;
       postToGoogleSheet({
         action: 'member_upsert',
@@ -11858,9 +11919,37 @@ ${m.body}`;
       }, url).catch(() => {});
     }
 
+    async function syncUnsyncedAttendanceToSheet(attList) {
+      const user = getCurrentUser();
+      const url = getAdminSheetUrl();
+      if (!user || !user.isSuperAdmin || !url || isSyncingUnsyncedAtt) return;
+      const toSync = (Array.isArray(attList) ? attList : []).filter(r => r && r.sheetSynced !== true);
+      if (toSync.length === 0) return;
+
+      isSyncingUnsyncedAtt = true;
+      try {
+        for (const rec of toSync) {
+          const ok = await postToGoogleSheet({
+            action: 'attendance_upsert',
+            colTitle: rec.colTitle || rec.date,
+            date: rec.date,
+            name: rec.name,
+            role: rec.roleName || '',
+            time: rec.time || '',
+            modifiedBy: rec.modifiedBy ? `${rec.modifiedBy}${rec.modifiedAt ? ` (${rec.modifiedAt})` : ''}` : ''
+          }, url);
+          if (ok) {
+            await db.collection('attendance').doc(String(rec.id)).update({ sheetSynced: true }).catch(() => {});
+          }
+        }
+      } finally {
+        isSyncingUnsyncedAtt = false;
+      }
+    }
+
     async function syncUnsyncedMembersToSheet(memberList) {
       const user = getCurrentUser();
-      const url = String((attendanceConfig && attendanceConfig.sheetUrl) || '').trim();
+      const url = getAdminSheetUrl();
       if (!user || !user.isSuperAdmin || !url) return;
       const toSync = memberList.filter(m => {
         const curStatusLabel = m.status === 'pending'
@@ -12058,20 +12147,10 @@ ${m.body}`;
           ts: Date.now(),
           source: 'self',
           modifiedBy: '',
-          modifiedAt: ''
+          modifiedAt: '',
+          sheetSynced: false
         };
         await docRef.set(record);
-
-        // 구글 시트 자동 전송
-        postToGoogleSheet({
-          action: 'attendance_upsert',
-          colTitle: record.colTitle,
-          date: record.date,
-          name: record.name,
-          role: record.roleName,
-          time: record.time,
-          modifiedBy: ''
-        }).catch(() => {});
 
         if (!myAttendanceRecords.some(r => r.id === docId)) {
           myAttendanceRecords.unshift(record);
@@ -12505,18 +12584,22 @@ ${m.body}`;
 
         <div class="manage-divider"></div>
 
-        <!-- 3) 구글 시트 자동 연동 설정 -->
+        <!-- 3) 구글 시트 자동 연동 설정 (관리자 전용 격리 보관) -->
         <div class="section-head">
           <h2 class="section-title">📊 구글 시트 자동 연동</h2>
-          <span class="tag ${cfg.sheetUrl ? 'green' : 'slate'}">${cfg.sheetUrl ? '연동 설정됨' : '미연동'}</span>
+          <div style="display:flex; gap:5px; align-items:center; flex-wrap:wrap;">
+            <span class="tag warm">🔐 관리자 전용 보관</span>
+            <span class="tag ${getAdminSheetUrl() ? 'green' : 'slate'}">${getAdminSheetUrl() ? '연동 설정됨' : '미연동'}</span>
+          </div>
         </div>
         <div class="card">
           <div class="form-group">
-            <label class="form-label" for="cfgSheetUrlInput">Google Apps Script 웹 앱 URL</label>
-            <input id="cfgSheetUrlInput" type="url" class="form-input" value="${escapeHtml(cfg.sheetUrl || '')}" placeholder="구글 앱스 스크립트 웹앱 URL 입력" />
+            <label class="form-label" for="cfgSheetUrlInput">Google Apps Script 웹 앱 URL (일반 회원 비공개)</label>
+            <input id="cfgSheetUrlInput" type="url" class="form-input" value="${escapeHtml(getAdminSheetUrl())}" placeholder="구글 앱스 스크립트 웹앱 URL 입력" />
           </div>
           <div style="font-size:11.5px; color:#64748B; line-height:1.5; margin-bottom:10px;">
-            연동하면 <b>출석부(추가·수정·삭제)</b>, <b>회원 명단(가입·재가입·승인·삭제)</b>, <b>관리자 명단(등록·해제·재입장)</b>이 구글 시트에 자동으로 기록됩니다.
+            • 보안 강화를 위해 연동 주소는 <b>최고 관리자 전용 서버(config/sheetSecret)</b>에만 격리 보관되며 일반 회원에게는 노출되지 않습니다.<br>
+            • 회원이 출석 체크를 하면 <b>관리자가 앱을 열거나 접속 중일 때</b> 출석부·회원·관리자 명단이 구글 시트에 자동으로 반영됩니다.
           </div>
           <div style="display:flex; gap:6px; flex-wrap:wrap;">
             <button id="saveSheetUrlBtn" class="btn-sm primary" type="button" style="flex:1; padding:9px;" onclick="handleSaveSheetUrl()">💾 연동 주소 저장</button>
@@ -12712,11 +12795,29 @@ ${m.body}`;
       const btn = document.getElementById('saveSheetUrlBtn');
       btn.disabled = true;
       try {
-        await db.collection('config').doc('attendance').set({ sheetUrl: url }, { merge: true });
+        const batch = db.batch();
+        batch.set(db.collection('config').doc('sheetSecret'), {
+          url,
+          updatedAt: formatKstDateTime(),
+          updatedTs: Date.now(),
+          updatedBy: currentAdminName || '관리자'
+        }, { merge: true });
+        batch.set(db.collection('config').doc('attendance'), {
+          sheetUrl: FieldValue.delete()
+        }, { merge: true });
+        await batch.commit();
+        adminSheetUrl = url;
         if (url) {
           const res = await postToGoogleSheet(buildFullSheetSyncPayload(), url, true);
           if (!warnIfOldAppsScript(res)) {
-            showToast(res.ok ? '연동 주소 저장 및 시트 전체 동기화가 완료되었습니다!' : '주소는 저장되었으나 시트 전송을 확인해 주세요.');
+            if (res.ok) {
+              attendanceRecords.forEach(r => {
+                if (r.sheetSynced !== true) {
+                  db.collection('attendance').doc(String(r.id)).update({ sheetSynced: true }).catch(() => {});
+                }
+              });
+            }
+            showToast(res.ok ? '연동 주소를 관리자 전용 서버에 안전 저장하고 시트를 동기화했습니다!' : '주소는 저장되었으나 시트 전송을 확인해 주세요.');
           }
         } else {
           showToast('구글 시트 연동이 해제되었습니다.');
@@ -12729,7 +12830,7 @@ ${m.body}`;
     };
 
     window.handleTestSheetConnection = async () => {
-      const url = document.getElementById('cfgSheetUrlInput').value.trim() || attendanceConfig.sheetUrl;
+      const url = document.getElementById('cfgSheetUrlInput').value.trim() || getAdminSheetUrl();
       if (!url) return showToast('먼저 Apps Script 웹 앱 URL을 입력해 주세요.');
       const res = await postToGoogleSheet({ action: 'test', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url, true);
       if (warnIfOldAppsScript(res)) return;
@@ -12741,13 +12842,13 @@ ${m.body}`;
     };
 
     window.handleSyncAllToGoogleSheet = async () => {
-      const url = document.getElementById('cfgSheetUrlInput').value.trim() || attendanceConfig.sheetUrl;
+      const url = document.getElementById('cfgSheetUrlInput').value.trim() || getAdminSheetUrl();
       if (!url) return showToast('먼저 Apps Script 웹 앱 URL을 입력하고 저장해 주세요.');
       showToast('출석부 · 회원 명단 · 관리자 명단을 동기화 중...');
       const res = await postToGoogleSheet(buildFullSheetSyncPayload(), url, true);
       if (warnIfOldAppsScript(res)) return;
       if (res.ok) {
-        // 모든 회원 동기화 완료 상태 반영
+        // 모든 회원·출석 기록 동기화 완료 상태 반영
         for (const m of members) {
           const isRe = !!m.isRejoin || memberHistoryMap.has(nameToHex(m.name));
           const st = m.status === 'pending'
@@ -12755,6 +12856,11 @@ ${m.body}`;
             : (m.status === 'approved' ? (isRe ? '재가입 승인' : '승인') : (m.status === 'rejected' ? '보류' : m.status));
           if (m.sheetSyncedStatus !== st) {
             db.collection('members').doc(String(m.id)).update({ sheetSyncedStatus: st }).catch(() => {});
+          }
+        }
+        for (const r of attendanceRecords) {
+          if (r.sheetSynced !== true) {
+            db.collection('attendance').doc(String(r.id)).update({ sheetSynced: true }).catch(() => {});
           }
         }
         showToast('✅ 출석부 · 회원 명단 · 관리자 명단 전체 동기화 완료!');
@@ -12827,7 +12933,8 @@ ${m.body}`;
             time: timeVal,
             source: 'admin_edit',
             modifiedBy: adminActor,
-            modifiedAt: nowStr
+            modifiedAt: nowStr,
+            sheetSynced: !!getAdminSheetUrl()
           });
           postToGoogleSheet({
             action: 'attendance_upsert',
@@ -12859,7 +12966,8 @@ ${m.body}`;
             ts: Date.now(),
             source: 'admin_add',
             modifiedBy: adminActor,
-            modifiedAt: nowStr
+            modifiedAt: nowStr,
+            sheetSynced: !!getAdminSheetUrl()
           };
           await db.collection('attendance').doc(newDocId).set(newRec);
           postToGoogleSheet({
@@ -13188,7 +13296,7 @@ ${m.body}`;
             setDiagResult(id, 'warn', '서버 연결은 정상이지만 초기 설정 문서(config/app)가 비어 있습니다.');
           }
         } else if (id === 'sheet') {
-          const url = String((attendanceConfig && attendanceConfig.sheetUrl) || '').trim();
+          const url = getAdminSheetUrl();
           if (!url) {
             setDiagResult(id, 'warn', '구글 시트 연동 URL이 아직 등록되지 않았습니다. [예배 관리]에서 URL을 입력해 주세요.');
           } else {
@@ -13198,7 +13306,7 @@ ${m.body}`;
             } else if (res.readable && res.data && !isSheetResponseMultiTab(res.data)) {
               setDiagResult(id, 'err', 'Apps Script가 예전 1탭 버전입니다. Apps Script에서 [배포 관리 → ✏️ 수정 → 새 버전 → 배포]를 진행해 주세요.');
             } else if (res.readable && res.data && isSheetResponseMultiTab(res.data)) {
-              setDiagResult(id, 'ok', `구글 시트 3개 탭(출석부·회원 명단·관리자 명단) 정상 응답 확인 (${res.data.version || '3탭'})`);
+              setDiagResult(id, 'ok', `🔐 관리자 전용 URL 격리 정상 · 구글 시트 3개 탭(출석부·회원·관리자) 응답 확인 (${res.data.version || '3탭'})`);
             } else {
               setDiagResult(id, 'ok', '구글 시트 전송 성공 (브라우저 보안 정책으로 응답 본문은 숨겨졌으나 시트로 정상 전송됨)');
             }
@@ -13392,7 +13500,7 @@ ${m.body}`;
     };
 
     window.runSheetLiveWriteTest = async () => {
-      const url = String((attendanceConfig && attendanceConfig.sheetUrl) || '').trim();
+      const url = getAdminSheetUrl();
       if (!url) return showToast('먼저 [예배 관리]에서 구글 시트 URL을 저장해 주세요.');
       const now = getKstNowInfo();
       const colTitle = `${now.dot} (기능점검 테스트)`;
@@ -13411,7 +13519,7 @@ ${m.body}`;
     };
 
     window.handleCleanupZeroSheetEntries = async () => {
-      const url = String((attendanceConfig && attendanceConfig.sheetUrl) || '').trim();
+      const url = getAdminSheetUrl();
       if (!url) return showToast('구글 시트 URL이 설정되어 있지 않습니다.');
       if (!confirm('구글 시트 [출석부]에서 출석이 0인 날짜 열과 0명 행을 모두 깔끔하게 삭제할까요?')) return;
       const res = await postToGoogleSheet({ action: 'cleanup_zeros' }, url, true);
@@ -13432,7 +13540,7 @@ ${m.body}`;
     };
 
     window.runSheetLiveCleanupTest = async () => {
-      const url = String((attendanceConfig && attendanceConfig.sheetUrl) || '').trim();
+      const url = getAdminSheetUrl();
       if (!url) return showToast('구글 시트 URL이 설정되어 있지 않습니다.');
       const now = getKstNowInfo();
       const colTitle = `${now.dot} (기능점검 테스트)`;
