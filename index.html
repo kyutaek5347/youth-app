@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=140" />
+  <link rel="manifest" href="./manifest.json?v=141" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=140" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=140" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=141" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=141" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2637,7 +2637,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=140" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=141" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4697,7 +4697,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=140" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=141" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -4720,8 +4720,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=140', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=140', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=141', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=141', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -4935,30 +4935,10 @@
     let unsubMyMember = null;
     let memberProfileRetryTimer = null;
 
-    function loadCachedMember(uid) {
-      if (!uid) return null;
-      try {
-        const raw = JSON.parse(localStorage.getItem(KEY_MEMBER_CACHE) || 'null');
-        if (raw && String(raw.id) === String(uid)) return raw;
-      } catch {}
-      return null;
-    }
-
-    function saveCachedMember(member) {
-      if (!member || !member.id) return;
-      try {
-        localStorage.setItem(KEY_MEMBER_CACHE, JSON.stringify({
-          id: String(member.id),
-          name: member.name || '',
-          status: member.status || 'pending',
-          roleId: member.roleId || 'role_youth'
-        }));
-      } catch {}
-    }
-
     function clearCachedMember() {
       try { localStorage.removeItem(KEY_MEMBER_CACHE); } catch {}
     }
+    clearCachedMember();
     let unsubCore = [];
     let unsubMembersAll = null;
     let unsubAdminSecret = null;
@@ -6160,7 +6140,6 @@
               if (serverSnap.exists) {
                 const verified = { ...serverSnap.data(), id: String(serverSnap.id) };
                 myMemberDoc = verified;
-                saveCachedMember(verified);
                 if (verified.status === 'approved') {
                   subscribeCoreData();
                   syncMembersAllSubscription();
@@ -6187,7 +6166,6 @@
         const prevStatus = myMemberDoc ? myMemberDoc.status : null;
         const prevRoleId = myMemberDoc ? myMemberDoc.roleId : null;
         myMemberDoc = { ...doc.data(), id: String(doc.id) };
-        saveCachedMember(myMemberDoc);
 
         if (myMemberDoc.status === 'approved') {
           if (prevStatus && prevStatus !== 'approved') {
@@ -6476,17 +6454,7 @@
         }
         attachAdminRegistryListener();
       } else {
-        // 업데이트/재실행 시 캐시된 회원 정보로 즉시 로그인 상태 유지 후 서버와 실시간 동기화
-        const cached = loadCachedMember(user.uid);
-        if (cached) {
-          myMemberDoc = cached;
-          if (cached.status === 'approved') {
-            subscribeCoreData();
-            syncMembersAllSubscription();
-          }
-          document.getElementById('loadingScreen').classList.add('hidden');
-          applyScreen();
-        }
+        // 서버(Firestore)에서 최신 회원 정보를 실시간 동기화 (브라우저 평문 캐시 미사용)
         attachMemberProfileListener(user.uid, 0);
       }
     });
@@ -6657,7 +6625,6 @@
         await db.collection('members').doc(uid).set(newMember);
         fbUser = cred.user;
         myMemberDoc = newMember;
-        saveCachedMember(newMember);
 
         document.getElementById('signupNameInput').value = '';
         document.getElementById('signupBirthInput').value = '';
@@ -9478,7 +9445,6 @@
 
         fbUser = createdUser;
         myMemberDoc = newMember;
-        saveCachedMember(newMember);
         currentMainTab = 'home';
 
         document.getElementById('resetNameInput').value = '';
