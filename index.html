@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=149" />
+  <link rel="manifest" href="./manifest.json?v=150" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=149" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=149" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=150" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=150" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -408,6 +408,7 @@
       color: var(--text);
       box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
     }
+    .search-input::placeholder { color: #94A3B8; text-overflow: ellipsis; overflow: hidden; }
     .search-input:focus { outline: none; border-color: #111827; }
     .search-icon {
       position: absolute;
@@ -2485,8 +2486,8 @@
 
     @media (max-width: 440px) {
       .search-input {
-        padding: 11px 34px 11px 36px;
-        font-size: 13.5px;
+        padding: 11px 32px 11px 36px;
+        font-size: 13px;
       }
       .search-icon {
         left: 11px;
@@ -2526,8 +2527,8 @@
 
     @media (max-width: 360px) {
       .search-input {
-        font-size: 12.8px;
-        padding: 10px 32px 10px 34px;
+        font-size: 12.2px;
+        padding: 10px 30px 10px 33px;
       }
       .quick-link-btn {
         font-size: 13px;
@@ -2863,7 +2864,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=149" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=150" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3159,7 +3160,7 @@
 
           <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input id="userGuideSearchInput" class="search-input" type="search" placeholder="궁금한 기능 검색 (예: 출석, 성경, 이름 변경, 비밀번호)" oninput="onUserGuideSearchInput(this.value)" />
+            <input id="userGuideSearchInput" class="search-input" type="search" placeholder="기능 검색 (예: 출석, 성경, 알림)" oninput="onUserGuideSearchInput(this.value)" />
             <button id="userGuideSearchClear" class="search-clear hidden" type="button" onclick="clearUserGuideSearch()">✕</button>
           </div>
 
@@ -4984,7 +4985,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=149" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=150" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5007,8 +5008,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=149', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=149', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=150', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=150', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5410,6 +5411,26 @@
         if (qtIcon !== DEFAULT_TAB_ICONS.qt) return qtIcon;
       }
       return raw;
+    }
+
+    function fitSearchPlaceholder(prefix, examples, maxWeight = 18) {
+      const measure = (s) => {
+        let w = 0;
+        for (const ch of String(s || '')) {
+          w += /[가-힣ㄱ-ㅎㅏ-ㅣ]/.test(ch) ? 1 : 0.56;
+        }
+        return w;
+      };
+      const picked = [];
+      for (const ex of (Array.isArray(examples) ? examples : [])) {
+        const clean = String(ex || '').trim();
+        if (!clean || picked.includes(clean)) continue;
+        const cand = `${prefix} (예: ${[...picked, clean].join(', ')})`;
+        if (measure(cand) <= maxWeight) {
+          picked.push(clean);
+        }
+      }
+      return picked.length > 0 ? `${prefix} (예: ${picked.join(', ')})` : `${prefix}...`;
     }
 
     function getValidTabOrder(rawOrder) {
@@ -7556,6 +7577,10 @@
       if (qsEditBtn) qsEditBtn.textContent = `⚙️ ${getTabLabel('manage')} 편집`;
       const bpModalTitle = document.getElementById('biblePickerModalTitle');
       if (bpModalTitle) bpModalTitle.textContent = `${getTabIcon('bible')} ${getTabLabel('bible')} 이동`;
+      const bibleSearchInp = document.getElementById('bibleQuickSearchInput');
+      if (bibleSearchInp) bibleSearchInp.placeholder = fitSearchPlaceholder(`${getTabLabel('bible')} 검색`, ['시편 23:1', '요3:16'], 17.5);
+      const bylawSearchInp = document.getElementById('bylawSearchInput');
+      if (bylawSearchInp) bylawSearchInp.placeholder = fitSearchPlaceholder(`${getTabLabel('bylaws')} 검색`, ['제5조', '임기'], 17.5);
 
       if (currentMainTab === 'home') renderHomeView(user);
       else if (currentMainTab === 'bible') renderBibleView();
@@ -7817,7 +7842,7 @@
       const qLbl = getTabLabel('qt');
       const searchInp = document.getElementById('userGuideSearchInput');
       if (searchInp) {
-        searchInp.placeholder = `궁금한 기능 검색 (예: 출석, ${bLbl}, ${qLbl}, 이름 변경, 비밀번호)`;
+        searchInp.placeholder = fitSearchPlaceholder('기능 검색', ['출석', bLbl, qLbl, '알림'], 17.5);
       }
 
       const tagsEl = document.getElementById('userGuideQuickTags');
@@ -8229,7 +8254,7 @@
 
         <div class="search-box" style="margin-bottom:8px;">
           <span class="search-icon">🔍</span>
-          <input id="adminGuideSearchInput" class="search-input" type="search" value="${escapeHtml(adminGuideSearchQuery)}" placeholder="관리자 기능 검색 (예: 인수인계, ${escapeHtml(getTabLabel('qt'))}, 구글 시트, 예약, QR, ${escapeHtml(getTabLabel('manageLogs'))})" oninput="onAdminGuideSearchInput(this.value)" />
+          <input id="adminGuideSearchInput" class="search-input" type="search" value="${escapeHtml(adminGuideSearchQuery)}" placeholder="${escapeHtml(fitSearchPlaceholder('기능 검색', ['인수인계', getTabLabel('qt'), '시트', getTabLabel('manageLogs')], 17.5))}" oninput="onAdminGuideSearchInput(this.value)" />
           <button id="adminGuideSearchClear" class="search-clear ${adminGuideSearchQuery ? '' : 'hidden'}" type="button" onclick="clearAdminGuideSearch()">✕</button>
         </div>
         <div id="adminGuideSummaryText" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
@@ -10560,7 +10585,7 @@
             <div class="form-group" style="margin-bottom:10px;">
               <label class="form-label" for="newAdminPwInput">새 관리자 코드 (6자리 이상)</label>
               <div style="display:flex; gap:6px;">
-                <input id="newAdminPwInput" type="password" class="form-input" placeholder="직접 입력하거나 [🎲 자동 생성] 클릭" style="flex:1;" />
+                <input id="newAdminPwInput" type="password" class="form-input" placeholder="새 코드 입력 (6자리 이상)" style="flex:1;" />
                 <button id="toggleNewAdminPwBtn" class="btn-sm" type="button" style="white-space:nowrap;" onclick="toggleNewAdminPwVisibility()">👁️ 보기</button>
               </div>
             </div>
@@ -15569,7 +15594,7 @@ ${m.body}`;
               <label class="form-label" for="adminAttSessionSelect" style="margin-bottom:0;">예배·행사 선택 (한국시간 기준)</label>
               ${curSess ? `<button class="btn-sm" type="button" style="padding:4px 8px; font-size:11px;" onclick="renameSelectedWorshipSession()">✏️ 예배명 변경</button>` : ''}
             </div>
-            <input id="adminAttSessionSearchInput" class="form-input" style="margin-bottom:6px; padding:8px 11px; font-size:13px;" value="${escapeHtml(adminAttSessionSearchQuery)}" placeholder="날짜·예배명 검색 (예: 2026.11, 주일)" oninput="onAdminAttSessionSearchInput(this.value)" />
+            <input id="adminAttSessionSearchInput" class="form-input" style="margin-bottom:6px; padding:8px 11px; font-size:13px;" value="${escapeHtml(adminAttSessionSearchQuery)}" placeholder="날짜·예배명 검색 (예: 주일)" oninput="onAdminAttSessionSearchInput(this.value)" />
             <select id="adminAttSessionSelect" class="form-select" onchange="onSelectAdminAttSession(this.value)">
               ${filteredSessions.map(s => `
                 <option value="${escapeHtml(s.sessionId)}" ${s.sessionId === selectedAdminAttSessionKey ? 'selected' : ''}>${escapeHtml(s.displayTitle || s.colTitle)}</option>
