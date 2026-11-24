@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=124" />
+  <link rel="manifest" href="./manifest.json?v=125" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=124" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=124" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=125" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=125" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1868,7 +1868,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=124" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=125" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3623,7 +3623,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=124" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=125" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -3646,8 +3646,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=124', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=124', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=125', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=125', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -10805,8 +10805,16 @@ ${m.body}`;
       };
     }
 
+    function isSheetResponseMultiTab(data) {
+      if (!data || typeof data !== 'object') return false;
+      if (data.multiTab === true) return true;
+      if (String(data.message || '').includes('3개 탭')) return true;
+      if (data.result && typeof data.result === 'object') return true;
+      return false;
+    }
+
     function warnIfOldAppsScript(res) {
-      if (res && res.readable && res.data && !res.data.multiTab) {
+      if (res && res.readable && res.data && !isSheetResponseMultiTab(res.data)) {
         alert('⚠️ 구글 시트의 Apps Script가 아직 예전(1탭) 버전으로 배포되어 있습니다!\n\n구글 시트 → 확장 프로그램 → Apps Script에서:\n1) 최신 3탭 코드를 붙여넣고 저장한 뒤\n2) 오른쪽 위 [배포 → 배포 관리 → ✏️(수정) → 버전: 새 버전 → 배포]를 꼭 눌러주세요.\n(저장만 해서는 새 버전이 반영되지 않습니다.)');
         return true;
       }
@@ -10842,7 +10850,7 @@ ${m.body}`;
       if (!url) return showToast('먼저 Apps Script 웹 앱 URL을 입력해 주세요.');
       const res = await postToGoogleSheet({ action: 'test', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url, true);
       if (warnIfOldAppsScript(res)) return;
-      if (res.ok && res.readable && res.data && res.data.multiTab) {
+      if (res.ok && res.readable && res.data && isSheetResponseMultiTab(res.data)) {
         showToast('✅ 구글 시트 3개 탭(출석부·회원 명단·관리자 명단) 연동 정상!');
       } else {
         showToast(res.ok ? '구글 시트로 테스트 신호를 보냈습니다! 시트 하단 3개 탭을 확인해 보세요.' : '전송에 실패했습니다. URL을 확인해 주세요.');
@@ -11304,10 +11312,10 @@ ${m.body}`;
             const res = await postToGoogleSheet({ action: 'test', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url, true);
             if (!res.ok) {
               setDiagResult(id, 'err', '구글 시트 전송 실패: URL 오타 또는 네트워크 오류를 확인해 주세요.');
-            } else if (res.readable && res.data && !res.data.multiTab) {
+            } else if (res.readable && res.data && !isSheetResponseMultiTab(res.data)) {
               setDiagResult(id, 'err', 'Apps Script가 예전 1탭 버전입니다. Apps Script에서 [배포 관리 → ✏️ 수정 → 새 버전 → 배포]를 진행해 주세요.');
-            } else if (res.readable && res.data && res.data.multiTab) {
-              setDiagResult(id, 'ok', `구글 시트 3개 탭(출석부·회원 명단·관리자 명단) 정상 응답 확인 (${res.data.version || '최신'})`);
+            } else if (res.readable && res.data && isSheetResponseMultiTab(res.data)) {
+              setDiagResult(id, 'ok', `구글 시트 3개 탭(출석부·회원 명단·관리자 명단) 정상 응답 확인 (${res.data.version || '3탭'})`);
             } else {
               setDiagResult(id, 'ok', '구글 시트 전송 성공 (브라우저 보안 정책으로 응답 본문은 숨겨졌으나 시트로 정상 전송됨)');
             }
@@ -11475,17 +11483,29 @@ ${m.body}`;
           <h2 class="newcomer-auto-title">${escapeHtml(nTitle)}</h2>
           <p class="newcomer-auto-desc">${escapeHtml(nDesc)}</p>
         </div>
-        <button class="btn-full btn-dark" type="button" style="padding:11px; font-size:13.5px;" onclick="previewDiagCelebrationNotif()">🔔 생일 축하 팝업 알림 띄워보기</button>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button class="btn-full btn-dark" type="button" style="padding:11px; font-size:13.5px;" onclick="previewDiagCelebrationNotif('birthday')">🎂 생일 축하 팝업 알림 띄워보기</button>
+          <button class="btn-full btn-blue" type="button" style="padding:11px; font-size:13.5px;" onclick="previewDiagCelebrationNotif('newcomer')">💐 새신자 환영 팝업 알림 띄워보기</button>
+        </div>
       `;
       document.getElementById('diagSimModal').classList.add('open');
     };
 
-    window.previewDiagCelebrationNotif = () => {
+    window.previewDiagCelebrationNotif = (kind = 'birthday') => {
       const sample = '홍길동';
-      const bTitle = renderCelebrationText(getCelebrationMsg('birthdayTitle'), sample);
-      const bDesc = renderCelebrationText(getCelebrationMsg('birthdayDesc'), sample).replace(/\s*\n\s*/g, ' ');
-      showInAppNotif('🎂', bTitle, bDesc, () => {});
-      showToast('상단 팝업 알림 미리보기를 띄웠습니다!');
+      if (kind === 'newcomer') {
+        const nTitle = renderCelebrationText(getCelebrationMsg('newcomerTitle'), sample);
+        const nDesc = renderCelebrationText(getCelebrationMsg('newcomerDesc'), sample).replace(/\s*\n\s*/g, ' ');
+        showInAppNotif('💐', nTitle, nDesc, () => {});
+        sendDeviceNotification(nTitle, nDesc).catch(() => {});
+        showToast('새신자 환영 팝업 알림 미리보기를 띄웠습니다!');
+      } else {
+        const bTitle = renderCelebrationText(getCelebrationMsg('birthdayTitle'), sample);
+        const bDesc = renderCelebrationText(getCelebrationMsg('birthdayDesc'), sample).replace(/\s*\n\s*/g, ' ');
+        showInAppNotif('🎂', bTitle, bDesc, () => {});
+        sendDeviceNotification(bTitle, bDesc).catch(() => {});
+        showToast('생일 축하 팝업 알림 미리보기를 띄웠습니다!');
+      }
     };
 
     window.runSheetLiveWriteTest = async () => {
