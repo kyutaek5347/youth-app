@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=142" />
+  <link rel="manifest" href="./manifest.json?v=143" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=142" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=142" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=143" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=143" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2678,7 +2678,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=142" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=143" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3033,6 +3033,7 @@
       </div>
       <div id="accountSummaryBox" class="status-meta" style="margin-bottom:10px;"></div>
       <div id="accountAttendanceBox" class="att-history-box"></div>
+      <div id="accountRenameBox" class="form-group" style="background:#F8FAFC; border:1px solid var(--border); border-radius:12px; padding:11px 12px; margin-bottom:12px;"></div>
       <div class="form-group" style="background:#F8FAFC; border:1px solid var(--border); border-radius:12px; padding:10px 12px; margin-bottom:14px;">
         <label class="form-label" for="accBirthInput" style="margin-bottom:6px;">🎂 내 생일 등록 · 수정</label>
         <div class="combo-input-row">
@@ -4723,6 +4724,23 @@
       return 0;
     }
 
+    async function resolveMemberAuthEmail(name) {
+      const nameHex = nameToHex(name);
+      try {
+        const snap = await db.collection('authIndex').doc(nameHex).get();
+        if (snap.exists) {
+          const d = snap.data() || {};
+          if (d.loginEmail && typeof d.loginEmail === 'string') {
+            return d.loginEmail;
+          }
+          if (typeof d.v === 'number') {
+            return hexToAuthEmail(nameHex, d.v);
+          }
+        }
+      } catch {}
+      return hexToAuthEmail(nameHex, 0);
+    }
+
     // ==================== 5. 알림 설정 상태 & 실시간 알림 엔진 ====================
     function loadNotifPrefs() {
       try {
@@ -4763,7 +4781,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=142" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=143" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -4786,8 +4804,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=142', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=142', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=143', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=143', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -4960,6 +4978,8 @@
     let isRenamingAdmin = false;
     let isSyncingUnsyncedRenameLogs = false;
     let adminLogSearchQuery = '';
+    let adminLogFilterType = 'all';
+    let knownPendingRenameMap = new Map();
     let pendingAdminStatus = null; // null | 'pending'
     let memberHistoryMap = new Map();
     let unsubAdminRegistry = null;
@@ -5059,6 +5079,7 @@
       qtFirstSnap = true;
       knownNoticeIds = new Set();
       knownPendingMemberIds = new Set();
+      knownPendingRenameMap = new Map();
       knownQtIds = new Set();
       knownNoticeAlertMap = new Map();
       lastSeenLayoutAlertTs = 0;
@@ -5563,12 +5584,18 @@
       if (needsAllMembers && !unsubMembersAll) {
         membersFirstSnap = true;
         knownPendingMemberIds = new Set();
+        knownPendingRenameMap = new Map();
         unsubMembersAll = db.collection('members').onSnapshot(snap => {
           const nextMembers = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
             .sort((a, b) => Number(b.createdTs || 0) - Number(a.createdTs || 0));
 
           if (membersFirstSnap) {
-            nextMembers.forEach(m => { if (m.status === 'pending') knownPendingMemberIds.add(m.id); });
+            nextMembers.forEach(m => {
+              if (m.status === 'pending') knownPendingMemberIds.add(m.id);
+              if (m.status === 'approved' && m.pendingName) {
+                knownPendingRenameMap.set(m.id, `${m.pendingName}:${m.pendingNameTs || 0}`);
+              }
+            });
             membersFirstSnap = false;
           } else {
             nextMembers.forEach(m => {
@@ -5585,6 +5612,25 @@
                     applyScreen();
                   }
                 });
+              }
+              if (m.status === 'approved' && m.pendingName) {
+                const sig = `${m.pendingName}:${m.pendingNameTs || 0}`;
+                if (knownPendingRenameMap.get(m.id) !== sig) {
+                  knownPendingRenameMap.set(m.id, sig);
+                  dispatchAppNotification({
+                    type: 'member',
+                    icon: '✏️',
+                    title: '회원 이름 변경 승인 요청',
+                    body: `${m.name}님이 [${m.pendingName}](으)로 이름 변경을 신청했습니다.`,
+                    onClick: () => {
+                      currentMainTab = 'manage';
+                      currentManageSubTab = 'members';
+                      applyScreen();
+                    }
+                  });
+                }
+              } else {
+                knownPendingRenameMap.delete(m.id);
               }
             });
           }
@@ -5607,6 +5653,7 @@
         members = [];
         membersFirstSnap = true;
         knownPendingMemberIds = new Set();
+        knownPendingRenameMap = new Map();
       }
 
       if (needsAllMembers && !unsubAdminSecret) {
@@ -6240,6 +6287,9 @@
 
         const prevStatus = myMemberDoc ? myMemberDoc.status : null;
         const prevRoleId = myMemberDoc ? myMemberDoc.roleId : null;
+        const prevName = myMemberDoc ? myMemberDoc.name : null;
+        const prevPendingName = myMemberDoc ? myMemberDoc.pendingName : null;
+        const prevResultTs = (myMemberDoc && myMemberDoc.lastRenameResult) ? Number(myMemberDoc.lastRenameResult.ts || 0) : 0;
         myMemberDoc = { ...doc.data(), id: String(doc.id) };
 
         if (myMemberDoc.status === 'approved') {
@@ -6247,11 +6297,35 @@
             currentMainTab = 'home';
             showToast(`가입이 승인되었습니다! ${myMemberDoc.name}님 환영합니다.`);
           }
+          const curRes = myMemberDoc.lastRenameResult || null;
+          const curResultTs = curRes ? Number(curRes.ts || 0) : 0;
+          if (prevName && myMemberDoc.name !== prevName) {
+            showToast(`✅ 이름 변경이 승인되었습니다! 이제 [${myMemberDoc.name}]님으로 표시됩니다.`);
+            dispatchAppNotification({
+              type: 'notice',
+              icon: '✅',
+              title: '이름 변경 승인 완료',
+              body: `${prevName} → ${myMemberDoc.name} (다음 로그인부터 새 이름으로 로그인해 주세요)`,
+              onClick: () => { openAccountModal(); }
+            });
+          } else if (prevPendingName && !myMemberDoc.pendingName && curRes && curRes.status === 'rejected' && curResultTs > prevResultTs) {
+            showToast(`❌ 이름 변경 신청이 거절되어 기존 이름([${myMemberDoc.name}])이 유지됩니다.`);
+            dispatchAppNotification({
+              type: 'notice',
+              icon: 'ℹ️',
+              title: '이름 변경 신청 거절 안내',
+              body: `요청하신 [${curRes.requestedName || prevPendingName}] 변경이 거절되어 기존 이름(${myMemberDoc.name})이 유지됩니다.`,
+              onClick: () => { openAccountModal(); }
+            });
+          }
           subscribeCoreData();
           if (prevRoleId && prevRoleId !== myMemberDoc.roleId) {
             syncScopedContentSubscriptions();
           }
           syncMembersAllSubscription();
+          if (document.getElementById('accountModal').classList.contains('open')) {
+            refreshAccountModalContent();
+          }
         } else {
           unsubCore.forEach(fn => { try { fn(); } catch {} });
           unsubCore = [];
@@ -6679,7 +6753,18 @@
 
       try {
         const nameHex = nameToHex(name);
-        const authVer = await getAuthVerForHex(nameHex);
+        let authVer = 0;
+        try {
+          const idxSnap = await db.collection('authIndex').doc(nameHex).get();
+          if (idxSnap.exists) {
+            const idxData = idxSnap.data() || {};
+            if (idxData.loginEmail && typeof idxData.loginEmail === 'string') {
+              isSigningUp = false;
+              return showError('signupError', '이미 등록된 성명입니다. 동명이인은 이름 뒤에 생년 등을 붙여주세요. (예: 홍길동01)');
+            }
+            if (typeof idxData.v === 'number') authVer = idxData.v;
+          }
+        } catch {}
         const authEmail = hexToAuthEmail(nameHex, authVer);
         await authPersistenceReady;
         await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
@@ -6694,6 +6779,7 @@
           status: 'pending',
           roleId: 'role_youth',
           authVer,
+          authEmail,
           inviteToken: capturedInviteToken,
           createdAt: formatKstDateTime(),
           createdTs: Date.now(),
@@ -6735,11 +6821,10 @@
       btn.textContent = '로그인 중...';
       try {
         currentMainTab = 'home';
-        const nameHex = nameToHex(name);
-        const authVer = await getAuthVerForHex(nameHex);
+        const loginEmail = await resolveMemberAuthEmail(name);
         await authPersistenceReady;
         await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
-        await auth.signInWithEmailAndPassword(hexToAuthEmail(nameHex, authVer), pw);
+        await auth.signInWithEmailAndPassword(loginEmail, pw);
         document.getElementById('loginNameInput').value = '';
         document.getElementById('loginPwInput').value = '';
       } catch (err) {
@@ -7051,7 +7136,7 @@
       badge.style.background = user.role.color;
       document.getElementById('headerSubText').textContent = `${user.name}님`;
 
-      const pendingCount = members.filter(m => m.status === 'pending').length + (adminRegistry.items || []).filter(a => a.status === 'pending').length;
+      const pendingCount = members.filter(m => m.status === 'pending').length + members.filter(m => m.status === 'approved' && m.pendingName).length + (adminRegistry.items || []).filter(a => a.status === 'pending').length;
       const tabbar = document.getElementById('appTabbar');
       tabbar.className = `tabbar ${isManageMode ? 'dark' : 'light'}`;
       const orderedTabs = getValidTabOrder().filter(k => k !== 'manage' || canManage);
@@ -8580,6 +8665,8 @@
     // (C) 회원 승인 · 역할 부여 · 비밀번호 초기화
     function renderManageMembers(el) {
       const pending = members.filter(m => m.status === 'pending');
+      const renamePending = members.filter(m => m.status === 'approved' && m.pendingName)
+        .sort((a, b) => Number(b.pendingNameTs || 0) - Number(a.pendingNameTs || 0));
       const resetPending = members.filter(m => m.status === 'reset_pending');
       const approved = members.filter(m => m.status === 'approved');
       const rejected = members.filter(m => m.status === 'rejected');
@@ -8707,6 +8794,39 @@
               `;
             }).join('')}
 
+        ${renamePending.length > 0 ? `
+          <div class="section-head" style="margin-top:20px;">
+            <h2 class="section-title">✏️ 회원 이름 변경 승인 대기</h2>
+            <span class="tag warm">${renamePending.length}건</span>
+          </div>
+          ${renamePending.map(m => {
+            const r = getRoleById(m.roleId);
+            const reqNew = String(m.pendingName || '').trim();
+            const isDup = members.some(other => String(other.id) !== String(m.id) && String(other.name || '').trim() === reqNew);
+            return `
+              <div class="card highlight-pending">
+                <div class="card-top">
+                  <div class="member-name">
+                    <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
+                    <span class="tag warm">✏️ 이름 변경 신청</span>
+                  </div>
+                  <span class="card-date">${escapeHtml(m.pendingNameAt || '')}</span>
+                </div>
+                <div class="log-rename-diff" style="background:#FFF;">
+                  <span class="log-name-old">${escapeHtml(m.name)}</span>
+                  <span class="log-name-arrow">→</span>
+                  <span class="log-name-new">${escapeHtml(reqNew)}</span>
+                </div>
+                ${isDup ? `<div style="font-size:12px; color:#DC2626; font-weight:700; margin-bottom:8px;">⚠️ 이미 다른 회원이 사용 중인 이름입니다. 거절 후 다른 이름으로 재신청하도록 안내해 주세요.</div>` : ''}
+                <div style="display:flex; gap:6px; margin-top:8px;">
+                  <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberNameChange('${escapeJsAttr(m.id)}')" ${isDup ? 'disabled' : ''}>✅ 이름 변경 승인</button>
+                  <button class="btn-sm danger" style="padding:9px 12px;" onclick="rejectMemberNameChange('${escapeJsAttr(m.id)}')">❌ 거절 (기존 이름 유지)</button>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        ` : ''}
+
         ${resetPending.length > 0 ? `
           <div class="section-head" style="margin-top:20px;">
             <h2 class="section-title">🔑 비밀번호 초기화 대기</h2>
@@ -8761,8 +8881,9 @@
                         <span>${escapeHtml(m.name)}</span>
                         <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
                         ${isNewcomer ? '<span class="tag warm" style="font-size:10px; padding:2px 6px;">메인 표시중</span>' : ''}
+                        ${m.pendingName ? `<span class="tag warm" style="font-size:10px; padding:2px 6px;">✏️ 변경신청: ${escapeHtml(m.pendingName)}</span>` : ''}
                       </div>
-                      <div class="member-meta">가입일 ${escapeHtml(m.createdAt)} · 🎂 ${escapeHtml(formatBirthdayDisplay(m.birthday))}</div>
+                      <div class="member-meta">가입일 ${escapeHtml(m.createdAt)} · 🎂 ${escapeHtml(formatBirthdayDisplay(m.birthday))}${m.prevName ? ` · 이전 이름: ${escapeHtml(m.prevName)}` : ''}</div>
                     </div>
                     <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
                       <select class="role-select" onchange="changeMemberRole('${escapeJsAttr(m.id)}', this.value)">
@@ -9119,6 +9240,7 @@
         }
         batch.set(db.collection('authIndex').doc(nameHex), {
           v: curVer + 1,
+          loginEmail: FieldValue.delete(),
           updatedAt: Date.now()
         }, { merge: true });
         batch.set(db.collection('memberHistory').doc(nameHex), {
@@ -9484,6 +9606,7 @@
           status: rData.origStatus || 'approved',
           roleId: rData.roleId || 'role_youth',
           authVer: nextVer,
+          authEmail: newEmail,
           resetKey,
           createdAt: rData.createdAt || formatToday(),
           createdTs: Date.now()
@@ -9557,21 +9680,161 @@
       }
     };
 
-    window.openAccountModal = (tab = 'pw') => {
+    function renderAccountRenameBox() {
+      const box = document.getElementById('accountRenameBox');
+      const user = getCurrentUser();
+      if (!box || !user || user.isSuperAdmin || !myMemberDoc) return;
+      const pendingName = String(myMemberDoc.pendingName || '').trim();
+      const lastRes = myMemberDoc.lastRenameResult || null;
+
+      if (pendingName) {
+        box.innerHTML = `
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:6px; flex-wrap:wrap;">
+            <span style="font-size:12.5px; font-weight:800; color:#92400E;">⏳ 이름 변경 승인 대기 중</span>
+            <span class="tag warm" style="font-size:10.5px;">관리자 확인 대기</span>
+          </div>
+          <div class="log-rename-diff" style="background:#FFF; margin:6px 0 8px;">
+            <span class="log-name-old">${escapeHtml(user.name)}</span>
+            <span class="log-name-arrow">→</span>
+            <span class="log-name-new">${escapeHtml(pendingName)}</span>
+          </div>
+          <div style="font-size:11.5px; color:#64748B; line-height:1.45; margin-bottom:8px;">
+            신청 일시: ${escapeHtml(myMemberDoc.pendingNameAt || '-')}<br>
+            관리자가 승인하면 이름이 변경되며, 거절 시 기존 이름(${escapeHtml(user.name)})이 유지됩니다.
+          </div>
+          <button id="cancelMyRenameBtn" class="btn-sm danger" type="button" style="width:100%; padding:8px;" onclick="cancelMyNameChangeRequest()">신청 취소하기</button>
+        `;
+        return;
+      }
+
+      let resultNoticeHtml = '';
+      if (lastRes && lastRes.status === 'rejected') {
+        resultNoticeHtml = `
+          <div style="background:#FEF2F2; border:1px solid #FECACA; color:#991B1B; border-radius:9px; padding:8px 10px; font-size:11.5px; line-height:1.45; margin-bottom:8px;">
+            ❌ 이전 이름 변경 신청(<b>${escapeHtml(lastRes.requestedName || '')}</b>)이 거절되어 기존 이름(<b>${escapeHtml(user.name)}</b>)이 유지되었습니다.${lastRes.at ? ` (${escapeHtml(lastRes.at)})` : ''}
+          </div>
+        `;
+      } else if (lastRes && lastRes.status === 'approved') {
+        resultNoticeHtml = `
+          <div style="background:#ECFDF5; border:1px solid #A7F3D0; color:#065F46; border-radius:9px; padding:8px 10px; font-size:11.5px; line-height:1.45; margin-bottom:8px;">
+            ✅ 이름이 <b>${escapeHtml(lastRes.oldName || '')} → ${escapeHtml(lastRes.newName || user.name)}</b>(으)로 변경되었습니다. 다음 로그인부터 새 이름으로 로그인해 주세요.
+          </div>
+        `;
+      }
+
+      box.innerHTML = `
+        <label class="form-label" for="accRenameInput" style="margin-bottom:6px;">✏️ 내 이름 변경 신청 (관리자 승인 필요)</label>
+        ${resultNoticeHtml}
+        <div style="display:flex; gap:6px; align-items:center;">
+          <input id="accRenameInput" type="text" maxlength="10" class="form-input" style="flex:1; background:#fff;" placeholder="변경할 새 성명 (2~10글자)" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleRequestMyNameChange();}" />
+          <button id="reqMyRenameBtn" class="btn-sm primary" type="button" style="padding:10px 12px; white-space:nowrap;" onclick="handleRequestMyNameChange()">변경 신청</button>
+        </div>
+        <div id="accRenameError" class="login-error" style="margin-top:7px; margin-bottom:0;"></div>
+        <div style="font-size:11px; color:#64748B; margin-top:6px; line-height:1.45;">
+          관리자 승인 후 이름이 변경되며, 거절 시 기존 이름이 유지됩니다. (보안 로그 기록)
+        </div>
+      `;
+    }
+
+    function refreshAccountModalContent() {
       const user = getCurrentUser();
       if (!user || user.isSuperAdmin) return;
-      document.getElementById('accPwError').classList.remove('show');
-      document.getElementById('accDeleteError').classList.remove('show');
       const curBday = (myMemberDoc && isValidBirthdayStr(myMemberDoc.birthday)) ? myMemberDoc.birthday : '';
       document.getElementById('accountSummaryBox').innerHTML = `
         <div><b>아이디 (성명):</b> ${escapeHtml(user.name)}</div>
         <div><b>역할:</b> ${escapeHtml(user.role.name)}</div>
         <div><b>생년월일:</b> ${escapeHtml(formatBirthdayDisplay(curBday))}</div>
       `;
-      document.getElementById('accBirthInput').value = curBday ? formatBirthdayDisplay(curBday) : '';
+      renderAccountRenameBox();
       renderAccountAttendanceBox();
+    }
+
+    window.openAccountModal = (tab = 'pw') => {
+      const user = getCurrentUser();
+      if (!user || user.isSuperAdmin) return;
+      document.getElementById('accPwError').classList.remove('show');
+      document.getElementById('accDeleteError').classList.remove('show');
+      const curBday = (myMemberDoc && isValidBirthdayStr(myMemberDoc.birthday)) ? myMemberDoc.birthday : '';
+      document.getElementById('accBirthInput').value = curBday ? formatBirthdayDisplay(curBday) : '';
+      refreshAccountModalContent();
       switchAccountTab(tab);
       document.getElementById('accountModal').classList.add('open');
+    };
+
+    window.handleRequestMyNameChange = async () => {
+      const user = getCurrentUser();
+      if (!user || user.isSuperAdmin || !fbUser || !myMemberDoc) return;
+      const inp = document.getElementById('accRenameInput');
+      const errEl = document.getElementById('accRenameError');
+      if (errEl) errEl.classList.remove('show');
+
+      const newName = String((inp && inp.value) || '').trim();
+      if (newName.length < 2 || newName.length > 10) {
+        if (errEl) { errEl.textContent = '변경할 성명은 2~10글자 이내로 입력해 주세요.'; errEl.classList.add('show'); }
+        return;
+      }
+      if (newName === String(user.name || '').trim()) {
+        if (errEl) { errEl.textContent = '현재 이름과 동일합니다. 다른 이름을 입력해 주세요.'; errEl.classList.add('show'); }
+        return;
+      }
+      if (!confirm(`[${user.name}] → [${newName}](으)로 이름 변경을 신청할까요?
+관리자 승인 후 적용됩니다.`)) return;
+
+      const btn = document.getElementById('reqMyRenameBtn');
+      if (btn) { btn.disabled = true; btn.textContent = '신청중...'; }
+      try {
+        const nowInfo = getKstNowInfo();
+        const nowTs = Date.now();
+        await db.collection('members').doc(fbUser.uid).update({
+          pendingName: newName,
+          pendingNameAt: nowInfo.dateTimeFull,
+          pendingNameTs: nowTs
+        });
+        myMemberDoc.pendingName = newName;
+        myMemberDoc.pendingNameAt = nowInfo.dateTimeFull;
+        myMemberDoc.pendingNameTs = nowTs;
+        renderAccountRenameBox();
+        showToast(`이름 변경 신청([${newName}])이 접수되었습니다! 관리자 승인을 기다려 주세요.`);
+      } catch (err) {
+        console.error('Member rename request error:', err);
+        if (err && err.code === 'permission-denied') {
+          if (errEl) {
+            errEl.textContent = 'Firestore 보안 규칙 업데이트가 필요합니다. 관리자에게 최신 규칙 게시를 요청해 주세요.';
+            errEl.classList.add('show');
+          }
+          showToast('Firestore 보안 규칙 업데이트가 필요합니다.');
+        } else {
+          handleDbError(err, '이름 변경 신청');
+        }
+      } finally {
+        const b = document.getElementById('reqMyRenameBtn');
+        if (b) { b.disabled = false; b.textContent = '변경 신청'; }
+      }
+    };
+
+    window.cancelMyNameChangeRequest = async () => {
+      const user = getCurrentUser();
+      if (!user || user.isSuperAdmin || !fbUser || !myMemberDoc || !myMemberDoc.pendingName) return;
+      if (!confirm('대기 중인 이름 변경 신청을 취소할까요?')) return;
+      const btn = document.getElementById('cancelMyRenameBtn');
+      if (btn) btn.disabled = true;
+      try {
+        await db.collection('members').doc(fbUser.uid).update({
+          pendingName: FieldValue.delete(),
+          pendingNameAt: FieldValue.delete(),
+          pendingNameTs: FieldValue.delete()
+        });
+        delete myMemberDoc.pendingName;
+        delete myMemberDoc.pendingNameAt;
+        delete myMemberDoc.pendingNameTs;
+        renderAccountRenameBox();
+        showToast('이름 변경 신청을 취소했습니다.');
+      } catch (err) {
+        handleDbError(err, '이름 변경 신청 취소');
+      } finally {
+        const b = document.getElementById('cancelMyRenameBtn');
+        if (b) b.disabled = false;
+      }
     };
 
     window.handleSaveMyBirthday = async () => {
@@ -11216,7 +11479,7 @@ ${m.body}`;
       const tabbar = document.getElementById('appTabbar');
       if (tabbar) {
         const canManage = hasAnyManagePerm(perms);
-        const pendingCount = members.filter(m => m.status === 'pending').length + (adminRegistry.items || []).filter(a => a.status === 'pending').length;
+        const pendingCount = members.filter(m => m.status === 'pending').length + members.filter(m => m.status === 'approved' && m.pendingName).length + (adminRegistry.items || []).filter(a => a.status === 'pending').length;
         const orderedTabs = getValidTabOrder(draftTabOrder).filter(k => k !== 'manage' || canManage);
         const isMoreOpen = document.getElementById('quickLinksSheet').classList.contains('open');
         tabbar.innerHTML = orderedTabs.map(key => {
@@ -12754,25 +13017,51 @@ ${m.body}`;
       } catch (err) { handleDbError(err, '관리자 해제'); }
     };
 
-    // --- 관리자 이름 변경 + 보안 감사 로그(📋 로그 탭) + 구글 시트 자동 기록 ---
+    // --- 관리자·회원 이름 변경 + 보안 감사 로그(📋 로그 탭) + 구글 시트 자동 기록 ---
     function buildRenameSheetPayload(logItem) {
+      const isMember = logItem.type === 'member_rename' || logItem.targetType === 'member';
+      const decision = logItem.decision || 'approved';
       const actor = String(logItem.actorName || logItem.oldName || '관리자');
       const oldN = String(logItem.oldName || '');
       const newN = String(logItem.newName || '');
       const dateStr = logItem.dateWithDow || (logItem.date ? `${logItem.date}${logItem.dow ? ` (${logItem.dow})` : ''}` : '');
       const timeOnly = String(logItem.time || '');
       const fullDt = logItem.dateTime || `${dateStr} ${timeOnly}`.trim();
+
+      if (isMember) {
+        const isRejected = decision === 'rejected';
+        return {
+          action: 'admin_log',
+          logType: isRejected ? 'member_rename_reject' : 'member_rename',
+          logId: String(logItem.id || ''),
+          name: isRejected ? `[회원] ${oldN} (신청: ${newN})` : `[회원] ${oldN} → ${newN}`,
+          oldName: oldN,
+          newName: newN,
+          actorName: actor,
+          targetType: 'member',
+          decision,
+          status: isRejected ? '회원 이름 변경 거절' : '회원 이름 변경 승인',
+          date: dateStr,
+          timeOnly,
+          time: fullDt,
+          note: isRejected
+            ? `처리자: ${actor} · 거절 (기존 이름 ${oldN} 유지)`
+            : `승인자: ${actor} · ${oldN} → ${newN}`
+        };
+      }
+
       const kindLabel = logItem.isSelf ? '본인 변경' : '타 관리자 변경';
       return {
         action: 'admin_log',
         logType: 'admin_rename',
         logId: String(logItem.id || ''),
-        name: `${oldN} → ${newN}`,
+        name: `[관리자] ${oldN} → ${newN}`,
         oldName: oldN,
         newName: newN,
         actorName: actor,
+        targetType: 'admin',
         isSelf: !!logItem.isSelf,
-        status: '이름 변경',
+        status: '관리자 이름 변경',
         date: dateStr,
         timeOnly,
         time: fullDt,
@@ -12792,7 +13081,6 @@ ${m.body}`;
       let syncedCount = 0;
       try {
         const syncedIds = new Set();
-        // 오래된 순으로 전송해 시트에 시간순 기록 유지
         const ordered = [...toSync].sort((a, b) => Number(a.ts || 0) - Number(b.ts || 0));
         for (const item of ordered) {
           const ok = await postToGoogleSheet(buildRenameSheetPayload(item), url);
@@ -12836,6 +13124,234 @@ ${m.body}`;
       showToast(`미전송 로그 ${unsynced.length}건을 구글 시트로 전송 중...`);
       const count = await syncUnsyncedRenameLogsToSheet();
       showToast(count > 0 ? `✅ 로그 ${count}건을 구글 시트에 기록했습니다!` : '구글 시트 전송에 실패했습니다. 네트워크와 URL을 확인해 주세요.');
+    };
+
+    // --- 관리자: 회원 이름 변경 신청 승인 / 거절 (+ 로그인 매핑 갱신 + 보안 로그 + 구글 시트 기록) ---
+    window.approveMemberNameChange = async (memberId) => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const m = members.find(x => String(x.id) === String(memberId));
+      if (!m || !m.pendingName) return showToast('대기 중인 이름 변경 신청이 없습니다.');
+
+      const oldName = String(m.name || '').trim();
+      const newName = String(m.pendingName || '').trim();
+      if (newName.length < 2 || newName.length > 10) {
+        return showToast('신청된 이름이 올바르지 않습니다. (2~10글자)');
+      }
+      if (newName === oldName) {
+        return showToast('기존 이름과 동일합니다.');
+      }
+      const duplicated = members.some(other => String(other.id) !== String(m.id) && String(other.name || '').trim() === newName);
+      if (duplicated) {
+        return showToast(`이미 [${newName}] 이름을 사용하는 회원이 있습니다. 거절 후 다른 이름으로 재신청하도록 안내해 주세요.`);
+      }
+      if (!confirm(`[${oldName}]님의 이름을 [${newName}](으)로 변경 승인할까요?
+
+• 승인 즉시 앱 내 이름이 변경되며, 다음 로그인부터 새 이름으로 로그인하게 됩니다.
+• 변경 기록이 [📋 로그] 탭과 구글 시트에 저장됩니다.`)) return;
+
+      const actorName = currentAdminName || '관리자';
+      const nowInfo = getKstNowInfo();
+      const nowTs = Date.now();
+      const oldHex = nameToHex(oldName);
+      const newHex = nameToHex(newName);
+      const actualAuthEmail = String(m.authEmail || hexToAuthEmail(oldHex, Number(m.authVer || 0)));
+      const oldCurVer = Math.max(await getAuthVerForHex(oldHex), Number(m.authVer || 0));
+      const roleName = getRoleById(m.roleId).name;
+
+      const logEntry = {
+        id: 'log_' + nowTs + '_' + Math.random().toString(36).slice(2, 6),
+        type: 'member_rename',
+        targetType: 'member',
+        targetUid: String(m.id),
+        decision: 'approved',
+        actorName,
+        oldName,
+        newName,
+        requestedAt: m.pendingNameAt || '',
+        date: nowInfo.dot,
+        dow: nowInfo.dowLabel,
+        dateWithDow: nowInfo.dateWithDow,
+        time: nowInfo.timeWithSec,
+        dateTime: nowInfo.dateTimeFull,
+        ts: nowTs,
+        sheetSynced: false
+      };
+      const nextLogs = [logEntry, ...structuredClone(adminRegistry.renameLogs || [])].slice(0, 300);
+
+      try {
+        const batch = db.batch();
+        batch.update(db.collection('members').doc(String(m.id)), {
+          name: newName,
+          prevName: oldName,
+          authEmail: actualAuthEmail,
+          renameCount: Number(m.renameCount || 0) + 1,
+          renamedAt: nowInfo.dateTimeFull,
+          renamedBy: actorName,
+          pendingName: FieldValue.delete(),
+          pendingNameAt: FieldValue.delete(),
+          pendingNameTs: FieldValue.delete(),
+          lastRenameResult: {
+            status: 'approved',
+            oldName,
+            newName,
+            by: actorName,
+            at: nowInfo.dateTimeFull,
+            ts: nowTs
+          }
+        });
+        // 로그인 매핑 갱신: 새 이름으로 로그인 시 실제 Firebase Auth 이메일로 연결, 이전 이름은 재가입 충돌 방지 버전업
+        batch.set(db.collection('authIndex').doc(newHex), {
+          loginEmail: actualAuthEmail,
+          updatedAt: nowTs
+        }, { merge: true });
+        if (oldHex !== newHex) {
+          batch.set(db.collection('authIndex').doc(oldHex), {
+            v: oldCurVer + 1,
+            loginEmail: FieldValue.delete(),
+            updatedAt: nowTs
+          }, { merge: true });
+        }
+        // 생일·새신자·회원이력 동기화
+        if (isValidBirthdayStr(m.birthday)) {
+          batch.set(db.collection('birthdays').doc(String(m.id)), {
+            uid: String(m.id),
+            name: newName,
+            md: birthdayToMd(m.birthday),
+            updatedAt: nowTs
+          });
+        }
+        if (isNewcomerRoleId(m.roleId)) {
+          batch.set(db.collection('newcomers').doc(String(m.id)), {
+            uid: String(m.id),
+            name: newName,
+            joinedAt: m.createdAt || formatToday(),
+            addedTs: nowTs
+          });
+        }
+        const prevHist = memberHistoryMap.get(oldHex) || memberHistoryMap.get(newHex);
+        batch.set(db.collection('memberHistory').doc(newHex), {
+          name: newName,
+          prevName: oldName,
+          totalJoins: Number((prevHist && prevHist.totalJoins) || 1),
+          lastStatus: '이름 변경',
+          lastRole: roleName,
+          lastUpdatedAt: nowInfo.dateTime,
+          approvedBy: actorName
+        }, { merge: true });
+        // 보안 감사 로그 저장
+        batch.set(db.collection('config').doc('adminRegistry'), {
+          renameLogs: nextLogs
+        }, { merge: true });
+
+        await batch.commit();
+
+        // 구글 시트 자동 기록 (로그 + 회원 명단)
+        const sheetUrl = getAdminSheetUrl();
+        let syncedNow = false;
+        if (sheetUrl) {
+          const res = await postToGoogleSheet(buildRenameSheetPayload(logEntry), sheetUrl, true);
+          if (res && res.ok) {
+            syncedNow = true;
+            const markLogs = structuredClone(nextLogs);
+            const foundLog = markLogs.find(l => String(l.id) === String(logEntry.id));
+            if (foundLog) foundLog.sheetSynced = true;
+            await db.collection('config').doc('adminRegistry').set({
+              renameLogs: markLogs
+            }, { merge: true }).catch(() => {});
+          }
+          syncMemberEventToSheet({
+            name: newName,
+            role: roleName,
+            joinedAt: m.createdAt || nowInfo.dateTime,
+            status: `이름 변경 (${oldName} → ${newName})`
+          });
+        }
+
+        showToast(syncedNow
+          ? `✅ [${oldName}] → [${newName}] 이름 변경을 승인하고 로그·구글 시트에 기록했습니다!`
+          : `✅ [${oldName}] → [${newName}] 이름 변경을 승인하고 보안 로그에 기록했습니다!`);
+      } catch (err) {
+        handleDbError(err, '회원 이름 변경 승인');
+      }
+    };
+
+    window.rejectMemberNameChange = async (memberId) => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const m = members.find(x => String(x.id) === String(memberId));
+      if (!m || !m.pendingName) return showToast('대기 중인 이름 변경 신청이 없습니다.');
+
+      const oldName = String(m.name || '').trim();
+      const requestedName = String(m.pendingName || '').trim();
+      if (!confirm(`[${oldName}]님의 이름 변경 신청([${requestedName}])을 거절할까요?
+거절 시 기존 이름([${oldName}])을 계속 사용하게 되며, 처리 이력이 로그에 기록됩니다.`)) return;
+
+      const actorName = currentAdminName || '관리자';
+      const nowInfo = getKstNowInfo();
+      const nowTs = Date.now();
+
+      const logEntry = {
+        id: 'log_' + nowTs + '_' + Math.random().toString(36).slice(2, 6),
+        type: 'member_rename',
+        targetType: 'member',
+        targetUid: String(m.id),
+        decision: 'rejected',
+        actorName,
+        oldName,
+        newName: requestedName,
+        requestedAt: m.pendingNameAt || '',
+        date: nowInfo.dot,
+        dow: nowInfo.dowLabel,
+        dateWithDow: nowInfo.dateWithDow,
+        time: nowInfo.timeWithSec,
+        dateTime: nowInfo.dateTimeFull,
+        ts: nowTs,
+        sheetSynced: false
+      };
+      const nextLogs = [logEntry, ...structuredClone(adminRegistry.renameLogs || [])].slice(0, 300);
+
+      try {
+        const batch = db.batch();
+        batch.update(db.collection('members').doc(String(m.id)), {
+          pendingName: FieldValue.delete(),
+          pendingNameAt: FieldValue.delete(),
+          pendingNameTs: FieldValue.delete(),
+          lastRenameResult: {
+            status: 'rejected',
+            oldName,
+            requestedName,
+            by: actorName,
+            at: nowInfo.dateTimeFull,
+            ts: nowTs
+          }
+        });
+        batch.set(db.collection('config').doc('adminRegistry'), {
+          renameLogs: nextLogs
+        }, { merge: true });
+        await batch.commit();
+
+        const sheetUrl = getAdminSheetUrl();
+        let syncedNow = false;
+        if (sheetUrl) {
+          const res = await postToGoogleSheet(buildRenameSheetPayload(logEntry), sheetUrl, true);
+          if (res && res.ok) {
+            syncedNow = true;
+            const markLogs = structuredClone(nextLogs);
+            const foundLog = markLogs.find(l => String(l.id) === String(logEntry.id));
+            if (foundLog) foundLog.sheetSynced = true;
+            await db.collection('config').doc('adminRegistry').set({
+              renameLogs: markLogs
+            }, { merge: true }).catch(() => {});
+          }
+        }
+
+        showToast(syncedNow
+          ? `[${oldName}]님의 이름 변경 신청을 거절(기존 이름 유지)하고 로그·시트에 기록했습니다.`
+          : `[${oldName}]님의 이름 변경 신청을 거절(기존 이름 유지)하고 보안 로그에 기록했습니다.`);
+      } catch (err) {
+        handleDbError(err, '회원 이름 변경 거절');
+      }
     };
 
     window.openAdminRenameModal = (admId = '') => {
@@ -12908,6 +13424,8 @@ ${m.body}`;
       const logEntry = {
         id: 'log_' + nowTs + '_' + Math.random().toString(36).slice(2, 6),
         type: 'admin_rename',
+        targetType: 'admin',
+        decision: 'approved',
         actorName,
         oldName,
         newName,
@@ -12985,6 +13503,17 @@ ${m.body}`;
       }
     };
 
+    window.setAdminLogFilter = (filterType) => {
+      adminLogFilterType = filterType || 'all';
+      const chips = document.getElementById('adminLogFilterChips');
+      if (chips) {
+        chips.querySelectorAll('.filter-chip').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.logFilter === adminLogFilterType);
+        });
+      }
+      renderAdminLogsListOnly();
+    };
+
     function renderAdminLogsListOnly() {
       const listEl = document.getElementById('adminLogsListArea');
       if (!listEl) return;
@@ -12994,52 +13523,81 @@ ${m.body}`;
       if (clearBtn) clearBtn.classList.toggle('hidden', !q);
 
       const filtered = allLogs.filter(item => {
+        if (!item) return false;
+        const isMember = item.type === 'member_rename' || item.targetType === 'member';
+        if (adminLogFilterType === 'admin' && isMember) return false;
+        if (adminLogFilterType === 'member' && !isMember) return false;
         if (!q) return true;
-        const hay = `${item.actorName || ''} ${item.oldName || ''} ${item.newName || ''} ${item.date || ''} ${item.dateWithDow || ''} ${item.time || ''} ${item.dateTime || ''}`.toLowerCase();
+        const hay = `${item.actorName || ''} ${item.oldName || ''} ${item.newName || ''} ${item.date || ''} ${item.dateWithDow || ''} ${item.time || ''} ${item.dateTime || ''} ${isMember ? '회원' : '관리자'} ${item.decision === 'rejected' ? '거절' : '승인'}`.toLowerCase();
         return hay.includes(q);
       });
 
       const summaryEl = document.getElementById('adminLogsSummaryText');
       if (summaryEl) {
+        const filterLabel = adminLogFilterType === 'admin' ? '관리자 ' : (adminLogFilterType === 'member' ? '회원 ' : '');
         summaryEl.textContent = q
           ? `'${adminLogSearchQuery.trim()}' 검색 결과 ${filtered.length}건 (전체 ${allLogs.length}건)`
-          : `총 ${allLogs.length}건의 관리자 이름 변경 로그`;
+          : `${filterLabel}이름 변경 로그 ${filtered.length}건 (전체 ${allLogs.length}건)`;
       }
 
       if (filtered.length === 0) {
         listEl.innerHTML = `
           <div class="card" style="text-align:center; padding:28px 16px; color:#64748B;">
             <div style="font-size:24px; margin-bottom:6px;">📋</div>
-            <div style="font-size:13.5px; font-weight:700; color:#334155;">${q ? '일치하는 로그 기록이 없습니다.' : '아직 관리자 이름 변경 로그가 없습니다.'}</div>
-            <div style="font-size:12px; margin-top:4px;">${q ? '다른 이름이나 날짜로 검색해 보세요.' : '관리자가 이름을 변경하면 변경자·변경 전/후 이름·날짜·시각이 자동으로 기록됩니다.'}</div>
+            <div style="font-size:13.5px; font-weight:700; color:#334155;">${q ? '일치하는 로그 기록이 없습니다.' : '아직 기록된 이름 변경 로그가 없습니다.'}</div>
+            <div style="font-size:12px; margin-top:4px;">${q ? '다른 이름이나 날짜로 검색해 보세요.' : '관리자 또는 회원의 이름이 변경(또는 거절)되면 처리자·변경 전/후 이름·날짜·시각이 자동으로 기록됩니다.'}</div>
           </div>
         `;
         return;
       }
 
       listEl.innerHTML = filtered.map(item => {
+        const isMember = item.type === 'member_rename' || item.targetType === 'member';
+        const isRejected = item.decision === 'rejected';
         const dateDisp = item.dateWithDow || (item.date ? `${item.date}${item.dow ? ` (${item.dow})` : ''}` : '-');
         const timeDisp = item.time || (item.dateTime ? String(item.dateTime).split(' ').pop() : '-');
         const actor = item.actorName || item.oldName || '관리자';
         const isSelf = item.isSelf !== false;
+
+        const badgesHtml = isMember
+          ? `<span class="tag ${isRejected ? 'red' : 'green'}">👤 회원 이름 변경</span>
+             <span class="tag ${isRejected ? 'red' : 'green'}">${isRejected ? '❌ 거절 (기존 이름 유지)' : '✅ 승인'}</span>`
+          : `<span class="tag warm">🔐 관리자 이름 변경</span>
+             <span class="tag ${isSelf ? 'slate' : 'red'}">${isSelf ? '본인 변경' : '타 관리자 변경'}</span>`;
+
+        const diffHtml = isRejected
+          ? `<div class="log-rename-diff" style="background:#FEF2F2; border-color:#FECACA;">
+               <span class="log-name-new" style="background:#FFF; color:#0F172A; border:1px solid #CBD5E1;">${escapeHtml(item.oldName || '')} (유지)</span>
+               <span style="font-size:12px; color:#991B1B; font-weight:700;">신청 거절: ${escapeHtml(item.newName || '')}</span>
+             </div>`
+          : `<div class="log-rename-diff">
+               <span class="log-name-old">${escapeHtml(item.oldName || '')}</span>
+               <span class="log-name-arrow">→</span>
+               <span class="log-name-new">${escapeHtml(item.newName || '')}</span>
+             </div>`;
+
+        const actorLine = isMember
+          ? `<div>🔐 <b>${isRejected ? '처리 관리자' : '승인 관리자'}:</b> ${escapeHtml(actor)}</div>`
+          : `<div>👤 <b>변경한 관리자:</b> ${escapeHtml(actor)}</div>`;
+
+        const reqLine = (isMember && item.requestedAt)
+          ? `<div>📩 <b>회원 신청 일시:</b> ${escapeHtml(item.requestedAt)}</div>`
+          : '';
+
         return `
           <div class="card">
             <div class="card-top">
               <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                <span class="tag warm">🔄 이름 변경</span>
-                <span class="tag ${isSelf ? 'slate' : 'red'}">${isSelf ? '본인 변경' : '타 관리자 변경'}</span>
+                ${badgesHtml}
               </div>
               <span class="tag ${item.sheetSynced ? 'green' : 'slate'}">${item.sheetSynced ? '✅ 시트 기록됨' : '⏳ 시트 미반영'}</span>
             </div>
-            <div class="log-rename-diff">
-              <span class="log-name-old">${escapeHtml(item.oldName || '')}</span>
-              <span class="log-name-arrow">→</span>
-              <span class="log-name-new">${escapeHtml(item.newName || '')}</span>
-            </div>
+            ${diffHtml}
             <div class="log-meta-lines">
-              <div>👤 <b>변경한 관리자:</b> ${escapeHtml(actor)}</div>
-              <div>📅 <b>변경 날짜:</b> ${escapeHtml(dateDisp)}</div>
-              <div>🕒 <b>변경 시각:</b> ${escapeHtml(timeDisp)} (한국시간 KST)</div>
+              ${actorLine}
+              ${reqLine}
+              <div>📅 <b>${isRejected ? '처리 날짜' : '변경 날짜'}:</b> ${escapeHtml(dateDisp)}</div>
+              <div>🕒 <b>${isRejected ? '처리 시각' : '변경 시각'}:</b> ${escapeHtml(timeDisp)} (한국시간 KST)</div>
             </div>
           </div>
         `;
@@ -13058,9 +13616,11 @@ ${m.body}`;
       renderAdminLogsListOnly();
     };
 
-    // (D-3) 보안 로그 탭 (관리자 이름 변경 이력 · 삭제 불가 · 구글 시트 연동)
+    // (D-3) 보안 로그 탭 (관리자·회원 이름 변경 이력 · 삭제 불가 · 구글 시트 연동)
     function renderManageLogs(el, user) {
       const allLogs = Array.isArray(adminRegistry.renameLogs) ? adminRegistry.renameLogs : [];
+      const adminCnt = allLogs.filter(l => l && l.type !== 'member_rename' && l.targetType !== 'member').length;
+      const memberCnt = allLogs.filter(l => l && (l.type === 'member_rename' || l.targetType === 'member')).length;
       const unsyncedCount = allLogs.filter(l => l && l.sheetSynced !== true).length;
       const hasSheet = !!getAdminSheetUrl();
 
@@ -13071,9 +13631,9 @@ ${m.body}`;
         </div>
         <div class="info-box" style="margin-top:0; margin-bottom:12px;">
           🔐 <b>보안 감사 로그 (삭제 불가)</b><br>
-          관리자가 이름을 변경하면 <b>누가 · 어떤 이름에서 어떤 이름으로 · 언제 몇 시(초)</b>에 변경했는지 자동 기록됩니다.<br>
+          <b>관리자</b>와 <b>회원</b>의 이름 변경(승인·거절) 내역이 <b>처리자 · 변경 전/후 이름 · 날짜 · 시각(초)</b>과 함께 자동 기록됩니다.<br>
           ${hasSheet
-            ? '✅ 구글 시트가 연동되어 있어 이름 변경 시 시트에도 자동 저장됩니다.'
+            ? '✅ 구글 시트가 연동되어 있어 이름 변경 처리 시 시트에도 자동 저장됩니다.'
             : 'ℹ️ 구글 시트 연동은 <b>[⛪ 예배 관리]</b> 탭에서 Apps Script URL을 등록하면 자동으로 함께 기록됩니다.'}
         </div>
 
@@ -13090,9 +13650,15 @@ ${m.body}`;
           </div>
         ` : ''}
 
+        <div id="adminLogFilterChips" class="filter-row" style="margin-bottom:8px;">
+          <button class="filter-chip ${adminLogFilterType === 'all' ? 'active' : ''}" data-log-filter="all" type="button" onclick="setAdminLogFilter('all')">전체 (${allLogs.length})</button>
+          <button class="filter-chip ${adminLogFilterType === 'admin' ? 'active' : ''}" data-log-filter="admin" type="button" onclick="setAdminLogFilter('admin')">🔐 관리자 (${adminCnt})</button>
+          <button class="filter-chip ${adminLogFilterType === 'member' ? 'active' : ''}" data-log-filter="member" type="button" onclick="setAdminLogFilter('member')">👤 회원 (${memberCnt})</button>
+        </div>
+
         <div class="search-box" style="margin-bottom:8px;">
           <span class="search-icon">🔍</span>
-          <input id="adminLogSearchInput" class="search-input" type="search" value="${escapeHtml(adminLogSearchQuery)}" placeholder="이름·변경자·날짜 검색 (예: 2026.11.24)" oninput="onAdminLogSearchInput(this.value)" />
+          <input id="adminLogSearchInput" class="search-input" type="search" value="${escapeHtml(adminLogSearchQuery)}" placeholder="이름·처리자·날짜 검색 (예: 2026.11.24)" oninput="onAdminLogSearchInput(this.value)" />
           <button id="adminLogSearchClear" class="search-clear ${adminLogSearchQuery ? '' : 'hidden'}" type="button" onclick="clearAdminLogSearch()">✕</button>
         </div>
         <div id="adminLogsSummaryText" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
@@ -13523,16 +14089,24 @@ ${m.body}`;
           a.prevName ? `이전 이름: ${a.prevName}` : ''
         ].filter(Boolean).join(' · ')
       }));
-      const renameLogPayload = (adminRegistry.renameLogs || []).map(l => ({
-        actorName: l.actorName || l.oldName || '관리자',
-        oldName: l.oldName || '',
-        newName: l.newName || '',
-        kind: l.isSelf !== false ? '본인 변경' : '타 관리자 변경',
-        date: l.dateWithDow || l.date || '',
-        time: l.time || '',
-        dateTime: l.dateTime || '',
-        note: `변경자: ${l.actorName || l.oldName || '관리자'} (${l.oldName || ''} → ${l.newName || ''})`
-      }));
+      const renameLogPayload = (adminRegistry.renameLogs || []).map(l => {
+        const isMember = l.type === 'member_rename' || l.targetType === 'member';
+        const isRej = l.decision === 'rejected';
+        return {
+          targetType: isMember ? 'member' : 'admin',
+          decision: l.decision || 'approved',
+          actorName: l.actorName || l.oldName || '관리자',
+          oldName: l.oldName || '',
+          newName: l.newName || '',
+          kind: isMember ? (isRej ? '회원 변경 거절' : '회원 변경 승인') : (l.isSelf !== false ? '관리자 본인 변경' : '타 관리자 변경'),
+          date: l.dateWithDow || l.date || '',
+          time: l.time || '',
+          dateTime: l.dateTime || '',
+          note: isMember
+            ? (isRej ? `처리자: ${l.actorName || '관리자'} · 거절 (${l.oldName || ''} 유지)` : `승인자: ${l.actorName || '관리자'} · ${l.oldName || ''} → ${l.newName || ''}`)
+            : `변경자: ${l.actorName || l.oldName || '관리자'} (${l.oldName || ''} → ${l.newName || ''})`
+        };
+      });
       return {
         action: 'sync_all',
         attendance: attPayload,
