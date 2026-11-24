@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=136" />
+  <link rel="manifest" href="./manifest.json?v=137" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=136" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=136" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=137" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=137" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2637,7 +2637,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=136" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=137" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3341,9 +3341,9 @@
         </select>
         <div id="noticeRoleTargetBox" class="role-target-box hidden">
           <div class="role-target-actions">
-            <button class="btn-sm primary" type="button" onclick="applyRolePickerPreset('notice', 'leader')">👑 리더·교역자 일괄선택</button>
-            <button class="btn-sm" type="button" onclick="applyRolePickerPreset('notice', 'all')">전체 선택</button>
+            <button class="btn-sm primary" type="button" onclick="applyRolePickerPreset('notice', 'all')">전체 선택</button>
             <button class="btn-sm" type="button" onclick="applyRolePickerPreset('notice', 'none')">선택 해제</button>
+            <span style="font-size:11px; color:#64748B; align-self:center;">보여줄 역할을 직접 선택 (중복 가능)</span>
           </div>
           <div id="noticeRoleChecklist" class="role-target-grid"></div>
         </div>
@@ -3408,7 +3408,7 @@
           <option value="custom_ad">광고 · 홍보 배너 칸</option>
           <option value="hero_notice">상단 메인 고정 공지 배너</option>
           <option value="newcomer_card">새신자 소식 · 환영 안내 칸</option>
-          <option value="leader_card">리더·교역자 전용 소식 칸</option>
+          <option value="leader_card">🎯 특정 역할 전용 소식 칸</option>
           <option value="notice_list">공지 · 광고 · 소식 목록</option>
         </select>
       </div>
@@ -3440,9 +3440,9 @@
         </select>
         <div id="blockRoleTargetBox" class="role-target-box hidden">
           <div class="role-target-actions">
-            <button class="btn-sm primary" type="button" onclick="applyRolePickerPreset('block', 'leader')">👑 리더·교역자 일괄선택</button>
-            <button class="btn-sm" type="button" onclick="applyRolePickerPreset('block', 'all')">전체 선택</button>
+            <button class="btn-sm primary" type="button" onclick="applyRolePickerPreset('block', 'all')">전체 선택</button>
             <button class="btn-sm" type="button" onclick="applyRolePickerPreset('block', 'none')">선택 해제</button>
+            <span style="font-size:11px; color:#64748B; align-self:center;">보여줄 역할을 직접 선택 (중복 가능)</span>
           </div>
           <div id="blockRoleChecklist" class="role-target-grid"></div>
         </div>
@@ -3496,8 +3496,8 @@
       </div>
       <input type="hidden" id="editRoleId" />
       <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-        역할은 회원 이름 옆에 표시되는 직분 배지입니다.<br>
-        앱의 수정·삭제·게시·승인 권한은 <b>최고 관리자</b>에게만 부여됩니다.
+        역할은 회원 이름 옆에 표시되는 <b>직분 배지</b>입니다.<br>
+        특정 역할에게만 보여주는 설정은 <b>공지·광고·배너 작성 화면</b>에서 원하는 역할을 직접 선택해 지정할 수 있습니다.
       </div>
       <div class="form-group">
         <label class="form-label">역할 이름</label>
@@ -3507,10 +3507,6 @@
         <label class="form-label">역할 배지 색상</label>
         <div id="roleColorPalette" class="color-palette"></div>
       </div>
-      <label class="checkbox-row" style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:11px; padding:10px 11px; margin:10px 0 12px;">
-        <input type="checkbox" id="roleLeaderGroupInput" />
-        <span style="font-size:12.5px; color:#92400E;"><b>👑 리더·교역자 전용 그룹에 포함</b><br><span style="font-weight:500; font-size:11.5px; color:#78350F;">리더·교역자 전용 소식 칸 또는 공지 작성 시 일괄 선택 대상에 자동 포함됩니다.</span></span>
-      </label>
       <button id="saveRoleBtn" class="btn-full btn-dark" type="button" style="margin-top:8px;">역할 저장하기</button>
     </div>
   </div>
@@ -3527,7 +3523,7 @@
       <div id="quickLinksSheetList"></div>
       <div id="quickLinksSheetAdminBar" class="quick-sheet-admin-bar hidden">
         <button class="quick-sheet-admin-btn" type="button" onclick="openAddQuickLinkFromSheet()">+ 사이트 추가</button>
-        <button class="quick-sheet-admin-btn" type="button" onclick="goToQuickLinksManage()">⚙️ 관리 센터 편집</button>
+        <button id="quickSheetManageEditBtn" class="quick-sheet-admin-btn" type="button" onclick="goToQuickLinksManage()">⚙️ 관리 센터 편집</button>
       </div>
     </div>
   </div>
@@ -3905,7 +3901,7 @@
       hero_notice: '상단 메인 고정 공지 배너',
       newcomer_card: '새신자 소식 · 환영 안내',
       custom_ad: '광고 · 홍보 배너',
-      leader_card: '리더·교역자 전용 소식',
+      leader_card: '특정 역할 전용 소식',
       notice_list: '공지 · 광고 · 소식 목록'
     };
     const DEFAULT_MAINTENANCE_CONFIG = {
@@ -3961,6 +3957,7 @@
       { id: 'diagnostics', labelKey: 'manageDiagnostics', defaultIcon: '🧪', defaultLabel: '기능 점검', permCheck: p => !!p.canManageMembers }
     ];
     const DEFAULT_TAB_ORDER = BOTTOM_TAB_REGISTRY.map(t => t.key);
+    const DEFAULT_MANAGE_SUBTAB_ORDER = MANAGE_SUBTAB_REGISTRY.map(t => t.id);
     const TAB_META_DEFS = Object.fromEntries(BOTTOM_TAB_REGISTRY.map(t => [t.key, { icon: t.defaultIcon, roleHint: t.roleHint }]));
     const DEFAULT_TAB_ICONS = Object.assign(
       {},
@@ -3968,7 +3965,7 @@
       Object.fromEntries(MANAGE_SUBTAB_REGISTRY.map(t => [t.labelKey, t.defaultIcon]))
     );
     const DEFAULT_TAB_LABELS = Object.assign(
-      { tabOrder: DEFAULT_TAB_ORDER, icons: DEFAULT_TAB_ICONS },
+      { tabOrder: DEFAULT_TAB_ORDER, manageSubTabOrder: DEFAULT_MANAGE_SUBTAB_ORDER, icons: DEFAULT_TAB_ICONS },
       Object.fromEntries(BOTTOM_TAB_REGISTRY.map(t => [t.key, t.defaultLabel])),
       Object.fromEntries(MANAGE_SUBTAB_REGISTRY.map(t => [t.labelKey, t.defaultLabel]))
     );
@@ -4344,8 +4341,7 @@
       return (Array.isArray(roleList) ? roleList : []).map(r => ({
         id: String(r.id),
         name: String(r.name || '청년'),
-        color: String(r.color || '#475569'),
-        isLeaderGroup: isLeaderGroupRoleObj(r)
+        color: String(r.color || '#475569')
       }));
     }
 
@@ -4698,7 +4694,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=136" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=137" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -4721,8 +4717,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=136', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=136', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=137', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=137', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5115,11 +5111,28 @@
       return valid;
     }
 
+    function getValidManageSubTabOrder(rawOrder) {
+      const src = Array.isArray(rawOrder)
+        ? rawOrder
+        : (tabLabels && Array.isArray(tabLabels.manageSubTabOrder) ? tabLabels.manageSubTabOrder : DEFAULT_MANAGE_SUBTAB_ORDER);
+      const valid = [];
+      src.forEach(id => {
+        if (DEFAULT_MANAGE_SUBTAB_ORDER.includes(id) && !valid.includes(id)) valid.push(id);
+      });
+      DEFAULT_MANAGE_SUBTAB_ORDER.forEach(id => {
+        if (!valid.includes(id)) valid.push(id);
+      });
+      return valid;
+    }
+
     function getAllowedManageSubTabs(perms) {
-      return MANAGE_SUBTAB_REGISTRY
-        .filter(t => t.permCheck(perms))
+      const orderedIds = getValidManageSubTabOrder();
+      return orderedIds
+        .map(id => MANAGE_SUBTAB_REGISTRY.find(t => t.id === id))
+        .filter(t => t && t.permCheck(perms))
         .map(t => ({
           id: t.id,
+          labelKey: t.labelKey,
           label: `${getTabIcon(t.labelKey)} ${getTabLabel(t.labelKey)}`
         }));
     }
@@ -6030,7 +6043,12 @@
           } else {
             tabLabels = structuredClone(DEFAULT_TAB_LABELS);
           }
-          applyScreen();
+          const activeEl = document.activeElement;
+          const isEditingLabels = !!(activeEl && (activeEl.hasAttribute('data-tab-name-key') || activeEl.hasAttribute('data-tab-icon-key')));
+          if (!isEditingLabels) {
+            draftTabInitialized = false;
+            applyScreen();
+          }
         }, () => {})
       );
 
@@ -6386,7 +6404,7 @@
         pendingAdminStatus = null;
         if (wasPending) {
           currentMainTab = 'manage';
-          currentManageSubTab = 'content';
+          currentManageSubTab = getValidManageSubTabOrder()[0];
           showToast(`${currentAdminName}님의 관리자 입장이 승인되었습니다!`);
         }
 
@@ -6825,7 +6843,7 @@
         if (document.getElementById('adminNameInput')) document.getElementById('adminNameInput').value = '';
       document.getElementById('adminPinInput').value = '';
         currentMainTab = 'manage';
-        currentManageSubTab = 'content';
+        currentManageSubTab = getValidManageSubTabOrder()[0];
         isLoggingInAdmin = false;
         attachAdminRegistryListener();
         if (pendingAdminStatus === 'pending') {
@@ -7036,6 +7054,8 @@
       document.getElementById('bibleViewTitle').textContent = `${getTabIcon('bible')} ${getTabLabel('bible')}`;
       document.getElementById('qtViewTitle').textContent = `${getTabIcon('qt')} ${getTabLabel('qt')}`;
       document.getElementById('bylawViewTitle').textContent = `${getTabIcon('bylaws')} 구미제일감리교회 라이트 청년부 ${getTabLabel('bylaws')}`;
+      const qsEditBtn = document.getElementById('quickSheetManageEditBtn');
+      if (qsEditBtn) qsEditBtn.textContent = `⚙️ ${getTabLabel('manage')} 편집`;
 
       if (currentMainTab === 'home') renderHomeView(user);
       else if (currentMainTab === 'bible') renderBibleView();
@@ -7046,6 +7066,9 @@
 
     window.switchMainTab = (tab) => {
       document.getElementById('quickLinksSheet').classList.remove('open');
+      if (currentMainTab === 'manage' && tab !== 'manage') {
+        draftTabInitialized = false;
+      }
       currentMainTab = tab;
       applyScreen();
     };
@@ -7575,9 +7598,11 @@
     }
 
     window.switchManageSubTab = (sub) => {
+      if (currentManageSubTab === 'labels' && sub !== 'labels') {
+        draftTabInitialized = false;
+      }
       currentManageSubTab = sub;
-      const user = getCurrentUser();
-      if (user) renderManageView(user);
+      applyScreen();
     };
 
     // (A+B 통합) 화면·배너 배치 + 공지·광고 관리 + 오늘의 말씀 관리 + 칸 이름 수정
@@ -7932,12 +7957,6 @@
       const box = document.getElementById('blockRoleTargetBox');
       if (!box) return;
       box.classList.toggle('hidden', aud !== 'roles');
-      if (aud === 'roles') {
-        const cur = getSelectedRoleIds('block');
-        if (cur.length === 0) {
-          renderRoleChecklist('block', getLeaderGroupRoleIds());
-        }
-      }
     };
 
     window.onNoticeAudienceChange = () => {
@@ -7945,12 +7964,6 @@
       const box = document.getElementById('noticeRoleTargetBox');
       if (!box) return;
       box.classList.toggle('hidden', aud !== 'roles');
-      if (aud === 'roles') {
-        const cur = getSelectedRoleIds('notice');
-        if (cur.length === 0) {
-          renderRoleChecklist('notice', getLeaderGroupRoleIds());
-        }
-      }
     };
 
     window.onBlockTypeChange = (isInitialLoad = false) => {
@@ -7963,17 +7976,16 @@
       if (!isInitialLoad) {
         if (type === 'leader_card') {
           document.getElementById('blockAudienceSelect').value = 'roles';
-          renderRoleChecklist('block', getLeaderGroupRoleIds());
           onBlockAudienceChange();
           const badgeEl = document.getElementById('blockBadgeInput');
           if (!badgeEl.value.trim() || badgeEl.value.trim() === '📣 청년부 광고') {
-            badgeEl.value = '👑 리더·교역자 전용';
+            badgeEl.value = '🎯 전용 안내';
           }
           selectedBlockTheme = 'dark';
           renderBlockThemePalette();
         } else if (type === 'newcomer_card') {
           const badgeEl = document.getElementById('blockBadgeInput');
-          if (!badgeEl.value.trim() || badgeEl.value.trim() === '📣 청년부 광고' || badgeEl.value.trim() === '👑 리더·교역자 전용') {
+          if (!badgeEl.value.trim() || badgeEl.value.trim() === '📣 청년부 광고' || badgeEl.value.trim() === '🎯 전용 안내' || badgeEl.value.trim() === '👑 리더·교역자 전용') {
             badgeEl.value = '💐 새신자 소식';
           }
         }
@@ -8020,7 +8032,7 @@
       document.getElementById('blockTitleInput').value = '';
       document.getElementById('blockDescInput').value = '';
       document.getElementById('blockAudienceSelect').value = 'all';
-      renderRoleChecklist('block', getLeaderGroupRoleIds());
+      renderRoleChecklist('block', []);
       onBlockAudienceChange();
       const def = getDefaultScheduleKst();
       document.getElementById('blockPublishModeSelect').value = 'now';
@@ -8049,8 +8061,6 @@
       let initRoles = Array.isArray(b.targetRoles) ? b.targetRoles : [];
       if (audVal === 'leader') {
         audVal = 'roles';
-        initRoles = getLeaderGroupRoleIds();
-      } else if (audVal === 'roles' && initRoles.length === 0) {
         initRoles = getLeaderGroupRoleIds();
       }
       document.getElementById('blockAudienceSelect').value = audVal;
@@ -8350,7 +8360,7 @@
       document.getElementById('noticeTitleInput').value = '';
       document.getElementById('noticeBodyInput').value = '';
       document.getElementById('noticeAudienceSelect').value = 'all';
-      renderRoleChecklist('notice', getLeaderGroupRoleIds());
+      renderRoleChecklist('notice', []);
       onNoticeAudienceChange();
       const def = getDefaultScheduleKst();
       document.getElementById('noticePublishModeSelect').value = 'now';
@@ -8379,7 +8389,7 @@
       document.getElementById('noticeTitleInput').value = n.title;
       document.getElementById('noticeBodyInput').value = n.body;
       const audVal = n.audience || 'all';
-      const initRoles = Array.isArray(n.targetRoles) && n.targetRoles.length > 0 ? n.targetRoles : getLeaderGroupRoleIds();
+      const initRoles = Array.isArray(n.targetRoles) ? n.targetRoles : [];
       document.getElementById('noticeAudienceSelect').value = audVal;
       renderRoleChecklist('notice', initRoles);
       onNoticeAudienceChange();
@@ -8874,7 +8884,7 @@
       if (!m) return;
       const nonNewcomerRoles = roles.filter(r => !isNewcomerRoleObj(r));
       if (nonNewcomerRoles.length === 0) {
-        return showToast('변경할 다른 역할이 없습니다. 먼저 [역할 설정]에서 역할을 만들어 주세요.');
+        return showToast(`변경할 다른 역할이 없습니다. 먼저 [${getTabLabel('manageRoles')}]에서 역할을 만들어 주세요.`);
       }
       document.getElementById('releaseNewcomerModalTitle').textContent = `💐 ${m.name}님 새신자 해제`;
       document.getElementById('releaseNewcomerMemberId').value = m.id;
@@ -9076,11 +9086,12 @@
 
       el.innerHTML = `
         <div class="section-head">
-          <h2 class="section-title">🏷️ 역할(직분 배지) 목록 (${roles.length}개)</h2>
+          <h2 class="section-title">${escapeHtml(getTabIcon('manageRoles'))} ${escapeHtml(getTabLabel('manageRoles'))} (${roles.length}개)</h2>
           <button class="btn-admin" onclick="openAddRoleModal()">+ 새 역할 만들기</button>
         </div>
         <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-          여기서 추가·수정·삭제·순서 변경(▲/▼)한 역할 목록이 <b>회원가입 역할 선택창</b>에 그대로 자동 반영됩니다.
+          역할은 회원 이름 옆에 표시되는 직분 배지입니다.<br>
+          특정 역할에게만 보여주는 설정은 <b>공지·광고·배너 작성 화면</b>에서 원하는 역할을 직접 선택해 지정할 수 있습니다.
         </div>
         ${roles.map((r, idx) => {
           const count = members.filter(m => m.status === 'approved' && m.roleId === r.id).length;
@@ -9099,10 +9110,9 @@
               </div>
               <div class="card-footer">
                 <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                  ${isLeaderGroupRoleObj(r)
-                    ? '<span class="tag warm" style="font-size:10.5px;">👑 리더·교역자 그룹</span>'
-                    : (isNewcomerRoleObj(r) ? '<span class="tag" style="font-size:10.5px;">💐 새신자 자동 환영</span>' : '<span style="font-size:11.5px; color:#64748B;">일반 직분 배지</span>')}
-                  <button class="btn-sm" type="button" style="padding:4px 8px; font-size:11px;" onclick="toggleRoleLeaderGroup('${escapeJsAttr(r.id)}')">${isLeaderGroupRoleObj(r) ? '리더 해제' : '👑 리더 포함'}</button>
+                  ${isNewcomerRoleObj(r)
+                    ? '<span class="tag" style="font-size:10.5px;">💐 새신자 자동 환영</span>'
+                    : '<span style="font-size:11.5px; color:#64748B;">직분 배지 · 공지/배너 대상 선택용</span>'}
                 </div>
                 <div style="display:flex; gap:6px;">
                   <button class="btn-sm" onclick="openEditRoleModal('${escapeJsAttr(r.id)}')">수정</button>
@@ -9184,29 +9194,10 @@
     }
     window.selectRoleColor = (c) => { selectedRoleColor = c; renderRoleColorPalette(); };
 
-    window.toggleRoleLeaderGroup = async (roleId) => {
-      const next = sanitizeRolesList(roles);
-      const r = next.find(x => String(x.id) === String(roleId));
-      if (!r) return;
-      r.isLeaderGroup = !r.isLeaderGroup;
-      try {
-        await db.collection('config').doc('roles').set({
-          items: next,
-          metaById: buildRolesMetaByIdMap(next)
-        });
-        showToast(r.isLeaderGroup
-          ? `[${r.name}] 역할을 리더·교역자 그룹에 포함했습니다.`
-          : `[${r.name}] 역할을 리더·교역자 그룹에서 해제했습니다.`);
-      } catch (err) {
-        handleDbError(err, '역할 그룹 변경');
-      }
-    };
-
     window.openAddRoleModal = () => {
       document.getElementById('roleModalTitle').textContent = '새 역할 만들기';
       document.getElementById('editRoleId').value = '';
       document.getElementById('roleNameInput').value = '';
-      document.getElementById('roleLeaderGroupInput').checked = false;
       selectedRoleColor = ROLE_COLORS[4];
       renderRoleColorPalette();
       document.getElementById('roleModal').classList.add('open');
@@ -9218,7 +9209,6 @@
       document.getElementById('roleModalTitle').textContent = `[${r.name}] 역할 수정`;
       document.getElementById('editRoleId').value = r.id;
       document.getElementById('roleNameInput').value = r.name;
-      document.getElementById('roleLeaderGroupInput').checked = isLeaderGroupRoleObj(r);
       selectedRoleColor = r.color || ROLE_COLORS[0];
       renderRoleColorPalette();
       document.getElementById('roleModal').classList.add('open');
@@ -9227,18 +9217,17 @@
     document.getElementById('saveRoleBtn').addEventListener('click', async () => {
       const id = document.getElementById('editRoleId').value;
       const name = document.getElementById('roleNameInput').value.trim();
-      const isLeaderGroup = document.getElementById('roleLeaderGroupInput').checked;
       if (!name) return showToast('역할 이름을 입력해 주세요.');
 
       const next = sanitizeRolesList(roles);
       let msg = '';
       if (id) {
         const r = next.find(x => x.id === id);
-        if (r) { r.name = name; r.color = selectedRoleColor; r.isLeaderGroup = isLeaderGroup; }
+        if (r) { r.name = name; r.color = selectedRoleColor; }
         msg = `[${name}] 역할이 수정되었습니다!`;
       } else {
         if (next.some(r => r.name === name)) return showToast('이미 같은 이름의 역할이 존재합니다.');
-        next.push({ id: 'role_' + Date.now(), name, color: selectedRoleColor, isLeaderGroup });
+        next.push({ id: 'role_' + Date.now(), name, color: selectedRoleColor });
         msg = `[${name}] 새 역할이 추가되었습니다!`;
       }
       try {
@@ -11065,6 +11054,7 @@ ${m.body}`;
 
     // ==================== 16. 전용 [✏️ 메뉴·이름] 탭 (중앙 레지스트리 자동 연동 · 이모지/이름/순서 편집) ====================
     let draftTabOrder = [...DEFAULT_TAB_ORDER];
+    let draftManageSubTabOrder = [...DEFAULT_MANAGE_SUBTAB_ORDER];
     let draftTabNames = {};
     let draftTabIcons = {};
     let draftTabInitialized = false;
@@ -11072,6 +11062,7 @@ ${m.body}`;
     function initDraftTabEditorFromCurrent(force = false) {
       if (draftTabInitialized && !force) return;
       draftTabOrder = getValidTabOrder();
+      draftManageSubTabOrder = getValidManageSubTabOrder();
       draftTabNames = {};
       draftTabIcons = {};
       BOTTOM_TAB_REGISTRY.forEach(t => {
@@ -11085,16 +11076,102 @@ ${m.body}`;
       draftTabInitialized = true;
     }
 
+    function syncDraftFromDomInputs() {
+      document.querySelectorAll('[data-tab-name-key]').forEach(inp => {
+        const k = inp.getAttribute('data-tab-name-key');
+        if (k) draftTabNames[k] = inp.value;
+      });
+      document.querySelectorAll('[data-tab-icon-key]').forEach(inp => {
+        const k = inp.getAttribute('data-tab-icon-key');
+        if (k) draftTabIcons[k] = inp.value;
+      });
+    }
+
+    function syncLiveTabPreview() {
+      const user = getCurrentUser();
+      if (!user) return;
+      const perms = user.role.perms;
+
+      // 1) 관리 센터 상단 탭 즉시 실시간 미리보기 (이름·이모지·순서)
+      const subTabsEl = document.getElementById('manageSubTabs');
+      if (subTabsEl && currentMainTab === 'manage') {
+        const orderedSubIds = getValidManageSubTabOrder(draftManageSubTabOrder);
+        const liveAllowed = orderedSubIds
+          .map(id => MANAGE_SUBTAB_REGISTRY.find(t => t.id === id))
+          .filter(t => t && t.permCheck(perms));
+        subTabsEl.innerHTML = liveAllowed.map(t => {
+          const ic = String(draftTabIcons[t.labelKey] ?? '').trim() || t.defaultIcon;
+          const nm = String(draftTabNames[t.labelKey] ?? '').trim() || t.defaultLabel;
+          return `
+            <button class="sub-tab-btn ${currentManageSubTab === t.id ? 'active' : ''}" onclick="switchManageSubTab('${t.id}')">
+              ${escapeHtml(ic)} ${escapeHtml(nm)}
+            </button>
+          `;
+        }).join('');
+      }
+
+      // 2) 하단 탭바 즉시 실시간 미리보기 (이름·이모지·순서)
+      const tabbar = document.getElementById('appTabbar');
+      if (tabbar) {
+        const canManage = hasAnyManagePerm(perms);
+        const pendingCount = members.filter(m => m.status === 'pending').length + (adminRegistry.items || []).filter(a => a.status === 'pending').length;
+        const orderedTabs = getValidTabOrder(draftTabOrder).filter(k => k !== 'manage' || canManage);
+        const isMoreOpen = document.getElementById('quickLinksSheet').classList.contains('open');
+        tabbar.innerHTML = orderedTabs.map(key => {
+          const meta = BOTTOM_TAB_REGISTRY.find(t => t.key === key) || { defaultIcon: '•', defaultLabel: key };
+          const iconVal = String(draftTabIcons[key] ?? '').trim() || meta.defaultIcon;
+          const labelVal = String(draftTabNames[key] ?? '').trim() || meta.defaultLabel;
+          if (key === 'more') {
+            const moreIconHtml = iconVal === '☰'
+              ? `<span class="tab-icon tab-icon-bars">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                    <line x1="4" y1="6.5" x2="20" y2="6.5"></line>
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="17.5" x2="20" y2="17.5"></line>
+                  </svg>
+                </span>`
+              : `<span class="tab-icon">${escapeHtml(iconVal)}</span>`;
+            return `
+              <button id="tabBtnMore" class="tab-btn ${isMoreOpen ? 'more-active' : ''}" onclick="toggleQuickLinksSheet()">
+                ${moreIconHtml}
+                <span>${escapeHtml(labelVal)}</span>
+              </button>
+            `;
+          }
+          const badgeHtml = (key === 'manage' && perms.canManageMembers && pendingCount > 0)
+            ? `<span class="tab-badge">${pendingCount}</span>`
+            : '';
+          return `
+            <button class="tab-btn ${!isMoreOpen && currentMainTab === key ? 'active' : ''}" onclick="switchMainTab('${key}')">
+              <span class="tab-icon">${escapeHtml(iconVal)}</span>
+              <span>${escapeHtml(labelVal)}</span>
+              ${badgeHtml}
+            </button>
+          `;
+        }).join('');
+      }
+
+      // 3) 카드 상단 제목의 관리 명칭도 실시간 반영
+      const manageTitleEl = document.getElementById('manageSubTabCardHeading');
+      if (manageTitleEl) {
+        const mIcon = String(draftTabIcons.manage ?? '').trim() || getTabIcon('manage');
+        const mName = String(draftTabNames.manage ?? '').trim() || getTabLabel('manage');
+        manageTitleEl.textContent = `${mIcon} ${mName} 상단 탭 (왼쪽 → 오른쪽 순)`;
+      }
+    }
+
     function renderManageLabels(el, user) {
       initDraftTabEditorFromCurrent(false);
+      const curManageName = String(draftTabNames.manage ?? '').trim() || getTabLabel('manage');
+      const curManageIcon = String(draftTabIcons.manage ?? '').trim() || getTabIcon('manage');
       el.innerHTML = `
         <div class="section-head">
-          <h2 class="section-title">✏️ 전체 메뉴 · 이모지 · 순서 편집</h2>
+          <h2 class="section-title">${escapeHtml(getTabIcon('manageLabels'))} ${escapeHtml(getTabLabel('manageLabels'))} · 이모지 · 순서</h2>
           <button class="btn-sm" type="button" onclick="resetTabLabelsDefaults()">기본값 복원</button>
         </div>
         <div class="info-box" style="margin-top:0; margin-bottom:14px;">
-          하단 메뉴와 관리 센터의 모든 탭 <b>이모지 · 이름 · 순서(▲/▼)</b>를 한곳에서 변경할 수 있습니다.<br>
-          추후 새 탭이 업데이트되어도 이 화면에 자동으로 추가됩니다.
+          하단 메뉴와 <b>${escapeHtml(curManageName)} 상단 탭</b>의 이모지·이름·순서(▲/▼)를 자유롭게 바꿀 수 있습니다.<br>
+          입력하거나 순서를 바꾸면 상단·하단 탭에 바로 미리보기되며, 아래 저장 버튼을 누르면 즉시 저장·반영됩니다.
         </div>
 
         <div class="card">
@@ -11107,10 +11184,11 @@ ${m.body}`;
               return `
                 <div class="tab-order-row">
                   <span class="tab-order-num">${idx + 1}</span>
-                  <input class="emoji-input" maxlength="4" value="${escapeHtml(curIcon)}" title="이모지 변경"
+                  <input class="emoji-input" maxlength="4" data-tab-icon-key="${key}" value="${escapeHtml(curIcon)}" title="이모지 변경"
                          oninput="onDraftTabIconInput('${key}', this.value)" />
                   <div style="flex:1; min-width:0;">
                     <input class="form-input" style="padding:7px 10px; font-size:13.5px;" maxlength="10"
+                           data-tab-name-key="${key}"
                            value="${escapeHtml(curName)}"
                            placeholder="${escapeHtml(meta.defaultLabel)}"
                            oninput="onDraftTabNameInput('${key}', this.value)" />
@@ -11127,24 +11205,34 @@ ${m.body}`;
         </div>
 
         <div class="card">
-          <div style="font-size:13.5px; font-weight:800; color:#0F172A; margin-bottom:10px;">🛠️ 관리 센터 상단 탭 (${MANAGE_SUBTAB_REGISTRY.length}개 자동 연동)</div>
-          ${MANAGE_SUBTAB_REGISTRY.map(t => {
-            const curName = draftTabNames[t.labelKey] !== undefined ? draftTabNames[t.labelKey] : getTabLabel(t.labelKey);
-            const curIcon = draftTabIcons[t.labelKey] !== undefined ? draftTabIcons[t.labelKey] : getTabIcon(t.labelKey);
-            return `
-              <div class="tab-order-row">
-                <input class="emoji-input" maxlength="4" value="${escapeHtml(curIcon)}" title="이모지 변경"
-                       oninput="onDraftTabIconInput('${t.labelKey}', this.value)" />
-                <div style="flex:1; min-width:0;">
-                  <input class="form-input" style="padding:7px 10px; font-size:13.5px;" maxlength="14"
-                         value="${escapeHtml(curName)}"
-                         placeholder="${escapeHtml(t.defaultLabel)}"
-                         oninput="onDraftTabNameInput('${t.labelKey}', this.value)" />
-                  <div style="font-size:10.5px; color:#64748B; margin-top:2px; padding-left:2px;">기본: ${escapeHtml(t.defaultIcon)} ${escapeHtml(t.defaultLabel)}</div>
+          <div id="manageSubTabCardHeading" style="font-size:13.5px; font-weight:800; color:#0F172A; margin-bottom:10px;">${escapeHtml(curManageIcon)} ${escapeHtml(curManageName)} 상단 탭 (왼쪽 → 오른쪽 순)</div>
+          <div id="inlineManageSubTabEditor">
+            ${draftManageSubTabOrder.map((subId, idx) => {
+              const t = MANAGE_SUBTAB_REGISTRY.find(x => x.id === subId);
+              if (!t) return '';
+              const curName = draftTabNames[t.labelKey] !== undefined ? draftTabNames[t.labelKey] : getTabLabel(t.labelKey);
+              const curIcon = draftTabIcons[t.labelKey] !== undefined ? draftTabIcons[t.labelKey] : getTabIcon(t.labelKey);
+              return `
+                <div class="tab-order-row">
+                  <span class="tab-order-num">${idx + 1}</span>
+                  <input class="emoji-input" maxlength="4" data-tab-icon-key="${t.labelKey}" value="${escapeHtml(curIcon)}" title="이모지 변경"
+                         oninput="onDraftTabIconInput('${t.labelKey}', this.value)" />
+                  <div style="flex:1; min-width:0;">
+                    <input class="form-input" style="padding:7px 10px; font-size:13.5px;" maxlength="14"
+                           data-tab-name-key="${t.labelKey}"
+                           value="${escapeHtml(curName)}"
+                           placeholder="${escapeHtml(t.defaultLabel)}"
+                           oninput="onDraftTabNameInput('${t.labelKey}', this.value)" />
+                    <div style="font-size:10.5px; color:#64748B; margin-top:2px; padding-left:2px;">기본: ${escapeHtml(t.defaultIcon)} ${escapeHtml(t.defaultLabel)}</div>
+                  </div>
+                  <div class="order-btns">
+                    <button class="order-btn" type="button" onclick="moveDraftManageSubTabOrder(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                    <button class="order-btn" type="button" onclick="moveDraftManageSubTabOrder(${idx}, 1)" ${idx === draftManageSubTabOrder.length - 1 ? 'disabled' : ''}>▼</button>
+                  </div>
                 </div>
-              </div>
-            `;
-          }).join('')}
+              `;
+            }).join('')}
+          </div>
         </div>
 
         <button id="saveTabLabelsInlineBtn" class="btn-full btn-dark" type="button" onclick="handleSaveTabLabels()">💾 전체 메뉴 이모지 · 이름 · 순서 저장하기</button>
@@ -11153,16 +11241,32 @@ ${m.body}`;
 
     window.onDraftTabNameInput = (key, val) => {
       draftTabNames[key] = val;
+      syncLiveTabPreview();
     };
 
     window.onDraftTabIconInput = (key, val) => {
       draftTabIcons[key] = val;
+      syncLiveTabPreview();
     };
 
     window.moveDraftTabOrder = (idx, dir) => {
+      syncDraftFromDomInputs();
       const t = idx + dir;
       if (t < 0 || t >= draftTabOrder.length) return;
       [draftTabOrder[idx], draftTabOrder[t]] = [draftTabOrder[t], draftTabOrder[idx]];
+      syncLiveTabPreview();
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'labels') {
+        renderManageLabels(document.getElementById('manageContent'), u);
+      }
+    };
+
+    window.moveDraftManageSubTabOrder = (idx, dir) => {
+      syncDraftFromDomInputs();
+      const t = idx + dir;
+      if (t < 0 || t >= draftManageSubTabOrder.length) return;
+      [draftManageSubTabOrder[idx], draftManageSubTabOrder[t]] = [draftManageSubTabOrder[t], draftManageSubTabOrder[idx]];
+      syncLiveTabPreview();
       const u = getCurrentUser();
       if (u && currentMainTab === 'manage' && currentManageSubTab === 'labels') {
         renderManageLabels(document.getElementById('manageContent'), u);
@@ -11178,6 +11282,7 @@ ${m.body}`;
 
     window.resetTabLabelsDefaults = () => {
       draftTabOrder = [...DEFAULT_TAB_ORDER];
+      draftManageSubTabOrder = [...DEFAULT_MANAGE_SUBTAB_ORDER];
       draftTabNames = {};
       draftTabIcons = {};
       BOTTOM_TAB_REGISTRY.forEach(t => {
@@ -11189,6 +11294,7 @@ ${m.body}`;
         draftTabIcons[t.labelKey] = t.defaultIcon;
       });
       draftTabInitialized = true;
+      syncLiveTabPreview();
       const u = getCurrentUser();
       if (u && currentMainTab === 'manage' && currentManageSubTab === 'labels') {
         renderManageLabels(document.getElementById('manageContent'), u);
@@ -11197,7 +11303,12 @@ ${m.body}`;
     };
 
     window.handleSaveTabLabels = async () => {
-      const next = { tabOrder: getValidTabOrder(draftTabOrder), icons: {} };
+      syncDraftFromDomInputs();
+      const next = {
+        tabOrder: getValidTabOrder(draftTabOrder),
+        manageSubTabOrder: getValidManageSubTabOrder(draftManageSubTabOrder),
+        icons: {}
+      };
       BOTTOM_TAB_REGISTRY.forEach(t => {
         next[t.key] = String(draftTabNames[t.key] ?? '').trim() || t.defaultLabel;
         next.icons[t.key] = String(draftTabIcons[t.key] ?? '').trim() || t.defaultIcon;
@@ -11210,8 +11321,14 @@ ${m.body}`;
       const btn = document.getElementById('saveTabLabelsInlineBtn') || document.getElementById('saveTabLabelsBtn');
       if (btn) btn.disabled = true;
       try {
-        await db.collection('config').doc('labels').set(next);
+        tabLabels = {
+          ...DEFAULT_TAB_LABELS,
+          ...next,
+          icons: { ...DEFAULT_TAB_ICONS, ...next.icons }
+        };
         draftTabInitialized = false;
+        await db.collection('config').doc('labels').set(next);
+        applyScreen();
         showToast('전체 메뉴 이모지 · 이름 · 순서가 저장되었습니다!');
       } catch (err) {
         handleDbError(err, '메뉴 순서·이름 저장');
@@ -13572,7 +13689,7 @@ ${m.body}`;
         } else if (id === 'sheet') {
           const url = getAdminSheetUrl();
           if (!url) {
-            setDiagResult(id, 'warn', '구글 시트 연동 URL이 아직 등록되지 않았습니다. [예배 관리]에서 URL을 입력해 주세요.');
+            setDiagResult(id, 'warn', `구글 시트 연동 URL이 아직 등록되지 않았습니다. [${getTabLabel('manageWorship')}]에서 URL을 입력해 주세요.`);
           } else {
             const res = await postToGoogleSheet({ action: 'test', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url, true);
             if (!res.ok) {
@@ -13775,7 +13892,7 @@ ${m.body}`;
 
     window.runSheetLiveWriteTest = async () => {
       const url = getAdminSheetUrl();
-      if (!url) return showToast('먼저 [예배 관리]에서 구글 시트 URL을 저장해 주세요.');
+      if (!url) return showToast(`먼저 [${getTabLabel('manageWorship')}]에서 구글 시트 URL을 저장해 주세요.`);
       const now = getKstNowInfo();
       const colTitle = `${now.dot} (기능점검 테스트)`;
       const res = await postToGoogleSheet({
