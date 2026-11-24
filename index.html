@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=126" />
+  <link rel="manifest" href="./manifest.json?v=127" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=126" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=126" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=127" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=127" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1896,6 +1896,28 @@
       flex-shrink: 0;
     }
 
+    /* ==================== v10.27 예약 게시 입력 박스 & 미리보기 배지 ==================== */
+    .schedule-time-box {
+      background: #EEF2FF;
+      border: 1.5px solid #C7D2FE;
+      border-radius: 13px;
+      padding: 11px 12px;
+      margin-top: 8px;
+    }
+    .sched-preview-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(15, 23, 42, 0.72);
+      color: #FDE68A;
+      border: 1px solid rgba(253, 230, 138, 0.45);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 999px;
+      margin-bottom: 7px;
+    }
+
     /* 토스트 */
     .toast {
       position: fixed; bottom: calc(86px + var(--safe-bottom)); left: 50%;
@@ -1917,7 +1939,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=126" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=127" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -2615,11 +2637,48 @@
         </div>
       </div>
 
-      <label class="checkbox-row" style="margin-bottom:16px;">
-        <input type="checkbox" id="noticeNotifyInput" checked />
-        <span>게시 시 대상 회원들에게 알림 띄우기</span>
+      <div class="form-group">
+        <label class="form-label" for="noticePublishModeSelect">게시 방식</label>
+        <select id="noticePublishModeSelect" class="form-select" onchange="onNoticePublishModeChange()">
+          <option value="now">🚀 바로 게시 (즉시 공개)</option>
+          <option value="draft">📝 임시저장 (숨김 · 관리자만 확인)</option>
+          <option value="scheduled">⏰ 예약 게시 (지정한 한국시간에 자동 공개)</option>
+        </select>
+        <div id="noticeScheduleBox" class="schedule-time-box hidden">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div>
+              <label class="form-label" for="noticeScheduleDateInput" style="font-size:11.5px; margin-bottom:4px;">예약 날짜 (KST)</label>
+              <div class="combo-input-row">
+                <input id="noticeScheduleDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="2026.11.29" oninput="formatBirthdayTyping(this)" />
+                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="달력에서 선택" onclick="openNativePicker('noticeScheduleDatePicker', 'noticeScheduleDateInput', 'date')">📅</button>
+                <input id="noticeScheduleDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('noticeScheduleDatePicker', 'noticeScheduleDateInput', 'date')" />
+              </div>
+            </div>
+            <div>
+              <label class="form-label" for="noticeScheduleTimeInput" style="font-size:11.5px; margin-bottom:4px;">예약 시각 (KST)</label>
+              <div class="combo-input-row">
+                <input id="noticeScheduleTimeInput" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="09:00" oninput="formatTimeTyping(this)" />
+                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="시계에서 선택" onclick="openNativePicker('noticeScheduleTimePicker', 'noticeScheduleTimeInput', 'time')">🕒</button>
+                <input id="noticeScheduleTimePicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('noticeScheduleTimePicker', 'noticeScheduleTimeInput', 'time')" />
+              </div>
+            </div>
+          </div>
+          <div style="font-size:11px; color:#3730A3; margin-top:7px; line-height:1.45;">
+            지정 시각 전에는 일반 회원에게 보이지 않으며, 해당 시각에 자동으로 공개됩니다. (종료는 관리자가 직접 숨기기·수정·삭제)
+          </div>
+        </div>
+      </div>
+
+      <label id="noticePinBannerRow" class="checkbox-row" style="margin-bottom:8px;">
+        <input type="checkbox" id="noticePinBannerInput" checked />
+        <span>📌 상단 고정 공지 배너에도 함께 띄우기</span>
       </label>
-      <button id="saveNoticeBtn" class="btn-full btn-dark" type="button">저장하고 게시하기</button>
+
+      <label id="noticeNotifyRow" class="checkbox-row" style="margin-bottom:16px;">
+        <input type="checkbox" id="noticeNotifyInput" checked />
+        <span>바로 게시 시 대상 회원들에게 알림 띄우기</span>
+      </label>
+      <button id="saveNoticeBtn" class="btn-full btn-dark" type="button">저장하기</button>
     </div>
   </div>
 
@@ -2641,10 +2700,7 @@
           <option value="notice_list">공지 · 광고 · 소식 목록</option>
         </select>
       </div>
-      <div class="form-group">
-        <label class="form-label">관리용 블록 이름</label>
-        <input id="blockLabelInput" class="form-input" placeholder="예: 겨울 수련회 특별 배너" />
-      </div>
+
       <div id="blockContentFields">
         <div class="form-group" id="blockBadgeGroup">
           <label class="form-label">배지 문구 (상단 작은 글씨)</label>
@@ -2679,9 +2735,41 @@
           <div id="blockRoleChecklist" class="role-target-grid"></div>
         </div>
       </div>
-      <label class="checkbox-row" style="margin-bottom:12px;">
+      <div class="form-group">
+        <label class="form-label" for="blockPublishModeSelect">게시 방식</label>
+        <select id="blockPublishModeSelect" class="form-select" onchange="onBlockPublishModeChange()">
+          <option value="now">🚀 바로 게시 (즉시 메인 화면에 공개)</option>
+          <option value="draft">📝 임시저장 (숨김 · 관리자만 확인)</option>
+          <option value="scheduled">⏰ 예약 게시 (지정한 한국시간에 자동 공개)</option>
+        </select>
+        <div id="blockScheduleBox" class="schedule-time-box hidden">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div>
+              <label class="form-label" for="blockScheduleDateInput" style="font-size:11.5px; margin-bottom:4px;">예약 날짜 (KST)</label>
+              <div class="combo-input-row">
+                <input id="blockScheduleDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="2026.11.29" oninput="formatBirthdayTyping(this)" />
+                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="달력에서 선택" onclick="openNativePicker('blockScheduleDatePicker', 'blockScheduleDateInput', 'date')">📅</button>
+                <input id="blockScheduleDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('blockScheduleDatePicker', 'blockScheduleDateInput', 'date')" />
+              </div>
+            </div>
+            <div>
+              <label class="form-label" for="blockScheduleTimeInput" style="font-size:11.5px; margin-bottom:4px;">예약 시각 (KST)</label>
+              <div class="combo-input-row">
+                <input id="blockScheduleTimeInput" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="09:00" oninput="formatTimeTyping(this)" />
+                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="시계에서 선택" onclick="openNativePicker('blockScheduleTimePicker', 'blockScheduleTimeInput', 'time')">🕒</button>
+                <input id="blockScheduleTimePicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('blockScheduleTimePicker', 'blockScheduleTimeInput', 'time')" />
+              </div>
+            </div>
+          </div>
+          <div style="font-size:11px; color:#3730A3; margin-top:7px; line-height:1.45;">
+            지정 시각 전에는 일반 회원에게 보이지 않으며, 해당 시각에 자동으로 공개됩니다. (종료는 관리자가 직접 숨기기·수정·삭제)
+          </div>
+        </div>
+      </div>
+
+      <label id="blockNotifyRow" class="checkbox-row" style="margin-bottom:12px;">
         <input type="checkbox" id="blockNotifyInput" checked />
-        <span>저장 시 메인 홈 반영 및 회원들에게 알림 띄우기</span>
+        <span>바로 게시 시 대상 회원들에게 알림 띄우기</span>
       </label>
       <button id="saveBlockBtn" class="btn-full btn-dark" type="button" style="margin-top:6px;">화면 설정 저장</button>
     </div>
@@ -3093,6 +3181,14 @@
     const SESSION_EPOCH = 'v10.20';
     const KEY_INVITE_TOKEN = 'right_youth_invite_token_v20';
     const DAY_NAMES_KO = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+    const DAY_SHORT_KO = ['일', '월', '화', '수', '목', '금', '토'];
+    const BLOCK_TYPE_NAMES = {
+      hero_notice: '상단 메인 고정 공지 배너',
+      newcomer_card: '새신자 소식 · 환영 안내',
+      custom_ad: '광고 · 홍보 배너',
+      leader_card: '리더·교역자 전용 소식',
+      notice_list: '공지 · 광고 · 소식 목록'
+    };
     const DEFAULT_ATTENDANCE_CONFIG = {
       sheetUrl: '',
       regularEnabled: true,
@@ -3100,7 +3196,8 @@
       regularLabel: '주일 예배',
       regularStart: '14:00',
       regularEnd: '15:30',
-      specialEvents: []
+      specialEvents: [],
+      sessionNames: {}
     };
     const KEY_BDAY_NOTIFIED = 'right_youth_bday_notified_v1';
     const KEY_NEWCOMER_NOTIFIED = 'right_youth_newcomer_notified_v1';
@@ -3130,7 +3227,8 @@
     ];
     const MANAGE_SUBTAB_REGISTRY = [
       { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', permCheck: p => !!(p.canEditLayout || p.canManageNotices || p.canManageQt) },
-      { id: 'attendance', labelKey: 'manageAttendance', defaultIcon: '✅', defaultLabel: '출석·QR 관리', permCheck: p => !!p.canManageMembers },
+      { id: 'worship', labelKey: 'manageWorship', defaultIcon: '⛪', defaultLabel: '예배 관리', permCheck: p => !!p.canManageMembers },
+      { id: 'qr', labelKey: 'manageQr', defaultIcon: '📲', defaultLabel: 'QR 관리', permCheck: p => !!p.canManageMembers },
       { id: 'members', labelKey: 'manageMembers', defaultIcon: '👥', defaultLabel: '회원 승인·역할', permCheck: p => !!p.canManageMembers },
       { id: 'roles', labelKey: 'manageRoles', defaultIcon: '🏷️', defaultLabel: '역할 설정', permCheck: p => !!p.canManageMembers },
       { id: 'labels', labelKey: 'manageLabels', defaultIcon: '✏️', defaultLabel: '메뉴·이름', permCheck: p => !!p.canEditLayout },
@@ -3578,6 +3676,85 @@
       return '';
     }
 
+    function getDowForDateStr(rawDate) {
+      const s = String(rawDate || '').trim();
+      const m = s.match(/^(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})$/);
+      if (!m) return -1;
+      const dt = new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3])));
+      return dt.getUTCDay();
+    }
+
+    function formatDateWithDowKo(rawDate) {
+      const s = String(rawDate || '').trim().replace(/-/g, '.');
+      const dow = getDowForDateStr(s);
+      return dow >= 0 ? `${s} (${DAY_SHORT_KO[dow]})` : s;
+    }
+
+    function kstDateTimeToTs(dateRaw, hhmmRaw) {
+      const iso = normalizeDateAnyInput(dateRaw);
+      const hhmm = normalizeTimeInput(hhmmRaw);
+      if (!iso || !hhmm) return 0;
+      const [y, mo, d] = iso.split('-').map(Number);
+      const [h, mi] = hhmm.split(':').map(Number);
+      return Date.UTC(y, mo - 1, d, h, mi, 0, 0) - 9 * 60 * 60 * 1000;
+    }
+
+    function tsToKstParts(ts) {
+      const n = Number(ts || 0);
+      if (!n) return null;
+      const kst = new Date(n + 9 * 60 * 60 * 1000);
+      const y = kst.getUTCFullYear();
+      const m = String(kst.getUTCMonth() + 1).padStart(2, '0');
+      const d = String(kst.getUTCDate()).padStart(2, '0');
+      const hh = String(kst.getUTCHours()).padStart(2, '0');
+      const mi = String(kst.getUTCMinutes()).padStart(2, '0');
+      const dow = kst.getUTCDay();
+      return {
+        dot: `${y}.${m}.${d}`,
+        iso: `${y}-${m}-${d}`,
+        hhmm: `${hh}:${mi}`,
+        shortLabel: `${Number(m)}.${Number(d)}(${DAY_SHORT_KO[dow]}) ${hh}:${mi}`,
+        fullLabel: `${y}.${m}.${d}(${DAY_SHORT_KO[dow]}) ${hh}:${mi}`
+      };
+    }
+
+    function getDefaultScheduleKst() {
+      const nextHourTs = Date.now() + 60 * 60 * 1000;
+      const p = tsToKstParts(nextHourTs);
+      return { dot: p.dot, hhmm: `${p.hhmm.slice(0, 2)}:00` };
+    }
+
+    function getPublishState(item) {
+      if (!item) return 'draft';
+      if (item.publishMode === 'draft' || (!item.publishMode && item.hiddenOnHome)) return 'draft';
+      if (item.publishMode === 'scheduled') {
+        const ts = Number(item.publishAtTs || 0);
+        if (ts > Date.now()) return 'scheduled';
+      }
+      return 'live';
+    }
+
+    function getPublishStateBadgeHtml(item) {
+      const st = getPublishState(item);
+      if (st === 'draft') {
+        return '<span class="tag slate">📝 임시저장(숨김)</span>';
+      }
+      if (st === 'scheduled') {
+        const p = tsToKstParts(item.publishAtTs);
+        return `<span class="tag" style="background:#EEF2FF;color:#4338CA;">⏰ ${escapeHtml(p ? p.shortLabel : '')} 예약됨</span>`;
+      }
+      return '<span class="tag green">메인 표시중</span>';
+    }
+
+    function getBlockDisplayLabel(b) {
+      if (!b) return '배너·칸';
+      const t = String(b.title || '').trim();
+      const lbl = String(b.label || '').trim();
+      const typeName = BLOCK_TYPE_NAMES[b.type] || '배너·칸';
+      if (b.type === 'hero_notice') return typeName;
+      return t || lbl || typeName;
+    }
+
     function isNewcomerRoleId(roleId) {
       const r = roles.find(x => String(x.id) === String(roleId));
       if (r) return isNewcomerRoleObj(r);
@@ -3759,7 +3936,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=126" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=127" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -3782,8 +3959,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=126', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=126', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=127', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=127', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -4469,7 +4646,7 @@
         unsubAttendanceAdmin = db.collection('attendance').onSnapshot(snap => {
           attendanceRecords = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
             .sort((a, b) => Number(b.ts || 0) - Number(a.ts || 0));
-          if (currentMainTab === 'manage' && currentManageSubTab === 'attendance') {
+          if (currentMainTab === 'manage' && currentManageSubTab === 'worship') {
             applyScreen();
           }
         }, () => {});
@@ -4511,7 +4688,8 @@
             attendanceConfig = {
               ...DEFAULT_ATTENDANCE_CONFIG,
               ...doc.data(),
-              specialEvents: Array.isArray(doc.data().specialEvents) ? doc.data().specialEvents : []
+              specialEvents: Array.isArray(doc.data().specialEvents) ? doc.data().specialEvents : [],
+              sessionNames: (doc.data().sessionNames && typeof doc.data().sessionNames === 'object') ? doc.data().sessionNames : {}
             };
           } else {
             attendanceConfig = structuredClone(DEFAULT_ATTENDANCE_CONFIG);
@@ -4520,7 +4698,7 @@
           if (attendanceConfig.sheetUrl && members.length > 0) {
             syncUnsyncedMembersToSheet(members).catch(() => {});
           }
-          if (currentMainTab === 'home' || (currentMainTab === 'manage' && currentManageSubTab === 'attendance')) {
+          if (currentMainTab === 'home' || (currentMainTab === 'manage' && currentManageSubTab === 'worship')) {
             applyScreen();
           }
         }, () => {})
@@ -4645,7 +4823,7 @@
 
               if ((isNew && curAlertTs > 0) || (curAlertTs > prevAlertTs && curAlertTs > 0)) {
                 const curUser = getCurrentUser();
-                if (canUserSeeTarget(curUser, n)) {
+                if (getPublishState(n) === 'live' && canUserSeeTarget(curUser, n)) {
                   dispatchAppNotification({
                     type: 'notice',
                     icon: '📢',
@@ -4947,7 +5125,7 @@
         if (document.getElementById('inviteQrModal').classList.contains('open')) {
           renderInviteQrModalCanvas();
         }
-        if (currentMainTab === 'manage' && currentManageSubTab === 'attendance') {
+        if (currentMainTab === 'manage' && currentManageSubTab === 'qr') {
           const u = getCurrentUser();
           if (u) renderManageView(u);
         }
@@ -5997,16 +6175,25 @@
       const perms = user.role.perms;
       const container = document.getElementById('viewHome');
 
-      function canSeeBlock(b) {
-        if (b.hiddenOnHome) return false;
-        return canUserSeeTarget(user, b);
+      function canSeeItemOnHome(item) {
+        if (!canUserSeeTarget(user, item)) return false;
+        const st = getPublishState(item);
+        if (st === 'draft') return false;
+        if (st === 'scheduled') return !!user.isSuperAdmin; // 관리자는 예약된 항목 미리보기 가능
+        return true;
       }
 
-      const visibleNotices = notices.filter(n => canUserSeeTarget(user, n));
+      function getAdminSchedPill(item) {
+        if (!user.isSuperAdmin || getPublishState(item) !== 'scheduled') return '';
+        const p = tsToKstParts(item.publishAtTs);
+        return `<div class="sched-preview-pill">⏰ 예약 미리보기 · ${escapeHtml(p ? p.shortLabel : '')} 자동 공개</div>`;
+      }
+
+      const visibleNotices = notices.filter(canSeeItemOnHome);
       const attendanceHtml = buildAttendanceHomeCardHtml(user);
       const birthdayHtml = buildBirthdayBannerHtml(user);
       const newcomerHtml = buildNewcomerAutoBannerHtml(user);
-      const visibleBlocks = blocks.filter(canSeeBlock);
+      const visibleBlocks = blocks.filter(canSeeItemOnHome);
 
       if (!attendanceHtml && !birthdayHtml && !newcomerHtml && visibleBlocks.length === 0) {
         container.innerHTML = `
@@ -6039,6 +6226,7 @@
           return `
             <div class="home-block">
               <div class="newcomer-card" style="background:${getThemeCss(b.theme)};">
+                ${getAdminSchedPill(b)}
                 ${b.badge ? `<span class="hero-badge" style="background:rgba(255,255,255,0.22);color:#fff;">${escapeHtml(b.badge)}</span>` : ''}
                 <h3 class="hero-title" style="font-size:17px;">${escapeHtml(b.title)}</h3>
                 <p class="hero-desc">${escapeHtml(b.desc)}</p>
@@ -6051,6 +6239,7 @@
           return `
             <div class="home-block">
               <div class="leader-card" style="background:${getThemeCss(b.theme)};">
+                ${getAdminSchedPill(b)}
                 ${b.badge ? `<span class="hero-badge">${escapeHtml(b.badge)}</span>` : ''}
                 <h3 class="hero-title" style="font-size:16.5px;">${escapeHtml(b.title)}</h3>
                 <p class="hero-desc">${escapeHtml(b.desc)}</p>
@@ -6063,6 +6252,7 @@
           return `
             <div class="home-block">
               <div class="custom-banner-card" style="background:${getThemeCss(b.theme)};">
+                ${getAdminSchedPill(b)}
                 ${b.badge ? `<span class="hero-badge" style="margin-bottom:7px;">${escapeHtml(b.badge)}</span>` : ''}
                 <h3 class="hero-title" style="font-size:16.5px;">${escapeHtml(b.title)}</h3>
                 <p class="hero-desc">${escapeHtml(b.desc)}</p>
@@ -6092,6 +6282,7 @@
                         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
                           <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
                           ${n.pinned ? '<span class="tag green">배너고정</span>' : ''}
+                          ${getPublishState(n) === 'scheduled' ? getPublishStateBadgeHtml(n) : ''}
                           ${getAudienceBadgeHtml(n)}
                         </div>
                         <span class="card-date">${escapeHtml(n.date)}</span>
@@ -6116,7 +6307,7 @@
     window.openDetail = (id) => {
       const n = notices.find(item => String(item.id) === String(id));
       const user = getCurrentUser();
-      if (!n || !canUserSeeTarget(user, n)) return;
+      if (!n || !canUserSeeTarget(user, n) || (!user.isSuperAdmin && getPublishState(n) !== 'live')) return;
       currentDetailId = String(id);
       document.getElementById('detailTag').textContent = n.category;
       document.getElementById('detailTitle').textContent = n.title;
@@ -6143,7 +6334,8 @@
 
       const content = document.getElementById('manageContent');
       if (currentManageSubTab === 'content') renderManageContent(content, user);
-      else if (currentManageSubTab === 'attendance') renderManageAttendance(content, user);
+      else if (currentManageSubTab === 'worship') renderManageWorship(content, user);
+      else if (currentManageSubTab === 'qr') renderManageQr(content, user);
       else if (currentManageSubTab === 'members') renderManageMembers(content);
       else if (currentManageSubTab === 'roles') renderManageRoles(content, user);
       else if (currentManageSubTab === 'labels') renderManageLabels(content, user);
@@ -6165,7 +6357,7 @@
       el.innerHTML = `
         <div class="stats-grid-3">
           <div class="stat-box" onclick="switchMainTab('home')">
-            <div class="stat-num">${blocks.filter(b => !b.hiddenOnHome).length}</div>
+            <div class="stat-num">${blocks.filter(b => getPublishState(b) === 'live').length}</div>
             <div class="stat-label">메인 표시 칸 · 보기</div>
           </div>
           <div class="stat-box">
@@ -6203,31 +6395,36 @@
                    <button class="btn-sm" type="button" onclick="openAddBlockModal()">+ 직접 칸 추가</button>
                  </div>
                </div>`
-            : blocks.map((b, idx) => `
-                <div class="card" style="${b.hiddenOnHome ? 'opacity:0.72; background:#F8FAFC;' : ''}">
-                  <div class="layout-item-head">
-                    <div style="min-width:0;">
-                      <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                        <strong style="font-size:14px;">${idx + 1}. ${escapeHtml(b.label)}</strong>
-                        ${b.hiddenOnHome ? '<span class="tag slate">숨김</span>' : '<span class="tag green">메인 표시중</span>'}
-                        ${getAudienceBadgeHtml(b)}
+            : blocks.map((b, idx) => {
+                const st = getPublishState(b);
+                const dispTitle = getBlockDisplayLabel(b);
+                const typeHint = BLOCK_TYPE_NAMES[b.type] || '';
+                return `
+                  <div class="card" style="${st === 'draft' ? 'opacity:0.74; background:#F8FAFC;' : (st === 'scheduled' ? 'border-color:#A5B4FC; background:#F5F7FF;' : '')}">
+                    <div class="layout-item-head">
+                      <div style="min-width:0;">
+                        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                          <strong style="font-size:14px;">${idx + 1}. ${escapeHtml(dispTitle)}</strong>
+                          ${getPublishStateBadgeHtml(b)}
+                          ${getAudienceBadgeHtml(b)}
+                        </div>
+                        ${(typeHint && typeHint !== dispTitle) ? `<div style="font-size:11.5px; color:#64748B; margin-top:4px;">유형: ${escapeHtml(typeHint)}</div>` : ''}
                       </div>
-                      ${b.title ? `<div style="font-size:12px; color:#64748B; margin-top:4px;">${escapeHtml(b.title)}</div>` : ''}
+                      <div class="order-btns">
+                        <button class="order-btn" onclick="moveBlock(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                        <button class="order-btn" onclick="moveBlock(${idx}, 1)" ${idx === blocks.length - 1 ? 'disabled' : ''}>▼</button>
+                      </div>
                     </div>
-                    <div class="order-btns">
-                      <button class="order-btn" onclick="moveBlock(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
-                      <button class="order-btn" onclick="moveBlock(${idx}, 1)" ${idx === blocks.length - 1 ? 'disabled' : ''}>▼</button>
+                    <div class="card-footer">
+                      <button class="btn-sm ${st !== 'live' ? 'approve' : ''}" onclick="toggleBlockHomeVisibility('${b.id}')">${st === 'live' ? '숨기기(임시저장)' : '🚀 지금 바로 게시'}</button>
+                      <div style="display:flex; gap:6px;">
+                        <button class="btn-sm" onclick="openEditBlockModal('${b.id}')">수정</button>
+                        <button class="btn-sm danger" onclick="deleteBlock('${b.id}')">삭제</button>
+                      </div>
                     </div>
                   </div>
-                  <div class="card-footer">
-                    <button class="btn-sm ${b.hiddenOnHome ? 'approve' : ''}" onclick="toggleBlockHomeVisibility('${b.id}')">${b.hiddenOnHome ? '📌 메인에 띄우기' : '숨기기'}</button>
-                    <div style="display:flex; gap:6px;">
-                      <button class="btn-sm" onclick="openEditBlockModal('${b.id}')">내용 수정</button>
-                      <button class="btn-sm danger" onclick="deleteBlock('${b.id}')">삭제</button>
-                    </div>
-                  </div>
-                </div>
-              `).join('')}
+                `;
+              }).join('')}
         ` : ''}
 
         ${canLayout ? `
@@ -6284,31 +6481,36 @@
           </div>
           ${notices.length === 0
             ? '<div class="card" style="text-align:center;color:#64748B;">등록된 공지가 없습니다.</div>'
-            : notices.map((n, idx) => `
-                <div class="card">
-                  <div class="card-top">
-                    <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
-                      <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
-                      ${n.pinned ? '<span class="tag green">메인 배너 표시중</span>' : ''}
-                      ${getAudienceBadgeHtml(n)}
+            : notices.map((n, idx) => {
+                const st = getPublishState(n);
+                return `
+                  <div class="card" style="${st === 'draft' ? 'opacity:0.74; background:#F8FAFC;' : (st === 'scheduled' ? 'border-color:#A5B4FC; background:#F5F7FF;' : '')}">
+                    <div class="card-top">
+                      <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+                        <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
+                        ${st !== 'live' ? getPublishStateBadgeHtml(n) : (n.pinned ? '<span class="tag green">상단 배너 고정중</span>' : '<span class="tag green">게시중</span>')}
+                        ${getAudienceBadgeHtml(n)}
+                      </div>
+                      <div class="order-btns">
+                        <button class="order-btn" onclick="moveNotice(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                        <button class="order-btn" onclick="moveNotice(${idx}, 1)" ${idx === notices.length - 1 ? 'disabled' : ''}>▼</button>
+                      </div>
                     </div>
-                    <div class="order-btns">
-                      <button class="order-btn" onclick="moveNotice(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
-                      <button class="order-btn" onclick="moveNotice(${idx}, 1)" ${idx === notices.length - 1 ? 'disabled' : ''}>▼</button>
+                    <h3 class="card-title">${escapeHtml(n.title)}</h3>
+                    <p class="card-body clamp">${escapeHtml(n.body)}</p>
+                    <div class="card-footer">
+                      <span class="card-date">${escapeHtml(n.date)}</span>
+                      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                        ${st !== 'live'
+                          ? `<button class="btn-sm approve" onclick="publishNoticeNow('${n.id}')">🚀 지금 바로 게시</button>`
+                          : (!n.pinned ? `<button class="btn-sm primary" onclick="pinNoticeToHomeBanner('${n.id}')">📌 배너 고정</button>` : '')}
+                        <button class="btn-sm" onclick="openEditNotice('${n.id}')">수정</button>
+                        <button class="btn-sm danger" onclick="deleteNotice('${n.id}')">삭제</button>
+                      </div>
                     </div>
                   </div>
-                  <h3 class="card-title">${escapeHtml(n.title)}</h3>
-                  <p class="card-body clamp">${escapeHtml(n.body)}</p>
-                  <div class="card-footer">
-                    <span class="card-date">${escapeHtml(n.date)}</span>
-                    <div style="display:flex;gap:6px;">
-                      ${!n.pinned ? `<button class="btn-sm primary" onclick="pinNoticeToHomeBanner('${n.id}')">📌 메인 띄우기</button>` : ''}
-                      <button class="btn-sm" onclick="openEditNotice('${n.id}')">내용 수정</button>
-                      <button class="btn-sm danger" onclick="deleteNotice('${n.id}')">삭제</button>
-                    </div>
-                  </div>
-                </div>
-              `).join('')}
+                `;
+              }).join('')}
         ` : ''}
 
         ${(canLayout || canNotices) && canQt ? '<div class="manage-divider"></div>' : ''}
@@ -6407,7 +6609,7 @@
 
     window.deleteBlock = async (id) => {
       const b = blocks.find(x => x.id === id);
-      if (!b || !confirm(`[${b.label}] 영역을 삭제할까요?`)) return;
+      if (!b || !confirm(`[${getBlockDisplayLabel(b)}] 영역을 삭제할까요?`)) return;
       const next = blocks.filter(x => x.id !== id);
       await saveBlocksToCloud(next, '영역이 삭제되었습니다.');
     };
@@ -6509,18 +6711,53 @@
       }
     };
 
+    window.onBlockPublishModeChange = () => {
+      const mode = document.getElementById('blockPublishModeSelect').value;
+      document.getElementById('blockScheduleBox').classList.toggle('hidden', mode !== 'scheduled');
+      document.getElementById('blockNotifyRow').classList.toggle('hidden', mode !== 'now');
+      if (mode === 'scheduled') {
+        const dEl = document.getElementById('blockScheduleDateInput');
+        const tEl = document.getElementById('blockScheduleTimeInput');
+        if (!dEl.value.trim() || !tEl.value.trim()) {
+          const def = getDefaultScheduleKst();
+          if (!dEl.value.trim()) dEl.value = def.dot;
+          if (!tEl.value.trim()) tEl.value = def.hhmm;
+        }
+      }
+    };
+
+    window.onNoticePublishModeChange = () => {
+      const mode = document.getElementById('noticePublishModeSelect').value;
+      document.getElementById('noticeScheduleBox').classList.toggle('hidden', mode !== 'scheduled');
+      document.getElementById('noticePinBannerRow').classList.toggle('hidden', mode === 'draft');
+      document.getElementById('noticeNotifyRow').classList.toggle('hidden', mode !== 'now');
+      if (mode === 'scheduled') {
+        const dEl = document.getElementById('noticeScheduleDateInput');
+        const tEl = document.getElementById('noticeScheduleTimeInput');
+        if (!dEl.value.trim() || !tEl.value.trim()) {
+          const def = getDefaultScheduleKst();
+          if (!dEl.value.trim()) dEl.value = def.dot;
+          if (!tEl.value.trim()) tEl.value = def.hhmm;
+        }
+      }
+    };
+
     window.openAddBlockModal = () => {
       document.getElementById('blockModalTitle').textContent = '새 칸(배너·영역) 추가';
       document.getElementById('editBlockId').value = '';
       document.getElementById('blockTypeGroup').classList.remove('hidden');
       document.getElementById('blockTypeSelect').value = 'custom_ad';
-      document.getElementById('blockLabelInput').value = '';
       document.getElementById('blockBadgeInput').value = '📣 청년부 광고';
       document.getElementById('blockTitleInput').value = '';
       document.getElementById('blockDescInput').value = '';
       document.getElementById('blockAudienceSelect').value = 'all';
       renderRoleChecklist('block', getLeaderGroupRoleIds());
       onBlockAudienceChange();
+      const def = getDefaultScheduleKst();
+      document.getElementById('blockPublishModeSelect').value = 'now';
+      document.getElementById('blockScheduleDateInput').value = def.dot;
+      document.getElementById('blockScheduleTimeInput').value = def.hhmm;
+      onBlockPublishModeChange();
       document.getElementById('blockNotifyInput').checked = true;
       selectedBlockTheme = 'gold';
       renderBlockThemePalette();
@@ -6535,7 +6772,6 @@
       document.getElementById('editBlockId').value = b.id;
       document.getElementById('blockTypeGroup').classList.remove('hidden');
       document.getElementById('blockTypeSelect').value = b.type || 'custom_ad';
-      document.getElementById('blockLabelInput').value = b.label || '';
       document.getElementById('blockBadgeInput').value = b.badge || '';
       document.getElementById('blockTitleInput').value = b.title || '';
       document.getElementById('blockDescInput').value = b.desc || '';
@@ -6551,6 +6787,24 @@
       document.getElementById('blockAudienceSelect').value = audVal;
       renderRoleChecklist('block', initRoles);
       onBlockAudienceChange();
+
+      const st = getPublishState(b);
+      const def = getDefaultScheduleKst();
+      if (st === 'scheduled' && b.publishAtTs) {
+        const p = tsToKstParts(b.publishAtTs);
+        document.getElementById('blockPublishModeSelect').value = 'scheduled';
+        document.getElementById('blockScheduleDateInput').value = p ? p.dot : def.dot;
+        document.getElementById('blockScheduleTimeInput').value = p ? p.hhmm : def.hhmm;
+      } else if (st === 'draft') {
+        document.getElementById('blockPublishModeSelect').value = 'draft';
+        document.getElementById('blockScheduleDateInput').value = def.dot;
+        document.getElementById('blockScheduleTimeInput').value = def.hhmm;
+      } else {
+        document.getElementById('blockPublishModeSelect').value = 'now';
+        document.getElementById('blockScheduleDateInput').value = def.dot;
+        document.getElementById('blockScheduleTimeInput').value = def.hhmm;
+      }
+      onBlockPublishModeChange();
 
       document.getElementById('blockNotifyInput').checked = true;
       selectedBlockTheme = b.theme || 'dark';
@@ -6617,9 +6871,41 @@
       const next = structuredClone(blocks);
       const b = next.find(x => x.id === id);
       if (!b) return;
-      b.hiddenOnHome = !b.hiddenOnHome;
-      const alertObj = !b.hiddenOnHome ? { title: `📌 ${b.label}`, body: b.title || '메인 화면에 새 칸이 표시되었습니다.', audience: b.audience || 'all', targetRoles: Array.isArray(b.targetRoles) ? b.targetRoles : [] } : null;
-      await saveBlocksToCloud(next, b.hiddenOnHome ? `[${b.label}] 칸을 숨겼습니다.` : `[${b.label}] 칸을 메인 화면에 띄웠습니다!`, alertObj);
+      const curState = getPublishState(b);
+      const dispName = getBlockDisplayLabel(b);
+      if (curState === 'live') {
+        b.publishMode = 'draft';
+        b.publishAtTs = 0;
+        b.hiddenOnHome = true;
+        await saveBlocksToCloud(next, `[${dispName}] 칸을 임시저장(숨김)으로 전환했습니다.`, null);
+      } else {
+        b.publishMode = 'now';
+        b.publishAtTs = 0;
+        b.hiddenOnHome = false;
+        const alertObj = {
+          title: `📌 ${dispName}`,
+          body: b.desc || b.title || '메인 화면에 새 소식이 표시되었습니다.',
+          audience: b.audience || 'all',
+          targetRoles: Array.isArray(b.targetRoles) ? b.targetRoles : []
+        };
+        await saveBlocksToCloud(next, `[${dispName}] 칸을 지금 바로 게시했습니다!`, alertObj);
+      }
+    };
+
+    window.publishNoticeNow = async (id) => {
+      const n = notices.find(x => String(x.id) === String(id));
+      if (!n) return;
+      try {
+        await db.collection('notices').doc(String(id)).update({
+          publishMode: 'now',
+          publishAtTs: 0,
+          alertTs: Date.now()
+        });
+        await ensureHomeBlocksExistForTypes(['notice_list']);
+        showToast(`[${n.title}] 공지를 지금 바로 게시했습니다!`);
+      } catch (err) {
+        handleDbError(err, '공지 바로 게시');
+      }
     };
 
     window.pinNoticeToHomeBanner = async (id) => {
@@ -6632,74 +6918,97 @@
             batch.update(db.collection('notices').doc(String(item.id)), { pinned: false });
           }
         });
-        batch.update(db.collection('notices').doc(String(id)), { pinned: true, alertTs: Date.now() });
+        batch.update(db.collection('notices').doc(String(id)), {
+          pinned: true,
+          publishMode: 'now',
+          publishAtTs: 0,
+          alertTs: Date.now()
+        });
         await batch.commit();
         await ensureHomeBlocksExistForTypes(['hero_notice', 'notice_list']);
         showToast('메인 화면 상단 배너에 바로 띄웠습니다!');
       } catch (err) { handleDbError(err, '배너 고정'); }
     };
 
-    document.getElementById('saveBlockBtn').addEventListener('click', () => {
+    document.getElementById('saveBlockBtn').addEventListener('click', async () => {
       const id = document.getElementById('editBlockId').value;
       const type = document.getElementById('blockTypeSelect').value;
-      const label = document.getElementById('blockLabelInput').value.trim();
       const badge = document.getElementById('blockBadgeInput').value.trim();
       const title = document.getElementById('blockTitleInput').value.trim();
       const desc = document.getElementById('blockDescInput').value.trim();
       const audience = document.getElementById('blockAudienceSelect').value || 'all';
       const targetRoles = audience === 'roles' ? getSelectedRoleIds('block') : [];
+      const publishMode = document.getElementById('blockPublishModeSelect').value || 'now';
       const notify = document.getElementById('blockNotifyInput').checked;
-      if (!label) return showToast('관리용 블록 이름을 입력해 주세요.');
+
       if (audience === 'roles' && targetRoles.length === 0) {
         return showToast('볼 수 있는 역할을 1개 이상 선택해 주세요.');
       }
-      if (!id && type !== 'hero_notice' && type !== 'notice_list' && !title) {
+      if (type !== 'hero_notice' && type !== 'notice_list' && !title) {
         return showToast('배너 제목을 입력해 주세요.');
       }
 
-      document.getElementById('blockModal').classList.remove('open');
-      openHomePublishConfirm(
-        `<b>[${escapeHtml(label)}]</b> 칸을 메인 화면에 바로 띄우시겠습니까?<br><span style="font-size:12px; color:#475569;">띄우기를 누르면 선택한 대상의 메인 홈에 즉시 표시되고 알림이 전송됩니다.</span>`,
-        '✅ 네, 메인 화면에 바로 띄우기',
-        '숨김 상태로 저장 (나중에 띄우기)',
-        async (showOnHome) => {
-          const next = structuredClone(blocks);
-          if (id) {
-            const b = next.find(x => x.id === id);
-            if (b) {
-              b.type = type;
-              b.label = label;
-              b.badge = badge;
-              b.title = title;
-              b.desc = desc;
-              b.theme = selectedBlockTheme;
-              b.audience = audience;
-              b.targetRoles = targetRoles;
-              b.hiddenOnHome = !showOnHome;
-            }
-          } else {
-            next.unshift({
-              id: 'blk_' + Date.now(),
-              type,
-              label,
-              badge,
-              title: title || (type === 'notice_list' ? '📢 공지 · 광고 · 소식' : ''),
-              desc,
-              theme: selectedBlockTheme,
-              audience,
-              targetRoles,
-              hiddenOnHome: !showOnHome
-            });
-          }
-          const alertObj = (showOnHome && notify) ? {
-            title: `📌 ${label}`,
-            body: title || desc || '메인 홈 배너가 업데이트되었습니다.',
-            audience,
-            targetRoles
-          } : null;
-          await saveBlocksToCloud(next, showOnHome ? '메인 화면에 바로 띄웠습니다!' : '숨김 상태로 저장했습니다.', alertObj);
+      let publishAtTs = 0;
+      if (publishMode === 'scheduled') {
+        const dRaw = document.getElementById('blockScheduleDateInput').value;
+        const tRaw = document.getElementById('blockScheduleTimeInput').value;
+        publishAtTs = kstDateTimeToTs(dRaw, tRaw);
+        if (!publishAtTs) return showToast('예약 날짜와 시각(한국시간)을 올바르게 입력해 주세요.');
+        if (publishAtTs <= Date.now()) return showToast('예약 시각은 현재 한국시간보다 미래로 설정해 주세요.');
+      }
+
+      const finalTitle = title || (type === 'notice_list' ? '📢 공지 · 광고 · 소식' : '');
+      const autoLabel = (type === 'hero_notice')
+        ? (BLOCK_TYPE_NAMES.hero_notice)
+        : (finalTitle || BLOCK_TYPE_NAMES[type] || '배너·칸');
+      const hiddenOnHome = publishMode === 'draft';
+
+      const next = structuredClone(blocks);
+      if (id) {
+        const b = next.find(x => x.id === id);
+        if (b) {
+          b.type = type;
+          b.label = autoLabel;
+          b.badge = badge;
+          b.title = finalTitle;
+          b.desc = desc;
+          b.theme = selectedBlockTheme;
+          b.audience = audience;
+          b.targetRoles = targetRoles;
+          b.publishMode = publishMode;
+          b.publishAtTs = publishAtTs;
+          b.hiddenOnHome = hiddenOnHome;
         }
-      );
+      } else {
+        next.unshift({
+          id: 'blk_' + Date.now(),
+          type,
+          label: autoLabel,
+          badge,
+          title: finalTitle,
+          desc,
+          theme: selectedBlockTheme,
+          audience,
+          targetRoles,
+          publishMode,
+          publishAtTs,
+          hiddenOnHome
+        });
+      }
+
+      document.getElementById('blockModal').classList.remove('open');
+      const alertObj = (publishMode === 'now' && notify) ? {
+        title: `📌 ${autoLabel}`,
+        body: desc || finalTitle || '메인 홈 배너가 업데이트되었습니다.',
+        audience,
+        targetRoles
+      } : null;
+      const doneMsg = publishMode === 'draft'
+        ? '임시저장(숨김) 상태로 저장했습니다.'
+        : (publishMode === 'scheduled'
+          ? `⏰ ${tsToKstParts(publishAtTs).shortLabel}에 자동 공개되도록 예약했습니다!`
+          : '메인 화면에 바로 게시했습니다!');
+      await saveBlocksToCloud(next, doneMsg, alertObj);
     });
 
 
@@ -6739,7 +7048,13 @@
       document.getElementById('noticeAudienceSelect').value = 'all';
       renderRoleChecklist('notice', getLeaderGroupRoleIds());
       onNoticeAudienceChange();
+      const def = getDefaultScheduleKst();
+      document.getElementById('noticePublishModeSelect').value = 'now';
+      document.getElementById('noticeScheduleDateInput').value = def.dot;
+      document.getElementById('noticeScheduleTimeInput').value = def.hhmm;
+      document.getElementById('noticePinBannerInput').checked = true;
       document.getElementById('noticeNotifyInput').checked = true;
+      onNoticePublishModeChange();
       document.getElementById('noticeModal').classList.add('open');
     };
 
@@ -6764,11 +7079,30 @@
       document.getElementById('noticeAudienceSelect').value = audVal;
       renderRoleChecklist('notice', initRoles);
       onNoticeAudienceChange();
+
+      const st = getPublishState(n);
+      const def = getDefaultScheduleKst();
+      if (st === 'scheduled' && n.publishAtTs) {
+        const p = tsToKstParts(n.publishAtTs);
+        document.getElementById('noticePublishModeSelect').value = 'scheduled';
+        document.getElementById('noticeScheduleDateInput').value = p ? p.dot : def.dot;
+        document.getElementById('noticeScheduleTimeInput').value = p ? p.hhmm : def.hhmm;
+      } else if (st === 'draft') {
+        document.getElementById('noticePublishModeSelect').value = 'draft';
+        document.getElementById('noticeScheduleDateInput').value = def.dot;
+        document.getElementById('noticeScheduleTimeInput').value = def.hhmm;
+      } else {
+        document.getElementById('noticePublishModeSelect').value = 'now';
+        document.getElementById('noticeScheduleDateInput').value = def.dot;
+        document.getElementById('noticeScheduleTimeInput').value = def.hhmm;
+      }
+      document.getElementById('noticePinBannerInput').checked = !!n.pinned;
       document.getElementById('noticeNotifyInput').checked = true;
+      onNoticePublishModeChange();
       document.getElementById('noticeModal').classList.add('open');
     };
 
-    document.getElementById('saveNoticeBtn').addEventListener('click', () => {
+    document.getElementById('saveNoticeBtn').addEventListener('click', async () => {
       const editId = document.getElementById('editNoticeId').value;
       const rawCat = document.getElementById('noticeCategory').value;
       const category = rawCat === '__custom__'
@@ -6779,57 +7113,65 @@
       const body = document.getElementById('noticeBodyInput').value.trim();
       const audience = document.getElementById('noticeAudienceSelect').value || 'all';
       const targetRoles = audience === 'roles' ? getSelectedRoleIds('notice') : [];
+      const publishMode = document.getElementById('noticePublishModeSelect').value || 'now';
+      const pinChecked = document.getElementById('noticePinBannerInput').checked;
       const notify = document.getElementById('noticeNotifyInput').checked;
+
       if (!title || !body) return showToast('제목과 내용을 모두 입력해 주세요.');
       if (audience === 'roles' && targetRoles.length === 0) {
         return showToast('이 공지를 볼 수 있는 역할을 1개 이상 선택해 주세요.');
       }
 
+      let publishAtTs = 0;
+      if (publishMode === 'scheduled') {
+        const dRaw = document.getElementById('noticeScheduleDateInput').value;
+        const tRaw = document.getElementById('noticeScheduleTimeInput').value;
+        publishAtTs = kstDateTimeToTs(dRaw, tRaw);
+        if (!publishAtTs) return showToast('예약 날짜와 시각(한국시간)을 올바르게 입력해 주세요.');
+        if (publishAtTs <= Date.now()) return showToast('예약 시각은 현재 한국시간보다 미래로 설정해 주세요.');
+      }
+
+      const pinned = publishMode === 'draft' ? false : !!pinChecked;
+      const alertTs = (publishMode === 'now' && notify) ? Date.now() : 0;
+
       document.getElementById('noticeModal').classList.remove('open');
-      openHomePublishConfirm(
-        `<b>[${escapeHtml(category)}] ${escapeHtml(title)}</b><br>이 글을 메인 화면 상단 배너에 바로 띄우시겠습니까?`,
-        '✅ 네, 메인 화면에 바로 띄우기',
-        '공지 목록에만 저장',
-        async (showOnHome) => {
-          try {
-            lastSelfNoticeEditTs = Date.now();
-            const pinned = !!showOnHome;
-            const alertTs = (notify && showOnHome) ? Date.now() : 0;
-            const batch = db.batch();
-            if (pinned) {
-              notices.forEach(n => {
-                if (n.pinned && String(n.id) !== String(editId)) {
-                  batch.update(db.collection('notices').doc(String(n.id)), { pinned: false });
-                }
-              });
+      try {
+        lastSelfNoticeEditTs = Date.now();
+        const batch = db.batch();
+        if (pinned && publishMode === 'now') {
+          notices.forEach(n => {
+            if (n.pinned && String(n.id) !== String(editId)) {
+              batch.update(db.collection('notices').doc(String(n.id)), { pinned: false });
             }
-
-            if (editId) {
-              const updateData = { category, title, body, pinned, audience, targetRoles };
-              if (alertTs) updateData.alertTs = alertTs;
-              batch.update(db.collection('notices').doc(String(editId)), updateData);
-              await batch.commit();
-            } else {
-              const newId = String(Date.now());
-              const minOrder = notices.length > 0 ? Math.min(...notices.map(n => Number(n.order || 0))) - 1 : 0;
-              batch.set(db.collection('notices').doc(newId), {
-                id: newId, category, title, body, date: formatToday(),
-                pinned, order: minOrder, alertTs, audience, targetRoles
-              });
-              await batch.commit();
-            }
-
-            if (showOnHome) {
-              await ensureHomeBlocksExistForTypes(['hero_notice', 'notice_list']);
-              showToast('메인 화면 배너에 바로 띄웠습니다!');
-            } else {
-              showToast('공지 목록에 저장되었습니다.');
-            }
-          } catch (err) {
-            handleDbError(err, '공지 저장');
-          }
+          });
         }
-      );
+
+        if (editId) {
+          const updateData = { category, title, body, pinned, audience, targetRoles, publishMode, publishAtTs };
+          if (alertTs) updateData.alertTs = alertTs;
+          batch.update(db.collection('notices').doc(String(editId)), updateData);
+          await batch.commit();
+        } else {
+          const newId = String(Date.now());
+          const minOrder = notices.length > 0 ? Math.min(...notices.map(n => Number(n.order || 0))) - 1 : 0;
+          batch.set(db.collection('notices').doc(newId), {
+            id: newId, category, title, body, date: formatToday(),
+            pinned, order: minOrder, alertTs, audience, targetRoles, publishMode, publishAtTs
+          });
+          await batch.commit();
+        }
+
+        if (publishMode === 'now') {
+          await ensureHomeBlocksExistForTypes(pinned ? ['hero_notice', 'notice_list'] : ['notice_list']);
+          showToast(pinned ? '메인 상단 배너와 공지 목록에 바로 게시했습니다!' : '공지 목록에 바로 게시했습니다!');
+        } else if (publishMode === 'scheduled') {
+          showToast(`⏰ ${tsToKstParts(publishAtTs).shortLabel}에 자동 공개되도록 예약했습니다!`);
+        } else {
+          showToast('임시저장(숨김) 상태로 저장했습니다.');
+        }
+      } catch (err) {
+        handleDbError(err, '공지 저장');
+      }
     });
 
     window.deleteNotice = async (id) => {
@@ -10446,7 +10788,30 @@ ${m.body}`;
       }
     }
 
-    // --- Attendance Schedule & Home Card (방식 A) ---
+    // --- Attendance Schedule & Home Card (방식 A · KST 실제 요일 연동 + 예배명 개별 변경) ---
+    function getCustomSessionLabel(sessionId, fallbackLabel) {
+      const overrides = (attendanceConfig && attendanceConfig.sessionNames && typeof attendanceConfig.sessionNames === 'object')
+        ? attendanceConfig.sessionNames
+        : {};
+      const custom = overrides[String(sessionId)];
+      return (custom && String(custom).trim()) ? String(custom).trim() : fallbackLabel;
+    }
+
+    function getKstDateOffsetInfo(offsetDays) {
+      const kst = new Date(Date.now() + 9 * 60 * 60 * 1000 + Number(offsetDays || 0) * 86400000);
+      const y = kst.getUTCFullYear();
+      const m = String(kst.getUTCMonth() + 1).padStart(2, '0');
+      const d = String(kst.getUTCDate()).padStart(2, '0');
+      const dow = kst.getUTCDay();
+      return {
+        y, m, d, dow,
+        dowShort: DAY_SHORT_KO[dow],
+        dot: `${y}.${m}.${d}`,
+        iso: `${y}-${m}-${d}`,
+        compact: `${y}${m}${d}`
+      };
+    }
+
     function getActiveAttendanceSessions() {
       const now = getKstNowInfo();
       const cfg = attendanceConfig || DEFAULT_ATTENDANCE_CONFIG;
@@ -10456,12 +10821,15 @@ ${m.body}`;
         const regDay = Number(cfg.regularDay ?? 0);
         const start = String(cfg.regularStart || '14:00');
         const end = String(cfg.regularEnd || '15:30');
-        const label = String(cfg.regularLabel || '주일 예배').trim() || '주일 예배';
+        const baseLabel = String(cfg.regularLabel || '주일 예배').trim() || '주일 예배';
         if (now.dow === regDay && now.hhmm >= start && now.hhmm <= end) {
+          const sessionId = `${now.compact}_regular`;
+          const label = getCustomSessionLabel(sessionId, baseLabel);
           list.push({
-            sessionId: `${now.compact}_regular`,
+            sessionId,
             date: now.dot,
-            colTitle: `${now.dot} (${label})`,
+            colTitle: `${now.dot}(${DAY_SHORT_KO[now.dow]}) ${label}`,
+            displayTitle: `${now.dot} (${DAY_SHORT_KO[now.dow]}) · ${label}`,
             label,
             start,
             end,
@@ -10476,11 +10844,14 @@ ${m.body}`;
         const end = String(ev.end || '23:59');
         if (String(ev.date) === now.iso && now.hhmm >= start && now.hhmm <= end) {
           const dotDate = String(ev.date).replace(/-/g, '.');
-          const title = String(ev.title || '특별 행사').trim();
+          const dow = getDowForDateStr(dotDate);
+          const dowPart = dow >= 0 ? `(${DAY_SHORT_KO[dow]})` : '';
+          const title = getCustomSessionLabel(String(ev.id), String(ev.title || '특별 행사').trim());
           list.push({
             sessionId: String(ev.id),
             date: dotDate,
-            colTitle: `${dotDate} (${title})`,
+            colTitle: `${dotDate}${dowPart} ${title}`,
+            displayTitle: `${formatDateWithDowKo(dotDate)} · ${title}`,
             label: title,
             start,
             end,
@@ -10537,7 +10908,7 @@ ${m.body}`;
 
     window.goToAttendanceManage = () => {
       currentMainTab = 'manage';
-      currentManageSubTab = 'attendance';
+      currentManageSubTab = 'worship';
       applyScreen();
     };
 
@@ -10633,8 +11004,11 @@ ${m.body}`;
     // 30초마다 홈 출석 카드 표시/숨김 자동 갱신 (14:00 시작 / 15:30 종료 자동 반영)
     setInterval(() => {
       const u = getCurrentUser();
-      if (u && currentMainTab === 'home') {
+      if (!u) return;
+      if (currentMainTab === 'home') {
         renderHomeView(u);
+      } else if (currentMainTab === 'manage' && currentManageSubTab === 'content') {
+        renderManageContent(document.getElementById('manageContent'), u);
       }
     }, 30000);
 
@@ -10798,38 +11172,62 @@ ${m.body}`;
       const map = new Map();
       const now = getKstNowInfo();
       const cfg = attendanceConfig || DEFAULT_ATTENDANCE_CONFIG;
-      const regLabel = String(cfg.regularLabel || '주일 예배').trim() || '주일 예배';
+      const regDay = Number(cfg.regularDay ?? 0);
+      const baseRegLabel = String(cfg.regularLabel || '주일 예배').trim() || '주일 예배';
 
-      // 오늘의 정기 세션(또는 오늘 날짜 기본 옵션)
-      const todayRegId = `${now.compact}_regular`;
-      map.set(todayRegId, {
-        sessionId: todayRegId,
-        date: now.dot,
-        colTitle: `${now.dot} (${regLabel})`,
-        label: regLabel
-      });
+      // 1) 정기 예배: 한국시간(KST) 기준 실제 설정 요일에 해당하는 날짜만 자동 생성 (최근 지난 해당 요일 + 다가오는 해당 요일)
+      if (cfg.regularEnabled !== false) {
+        const daysSince = (now.dow - regDay + 7) % 7; // 오늘이 해당 요일이면 0, 화요일이고 일요일 설정이면 2
+        const daysUntil = daysSince === 0 ? 7 : (7 - daysSince);
+        const regularOffsets = daysSince === 0 ? [0, 7] : [-daysSince, daysUntil];
 
-      // 등록된 특별 행사들
+        regularOffsets.forEach(off => {
+          const info = getKstDateOffsetInfo(off);
+          const sessId = `${info.compact}_regular`;
+          const label = getCustomSessionLabel(sessId, baseRegLabel);
+          const tagNote = off === 0 ? ' · 오늘' : (off > 0 ? ' · 예정' : '');
+          map.set(sessId, {
+            sessionId: sessId,
+            date: info.dot,
+            colTitle: `${info.dot}(${info.dowShort}) ${label}`,
+            displayTitle: `${info.dot} (${info.dowShort}) · ${label}${tagNote}`,
+            label,
+            isSpecial: false
+          });
+        });
+      }
+
+      // 2) 등록된 특별 행사들 (실제 요일 자동 표시)
       (Array.isArray(cfg.specialEvents) ? cfg.specialEvents : []).forEach(ev => {
         if (!ev || !ev.id || !ev.date) return;
         const dotDate = String(ev.date).replace(/-/g, '.');
-        const title = String(ev.title || '특별 행사').trim();
+        const dow = getDowForDateStr(dotDate);
+        const dowPart = dow >= 0 ? `(${DAY_SHORT_KO[dow]})` : '';
+        const title = getCustomSessionLabel(String(ev.id), String(ev.title || '특별 행사').trim());
         map.set(String(ev.id), {
           sessionId: String(ev.id),
           date: dotDate,
-          colTitle: `${dotDate} (${title})`,
-          label: title
+          colTitle: `${dotDate}${dowPart} ${title}`,
+          displayTitle: `${formatDateWithDowKo(dotDate)} · ${title}`,
+          label: title,
+          isSpecial: true
         });
       });
 
-      // 이미 출석 기록이 존재하는 과거 세션들
+      // 3) 이미 출석 기록이 존재하는 과거 세션들
       attendanceRecords.forEach(r => {
         if (r.sessionId && !map.has(String(r.sessionId))) {
+          const dotDate = String(r.date || '').replace(/-/g, '.');
+          const dow = getDowForDateStr(dotDate);
+          const dowPart = dow >= 0 ? `(${DAY_SHORT_KO[dow]})` : '';
+          const label = getCustomSessionLabel(String(r.sessionId), String(r.label || '예배').trim());
           map.set(String(r.sessionId), {
             sessionId: String(r.sessionId),
-            date: r.date || '',
-            colTitle: r.colTitle || r.date || String(r.sessionId),
-            label: r.label || '예배'
+            date: dotDate,
+            colTitle: r.colTitle || `${dotDate}${dowPart} ${label}`,
+            displayTitle: `${formatDateWithDowKo(dotDate)} · ${label}`,
+            label,
+            isSpecial: !String(r.sessionId).endsWith('_regular')
           });
         }
       });
@@ -10837,57 +11235,83 @@ ${m.body}`;
       return Array.from(map.values()).sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
     }
 
-    function renderManageAttendance(el, user) {
+    function renderManageQr(el, user) {
+      const todayInfo = getKstNowInfo();
+      const todayLabel = `${todayInfo.dot} (${DAY_SHORT_KO[todayInfo.dow]})`;
+      const qrReady = !!(inviteQrDoc && String(inviteQrDoc.date) === todayInfo.dot && inviteQrDoc.token);
+
+      el.innerHTML = `
+        <div class="section-head">
+          <h2 class="section-title">📲 오늘의 초대 QR (매일 00:00 자동 갱신)</h2>
+          <span class="tag ${qrReady ? 'green' : 'warm'}">${qrReady ? `${todayInfo.dot} 활성` : '생성 대기'}</span>
+        </div>
+        <div class="card">
+          <div style="font-size:13px; color:#334155; line-height:1.6; margin-bottom:12px;">
+            <div>📅 <b>유효 날짜:</b> ${escapeHtml(todayLabel)} (한국시간 23:59까지)</div>
+            ${inviteQrDoc && inviteQrDoc.updatedAt ? `<div>🔄 <b>최근 발급:</b> ${escapeHtml(inviteQrDoc.updatedAt)}${inviteQrDoc.updatedBy ? ` (${escapeHtml(inviteQrDoc.updatedBy)})` : ''}</div>` : ''}
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button class="btn-sm primary" type="button" style="flex:1; padding:10px;" onclick="openInviteQrModal()">📲 QR 보기 · 공유</button>
+            <button class="btn-sm" type="button" style="padding:10px 12px;" onclick="copyInviteQrLink()">🔗 링크 복사</button>
+            <button class="btn-sm warn" type="button" style="width:100%; padding:10px; margin-top:2px;" onclick="regenerateInviteQrByAdmin()">🔄 새 QR 즉시 재발급 (기존 QR 즉시 폐기)</button>
+          </div>
+        </div>
+
+        <div class="card" style="background:#F8FAFC;">
+          <div style="font-size:13.5px; font-weight:800; color:#0F172A; margin-bottom:7px;">ℹ️ 초대 QR 운영 안내</div>
+          <div style="font-size:12px; color:#475569; line-height:1.65;">
+            • 신규 회원가입은 <b>오늘 유효한 초대 QR 코드</b>를 스캔해 접속해야만 신청할 수 있습니다.<br>
+            • 한국시간 <b>자정(00:00)</b>이 지나면 자동으로 새 QR이 생성되며 어제 QR은 만료됩니다.<br>
+            • 외부 유출이 의심될 때 <b>즉시 재발급</b>을 누르면 이전 QR은 그 즉시 사용 불가 처리됩니다.<br>
+            • 이미 가입·승인된 기존 회원은 QR 없이 평소처럼 성명·비밀번호로 로그인합니다.
+          </div>
+        </div>
+      `;
+    }
+
+    function renderManageWorship(el, user) {
       const cfg = attendanceConfig || DEFAULT_ATTENDANCE_CONFIG;
       const sessions = getAllAttendanceSessionOptions();
       if (!selectedAdminAttSessionKey || !sessions.some(s => s.sessionId === selectedAdminAttSessionKey)) {
-        selectedAdminAttSessionKey = sessions[0] ? sessions[0].sessionId : '';
+        // 오늘 날짜가 있으면 오늘, 아니면 가장 최근 과거/예정 항목 중 오늘과 가장 가까운 항목 선택
+        const todayDot = getKstNowInfo().dot;
+        const todayMatch = sessions.find(s => s.date === todayDot);
+        const pastOrToday = sessions.find(s => s.date <= todayDot);
+        selectedAdminAttSessionKey = (todayMatch || pastOrToday || sessions[0] || {}).sessionId || '';
       }
       const curSess = sessions.find(s => s.sessionId === selectedAdminAttSessionKey) || sessions[0];
       const sessRecords = curSess
         ? attendanceRecords.filter(r => String(r.sessionId) === String(curSess.sessionId))
             .sort((a, b) => String(a.time || '').localeCompare(String(b.time || '')))
         : [];
-      const todayDot = getKstDateParts().dot;
-      const qrReady = !!(inviteQrDoc && String(inviteQrDoc.date) === todayDot && inviteQrDoc.token);
+      const filteredSessions = sessions.filter(s => {
+        if (!adminAttSessionSearchQuery) return true;
+        const q = adminAttSessionSearchQuery.toLowerCase();
+        return (s.displayTitle || s.colTitle || '').toLowerCase().includes(q);
+      });
 
       el.innerHTML = `
-        <!-- 1) 오늘의 초대 QR 관리 -->
+        <!-- 1) 예배 · 출석 현황 & 예배명 변경 -->
         <div class="section-head">
-          <h2 class="section-title">📲 오늘의 초대 QR (매일 00:00 갱신)</h2>
-          <span class="tag ${qrReady ? 'green' : 'warm'}">${qrReady ? `${todayDot} 활성` : '생성 대기'}</span>
-        </div>
-        <div class="card">
-          <div style="font-size:12.5px; color:#475569; line-height:1.55; margin-bottom:10px;">
-            신규 회원가입은 오늘 유효한 초대 QR로 접속해야 가능합니다. 회원·관리자 모두 상단 QR 아이콘으로 공유할 수 있으며, <b>즉시 재발급은 관리자 전용</b>입니다.
-          </div>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button class="btn-sm primary" type="button" onclick="openInviteQrModal()">📲 QR 보기 · 공유</button>
-            <button class="btn-sm" type="button" onclick="copyInviteQrLink()">🔗 링크 복사</button>
-            <button class="btn-sm warn" type="button" onclick="regenerateInviteQrByAdmin()">🔄 즉시 재발급</button>
-          </div>
-        </div>
-
-        <div class="manage-divider"></div>
-
-        <!-- 2) 출석 현황 & 추가 · 수정 · 삭제 -->
-        <div class="section-head">
-          <h2 class="section-title">✅ 출석 현황 (${sessRecords.length}명)</h2>
+          <h2 class="section-title">⛪ 예배 · 출석 현황 (${sessRecords.length}명)</h2>
           ${curSess ? `<button class="btn-admin" type="button" onclick="openAddAdminAttendanceModal()">+ 출석 추가</button>` : ''}
         </div>
         <div class="card">
           <div class="form-group" style="margin-bottom:10px;">
-            <label class="form-label" for="adminAttSessionSelect">조회할 예배 · 행사 (검색 입력 또는 목록 선택)</label>
-            <input id="adminAttSessionSearchInput" class="form-input" style="margin-bottom:6px; padding:8px 11px; font-size:13px;" value="${escapeHtml(adminAttSessionSearchQuery)}" placeholder="날짜 또는 행사명 검색 (예: 2026.11, 수련회)" oninput="onAdminAttSessionSearchInput(this.value)" />
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:6px;">
+              <label class="form-label" for="adminAttSessionSelect" style="margin-bottom:0;">예배 · 행사 선택 (한국시간 실제 요일 자동 표시)</label>
+              ${curSess ? `<button class="btn-sm" type="button" style="padding:4px 8px; font-size:11px;" onclick="renameSelectedWorshipSession()">✏️ 예배명 변경</button>` : ''}
+            </div>
+            <input id="adminAttSessionSearchInput" class="form-input" style="margin-bottom:6px; padding:8px 11px; font-size:13px;" value="${escapeHtml(adminAttSessionSearchQuery)}" placeholder="날짜 또는 예배·행사명 검색 (예: 2026.11, 주일, 수련회)" oninput="onAdminAttSessionSearchInput(this.value)" />
             <select id="adminAttSessionSelect" class="form-select" onchange="onSelectAdminAttSession(this.value)">
-              ${sessions.filter(s => !adminAttSessionSearchQuery || s.colTitle.toLowerCase().includes(adminAttSessionSearchQuery.toLowerCase())).map(s => `
-                <option value="${escapeHtml(s.sessionId)}" ${s.sessionId === selectedAdminAttSessionKey ? 'selected' : ''}>${escapeHtml(s.colTitle)}</option>
+              ${filteredSessions.map(s => `
+                <option value="${escapeHtml(s.sessionId)}" ${s.sessionId === selectedAdminAttSessionKey ? 'selected' : ''}>${escapeHtml(s.displayTitle || s.colTitle)}</option>
               `).join('')}
             </select>
           </div>
 
           ${sessRecords.length === 0
-            ? '<div style="text-align:center; padding:18px 8px; color:#64748B; font-size:13px;">해당 일정에 기록된 출석자가 없습니다.</div>'
+            ? '<div style="text-align:center; padding:18px 8px; color:#64748B; font-size:13px;">해당 예배·행사에 기록된 출석자가 없습니다.</div>'
             : sessRecords.map(r => `
                 <div class="att-record-row">
                   <div>
@@ -10912,9 +11336,9 @@ ${m.body}`;
 
         <div class="manage-divider"></div>
 
-        <!-- 3) 출석 요일 · 시간 · 특별 행사 설정 -->
+        <!-- 2) 정기 예배 · 특별 행사 출석 시간 설정 -->
         <div class="section-head">
-          <h2 class="section-title">⏰ 출석 가능 요일 · 시간 설정</h2>
+          <h2 class="section-title">⏰ 정기 예배 · 특별 행사 설정</h2>
           <button class="btn-admin" type="button" onclick="openSpecialEventModal()">+ 수련회·행사 추가</button>
         </div>
         <div class="card">
@@ -10937,7 +11361,7 @@ ${m.body}`;
               <input id="cfgAttRegularDayText" class="form-input" style="padding:7px 10px; font-size:12.5px;" maxlength="6" value="${escapeHtml(DAY_NAMES_KO[Number(cfg.regularDay ?? 0)] || '일요일')}" placeholder="직접 입력 (예: 일요일)" oninput="onRegularDayTextInput(this.value)" />
             </div>
             <div class="form-group">
-              <label class="form-label" for="cfgAttRegularLabel">예배 명칭</label>
+              <label class="form-label" for="cfgAttRegularLabel">기본 예배 명칭</label>
               <input id="cfgAttRegularLabel" class="form-input" maxlength="16" value="${escapeHtml(cfg.regularLabel || '주일 예배')}" />
             </div>
           </div>
@@ -10959,19 +11383,22 @@ ${m.body}`;
               </div>
             </div>
           </div>
-          <button id="saveAttScheduleBtn" class="btn-full btn-dark" type="button" style="padding:11px; font-size:13.5px;" onclick="handleSaveAttendanceSchedule()">정기 출석 시간 저장</button>
+          <button id="saveAttScheduleBtn" class="btn-full btn-dark" type="button" style="padding:11px; font-size:13.5px;" onclick="handleSaveAttendanceSchedule()">💾 정기 예배 설정 저장</button>
 
-          <div style="margin-top:14px; padding-top:12px; border-top:1px dashed #E2E8F0;">
-            <div style="font-size:12.5px; font-weight:800; color:#0F172A; margin-bottom:8px;">📅 등록된 수련회 · 특별 행사 (${(cfg.specialEvents || []).length}개)</div>
+          <div style="margin-top:14px; padding-top:12px; border-top:1px solid #F1F5F9;">
+            <div style="font-size:12.5px; font-weight:800; color:#334155; margin-bottom:8px;">📅 등록된 특별 행사 · 수련회 (${(cfg.specialEvents || []).length}건)</div>
             ${(cfg.specialEvents || []).length === 0
-              ? '<div style="font-size:12px; color:#64748B;">등록된 특별 행사 출석 일정이 없습니다.</div>'
+              ? '<div style="font-size:12px; color:#94A3B8; text-align:center; padding:8px 0;">등록된 특별 행사가 없습니다.</div>'
               : (cfg.specialEvents || []).map(ev => `
                   <div class="att-record-row">
                     <div>
-                      <div style="font-size:13.5px; font-weight:800; color:#0F172A;">${escapeHtml(ev.title)}</div>
-                      <div style="font-size:11.5px; color:#64748B;">${escapeHtml(ev.date)} · ${escapeHtml(ev.start)} ~ ${escapeHtml(ev.end)}</div>
+                      <div style="font-size:13.5px; font-weight:800; color:#0F172A;">${escapeHtml(getCustomSessionLabel(ev.id, ev.title))}</div>
+                      <div style="font-size:11.5px; color:#64748B;">${escapeHtml(formatDateWithDowKo(ev.date))} · ${escapeHtml(ev.start)}~${escapeHtml(ev.end)}</div>
                     </div>
-                    <button class="btn-sm danger" type="button" onclick="deleteSpecialEvent('${ev.id}')">삭제</button>
+                    <div style="display:flex; gap:5px;">
+                      <button class="btn-sm" type="button" onclick="renameSpecialEvent('${ev.id}')">✏️ 이름 변경</button>
+                      <button class="btn-sm danger" type="button" onclick="deleteSpecialEvent('${ev.id}')">삭제</button>
+                    </div>
                   </div>
                 `).join('')}
           </div>
@@ -10979,7 +11406,7 @@ ${m.body}`;
 
         <div class="manage-divider"></div>
 
-        <!-- 4) 구글 시트 자동 연동 설정 -->
+        <!-- 3) 구글 시트 자동 연동 설정 -->
         <div class="section-head">
           <h2 class="section-title">📊 구글 시트 자동 연동</h2>
           <span class="tag ${cfg.sheetUrl ? 'green' : 'slate'}">${cfg.sheetUrl ? '연동 설정됨' : '미연동'}</span>
@@ -11000,6 +11427,58 @@ ${m.body}`;
           </div>
         </div>
       `;
+    }
+
+    window.renameSelectedWorshipSession = async () => {
+      const sessions = getAllAttendanceSessionOptions();
+      const curSess = sessions.find(s => s.sessionId === selectedAdminAttSessionKey) || sessions[0];
+      if (!curSess) return;
+      const input = prompt(`[${formatDateWithDowKo(curSess.date)}] 예배·행사 이름을 입력해 주세요.
+(예: 성탄 감사예배, 청년부 헌신예배, 송구영신예배)`, curSess.label);
+      if (input === null) return;
+      const newLabel = input.trim();
+      if (!newLabel) return showToast('예배·행사 이름을 입력해 주세요.');
+      await applyWorshipSessionRename(curSess.sessionId, curSess.date, newLabel, curSess.isSpecial);
+    };
+
+    window.renameSpecialEvent = async (evId) => {
+      const ev = (attendanceConfig.specialEvents || []).find(x => String(x.id) === String(evId));
+      if (!ev) return;
+      const curTitle = getCustomSessionLabel(ev.id, ev.title);
+      const input = prompt(`[${formatDateWithDowKo(ev.date)}] 행사 이름을 입력해 주세요.`, curTitle);
+      if (input === null) return;
+      const newLabel = input.trim();
+      if (!newLabel) return showToast('행사 이름을 입력해 주세요.');
+      await applyWorshipSessionRename(String(ev.id), String(ev.date).replace(/-/g, '.'), newLabel, true);
+    };
+
+    async function applyWorshipSessionRename(sessionId, dotDate, newLabel, isSpecial) {
+      try {
+        const nextOverrides = { ...(attendanceConfig.sessionNames || {}), [String(sessionId)]: newLabel };
+        const patch = { sessionNames: nextOverrides };
+        if (isSpecial) {
+          patch.specialEvents = (attendanceConfig.specialEvents || []).map(ev =>
+            String(ev.id) === String(sessionId) ? { ...ev, title: newLabel } : ev
+          );
+        }
+        await db.collection('config').doc('attendance').set(patch, { merge: true });
+
+        // 이미 기록된 출석 문서가 있으면 라벨·열 제목도 함께 동기화
+        const existingRecs = attendanceRecords.filter(r => String(r.sessionId) === String(sessionId));
+        if (existingRecs.length > 0) {
+          const dow = getDowForDateStr(dotDate);
+          const dowPart = dow >= 0 ? `(${DAY_SHORT_KO[dow]})` : '';
+          const newColTitle = `${dotDate}${dowPart} ${newLabel}`;
+          const batch = db.batch();
+          existingRecs.forEach(r => {
+            batch.update(db.collection('attendance').doc(String(r.id)), { label: newLabel, colTitle: newColTitle });
+          });
+          await batch.commit();
+        }
+        showToast(`예배·행사 이름이 [${newLabel}](으)로 변경되었습니다!`);
+      } catch (err) {
+        handleDbError(err, '예배명 변경');
+      }
     }
 
     window.onSelectAdminAttSession = (val) => {
@@ -11612,7 +12091,7 @@ ${m.body}`;
         } else if (id === 'sheet') {
           const url = String((attendanceConfig && attendanceConfig.sheetUrl) || '').trim();
           if (!url) {
-            setDiagResult(id, 'warn', '구글 시트 연동 URL이 아직 등록되지 않았습니다. [출석·QR 관리]에서 URL을 입력해 주세요.');
+            setDiagResult(id, 'warn', '구글 시트 연동 URL이 아직 등록되지 않았습니다. [예배 관리]에서 URL을 입력해 주세요.');
           } else {
             const res = await postToGoogleSheet({ action: 'test', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url, true);
             if (!res.ok) {
@@ -11815,7 +12294,7 @@ ${m.body}`;
 
     window.runSheetLiveWriteTest = async () => {
       const url = String((attendanceConfig && attendanceConfig.sheetUrl) || '').trim();
-      if (!url) return showToast('먼저 [출석·QR 관리]에서 구글 시트 URL을 저장해 주세요.');
+      if (!url) return showToast('먼저 [예배 관리]에서 구글 시트 URL을 저장해 주세요.');
       const now = getKstNowInfo();
       const colTitle = `${now.dot} (기능점검 테스트)`;
       const res = await postToGoogleSheet({
