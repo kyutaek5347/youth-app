@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=133" />
+  <link rel="manifest" href="./manifest.json?v=134" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=133" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=133" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=134" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=134" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2554,7 +2554,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=133" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=134" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3279,7 +3279,7 @@
             </div>
           </div>
           <div style="font-size:11px; color:#3730A3; margin-top:7px; line-height:1.45;">
-            지정 시각 전에는 일반 회원에게 보이지 않으며, 해당 시각에 자동으로 공개됩니다. (종료는 관리자가 직접 숨기기·수정·삭제)
+            예약된 항목은 보안상 관리자 전용 서버에 격리 보관되며, 지정 시각 이후 관리자가 앱에 접속 중이거나 열 때 즉시 자동 공개됩니다.
           </div>
         </div>
       </div>
@@ -3377,7 +3377,7 @@
             </div>
           </div>
           <div style="font-size:11px; color:#3730A3; margin-top:7px; line-height:1.45;">
-            지정 시각 전에는 일반 회원에게 보이지 않으며, 해당 시각에 자동으로 공개됩니다. (종료는 관리자가 직접 숨기기·수정·삭제)
+            예약된 항목은 보안상 관리자 전용 서버에 격리 보관되며, 지정 시각 이후 관리자가 앱에 접속 중이거나 열 때 즉시 자동 공개됩니다.
           </div>
         </div>
       </div>
@@ -3731,7 +3731,7 @@
     const authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 20;
+    const CURRENT_SCHEMA_VERSION = 21;
 
     // 매일 자정(KST) 자동 변경되는 일일 큐티 성경말씀 풀 (60편)
     const DAILY_QT_POOL = [
@@ -4356,6 +4356,42 @@
       return 'live';
     }
 
+    function normalizeAudiencePayload(item) {
+      let aud = (item && item.audience) || (item && item.type === 'leader_card' ? 'roles' : 'all');
+      let targets = Array.isArray(item && item.targetRoles) ? item.targetRoles.map(String).filter(Boolean) : [];
+      if (aud === 'leader') {
+        aud = 'roles';
+        targets = getLeaderGroupRoleIds();
+      } else if (aud !== 'roles' && aud !== 'admin') {
+        aud = 'all';
+        targets = [];
+      }
+      return { audience: aud, targetRoles: Array.from(new Set(targets)) };
+    }
+
+    function isServerRestrictedItem(item) {
+      if (!item) return true;
+      const st = getPublishState(item);
+      if (st !== 'live') return true;
+      const { audience, targetRoles } = normalizeAudiencePayload(item);
+      if (audience === 'admin') return true;
+      if (audience === 'roles' && targetRoles.length === 0) return true;
+      return false;
+    }
+
+    function computeVisibleTo(item) {
+      if (isServerRestrictedItem(item)) return [];
+      const { audience, targetRoles } = normalizeAudiencePayload(item);
+      if (audience === 'roles') return targetRoles;
+      return ['__all__'];
+    }
+
+    function stripInternalDocFields(obj) {
+      const copy = { ...obj };
+      delete copy._col;
+      return copy;
+    }
+
     function getPublishStateBadgeHtml(item) {
       const st = getPublishState(item);
       if (st === 'draft') {
@@ -4558,7 +4594,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=133" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=134" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -4581,8 +4617,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=133', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=133', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=134', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=134', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -4724,6 +4760,17 @@
     let qtCommentLikes = [];
     let lastSeenLayoutAlertTs = 0;
     let knownNoticeAlertMap = new Map();
+    let knownBlockAlertMap = new Map();
+    let knownBlockIds = new Set();
+    let blocksFirstSnap = true;
+    let unsubScopedContent = [];
+    let scopedSubMode = '';
+    let publicNoticesMap = new Map();
+    let roleOrAdminNoticesMap = new Map();
+    let publicBlocksMap = new Map();
+    let roleOrAdminBlocksMap = new Map();
+    let scheduledPromoteTimer = null;
+    let isPromotingScheduled = false;
     let members = [];
     let birthdayList = [];
     let newcomerList = [];
@@ -4844,6 +4891,7 @@
       if (memberProfileRetryTimer) { clearTimeout(memberProfileRetryTimer); memberProfileRetryTimer = null; }
       unsubCore.forEach(fn => { try { fn(); } catch {} });
       unsubCore = [];
+      clearScopedContentSubscriptions();
       coreDataSubscribed = false;
       if (unsubMembersAll) { unsubMembersAll(); unsubMembersAll = null; }
       if (unsubAdminSecret) { unsubAdminSecret(); unsubAdminSecret = null; }
@@ -5073,7 +5121,22 @@
           items: DEFAULT_ROLES,
           metaById: buildRolesMetaByIdMap(DEFAULT_ROLES)
         });
-        batch.set(db.collection('config').doc('layout'), { blocks: DEFAULT_BLOCKS });
+        batch.set(db.collection('config').doc('layout'), { blocksSeparatedV21: true });
+        DEFAULT_BLOCKS.forEach((b, idx) => {
+          const norm = normalizeAudiencePayload(b);
+          const docData = {
+            ...b,
+            audience: norm.audience,
+            targetRoles: norm.targetRoles,
+            publishMode: 'now',
+            publishAtTs: 0,
+            hiddenOnHome: false,
+            order: idx
+          };
+          const restricted = isServerRestrictedItem(docData);
+          docData.visibleTo = computeVisibleTo(docData);
+          batch.set(db.collection(restricted ? 'adminBlocks' : 'homeBlocks').doc(String(b.id)), docData);
+        });
         batch.set(db.collection('config').doc('quickLinks'), { items: DEFAULT_QUICK_LINKS });
         batch.set(db.collection('config').doc('labels'), DEFAULT_TAB_LABELS);
         const welcomeId = String(Date.now());
@@ -5084,7 +5147,12 @@
           body: '구미제일감리교회 라이트 청년부 앱이 준비되었습니다.\n관리자 화면에서 공지·광고·배너를 자유롭게 수정해 사용해 주세요!',
           date: formatToday(),
           pinned: true,
-          order: 0
+          order: 0,
+          audience: 'all',
+          targetRoles: [],
+          publishMode: 'now',
+          publishAtTs: 0,
+          visibleTo: ['__all__']
         });
         await batch.commit();
       } else if ((appSnap.data().schemaVersion || 0) < CURRENT_SCHEMA_VERSION) {
@@ -5202,6 +5270,81 @@
           }
         } catch (v20InitErr) { console.warn('v10.20 config init skipped:', v20InitErr); }
 
+        // 7) v10.34 (schemaVersion 21): 역할 지정·임시저장·예약 글/배너 서버 컬렉션 분리 이관
+        if ((appSnap.data().schemaVersion || 0) < 21) {
+          try {
+            // (a) 기존 notices 문서들을 공개/역할별(notices) vs 임시저장/예약/관리자전용(adminNotices)로 분리
+            const noticeSnap = await db.collection('notices').get();
+            if (!noticeSnap.empty) {
+              const nBatch = db.batch();
+              noticeSnap.docs.forEach(doc => {
+                const raw = { ...doc.data(), id: String(doc.id) };
+                const norm = normalizeAudiencePayload(raw);
+                const merged = {
+                  ...raw,
+                  audience: norm.audience,
+                  targetRoles: norm.targetRoles,
+                  publishMode: raw.publishMode || 'now',
+                  publishAtTs: Number(raw.publishAtTs || 0)
+                };
+                if (isServerRestrictedItem(merged)) {
+                  merged.visibleTo = [];
+                  nBatch.set(db.collection('adminNotices').doc(String(doc.id)), stripInternalDocFields(merged));
+                  nBatch.delete(db.collection('notices').doc(String(doc.id)));
+                } else {
+                  merged.visibleTo = computeVisibleTo(merged);
+                  nBatch.set(db.collection('notices').doc(String(doc.id)), stripInternalDocFields(merged), { merge: true });
+                }
+              });
+              await nBatch.commit();
+            }
+
+            // (b) 기존 config/layout.blocks 배열을 homeBlocks / adminBlocks로 분리 이관 후 config/layout에서 민감 배열 제거
+            const latestLayoutSnap = await db.collection('config').doc('layout').get();
+            if (latestLayoutSnap.exists && Array.isArray(latestLayoutSnap.data().blocks)) {
+              const rawBlocks = latestLayoutSnap.data().blocks.filter(b => b.type !== 'quick_check' && b.type !== 'today_qt');
+              const bBatch = db.batch();
+              rawBlocks.forEach((b, idx) => {
+                const bid = String(b.id || ('blk_' + (Date.now() + idx)));
+                const norm = normalizeAudiencePayload(b);
+                const pubMode = b.publishMode || (b.hiddenOnHome ? 'draft' : 'now');
+                const merged = {
+                  ...b,
+                  id: bid,
+                  order: idx,
+                  audience: norm.audience,
+                  targetRoles: norm.targetRoles,
+                  publishMode: pubMode,
+                  publishAtTs: Number(b.publishAtTs || 0),
+                  hiddenOnHome: pubMode === 'draft'
+                };
+                if (isServerRestrictedItem(merged)) {
+                  merged.visibleTo = [];
+                  bBatch.set(db.collection('adminBlocks').doc(bid), stripInternalDocFields(merged));
+                  bBatch.delete(db.collection('homeBlocks').doc(bid));
+                } else {
+                  merged.visibleTo = computeVisibleTo(merged);
+                  bBatch.set(db.collection('homeBlocks').doc(bid), stripInternalDocFields(merged));
+                  bBatch.delete(db.collection('adminBlocks').doc(bid));
+                }
+              });
+              bBatch.set(db.collection('config').doc('layout'), {
+                blocks: FieldValue.delete(),
+                lastAlert: FieldValue.delete(),
+                blocksSeparatedV21: true
+              }, { merge: true });
+              await bBatch.commit();
+            } else {
+              await db.collection('config').doc('layout').set({
+                lastAlert: FieldValue.delete(),
+                blocksSeparatedV21: true
+              }, { merge: true });
+            }
+          } catch (v21Err) {
+            console.warn('v10.34 server separation migration error:', v21Err);
+          }
+        }
+
         await appRef.set({
           initialized: true,
           schemaVersion: CURRENT_SCHEMA_VERSION,
@@ -5313,6 +5456,281 @@
       }
     }
 
+    function clearScopedContentSubscriptions() {
+      unsubScopedContent.forEach(fn => { try { fn(); } catch {} });
+      unsubScopedContent = [];
+      scopedSubMode = '';
+      publicNoticesMap = new Map();
+      roleOrAdminNoticesMap = new Map();
+      publicBlocksMap = new Map();
+      roleOrAdminBlocksMap = new Map();
+      noticesFirstSnap = true;
+      blocksFirstSnap = true;
+      knownNoticeIds = new Set();
+      knownNoticeAlertMap = new Map();
+      knownBlockIds = new Set();
+      knownBlockAlertMap = new Map();
+      if (scheduledPromoteTimer) {
+        clearInterval(scheduledPromoteTimer);
+        scheduledPromoteTimer = null;
+      }
+    }
+
+    function rebuildMergedNotices(allowNotify) {
+      const mergedMap = new Map();
+      publicNoticesMap.forEach((v, k) => mergedMap.set(k, v));
+      roleOrAdminNoticesMap.forEach((v, k) => mergedMap.set(k, v));
+      const nextNotices = Array.from(mergedMap.values())
+        .sort((a, b) => (Number(a.order ?? 9999) - Number(b.order ?? 9999)) || (Number(b.id) - Number(a.id)));
+
+      if (noticesFirstSnap) {
+        nextNotices.forEach(n => {
+          knownNoticeIds.add(n.id);
+          knownNoticeAlertMap.set(n.id, Number(n.alertTs || 0));
+        });
+        noticesFirstSnap = false;
+      } else if (allowNotify) {
+        nextNotices.forEach(n => {
+          const prevAlertTs = knownNoticeAlertMap.get(n.id) || 0;
+          const curAlertTs = Number(n.alertTs || 0);
+          const isNew = !knownNoticeIds.has(n.id);
+          knownNoticeIds.add(n.id);
+          knownNoticeAlertMap.set(n.id, curAlertTs);
+
+          if ((isNew && curAlertTs > 0) || (curAlertTs > prevAlertTs && curAlertTs > 0)) {
+            const curUser = getCurrentUser();
+            if (getPublishState(n) === 'live' && canUserSeeTarget(curUser, n)) {
+              dispatchAppNotification({
+                type: 'notice',
+                icon: '📢',
+                title: isNew ? `메인 화면 새 ${n.category || '소식'}` : `메인 화면 ${n.category || '소식'} 업데이트`,
+                body: n.title,
+                onClick: () => {
+                  switchMainTab('home');
+                  openDetail(n.id);
+                }
+              });
+            }
+          }
+        });
+      }
+
+      notices = nextNotices;
+      applyScreen();
+      if (currentDetailId && document.getElementById('detailModal').classList.contains('open')) {
+        openDetail(currentDetailId);
+      }
+    }
+
+    function rebuildMergedBlocks(allowNotify) {
+      const mergedMap = new Map();
+      publicBlocksMap.forEach((v, k) => mergedMap.set(k, v));
+      roleOrAdminBlocksMap.forEach((v, k) => mergedMap.set(k, v));
+      const nextBlocks = Array.from(mergedMap.values())
+        .filter(b => b.type !== 'quick_check' && b.type !== 'today_qt')
+        .sort((a, b) => (Number(a.order ?? 9999) - Number(b.order ?? 9999)) || String(a.id).localeCompare(String(b.id)));
+
+      if (blocksFirstSnap) {
+        nextBlocks.forEach(b => {
+          knownBlockIds.add(b.id);
+          knownBlockAlertMap.set(b.id, Number(b.alertTs || 0));
+        });
+        blocksFirstSnap = false;
+      } else if (allowNotify) {
+        nextBlocks.forEach(b => {
+          const prevAlertTs = knownBlockAlertMap.get(b.id) || 0;
+          const curAlertTs = Number(b.alertTs || 0);
+          const isNew = !knownBlockIds.has(b.id);
+          knownBlockIds.add(b.id);
+          knownBlockAlertMap.set(b.id, curAlertTs);
+
+          if ((isNew && curAlertTs > 0) || (curAlertTs > prevAlertTs && curAlertTs > 0)) {
+            const curUser = getCurrentUser();
+            if (getPublishState(b) === 'live' && canUserSeeTarget(curUser, b)) {
+              dispatchAppNotification({
+                type: 'banner',
+                icon: '📌',
+                title: b.alertTitle || `📌 ${getBlockDisplayLabel(b)}`,
+                body: b.alertBody || b.desc || b.title || '라이트 청년부 메인 화면 배너가 새로 업데이트되었습니다.',
+                onClick: () => { switchMainTab('home'); }
+              });
+            }
+          }
+        });
+      }
+
+      blocks = nextBlocks;
+      applyScreen();
+    }
+
+    async function checkAndPromoteDueScheduledItems() {
+      if (isPromotingScheduled) return;
+      if (!fbUser || (fbUser.email || '').toLowerCase() !== ADMIN_EMAIL || pendingAdminStatus === 'pending') return;
+      const now = Date.now();
+      const dueNotices = [];
+      roleOrAdminNoticesMap.forEach(n => {
+        if (n.publishMode === 'scheduled' && Number(n.publishAtTs || 0) > 0 && Number(n.publishAtTs) <= now) {
+          dueNotices.push(n);
+        }
+      });
+      const dueBlocks = [];
+      roleOrAdminBlocksMap.forEach(b => {
+        if (b.publishMode === 'scheduled' && Number(b.publishAtTs || 0) > 0 && Number(b.publishAtTs) <= now) {
+          dueBlocks.push(b);
+        }
+      });
+      if (dueNotices.length === 0 && dueBlocks.length === 0) return;
+
+      isPromotingScheduled = true;
+      try {
+        const batch = db.batch();
+        let promotedCount = 0;
+
+        dueNotices.forEach(n => {
+          const clean = stripInternalDocFields(n);
+          const norm = normalizeAudiencePayload(clean);
+          const updated = {
+            ...clean,
+            audience: norm.audience,
+            targetRoles: norm.targetRoles,
+            publishMode: 'now',
+            publishAtTs: 0,
+            alertTs: now
+          };
+          if (isServerRestrictedItem(updated)) {
+            updated.visibleTo = [];
+            batch.set(db.collection('adminNotices').doc(String(n.id)), updated);
+          } else {
+            updated.visibleTo = computeVisibleTo(updated);
+            batch.set(db.collection('notices').doc(String(n.id)), updated);
+            batch.delete(db.collection('adminNotices').doc(String(n.id)));
+          }
+          promotedCount++;
+        });
+
+        dueBlocks.forEach(b => {
+          const clean = stripInternalDocFields(b);
+          const norm = normalizeAudiencePayload(clean);
+          const updated = {
+            ...clean,
+            audience: norm.audience,
+            targetRoles: norm.targetRoles,
+            publishMode: 'now',
+            publishAtTs: 0,
+            hiddenOnHome: false,
+            alertTs: now,
+            alertTitle: `📌 ${getBlockDisplayLabel(clean)}`,
+            alertBody: clean.desc || clean.title || '예약된 배너가 메인 화면에 공개되었습니다.'
+          };
+          if (isServerRestrictedItem(updated)) {
+            updated.visibleTo = [];
+            batch.set(db.collection('adminBlocks').doc(String(b.id)), updated);
+          } else {
+            updated.visibleTo = computeVisibleTo(updated);
+            batch.set(db.collection('homeBlocks').doc(String(b.id)), updated);
+            batch.delete(db.collection('adminBlocks').doc(String(b.id)));
+          }
+          promotedCount++;
+        });
+
+        if (promotedCount > 0) {
+          await batch.commit();
+          showToast(`⏰ 예약된 항목 ${promotedCount}건이 자동 공개되었습니다!`);
+        }
+      } catch (err) {
+        console.warn('Scheduled auto-promote error:', err);
+      } finally {
+        isPromotingScheduled = false;
+      }
+    }
+
+    function syncScopedContentSubscriptions() {
+      if (!fbUser) return;
+      const isActualAdmin = (fbUser.email || '').toLowerCase() === ADMIN_EMAIL && pendingAdminStatus !== 'pending';
+      const myRoleId = (!isActualAdmin && myMemberDoc && myMemberDoc.status === 'approved')
+        ? String(myMemberDoc.roleId || 'role_youth')
+        : '';
+      const desiredMode = isActualAdmin ? 'admin' : (myRoleId ? `member:${myRoleId}` : '');
+      if (!desiredMode || scopedSubMode === desiredMode) return;
+
+      clearScopedContentSubscriptions();
+      scopedSubMode = desiredMode;
+
+      if (isActualAdmin) {
+        unsubScopedContent.push(
+          db.collection('notices').onSnapshot(snap => {
+            const mp = new Map();
+            snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'notices' }));
+            publicNoticesMap = mp;
+            rebuildMergedNotices(true);
+          }, err => handleDbError(err, '공개 공지 동기화'))
+        );
+        unsubScopedContent.push(
+          db.collection('adminNotices').onSnapshot(snap => {
+            const mp = new Map();
+            snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'adminNotices' }));
+            roleOrAdminNoticesMap = mp;
+            rebuildMergedNotices(false);
+            checkAndPromoteDueScheduledItems();
+          }, err => handleDbError(err, '비공개 공지 동기화'))
+        );
+        unsubScopedContent.push(
+          db.collection('homeBlocks').onSnapshot(snap => {
+            const mp = new Map();
+            snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'homeBlocks' }));
+            publicBlocksMap = mp;
+            rebuildMergedBlocks(true);
+          }, err => handleDbError(err, '공개 배너 동기화'))
+        );
+        unsubScopedContent.push(
+          db.collection('adminBlocks').onSnapshot(snap => {
+            const mp = new Map();
+            snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'adminBlocks' }));
+            roleOrAdminBlocksMap = mp;
+            rebuildMergedBlocks(false);
+            checkAndPromoteDueScheduledItems();
+          }, err => handleDbError(err, '비공개 배너 동기화'))
+        );
+        scheduledPromoteTimer = setInterval(() => {
+          checkAndPromoteDueScheduledItems();
+        }, 30000);
+      } else {
+        // 일반 승인 회원: 서버 규칙으로 검증된 본인 허용 문서만 쿼리 (임시저장·예약·타역할 문서 원천 차단)
+        unsubScopedContent.push(
+          db.collection('notices').where('visibleTo', 'array-contains', '__all__').onSnapshot(snap => {
+            const mp = new Map();
+            snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'notices' }));
+            publicNoticesMap = mp;
+            rebuildMergedNotices(true);
+          }, err => handleDbError(err, '전체 공지 동기화'))
+        );
+        unsubScopedContent.push(
+          db.collection('notices').where('visibleTo', 'array-contains', myRoleId).onSnapshot(snap => {
+            const mp = new Map();
+            snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'notices' }));
+            roleOrAdminNoticesMap = mp;
+            rebuildMergedNotices(true);
+          }, err => handleDbError(err, '역할 공지 동기화'))
+        );
+        unsubScopedContent.push(
+          db.collection('homeBlocks').where('visibleTo', 'array-contains', '__all__').onSnapshot(snap => {
+            const mp = new Map();
+            snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'homeBlocks' }));
+            publicBlocksMap = mp;
+            rebuildMergedBlocks(true);
+          }, err => handleDbError(err, '전체 화면 동기화'))
+        );
+        unsubScopedContent.push(
+          db.collection('homeBlocks').where('visibleTo', 'array-contains', myRoleId).onSnapshot(snap => {
+            const mp = new Map();
+            snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'homeBlocks' }));
+            roleOrAdminBlocksMap = mp;
+            rebuildMergedBlocks(true);
+          }, err => handleDbError(err, '역할 화면 동기화'))
+        );
+      }
+    }
+
     function subscribeCoreData() {
       if (coreDataSubscribed) return;
       coreDataSubscribed = true;
@@ -5405,88 +5823,21 @@
             if (!quickLinksDedicatedLoaded && Array.isArray(d.quickLinks)) {
               quickLinks = d.quickLinks;
             }
-            if (Array.isArray(d.blocks)) {
-              blocks = d.blocks.filter(b => b.type !== 'quick_check' && b.type !== 'today_qt');
-            }
             if (d.celebrationMsgs && typeof d.celebrationMsgs === 'object') {
               celebrationMsgs = { ...DEFAULT_CELEBRATION_MSGS, ...d.celebrationMsgs };
             } else {
               celebrationMsgs = structuredClone(DEFAULT_CELEBRATION_MSGS);
             }
             hiddenAutoQtDate = normalizeDotDate(d.hiddenAutoQtDate || '');
-            const alertObj = d.lastAlert || null;
-            const alertTs = alertObj ? Number(alertObj.ts || 0) : 0;
-            if (layoutFirstSnap) {
-              layoutFirstSnap = false;
-              lastSeenLayoutAlertTs = alertTs;
-            } else if (alertTs > lastSeenLayoutAlertTs) {
-              lastSeenLayoutAlertTs = alertTs;
-              const curUser = getCurrentUser();
-              if (!alertObj || canUserSeeTarget(curUser, alertObj)) {
-                dispatchAppNotification({
-                  type: 'banner',
-                  icon: '📌',
-                  title: (alertObj && alertObj.title) || '메인 홈 배너 업데이트',
-                  body: (alertObj && alertObj.body) || '라이트 청년부 메인 화면 배너가 새로 업데이트되었습니다.',
-                  onClick: () => { switchMainTab('home'); }
-                });
-              }
-            }
           }
           applyScreen();
           if (document.getElementById('quickLinksSheet').classList.contains('open')) {
             renderQuickLinksSheetContent();
           }
-        }, err => handleDbError(err, '배치 동기화'))
+        }, err => handleDbError(err, '화면 설정 동기화'))
       );
 
-      unsubCore.push(
-        db.collection('notices').onSnapshot(snap => {
-          const nextNotices = snap.docs.map(d => ({
-            order: 9999,
-            ...d.data(),
-            id: String(d.id)
-          })).sort((a, b) => (a.order - b.order) || (Number(b.id) - Number(a.id)));
-
-          if (noticesFirstSnap) {
-            nextNotices.forEach(n => {
-              knownNoticeIds.add(n.id);
-              knownNoticeAlertMap.set(n.id, Number(n.alertTs || 0));
-            });
-            noticesFirstSnap = false;
-          } else {
-            nextNotices.forEach(n => {
-              const prevAlertTs = knownNoticeAlertMap.get(n.id) || 0;
-              const curAlertTs = Number(n.alertTs || 0);
-              const isNew = !knownNoticeIds.has(n.id);
-              knownNoticeIds.add(n.id);
-              knownNoticeAlertMap.set(n.id, curAlertTs);
-
-              if ((isNew && curAlertTs > 0) || (curAlertTs > prevAlertTs && curAlertTs > 0)) {
-                const curUser = getCurrentUser();
-                if (getPublishState(n) === 'live' && canUserSeeTarget(curUser, n)) {
-                  dispatchAppNotification({
-                    type: 'notice',
-                    icon: '📢',
-                    title: isNew ? `메인 화면 새 ${n.category || '소식'}` : `메인 화면 ${n.category || '소식'} 업데이트`,
-                    body: n.title,
-                    onClick: () => {
-                      switchMainTab('home');
-                      openDetail(n.id);
-                    }
-                  });
-                }
-              }
-            });
-          }
-
-          notices = nextNotices;
-          applyScreen();
-          if (currentDetailId && document.getElementById('detailModal').classList.contains('open')) {
-            openDetail(currentDetailId);
-          }
-        }, err => handleDbError(err, '공지 동기화'))
-      );
+      syncScopedContentSubscriptions();
 
       unsubCore.push(
         db.collection('config').doc('labels').onSnapshot(doc => {
@@ -5639,6 +5990,7 @@
         }
 
         const prevStatus = myMemberDoc ? myMemberDoc.status : null;
+        const prevRoleId = myMemberDoc ? myMemberDoc.roleId : null;
         myMemberDoc = { ...doc.data(), id: String(doc.id) };
         saveCachedMember(myMemberDoc);
 
@@ -5648,10 +6000,14 @@
             showToast(`가입이 승인되었습니다! ${myMemberDoc.name}님 환영합니다.`);
           }
           subscribeCoreData();
+          if (prevRoleId && prevRoleId !== myMemberDoc.roleId) {
+            syncScopedContentSubscriptions();
+          }
           syncMembersAllSubscription();
         } else {
           unsubCore.forEach(fn => { try { fn(); } catch {} });
           unsubCore = [];
+          clearScopedContentSubscriptions();
           coreDataSubscribed = false;
           if (unsubMembersAll) { unsubMembersAll(); unsubMembersAll = null; }
           if (unsubAdminSecret) { unsubAdminSecret(); unsubAdminSecret = null; }
@@ -6618,6 +6974,7 @@
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
         handleKstDayRolloverCheck();
+        checkAndPromoteDueScheduledItems();
         checkAndNotifyTodayBirthdays();
         checkAndNotifyNewcomers();
         const u = getCurrentUser();
@@ -7224,20 +7581,55 @@
       `;
     }
 
-    async function saveBlocksToCloud(nextBlocks, msg, alertPayload = null) {
+    async function saveBlocksToCloud(nextBlocks, msg, alertPayload = null, alertBlockId = null) {
       try {
         lastSelfLayoutEditTs = Date.now();
-        const payload = { blocks: nextBlocks };
-        if (alertPayload) {
-          payload.lastAlert = {
-            title: alertPayload.title || '메인 홈 배너 업데이트',
-            body: alertPayload.body || '새 배너가 메인 홈에 등록되었습니다.',
-            audience: alertPayload.audience || 'all',
-            targetRoles: Array.isArray(alertPayload.targetRoles) ? alertPayload.targetRoles : [],
-            ts: Date.now()
+        const prevIds = new Set(blocks.map(b => String(b.id)));
+        const nextIds = new Set(nextBlocks.map(b => String(b.id)));
+        const batch = db.batch();
+        const nowTs = Date.now();
+
+        nextBlocks.forEach((rawBlock, idx) => {
+          const bid = String(rawBlock.id);
+          const clean = stripInternalDocFields(rawBlock);
+          const norm = normalizeAudiencePayload(clean);
+          const pubMode = clean.publishMode || (clean.hiddenOnHome ? 'draft' : 'now');
+          const docData = {
+            ...clean,
+            id: bid,
+            order: idx,
+            audience: norm.audience,
+            targetRoles: norm.targetRoles,
+            publishMode: pubMode,
+            publishAtTs: Number(clean.publishAtTs || 0),
+            hiddenOnHome: pubMode === 'draft'
           };
-        }
-        await db.collection('config').doc('layout').set(payload, { merge: true });
+          const restricted = isServerRestrictedItem(docData);
+          docData.visibleTo = computeVisibleTo(docData);
+
+          if (!restricted && alertPayload && (!alertBlockId || String(alertBlockId) === bid)) {
+            docData.alertTs = nowTs;
+            docData.alertTitle = alertPayload.title || `📌 ${getBlockDisplayLabel(docData)}`;
+            docData.alertBody = alertPayload.body || docData.desc || docData.title || '메인 홈 배너가 업데이트되었습니다.';
+          }
+
+          if (restricted) {
+            batch.set(db.collection('adminBlocks').doc(bid), docData);
+            batch.delete(db.collection('homeBlocks').doc(bid));
+          } else {
+            batch.set(db.collection('homeBlocks').doc(bid), docData);
+            batch.delete(db.collection('adminBlocks').doc(bid));
+          }
+        });
+
+        prevIds.forEach(oldId => {
+          if (!nextIds.has(oldId)) {
+            batch.delete(db.collection('homeBlocks').doc(oldId));
+            batch.delete(db.collection('adminBlocks').doc(oldId));
+          }
+        });
+
+        await batch.commit();
         if (msg) showToast(msg);
       } catch (err) { handleDbError(err, '화면 배치 저장'); }
     }
@@ -7480,8 +7872,10 @@
       requiredTypes.forEach(reqType => {
         const existing = next.find(b => b.type === reqType);
         if (existing) {
-          if (existing.hiddenOnHome) {
+          if (existing.hiddenOnHome || existing.publishMode === 'draft') {
             existing.hiddenOnHome = false;
+            existing.publishMode = 'now';
+            existing.publishAtTs = 0;
             changed = true;
           }
         } else {
@@ -7502,7 +7896,7 @@
       });
 
       if (changed) {
-        await db.collection('config').doc('layout').set({ blocks: next }, { merge: true });
+        await saveBlocksToCloud(next, '');
       }
     }
 
@@ -7531,7 +7925,7 @@
           audience: b.audience || 'all',
           targetRoles: Array.isArray(b.targetRoles) ? b.targetRoles : []
         };
-        await saveBlocksToCloud(next, `[${dispName}] 칸을 지금 바로 게시했습니다!`, alertObj);
+        await saveBlocksToCloud(next, `[${dispName}] 칸을 지금 바로 게시했습니다!`, alertObj, id);
       }
     };
 
@@ -7539,11 +7933,27 @@
       const n = notices.find(x => String(x.id) === String(id));
       if (!n) return;
       try {
-        await db.collection('notices').doc(String(id)).update({
+        const clean = stripInternalDocFields(n);
+        const norm = normalizeAudiencePayload(clean);
+        const updated = {
+          ...clean,
+          audience: norm.audience,
+          targetRoles: norm.targetRoles,
           publishMode: 'now',
           publishAtTs: 0,
           alertTs: Date.now()
-        });
+        };
+        const restricted = isServerRestrictedItem(updated);
+        updated.visibleTo = computeVisibleTo(updated);
+        const batch = db.batch();
+        if (restricted) {
+          batch.set(db.collection('adminNotices').doc(String(id)), updated);
+          batch.delete(db.collection('notices').doc(String(id)));
+        } else {
+          batch.set(db.collection('notices').doc(String(id)), updated);
+          batch.delete(db.collection('adminNotices').doc(String(id)));
+        }
+        await batch.commit();
         await ensureHomeBlocksExistForTypes(['notice_list']);
         showToast(`[${n.title}] 공지를 지금 바로 게시했습니다!`);
       } catch (err) {
@@ -7558,15 +7968,30 @@
         const batch = db.batch();
         notices.forEach(item => {
           if (item.pinned && String(item.id) !== String(id)) {
-            batch.update(db.collection('notices').doc(String(item.id)), { pinned: false });
+            const col = item._col || (isServerRestrictedItem(item) ? 'adminNotices' : 'notices');
+            batch.update(db.collection(col).doc(String(item.id)), { pinned: false });
           }
         });
-        batch.update(db.collection('notices').doc(String(id)), {
+        const clean = stripInternalDocFields(n);
+        const norm = normalizeAudiencePayload(clean);
+        const updated = {
+          ...clean,
+          audience: norm.audience,
+          targetRoles: norm.targetRoles,
           pinned: true,
           publishMode: 'now',
           publishAtTs: 0,
           alertTs: Date.now()
-        });
+        };
+        const restricted = isServerRestrictedItem(updated);
+        updated.visibleTo = computeVisibleTo(updated);
+        if (restricted) {
+          batch.set(db.collection('adminNotices').doc(String(id)), updated);
+          batch.delete(db.collection('notices').doc(String(id)));
+        } else {
+          batch.set(db.collection('notices').doc(String(id)), updated);
+          batch.delete(db.collection('adminNotices').doc(String(id)));
+        }
         await batch.commit();
         await ensureHomeBlocksExistForTypes(['hero_notice', 'notice_list']);
         showToast('메인 화면 상단 배너에 바로 띄웠습니다!');
@@ -7607,6 +8032,7 @@
       const hiddenOnHome = publishMode === 'draft';
 
       const next = structuredClone(blocks);
+      let targetBlockId = id || ('blk_' + Date.now());
       if (id) {
         const b = next.find(x => x.id === id);
         if (b) {
@@ -7624,7 +8050,7 @@
         }
       } else {
         next.unshift({
-          id: 'blk_' + Date.now(),
+          id: targetBlockId,
           type,
           label: autoLabel,
           badge,
@@ -7651,7 +8077,7 @@
         : (publishMode === 'scheduled'
           ? `⏰ ${tsToKstParts(publishAtTs).shortLabel}에 자동 공개되도록 예약했습니다!`
           : '메인 화면에 바로 게시했습니다!');
-      await saveBlocksToCloud(next, doneMsg, alertObj);
+      await saveBlocksToCloud(next, doneMsg, alertObj, targetBlockId);
     });
 
 
@@ -7664,7 +8090,8 @@
       try {
         const batch = db.batch();
         reordered.forEach((n, i) => {
-          batch.update(db.collection('notices').doc(String(n.id)), { order: i });
+          const col = n._col || (isServerRestrictedItem(n) ? 'adminNotices' : 'notices');
+          batch.update(db.collection(col).doc(String(n.id)), { order: i });
         });
         await batch.commit();
         showToast('공지·광고 순서가 변경되었습니다.');
@@ -7784,25 +8211,45 @@
         if (pinned && publishMode === 'now') {
           notices.forEach(n => {
             if (n.pinned && String(n.id) !== String(editId)) {
-              batch.update(db.collection('notices').doc(String(n.id)), { pinned: false });
+              const col = n._col || (isServerRestrictedItem(n) ? 'adminNotices' : 'notices');
+              batch.update(db.collection(col).doc(String(n.id)), { pinned: false });
             }
           });
         }
 
-        if (editId) {
-          const updateData = { category, title, body, pinned, audience, targetRoles, publishMode, publishAtTs };
-          if (alertTs) updateData.alertTs = alertTs;
-          batch.update(db.collection('notices').doc(String(editId)), updateData);
-          await batch.commit();
+        const existingNotice = editId ? notices.find(x => String(x.id) === String(editId)) : null;
+        const targetId = editId ? String(editId) : String(Date.now());
+        const minOrder = notices.length > 0 ? Math.min(...notices.map(n => Number(n.order || 0))) - 1 : 0;
+        const baseDoc = existingNotice ? stripInternalDocFields(existingNotice) : {
+          id: targetId,
+          date: formatToday(),
+          order: minOrder,
+          alertTs: 0
+        };
+        const nextDoc = {
+          ...baseDoc,
+          id: targetId,
+          category,
+          title,
+          body,
+          pinned,
+          audience,
+          targetRoles,
+          publishMode,
+          publishAtTs
+        };
+        if (alertTs) nextDoc.alertTs = alertTs;
+        const restricted = isServerRestrictedItem(nextDoc);
+        nextDoc.visibleTo = computeVisibleTo(nextDoc);
+
+        if (restricted) {
+          batch.set(db.collection('adminNotices').doc(targetId), nextDoc);
+          batch.delete(db.collection('notices').doc(targetId));
         } else {
-          const newId = String(Date.now());
-          const minOrder = notices.length > 0 ? Math.min(...notices.map(n => Number(n.order || 0))) - 1 : 0;
-          batch.set(db.collection('notices').doc(newId), {
-            id: newId, category, title, body, date: formatToday(),
-            pinned, order: minOrder, alertTs, audience, targetRoles, publishMode, publishAtTs
-          });
-          await batch.commit();
+          batch.set(db.collection('notices').doc(targetId), nextDoc);
+          batch.delete(db.collection('adminNotices').doc(targetId));
         }
+        await batch.commit();
 
         if (publishMode === 'now') {
           await ensureHomeBlocksExistForTypes(pinned ? ['hero_notice', 'notice_list'] : ['notice_list']);
@@ -7820,7 +8267,10 @@
     window.deleteNotice = async (id) => {
       if (!confirm('이 글을 삭제할까요?')) return;
       try {
-        await db.collection('notices').doc(String(id)).delete();
+        const batch = db.batch();
+        batch.delete(db.collection('notices').doc(String(id)));
+        batch.delete(db.collection('adminNotices').doc(String(id)));
+        await batch.commit();
         showToast('삭제되었습니다.');
       } catch (err) { handleDbError(err, '공지 삭제'); }
     };
@@ -12788,7 +13238,7 @@ ${m.body}`;
           if (issues.length > 0) {
             setDiagResult(id, 'warn', `점검 필요: ${issues.join(', ')}`);
           } else {
-            setDiagResult(id, 'ok', `역할 ${roles.length}개 · 메인 칸 ${blocks.length}개 · 바로가기 ${quickLinks.length}개 · 활성 관리자 ${activeAdmins}명 · 승인 회원 ${members.filter(m => m.status === 'approved').length}명`);
+            setDiagResult(id, 'ok', `서버 분리 정상 (공개 공지 ${publicNoticesMap.size} · 비공개 공지 ${roleOrAdminNoticesMap.size} / 공개 칸 ${publicBlocksMap.size} · 비공개 칸 ${roleOrAdminBlocksMap.size}) · 역할 ${roles.length}개 · 바로가기 ${quickLinks.length}개 · 활성 관리자 ${activeAdmins}명 · 승인 회원 ${members.filter(m => m.status === 'approved').length}명`);
           }
         }
       } catch (err) {
