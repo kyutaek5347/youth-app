@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=130" />
+  <link rel="manifest" href="./manifest.json?v=131" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=130" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=130" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=131" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=131" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -41,6 +41,10 @@
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif;
@@ -49,6 +53,9 @@
       display: flex;
       justify-content: center;
       min-height: 100vh;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      -webkit-font-smoothing: antialiased;
     }
 
     .app-shell {
@@ -245,18 +252,30 @@
     .header.light { background: var(--surface); color: var(--text); }
     .header.dark { background: var(--admin-bg); color: #fff; border-bottom-color: #1E293B; }
 
-    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .brand { display: flex; align-items: center; gap: 9px; min-width: 0; flex: 1; }
     .brand-logo {
       width: 38px; height: 38px; border-radius: 50%; object-fit: cover;
       background: #000; border: 1px solid rgba(15,23,42,0.12); flex-shrink: 0;
     }
     .header.dark .brand-logo { border-color: rgba(255,255,255,0.2); }
-    .brand-title { font-size: 15.5px; font-weight: 800; line-height: 1.2; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
-    .brand-sub { font-size: 11px; margin-top: 2px; opacity: 0.72; }
+    .brand-info { min-width: 0; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    .brand-title {
+      font-size: 15.5px; font-weight: 800; line-height: 1.2; letter-spacing: -0.35px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .brand-meta {
+      display: flex; align-items: center; gap: 5px; margin-top: 3px; min-width: 0;
+    }
+    .brand-sub {
+      font-size: 11.5px; font-weight: 600; line-height: 1.2; opacity: 0.78;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
 
     .role-pill {
-      display: inline-flex; align-items: center; font-size: 10.5px; font-weight: 800;
-      padding: 2px 8px; border-radius: 999px; color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 800; line-height: 1.25;
+      padding: 2px 7px; border-radius: 999px; color: #fff;
+      white-space: nowrap; flex-shrink: 0;
     }
 
     .header-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
@@ -1920,6 +1939,78 @@
       margin-bottom: 7px;
     }
 
+    /* ==================== v10.31 모바일 화면 비율·글자 크기·줄바꿈 최적화 ==================== */
+    .exit-btn, .btn-admin, .btn-sm, .tag, .hero-badge {
+      white-space: nowrap;
+    }
+    .hero-title, .hero-desc, .card-title, .card-body, .section-title,
+    .birthday-title, .birthday-desc, .newcomer-auto-title, .newcomer-auto-desc,
+    .attendance-home-title, .attendance-home-desc {
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+    .hero-title, .card-title, .section-title {
+      letter-spacing: -0.3px;
+    }
+    .tab-icon {
+      height: 21px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .tab-btn {
+      gap: 3px;
+      font-size: 10px;
+      line-height: 1.2;
+      letter-spacing: -0.35px;
+    }
+
+    @media (max-width: 420px) {
+      .header { padding: 10px 12px; gap: 6px; }
+      .brand { gap: 8px; }
+      .brand-logo { width: 35px; height: 35px; }
+      .brand-title { font-size: 14.5px; }
+      .brand-meta { gap: 4px; margin-top: 2px; }
+      .brand-sub { font-size: 11px; }
+      .role-pill { font-size: 9.5px; padding: 2px 6px; }
+      .header-actions { gap: 4px; }
+      .icon-btn { width: 31px; height: 30px; font-size: 14px; border-radius: 8px; }
+      .exit-btn { padding: 6px 9px; font-size: 11.5px; border-radius: 8px; }
+
+      .main { padding: 14px 13px calc(86px + var(--safe-bottom)); }
+      .home-block { margin-bottom: 14px; }
+      .hero-banner, .newcomer-card, .leader-card, .custom-banner-card,
+      .birthday-banner, .newcomer-auto-banner, .attendance-home-card {
+        padding: 16px 15px;
+        border-radius: 17px;
+      }
+      .hero-title, .birthday-title, .newcomer-auto-title, .attendance-home-title {
+        font-size: 16.5px;
+        line-height: 1.35;
+      }
+      .hero-desc, .birthday-desc, .newcomer-auto-desc, .attendance-home-desc {
+        font-size: 13px;
+        line-height: 1.54;
+      }
+      .section-title { font-size: 15px; }
+      .card { padding: 14px; border-radius: 15px; }
+      .card-title { font-size: 14.5px; line-height: 1.38; }
+      .card-body { font-size: 13px; line-height: 1.56; }
+      .filter-chip { padding: 6px 11px; font-size: 12px; }
+      .modal { padding: 18px 15px calc(22px + var(--safe-bottom)); }
+    }
+
+    @media (max-width: 370px) {
+      .header { padding: 9px 10px; gap: 5px; }
+      .brand-logo { width: 33px; height: 33px; }
+      .brand-title { font-size: 14px; }
+      .icon-btn { width: 29px; height: 29px; font-size: 13.5px; }
+      .exit-btn { padding: 6px 8px; font-size: 11px; }
+      .tab-btn { font-size: 9.5px; letter-spacing: -0.45px; }
+      .tab-icon { font-size: 17px; height: 20px; }
+    }
+
     /* 토스트 */
     .toast {
       position: fixed; bottom: calc(86px + var(--safe-bottom)); left: 50%;
@@ -1941,7 +2032,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=130" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=131" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -2076,12 +2167,12 @@
       <header id="appHeader" class="header light">
         <div class="brand">
           <img src="./icon-192.png" alt="로고" class="brand-logo" />
-          <div>
-            <div class="brand-title">
-              <span>라이트 청년부</span>
+          <div class="brand-info">
+            <div class="brand-title">라이트 청년부</div>
+            <div class="brand-meta">
               <span id="headerRoleBadge" class="role-pill" style="background:#111827;">청년</span>
+              <span id="headerSubText" class="brand-sub">환영합니다</span>
             </div>
-            <div id="headerSubText" class="brand-sub">환영합니다</div>
           </div>
         </div>
         <div class="header-actions">
@@ -3945,7 +4036,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=130" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=131" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -3968,8 +4059,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=130', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=130', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=131', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=131', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
