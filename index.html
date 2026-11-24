@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=131" />
+  <link rel="manifest" href="./manifest.json?v=132" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=131" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=131" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=132" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=132" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -1939,19 +1939,233 @@
       margin-bottom: 7px;
     }
 
-    /* ==================== v10.31 모바일 화면 비율·글자 크기·줄바꿈 최적화 ==================== */
-    .exit-btn, .btn-admin, .btn-sm, .tag, .hero-badge {
-      white-space: nowrap;
+    /* ==================== v10.32 전 기기(모바일·태블릿·아이패드·PC 웹) 통합 반응형 & 타이포그래피 ==================== */
+    :root {
+      --shell-max: 100%;
+      --fs-xs: 11.5px;
+      --fs-sm: 12.5px;
+      --fs-base: 14px;
+      --fs-md: 15px;
+      --fs-lg: 17px;
+      --fs-xl: 19px;
     }
+
+    html {
+      font-size: 16px;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+    body {
+      overflow-x: hidden;
+      font-size: var(--fs-base);
+      line-height: 1.5;
+    }
+    .app-shell {
+      max-width: var(--shell-max);
+      overflow-x: clip;
+    }
+    .main {
+      overflow-x: clip;
+      min-width: 0;
+    }
+    .tabbar {
+      max-width: var(--shell-max);
+    }
+    .modal,
+    .quick-sheet-modal {
+      max-width: var(--shell-max);
+    }
+    .inapp-notif {
+      max-width: calc(var(--shell-max) - 24px);
+    }
+
+    /* 가로 스크롤바 숨김 + 부드러운 터치 스크롤 */
+    .sub-tabs,
+    .filter-row,
+    .quick-tags {
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .sub-tabs::-webkit-scrollbar,
+    .filter-row::-webkit-scrollbar,
+    .quick-tags::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* 모든 텍스트·카드·폼 요소 넘침 및 한글 어절 끊김 방지 */
     .hero-title, .hero-desc, .card-title, .card-body, .section-title,
     .birthday-title, .birthday-desc, .newcomer-auto-title, .newcomer-auto-desc,
-    .attendance-home-title, .attendance-home-desc {
+    .attendance-home-title, .attendance-home-desc, .bylaw-hero-title, .bylaw-hero-dates,
+    .bylaw-article-title, .bylaw-article-body, .qt-scripture-box, .qt-comment-body,
+    .bible-vtext, .info-box, .status-desc, .status-meta, .setting-title, .setting-sub,
+    .diag-msg, .publish-confirm-box, .modal-title, .form-label {
       word-break: keep-all;
-      overflow-wrap: break-word;
+      overflow-wrap: anywhere;
     }
-    .hero-title, .card-title, .section-title {
+    .hero-title, .card-title, .section-title, .bylaw-hero-title, .modal-title {
+      letter-spacing: -0.28px;
+    }
+
+    /* 버튼·배지 줄바꿈 깨짐 방지 */
+    .exit-btn, .btn-admin, .btn-sm, .tag, .hero-badge, .qt-passage-pill,
+    .birthday-badge, .newcomer-auto-badge, .attendance-live-badge, .role-pill,
+    .bible-mini-btn, .bible-picker-btn, .filter-chip, .sub-tab-btn, .quick-tag {
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* 플렉스·그리드 내부 자식 넘침 방지 */
+    .section-head {
+      flex-wrap: wrap;
+      gap: 6px 8px;
+    }
+    .section-title {
+      min-width: 0;
+      font-size: var(--fs-md);
+      line-height: 1.35;
+    }
+    .layout-item-head,
+    .bylaw-article-head,
+    .qt-comment-head,
+    .card-top,
+    .card-footer,
+    .member-row,
+    .att-record-row,
+    .setting-row,
+    .secret-code-row {
+      min-width: 0;
+    }
+    .layout-item-head > div,
+    .member-row > div,
+    .att-record-row > div,
+    .setting-row > div,
+    .bylaw-article-head > span,
+    .card-footer > div {
+      min-width: 0;
+    }
+    .card-title {
+      font-size: var(--fs-md);
+      line-height: 1.4;
+    }
+    .card-body {
+      font-size: var(--fs-base);
+      line-height: 1.58;
+    }
+    .card-date,
+    .member-meta {
+      font-size: var(--fs-xs);
+      line-height: 1.4;
+    }
+    .form-label {
+      font-size: var(--fs-sm);
+      line-height: 1.38;
+    }
+    .form-input, .form-select, .form-textarea, .search-input, .login-input {
+      font-size: 14.5px;
+      line-height: 1.45;
+      min-width: 0;
+    }
+    .btn-full {
+      font-size: 14.5px;
+      line-height: 1.35;
+      white-space: normal;
+      word-break: keep-all;
+    }
+    .btn-outline {
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .btn-sm {
+      font-size: 12px;
+      line-height: 1.3;
+    }
+    .btn-admin {
+      font-size: 12.5px;
+      line-height: 1.3;
+    }
+
+    /* 성경·큐티 히어로 상단 바 반응형 래핑 */
+    .hero-top-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px 10px;
+      flex-wrap: wrap;
+    }
+    .hero-top-text {
+      min-width: 0;
+      flex: 1 1 180px;
+    }
+    .hero-top-title {
+      font-size: var(--fs-lg);
+      font-weight: 800;
+      line-height: 1.3;
       letter-spacing: -0.3px;
     }
+    .hero-top-sub {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.84);
+      margin-top: 3px;
+      line-height: 1.45;
+    }
+    .hero-top-actions {
+      display: flex;
+      gap: 5px;
+      flex-shrink: 0;
+      align-items: center;
+    }
+    .hero-write-btn {
+      border: none;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* 2열 폼 그리드 (좁은 모바일에서는 1열로 자동 전환) */
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .form-grid-2 > * {
+      min-width: 0;
+    }
+
+    /* 미리보기 상단 배너 모바일 래핑 */
+    .preview-member-bar {
+      flex-wrap: wrap;
+      line-height: 1.4;
+    }
+    .preview-member-bar > span {
+      min-width: 0;
+      flex: 1 1 200px;
+    }
+
+    /* 관리 통계 박스(3열) 글자 균형 */
+    .stats-grid-3 {
+      gap: 7px;
+    }
+    .stat-box {
+      padding: 12px 6px;
+      min-width: 0;
+    }
+    .stat-num {
+      font-size: 19px;
+      line-height: 1.2;
+    }
+    .stat-label {
+      font-size: 11px;
+      line-height: 1.3;
+      margin-top: 4px;
+      word-break: keep-all;
+    }
+
+    /* 하단 탭바 아이콘·텍스트 기준선 통일 */
     .tab-icon {
       height: 21px;
       display: inline-flex;
@@ -1961,12 +2175,62 @@
     }
     .tab-btn {
       gap: 3px;
-      font-size: 10px;
+      font-size: 10.5px;
       line-height: 1.2;
-      letter-spacing: -0.35px;
+      letter-spacing: -0.3px;
+      padding: 4px 2px;
     }
 
-    @media (max-width: 420px) {
+    /* 로그인 화면 중앙 정렬 카드 */
+    .login-brand,
+    .login-card {
+      width: 100%;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .text-link-btn {
+      line-height: 1.45;
+      white-space: normal;
+      word-break: keep-all;
+    }
+
+    /* 토스트: 긴 문장 잘리지 않고 깔끔하게 줄바꿈 */
+    .toast {
+      position: fixed;
+      bottom: calc(86px + var(--safe-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(15, 23, 42, 0.94);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      line-height: 1.42;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s;
+      z-index: 100;
+      white-space: normal;
+      word-break: keep-all;
+      max-width: min(92vw, calc(var(--shell-max) - 28px));
+      width: max-content;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.28);
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ==================== 모바일 일반 (<= 440px) ==================== */
+    @media (max-width: 440px) {
+      :root {
+        --fs-xs: 11px;
+        --fs-sm: 12px;
+        --fs-base: 13.5px;
+        --fs-md: 14.5px;
+        --fs-lg: 16px;
+        --fs-xl: 17.5px;
+      }
       .header { padding: 10px 12px; gap: 6px; }
       .brand { gap: 8px; }
       .brand-logo { width: 35px; height: 35px; }
@@ -1979,47 +2243,200 @@
       .exit-btn { padding: 6px 9px; font-size: 11.5px; border-radius: 8px; }
 
       .main { padding: 14px 13px calc(86px + var(--safe-bottom)); }
-      .home-block { margin-bottom: 14px; }
+      .home-block { margin-bottom: 13px; }
+
       .hero-banner, .newcomer-card, .leader-card, .custom-banner-card,
-      .birthday-banner, .newcomer-auto-banner, .attendance-home-card {
-        padding: 16px 15px;
-        border-radius: 17px;
+      .birthday-banner, .newcomer-auto-banner, .attendance-home-card,
+      .bible-hero, .qt-hero, .bylaw-hero {
+        padding: 15px 14px;
+        border-radius: 16px;
       }
-      .hero-title, .birthday-title, .newcomer-auto-title, .attendance-home-title {
-        font-size: 16.5px;
-        line-height: 1.35;
+      .hero-title, .birthday-title, .newcomer-auto-title, .attendance-home-title,
+      .bylaw-hero-title {
+        font-size: 16px;
+        line-height: 1.38;
       }
       .hero-desc, .birthday-desc, .newcomer-auto-desc, .attendance-home-desc {
         font-size: 13px;
         line-height: 1.54;
       }
-      .section-title { font-size: 15px; }
-      .card { padding: 14px; border-radius: 15px; }
-      .card-title { font-size: 14.5px; line-height: 1.38; }
-      .card-body { font-size: 13px; line-height: 1.56; }
+      .card { padding: 13px; border-radius: 14px; }
+      .bylaw-article-card { padding: 13px; border-radius: 14px; }
+      .bylaw-article-title { font-size: 14px; line-height: 1.4; }
+      .bylaw-article-body { font-size: 13px; line-height: 1.64; }
+      .qt-scripture-box { font-size: 13px; padding: 11px 12px; }
+      .react-btn { padding: 5px 10px; font-size: 12px; }
       .filter-chip { padding: 6px 11px; font-size: 12px; }
-      .modal { padding: 18px 15px calc(22px + var(--safe-bottom)); }
+      .sub-tab-btn { padding: 7px 10px; font-size: 12px; }
+      .modal { padding: 18px 14px calc(22px + var(--safe-bottom)); }
+      .quick-sheet-modal { padding: 12px 15px calc(22px + var(--safe-bottom)); }
+      .quick-link-btn { padding: 13px 14px; font-size: 14px; }
+      .tab-btn { font-size: 10px; letter-spacing: -0.4px; }
+      .tab-icon { font-size: 17.5px; height: 20px; }
+      .auth-tab-btn { font-size: 13px; padding: 10px 4px; }
+      .login-card { padding: 18px 15px 20px; }
     }
 
-    @media (max-width: 370px) {
+    /* ==================== 좁은 스마트폰 (<= 400px) ==================== */
+    @media (max-width: 400px) {
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .stat-num { font-size: 17.5px; }
+      .stat-label { font-size: 10.5px; }
+    }
+
+    /* ==================== 초소형 스마트폰 (<= 360px) ==================== */
+    @media (max-width: 360px) {
       .header { padding: 9px 10px; gap: 5px; }
-      .brand-logo { width: 33px; height: 33px; }
-      .brand-title { font-size: 14px; }
-      .icon-btn { width: 29px; height: 29px; font-size: 13.5px; }
-      .exit-btn { padding: 6px 8px; font-size: 11px; }
-      .tab-btn { font-size: 9.5px; letter-spacing: -0.45px; }
-      .tab-icon { font-size: 17px; height: 20px; }
+      .brand-logo { width: 32px; height: 32px; }
+      .brand-title { font-size: 13.5px; }
+      .brand-sub { font-size: 10.5px; }
+      .icon-btn { width: 28px; height: 28px; font-size: 13px; }
+      .exit-btn { padding: 5px 8px; font-size: 11px; }
+      .main { padding: 12px 11px calc(84px + var(--safe-bottom)); }
+      .tab-btn { font-size: 9.2px; letter-spacing: -0.55px; padding: 4px 1px; }
+      .tab-icon { font-size: 16.5px; height: 19px; }
+      .bible-grid-books { grid-template-columns: repeat(2, 1fr); }
+      .bible-grid-chapters { grid-template-columns: repeat(5, 1fr); }
+      .diag-sim-grid { grid-template-columns: 1fr; }
+      .auth-tab-btn { font-size: 12.5px; }
     }
 
-    /* 토스트 */
-    .toast {
-      position: fixed; bottom: calc(86px + var(--safe-bottom)); left: 50%;
-      transform: translateX(-50%) translateY(20px); background: rgba(15, 23, 42, 0.92);
-      color: #fff; padding: 10px 16px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
-      opacity: 0; pointer-events: none; transition: all 0.25s; z-index: 100; white-space: nowrap;
-      max-width: 92vw; overflow: hidden; text-overflow: ellipsis;
+    /* ==================== 태블릿 · 아이패드 · 갤럭시 탭 (600px ~ 1023px) ==================== */
+    @media (min-width: 600px) {
+      :root {
+        --shell-max: 600px;
+        --fs-xs: 12px;
+        --fs-sm: 13px;
+        --fs-base: 14.5px;
+        --fs-md: 15.5px;
+        --fs-lg: 18px;
+        --fs-xl: 20px;
+      }
+      body {
+        background: #DCE3EC;
+      }
+      .app-shell {
+        box-shadow: 0 0 36px rgba(15, 23, 42, 0.14);
+      }
+      .header {
+        padding: 13px 20px;
+      }
+      .brand-logo {
+        width: 40px;
+        height: 40px;
+      }
+      .brand-title {
+        font-size: 16.5px;
+      }
+      .brand-sub {
+        font-size: 12px;
+      }
+      .role-pill {
+        font-size: 10.5px;
+        padding: 2.5px 8px;
+      }
+      .icon-btn {
+        width: 36px;
+        height: 34px;
+        font-size: 16px;
+      }
+      .exit-btn {
+        padding: 7px 13px;
+        font-size: 12.5px;
+      }
+      .main {
+        padding: 20px 22px calc(92px + var(--safe-bottom));
+      }
+      .hero-banner, .newcomer-card, .leader-card, .custom-banner-card,
+      .birthday-banner, .newcomer-auto-banner, .attendance-home-card,
+      .bible-hero, .qt-hero, .bylaw-hero {
+        padding: 20px 22px;
+      }
+      .hero-title, .birthday-title, .newcomer-auto-title, .attendance-home-title {
+        font-size: 19px;
+      }
+      .hero-desc, .birthday-desc, .newcomer-auto-desc, .attendance-home-desc {
+        font-size: 14px;
+        line-height: 1.56;
+      }
+      .card, .bylaw-article-card {
+        padding: 17px 18px;
+      }
+      .tabbar {
+        padding: 8px 10px calc(9px + var(--safe-bottom));
+      }
+      .tab-btn {
+        font-size: 11.5px;
+        gap: 4px;
+        letter-spacing: -0.15px;
+      }
+      .tab-icon {
+        font-size: 20px;
+        height: 22px;
+      }
+      .sub-tabs {
+        flex-wrap: wrap;
+        overflow-x: visible;
+      }
+      .filter-row {
+        flex-wrap: wrap;
+        overflow-x: visible;
+      }
+      .bible-grid-books {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .bible-grid-chapters {
+        grid-template-columns: repeat(8, 1fr);
+      }
+      /* 태블릿·PC에서는 모달을 화면 중앙에 깔끔한 팝업 카드로 표시 */
+      .modal-backdrop {
+        align-items: center;
+        padding: 24px;
+      }
+      .modal {
+        max-width: 520px;
+        border-radius: 22px;
+        padding: 22px 22px 24px;
+        max-height: 86vh;
+        box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
+      }
+      .quick-sheet-modal {
+        max-width: 480px;
+        border-radius: 22px;
+        padding: 18px 20px 22px;
+      }
     }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ==================== PC · 대형 웹 브라우저 (>= 1024px) ==================== */
+    @media (min-width: 1024px) {
+      :root {
+        --shell-max: 680px;
+        --fs-xs: 12px;
+        --fs-sm: 13px;
+        --fs-base: 15px;
+        --fs-md: 16px;
+        --fs-lg: 18.5px;
+        --fs-xl: 21px;
+      }
+      .header {
+        padding: 14px 24px;
+      }
+      .main {
+        padding: 22px 26px calc(94px + var(--safe-bottom));
+      }
+      .bible-grid-books {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .bible-grid-chapters {
+        grid-template-columns: repeat(9, 1fr);
+      }
+      .modal {
+        max-width: 560px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -2032,7 +2449,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=131" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=132" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -2205,12 +2622,12 @@
         <!-- (2) 성경 읽기 화면 -->
         <section id="viewBible" class="hidden">
           <div class="bible-hero">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
-              <div>
-                <div id="bibleViewTitle" style="font-size:17.5px; font-weight:800;">📖 성경</div>
-                <div style="font-size:11.5px; color:#CBD5E1; margin-top:2px;">개역한글 성경 본문 · 절 터치 시 복사/책갈피/메모</div>
+            <div class="hero-top-row">
+              <div class="hero-top-text">
+                <div id="bibleViewTitle" class="hero-top-title">📖 성경</div>
+                <div class="hero-top-sub">개역한글 성경 본문 · 절 터치 시 복사/책갈피/메모</div>
               </div>
-              <div style="display:flex; gap:5px; flex-shrink:0;">
+              <div class="hero-top-actions">
                 <button class="bible-mini-btn" type="button" onclick="openBibleMemoModal()">📝 메모</button>
                 <button class="bible-mini-btn" type="button" onclick="openBibleBookmarksModal()">⭐ 책갈피</button>
               </div>
@@ -2257,12 +2674,12 @@
         <!-- (3) 오늘의 말씀 (큐티) 화면 -->
         <section id="viewQt" class="hidden">
           <div class="qt-hero">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
-              <div>
-                <div id="qtViewTitle" style="font-size:18px; font-weight:800;">✨ 오늘의 말씀</div>
-                <div style="font-size:12px; color:rgba(255,255,255,0.85); margin-top:3px;">매일 00:00(한국시간) 새 말씀 자동 변경 · 하트와 댓글로 나눠보세요</div>
+            <div class="hero-top-row">
+              <div class="hero-top-text">
+                <div id="qtViewTitle" class="hero-top-title">✨ 오늘의 말씀</div>
+                <div class="hero-top-sub">매일 00:00(한국시간) 새 말씀 자동 변경 · 하트와 댓글로 나눠보세요</div>
               </div>
-              <button id="qtWriteTopBtn" class="btn-amber hidden" type="button" style="border:none; border-radius:10px; padding:8px 12px; font-size:12px; font-weight:800; cursor:pointer; white-space:nowrap;" onclick="openNewQtModal()">+ 말씀·글 쓰기</button>
+              <button id="qtWriteTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openNewQtModal()">+ 말씀·글 쓰기</button>
             </div>
           </div>
 
@@ -2738,7 +3155,7 @@
           <option value="scheduled">⏰ 예약 게시 (지정한 한국시간에 자동 공개)</option>
         </select>
         <div id="noticeScheduleBox" class="schedule-time-box hidden">
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div class="form-grid-2">
             <div>
               <label class="form-label" for="noticeScheduleDateInput" style="font-size:11.5px; margin-bottom:4px;">예약 날짜 (KST)</label>
               <div class="combo-input-row">
@@ -2836,7 +3253,7 @@
           <option value="scheduled">⏰ 예약 게시 (지정한 한국시간에 자동 공개)</option>
         </select>
         <div id="blockScheduleBox" class="schedule-time-box hidden">
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div class="form-grid-2">
             <div>
               <label class="form-label" for="blockScheduleDateInput" style="font-size:11.5px; margin-bottom:4px;">예약 날짜 (KST)</label>
               <div class="combo-input-row">
@@ -3124,7 +3541,7 @@
           <input id="spEventDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('spEventDatePicker', 'spEventDateInput', 'date')" />
         </div>
       </div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+      <div class="form-grid-2">
         <div class="form-group">
           <label class="form-label" for="spEventStartInput">시작 시간</label>
           <div class="combo-input-row">
@@ -4036,7 +4453,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=131" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=132" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -4059,8 +4476,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=131', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=131', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=132', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=132', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -11478,7 +11895,7 @@ ${m.body}`;
               <span class="slider"></span>
             </label>
           </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div class="form-grid-2">
             <div class="form-group">
               <label class="form-label" for="cfgAttRegularDay">정기 요일 (선택·입력)</label>
               <select id="cfgAttRegularDay" class="form-select" style="margin-bottom:5px;" onchange="syncRegularDaySelectToText()">
@@ -11491,7 +11908,7 @@ ${m.body}`;
               <input id="cfgAttRegularLabel" class="form-input" maxlength="16" value="${escapeHtml(cfg.regularLabel || '주일 예배')}" />
             </div>
           </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div class="form-grid-2">
             <div class="form-group">
               <label class="form-label" for="cfgAttRegularStart">시작 시간 (KST)</label>
               <div class="combo-input-row">
