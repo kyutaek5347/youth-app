@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=143" />
+  <link rel="manifest" href="./manifest.json?v=144" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=143" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=143" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=144" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=144" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2678,7 +2678,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=143" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=144" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -2849,6 +2849,9 @@
           </button>
           <button id="headerAccountBtn" class="icon-btn light hidden" type="button" title="내 비밀번호·계정" onclick="openAccountModal()">
             <span>👤</span>
+          </button>
+          <button id="headerAdminRenameBtn" class="icon-btn light hidden" type="button" title="내 관리자 이름 변경" onclick="openAdminRenameModal()">
+            <span>✏️</span>
           </button>
           <button id="headerNotifBtn" class="icon-btn light" type="button" title="알림 설정" onclick="openNotifModal()">
             <span>🔔</span>
@@ -3034,15 +3037,7 @@
       <div id="accountSummaryBox" class="status-meta" style="margin-bottom:10px;"></div>
       <div id="accountAttendanceBox" class="att-history-box"></div>
       <div id="accountRenameBox" class="form-group" style="background:#F8FAFC; border:1px solid var(--border); border-radius:12px; padding:11px 12px; margin-bottom:12px;"></div>
-      <div class="form-group" style="background:#F8FAFC; border:1px solid var(--border); border-radius:12px; padding:10px 12px; margin-bottom:14px;">
-        <label class="form-label" for="accBirthInput" style="margin-bottom:6px;">🎂 내 생일 등록 · 수정</label>
-        <div class="combo-input-row">
-          <input id="accBirthInput" type="text" inputmode="numeric" maxlength="10" autocomplete="bday" class="form-input" style="flex:1; background:#fff;" placeholder="예: 1998.01.16 (숫자 8자리)" oninput="formatBirthdayTyping(this)" />
-          <button class="combo-picker-btn" type="button" title="달력에서 선택" onclick="openNativePicker('accBirthDatePicker', 'accBirthInput', 'date')">📅</button>
-          <input id="accBirthDatePicker" type="date" class="hidden-native-picker" min="1940-01-01" onchange="syncPickerToText('accBirthDatePicker', 'accBirthInput', 'date')" />
-          <button id="saveAccBirthBtn" class="btn-sm primary" type="button" style="padding:10px 13px; white-space:nowrap;" onclick="handleSaveMyBirthday()">저장</button>
-        </div>
-      </div>
+      <div id="accountBirthBox" class="form-group" style="background:#F8FAFC; border:1px solid var(--border); border-radius:12px; padding:11px 12px; margin-bottom:14px;"></div>
       <div class="modal-tabs-2">
         <button id="accTabPw" class="modal-tab-btn active" type="button" onclick="switchAccountTab('pw')">비밀번호 변경</button>
         <button id="accTabDelete" class="modal-tab-btn" type="button" onclick="switchAccountTab('delete')">계정 삭제</button>
@@ -4781,7 +4776,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=143" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=144" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -4804,8 +4799,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=143', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=143', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=144', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=144', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -4977,9 +4972,14 @@
     let currentAdminName = '';
     let isRenamingAdmin = false;
     let isSyncingUnsyncedRenameLogs = false;
+    let isSyncingUnsyncedAuditLogs = false;
+    let auditLogs = [];
+    let unsubAuditLogs = null;
     let adminLogSearchQuery = '';
     let adminLogFilterType = 'all';
+    let adminLogFilterCategory = 'all';
     let knownPendingRenameMap = new Map();
+    let knownPendingBdayMap = new Map();
     let pendingAdminStatus = null; // null | 'pending'
     let memberHistoryMap = new Map();
     let unsubAdminRegistry = null;
@@ -5080,6 +5080,7 @@
       knownNoticeIds = new Set();
       knownPendingMemberIds = new Set();
       knownPendingRenameMap = new Map();
+      knownPendingBdayMap = new Map();
       knownQtIds = new Set();
       knownNoticeAlertMap = new Map();
       lastSeenLayoutAlertTs = 0;
@@ -5091,6 +5092,9 @@
       if (unsubAttendanceAdmin) { unsubAttendanceAdmin(); unsubAttendanceAdmin = null; }
       if (unsubMyAttendance) { unsubMyAttendance(); unsubMyAttendance = null; }
       if (unsubMemberHistory) { unsubMemberHistory(); unsubMemberHistory = null; }
+      if (unsubAuditLogs) { unsubAuditLogs(); unsubAuditLogs = null; }
+      auditLogs = [];
+      isSyncingUnsyncedAuditLogs = false;
       attendanceRecords = [];
       myAttendanceRecords = [];
       memberHistoryMap = new Map();
@@ -5585,6 +5589,7 @@
         membersFirstSnap = true;
         knownPendingMemberIds = new Set();
         knownPendingRenameMap = new Map();
+        knownPendingBdayMap = new Map();
         unsubMembersAll = db.collection('members').onSnapshot(snap => {
           const nextMembers = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
             .sort((a, b) => Number(b.createdTs || 0) - Number(a.createdTs || 0));
@@ -5594,6 +5599,9 @@
               if (m.status === 'pending') knownPendingMemberIds.add(m.id);
               if (m.status === 'approved' && m.pendingName) {
                 knownPendingRenameMap.set(m.id, `${m.pendingName}:${m.pendingNameTs || 0}`);
+              }
+              if (m.status === 'approved' && m.pendingBirthday) {
+                knownPendingBdayMap.set(m.id, `${m.pendingBirthday}:${m.pendingBirthdayTs || 0}`);
               }
             });
             membersFirstSnap = false;
@@ -5632,6 +5640,25 @@
               } else {
                 knownPendingRenameMap.delete(m.id);
               }
+              if (m.status === 'approved' && m.pendingBirthday) {
+                const bSig = `${m.pendingBirthday}:${m.pendingBirthdayTs || 0}`;
+                if (knownPendingBdayMap.get(m.id) !== bSig) {
+                  knownPendingBdayMap.set(m.id, bSig);
+                  dispatchAppNotification({
+                    type: 'member',
+                    icon: '🎂',
+                    title: '회원 생일 변경 승인 요청',
+                    body: `${m.name}님이 생일 변경(${formatBirthdayDisplay(m.pendingBirthday)})을 신청했습니다.`,
+                    onClick: () => {
+                      currentMainTab = 'manage';
+                      currentManageSubTab = 'members';
+                      applyScreen();
+                    }
+                  });
+                }
+              } else {
+                knownPendingBdayMap.delete(m.id);
+              }
             });
           }
 
@@ -5654,6 +5681,7 @@
         membersFirstSnap = true;
         knownPendingMemberIds = new Set();
         knownPendingRenameMap = new Map();
+        knownPendingBdayMap = new Map();
       }
 
       if (needsAllMembers && !unsubAdminSecret) {
@@ -5685,6 +5713,9 @@
             if (attendanceRecords.length > 0) syncUnsyncedAttendanceToSheet(attendanceRecords).catch(() => {});
             if (Array.isArray(adminRegistry.renameLogs) && adminRegistry.renameLogs.length > 0) {
               syncUnsyncedRenameLogsToSheet().catch(() => {});
+            }
+            if (auditLogs.length > 0) {
+              syncUnsyncedAuditLogsToSheet().catch(() => {});
             }
           }
           if (currentMainTab === 'manage' && (currentManageSubTab === 'worship' || currentManageSubTab === 'diagnostics' || currentManageSubTab === 'logs')) {
@@ -5727,6 +5758,23 @@
         unsubMemberHistory();
         unsubMemberHistory = null;
         memberHistoryMap = new Map();
+      }
+
+      if (needsAllMembers && !unsubAuditLogs) {
+        unsubAuditLogs = db.collection('auditLogs').onSnapshot(snap => {
+          auditLogs = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
+            .sort((a, b) => Number(b.ts || 0) - Number(a.ts || 0));
+          if (adminSheetUrl) {
+            syncUnsyncedAuditLogsToSheet().catch(() => {});
+          }
+          if (currentMainTab === 'manage' && currentManageSubTab === 'logs') {
+            applyScreen();
+          }
+        }, () => {});
+      } else if (!needsAllMembers && unsubAuditLogs) {
+        unsubAuditLogs();
+        unsubAuditLogs = null;
+        auditLogs = [];
       }
     }
 
@@ -6290,6 +6338,9 @@
         const prevName = myMemberDoc ? myMemberDoc.name : null;
         const prevPendingName = myMemberDoc ? myMemberDoc.pendingName : null;
         const prevResultTs = (myMemberDoc && myMemberDoc.lastRenameResult) ? Number(myMemberDoc.lastRenameResult.ts || 0) : 0;
+        const prevBday = myMemberDoc ? (myMemberDoc.birthday || '') : '';
+        const prevPendingBday = myMemberDoc ? (myMemberDoc.pendingBirthday || '') : '';
+        const prevBdayResTs = (myMemberDoc && myMemberDoc.lastBirthdayResult) ? Number(myMemberDoc.lastBirthdayResult.ts || 0) : 0;
         myMemberDoc = { ...doc.data(), id: String(doc.id) };
 
         if (myMemberDoc.status === 'approved') {
@@ -6317,6 +6368,29 @@
               body: `요청하신 [${curRes.requestedName || prevPendingName}] 변경이 거절되어 기존 이름(${myMemberDoc.name})이 유지됩니다.`,
               onClick: () => { openAccountModal(); }
             });
+          }
+          const curBdayRes = myMemberDoc.lastBirthdayResult || null;
+          const curBdayResTs = curBdayRes ? Number(curBdayRes.ts || 0) : 0;
+          if (prevPendingBday && !myMemberDoc.pendingBirthday && curBdayRes && curBdayResTs > prevBdayResTs) {
+            if (curBdayRes.status === 'approved') {
+              showToast(`✅ 생일 변경이 승인되었습니다! (${formatBirthdayDisplay(myMemberDoc.birthday)})`);
+              dispatchAppNotification({
+                type: 'notice',
+                icon: '🎂',
+                title: '생일 변경 승인 완료',
+                body: `${formatBirthdayDisplay(prevBday)} → ${formatBirthdayDisplay(myMemberDoc.birthday)}`,
+                onClick: () => { openAccountModal(); }
+              });
+            } else if (curBdayRes.status === 'rejected') {
+              showToast(`❌ 생일 변경 신청이 거절되어 기존 생일(${formatBirthdayDisplay(myMemberDoc.birthday)})이 유지됩니다.`);
+              dispatchAppNotification({
+                type: 'notice',
+                icon: 'ℹ️',
+                title: '생일 변경 신청 거절 안내',
+                body: `요청하신 생일(${formatBirthdayDisplay(curBdayRes.requestedBirthday || prevPendingBday)}) 변경이 거절되어 기존 생일이 유지됩니다.`,
+                onClick: () => { openAccountModal(); }
+              });
+            }
           }
           subscribeCoreData();
           if (prevRoleId && prevRoleId !== myMemberDoc.roleId) {
@@ -6696,6 +6770,14 @@
             await db.collection('members').doc(String(member.id)).update({
               status: 'pending', createdAt: formatToday(), createdTs: Date.now()
             });
+            recordAuditLog({
+              actorType: 'member',
+              actorName: member.name,
+              category: '회원·생일',
+              action: '가입 재신청',
+              target: member.name,
+              detail: '보류 상태에서 재신청'
+            });
             showToast('가입 승인을 다시 신청했습니다.');
           } catch (err) { handleDbError(err, '재신청'); }
         };
@@ -6788,6 +6870,14 @@
         await db.collection('members').doc(uid).set(newMember);
         fbUser = cred.user;
         myMemberDoc = newMember;
+        recordAuditLog({
+          actorType: 'member',
+          actorName: name,
+          category: '회원·생일',
+          action: '회원가입 신청',
+          target: name,
+          detail: `신청 역할: ${selectedRoleObj.name} · 생일: ${formatBirthdayDisplay(birthday)}`
+        });
 
         document.getElementById('signupNameInput').value = '';
         document.getElementById('signupBirthInput').value = '';
@@ -7127,6 +7217,10 @@
       if (qrBtn) qrBtn.className = `icon-btn ${isManageMode ? 'dark' : 'light'}`;
       const accBtn = document.getElementById('headerAccountBtn');
       accBtn.className = `icon-btn ${isManageMode ? 'dark' : 'light'}${(user.isSuperAdmin || user.isPreviewMember) ? ' hidden' : ''}`;
+      const admRenameBtn = document.getElementById('headerAdminRenameBtn');
+      if (admRenameBtn) {
+        admRenameBtn.className = `icon-btn ${isManageMode ? 'dark' : 'light'}${user.isSuperAdmin ? '' : ' hidden'}`;
+      }
       document.getElementById('headerNotifBtn').className = `icon-btn ${isManageMode ? 'dark' : 'light'}`;
       document.getElementById('headerLogoutBtn').className = `exit-btn ${isManageMode ? 'dark' : 'light'}`;
       updateHeaderNotifDot();
@@ -7136,7 +7230,7 @@
       badge.style.background = user.role.color;
       document.getElementById('headerSubText').textContent = `${user.name}님`;
 
-      const pendingCount = members.filter(m => m.status === 'pending').length + members.filter(m => m.status === 'approved' && m.pendingName).length + (adminRegistry.items || []).filter(a => a.status === 'pending').length;
+      const pendingCount = members.filter(m => m.status === 'pending').length + members.filter(m => m.status === 'approved' && m.pendingName).length + members.filter(m => m.status === 'approved' && m.pendingBirthday).length + (adminRegistry.items || []).filter(a => a.status === 'pending').length;
       const tabbar = document.getElementById('appTabbar');
       tabbar.className = `tabbar ${isManageMode ? 'dark' : 'light'}`;
       const orderedTabs = getValidTabOrder().filter(k => k !== 'manage' || canManage);
@@ -8040,8 +8134,10 @@
       const targetIdx = idx + dir;
       if (targetIdx < 0 || targetIdx >= blocks.length) return;
       const next = structuredClone(blocks);
+      const movedName = getBlockDisplayLabel(next[idx]);
       [next[idx], next[targetIdx]] = [next[targetIdx], next[idx]];
       await saveBlocksToCloud(next, '메인 화면 배치가 변경되었습니다.');
+      recordAuditLog({ actorType: 'admin', category: '공지·배너', action: '메인 칸 순서 변경', target: movedName, detail: `${idx + 1}번 → ${targetIdx + 1}번` });
     };
 
     window.deleteBlock = async (id) => {
@@ -8049,6 +8145,7 @@
       if (!b || !confirm(`[${getBlockDisplayLabel(b)}] 영역을 삭제할까요?`)) return;
       const next = blocks.filter(x => x.id !== id);
       await saveBlocksToCloud(next, '영역이 삭제되었습니다.');
+      recordAuditLog({ actorType: 'admin', category: '공지·배너', action: '메인 칸 삭제', target: getBlockDisplayLabel(b), detail: b.desc || '' });
     };
 
     function renderBlockThemePalette() {
@@ -8289,6 +8386,7 @@
 
     window.restoreDefaultLayoutBlocks = async () => {
       await saveBlocksToCloud(structuredClone(DEFAULT_BLOCKS), '기본 메인 화면 칸이 복원되었습니다!');
+      recordAuditLog({ actorType: 'admin', category: '공지·배너', action: '메인 기본 칸 복원', target: '메인 화면 배치' });
     };
 
     window.toggleBlockHomeVisibility = async (id) => {
@@ -8302,6 +8400,7 @@
         b.publishAtTs = 0;
         b.hiddenOnHome = true;
         await saveBlocksToCloud(next, `[${dispName}] 칸을 임시저장(숨김)으로 전환했습니다.`, null);
+        recordAuditLog({ actorType: 'admin', category: '공지·배너', action: '메인 칸 숨김(임시저장)', target: dispName });
       } else {
         b.publishMode = 'now';
         b.publishAtTs = 0;
@@ -8313,6 +8412,7 @@
           targetRoles: Array.isArray(b.targetRoles) ? b.targetRoles : []
         };
         await saveBlocksToCloud(next, `[${dispName}] 칸을 지금 바로 게시했습니다!`, alertObj, id);
+        recordAuditLog({ actorType: 'admin', category: '공지·배너', action: '메인 칸 즉시 게시', target: dispName });
       }
     };
 
@@ -8342,6 +8442,7 @@
         }
         await batch.commit();
         await ensureHomeBlocksExistForTypes(['notice_list']);
+        recordAuditLog({ actorType: 'admin', category: '공지·배너', action: '공지 즉시 게시', target: n.title, detail: n.category || '' });
         showToast(`[${n.title}] 공지를 지금 바로 게시했습니다!`);
       } catch (err) {
         handleDbError(err, '공지 바로 게시');
@@ -8381,6 +8482,7 @@
         }
         await batch.commit();
         await ensureHomeBlocksExistForTypes(['hero_notice', 'notice_list']);
+        recordAuditLog({ actorType: 'admin', category: '공지·배너', action: '공지 상단 배너 고정', target: n.title });
         showToast('메인 화면 상단 배너에 바로 띄웠습니다!');
       } catch (err) { handleDbError(err, '배너 고정'); }
     };
@@ -8465,6 +8567,13 @@
           ? `⏰ ${tsToKstParts(publishAtTs).shortLabel}에 자동 공개되도록 예약했습니다!`
           : '메인 화면에 바로 게시했습니다!');
       await saveBlocksToCloud(next, doneMsg, alertObj, targetBlockId);
+      recordAuditLog({
+        actorType: 'admin',
+        category: '공지·배너',
+        action: id ? '메인 칸 수정' : '메인 칸 추가',
+        target: autoLabel,
+        detail: `게시: ${publishMode === 'draft' ? '임시저장' : (publishMode === 'scheduled' ? '예약' : '즉시')} · ${desc || finalTitle}`
+      });
     });
 
 
@@ -8481,6 +8590,7 @@
           batch.update(db.collection(col).doc(String(n.id)), { order: i });
         });
         await batch.commit();
+        recordAuditLog({ actorType: 'admin', category: '공지·배너', action: '공지 순서 변경', target: notices[idx] ? notices[idx].title : '', detail: `${idx + 1}번 → ${t + 1}번` });
         showToast('공지·광고 순서가 변경되었습니다.');
       } catch (err) { handleDbError(err, '순서 변경'); }
     };
@@ -8638,6 +8748,15 @@
         }
         await batch.commit();
 
+        recordAuditLog({
+          actorType: 'admin',
+          category: '공지·배너',
+          action: editId ? '공지·광고 수정' : '공지·광고 등록',
+          target: `[${category}] ${title}`,
+          beforeVal: (existingNotice && existingNotice.title !== title) ? existingNotice.title : '',
+          afterVal: (existingNotice && existingNotice.title !== title) ? title : '',
+          detail: `게시: ${publishMode === 'draft' ? '임시저장' : (publishMode === 'scheduled' ? '예약' : '즉시')} · ${body}`
+        });
         if (publishMode === 'now') {
           await ensureHomeBlocksExistForTypes(pinned ? ['hero_notice', 'notice_list'] : ['notice_list']);
           showToast(pinned ? '메인 상단 배너와 공지 목록에 바로 게시했습니다!' : '공지 목록에 바로 게시했습니다!');
@@ -8653,11 +8772,19 @@
 
     window.deleteNotice = async (id) => {
       if (!confirm('이 글을 삭제할까요?')) return;
+      const targetN = notices.find(x => String(x.id) === String(id));
       try {
         const batch = db.batch();
         batch.delete(db.collection('notices').doc(String(id)));
         batch.delete(db.collection('adminNotices').doc(String(id)));
         await batch.commit();
+        recordAuditLog({
+          actorType: 'admin',
+          category: '공지·배너',
+          action: '공지·광고 삭제',
+          target: targetN ? `[${targetN.category}] ${targetN.title}` : String(id),
+          detail: targetN ? targetN.body : ''
+        });
         showToast('삭제되었습니다.');
       } catch (err) { handleDbError(err, '공지 삭제'); }
     };
@@ -8667,6 +8794,8 @@
       const pending = members.filter(m => m.status === 'pending');
       const renamePending = members.filter(m => m.status === 'approved' && m.pendingName)
         .sort((a, b) => Number(b.pendingNameTs || 0) - Number(a.pendingNameTs || 0));
+      const bdayPending = members.filter(m => m.status === 'approved' && m.pendingBirthday)
+        .sort((a, b) => Number(b.pendingBirthdayTs || 0) - Number(a.pendingBirthdayTs || 0));
       const resetPending = members.filter(m => m.status === 'reset_pending');
       const approved = members.filter(m => m.status === 'approved');
       const rejected = members.filter(m => m.status === 'rejected');
@@ -8827,6 +8956,37 @@
           }).join('')}
         ` : ''}
 
+        ${bdayPending.length > 0 ? `
+          <div class="section-head" style="margin-top:20px;">
+            <h2 class="section-title">🎂 회원 생일 변경 승인 대기</h2>
+            <span class="tag warm">${bdayPending.length}건</span>
+          </div>
+          ${bdayPending.map(m => {
+            const r = getRoleById(m.roleId);
+            return `
+              <div class="card highlight-pending">
+                <div class="card-top">
+                  <div class="member-name">
+                    <span>${escapeHtml(m.name)}</span>
+                    <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
+                    <span class="tag warm">🎂 생일 변경 신청</span>
+                  </div>
+                  <span class="card-date">${escapeHtml(m.pendingBirthdayAt || '')}</span>
+                </div>
+                <div class="log-rename-diff" style="background:#FFF;">
+                  <span class="log-name-old">${escapeHtml(formatBirthdayDisplay(m.birthday))}</span>
+                  <span class="log-name-arrow">→</span>
+                  <span class="log-name-new">${escapeHtml(formatBirthdayDisplay(m.pendingBirthday))}</span>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:8px;">
+                  <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberBirthdayChange('${escapeJsAttr(m.id)}')">✅ 생일 변경 승인</button>
+                  <button class="btn-sm danger" style="padding:9px 12px;" onclick="rejectMemberBirthdayChange('${escapeJsAttr(m.id)}')">❌ 거절 (기존 생일 유지)</button>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        ` : ''}
+
         ${resetPending.length > 0 ? `
           <div class="section-head" style="margin-top:20px;">
             <h2 class="section-title">🔑 비밀번호 초기화 대기</h2>
@@ -8881,7 +9041,8 @@
                         <span>${escapeHtml(m.name)}</span>
                         <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
                         ${isNewcomer ? '<span class="tag warm" style="font-size:10px; padding:2px 6px;">메인 표시중</span>' : ''}
-                        ${m.pendingName ? `<span class="tag warm" style="font-size:10px; padding:2px 6px;">✏️ 변경신청: ${escapeHtml(m.pendingName)}</span>` : ''}
+                        ${m.pendingName ? `<span class="tag warm" style="font-size:10px; padding:2px 6px;">✏️ 이름신청: ${escapeHtml(m.pendingName)}</span>` : ''}
+                        ${m.pendingBirthday ? `<span class="tag warm" style="font-size:10px; padding:2px 6px;">🎂 생일신청: ${escapeHtml(formatBirthdayDisplay(m.pendingBirthday))}</span>` : ''}
                       </div>
                       <div class="member-meta">가입일 ${escapeHtml(m.createdAt)} · 🎂 ${escapeHtml(formatBirthdayDisplay(m.birthday))}${m.prevName ? ` · 이전 이름: ${escapeHtml(m.prevName)}` : ''}</div>
                     </div>
@@ -8974,6 +9135,14 @@
           isRejoin
         });
         await batch.commit();
+        recordAuditLog({
+          actorType: 'admin',
+          category: '회원·생일',
+          action: isRejoin ? '회원 재가입 승인' : '회원 가입 승인',
+          target: m.name,
+          detail: `부여 역할: ${assignedRoleName}`,
+          decision: 'approved'
+        });
         syncMemberEventToSheet({
           name: m.name,
           role: assignedRoleName,
@@ -9017,6 +9186,14 @@
           });
         }
         await batch.commit();
+        recordAuditLog({
+          actorType: 'admin',
+          category: '회원·생일',
+          action: '회원 생일 직접 수정',
+          target: m.name,
+          beforeVal: formatBirthdayDisplay(m.birthday),
+          afterVal: formatBirthdayDisplay(birthday)
+        });
         document.getElementById('memberBirthdayModal').classList.remove('open');
         showToast(`${m.name}님의 생일이 저장되었습니다!`);
       } catch (err) {
@@ -9044,8 +9221,17 @@
         } else {
           batch.delete(db.collection('newcomers').doc(String(id)));
         }
+        const prevRoleName = getRoleById(m.roleId).name;
         await batch.commit();
         const roleName = getRoleById(newRoleId).name;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '회원·생일',
+          action: (wasNewcomer && !willBeNewcomer) ? '새신자 해제·역할 변경' : '회원 역할 변경',
+          target: m.name,
+          beforeVal: prevRoleName,
+          afterVal: roleName
+        });
         syncMemberEventToSheet({
           name: m.name,
           role: roleName,
@@ -9116,6 +9302,13 @@
         }, { merge: true });
         batch.update(db.collection('members').doc(String(id)), { sheetSyncedStatus: '보류' });
         await batch.commit();
+        recordAuditLog({
+          actorType: 'admin',
+          category: '회원·생일',
+          action: '회원 가입 보류',
+          target: m.name,
+          decision: 'rejected'
+        });
         syncMemberEventToSheet({
           name: m.name,
           role: m.requestedRole || getRoleById(m.roleId).name,
@@ -9167,6 +9360,13 @@
         });
         await batch.commit();
 
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '회원 비밀번호 초기화 발급',
+          target: m.name,
+          detail: '24시간 유효 1회용 코드 발급'
+        });
         openIssuedResetModalUI(m.name, code);
         showToast(`${m.name}님의 비밀번호가 초기화되었습니다.`);
       } catch (err) {
@@ -9219,6 +9419,12 @@
           resetExpiresAt: FieldValue.delete()
         });
         await batch.commit();
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '회원 비밀번호 초기화 취소',
+          target: m.name
+        });
         showToast(`${m.name}님의 비밀번호 초기화를 취소했습니다.`);
       } catch (err) {
         handleDbError(err, '초기화 취소');
@@ -9251,6 +9457,13 @@
           removedBy: currentAdminName || '관리자'
         }, { merge: true });
         await batch.commit();
+        recordAuditLog({
+          actorType: 'admin',
+          category: '회원·생일',
+          action: '회원 삭제',
+          target: m.name,
+          detail: `역할: ${m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미승인')}`
+        });
         syncMemberEventToSheet({
           name: m.name,
           role: m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미승인'),
@@ -9406,6 +9619,13 @@
         document.getElementById('newAdminPwInput').type = 'password';
         const tBtn = document.getElementById('toggleNewAdminPwBtn');
         if (tBtn) tBtn.textContent = '👁️ 보기';
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '최고 관리자 코드 변경',
+          target: '최고 관리자 코드',
+          detail: '보안을 위해 변경된 코드 내용은 로그에 표시하지 않음'
+        });
         showToast('최고 관리자 코드가 변경 및 공유 업데이트되었습니다!');
       } catch (err) {
         showToast(authErrorToKorean(err, true));
@@ -9447,6 +9667,7 @@
 
       const next = sanitizeRolesList(roles);
       let msg = '';
+      const prevRoleObj = id ? roles.find(x => x.id === id) : null;
       if (id) {
         const r = next.find(x => x.id === id);
         if (r) { r.name = name; r.color = selectedRoleColor; }
@@ -9460,6 +9681,14 @@
         await db.collection('config').doc('roles').set({
           items: next,
           metaById: buildRolesMetaByIdMap(next)
+        });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '역할·메뉴',
+          action: id ? '역할 수정' : '역할 추가',
+          target: name,
+          beforeVal: prevRoleObj ? prevRoleObj.name : '',
+          afterVal: prevRoleObj ? name : ''
         });
         document.getElementById('roleModal').classList.remove('open');
         showToast(msg);
@@ -9475,6 +9704,13 @@
         await db.collection('config').doc('roles').set({
           items: next,
           metaById: buildRolesMetaByIdMap(next)
+        });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '역할·메뉴',
+          action: '역할 순서 변경',
+          target: roles[idx] ? roles[idx].name : '',
+          detail: `${idx + 1}번 → ${t + 1}번`
         });
         showToast('역할 순서가 변경되었습니다.');
       } catch (err) {
@@ -9504,6 +9740,13 @@
           }
         });
         await batch.commit();
+        recordAuditLog({
+          actorType: 'admin',
+          category: '역할·메뉴',
+          action: '역할 삭제',
+          target: r.name,
+          detail: `소속 회원 대체 역할: ${fallback.name}`
+        });
         showToast(`[${r.name}] 역할이 삭제되었습니다.`);
       } catch (err) { handleDbError(err, '역할 삭제'); }
     };
@@ -9736,6 +9979,65 @@
       `;
     }
 
+    function renderAccountBirthBox() {
+      const box = document.getElementById('accountBirthBox');
+      const user = getCurrentUser();
+      if (!box || !user || user.isSuperAdmin || !myMemberDoc) return;
+      const curBday = isValidBirthdayStr(myMemberDoc.birthday) ? myMemberDoc.birthday : '';
+      const pendingBday = isValidBirthdayStr(myMemberDoc.pendingBirthday) ? myMemberDoc.pendingBirthday : '';
+      const lastRes = myMemberDoc.lastBirthdayResult || null;
+
+      if (pendingBday) {
+        box.innerHTML = `
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:6px; flex-wrap:wrap;">
+            <span style="font-size:12.5px; font-weight:800; color:#92400E;">⏳ 생일 변경 승인 대기 중</span>
+            <span class="tag warm" style="font-size:10.5px;">관리자 확인 대기</span>
+          </div>
+          <div class="log-rename-diff" style="background:#FFF; margin:6px 0 8px;">
+            <span class="log-name-old">${escapeHtml(formatBirthdayDisplay(curBday))}</span>
+            <span class="log-name-arrow">→</span>
+            <span class="log-name-new">${escapeHtml(formatBirthdayDisplay(pendingBday))}</span>
+          </div>
+          <div style="font-size:11.5px; color:#64748B; line-height:1.45; margin-bottom:8px;">
+            신청 일시: ${escapeHtml(myMemberDoc.pendingBirthdayAt || '-')}<br>
+            관리자가 승인하면 생일이 변경되며, 거절 시 기존 생일(${escapeHtml(formatBirthdayDisplay(curBday))})이 유지됩니다.
+          </div>
+          <button id="cancelMyBirthBtn" class="btn-sm danger" type="button" style="width:100%; padding:8px;" onclick="cancelMyBirthdayChangeRequest()">신청 취소하기</button>
+        `;
+        return;
+      }
+
+      let resHtml = '';
+      if (lastRes && lastRes.status === 'rejected') {
+        resHtml = `
+          <div style="background:#FEF2F2; border:1px solid #FECACA; color:#991B1B; border-radius:9px; padding:8px 10px; font-size:11.5px; line-height:1.45; margin-bottom:8px;">
+            ❌ 이전 생일 변경 신청(<b>${escapeHtml(formatBirthdayDisplay(lastRes.requestedBirthday || ''))}</b>)이 거절되어 기존 생일(<b>${escapeHtml(formatBirthdayDisplay(curBday))}</b>)이 유지되었습니다.${lastRes.at ? ` (${escapeHtml(lastRes.at)})` : ''}
+          </div>
+        `;
+      } else if (lastRes && lastRes.status === 'approved') {
+        resHtml = `
+          <div style="background:#ECFDF5; border:1px solid #A7F3D0; color:#065F46; border-radius:9px; padding:8px 10px; font-size:11.5px; line-height:1.45; margin-bottom:8px;">
+            ✅ 생일이 <b>${escapeHtml(formatBirthdayDisplay(lastRes.oldBirthday || ''))} → ${escapeHtml(formatBirthdayDisplay(lastRes.newBirthday || curBday))}</b>(으)로 변경되었습니다.
+          </div>
+        `;
+      }
+
+      box.innerHTML = `
+        <label class="form-label" for="accBirthInput" style="margin-bottom:6px;">🎂 내 생일 변경 신청 (관리자 승인 필요)</label>
+        ${resHtml}
+        <div class="combo-input-row">
+          <input id="accBirthInput" type="text" inputmode="numeric" maxlength="10" autocomplete="bday" class="form-input" style="flex:1; background:#fff;" value="${escapeHtml(curBday ? formatBirthdayDisplay(curBday) : '')}" placeholder="예: 1998.01.16 (숫자 8자리)" oninput="formatBirthdayTyping(this)" />
+          <button class="combo-picker-btn" type="button" title="달력에서 선택" onclick="openNativePicker('accBirthDatePicker', 'accBirthInput', 'date')">📅</button>
+          <input id="accBirthDatePicker" type="date" class="hidden-native-picker" min="1940-01-01" onchange="syncPickerToText('accBirthDatePicker', 'accBirthInput', 'date')" />
+          <button id="saveAccBirthBtn" class="btn-sm primary" type="button" style="padding:10px 12px; white-space:nowrap;" onclick="handleSaveMyBirthday()">변경 신청</button>
+        </div>
+        <div id="accBirthError" class="login-error" style="margin-top:7px; margin-bottom:0;"></div>
+        <div style="font-size:11px; color:#64748B; margin-top:6px; line-height:1.45;">
+          관리자 승인 후 생일이 변경되며, 거절 시 기존 생일이 유지됩니다. (보안 로그 기록)
+        </div>
+      `;
+    }
+
     function refreshAccountModalContent() {
       const user = getCurrentUser();
       if (!user || user.isSuperAdmin) return;
@@ -9746,6 +10048,7 @@
         <div><b>생년월일:</b> ${escapeHtml(formatBirthdayDisplay(curBday))}</div>
       `;
       renderAccountRenameBox();
+      renderAccountBirthBox();
       renderAccountAttendanceBox();
     }
 
@@ -9754,8 +10057,6 @@
       if (!user || user.isSuperAdmin) return;
       document.getElementById('accPwError').classList.remove('show');
       document.getElementById('accDeleteError').classList.remove('show');
-      const curBday = (myMemberDoc && isValidBirthdayStr(myMemberDoc.birthday)) ? myMemberDoc.birthday : '';
-      document.getElementById('accBirthInput').value = curBday ? formatBirthdayDisplay(curBday) : '';
       refreshAccountModalContent();
       switchAccountTab(tab);
       document.getElementById('accountModal').classList.add('open');
@@ -9793,6 +10094,16 @@
         myMemberDoc.pendingName = newName;
         myMemberDoc.pendingNameAt = nowInfo.dateTimeFull;
         myMemberDoc.pendingNameTs = nowTs;
+        recordAuditLog({
+          actorType: 'member',
+          actorName: user.name,
+          category: '회원·생일',
+          action: '이름 변경 신청',
+          target: user.name,
+          beforeVal: user.name,
+          afterVal: newName,
+          detail: '관리자 승인 대기'
+        });
         renderAccountRenameBox();
         showToast(`이름 변경 신청([${newName}])이 접수되었습니다! 관리자 승인을 기다려 주세요.`);
       } catch (err) {
@@ -9824,9 +10135,20 @@
           pendingNameAt: FieldValue.delete(),
           pendingNameTs: FieldValue.delete()
         });
+        const canceledName = myMemberDoc.pendingName;
         delete myMemberDoc.pendingName;
         delete myMemberDoc.pendingNameAt;
         delete myMemberDoc.pendingNameTs;
+        recordAuditLog({
+          actorType: 'member',
+          actorName: user.name,
+          category: '회원·생일',
+          action: '이름 변경 신청 취소',
+          target: user.name,
+          beforeVal: canceledName,
+          afterVal: user.name,
+          detail: '본인 취소'
+        });
         renderAccountRenameBox();
         showToast('이름 변경 신청을 취소했습니다.');
       } catch (err) {
@@ -9839,35 +10161,97 @@
 
     window.handleSaveMyBirthday = async () => {
       const user = getCurrentUser();
-      if (!user || user.isSuperAdmin || !fbUser) return;
-      const birthday = normalizeBirthdayInput(document.getElementById('accBirthInput').value);
+      if (!user || user.isSuperAdmin || !fbUser || !myMemberDoc) return;
+      const errEl = document.getElementById('accBirthError');
+      if (errEl) errEl.classList.remove('show');
+      const inp = document.getElementById('accBirthInput');
+      const birthday = normalizeBirthdayInput(inp ? inp.value : '');
       if (!isValidBirthdayStr(birthday)) {
-        return showToast('생년월일 8자리(예: 1998.01.16)를 올바르게 입력해 주세요.');
+        if (errEl) { errEl.textContent = '생년월일 8자리(예: 1998.01.16)를 올바르게 입력해 주세요.'; errEl.classList.add('show'); }
+        return;
       }
+      const curBday = isValidBirthdayStr(myMemberDoc.birthday) ? myMemberDoc.birthday : '';
+      if (birthday === curBday) {
+        if (errEl) { errEl.textContent = '현재 등록된 생일과 동일합니다. 다른 날짜를 입력해 주세요.'; errEl.classList.add('show'); }
+        return;
+      }
+      if (!confirm(`[${formatBirthdayDisplay(curBday)}] → [${formatBirthdayDisplay(birthday)}](으)로 생일 변경을 신청할까요?\n관리자 승인 후 적용됩니다.`)) return;
+
       const btn = document.getElementById('saveAccBirthBtn');
-      btn.disabled = true;
+      if (btn) { btn.disabled = true; btn.textContent = '신청중...'; }
       try {
-        const uid = fbUser.uid;
-        await db.collection('members').doc(uid).update({ birthday });
-        await db.collection('birthdays').doc(uid).set({
-          uid,
-          name: user.name,
-          md: birthdayToMd(birthday),
-          updatedAt: Date.now()
+        const nowInfo = getKstNowInfo();
+        const nowTs = Date.now();
+        await db.collection('members').doc(fbUser.uid).update({
+          pendingBirthday: birthday,
+          pendingBirthdayAt: nowInfo.dateTimeFull,
+          pendingBirthdayTs: nowTs
         });
-        if (myMemberDoc) {
-          myMemberDoc.birthday = birthday;
-        }
-        document.getElementById('accountSummaryBox').innerHTML = `
-          <div><b>아이디 (성명):</b> ${escapeHtml(user.name)}</div>
-          <div><b>역할:</b> ${escapeHtml(user.role.name)}</div>
-          <div><b>생년월일:</b> ${escapeHtml(formatBirthdayDisplay(birthday))}</div>
-        `;
-        showToast('생일이 저장되었습니다!');
+        myMemberDoc.pendingBirthday = birthday;
+        myMemberDoc.pendingBirthdayAt = nowInfo.dateTimeFull;
+        myMemberDoc.pendingBirthdayTs = nowTs;
+        recordAuditLog({
+          actorType: 'member',
+          actorName: user.name,
+          category: '회원·생일',
+          action: '생일 변경 신청',
+          target: user.name,
+          beforeVal: formatBirthdayDisplay(curBday),
+          afterVal: formatBirthdayDisplay(birthday),
+          detail: '관리자 승인 대기'
+        });
+        renderAccountBirthBox();
+        showToast(`생일 변경 신청(${formatBirthdayDisplay(birthday)})이 접수되었습니다! 관리자 승인을 기다려 주세요.`);
       } catch (err) {
-        handleDbError(err, '생일 저장');
+        console.error('Member birthday request error:', err);
+        if (err && err.code === 'permission-denied') {
+          if (errEl) {
+            errEl.textContent = 'Firestore 보안 규칙 업데이트가 필요합니다. 관리자에게 최신 규칙 게시를 요청해 주세요.';
+            errEl.classList.add('show');
+          }
+          showToast('Firestore 보안 규칙 업데이트가 필요합니다.');
+        } else {
+          handleDbError(err, '생일 변경 신청');
+        }
       } finally {
-        btn.disabled = false;
+        const b = document.getElementById('saveAccBirthBtn');
+        if (b) { b.disabled = false; b.textContent = '변경 신청'; }
+      }
+    };
+
+    window.cancelMyBirthdayChangeRequest = async () => {
+      const user = getCurrentUser();
+      if (!user || user.isSuperAdmin || !fbUser || !myMemberDoc || !myMemberDoc.pendingBirthday) return;
+      if (!confirm('대기 중인 생일 변경 신청을 취소할까요?')) return;
+      const btn = document.getElementById('cancelMyBirthBtn');
+      if (btn) btn.disabled = true;
+      try {
+        const canceledBday = myMemberDoc.pendingBirthday;
+        await db.collection('members').doc(fbUser.uid).update({
+          pendingBirthday: FieldValue.delete(),
+          pendingBirthdayAt: FieldValue.delete(),
+          pendingBirthdayTs: FieldValue.delete()
+        });
+        delete myMemberDoc.pendingBirthday;
+        delete myMemberDoc.pendingBirthdayAt;
+        delete myMemberDoc.pendingBirthdayTs;
+        recordAuditLog({
+          actorType: 'member',
+          actorName: user.name,
+          category: '회원·생일',
+          action: '생일 변경 신청 취소',
+          target: user.name,
+          beforeVal: formatBirthdayDisplay(canceledBday),
+          afterVal: formatBirthdayDisplay(myMemberDoc.birthday),
+          detail: '본인 취소'
+        });
+        renderAccountBirthBox();
+        showToast('생일 변경 신청을 취소했습니다.');
+      } catch (err) {
+        handleDbError(err, '생일 변경 신청 취소');
+      } finally {
+        const b = document.getElementById('cancelMyBirthBtn');
+        if (b) b.disabled = false;
       }
     };
 
@@ -9925,6 +10309,15 @@
         const uid = fbUser.uid;
         const cred = firebase.auth.EmailAuthProvider.credential(fbUser.email, curPw);
         await auth.currentUser.reauthenticateWithCredential(cred);
+        const selfName = (myMemberDoc && myMemberDoc.name) ? myMemberDoc.name : '회원';
+        await recordAuditLog({
+          actorType: 'member',
+          actorName: selfName,
+          category: '회원·생일',
+          action: '회원 탈퇴(계정 삭제)',
+          target: selfName,
+          detail: '본인 직접 계정 삭제'
+        });
         await db.collection('birthdays').doc(uid).delete().catch(() => {});
         await db.collection('newcomers').doc(uid).delete().catch(() => {});
         await db.collection('members').doc(uid).delete();
@@ -11202,11 +11595,23 @@ ${m.body}`;
       const btn = document.getElementById('qtCommentSubmitBtn');
       btn.disabled = true;
       try {
+        const qtPostObj = getQtPostById(currentQtDetailId);
+        const qtPostTitle = (qtPostObj && (qtPostObj.passage || qtPostObj.title)) ? (qtPostObj.passage || qtPostObj.title) : currentQtDetailId;
         if (editingCommentId) {
+          const prevC = qtComments.find(x => x.id === editingCommentId);
           await db.collection('qtComments').doc(editingCommentId).update({
             body,
             edited: true,
             updatedTs: Date.now()
+          });
+          recordAuditLog({
+            actorType: user.isSuperAdmin ? 'admin' : 'member',
+            actorName: user.name,
+            category: '댓글',
+            action: '댓글 수정',
+            target: qtPostTitle,
+            beforeVal: prevC ? prevC.body : '',
+            afterVal: body
           });
           editingCommentId = null;
           btn.textContent = '등록';
@@ -11222,6 +11627,14 @@ ${m.body}`;
             roleColor: user.role.color,
             body,
             createdTs: Date.now()
+          });
+          recordAuditLog({
+            actorType: user.isSuperAdmin ? 'admin' : 'member',
+            actorName: user.name,
+            category: '댓글',
+            action: '댓글 작성',
+            target: qtPostTitle,
+            detail: body
           });
           showToast('묵상 댓글이 등록되었습니다!');
         }
@@ -11246,8 +11659,18 @@ ${m.body}`;
 
     window.deleteQtComment = async (cid) => {
       if (!confirm('이 댓글을 삭제할까요?')) return;
+      const targetC = qtComments.find(x => x.id === cid);
+      const curU = getCurrentUser();
       try {
         await db.collection('qtComments').doc(cid).delete();
+        recordAuditLog({
+          actorType: (curU && curU.isSuperAdmin) ? 'admin' : 'member',
+          actorName: curU ? curU.name : '회원',
+          category: '댓글',
+          action: '댓글 삭제',
+          target: targetC ? `${targetC.authorName || '작성자'}의 댓글` : cid,
+          detail: targetC ? targetC.body : ''
+        });
         if (editingCommentId === cid) {
           editingCommentId = null;
           document.getElementById('qtCommentInput').value = '';
@@ -11321,6 +11744,7 @@ ${m.body}`;
         await db.collection('config').doc('layout').set({
           hiddenAutoQtDate: getKstDateParts().dot
         }, { merge: true });
+        recordAuditLog({ actorType: 'admin', category: '오늘의 말씀', action: '오늘 자동 말씀 숨김', target: getKstDateParts().dot });
         showToast('오늘의 자동 말씀을 숨겼습니다.');
       } catch (err) {
         handleDbError(err, '자동 말씀 숨김');
@@ -11332,6 +11756,7 @@ ${m.body}`;
         await db.collection('config').doc('layout').set({
           hiddenAutoQtDate: ''
         }, { merge: true });
+        recordAuditLog({ actorType: 'admin', category: '오늘의 말씀', action: '오늘 자동 말씀 복원', target: getKstDateParts().dot });
         showToast('오늘의 자동 말씀을 복원했습니다!');
       } catch (err) {
         handleDbError(err, '자동 말씀 복원');
@@ -11371,6 +11796,13 @@ ${m.body}`;
         lastSelfQtEditTs = Date.now();
         if (editId) {
           await db.collection('qtPosts').doc(editId).update({ date, passage, scripture, displayMode });
+          recordAuditLog({
+            actorType: 'admin',
+            category: '오늘의 말씀',
+            action: '말씀·글 수정',
+            target: passage || date,
+            detail: `${displayMode === 'replace' ? '대체 게시' : '함께 게시'} · ${scripture}`
+          });
           showToast(displayMode === 'replace'
             ? '오늘의 말씀 대체 글로 수정되었습니다!'
             : '오늘의 말씀과 함께 표시되도록 수정되었습니다!');
@@ -11379,6 +11811,13 @@ ${m.body}`;
           await db.collection('qtPosts').doc(targetId).set({
             id: targetId, date, passage, scripture, displayMode,
             authorName: user.name, notifyOnPublish, createdTs: Date.now()
+          });
+          recordAuditLog({
+            actorType: 'admin',
+            category: '오늘의 말씀',
+            action: '말씀·글 등록',
+            target: passage || date,
+            detail: `${displayMode === 'replace' ? '대체 게시' : '함께 게시'} · ${scripture}`
           });
           showToast(displayMode === 'replace'
             ? '오늘의 말씀을 이 글로 대체하여 등록했습니다!'
@@ -11394,6 +11833,7 @@ ${m.body}`;
 
     window.deleteQtPost = async (postId) => {
       if (!confirm('이 큐티 글과 관련 댓글·반응을 모두 삭제할까요?')) return;
+      const targetQt = qtPosts.find(x => String(x.id) === String(postId));
       try {
         const batch = db.batch();
         batch.delete(db.collection('qtPosts').doc(String(postId)));
@@ -11408,6 +11848,13 @@ ${m.body}`;
           });
         });
         await batch.commit();
+        recordAuditLog({
+          actorType: 'admin',
+          category: '오늘의 말씀',
+          action: '말씀·글 삭제',
+          target: targetQt ? (targetQt.passage || targetQt.date || String(postId)) : String(postId),
+          detail: targetQt ? (targetQt.scripture || '') : ''
+        });
         if (currentQtDetailId === String(postId)) {
           document.getElementById('qtDetailModal').classList.remove('open');
         }
@@ -11479,7 +11926,7 @@ ${m.body}`;
       const tabbar = document.getElementById('appTabbar');
       if (tabbar) {
         const canManage = hasAnyManagePerm(perms);
-        const pendingCount = members.filter(m => m.status === 'pending').length + members.filter(m => m.status === 'approved' && m.pendingName).length + (adminRegistry.items || []).filter(a => a.status === 'pending').length;
+        const pendingCount = members.filter(m => m.status === 'pending').length + members.filter(m => m.status === 'approved' && m.pendingName).length + members.filter(m => m.status === 'approved' && m.pendingBirthday).length + (adminRegistry.items || []).filter(a => a.status === 'pending').length;
         const orderedTabs = getValidTabOrder(draftTabOrder).filter(k => k !== 'manage' || canManage);
         const isMoreOpen = document.getElementById('quickLinksSheet').classList.contains('open');
         tabbar.innerHTML = orderedTabs.map(key => {
@@ -11693,6 +12140,13 @@ ${m.body}`;
         };
         draftTabInitialized = false;
         await db.collection('config').doc('labels').set(next);
+        recordAuditLog({
+          actorType: 'admin',
+          category: '역할·메뉴',
+          action: '메뉴 이모지·이름·순서 변경',
+          target: '하단·관리 탭 메뉴',
+          detail: `하단 순서: ${next.tabOrder.map(k => next[k] || k).join(' → ')}`
+        });
         applyScreen();
         showToast('전체 메뉴 이모지 · 이름 · 순서가 저장되었습니다!');
       } catch (err) {
@@ -11921,6 +12375,13 @@ ${m.body}`;
       btn.disabled = true;
       try {
         await saveQuickLinksToCloud(next, id ? '사이트 바로가기가 수정되었습니다!' : '새 사이트 바로가기가 추가되었습니다!');
+        recordAuditLog({
+          actorType: 'admin',
+          category: '바로가기',
+          action: id ? '사이트 바로가기 수정' : '사이트 바로가기 추가',
+          target: label,
+          detail: url
+        });
         document.getElementById('quickLinkModal').classList.remove('open');
       } finally {
         btn.disabled = false;
@@ -11933,6 +12394,13 @@ ${m.body}`;
       const next = structuredClone(quickLinks);
       [next[idx], next[t]] = [next[t], next[idx]];
       await saveQuickLinksToCloud(next, '사이트 바로가기 순서가 변경되었습니다.');
+      recordAuditLog({
+        actorType: 'admin',
+        category: '바로가기',
+        action: '사이트 바로가기 순서 변경',
+        target: quickLinks[idx] ? quickLinks[idx].label : '',
+        detail: `${idx + 1}번 → ${t + 1}번`
+      });
     };
 
     window.deleteQuickLink = async (id) => {
@@ -11940,6 +12408,13 @@ ${m.body}`;
       if (!ql || !confirm(`[${ql.label}] 바로가기를 삭제할까요?`)) return;
       const next = quickLinks.filter(x => x.id !== id);
       await saveQuickLinksToCloud(next, '사이트 바로가기가 삭제되었습니다.');
+      recordAuditLog({
+        actorType: 'admin',
+        category: '바로가기',
+        action: '사이트 바로가기 삭제',
+        target: ql.label,
+        detail: ql.url || ''
+      });
     };
 
     // ==================== 18. 생일자 · 새신자 축하 멘트 관리자 편집 ====================
@@ -12004,6 +12479,13 @@ ${m.body}`;
       btn.disabled = true;
       try {
         await db.collection('config').doc('layout').set({ celebrationMsgs: next }, { merge: true });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '공지·배너',
+          action: '생일·새신자 축하 멘트 수정',
+          target: '축하 멘트',
+          detail: `생일: ${next.birthdayTitle} / 새신자: ${next.newcomerTitle}`
+        });
         document.getElementById('celebrationMsgsModal').classList.remove('open');
         showToast('생일 · 새신자 축하 멘트가 저장되었습니다!');
       } catch (err) {
@@ -12467,6 +12949,13 @@ ${m.body}`;
         };
         await db.collection('config').doc('inviteQr').set(nextDoc);
         inviteQrDoc = nextDoc;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '초대 QR 즉시 재발급',
+          target: nextDoc.date,
+          detail: '기존 당일 초대 QR 즉시 폐기'
+        });
         renderInviteQrModalCanvas();
         showToast('새 초대 QR이 즉시 재발급되었습니다! 기존 QR은 폐기되었습니다.');
       } catch (err) {
@@ -12821,6 +13310,14 @@ ${m.body}`;
           sheetSynced: false
         };
         await docRef.set(record);
+        recordAuditLog({
+          actorType: 'member',
+          actorName: user.name,
+          category: '예배·출석',
+          action: '출석 체크',
+          target: sess.colTitle || sess.label,
+          detail: `시각: ${record.time}`
+        });
 
         if (!myAttendanceRecords.some(r => r.id === docId)) {
           myAttendanceRecords.unshift(record);
@@ -12928,6 +13425,12 @@ ${m.body}`;
           lockAutoRegister: !!checked,
           items: adminRegistry.items || []
         }, { merge: true });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: checked ? '신규 관리자 자동 등록 잠금' : '신규 관리자 자동 등록 잠금 해제',
+          target: '관리자 등록 설정'
+        });
         showToast(checked
           ? '신규 관리자 자동 등록을 잠갔습니다. (기존 관리자 승인 필요)'
           : '신규 관리자 자동 등록 잠금을 해제했습니다.');
@@ -12960,6 +13463,13 @@ ${m.body}`;
           time: nowStr,
           note: `승인자: ${currentAdminName || '관리자'}`
         }).catch(() => {});
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: wasReentry ? '관리자 재입장 승인' : '신규 관리자 승인',
+          target: target.name,
+          decision: 'approved'
+        });
         showToast(`${target.name}님의 관리자 ${wasReentry ? '재입장' : '등록'}을 승인했습니다!`);
       } catch (err) { handleDbError(err, '관리자 승인'); }
     };
@@ -12985,6 +13495,13 @@ ${m.body}`;
           time: nowStr,
           note: `처리자: ${currentAdminName || '관리자'}`
         }).catch(() => {});
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '관리자 입장 요청 거절',
+          target: target.name,
+          decision: 'rejected'
+        });
         showToast(`${target.name}님의 관리자 요청을 거절했습니다.`);
       } catch (err) { handleDbError(err, '관리자 거절'); }
     };
@@ -13013,60 +13530,184 @@ ${m.body}`;
           time: nowStr,
           note: `해제자: ${currentAdminName || '관리자'}`
         }).catch(() => {});
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '관리자 해제',
+          target: target.name
+        });
         showToast(`${target.name}님을 관리자에서 해제했습니다.`);
       } catch (err) { handleDbError(err, '관리자 해제'); }
     };
 
-    // --- 관리자·회원 이름 변경 + 보안 감사 로그(📋 로그 탭) + 구글 시트 자동 기록 ---
-    function buildRenameSheetPayload(logItem) {
-      const isMember = logItem.type === 'member_rename' || logItem.targetType === 'member';
-      const decision = logItem.decision || 'approved';
-      const actor = String(logItem.actorName || logItem.oldName || '관리자');
-      const oldN = String(logItem.oldName || '');
-      const newN = String(logItem.newName || '');
-      const dateStr = logItem.dateWithDow || (logItem.date ? `${logItem.date}${logItem.dow ? ` (${logItem.dow})` : ''}` : '');
-      const timeOnly = String(logItem.time || '');
-      const fullDt = logItem.dateTime || `${dateStr} ${timeOnly}`.trim();
+    // --- 통합 보안 감사 로그 (auditLogs · 관리자 전체 활동 + 이용자 악용 가능 활동 · 삭제 불가 · 구글 시트 자동 연동) ---
+    function truncateLogText(str, maxLen = 140) {
+      const s = String(str || '').replace(/\s+/g, ' ').trim();
+      if (!s) return '';
+      return s.length > maxLen ? (s.slice(0, maxLen) + '…') : s;
+    }
 
-      if (isMember) {
-        const isRejected = decision === 'rejected';
-        return {
-          action: 'admin_log',
-          logType: isRejected ? 'member_rename_reject' : 'member_rename',
-          logId: String(logItem.id || ''),
-          name: isRejected ? `[회원] ${oldN} (신청: ${newN})` : `[회원] ${oldN} → ${newN}`,
-          oldName: oldN,
-          newName: newN,
-          actorName: actor,
-          targetType: 'member',
-          decision,
-          status: isRejected ? '회원 이름 변경 거절' : '회원 이름 변경 승인',
-          date: dateStr,
-          timeOnly,
-          time: fullDt,
-          note: isRejected
-            ? `처리자: ${actor} · 거절 (기존 이름 ${oldN} 유지)`
-            : `승인자: ${actor} · ${oldN} → ${newN}`
-        };
-      }
+    function normalizeLegacyRenameLog(l) {
+      const isMember = l.type === 'member_rename' || l.targetType === 'member';
+      const isRejected = l.decision === 'rejected';
+      return {
+        id: String(l.id || ('legacy_' + (l.ts || 0))),
+        isLegacyRename: true,
+        actorType: 'admin',
+        actorName: String(l.actorName || l.oldName || '관리자'),
+        category: isMember ? '회원·생일' : '보안·설정',
+        action: isMember ? (isRejected ? '회원 이름 변경 거절' : '회원 이름 변경 승인') : '관리자 이름 변경',
+        target: String(l.oldName || ''),
+        beforeVal: String(l.oldName || ''),
+        afterVal: String(l.newName || ''),
+        detail: isMember
+          ? (l.requestedAt ? `회원 신청 일시: ${l.requestedAt}` : (isRejected ? '기존 이름 유지' : '이름 변경 완료'))
+          : (l.isSelf !== false ? '본인 변경' : '타 관리자 변경'),
+        decision: l.decision || 'approved',
+        date: l.date || '',
+        dow: l.dow || '',
+        dateWithDow: l.dateWithDow || (l.date ? `${l.date}${l.dow ? ` (${l.dow})` : ''}` : ''),
+        time: l.time || '',
+        dateTime: l.dateTime || '',
+        ts: Number(l.ts || 0),
+        sheetSynced: !!l.sheetSynced
+      };
+    }
 
-      const kindLabel = logItem.isSelf ? '본인 변경' : '타 관리자 변경';
+    function getMergedAuditLogs() {
+      const map = new Map();
+      (Array.isArray(adminRegistry.renameLogs) ? adminRegistry.renameLogs : []).forEach(l => {
+        if (l && l.id) map.set(String(l.id), normalizeLegacyRenameLog(l));
+      });
+      (Array.isArray(auditLogs) ? auditLogs : []).forEach(l => {
+        if (l && l.id) map.set(String(l.id), { ...l, id: String(l.id), isLegacyRename: false });
+      });
+      return Array.from(map.values()).sort((a, b) => Number(b.ts || 0) - Number(a.ts || 0));
+    }
+
+    function buildAuditLogSheetPayload(entry) {
+      const isMemActor = entry.actorType === 'member';
+      const whoTag = isMemActor ? '[이용자]' : '[관리자]';
+      const actor = String(entry.actorName || (isMemActor ? '회원' : '관리자'));
+      const act = String(entry.action || '활동');
+      const cat = String(entry.category || '일반');
+      const diffPart = (entry.beforeVal && entry.afterVal)
+        ? `${entry.beforeVal} → ${entry.afterVal}`
+        : (entry.target || '');
+      const dateStr = entry.dateWithDow || (entry.date ? `${entry.date}${entry.dow ? ` (${entry.dow})` : ''}` : '');
+      const timeOnly = String(entry.time || '');
+      const fullDt = entry.dateTime || `${dateStr} ${timeOnly}`.trim();
+      const noteParts = [
+        `[${cat}] ${act}`,
+        diffPart ? `대상: ${diffPart}` : '',
+        entry.detail ? truncateLogText(entry.detail, 120) : ''
+      ].filter(Boolean);
       return {
         action: 'admin_log',
-        logType: 'admin_rename',
-        logId: String(logItem.id || ''),
-        name: `[관리자] ${oldN} → ${newN}`,
-        oldName: oldN,
-        newName: newN,
+        logType: 'audit_log',
+        logId: String(entry.id || ''),
+        actorType: isMemActor ? 'member' : 'admin',
         actorName: actor,
-        targetType: 'admin',
-        isSelf: !!logItem.isSelf,
-        status: '관리자 이름 변경',
+        category: cat,
+        name: `${whoTag} ${actor}`,
+        status: `[${cat}] ${act}`,
         date: dateStr,
         timeOnly,
         time: fullDt,
-        note: `변경자: ${actor} (${kindLabel}) · ${oldN} → ${newN}`
+        note: noteParts.join(' · ')
       };
+    }
+
+    function buildRenameSheetPayload(logItem) {
+      return buildAuditLogSheetPayload(normalizeLegacyRenameLog(logItem));
+    }
+
+    async function recordAuditLog({
+      actorType = '',
+      actorName = '',
+      category = '보안·설정',
+      action = '',
+      target = '',
+      beforeVal = '',
+      afterVal = '',
+      detail = '',
+      decision = ''
+    }) {
+      try {
+        if (!fbUser || !action) return null;
+        const u = getCurrentUser();
+        const isActualAdmin = (fbUser.email || '').toLowerCase() === ADMIN_EMAIL;
+        const resolvedActorType = actorType || (isActualAdmin ? 'admin' : 'member');
+        const resolvedActorName = String(
+          actorName || (resolvedActorType === 'admin' ? (currentAdminName || '관리자') : ((u && u.name) || (myMemberDoc && myMemberDoc.name) || '회원'))
+        ).trim().slice(0, 30);
+
+        const nowInfo = getKstNowInfo();
+        const nowTs = Date.now();
+        const id = 'alog_' + nowTs + '_' + Math.random().toString(36).slice(2, 7);
+
+        const entry = {
+          id,
+          actorType: resolvedActorType,
+          actorUid: String(fbUser.uid),
+          actorName: resolvedActorName,
+          category: String(category || '일반').slice(0, 24),
+          action: String(action).slice(0, 40),
+          target: truncateLogText(target, 80),
+          beforeVal: truncateLogText(beforeVal, 120),
+          afterVal: truncateLogText(afterVal, 120),
+          detail: truncateLogText(detail, 260),
+          decision: String(decision || '').slice(0, 20),
+          date: nowInfo.dot,
+          dow: nowInfo.dowLabel,
+          dateWithDow: nowInfo.dateWithDow,
+          time: nowInfo.timeWithSec,
+          dateTime: nowInfo.dateTimeFull,
+          ts: nowTs,
+          sheetSynced: false
+        };
+
+        await db.collection('auditLogs').doc(id).set(entry);
+
+        if (resolvedActorType === 'admin' && isActualAdmin) {
+          const sheetUrl = getAdminSheetUrl();
+          if (sheetUrl) {
+            postToGoogleSheet(buildAuditLogSheetPayload(entry), sheetUrl, true).then(res => {
+              if (res && res.ok) {
+                db.collection('auditLogs').doc(id).update({ sheetSynced: true }).catch(() => {});
+              }
+            }).catch(() => {});
+          }
+        }
+        return entry;
+      } catch (err) {
+        console.warn('Audit log write skipped:', err);
+        return null;
+      }
+    }
+
+    async function syncUnsyncedAuditLogsToSheet() {
+      const user = getCurrentUser();
+      const url = getAdminSheetUrl();
+      if (!user || !user.isSuperAdmin || !url || isSyncingUnsyncedAuditLogs) return 0;
+      const toSync = (Array.isArray(auditLogs) ? auditLogs : []).filter(l => l && l.sheetSynced !== true);
+      if (toSync.length === 0) return 0;
+
+      isSyncingUnsyncedAuditLogs = true;
+      let syncedCount = 0;
+      try {
+        const ordered = [...toSync].sort((a, b) => Number(a.ts || 0) - Number(b.ts || 0));
+        for (const item of ordered) {
+          const ok = await postToGoogleSheet(buildAuditLogSheetPayload(item), url);
+          if (ok) {
+            await db.collection('auditLogs').doc(String(item.id)).update({ sheetSynced: true }).catch(() => {});
+            syncedCount++;
+          }
+        }
+      } finally {
+        isSyncingUnsyncedAuditLogs = false;
+      }
+      return syncedCount;
     }
 
     async function syncUnsyncedRenameLogsToSheet() {
@@ -13113,8 +13754,8 @@ ${m.body}`;
     window.handleSyncRenameLogsToSheet = async () => {
       const url = getAdminSheetUrl();
       if (!url) return showToast('먼저 [⛪ 예배 관리] 탭에서 구글 시트 Apps Script URL을 등록해 주세요.');
-      const curLogs = Array.isArray(adminRegistry.renameLogs) ? adminRegistry.renameLogs : [];
-      const unsynced = curLogs.filter(l => l && l.sheetSynced !== true);
+      const merged = getMergedAuditLogs();
+      const unsynced = merged.filter(l => l && l.sheetSynced !== true);
       if (unsynced.length === 0) {
         const res = await postToGoogleSheet(buildFullSheetSyncPayload(), url, true);
         if (res && res.ok) showToast('✅ 모든 로그가 이미 구글 시트와 동기화되어 있습니다.');
@@ -13122,11 +13763,13 @@ ${m.body}`;
         return;
       }
       showToast(`미전송 로그 ${unsynced.length}건을 구글 시트로 전송 중...`);
-      const count = await syncUnsyncedRenameLogsToSheet();
-      showToast(count > 0 ? `✅ 로그 ${count}건을 구글 시트에 기록했습니다!` : '구글 시트 전송에 실패했습니다. 네트워크와 URL을 확인해 주세요.');
+      const c1 = await syncUnsyncedRenameLogsToSheet();
+      const c2 = await syncUnsyncedAuditLogsToSheet();
+      const total = c1 + c2;
+      showToast(total > 0 ? `✅ 로그 ${total}건을 구글 시트에 기록했습니다!` : '구글 시트 전송에 실패했습니다. 네트워크와 URL을 확인해 주세요.');
     };
 
-    // --- 관리자: 회원 이름 변경 신청 승인 / 거절 (+ 로그인 매핑 갱신 + 보안 로그 + 구글 시트 기록) ---
+    // --- 관리자: 회원 이름 변경 신청 승인 / 거절 ---
     window.approveMemberNameChange = async (memberId) => {
       const user = getCurrentUser();
       if (!user || !user.isSuperAdmin) return;
@@ -13138,17 +13781,12 @@ ${m.body}`;
       if (newName.length < 2 || newName.length > 10) {
         return showToast('신청된 이름이 올바르지 않습니다. (2~10글자)');
       }
-      if (newName === oldName) {
-        return showToast('기존 이름과 동일합니다.');
-      }
+      if (newName === oldName) return showToast('기존 이름과 동일합니다.');
       const duplicated = members.some(other => String(other.id) !== String(m.id) && String(other.name || '').trim() === newName);
       if (duplicated) {
         return showToast(`이미 [${newName}] 이름을 사용하는 회원이 있습니다. 거절 후 다른 이름으로 재신청하도록 안내해 주세요.`);
       }
-      if (!confirm(`[${oldName}]님의 이름을 [${newName}](으)로 변경 승인할까요?
-
-• 승인 즉시 앱 내 이름이 변경되며, 다음 로그인부터 새 이름으로 로그인하게 됩니다.
-• 변경 기록이 [📋 로그] 탭과 구글 시트에 저장됩니다.`)) return;
+      if (!confirm(`[${oldName}]님의 이름을 [${newName}](으)로 변경 승인할까요?\n\n• 승인 즉시 앱 내 이름이 변경되며, 다음 로그인부터 새 이름으로 로그인하게 됩니다.\n• 변경 기록이 [📋 로그] 탭과 구글 시트에 저장됩니다.`)) return;
 
       const actorName = currentAdminName || '관리자';
       const nowInfo = getKstNowInfo();
@@ -13158,26 +13796,7 @@ ${m.body}`;
       const actualAuthEmail = String(m.authEmail || hexToAuthEmail(oldHex, Number(m.authVer || 0)));
       const oldCurVer = Math.max(await getAuthVerForHex(oldHex), Number(m.authVer || 0));
       const roleName = getRoleById(m.roleId).name;
-
-      const logEntry = {
-        id: 'log_' + nowTs + '_' + Math.random().toString(36).slice(2, 6),
-        type: 'member_rename',
-        targetType: 'member',
-        targetUid: String(m.id),
-        decision: 'approved',
-        actorName,
-        oldName,
-        newName,
-        requestedAt: m.pendingNameAt || '',
-        date: nowInfo.dot,
-        dow: nowInfo.dowLabel,
-        dateWithDow: nowInfo.dateWithDow,
-        time: nowInfo.timeWithSec,
-        dateTime: nowInfo.dateTimeFull,
-        ts: nowTs,
-        sheetSynced: false
-      };
-      const nextLogs = [logEntry, ...structuredClone(adminRegistry.renameLogs || [])].slice(0, 300);
+      const reqAt = m.pendingNameAt || '';
 
       try {
         const batch = db.batch();
@@ -13200,7 +13819,6 @@ ${m.body}`;
             ts: nowTs
           }
         });
-        // 로그인 매핑 갱신: 새 이름으로 로그인 시 실제 Firebase Auth 이메일로 연결, 이전 이름은 재가입 충돌 방지 버전업
         batch.set(db.collection('authIndex').doc(newHex), {
           loginEmail: actualAuthEmail,
           updatedAt: nowTs
@@ -13212,7 +13830,6 @@ ${m.body}`;
             updatedAt: nowTs
           }, { merge: true });
         }
-        // 생일·새신자·회원이력 동기화
         if (isValidBirthdayStr(m.birthday)) {
           batch.set(db.collection('birthdays').doc(String(m.id)), {
             uid: String(m.id),
@@ -13239,38 +13856,28 @@ ${m.body}`;
           lastUpdatedAt: nowInfo.dateTime,
           approvedBy: actorName
         }, { merge: true });
-        // 보안 감사 로그 저장
-        batch.set(db.collection('config').doc('adminRegistry'), {
-          renameLogs: nextLogs
-        }, { merge: true });
-
         await batch.commit();
 
-        // 구글 시트 자동 기록 (로그 + 회원 명단)
-        const sheetUrl = getAdminSheetUrl();
-        let syncedNow = false;
-        if (sheetUrl) {
-          const res = await postToGoogleSheet(buildRenameSheetPayload(logEntry), sheetUrl, true);
-          if (res && res.ok) {
-            syncedNow = true;
-            const markLogs = structuredClone(nextLogs);
-            const foundLog = markLogs.find(l => String(l.id) === String(logEntry.id));
-            if (foundLog) foundLog.sheetSynced = true;
-            await db.collection('config').doc('adminRegistry').set({
-              renameLogs: markLogs
-            }, { merge: true }).catch(() => {});
-          }
-          syncMemberEventToSheet({
-            name: newName,
-            role: roleName,
-            joinedAt: m.createdAt || nowInfo.dateTime,
-            status: `이름 변경 (${oldName} → ${newName})`
-          });
-        }
+        await recordAuditLog({
+          actorType: 'admin',
+          actorName,
+          category: '회원·생일',
+          action: '회원 이름 변경 승인',
+          target: newName,
+          beforeVal: oldName,
+          afterVal: newName,
+          detail: reqAt ? `회원 신청 일시: ${reqAt}` : '승인 완료',
+          decision: 'approved'
+        });
 
-        showToast(syncedNow
-          ? `✅ [${oldName}] → [${newName}] 이름 변경을 승인하고 로그·구글 시트에 기록했습니다!`
-          : `✅ [${oldName}] → [${newName}] 이름 변경을 승인하고 보안 로그에 기록했습니다!`);
+        syncMemberEventToSheet({
+          name: newName,
+          role: roleName,
+          joinedAt: m.createdAt || nowInfo.dateTime,
+          status: `이름 변경 (${oldName} → ${newName})`
+        });
+
+        showToast(`✅ [${oldName}] → [${newName}] 이름 변경을 승인하고 보안 로그에 기록했습니다!`);
       } catch (err) {
         handleDbError(err, '회원 이름 변경 승인');
       }
@@ -13284,36 +13891,15 @@ ${m.body}`;
 
       const oldName = String(m.name || '').trim();
       const requestedName = String(m.pendingName || '').trim();
-      if (!confirm(`[${oldName}]님의 이름 변경 신청([${requestedName}])을 거절할까요?
-거절 시 기존 이름([${oldName}])을 계속 사용하게 되며, 처리 이력이 로그에 기록됩니다.`)) return;
+      const reqAt = m.pendingNameAt || '';
+      if (!confirm(`[${oldName}]님의 이름 변경 신청([${requestedName}])을 거절할까요?\n거절 시 기존 이름([${oldName}])을 계속 사용하게 되며, 처리 이력이 로그에 기록됩니다.`)) return;
 
       const actorName = currentAdminName || '관리자';
       const nowInfo = getKstNowInfo();
       const nowTs = Date.now();
 
-      const logEntry = {
-        id: 'log_' + nowTs + '_' + Math.random().toString(36).slice(2, 6),
-        type: 'member_rename',
-        targetType: 'member',
-        targetUid: String(m.id),
-        decision: 'rejected',
-        actorName,
-        oldName,
-        newName: requestedName,
-        requestedAt: m.pendingNameAt || '',
-        date: nowInfo.dot,
-        dow: nowInfo.dowLabel,
-        dateWithDow: nowInfo.dateWithDow,
-        time: nowInfo.timeWithSec,
-        dateTime: nowInfo.dateTimeFull,
-        ts: nowTs,
-        sheetSynced: false
-      };
-      const nextLogs = [logEntry, ...structuredClone(adminRegistry.renameLogs || [])].slice(0, 300);
-
       try {
-        const batch = db.batch();
-        batch.update(db.collection('members').doc(String(m.id)), {
+        await db.collection('members').doc(String(m.id)).update({
           pendingName: FieldValue.delete(),
           pendingNameAt: FieldValue.delete(),
           pendingNameTs: FieldValue.delete(),
@@ -13326,31 +13912,131 @@ ${m.body}`;
             ts: nowTs
           }
         });
-        batch.set(db.collection('config').doc('adminRegistry'), {
-          renameLogs: nextLogs
-        }, { merge: true });
-        await batch.commit();
 
-        const sheetUrl = getAdminSheetUrl();
-        let syncedNow = false;
-        if (sheetUrl) {
-          const res = await postToGoogleSheet(buildRenameSheetPayload(logEntry), sheetUrl, true);
-          if (res && res.ok) {
-            syncedNow = true;
-            const markLogs = structuredClone(nextLogs);
-            const foundLog = markLogs.find(l => String(l.id) === String(logEntry.id));
-            if (foundLog) foundLog.sheetSynced = true;
-            await db.collection('config').doc('adminRegistry').set({
-              renameLogs: markLogs
-            }, { merge: true }).catch(() => {});
-          }
-        }
+        await recordAuditLog({
+          actorType: 'admin',
+          actorName,
+          category: '회원·생일',
+          action: '회원 이름 변경 거절',
+          target: oldName,
+          beforeVal: oldName,
+          afterVal: requestedName,
+          detail: `기존 이름(${oldName}) 유지${reqAt ? ` · 신청 일시: ${reqAt}` : ''}`,
+          decision: 'rejected'
+        });
 
-        showToast(syncedNow
-          ? `[${oldName}]님의 이름 변경 신청을 거절(기존 이름 유지)하고 로그·시트에 기록했습니다.`
-          : `[${oldName}]님의 이름 변경 신청을 거절(기존 이름 유지)하고 보안 로그에 기록했습니다.`);
+        showToast(`[${oldName}]님의 이름 변경 신청을 거절(기존 이름 유지)하고 보안 로그에 기록했습니다.`);
       } catch (err) {
         handleDbError(err, '회원 이름 변경 거절');
+      }
+    };
+
+    // --- 관리자: 회원 생일 변경 신청 승인 / 거절 ---
+    window.approveMemberBirthdayChange = async (memberId) => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const m = members.find(x => String(x.id) === String(memberId));
+      if (!m || !m.pendingBirthday) return showToast('대기 중인 생일 변경 신청이 없습니다.');
+
+      const oldBday = isValidBirthdayStr(m.birthday) ? m.birthday : '';
+      const newBday = normalizeBirthdayInput(m.pendingBirthday);
+      if (!isValidBirthdayStr(newBday)) return showToast('신청된 생일 형식이 올바르지 않습니다.');
+      const reqAt = m.pendingBirthdayAt || '';
+
+      if (!confirm(`[${m.name}]님의 생일을 [${formatBirthdayDisplay(oldBday)}] → [${formatBirthdayDisplay(newBday)}](으)로 변경 승인할까요?`)) return;
+
+      const actorName = currentAdminName || '관리자';
+      const nowInfo = getKstNowInfo();
+      const nowTs = Date.now();
+
+      try {
+        const batch = db.batch();
+        batch.update(db.collection('members').doc(String(m.id)), {
+          birthday: newBday,
+          pendingBirthday: FieldValue.delete(),
+          pendingBirthdayAt: FieldValue.delete(),
+          pendingBirthdayTs: FieldValue.delete(),
+          lastBirthdayResult: {
+            status: 'approved',
+            oldBirthday: oldBday,
+            newBirthday: newBday,
+            by: actorName,
+            at: nowInfo.dateTimeFull,
+            ts: nowTs
+          }
+        });
+        batch.set(db.collection('birthdays').doc(String(m.id)), {
+          uid: String(m.id),
+          name: m.name,
+          md: birthdayToMd(newBday),
+          updatedAt: nowTs
+        });
+        await batch.commit();
+
+        await recordAuditLog({
+          actorType: 'admin',
+          actorName,
+          category: '회원·생일',
+          action: '회원 생일 변경 승인',
+          target: m.name,
+          beforeVal: formatBirthdayDisplay(oldBday),
+          afterVal: formatBirthdayDisplay(newBday),
+          detail: reqAt ? `회원 신청 일시: ${reqAt}` : '승인 완료',
+          decision: 'approved'
+        });
+
+        showToast(`✅ [${m.name}]님의 생일 변경을 승인하고 보안 로그에 기록했습니다!`);
+      } catch (err) {
+        handleDbError(err, '회원 생일 변경 승인');
+      }
+    };
+
+    window.rejectMemberBirthdayChange = async (memberId) => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const m = members.find(x => String(x.id) === String(memberId));
+      if (!m || !m.pendingBirthday) return showToast('대기 중인 생일 변경 신청이 없습니다.');
+
+      const oldBday = isValidBirthdayStr(m.birthday) ? m.birthday : '';
+      const reqBday = normalizeBirthdayInput(m.pendingBirthday);
+      const reqAt = m.pendingBirthdayAt || '';
+
+      if (!confirm(`[${m.name}]님의 생일 변경 신청(${formatBirthdayDisplay(reqBday)})을 거절할까요?\n거절 시 기존 생일(${formatBirthdayDisplay(oldBday)})이 유지됩니다.`)) return;
+
+      const actorName = currentAdminName || '관리자';
+      const nowInfo = getKstNowInfo();
+      const nowTs = Date.now();
+
+      try {
+        await db.collection('members').doc(String(m.id)).update({
+          pendingBirthday: FieldValue.delete(),
+          pendingBirthdayAt: FieldValue.delete(),
+          pendingBirthdayTs: FieldValue.delete(),
+          lastBirthdayResult: {
+            status: 'rejected',
+            oldBirthday: oldBday,
+            requestedBirthday: reqBday,
+            by: actorName,
+            at: nowInfo.dateTimeFull,
+            ts: nowTs
+          }
+        });
+
+        await recordAuditLog({
+          actorType: 'admin',
+          actorName,
+          category: '회원·생일',
+          action: '회원 생일 변경 거절',
+          target: m.name,
+          beforeVal: formatBirthdayDisplay(oldBday),
+          afterVal: formatBirthdayDisplay(reqBday),
+          detail: `기존 생일(${formatBirthdayDisplay(oldBday)}) 유지${reqAt ? ` · 신청 일시: ${reqAt}` : ''}`,
+          decision: 'rejected'
+        });
+
+        showToast(`[${m.name}]님의 생일 변경 신청을 거절(기존 생일 유지)하고 보안 로그에 기록했습니다.`);
+      } catch (err) {
+        handleDbError(err, '회원 생일 변경 거절');
       }
     };
 
@@ -13421,24 +14107,6 @@ ${m.body}`;
       const nowInfo = getKstNowInfo();
       const nowTs = Date.now();
 
-      const logEntry = {
-        id: 'log_' + nowTs + '_' + Math.random().toString(36).slice(2, 6),
-        type: 'admin_rename',
-        targetType: 'admin',
-        decision: 'approved',
-        actorName,
-        oldName,
-        newName,
-        isSelf: isMe,
-        date: nowInfo.dot,
-        dow: nowInfo.dowLabel,
-        dateWithDow: nowInfo.dateWithDow,
-        time: nowInfo.timeWithSec,
-        dateTime: nowInfo.dateTimeFull,
-        ts: nowTs,
-        sheetSynced: false
-      };
-
       target.name = newName;
       target.prevName = oldName;
       target.renamedAt = nowInfo.dateTimeFull;
@@ -13448,8 +14116,6 @@ ${m.body}`;
         target.lastLoginAt = nowInfo.dateTime;
         target.lastLoginTs = nowTs;
       }
-
-      const nextLogs = [logEntry, ...structuredClone(adminRegistry.renameLogs || [])].slice(0, 300);
 
       const btn = document.getElementById('submitAdminRenameBtn');
       btn.disabled = true;
@@ -13464,31 +14130,24 @@ ${m.body}`;
 
         await db.collection('config').doc('adminRegistry').set({
           lockAutoRegister: !!adminRegistry.lockAutoRegister,
-          items,
-          renameLogs: nextLogs
+          items
         }, { merge: true });
 
         document.getElementById('adminRenameModal').classList.remove('open');
 
-        // 구글 시트에 즉시 로그 전송
-        const sheetUrl = getAdminSheetUrl();
-        let syncedNow = false;
-        if (sheetUrl) {
-          const res = await postToGoogleSheet(buildRenameSheetPayload(logEntry), sheetUrl, true);
-          if (res && res.ok) {
-            syncedNow = true;
-            const markLogs = structuredClone(nextLogs);
-            const foundLog = markLogs.find(l => String(l.id) === String(logEntry.id));
-            if (foundLog) foundLog.sheetSynced = true;
-            await db.collection('config').doc('adminRegistry').set({
-              renameLogs: markLogs
-            }, { merge: true }).catch(() => {});
-          }
-        }
+        await recordAuditLog({
+          actorType: 'admin',
+          actorName,
+          category: '보안·설정',
+          action: '관리자 이름 변경',
+          target: newName,
+          beforeVal: oldName,
+          afterVal: newName,
+          detail: isMe ? '본인 변경' : '타 관리자 변경',
+          decision: 'approved'
+        });
 
-        showToast(syncedNow
-          ? `✅ 이름이 [${newName}](으)로 변경되고 로그·구글 시트에 기록되었습니다!`
-          : `✅ 이름이 [${newName}](으)로 변경되고 보안 로그에 기록되었습니다!`);
+        showToast(`✅ 이름이 [${newName}](으)로 변경되고 보안 로그에 기록되었습니다!`);
         applyScreen();
       } catch (err) {
         if (isMe) {
@@ -13514,90 +14173,100 @@ ${m.body}`;
       renderAdminLogsListOnly();
     };
 
+    window.setAdminLogCategoryFilter = (cat) => {
+      adminLogFilterCategory = cat || 'all';
+      renderAdminLogsListOnly();
+    };
+
     function renderAdminLogsListOnly() {
       const listEl = document.getElementById('adminLogsListArea');
       if (!listEl) return;
-      const allLogs = Array.isArray(adminRegistry.renameLogs) ? adminRegistry.renameLogs : [];
+      const allLogs = getMergedAuditLogs();
       const q = String(adminLogSearchQuery || '').trim().toLowerCase();
       const clearBtn = document.getElementById('adminLogSearchClear');
       if (clearBtn) clearBtn.classList.toggle('hidden', !q);
 
       const filtered = allLogs.filter(item => {
         if (!item) return false;
-        const isMember = item.type === 'member_rename' || item.targetType === 'member';
-        if (adminLogFilterType === 'admin' && isMember) return false;
-        if (adminLogFilterType === 'member' && !isMember) return false;
+        const isMemActor = item.actorType === 'member';
+        if (adminLogFilterType === 'admin' && isMemActor) return false;
+        if (adminLogFilterType === 'member' && !isMemActor) return false;
+        if (adminLogFilterCategory !== 'all' && String(item.category || '') !== adminLogFilterCategory) return false;
         if (!q) return true;
-        const hay = `${item.actorName || ''} ${item.oldName || ''} ${item.newName || ''} ${item.date || ''} ${item.dateWithDow || ''} ${item.time || ''} ${item.dateTime || ''} ${isMember ? '회원' : '관리자'} ${item.decision === 'rejected' ? '거절' : '승인'}`.toLowerCase();
+        const hay = `${item.actorName || ''} ${item.category || ''} ${item.action || ''} ${item.target || ''} ${item.beforeVal || ''} ${item.afterVal || ''} ${item.detail || ''} ${item.date || ''} ${item.dateWithDow || ''} ${item.time || ''} ${item.dateTime || ''} ${isMemActor ? '회원 이용자' : '관리자'}`.toLowerCase();
         return hay.includes(q);
       });
 
       const summaryEl = document.getElementById('adminLogsSummaryText');
       if (summaryEl) {
-        const filterLabel = adminLogFilterType === 'admin' ? '관리자 ' : (adminLogFilterType === 'member' ? '회원 ' : '');
+        const whoLbl = adminLogFilterType === 'admin' ? '관리자 ' : (adminLogFilterType === 'member' ? '이용자 ' : '');
+        const catLbl = adminLogFilterCategory !== 'all' ? `[${adminLogFilterCategory}] ` : '';
         summaryEl.textContent = q
           ? `'${adminLogSearchQuery.trim()}' 검색 결과 ${filtered.length}건 (전체 ${allLogs.length}건)`
-          : `${filterLabel}이름 변경 로그 ${filtered.length}건 (전체 ${allLogs.length}건)`;
+          : `${whoLbl}${catLbl}보안 로그 ${filtered.length}건 (전체 ${allLogs.length}건)`;
       }
 
       if (filtered.length === 0) {
         listEl.innerHTML = `
           <div class="card" style="text-align:center; padding:28px 16px; color:#64748B;">
             <div style="font-size:24px; margin-bottom:6px;">📋</div>
-            <div style="font-size:13.5px; font-weight:700; color:#334155;">${q ? '일치하는 로그 기록이 없습니다.' : '아직 기록된 이름 변경 로그가 없습니다.'}</div>
-            <div style="font-size:12px; margin-top:4px;">${q ? '다른 이름이나 날짜로 검색해 보세요.' : '관리자 또는 회원의 이름이 변경(또는 거절)되면 처리자·변경 전/후 이름·날짜·시각이 자동으로 기록됩니다.'}</div>
+            <div style="font-size:13.5px; font-weight:700; color:#334155;">${q ? '일치하는 로그 기록이 없습니다.' : '기록된 로그가 없습니다.'}</div>
+            <div style="font-size:12px; margin-top:4px;">${q ? '다른 이름, 작업명, 날짜로 검색해 보세요.' : '관리자 활동 및 이용자의 글·변경·신청·삭제 활동이 발생하면 자동으로 기록됩니다.'}</div>
           </div>
         `;
         return;
       }
 
-      listEl.innerHTML = filtered.map(item => {
-        const isMember = item.type === 'member_rename' || item.targetType === 'member';
+      listEl.innerHTML = filtered.slice(0, 200).map(item => {
+        const isMemActor = item.actorType === 'member';
         const isRejected = item.decision === 'rejected';
+        const isDangerAction = /삭제|해제|거절|보류|초기화|탈퇴/.test(String(item.action || ''));
         const dateDisp = item.dateWithDow || (item.date ? `${item.date}${item.dow ? ` (${item.dow})` : ''}` : '-');
         const timeDisp = item.time || (item.dateTime ? String(item.dateTime).split(' ').pop() : '-');
-        const actor = item.actorName || item.oldName || '관리자';
-        const isSelf = item.isSelf !== false;
+        const actor = item.actorName || (isMemActor ? '회원' : '관리자');
 
-        const badgesHtml = isMember
-          ? `<span class="tag ${isRejected ? 'red' : 'green'}">👤 회원 이름 변경</span>
-             <span class="tag ${isRejected ? 'red' : 'green'}">${isRejected ? '❌ 거절 (기존 이름 유지)' : '✅ 승인'}</span>`
-          : `<span class="tag warm">🔐 관리자 이름 변경</span>
-             <span class="tag ${isSelf ? 'slate' : 'red'}">${isSelf ? '본인 변경' : '타 관리자 변경'}</span>`;
+        const actorBadge = isMemActor
+          ? '<span class="tag" style="background:#EFF6FF; color:#1D4ED8;">👤 이용자</span>'
+          : '<span class="tag warm">🔐 관리자</span>';
+        const catBadge = `<span class="tag slate">${escapeHtml(item.category || '일반')}</span>`;
+        const actBadge = `<span class="tag ${isRejected || isDangerAction ? 'red' : 'green'}">${escapeHtml(item.action || '활동')}</span>`;
 
-        const diffHtml = isRejected
-          ? `<div class="log-rename-diff" style="background:#FEF2F2; border-color:#FECACA;">
-               <span class="log-name-new" style="background:#FFF; color:#0F172A; border:1px solid #CBD5E1;">${escapeHtml(item.oldName || '')} (유지)</span>
-               <span style="font-size:12px; color:#991B1B; font-weight:700;">신청 거절: ${escapeHtml(item.newName || '')}</span>
-             </div>`
-          : `<div class="log-rename-diff">
-               <span class="log-name-old">${escapeHtml(item.oldName || '')}</span>
-               <span class="log-name-arrow">→</span>
-               <span class="log-name-new">${escapeHtml(item.newName || '')}</span>
-             </div>`;
-
-        const actorLine = isMember
-          ? `<div>🔐 <b>${isRejected ? '처리 관리자' : '승인 관리자'}:</b> ${escapeHtml(actor)}</div>`
-          : `<div>👤 <b>변경한 관리자:</b> ${escapeHtml(actor)}</div>`;
-
-        const reqLine = (isMember && item.requestedAt)
-          ? `<div>📩 <b>회원 신청 일시:</b> ${escapeHtml(item.requestedAt)}</div>`
-          : '';
+        let diffHtml = '';
+        if (item.beforeVal && item.afterVal) {
+          if (isRejected) {
+            diffHtml = `
+              <div class="log-rename-diff" style="background:#FEF2F2; border-color:#FECACA;">
+                <span class="log-name-new" style="background:#FFF; color:#0F172A; border:1px solid #CBD5E1;">${escapeHtml(item.beforeVal)} (유지)</span>
+                <span style="font-size:12px; color:#991B1B; font-weight:700;">신청 거절: ${escapeHtml(item.afterVal)}</span>
+              </div>
+            `;
+          } else {
+            diffHtml = `
+              <div class="log-rename-diff">
+                <span class="log-name-old">${escapeHtml(item.beforeVal)}</span>
+                <span class="log-name-arrow">→</span>
+                <span class="log-name-new">${escapeHtml(item.afterVal)}</span>
+              </div>
+            `;
+          }
+        }
 
         return `
           <div class="card">
             <div class="card-top">
               <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                ${badgesHtml}
+                ${actorBadge}
+                ${catBadge}
+                ${actBadge}
               </div>
-              <span class="tag ${item.sheetSynced ? 'green' : 'slate'}">${item.sheetSynced ? '✅ 시트 기록됨' : '⏳ 시트 미반영'}</span>
+              <span class="tag ${item.sheetSynced ? 'green' : 'slate'}">${item.sheetSynced ? '✅ 시트' : '⏳ 미반영'}</span>
             </div>
             ${diffHtml}
             <div class="log-meta-lines">
-              ${actorLine}
-              ${reqLine}
-              <div>📅 <b>${isRejected ? '처리 날짜' : '변경 날짜'}:</b> ${escapeHtml(dateDisp)}</div>
-              <div>🕒 <b>${isRejected ? '처리 시각' : '변경 시각'}:</b> ${escapeHtml(timeDisp)} (한국시간 KST)</div>
+              <div>${isMemActor ? '👤' : '🔐'} <b>실행자:</b> ${escapeHtml(actor)}</div>
+              ${item.target ? `<div>🎯 <b>대상:</b> ${escapeHtml(item.target)}</div>` : ''}
+              ${item.detail ? `<div>📝 <b>상세:</b> ${escapeHtml(item.detail)}</div>` : ''}
+              <div>📅 <b>일시:</b> ${escapeHtml(dateDisp)} · 🕒 <b>${escapeHtml(timeDisp)}</b> (KST)</div>
             </div>
           </div>
         `;
@@ -13616,25 +14285,25 @@ ${m.body}`;
       renderAdminLogsListOnly();
     };
 
-    // (D-3) 보안 로그 탭 (관리자·회원 이름 변경 이력 · 삭제 불가 · 구글 시트 연동)
+    // (D-3) 통합 보안 감사 로그 탭 (삭제 불가 · 관리자 전체 활동 + 이용자 악용 가능 활동)
     function renderManageLogs(el, user) {
-      const allLogs = Array.isArray(adminRegistry.renameLogs) ? adminRegistry.renameLogs : [];
-      const adminCnt = allLogs.filter(l => l && l.type !== 'member_rename' && l.targetType !== 'member').length;
-      const memberCnt = allLogs.filter(l => l && (l.type === 'member_rename' || l.targetType === 'member')).length;
+      const allLogs = getMergedAuditLogs();
+      const adminCnt = allLogs.filter(l => l && l.actorType !== 'member').length;
+      const memberCnt = allLogs.filter(l => l && l.actorType === 'member').length;
       const unsyncedCount = allLogs.filter(l => l && l.sheetSynced !== true).length;
       const hasSheet = !!getAdminSheetUrl();
+      const cats = ['all', '공지·배너', '오늘의 말씀', '댓글', '회원·생일', '역할·메뉴', '예배·출석', '바로가기', '보안·설정'];
 
       el.innerHTML = `
         <div class="section-head">
           <h2 class="section-title">${escapeHtml(getTabIcon('manageLogs'))} ${escapeHtml(getTabLabel('manageLogs'))} (${allLogs.length}건)</h2>
-          <button class="btn-admin" type="button" onclick="openAdminRenameModal()">✏️ 내 이름 변경</button>
+          <span class="tag slate">삭제 불가</span>
         </div>
         <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-          🔐 <b>보안 감사 로그 (삭제 불가)</b><br>
-          <b>관리자</b>와 <b>회원</b>의 이름 변경(승인·거절) 내역이 <b>처리자 · 변경 전/후 이름 · 날짜 · 시각(초)</b>과 함께 자동 기록됩니다.<br>
-          ${hasSheet
-            ? '✅ 구글 시트가 연동되어 있어 이름 변경 처리 시 시트에도 자동 저장됩니다.'
-            : 'ℹ️ 구글 시트 연동은 <b>[⛪ 예배 관리]</b> 탭에서 Apps Script URL을 등록하면 자동으로 함께 기록됩니다.'}
+          🔐 <b>통합 보안 감사 로그 (위변조·삭제 불가)</b><br>
+          • <b>관리자:</b> 모든 추가·수정·삭제·승인·설정 변경 자동 기록<br>
+          • <b>이용자:</b> 댓글 작성/수정/삭제, 이름·생일 변경 신청/취소, 가입·탈퇴, 출석 체크만 기록<br>
+          • <b>미기록(프라이버시 보호):</b> 이용자 비밀번호 변경, 성경 메모·책갈피·검색, 사이트 이동, 공지·소식 단순 조회
         </div>
 
         ${hasSheet ? `
@@ -13653,13 +14322,18 @@ ${m.body}`;
         <div id="adminLogFilterChips" class="filter-row" style="margin-bottom:8px;">
           <button class="filter-chip ${adminLogFilterType === 'all' ? 'active' : ''}" data-log-filter="all" type="button" onclick="setAdminLogFilter('all')">전체 (${allLogs.length})</button>
           <button class="filter-chip ${adminLogFilterType === 'admin' ? 'active' : ''}" data-log-filter="admin" type="button" onclick="setAdminLogFilter('admin')">🔐 관리자 (${adminCnt})</button>
-          <button class="filter-chip ${adminLogFilterType === 'member' ? 'active' : ''}" data-log-filter="member" type="button" onclick="setAdminLogFilter('member')">👤 회원 (${memberCnt})</button>
+          <button class="filter-chip ${adminLogFilterType === 'member' ? 'active' : ''}" data-log-filter="member" type="button" onclick="setAdminLogFilter('member')">👤 이용자 (${memberCnt})</button>
         </div>
 
-        <div class="search-box" style="margin-bottom:8px;">
-          <span class="search-icon">🔍</span>
-          <input id="adminLogSearchInput" class="search-input" type="search" value="${escapeHtml(adminLogSearchQuery)}" placeholder="이름·처리자·날짜 검색 (예: 2026.11.24)" oninput="onAdminLogSearchInput(this.value)" />
-          <button id="adminLogSearchClear" class="search-clear ${adminLogSearchQuery ? '' : 'hidden'}" type="button" onclick="clearAdminLogSearch()">✕</button>
+        <div style="display:flex; gap:6px; margin-bottom:8px; align-items:center;">
+          <select class="form-select" style="width:auto; min-width:118px; padding:9px 10px; font-size:12.5px; font-weight:700;" onchange="setAdminLogCategoryFilter(this.value)">
+            ${cats.map(c => `<option value="${escapeHtml(c)}" ${adminLogFilterCategory === c ? 'selected' : ''}>${c === 'all' ? '전체 분류' : escapeHtml(c)}</option>`).join('')}
+          </select>
+          <div class="search-box" style="flex:1; margin-bottom:0;">
+            <span class="search-icon">🔍</span>
+            <input id="adminLogSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13px;" type="search" value="${escapeHtml(adminLogSearchQuery)}" placeholder="이름·내용·날짜 검색..." oninput="onAdminLogSearchInput(this.value)" />
+            <button id="adminLogSearchClear" class="search-clear ${adminLogSearchQuery ? '' : 'hidden'}" type="button" onclick="clearAdminLogSearch()">✕</button>
+          </div>
         </div>
         <div id="adminLogsSummaryText" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
         <div id="adminLogsListArea"></div>
@@ -13980,6 +14654,13 @@ ${m.body}`;
           });
           await batch.commit();
         }
+        recordAuditLog({
+          actorType: 'admin',
+          category: '예배·출석',
+          action: '예배·행사 이름 변경',
+          target: dotDate,
+          afterVal: newLabel
+        });
         showToast(`예배·행사 이름이 [${newLabel}](으)로 변경되었습니다!`);
       } catch (err) {
         handleDbError(err, '예배명 변경');
@@ -14007,6 +14688,13 @@ ${m.body}`;
         await db.collection('config').doc('attendance').set({
           regularEnabled, regularDay, regularLabel, regularStart, regularEnd
         }, { merge: true });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '예배·출석',
+          action: '정기 예배 일정 변경',
+          target: regularLabel,
+          detail: `${regularEnabled ? '활성' : '비활성'} · ${DAY_NAMES_KO[regularDay] || ''} ${regularStart}~${regularEnd}`
+        });
         showToast('정기 출석 요일·시간이 저장되었습니다!');
       } catch (err) {
         handleDbError(err, '출석 일정 저장');
@@ -14041,6 +14729,13 @@ ${m.body}`;
       btn.disabled = true;
       try {
         await db.collection('config').doc('attendance').set({ specialEvents: nextEvents }, { merge: true });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '예배·출석',
+          action: '특별 행사 일정 추가',
+          target: title,
+          detail: `${date} ${start}~${end}`
+        });
         document.getElementById('specialEventModal').classList.remove('open');
         showToast(`[${title}] 특별 출석 일정이 추가되었습니다!`);
       } catch (err) {
@@ -14052,9 +14747,17 @@ ${m.body}`;
 
     window.deleteSpecialEvent = async (evId) => {
       if (!confirm('이 특별 행사 출석 일정을 삭제할까요?')) return;
+      const delEv = (attendanceConfig.specialEvents || []).find(e => String(e.id) === String(evId));
       const nextEvents = (attendanceConfig.specialEvents || []).filter(e => String(e.id) !== String(evId));
       try {
         await db.collection('config').doc('attendance').set({ specialEvents: nextEvents }, { merge: true });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '예배·출석',
+          action: '특별 행사 일정 삭제',
+          target: delEv ? delEv.title : String(evId),
+          detail: delEv ? `${delEv.date} ${delEv.start}~${delEv.end}` : ''
+        });
         showToast('특별 행사 일정을 삭제했습니다.');
       } catch (err) { handleDbError(err, '행사 일정 삭제'); }
     };
@@ -14152,6 +14855,12 @@ ${m.body}`;
         }, { merge: true });
         await batch.commit();
         adminSheetUrl = url;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: url ? '구글 시트 연동 주소 저장' : '구글 시트 연동 해제',
+          target: '구글 시트 연동'
+        });
         if (url) {
           const res = await postToGoogleSheet(buildFullSheetSyncPayload(), url, true);
           if (!warnIfOldAppsScript(res)) {
@@ -14209,7 +14918,8 @@ ${m.body}`;
           }
         }
         await syncUnsyncedRenameLogsToSheet().catch(() => {});
-        showToast('✅ 출석부 · 회원 · 관리자 명단 · 변경 로그 전체 동기화 완료!');
+        await syncUnsyncedAuditLogsToSheet().catch(() => {});
+        showToast('✅ 출석부 · 회원 · 관리자 명단 · 보안 로그 전체 동기화 완료!');
       } else {
         showToast('동기화에 실패했습니다. URL과 Apps Script 배포 상태를 확인해 주세요.');
       }
@@ -14292,6 +15002,14 @@ ${m.body}`;
             modifiedBy: `수정: ${adminActor} (${nowStr})`,
             forceUpdate: true
           }).catch(() => {});
+          recordAuditLog({
+            actorType: 'admin',
+            category: '예배·출석',
+            action: '출석 기록 수정',
+            target: `${rec.name} (${rec.colTitle || colTitle})`,
+            beforeVal: rec.time || '-',
+            afterVal: timeVal
+          });
           showToast(`${rec.name}님의 출석 시각이 수정 및 시트에 반영되었습니다!`);
         } else {
           const uid = document.getElementById('adminAttMemberSelect').value;
@@ -14326,6 +15044,13 @@ ${m.body}`;
             modifiedBy: `추가: ${adminActor} (${nowStr})`,
             forceUpdate: true
           }).catch(() => {});
+          recordAuditLog({
+            actorType: 'admin',
+            category: '예배·출석',
+            action: '출석 수동 추가',
+            target: `${m.name} (${colTitle})`,
+            detail: `시각: ${timeVal}`
+          });
           showToast(`${m.name}님의 출석이 추가 및 시트에 반영되었습니다!`);
         }
         document.getElementById('adminAttendanceModal').classList.remove('open');
@@ -14350,6 +15075,13 @@ ${m.body}`;
           name: rec.name,
           modifiedBy: `삭제: ${adminActor} (${nowStr})`
         }).catch(() => {});
+        recordAuditLog({
+          actorType: 'admin',
+          category: '예배·출석',
+          action: '출석 기록 삭제',
+          target: `${rec.name} (${rec.colTitle || rec.date})`,
+          detail: `삭제된 출석 시각: ${rec.time || '-'}`
+        });
         showToast(`${rec.name}님의 출석이 삭제 및 시트에 반영되었습니다.`);
       } catch (err) {
         handleDbError(err, '출석 삭제');
@@ -15002,6 +15734,12 @@ ${m.body}`;
           updatedAt: formatKstDateTime(),
           updatedBy: currentAdminName || '관리자'
         }, { merge: true });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: checked ? '서버 점검 모드 켜기' : '서버 점검 모드 해제',
+          target: '정기 서버 점검'
+        });
         showToast(checked
           ? '🔧 서버 점검 모드가 켜졌습니다. 일반 회원 접근이 차단됩니다.'
           : '🟢 서버 점검 모드가 해제되었습니다. 일반 회원이 정상 접속할 수 있습니다.');
@@ -15019,6 +15757,12 @@ ${m.body}`;
           updatedAt: formatKstDateTime(),
           updatedBy: currentAdminName || '관리자'
         }, { merge: true });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '서버 점검 모드 즉시 해제',
+          target: '정기 서버 점검'
+        });
         showToast('🟢 서버 점검 모드가 해제되었습니다!');
       } catch (err) {
         handleDbError(err, '점검 모드 해제');
@@ -15053,6 +15797,13 @@ ${m.body}`;
           updatedAt: formatKstDateTime(),
           updatedBy: currentAdminName || '관리자'
         }, { merge: true });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '서버 점검 설정 저장',
+          target: title,
+          detail: `즉시점검: ${enabled ? '켜짐' : '꺼짐'} · 예약: ${scheduled ? '켜짐' : '꺼짐'}`
+        });
         showToast('✅ 정기 서버 점검 설정이 저장되었습니다!');
       } catch (err) {
         handleDbError(err, '점검 설정 저장');
