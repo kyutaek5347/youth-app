@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=145" />
+  <link rel="manifest" href="./manifest.json?v=146" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=145" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=145" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=146" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=146" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2704,6 +2704,147 @@
       color: #FDE68A;
       opacity: 1;
     }
+
+    /* ==================== v10.46 이용자·관리자 사용방법(인수인계) 가이드 스타일 ==================== */
+    .guide-hero-user {
+      background: linear-gradient(135deg, #0F172A 0%, #1D4ED8 58%, #2563EB 100%);
+      color: #FFFFFF;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 22px rgba(37, 99, 235, 0.22);
+    }
+    .guide-hero-admin {
+      background: linear-gradient(135deg, #0B0F19 0%, #1E293B 60%, #92400E 100%);
+      color: #FFFFFF;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.28);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+    .guide-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    }
+    .guide-card details {
+      width: 100%;
+    }
+    .guide-card summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      user-select: none;
+    }
+    .guide-card summary::-webkit-details-marker {
+      display: none;
+    }
+    .guide-summary-left {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+      flex: 1;
+    }
+    .guide-icon-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: #EFF6FF;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+    .guide-icon-badge.admin {
+      background: #FEF3C7;
+    }
+    .guide-card-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1.35;
+    }
+    .guide-card-sub {
+      font-size: 11.5px;
+      color: #64748B;
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+    .guide-chevron {
+      font-size: 12px;
+      color: #64748B;
+      font-weight: 800;
+      transition: transform 0.18s ease;
+      flex-shrink: 0;
+    }
+    .guide-card details[open] .guide-chevron {
+      transform: rotate(180deg);
+    }
+    .guide-card-body {
+      padding: 0 15px 15px;
+      border-top: 1px solid #F1F5F9;
+      font-size: 13px;
+      color: #334155;
+      line-height: 1.62;
+    }
+    .guide-step-list {
+      margin: 10px 0 0;
+      padding-left: 18px;
+    }
+    .guide-step-list li {
+      margin-bottom: 6px;
+    }
+    .guide-step-list li:last-child {
+      margin-bottom: 0;
+    }
+    .guide-tip-box {
+      margin-top: 10px;
+      padding: 9px 11px;
+      border-radius: 10px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.5;
+    }
+    .guide-tip-box.warn {
+      background: #FFFBEB;
+      border-color: #FDE68A;
+      color: #92400E;
+    }
+    .guide-sheet-tabs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .guide-sheet-pill {
+      background: #F8FAFC;
+      border: 1px solid #CBD5E1;
+      border-radius: 9px;
+      padding: 7px 9px;
+      font-size: 11.5px;
+      line-height: 1.4;
+    }
+    @media (max-width: 400px) {
+      .guide-sheet-tabs-grid { grid-template-columns: 1fr; }
+      .tab-btn { font-size: 9.2px; letter-spacing: -0.5px; padding: 4px 1px; }
+      .tab-icon { font-size: 16.5px; height: 19px; }
+    }
+    @media (max-width: 360px) {
+      .tab-btn { font-size: 8.4px; letter-spacing: -0.65px; }
+      .tab-icon { font-size: 15.5px; height: 18px; }
+    }
   </style>
 </head>
 <body>
@@ -2722,7 +2863,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=145" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=146" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3005,6 +3146,35 @@
           <div id="bylawChapterChips" class="filter-row"></div>
           <div id="bylawSummaryBar" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
           <div id="bylawsResults"></div>
+        </section>
+
+        <!-- (5) 이용자 사용방법 설명서 화면 -->
+        <section id="viewGuide" class="hidden">
+          <div class="guide-hero-user">
+            <div id="userGuideViewTitle" class="bylaw-hero-title">📘 라이트 청년부 앱 사용방법</div>
+            <div class="bylaw-hero-dates">
+              처음 사용하시는 분도 쉽게 따라 할 수 있도록 주요 기능과 이용 방법을 정리했습니다.
+            </div>
+          </div>
+
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input id="userGuideSearchInput" class="search-input" type="search" placeholder="궁금한 기능 검색 (예: 출석, 성경, 이름 변경, 비밀번호)" oninput="onUserGuideSearchInput(this.value)" />
+            <button id="userGuideSearchClear" class="search-clear hidden" type="button" onclick="clearUserGuideSearch()">✕</button>
+          </div>
+
+          <div class="quick-tags">
+            <button class="quick-tag" type="button" onclick="quickSearchUserGuide('설치')">#앱설치</button>
+            <button class="quick-tag" type="button" onclick="quickSearchUserGuide('출석')">#출석체크</button>
+            <button class="quick-tag" type="button" onclick="quickSearchUserGuide('성경')">#성경·메모</button>
+            <button class="quick-tag" type="button" onclick="quickSearchUserGuide('말씀')">#오늘의말씀</button>
+            <button class="quick-tag" type="button" onclick="quickSearchUserGuide('이름')">#이름·생일변경</button>
+            <button class="quick-tag" type="button" onclick="quickSearchUserGuide('QR')">#초대QR</button>
+            <button class="quick-tag" type="button" onclick="quickSearchUserGuide('알림')">#알림설정</button>
+          </div>
+
+          <div id="userGuideSummaryBar" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
+          <div id="userGuideResults"></div>
         </section>
 
         <!-- (3) 관리 센터 -->
@@ -4049,6 +4219,7 @@
       { key: 'bible', defaultIcon: '📖', defaultLabel: '성경', roleHint: '성경' },
       { key: 'qt', defaultIcon: '✨', defaultLabel: '오늘의 말씀', roleHint: '오늘의 말씀' },
       { key: 'bylaws', defaultIcon: '📜', defaultLabel: '회칙', roleHint: '회칙' },
+      { key: 'guide', defaultIcon: '📘', defaultLabel: '사용방법', roleHint: '이용자 사용 설명서' },
       { key: 'more', defaultIcon: '☰', defaultLabel: '더보기', roleHint: '더보기 (사이트 바로가기)' },
       { key: 'manage', defaultIcon: '🛠️', defaultLabel: '관리 센터', roleHint: '관리자 전용' }
     ];
@@ -4063,7 +4234,8 @@
       { id: 'admincode', labelKey: 'manageAdminCode', defaultIcon: '🔐', defaultLabel: '관리자 코드', permCheck: p => !!p.canManageMembers },
       { id: 'logs', labelKey: 'manageLogs', defaultIcon: '📋', defaultLabel: '로그', permCheck: p => !!p.canManageMembers },
       { id: 'labels', labelKey: 'manageLabels', defaultIcon: '✏️', defaultLabel: '메뉴·이름', permCheck: p => !!p.canEditLayout },
-      { id: 'diagnostics', labelKey: 'manageDiagnostics', defaultIcon: '🧪', defaultLabel: '기능 점검', permCheck: p => !!p.canManageMembers }
+      { id: 'diagnostics', labelKey: 'manageDiagnostics', defaultIcon: '🧪', defaultLabel: '기능 점검', permCheck: p => !!p.canManageMembers },
+      { id: 'guide', labelKey: 'manageGuide', defaultIcon: '📖', defaultLabel: '사용방법', permCheck: p => !!p.canManageMembers }
     ];
     const DEFAULT_TAB_ORDER = BOTTOM_TAB_REGISTRY.map(t => t.key);
     const DEFAULT_MANAGE_SUBTAB_ORDER = MANAGE_SUBTAB_REGISTRY.map(t => t.id);
@@ -4820,7 +4992,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=145" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=146" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -4843,8 +5015,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=145', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=145', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=146', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=146', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5103,6 +5275,10 @@
     // 회칙 화면 필터 상태
     let bylawSearchQuery = '';
     let bylawChapterFilter = 'all';
+    // 이용자·관리자 사용방법 검색/필터 상태
+    let userGuideSearchQuery = '';
+    let adminGuideSearchQuery = '';
+    let adminGuideCategoryFilter = 'all';
 
     function clearSubscriptions() {
       if (unsubMyMember) { unsubMyMember(); unsubMyMember = null; }
@@ -7100,11 +7276,22 @@
           }
           if (sUrl) {
             postToGoogleSheet({
-              action: 'admin_log',
+              action: 'admin_entry_log',
+              logId: `adm_login_${nowTs}_${Math.random().toString(36).slice(2, 6)}`,
               name: adminName,
               status: sheetLogStatus,
               time: nowStr,
-              note: sheetLogNote
+              note: sheetLogNote,
+              adminRow: target ? {
+                name: target.name,
+                status: target.status === 'active' ? '활성' : (target.status === 'pending' ? '승인 대기' : '해제'),
+                registeredAt: target.registeredAt || nowStr,
+                lastLoginAt: target.lastLoginAt || nowStr,
+                reentryCount: Number(target.reentryCount || 0),
+                renameCount: Number(target.renameCount || 0),
+                prevName: target.prevName || '',
+                note: sheetLogNote
+              } : null
             }, sUrl).catch(() => {});
           }
         }
@@ -7322,12 +7509,15 @@
       document.getElementById('viewBible').classList.toggle('hidden', currentMainTab !== 'bible');
       document.getElementById('viewQt').classList.toggle('hidden', currentMainTab !== 'qt');
       document.getElementById('viewBylaws').classList.toggle('hidden', currentMainTab !== 'bylaws');
+      document.getElementById('viewGuide').classList.toggle('hidden', currentMainTab !== 'guide');
       document.getElementById('viewManage').classList.toggle('hidden', currentMainTab !== 'manage');
 
       // 동적 칸 이모지 + 이름 제목 동기화
       document.getElementById('bibleViewTitle').textContent = `${getTabIcon('bible')} ${getTabLabel('bible')}`;
       document.getElementById('qtViewTitle').textContent = `${getTabIcon('qt')} ${getTabLabel('qt')}`;
       document.getElementById('bylawViewTitle').textContent = `${getTabIcon('bylaws')} 구미제일감리교회 라이트 청년부 ${getTabLabel('bylaws')}`;
+      const ugTitleEl = document.getElementById('userGuideViewTitle');
+      if (ugTitleEl) ugTitleEl.textContent = `${getTabIcon('guide')} 라이트 청년부 앱 ${getTabLabel('guide')}`;
       const qsEditBtn = document.getElementById('quickSheetManageEditBtn');
       if (qsEditBtn) qsEditBtn.textContent = `⚙️ ${getTabLabel('manage')} 편집`;
 
@@ -7335,6 +7525,7 @@
       else if (currentMainTab === 'bible') renderBibleView();
       else if (currentMainTab === 'qt') renderQtView();
       else if (currentMainTab === 'bylaws') renderBylawsView();
+      else if (currentMainTab === 'guide') renderUserGuideView();
       else if (currentMainTab === 'manage') renderManageView(user);
     }
 
@@ -7457,6 +7648,464 @@
         showToast('복사 기능을 지원하지 않는 브라우저입니다.');
       }
     };
+
+    // ==================== 10-2. 이용자용 사용방법 설명서 (📘 사용방법 탭) ====================
+    const USER_GUIDE_SECTIONS = [
+      {
+        id: 'ug_install',
+        icon: '📱',
+        title: '앱 설치 및 로그인 (홈 화면에 추가)',
+        sub: '아이폰·갤럭시 스마트폰에 앱처럼 설치해 편하게 이용하기',
+        keywords: '앱 설치 홈화면 사파리 크롬 카톡 로그인 자동로그인',
+        steps: [
+          '<b>아이폰 · 아이패드 (Safari):</b> 하단 또는 상단의 <b>공유(□↑)</b> 버튼을 누른 뒤 <b>[홈 화면에 추가]</b>를 선택하면 앱 아이콘이 생성됩니다.',
+          '<b>안드로이드 (Chrome / 삼성 인터넷):</b> 상단 설치 배너의 <b>[앱 설치]</b> 버튼 또는 브라우저 메뉴(⋮) → <b>[앱 설치 / 홈 화면에 추가]</b>를 누릅니다.',
+          '<b>카카오톡 안에서 열었을 때:</b> 카톡 내장 브라우저에서는 설치나 알림이 제한되므로, 우측 하단 <b>⋮ → 다른 브라우저로 열기</b>를 눌러 Safari나 Chrome으로 열어 주세요.',
+          '<b>로그인 유지:</b> 한 번 로그인하면 앱을 껐다 켜도 로그인 상태가 유지됩니다. (공용 기기에서는 상단 <b>로그아웃</b> 버튼을 눌러 주세요.)'
+        ],
+        tip: '홈 화면에 추가해 앱으로 실행하면 전체 화면으로 깔끔하게 보이고, 실시간 알림 기능도 더 안정적으로 작동합니다.'
+      },
+      {
+        id: 'ug_qr',
+        icon: '📲',
+        title: '회원가입 및 오늘의 초대 QR 공유',
+        sub: '신규 지체 초대 방법과 QR 유효기간 안내',
+        keywords: '초대 QR 회원가입 가입신청 승인 대기 재가입',
+        steps: [
+          '<b>신규 회원가입:</b> 기존 회원이나 관리자가 공유한 <b>오늘의 초대 QR 코드</b>를 스캔해 접속하면 회원가입 탭이 열립니다. 본인 성명, 생년월일(8자리 직접 입력 또는 달력 선택), 역할, 비밀번호(6자리 이상)를 입력해 신청합니다.',
+          '<b>실시간 자동 입장:</b> 가입 신청 후 관리자가 승인하면 별도로 새로고침하지 않아도 자동으로 메인 화면에 입장됩니다.',
+          '<b>친구 초대하기:</b> 앱 우측 상단의 <b>QR 아이콘</b>을 누르면 오늘의 초대 QR을 <b>카카오톡 이미지 공유</b>, <b>이미지 저장</b>, <b>초대 링크 복사</b>로 바로 전달할 수 있습니다.'
+        ],
+        tip: '초대 QR은 보안을 위해 매일 한국시간 자정(00:00)마다 자동으로 새 QR로 바뀌며, 지난 QR로는 가입할 수 없습니다. 이미 가입된 회원은 QR 없이 평소처럼 바로 로그인합니다.'
+      },
+      {
+        id: 'ug_home_att',
+        icon: '✅',
+        title: '메인 홈 소식 확인 & 예배 출석 체크',
+        sub: '공지·배너·생일/새신자 축하 & 주일/행사 출석 방법',
+        keywords: '메인 홈 공지 광고 소식 배너 생일 새신자 출석 체크 주일예배 행사',
+        steps: [
+          '<b>공지 · 광고 · 소식 확인:</b> 메인 홈 상단 고정 배너와 하단 공지 목록에서 청년부 소식을 확인합니다. 구분 칩(전체/공지/광고/소식/행사 등)으로 필터링할 수 있으며, 카드를 누르면 전체 본문이 열립니다.',
+          '<b>오늘의 생일 · 새신자 환영 배너:</b> 생일인 지체나 새로 온 새신자가 있으면 메인 홈 상단에 축하 배너가 자동으로 표시됩니다.',
+          '<b>예배 · 특별 행사 출석 체크:</b> 설정된 주일 예배 시간(기본 일요일 14:00~15:30) 또는 특별 행사 시간에만 메인 홈 맨 위에 <b>초록색 출석 카드</b>가 자동으로 나타납니다.',
+          '<b>1인 1회 출석 확인:</b> <b>[출석하기]</b> 버튼을 누르면 즉시 출석이 기록되고 카드가 자동으로 숨겨집니다. 출석 완료 여부와 최근 출석 기록은 우측 상단 <b>👤 내 계정</b>에서 언제든 확인할 수 있습니다.'
+        ],
+        tip: '출석 시간이 지났거나 깜빡하고 버튼을 못 누른 경우에는 관리자에게 말씀하시면 출석부에 수동으로 반영해 드립니다.'
+      },
+      {
+        id: 'ug_bible',
+        icon: '📖',
+        title: '성경 읽기 · 다중 색상 책갈피 · 개인 메모장',
+        sub: '66권 빠른 검색, 6색 형광펜 책갈피, 말씀 연결 메모',
+        keywords: '성경 개역한글 검색 장 이동 글자 크기 책갈피 색상 형광펜 메모 메모장 프라이버시',
+        steps: [
+          '<b>성경 이동 & 빠른 검색:</b> 상단 <b>[창세기 1장 ▾]</b> 버튼으로 66권·장을 고르거나, 검색창에 <b>시편 23:1</b>, <b>요3:16</b>처럼 입력하고 엔터를 누르면 해당 구절로 즉시 이동합니다.',
+          '<b>글자 크기 조절:</b> 상단 <b>[가-] / [가+]</b> 버튼으로 읽기 편한 글자 크기를 저장해 둘 수 있습니다.',
+          '<b>절 터치 기능 (책갈피 · 복사 · 메모):</b> 원하는 성경 절을 터치하면 <b>6가지 색상 책갈피</b>(노랑·분홍·하늘·초록·보라·주황), <b>말씀 복사</b>, <b>이 절에 메모 쓰기</b> 버튼이 나타납니다.',
+          '<b>⭐ 책갈피 & 📝 메모장 모아보기:</b> 상단 버튼에서 색상별로 책갈피를 모아보거나, 저장한 메모의 <b>[말씀 바로가기]</b>를 눌러 해당 성경 구절로 즉시 점프할 수 있습니다.'
+        ],
+        tip: '성경 책갈피·메모·검색 기록은 오직 본인 기기에만 저장되며, 관리자를 포함한 다른 사람에게 공개되거나 보안 로그에 남지 않습니다.'
+      },
+      {
+        id: 'ug_qt',
+        icon: '✨',
+        title: '오늘의 말씀 (큐티) · 공감 · 묵상 댓글',
+        sub: '매일 자정 자동 말씀과 지체들과의 은혜 나눔',
+        keywords: '오늘의 말씀 큐티 QT 하트 좋아요 아멘 은혜 도전 댓글 수정 삭제',
+        steps: [
+          '<b>매일 새 말씀:</b> 매일 한국시간 00:00에 새로운 오늘의 말씀이 자동으로 올라오며, 관리자가 올린 특별 말씀·묵상 글도 함께 확인할 수 있습니다.',
+          '<b>공감 버튼:</b> 말씀 하단의 <b>❤️ 좋아요 · 🙏 아멘 · 👏 은혜 · 🔥 도전</b> 버튼을 눌러 마음을 표현할 수 있습니다.',
+          '<b>묵상 댓글 나누기:</b> 카드를 누르거나 <b>[💬 댓글]</b> 버튼을 열어 묵상·기도제목을 남길 수 있으며, 본인이 작성한 댓글은 언제든 <b>수정 · 삭제</b>할 수 있습니다.'
+        ],
+        tip: '공동체 게시판의 건전한 운영을 위해 댓글 작성·수정·삭제 내역은 관리자 보안 로그에 기록됩니다.',
+        warn: true
+      },
+      {
+        id: 'ug_bylaws_more',
+        icon: '📜',
+        title: '청년부 회칙 검색 & 더보기(사이트 바로가기)',
+        sub: '회칙 키워드 검색·복사와 인스타/유튜브/교회 홈페이지 연결',
+        keywords: '회칙 검색 조항 복사 더보기 사이트 바로가기 인스타그램 유튜브 교회 홈페이지',
+        steps: [
+          '<b>회칙 검색:</b> <b>[📜 회칙]</b> 탭에서 <b>제5조</b>, <b>선거권</b>, <b>임기</b> 등 원하는 키워드나 추천 해시태그(#)를 눌러 해당 조항을 바로 찾을 수 있습니다. 각 조항 우측 <b>[복사]</b> 버튼으로 본문 복사도 가능합니다.',
+          '<b>사이트 바로가기 (☰ 더보기):</b> 하단 <b>[☰ 더보기]</b> 탭을 누르면 청년부 인스타그램, 유튜브 채널, 교회 홈페이지 등 등록된 외부 사이트로 한 번에 이동할 수 있습니다.'
+        ],
+        tip: '회칙 열람, 공지 확인, 사이트 바로가기 이동은 개인 활동으로 보안 로그에 남지 않습니다.'
+      },
+      {
+        id: 'ug_account',
+        icon: '👤',
+        title: '내 계정 관리 (이름·생일 변경 신청 / 비밀번호 / 탈퇴)',
+        sub: '상단 👤 버튼에서 내 정보 변경 및 비밀번호 분실 대처법',
+        keywords: '내 계정 이름 변경 신청 생일 변경 승인 거절 비밀번호 변경 초기화 분실 탈퇴 삭제',
+        steps: [
+          '<b>이름 변경 신청:</b> 우측 상단 <b>👤 버튼</b> → <b>[✏️ 내 이름 변경 신청]</b>에 새 성명(2~10글자)을 입력해 신청합니다. 관리자가 승인하면 즉시 새 이름으로 변경되며(다음 로그인부터 새 이름으로 로그인), 거절 시 기존 이름이 유지됩니다.',
+          '<b>생일 변경 신청:</b> <b>[🎂 내 생일 변경 신청]</b>에서 생년월일 8자리 입력 또는 달력 선택 후 신청합니다. 관리자 승인 후 반영되며, 대기 중에는 언제든 취소할 수 있습니다.',
+          '<b>비밀번호 변경:</b> 하단 <b>[비밀번호 변경]</b> 탭에서 현재 비밀번호와 새 비밀번호(6자리 이상)를 입력해 직접 변경할 수 있습니다. <b>(비밀번호 변경은 보안상 로그에 남지 않습니다.)</b>',
+          '<b>비밀번호를 잊어버렸을 때:</b> 관리자에게 비밀번호 초기화를 요청해 <b>8자리 초기화 코드(24시간 유효)</b>를 받은 뒤, 로그인 화면 하단의 <b>[🔑 새 비밀번호 설정]</b>에서 재설정하면 바로 로그인됩니다.'
+        ],
+        tip: '이름·생일 변경 신청/취소 및 회원 탈퇴는 보안상 관리자 로그에 기록되며, 비밀번호 변경은 기록되지 않습니다.'
+      },
+      {
+        id: 'ug_notif',
+        icon: '🔔',
+        title: '실시간 알림 설정',
+        sub: '새 공지·말씀·승인 결과를 알림으로 받아보기',
+        keywords: '알림 설정 팝업 기기알림 테스트알림',
+        steps: [
+          '우측 상단 <b>🔔 버튼</b>을 눌러 전체 알림과 항목별 알림(메인 화면 새 소식 / 오늘의 말씀)을 자유롭게 켜고 끌 수 있습니다.',
+          '<b>[기기 알림 허용하기]</b>를 눌러 권한을 허용하면 스마트폰 상단 알림으로도 소식을 받을 수 있으며, <b>[🔔 테스트 알림]</b>으로 정상 작동 여부를 바로 확인할 수 있습니다.'
+        ],
+        tip: '아이폰에서는 반드시 Safari → 공유 → [홈 화면에 추가]로 설치한 앱에서 열어야 기기 알림 허용 버튼이 활성화됩니다.'
+      }
+    ];
+
+    function renderUserGuideView() {
+      const q = String(userGuideSearchQuery || '').trim();
+      const clearBtn = document.getElementById('userGuideSearchClear');
+      if (clearBtn) clearBtn.classList.toggle('hidden', !q);
+
+      const qLower = q.toLowerCase();
+      const qTokens = qLower.split(/\s+/).filter(Boolean);
+
+      const matched = USER_GUIDE_SECTIONS.filter(sec => {
+        if (!qLower) return true;
+        const hay = `${sec.title} ${sec.sub} ${sec.keywords} ${sec.steps.join(' ')} ${sec.tip || ''}`.toLowerCase();
+        return qTokens.every(tok => hay.includes(tok));
+      });
+
+      const summaryEl = document.getElementById('userGuideSummaryBar');
+      if (summaryEl) {
+        summaryEl.textContent = q
+          ? `'${q}' 검색 결과 ${matched.length}개 항목`
+          : `총 ${matched.length}개 이용 안내 (항목을 누르면 자세한 방법이 펼쳐집니다)`;
+      }
+
+      const resEl = document.getElementById('userGuideResults');
+      if (!resEl) return;
+
+      if (matched.length === 0) {
+        resEl.innerHTML = `
+          <div class="card" style="text-align:center; padding:26px 16px; color:#64748B;">
+            <div style="font-size:24px; margin-bottom:6px;">🔎</div>
+            <div style="font-size:14px; font-weight:700; color:#334155;">일치하는 사용 안내가 없습니다.</div>
+            <div style="font-size:12.5px; margin-top:4px;">예: 출석, 성경, 메모, 이름, 생일, 비밀번호, QR 등으로 검색해 보세요.</div>
+          </div>
+        `;
+        return;
+      }
+
+      resEl.innerHTML = matched.map((sec, idx) => `
+        <div class="guide-card">
+          <details ${(q || idx === 0) ? 'open' : ''}>
+            <summary>
+              <div class="guide-summary-left">
+                <span class="guide-icon-badge">${sec.icon}</span>
+                <div style="min-width:0; flex:1;">
+                  <div class="guide-card-title">${escapeHtml(sec.title)}</div>
+                  <div class="guide-card-sub">${escapeHtml(sec.sub)}</div>
+                </div>
+              </div>
+              <span class="guide-chevron">▼</span>
+            </summary>
+            <div class="guide-card-body">
+              <ol class="guide-step-list">
+                ${sec.steps.map(s => `<li>${s}</li>`).join('')}
+              </ol>
+              ${sec.tip ? `<div class="guide-tip-box ${sec.warn ? 'warn' : ''}">💡 ${escapeHtml(sec.tip)}</div>` : ''}
+            </div>
+          </details>
+        </div>
+      `).join('');
+    }
+
+    window.onUserGuideSearchInput = (val) => {
+      userGuideSearchQuery = val;
+      renderUserGuideView();
+    };
+
+    window.clearUserGuideSearch = () => {
+      userGuideSearchQuery = '';
+      const inp = document.getElementById('userGuideSearchInput');
+      if (inp) { inp.value = ''; inp.focus(); }
+      renderUserGuideView();
+    };
+
+    window.quickSearchUserGuide = (keyword) => {
+      userGuideSearchQuery = keyword;
+      const inp = document.getElementById('userGuideSearchInput');
+      if (inp) inp.value = keyword;
+      renderUserGuideView();
+    };
+
+    // ==================== 10-3. 관리자 전용 사용방법 · 인수인계 설명서 (관리 센터 [📖 사용방법]) ====================
+    const ADMIN_GUIDE_SECTIONS = [
+      {
+        id: 'ag_handover',
+        category: '인수인계 필수',
+        icon: '🤝',
+        title: '1. 새 관리자 인수인계 필수 절차',
+        sub: '관리자 등록 · 잠금 · 퇴임자 해제 · 내 이름 변경 방법',
+        keywords: '인수인계 새 관리자 로그인 성명 코드 잠금 해제 퇴임 이름 변경',
+        targetTab: 'members',
+        targetLabel: '👥 회원 승인 탭 열기',
+        steps: [
+          '<b>관리자 로그인:</b> 로그인 화면 상단 <b>[관리자]</b> 탭에서 <b>본인 성명(2~10글자)</b>과 <b>최고 관리자 코드</b>를 입력해 입장합니다. (관리자 코드는 <b>[🔐 관리자 코드]</b> 탭에서 확인·복사 가능)',
+          '<b>신규 관리자 자동 등록 잠금 활용:</b> 평상시에는 <b>[👥 회원 승인] → 🔒 신규 관리자 자동 등록 잠금</b>을 켜 두는 것을 권장합니다. 잠금이 켜진 상태에서 새 관리자가 로그인하면 기존 관리자의 승인 대기 목록에 뜨며, <b>[✅ 관리자 입장 승인]</b>을 눌러야 입장됩니다.',
+          '<b>퇴임·이전 관리자 해제:</b> 인수인계가 끝나면 <b>[👥 회원 승인] → 🔐 관리자 명단</b>에서 퇴임하는 관리자의 <b>[관리자 해제]</b> 버튼을 누릅니다. 해제된 관리자는 즉시 자동 로그아웃되며, 추후 재입장 시도 시 기존 관리자의 승인이 필요합니다.',
+          '<b>관리자 코드 변경 (인수인계 마감):</b> <b>[🔐 관리자 코드]</b> 탭에서 새 6자리 이상 코드로 변경(🎲 자동 생성 지원)하면 Firebase 로그인 비밀번호와 공유 코드가 동시에 바뀝니다.',
+          '<b>내 관리자 이름 변경:</b> 앱 우측 상단 <b>🔔 알림 버튼 바로 왼쪽의 ✏️ 버튼</b>을 눌러 본인 이름을 변경할 수 있습니다. (보안을 위해 <b>[📋 로그]</b>와 구글 시트 <b>[이름 변경 로그]</b> 탭에 자동 기록)'
+        ],
+        tip: '최소 1명의 활성 관리자는 항상 유지되어야 하므로, 새 관리자를 먼저 등록·승인한 뒤 이전 관리자를 해제해 주세요.',
+        warn: true
+      },
+      {
+        id: 'ag_content',
+        category: '공지·말씀',
+        icon: '🎨',
+        title: '2. 화면·공지 관리 (배너 · 역할별 공개 · 예약 게시 · 축하 멘트)',
+        sub: '메인 화면 구성, 특정 역할 전용 공지, 예약 게시(KST) 활용법',
+        keywords: '화면 공지 배너 칸 배치 순서 임시저장 예약 게시 역할 전용 생일 새신자 축하 멘트',
+        targetTab: 'content',
+        targetLabel: '🎨 화면·공지 관리 열기',
+        steps: [
+          '<b>메인 화면 배너·칸 관리:</b> <b>[+ 새 배너·칸]</b>으로 광고·새신자 안내·특정 역할 전용 칸을 추가하고, <b>▲/▼</b> 버튼으로 메인 홈 표시 순서를 즉시 변경할 수 있습니다.',
+          '<b>공지·광고 작성 및 상단 고정:</b> <b>[+ 새 공지·광고]</b>에서 구분(선택 또는 직접 입력)·제목·내용을 작성합니다. <b>[📌 상단 고정 공지 배너에도 함께 띄우기]</b>를 체크하면 메인 최상단 배너에 자동 연동됩니다.',
+          '<b>특정 역할에게만 보여주기 (서버 보안 분리):</b> 공개 대상에서 <b>[🎯 선택한 역할만 보기]</b>를 고르고 원하는 역할(예: 목사·부장·회장·팀장·셀장 등 중복 선택 가능)을 체크하면 해당 역할 회원에게만 표시됩니다.',
+          '<b>임시저장 & 예약 게시:</b> <b>[📝 임시저장]</b>은 관리자만 볼 수 있고, <b>[⏰ 예약 게시]</b>는 지정한 한국시간(KST)이 지나면 자동으로 공개됩니다.',
+          '<b>생일 · 새신자 축하 멘트 수정:</b> 상단 노란색 카드의 <b>[✏️ 멘트 수정]</b>에서 <b>{이름}</b> 변수를 넣어 생일/새신자 자동 배너와 알림 문구를 자유롭게 바꿀 수 있습니다.'
+        ],
+        tip: '예약 게시 항목은 보안상 관리자 전용 서버(adminNotices/adminBlocks)에 격리되어 있으며, 지정 시각 이후 관리자가 앱에 접속 중이거나 앱을 열 때 즉시 자동 공개됩니다.'
+      },
+      {
+        id: 'ag_qt_links',
+        category: '공지·말씀',
+        icon: '✨',
+        title: '3. 오늘의 말씀 관리 & 사이트 바로가기 관리',
+        sub: '자동 말씀 대체/함께 올리기, 댓글 관리, 더보기(☰) 링크 편집',
+        keywords: '오늘의 말씀 큐티 대체 함께 올리기 숨김 복원 댓글 삭제 사이트 바로가기 인스타그램 유튜브 교회',
+        targetTab: 'qt',
+        targetLabel: '✨ 오늘의 말씀 관리 열기',
+        steps: [
+          '<b>오늘의 말씀 관리:</b> 매일 00:00(KST) 자동 말씀이 표시됩니다. 관리자가 직접 글을 올릴 때 <b>[📌 오늘의 말씀과 같이 올리기]</b> 또는 <b>[🔄 오늘의 말씀 대신 이 글만 올리기(대체)]</b> 중 선택할 수 있으며, 자동 말씀을 하루 숨김·복원할 수도 있습니다.',
+          '<b>악성 댓글 삭제:</b> 말씀 카드의 <b>[💬 댓글·하트]</b>에서 부적절한 댓글을 즉시 삭제할 수 있습니다. (삭제 원문은 보안 로그에 자동 보존)',
+          '<b>사이트 바로가기 관리 ([🔗 사이트 바로가기 관리]):</b> 하단 <b>[☰ 더보기]</b> 메뉴에 표시되는 인스타그램·유튜브·교회 홈페이지 등의 링크를 추가·수정·순서 변경·삭제할 수 있습니다.'
+        ],
+        tip: '인스타그램·유튜브 URL을 등록하면 스마트폰에 해당 앱이 설치된 이용자가 눌렀을 때 앱으로 바로 연결됩니다.'
+      },
+      {
+        id: 'ag_members_roles',
+        category: '회원·역할',
+        icon: '👥',
+        title: '4. 회원 승인 · 이름/생일 변경 승인 · 역할별 명단 관리',
+        sub: '회원 승인 탭과 역할 설정 탭의 역할 분담 안내',
+        keywords: '회원 승인 가입 대기 보류 삭제 이름 변경 승인 거절 생일 변경 승인 비밀번호 초기화 역할 설정 명단 새신자 해제',
+        targetTab: 'roles',
+        targetLabel: '🏷️ 역할 설정(명단) 열기',
+        steps: [
+          '<b>[👥 회원 승인] 탭 (승인·삭제 전용):</b> 신규 가입 대기(역할 부여 후 승인 / 보류 / 삭제), <b>회원 이름 변경 신청</b>(승인 시 다음 로그인부터 새 이름 자동 적용 / 거절 시 기존 이름 유지), <b>회원 생일 변경 신청</b>(승인 / 거절), 비밀번호 초기화 대기, 보류된 신청만 깔끔하게 처리합니다.',
+          '<b>[🏷️ 역할 설정] 탭 (승인 회원 명단 · 역할 변경):</b> 상단의 역할별 탭(<b>전체 · 목사 · 부장 · 교사 · 회장 · 팀장 · 셀장 · 청년 · 새신자</b> 등)을 눌러 소속 명단을 한눈에 확인하고, 이름 검색·역할 변경·생일 직접 수정·새신자 해제·비밀번호 초기화·삭제를 처리합니다.',
+          '<b>새신자 해제:</b> 역할이 <b>새신자</b>인 회원은 메인 홈에 환영 배너가 자동 표시됩니다. 정착 후 <b>[💐 새신자 해제]</b>로 일반 역할(예: 청년)로 바꾸면 메인 환영 배너에서 자동으로 내려갑니다.',
+          '<b>회원 비밀번호 초기화:</b> 회원이 비밀번호를 잊으면 명단에서 <b>[비번 초기화]</b>를 눌러 <b>8자리 1회용 코드(24시간 유효)</b>를 발급하고 <b>[📋 안내 문구 복사]</b>로 카톡 전달해 주세요.'
+        ],
+        tip: '새 역할을 추가하거나 역할 순서를 바꾸고 싶을 때도 [🏷️ 역할 설정] 하단의 [+ 새 역할 만들기]와 ▲/▼ 버튼을 이용하면 됩니다.'
+      },
+      {
+        id: 'ag_worship_sheet',
+        category: '예배·시트',
+        icon: '⛪',
+        title: '5. 예배 출석 관리 & 구글 시트 8개 세부 탭 자동 연동',
+        sub: '정기/특별 예배 출석 설정, 수동 수정, 구글 시트 8개 탭 구조 및 배포 방법',
+        keywords: '예배 출석 정기 특별 행사 수련회 구글 시트 Apps Script 8개 탭 동기화 출석 0 정리',
+        targetTab: 'worship',
+        targetLabel: '⛪ 예배 관리 열기',
+        steps: [
+          '<b>출석 명단 관리:</b> 날짜/예배를 선택해 출석 인원을 확인하고, 누락된 회원은 <b>[+ 출석 추가]</b>, 시각 오기는 <b>[수정]</b>, 잘못된 기록은 <b>[삭제]</b>할 수 있습니다. <b>[✏️ 예배명 변경]</b>으로 특정 주일을 절기 예배 이름으로 바꿀 수 있습니다.',
+          '<b>정기 예배 · 특별 행사 설정:</b> 정기 예배 요일·시간(기본 주일 14:00~15:30)을 바꾸거나 <b>[+ 행사 추가]</b>로 수련회·금요기도회 등 특별 출석 일정을 등록합니다.',
+          '<b>구글 시트 Apps Script 배포 방법:</b> 구글 시트 상단 <b>[확장 프로그램 → Apps Script]</b>에 최신 8탭 스크립트를 붙여넣고 저장한 뒤, 우측 상단 <b>[배포 → 배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]</b>를 완료합니다. (웹 앱 URL은 <b>[⛪ 예배 관리]</b> 하단에 입력 후 저장)',
+          '<b>자동 저장 & 전체 동기화:</b> 평소 출석·회원·관리자·보안 로그가 자동으로 각 전용 시트 탭에 분리 저장되며, <b>[🔄 전체 시트 동기화]</b>를 누르면 8개 탭 전체가 중복 없이 최신 상태로 맞춰집니다.'
+        ],
+        sheetTabs: [
+          { name: '1. 출석부', desc: '예배·행사별 출석 시각 & 누적 출석' },
+          { name: '2. 회원 명단', desc: '성명·역할·생일·가입일·상태·이전이름' },
+          { name: '3. 관리자 명단', desc: '활성/해제 관리자 현황·접속일·횟수' },
+          { name: '4. 관리자 입퇴장 로그', desc: '관리자 등록·승인·거절·해제·재입장' },
+          { name: '5. 이름 변경 로그', desc: '관리자·회원 이름 변경(신청/승인/거절)' },
+          { name: '6. 생일 변경 로그', desc: '회원 생일 변경 신청/승인/거절·직접수정' },
+          { name: '7. 관리자 활동 로그', desc: '공지·배너·말씀·역할·메뉴·설정 전체' },
+          { name: '8. 이용자 활동 로그', desc: '댓글·가입/탈퇴·출석 체크 이력' }
+        ],
+        tip: '구글 시트 URL은 관리자 전용 문서(config/sheetSecret)에 격리되어 있어 일반 회원은 절대 볼 수 없습니다.'
+      },
+      {
+        id: 'ag_qr_logs',
+        category: '보안·로그',
+        icon: '📋',
+        title: '6. 초대 QR 관리 & 통합 보안 감사 로그',
+        sub: 'QR 긴급 폐기·재발급과 삭제 불가능한 보안 로그 조회법',
+        keywords: 'QR 관리 초대 재발급 폐기 보안 로그 감사 검색 필터 구글 시트 동기화',
+        targetTab: 'logs',
+        targetLabel: '📋 로그 탭 열기',
+        steps: [
+          '<b>초대 QR 관리 ([📲 QR 관리]):</b> 초대 링크가 외부에 유출되었을 때 <b>[🔄 새 QR 즉시 재발급]</b>을 누르면 기존 오늘 QR이 즉시 폐기되고 새 QR이 발급됩니다.',
+          '<b>통합 보안 감사 로그 ([📋 로그]):</b> 악의적 글 게시·임의 변경·장난을 방지하기 위해 <b>관리자의 모든 추가/수정/삭제/설정 변경</b>과 <b>이용자의 댓글·이름/생일 변경 신청·가입/탈퇴·출석 체크</b>가 날짜·시각(초 단위 KST)과 함께 기록됩니다.',
+          '<b>위변조·삭제 불가:</b> 보안상 최고 관리자도 앱에서 로그를 수정하거나 삭제할 수 없으며, 상단 필터(전체/관리자/이용자), 분류 선택, 검색창으로 빠르게 추적할 수 있습니다.',
+          '<b>프라이버시 미기록 범위:</b> 이용자 비밀번호 변경, 성경 메모·책갈피·검색, 외부 사이트 이동, 공지·회칙 단순 조회는 기록되지 않습니다.'
+        ],
+        tip: '로그 탭 상단의 [📊 시트 동기화]를 누르면 아직 시트에 반영되지 않은 미전송 로그가 각 전용 탭으로 일괄 저장됩니다.'
+      },
+      {
+        id: 'ag_labels_diag',
+        category: '보안·로그',
+        icon: '🧪',
+        title: '7. 메뉴·이름 편집 & 기능 점검 · 정기 서버 점검 모드',
+        sub: '탭 이모지/순서 커스터마이징, 6항목 점검, 서버 점검 차단 방법',
+        keywords: '메뉴 이름 이모지 순서 편집 기능 점검 시뮬레이션 일반 회원 미리보기 정기 서버 점검 모드',
+        targetTab: 'diagnostics',
+        targetLabel: '🧪 기능 점검 탭 열기',
+        steps: [
+          '<b>메뉴·이름 편집 ([✏️ 메뉴·이름]):</b> 하단 탭과 관리 센터 서브탭의 이모지, 이름, 표시 순서를 자유롭게 바꿀 수 있습니다. 저장 시 모든 회원 앱에 즉시 반영됩니다.',
+          '<b>전체 기능 점검 ([🧪 기능 점검]):</b> <b>[🚀 전체 6개 항목 한 번에 점검하기]</b>로 Firebase, 구글 시트 8개 탭, 초대 QR, 성경 API, 알림, 설정 무결성을 한 번에 진단합니다.',
+          '<b>일반 회원 시점 미리보기:</b> <b>[👁️ 일반 회원 화면 미리보기]</b>를 누르면 관리자 전용 칸과 관리 센터가 숨겨진 실제 일반 회원 화면을 안전하게 확인해 볼 수 있습니다.',
+          '<b>정기 서버 점검 모드:</b> 앱 업데이트나 대규모 정비 시 <b>[즉시 서버 점검 모드 켜기]</b> 또는 <b>[⏰ 예약 정기 점검 시간]</b>을 켜면 일반 회원에게는 점검 안내 화면만 표시되고 최고 관리자는 정상 작업할 수 있습니다.'
+        ],
+        tip: '작업이 끝나면 상단 빨간 안내 바의 [점검 해제] 버튼을 눌러 일반 회원 접속을 복구해 주세요.'
+      }
+    ];
+
+    function renderAdminGuideListOnly() {
+      const listEl = document.getElementById('adminGuideListArea');
+      if (!listEl) return;
+      const q = String(adminGuideSearchQuery || '').trim();
+      const qLower = q.toLowerCase();
+      const qTokens = qLower.split(/\s+/).filter(Boolean);
+      const clearBtn = document.getElementById('adminGuideSearchClear');
+      if (clearBtn) clearBtn.classList.toggle('hidden', !q);
+
+      const filtered = ADMIN_GUIDE_SECTIONS.filter(sec => {
+        if (adminGuideCategoryFilter !== 'all' && sec.category !== adminGuideCategoryFilter) return false;
+        if (!qLower) return true;
+        const sheetTxt = Array.isArray(sec.sheetTabs) ? sec.sheetTabs.map(t => `${t.name} ${t.desc}`).join(' ') : '';
+        const hay = `${sec.category} ${sec.title} ${sec.sub} ${sec.keywords} ${sec.steps.join(' ')} ${sheetTxt} ${sec.tip || ''}`.toLowerCase();
+        return qTokens.every(tok => hay.includes(tok));
+      });
+
+      const summaryEl = document.getElementById('adminGuideSummaryText');
+      if (summaryEl) {
+        summaryEl.textContent = q
+          ? `'${q}' 검색 결과 ${filtered.length}개 가이드`
+          : `총 ${filtered.length}개 관리자 매뉴얼 (항목을 눌러 상세 절차를 확인하세요)`;
+      }
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = `
+          <div class="card" style="text-align:center; padding:26px 16px; color:#64748B;">
+            <div style="font-size:24px; margin-bottom:6px;">🔎</div>
+            <div style="font-size:14px; font-weight:700; color:#334155;">일치하는 관리자 가이드가 없습니다.</div>
+            <div style="font-size:12px; margin-top:4px;">예: 인수인계, 구글 시트, 예약, QR, 역할, 로그, 점검 등으로 검색해 보세요.</div>
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map((sec, idx) => `
+        <div class="guide-card">
+          <details ${(q || adminGuideCategoryFilter !== 'all' || idx === 0) ? 'open' : ''}>
+            <summary>
+              <div class="guide-summary-left">
+                <span class="guide-icon-badge admin">${sec.icon}</span>
+                <div style="min-width:0; flex:1;">
+                  <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-bottom:2px;">
+                    <span class="tag warm" style="font-size:10px; padding:2px 6px;">${escapeHtml(sec.category)}</span>
+                  </div>
+                  <div class="guide-card-title">${escapeHtml(sec.title)}</div>
+                  <div class="guide-card-sub">${escapeHtml(sec.sub)}</div>
+                </div>
+              </div>
+              <span class="guide-chevron">▼</span>
+            </summary>
+            <div class="guide-card-body">
+              <ol class="guide-step-list">
+                ${sec.steps.map(s => `<li>${s}</li>`).join('')}
+              </ol>
+              ${Array.isArray(sec.sheetTabs) ? `
+                <div style="margin-top:10px; font-size:12px; font-weight:800; color:#0F172A;">📊 구글 시트 자동 분리 8개 탭 구성</div>
+                <div class="guide-sheet-tabs-grid">
+                  ${sec.sheetTabs.map(t => `
+                    <div class="guide-sheet-pill">
+                      <div style="font-weight:800; color:#0F172A;">${escapeHtml(t.name)}</div>
+                      <div style="color:#64748B; font-size:11px;">${escapeHtml(t.desc)}</div>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
+              ${sec.tip ? `<div class="guide-tip-box ${sec.warn ? 'warn' : ''}">💡 ${escapeHtml(sec.tip)}</div>` : ''}
+              ${sec.targetTab ? `
+                <div style="margin-top:10px; display:flex; justify-content:flex-end;">
+                  <button class="btn-sm primary" type="button" onclick="switchManageSubTab('${escapeJsAttr(sec.targetTab)}')">${escapeHtml(sec.targetLabel || '바로가기')} →</button>
+                </div>
+              ` : ''}
+            </div>
+          </details>
+        </div>
+      `).join('');
+    }
+
+    window.setAdminGuideCategory = (cat) => {
+      adminGuideCategoryFilter = cat || 'all';
+      const bar = document.getElementById('adminGuideCatChips');
+      if (bar) {
+        bar.querySelectorAll('.filter-chip').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.guideCat === adminGuideCategoryFilter);
+        });
+      }
+      renderAdminGuideListOnly();
+    };
+
+    window.onAdminGuideSearchInput = (val) => {
+      adminGuideSearchQuery = val;
+      renderAdminGuideListOnly();
+    };
+
+    window.clearAdminGuideSearch = () => {
+      adminGuideSearchQuery = '';
+      const inp = document.getElementById('adminGuideSearchInput');
+      if (inp) { inp.value = ''; inp.focus(); }
+      renderAdminGuideListOnly();
+    };
+
+    function renderManageGuide(el, user) {
+      const cats = ['all', '인수인계 필수', '공지·말씀', '회원·역할', '예배·시트', '보안·로그'];
+      el.innerHTML = `
+        <div class="guide-hero-admin">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:6px;">
+            <span class="hero-badge" style="margin-bottom:0;">🔐 최고 관리자 전용 매뉴얼</span>
+            <span style="font-size:11px; color:#FDE68A; font-weight:700;">일반 회원 비공개</span>
+          </div>
+          <div class="bylaw-hero-title" style="margin-top:4px;">${escapeHtml(getTabIcon('manageGuide'))} 관리자 사용방법 · 인수인계 가이드</div>
+          <div class="bylaw-hero-dates">
+            새로운 관리자가 들어와도 막힘없이 운영할 수 있도록 모든 관리 기능과 구글 시트 8개 탭 연동 방법을 정리했습니다.
+          </div>
+        </div>
+
+        <div id="adminGuideCatChips" class="filter-row" style="margin-bottom:8px;">
+          ${cats.map(c => `
+            <button class="filter-chip ${adminGuideCategoryFilter === c ? 'active' : ''}" data-guide-cat="${escapeHtml(c)}" type="button" onclick="setAdminGuideCategory('${escapeJsAttr(c)}')">
+              ${c === 'all' ? '전체' : escapeHtml(c)}
+            </button>
+          `).join('')}
+        </div>
+
+        <div class="search-box" style="margin-bottom:8px;">
+          <span class="search-icon">🔍</span>
+          <input id="adminGuideSearchInput" class="search-input" type="search" value="${escapeHtml(adminGuideSearchQuery)}" placeholder="관리자 기능 검색 (예: 인수인계, 구글 시트, 예약, QR, 로그)" oninput="onAdminGuideSearchInput(this.value)" />
+          <button id="adminGuideSearchClear" class="search-clear ${adminGuideSearchQuery ? '' : 'hidden'}" type="button" onclick="clearAdminGuideSearch()">✕</button>
+        </div>
+        <div id="adminGuideSummaryText" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
+        <div id="adminGuideListArea"></div>
+      `;
+      renderAdminGuideListOnly();
+    }
 
     // ==================== 11. 메인 홈 화면 렌더링 (+ 오늘의 생일 자동 안내 · 알림) ====================
     function getTodayBirthdays() {
@@ -7872,6 +8521,7 @@
       else if (currentManageSubTab === 'logs') renderManageLogs(content, user);
       else if (currentManageSubTab === 'labels') renderManageLabels(content, user);
       else if (currentManageSubTab === 'diagnostics') renderManageDiagnostics(content, user);
+      else if (currentManageSubTab === 'guide') renderManageGuide(content, user);
     }
 
     window.switchManageSubTab = (sub) => {
@@ -9217,6 +9867,14 @@
           target: m.name,
           beforeVal: formatBirthdayDisplay(m.birthday),
           afterVal: formatBirthdayDisplay(birthday)
+        });
+        syncMemberEventToSheet({
+          name: m.name,
+          role: m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미정'),
+          birthday: formatBirthdayDisplay(birthday),
+          joinedAt: m.createdAt || formatKstDateTime(),
+          status: m.status === 'approved' ? '승인' : m.status,
+          prevName: m.prevName || ''
         });
         document.getElementById('memberBirthdayModal').classList.remove('open');
         showToast(`${m.name}님의 생일이 저장되었습니다!`);
@@ -13247,8 +13905,11 @@ ${m.body}`;
         action: 'member_upsert',
         name: item.name,
         role: item.role || '',
+        birthday: item.birthday || '',
         joinedAt: item.joinedAt || formatKstDateTime(),
-        status: item.status || ''
+        status: item.status || '',
+        prevName: item.prevName || '',
+        updatedAt: formatKstDateTime()
       }, url).catch(() => {});
     }
 
@@ -13302,8 +13963,11 @@ ${m.body}`;
           action: 'member_upsert',
           name: m.name,
           role: roleLabel,
+          birthday: formatBirthdayDisplay(m.birthday),
           joinedAt: m.createdAt || formatKstDateTime(),
-          status: curStatusLabel
+          status: curStatusLabel,
+          prevName: m.prevName || '',
+          updatedAt: formatKstDateTime()
         }, url);
         await db.collection('members').doc(String(m.id)).update({ sheetSyncedStatus: curStatusLabel }).catch(() => {});
       }
@@ -13631,17 +14295,22 @@ ${m.body}`;
           items
         }, { merge: true });
         postToGoogleSheet({
-          action: 'admin_log',
+          action: 'admin_upsert',
           name: target.name,
-          status: wasReentry ? `재입장 승인 (${target.reentryCount}회)` : '신규 승인',
-          time: nowStr,
+          status: '활성',
+          registeredAt: target.registeredAt || nowStr,
+          lastLoginAt: nowStr,
+          reentryCount: Number(target.reentryCount || 0),
+          renameCount: Number(target.renameCount || 0),
+          prevName: target.prevName || '',
           note: `승인자: ${currentAdminName || '관리자'}`
         }).catch(() => {});
         recordAuditLog({
           actorType: 'admin',
           category: '보안·설정',
-          action: wasReentry ? '관리자 재입장 승인' : '신규 관리자 승인',
+          action: wasReentry ? `관리자 재입장 승인 (${target.reentryCount}회)` : '신규 관리자 승인',
           target: target.name,
+          detail: `승인자: ${currentAdminName || '관리자'}`,
           decision: 'approved'
         });
         showToast(`${target.name}님의 관리자 ${wasReentry ? '재입장' : '등록'}을 승인했습니다!`);
@@ -13663,17 +14332,22 @@ ${m.body}`;
           items
         }, { merge: true });
         postToGoogleSheet({
-          action: 'admin_log',
+          action: 'admin_upsert',
           name: target.name,
-          status: '요청 거절',
-          time: nowStr,
-          note: `처리자: ${currentAdminName || '관리자'}`
+          status: '해제',
+          registeredAt: target.registeredAt || nowStr,
+          lastLoginAt: target.lastLoginAt || '-',
+          reentryCount: Number(target.reentryCount || 0),
+          renameCount: Number(target.renameCount || 0),
+          prevName: target.prevName || '',
+          note: `거절 처리자: ${currentAdminName || '관리자'}`
         }).catch(() => {});
         recordAuditLog({
           actorType: 'admin',
           category: '보안·설정',
           action: '관리자 입장 요청 거절',
           target: target.name,
+          detail: `처리자: ${currentAdminName || '관리자'}`,
           decision: 'rejected'
         });
         showToast(`${target.name}님의 관리자 요청을 거절했습니다.`);
@@ -13698,17 +14372,22 @@ ${m.body}`;
           items
         }, { merge: true });
         postToGoogleSheet({
-          action: 'admin_log',
+          action: 'admin_upsert',
           name: target.name,
-          status: '관리자 해제',
-          time: nowStr,
+          status: '해제',
+          registeredAt: target.registeredAt || nowStr,
+          lastLoginAt: target.lastLoginAt || '-',
+          reentryCount: Number(target.reentryCount || 0),
+          renameCount: Number(target.renameCount || 0),
+          prevName: target.prevName || '',
           note: `해제자: ${currentAdminName || '관리자'}`
         }).catch(() => {});
         recordAuditLog({
           actorType: 'admin',
           category: '보안·설정',
           action: '관리자 해제',
-          target: target.name
+          target: target.name,
+          detail: `해제자: ${currentAdminName || '관리자'}`
         });
         showToast(`${target.name}님을 관리자에서 해제했습니다.`);
       } catch (err) { handleDbError(err, '관리자 해제'); }
@@ -13759,30 +14438,52 @@ ${m.body}`;
       return Array.from(map.values()).sort((a, b) => Number(b.ts || 0) - Number(a.ts || 0));
     }
 
+    function resolveAuditLogSheetTab(entry) {
+      const act = String((entry && entry.action) || '').trim();
+      const isMemActor = entry && entry.actorType === 'member';
+      if (act.includes('이름 변경')) return '이름 변경 로그';
+      if (act.includes('생일')) return '생일 변경 로그';
+      if (act.includes('관리자 재입장') || act.includes('신규 관리자 승인') || act.includes('관리자 입장 요청') || act === '관리자 해제') {
+        return '관리자 입퇴장 로그';
+      }
+      if (isMemActor) return '이용자 활동 로그';
+      return '관리자 활동 로그';
+    }
+
     function buildAuditLogSheetPayload(entry) {
       const isMemActor = entry.actorType === 'member';
       const whoTag = isMemActor ? '[이용자]' : '[관리자]';
       const actor = String(entry.actorName || (isMemActor ? '회원' : '관리자'));
       const act = String(entry.action || '활동');
       const cat = String(entry.category || '일반');
-      const diffPart = (entry.beforeVal && entry.afterVal)
-        ? `${entry.beforeVal} → ${entry.afterVal}`
-        : (entry.target || '');
+      const sheetTab = resolveAuditLogSheetTab(entry);
+      const target = String(entry.target || '');
+      const beforeVal = String(entry.beforeVal || '');
+      const afterVal = String(entry.afterVal || '');
+      const detail = String(entry.detail || '');
+      const diffPart = (beforeVal && afterVal) ? `${beforeVal} → ${afterVal}` : target;
       const dateStr = entry.dateWithDow || (entry.date ? `${entry.date}${entry.dow ? ` (${entry.dow})` : ''}` : '');
       const timeOnly = String(entry.time || '');
       const fullDt = entry.dateTime || `${dateStr} ${timeOnly}`.trim();
       const noteParts = [
         `[${cat}] ${act}`,
         diffPart ? `대상: ${diffPart}` : '',
-        entry.detail ? truncateLogText(entry.detail, 120) : ''
+        detail ? truncateLogText(detail, 120) : ''
       ].filter(Boolean);
       return {
-        action: 'admin_log',
+        action: 'audit_log',
         logType: 'audit_log',
+        sheetTab,
         logId: String(entry.id || ''),
         actorType: isMemActor ? 'member' : 'admin',
         actorName: actor,
         category: cat,
+        actionLabel: act,
+        target,
+        beforeVal,
+        afterVal,
+        detail,
+        decision: String(entry.decision || ''),
         name: `${whoTag} ${actor}`,
         status: `[${cat}] ${act}`,
         date: dateStr,
@@ -14047,8 +14748,10 @@ ${m.body}`;
         syncMemberEventToSheet({
           name: newName,
           role: roleName,
+          birthday: formatBirthdayDisplay(m.birthday),
           joinedAt: m.createdAt || nowInfo.dateTime,
-          status: `이름 변경 (${oldName} → ${newName})`
+          status: `승인 (이름 변경)`,
+          prevName: oldName
         });
 
         showToast(`✅ [${oldName}] → [${newName}] 이름 변경을 승인하고 보안 로그에 기록했습니다!`);
@@ -14159,6 +14862,14 @@ ${m.body}`;
           decision: 'approved'
         });
 
+        syncMemberEventToSheet({
+          name: m.name,
+          role: getRoleById(m.roleId).name,
+          birthday: formatBirthdayDisplay(newBday),
+          joinedAt: m.createdAt || nowInfo.dateTime,
+          status: '승인',
+          prevName: m.prevName || ''
+        });
         showToast(`✅ [${m.name}]님의 생일 변경을 승인하고 보안 로그에 기록했습니다!`);
       } catch (err) {
         handleDbError(err, '회원 생일 변경 승인');
@@ -14309,6 +15020,17 @@ ${m.body}`;
 
         document.getElementById('adminRenameModal').classList.remove('open');
 
+        postToGoogleSheet({
+          action: 'admin_upsert',
+          name: newName,
+          status: '활성',
+          registeredAt: target.registeredAt || nowInfo.dateTime,
+          lastLoginAt: target.lastLoginAt || nowInfo.dateTime,
+          reentryCount: Number(target.reentryCount || 0),
+          renameCount: Number(target.renameCount || 0),
+          prevName: oldName,
+          note: `이전 이름: ${oldName}`
+        }).catch(() => {});
         await recordAuditLog({
           actorType: 'admin',
           actorName,
@@ -14770,7 +15492,7 @@ ${m.body}`;
           </div>
           <div style="font-size:11.5px; color:#64748B; line-height:1.5; margin-bottom:10px;">
             • 보안 강화를 위해 연동 주소는 <b>최고 관리자 전용 서버(config/sheetSecret)</b>에만 격리 보관되며 일반 회원에게는 노출되지 않습니다.<br>
-            • 회원이 출석 체크를 하면 <b>관리자가 앱을 열거나 접속 중일 때</b> 출석부·회원·관리자 명단이 구글 시트에 자동으로 반영됩니다.
+            • <b>8개 세부 탭 자동 분리 저장:</b> <b>출석부 · 회원 명단 · 관리자 명단 · 관리자 입퇴장 로그 · 이름 변경 로그 · 생일 변경 로그 · 관리자 활동 로그 · 이용자 활동 로그</b>가 각각 별도 탭에 자동 기록됩니다.
           </div>
           <div style="display:flex; gap:6px; flex-wrap:wrap;">
             <button id="saveSheetUrlBtn" class="btn-sm primary" type="button" style="flex:1; padding:9px;" onclick="handleSaveSheetUrl()">💾 연동 주소 저장</button>
@@ -14953,57 +15675,57 @@ ${m.body}`;
         return {
           name: m.name,
           role: m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미정'),
+          birthday: formatBirthdayDisplay(m.birthday),
           joinedAt: m.createdAt || formatKstDateTime(),
-          status: st
+          status: st,
+          prevName: m.prevName || '',
+          updatedAt: formatKstDateTime()
         };
       });
       const adminPayload = (adminRegistry.items || []).map(a => ({
         name: a.name,
         status: a.status === 'active' ? '활성' : (a.status === 'pending' ? '승인 대기' : '해제'),
+        registeredAt: a.registeredAt || '-',
+        lastLoginAt: a.lastLoginAt || a.registeredAt || '-',
+        reentryCount: Number(a.reentryCount || 0),
+        renameCount: Number(a.renameCount || 0),
+        prevName: a.prevName || '',
         time: a.lastLoginAt || a.registeredAt || formatKstDateTime(),
         note: [
           a.approvedBy ? `승인자: ${a.approvedBy}` : (a.removedBy ? `해제자: ${a.removedBy}` : '등록'),
           a.prevName ? `이전 이름: ${a.prevName}` : ''
         ].filter(Boolean).join(' · ')
       }));
-      const renameLogPayload = (adminRegistry.renameLogs || []).map(l => {
-        const isMember = l.type === 'member_rename' || l.targetType === 'member';
-        const isRej = l.decision === 'rejected';
-        return {
-          targetType: isMember ? 'member' : 'admin',
-          decision: l.decision || 'approved',
-          actorName: l.actorName || l.oldName || '관리자',
-          oldName: l.oldName || '',
-          newName: l.newName || '',
-          kind: isMember ? (isRej ? '회원 변경 거절' : '회원 변경 승인') : (l.isSelf !== false ? '관리자 본인 변경' : '타 관리자 변경'),
-          date: l.dateWithDow || l.date || '',
-          time: l.time || '',
-          dateTime: l.dateTime || '',
-          note: isMember
-            ? (isRej ? `처리자: ${l.actorName || '관리자'} · 거절 (${l.oldName || ''} 유지)` : `승인자: ${l.actorName || '관리자'} · ${l.oldName || ''} → ${l.newName || ''}`)
-            : `변경자: ${l.actorName || l.oldName || '관리자'} (${l.oldName || ''} → ${l.newName || ''})`
-        };
-      });
+      const allOrderedLogs = getMergedAuditLogs()
+        .slice()
+        .sort((a, b) => Number(a.ts || 0) - Number(b.ts || 0))
+        .map(l => buildAuditLogSheetPayload(l));
       return {
         action: 'sync_all',
         attendance: attPayload,
         members: memberPayload,
         admins: adminPayload,
-        renameLogs: renameLogPayload
+        auditLogs: allOrderedLogs
       };
     }
 
     function isSheetResponseMultiTab(data) {
       if (!data || typeof data !== 'object') return false;
       if (data.multiTab === true) return true;
-      if (String(data.message || '').includes('3개 탭')) return true;
+      if (Number(data.tabCount || 0) >= 3) return true;
+      if (String(data.message || '').includes('탭')) return true;
       if (data.result && typeof data.result === 'object') return true;
       return false;
     }
 
+    function isSheetResponseEightTab(data) {
+      if (!data || typeof data !== 'object') return false;
+      return Number(data.tabCount || 0) >= 8 || String(data.version || '').includes('8tab');
+    }
+
     function warnIfOldAppsScript(res) {
       if (res && res.readable && res.data && !isSheetResponseMultiTab(res.data)) {
-        alert('⚠️ 구글 시트의 Apps Script가 아직 예전(1탭) 버전으로 배포되어 있습니다!\n\n구글 시트 → 확장 프로그램 → Apps Script에서:\n1) 최신 3탭 코드를 붙여넣고 저장한 뒤\n2) 오른쪽 위 [배포 → 배포 관리 → ✏️(수정) → 버전: 새 버전 → 배포]를 꼭 눌러주세요.\n(저장만 해서는 새 버전이 반영되지 않습니다.)');
+        alert('⚠️ 구글 시트의 Apps Script가 아직 예전 버전으로 배포되어 있습니다!\n\n구글 시트 → 확장 프로그램 → Apps Script에서:\n1) 최신 8개 세부 탭 코드를 붙여넣고 저장한 뒤\n2) 오른쪽 위 [배포 → 배포 관리 → ✏️(수정) → 버전: 새 버전 → 배포]를 꼭 눌러주세요.\n(저장만 해서는 새 버전이 반영되지 않습니다.)');
         return true;
       }
       return false;
@@ -15062,17 +15784,19 @@ ${m.body}`;
       if (!url) return showToast('먼저 Apps Script 웹 앱 URL을 입력해 주세요.');
       const res = await postToGoogleSheet({ action: 'test', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url, true);
       if (warnIfOldAppsScript(res)) return;
-      if (res.ok && res.readable && res.data && isSheetResponseMultiTab(res.data)) {
-        showToast('✅ 구글 시트 3개 탭(출석부·회원 명단·관리자 명단) 연동 정상!');
+      if (res.ok && res.readable && res.data && isSheetResponseEightTab(res.data)) {
+        showToast('✅ 구글 시트 8개 세부 탭 자동 분리 연동 정상!');
+      } else if (res.ok && res.readable && res.data && isSheetResponseMultiTab(res.data)) {
+        showToast('✅ 연동 정상 (현재 예전 3탭 버전 · 최신 8탭 Apps Script 배포 시 세부 탭이 자동 생성됩니다)');
       } else {
-        showToast(res.ok ? '구글 시트로 테스트 신호를 보냈습니다! 시트 하단 3개 탭을 확인해 보세요.' : '전송에 실패했습니다. URL을 확인해 주세요.');
+        showToast(res.ok ? '구글 시트로 테스트 신호를 보냈습니다! 시트 하단 탭을 확인해 보세요.' : '전송에 실패했습니다. URL을 확인해 주세요.');
       }
     };
 
     window.handleSyncAllToGoogleSheet = async () => {
       const url = document.getElementById('cfgSheetUrlInput').value.trim() || getAdminSheetUrl();
       if (!url) return showToast('먼저 Apps Script 웹 앱 URL을 입력하고 저장해 주세요.');
-      showToast('출석부 · 회원 명단 · 관리자 명단을 동기화 중...');
+      showToast('8개 세부 탭(출석부·회원·관리자·각종 로그)을 동기화 중...');
       const res = await postToGoogleSheet(buildFullSheetSyncPayload(), url, true);
       if (warnIfOldAppsScript(res)) return;
       if (res.ok) {
@@ -15091,9 +15815,24 @@ ${m.body}`;
             db.collection('attendance').doc(String(r.id)).update({ sheetSynced: true }).catch(() => {});
           }
         }
-        await syncUnsyncedRenameLogsToSheet().catch(() => {});
-        await syncUnsyncedAuditLogsToSheet().catch(() => {});
-        showToast('✅ 출석부 · 회원 · 관리자 명단 · 보안 로그 전체 동기화 완료!');
+        if (res.readable && res.data && isSheetResponseEightTab(res.data)) {
+          // sync_all에서 이미 8개 탭(로그 포함) 일괄 반영됨 → 미동기화 플래그만 완료 처리
+          for (const l of auditLogs) {
+            if (l && l.sheetSynced !== true) {
+              db.collection('auditLogs').doc(String(l.id)).update({ sheetSynced: true }).catch(() => {});
+            }
+          }
+          const latestRenameLogs = structuredClone(adminRegistry.renameLogs || []);
+          if (latestRenameLogs.some(l => l && l.sheetSynced !== true)) {
+            latestRenameLogs.forEach(l => { if (l) l.sheetSynced = true; });
+            db.collection('config').doc('adminRegistry').set({ renameLogs: latestRenameLogs }, { merge: true }).catch(() => {});
+          }
+          showToast('✅ 구글 시트 8개 세부 탭 전체 동기화 완료!');
+        } else {
+          await syncUnsyncedRenameLogsToSheet().catch(() => {});
+          await syncUnsyncedAuditLogsToSheet().catch(() => {});
+          showToast('✅ 전체 동기화 완료! (최신 8탭 Apps Script 배포 시 로그가 탭별로 분리 저장됩니다)');
+        }
       } else {
         showToast('동기화에 실패했습니다. URL과 Apps Script 배포 상태를 확인해 주세요.');
       }
@@ -15424,7 +16163,7 @@ ${m.body}`;
     // ==================== 21. 관리 센터 [🧪 기능 점검] (일괄 + 개별 + 안전 시뮬레이션) ====================
     const DIAG_ITEMS = [
       { id: 'firebase', title: '1. Firebase 서버 연결 · 관리자 인증', desc: 'DB 연결, 최고 관리자 인증 상태, 스키마 버전을 점검합니다.' },
-      { id: 'sheet', title: '2. 구글 시트 3개 탭 연동 상태', desc: 'Apps Script 웹 앱 URL 연결 및 출석부·회원·관리자 3탭 배포 여부를 점검합니다.' },
+      { id: 'sheet', title: '2. 구글 시트 8개 세부 탭 연동 상태', desc: 'Apps Script 웹 앱 URL 연결 및 8개 세부 탭(출석부·명단·분리 로그) 배포 여부를 점검합니다.' },
       { id: 'qr', title: '3. 오늘의 초대 QR 유효성 · 생성 점검', desc: '한국시간 오늘 날짜 토큰 존재 여부와 QR 이미지 생성을 점검합니다.' },
       { id: 'bible', title: '4. 성경 본문 불러오기 API 점검', desc: '개역한글 성경 본문(창세기 1장) 실시간 로딩을 점검합니다.' },
       { id: 'notif', title: '5. 알림 설정 · 앱 내 팝업 점검', desc: '기기 알림 권한 상태와 앱 내 상단 팝업 알림 작동을 점검합니다.' },
@@ -15648,8 +16387,10 @@ ${m.body}`;
               setDiagResult(id, 'err', '구글 시트 전송 실패: URL 오타 또는 네트워크 오류를 확인해 주세요.');
             } else if (res.readable && res.data && !isSheetResponseMultiTab(res.data)) {
               setDiagResult(id, 'err', 'Apps Script가 예전 1탭 버전입니다. Apps Script에서 [배포 관리 → ✏️ 수정 → 새 버전 → 배포]를 진행해 주세요.');
+            } else if (res.readable && res.data && isSheetResponseEightTab(res.data)) {
+              setDiagResult(id, 'ok', `🔐 관리자 전용 URL 격리 정상 · 구글 시트 8개 세부 탭 자동 분리 응답 확인 (${res.data.version || '8탭'})`);
             } else if (res.readable && res.data && isSheetResponseMultiTab(res.data)) {
-              setDiagResult(id, 'ok', `🔐 관리자 전용 URL 격리 정상 · 구글 시트 3개 탭(출석부·회원·관리자) 응답 확인 (${res.data.version || '3탭'})`);
+              setDiagResult(id, 'warn', `연동은 정상이나 예전 3탭 버전(${res.data.version || '3탭'})입니다. 최신 8탭 Apps Script를 배포하면 로그가 항목별 탭으로 자동 분리됩니다.`);
             } else {
               setDiagResult(id, 'ok', '구글 시트 전송 성공 (브라우저 보안 정책으로 응답 본문은 숨겨졌으나 시트로 정상 전송됨)');
             }
