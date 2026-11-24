@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=139" />
+  <link rel="manifest" href="./manifest.json?v=140" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=139" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=139" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=140" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=140" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2637,7 +2637,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=139" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=140" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3921,7 +3921,7 @@
       specialEvents: [],
       sessionNames: {}
     };
-    const KEY_BDAY_NOTIFIED = 'right_youth_bday_notified_v1';
+    const KEY_CELEB_DATE_NOTIFIED = 'right_youth_celeb_date_notified_v1';
     const KEY_NEWCOMER_NOTIFIED = 'right_youth_newcomer_notified_v1';
     const KEY_BIBLE_POS = 'right_youth_bible_pos_v103';
     const KEY_BIBLE_CACHE = 'right_youth_bible_cache_v103';
@@ -4697,7 +4697,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=139" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=140" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -4720,8 +4720,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=139', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=139', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=140', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=140', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -4951,12 +4951,7 @@
           id: String(member.id),
           name: member.name || '',
           status: member.status || 'pending',
-          roleId: member.roleId || 'role_youth',
-          authVer: Number(member.authVer || 0),
-          birthday: member.birthday || '',
-          requestedRoleId: member.requestedRoleId || '',
-          requestedRole: member.requestedRole || '',
-          createdAt: member.createdAt || ''
+          roleId: member.roleId || 'role_youth'
         }));
       } catch {}
     }
@@ -6339,7 +6334,8 @@
       if (localStorage.getItem(KEY_SESSION_EPOCH) !== SESSION_EPOCH) {
         localStorage.removeItem(KEY_MEMBER_CACHE);
         localStorage.removeItem(KEY_ADMIN_NAME);
-        localStorage.removeItem(KEY_BDAY_NOTIFIED);
+        localStorage.removeItem('right_youth_bday_notified_v1');
+        localStorage.removeItem(KEY_CELEB_DATE_NOTIFIED);
         localStorage.removeItem(KEY_NEWCOMER_NOTIFIED);
         localStorage.setItem(KEY_SESSION_EPOCH, SESSION_EPOCH);
         sessionEpochResetDone = true;
@@ -7209,16 +7205,15 @@
       const todayBdays = getTodayBirthdays();
       if (todayBdays.length === 0) return;
 
-      const { compact } = getKstDateParts();
-      const namesArr = todayBdays.map(b => b.name);
-      const sig = `${compact}:${namesArr.join(',')}`;
+      const todayStamp = String(getKstDateParts().compact || '');
       try {
-        if (localStorage.getItem(KEY_BDAY_NOTIFIED) === sig) return;
+        localStorage.removeItem('right_youth_bday_notified_v1');
+        if (localStorage.getItem(KEY_CELEB_DATE_NOTIFIED) === todayStamp) return;
       } catch {}
 
       if (notifPrefs.enabled && notifPrefs.homeNews) {
-        try { localStorage.setItem(KEY_BDAY_NOTIFIED, sig); } catch {}
-        const namesText = namesArr.join(', ');
+        try { localStorage.setItem(KEY_CELEB_DATE_NOTIFIED, todayStamp); } catch {}
+        const namesText = todayBdays.map(b => b.name).join(', ');
         const msgTitle = renderCelebrationText(getCelebrationMsg('birthdayTitle'), namesText);
         const msgBody = renderCelebrationText(getCelebrationMsg('birthdayDesc'), namesText).replace(/\s*\n\s*/g, ' ');
         dispatchAppNotification({
@@ -9551,7 +9546,6 @@
         });
         if (myMemberDoc) {
           myMemberDoc.birthday = birthday;
-          saveCachedMember(myMemberDoc);
         }
         document.getElementById('accountSummaryBox').innerHTML = `
           <div><b>아이디 (성명):</b> ${escapeHtml(user.name)}</div>
