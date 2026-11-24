@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=129" />
+  <link rel="manifest" href="./manifest.json?v=130" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=129" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=129" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=130" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=130" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -1941,7 +1941,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=129" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=130" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3945,7 +3945,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=129" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=130" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -3968,8 +3968,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=129', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=129', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=130', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=130', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -4360,7 +4360,26 @@
 
     function escapeHtml(str) {
       return String(str ?? '')
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function sanitizeHexColor(raw, fallback = '#475569') {
+      const s = String(raw || '').trim();
+      return /^#[0-9A-Fa-f]{3,8}$/.test(s) ? s : fallback;
+    }
+
+    function escapeJsAttr(str) {
+      return escapeHtml(
+        String(str ?? '')
+          .replace(/\\/g, '\\\\')
+          .replace(/'/g, "\\'")
+          .replace(/\r/g, '')
+          .replace(/\n/g, ' ')
+      );
     }
 
     function escapeRegExp(str) {
@@ -6222,7 +6241,7 @@
           if (!pinned) return '';
           return `
             <div class="home-block">
-              <div class="hero-banner" style="background:${getThemeCss(b.theme)};" onclick="openDetail('${pinned.id}')">
+              <div class="hero-banner" style="background:${getThemeCss(b.theme)};" onclick="openDetail('${escapeJsAttr(pinned.id)}')">
                 <span class="hero-badge">${escapeHtml(b.badge || '📌 중요 공지')} · ${escapeHtml(pinned.category)}${pinned.audience && pinned.audience !== 'all' ? ' · 지정대상' : ''}</span>
                 <h2 class="hero-title">${escapeHtml(pinned.title)}</h2>
                 <p class="hero-desc">${escapeHtml((pinned.body || '').split('\n')[0])}</p>
@@ -6280,13 +6299,13 @@
               </div>
               <div class="filter-row">
                 ${Array.from(new Set(['전체', '공지', '광고', '소식', '행사', ...visibleNotices.map(n => n.category).filter(Boolean)])).map(cat => `
-                  <button class="filter-chip ${currentFilter === cat ? 'active' : ''}" onclick="setFilter('${escapeHtml(cat)}')">${escapeHtml(cat)}</button>
+                  <button class="filter-chip ${currentFilter === cat ? 'active' : ''}" data-cat="${escapeHtml(cat)}" onclick="setFilter(this.dataset.cat)">${escapeHtml(cat)}</button>
                 `).join('')}
               </div>
               ${filtered.length === 0
                 ? '<div class="card" style="text-align:center;color:#64748B;">해당 구분의 글이 없습니다.</div>'
                 : filtered.map(n => `
-                    <div class="card clickable" onclick="openDetail('${n.id}')">
+                    <div class="card clickable" onclick="openDetail('${escapeJsAttr(n.id)}')">
                       <div class="card-top">
                         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
                           <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
@@ -6425,10 +6444,10 @@
                       </div>
                     </div>
                     <div class="card-footer">
-                      <button class="btn-sm ${st !== 'live' ? 'approve' : ''}" onclick="toggleBlockHomeVisibility('${b.id}')">${st === 'live' ? '숨기기(임시저장)' : '🚀 지금 바로 게시'}</button>
+                      <button class="btn-sm ${st !== 'live' ? 'approve' : ''}" onclick="toggleBlockHomeVisibility('${escapeJsAttr(b.id)}')">${st === 'live' ? '숨기기(임시저장)' : '🚀 지금 바로 게시'}</button>
                       <div style="display:flex; gap:6px;">
-                        <button class="btn-sm" onclick="openEditBlockModal('${b.id}')">수정</button>
-                        <button class="btn-sm danger" onclick="deleteBlock('${b.id}')">삭제</button>
+                        <button class="btn-sm" onclick="openEditBlockModal('${escapeJsAttr(b.id)}')">수정</button>
+                        <button class="btn-sm danger" onclick="deleteBlock('${escapeJsAttr(b.id)}')">삭제</button>
                       </div>
                     </div>
                   </div>
@@ -6446,7 +6465,8 @@
             ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">등록된 사이트 바로가기가 없습니다.<br>인스타·유튜브·교회 홈페이지 등을 추가해 보세요.</div>'
             : quickLinks.map((ql, idx) => {
                 const theme = getQuickLinkTheme(ql.theme);
-                const hasUrl = !!(ql.url && String(ql.url).trim());
+                const safeManageUrl = normalizeExternalUrl(ql.url);
+                const hasUrl = !!safeManageUrl;
                 return `
                   <div class="card">
                     <div class="layout-item-head">
@@ -6469,11 +6489,11 @@
                     </div>
                     <div class="card-footer">
                       ${hasUrl
-                        ? `<a href="${escapeHtml(ql.url)}" target="_blank" rel="noopener noreferrer" class="btn-sm" style="text-decoration:none;">열기 테스트 ↗</a>`
-                        : `<button class="btn-sm primary" type="button" onclick="openEditQuickLinkModal('${ql.id}')">주소 입력하기</button>`}
+                        ? `<a href="${escapeHtml(safeManageUrl)}" target="_blank" rel="noopener noreferrer" class="btn-sm" style="text-decoration:none;">열기 테스트 ↗</a>`
+                        : `<button class="btn-sm primary" type="button" onclick="openEditQuickLinkModal('${escapeJsAttr(ql.id)}')">주소 입력하기</button>`}
                       <div style="display:flex; gap:6px;">
-                        <button class="btn-sm" onclick="openEditQuickLinkModal('${ql.id}')">수정</button>
-                        <button class="btn-sm danger" onclick="deleteQuickLink('${ql.id}')">삭제</button>
+                        <button class="btn-sm" onclick="openEditQuickLinkModal('${escapeJsAttr(ql.id)}')">수정</button>
+                        <button class="btn-sm danger" onclick="deleteQuickLink('${escapeJsAttr(ql.id)}')">삭제</button>
                       </div>
                     </div>
                   </div>
@@ -6511,10 +6531,10 @@
                       <span class="card-date">${escapeHtml(n.date)}</span>
                       <div style="display:flex;gap:6px;flex-wrap:wrap;">
                         ${st !== 'live'
-                          ? `<button class="btn-sm approve" onclick="publishNoticeNow('${n.id}')">🚀 지금 바로 게시</button>`
-                          : (!n.pinned ? `<button class="btn-sm primary" onclick="pinNoticeToHomeBanner('${n.id}')">📌 배너 고정</button>` : '')}
-                        <button class="btn-sm" onclick="openEditNotice('${n.id}')">수정</button>
-                        <button class="btn-sm danger" onclick="deleteNotice('${n.id}')">삭제</button>
+                          ? `<button class="btn-sm approve" onclick="publishNoticeNow('${escapeJsAttr(n.id)}')">🚀 지금 바로 게시</button>`
+                          : (!n.pinned ? `<button class="btn-sm primary" onclick="pinNoticeToHomeBanner('${escapeJsAttr(n.id)}')">📌 배너 고정</button>` : '')}
+                        <button class="btn-sm" onclick="openEditNotice('${escapeJsAttr(n.id)}')">수정</button>
+                        <button class="btn-sm danger" onclick="deleteNotice('${escapeJsAttr(n.id)}')">삭제</button>
                       </div>
                     </div>
                   </div>
@@ -6577,10 +6597,10 @@
                     </div>
                     <p class="card-body clamp">${escapeHtml(q.scripture || q.title || '')}</p>
                     <div class="card-footer">
-                      <button class="btn-sm" onclick="openQtDetail('${q.id}')">💬 댓글·하트</button>
+                      <button class="btn-sm" onclick="openQtDetail('${escapeJsAttr(q.id)}')">💬 댓글·하트</button>
                       <div style="display:flex; gap:6px;">
-                        <button class="btn-sm" onclick="openEditQtModal('${q.id}')">수정</button>
-                        <button class="btn-sm danger" onclick="deleteQtPost('${q.id}')">삭제</button>
+                        <button class="btn-sm" onclick="openEditQtModal('${escapeJsAttr(q.id)}')">수정</button>
+                        <button class="btn-sm danger" onclick="deleteQtPost('${escapeJsAttr(q.id)}')">삭제</button>
                       </div>
                     </div>
                   </div>
@@ -6641,7 +6661,7 @@
         return `
           <label class="role-check-chip ${checked ? 'checked' : ''}" onclick="setTimeout(() => syncRoleChipStyle(this), 0)">
             <input type="checkbox" name="${prefix}TargetRole" value="${escapeHtml(r.id)}" ${checked ? 'checked' : ''} />
-            <span class="role-check-dot" style="background:${escapeHtml(r.color || '#475569')};"></span>
+            <span class="role-check-dot" style="background:${sanitizeHexColor(r.color)};"></span>
             <span>${escapeHtml(r.name)}</span>
           </label>
         `;
@@ -7240,8 +7260,8 @@
                   : '신규 관리자 등록 잠금 상태에서 입장을 요청했습니다.'}
               </div>
               <div style="display:flex; gap:6px;">
-                <button class="btn-sm approve" style="flex:1; padding:8px;" onclick="approveAdminEntry('${a.id}')">✅ 관리자 입장 승인</button>
-                <button class="btn-sm danger" style="padding:8px 12px;" onclick="rejectAdminEntry('${a.id}')">거절</button>
+                <button class="btn-sm approve" style="flex:1; padding:8px;" onclick="approveAdminEntry('${escapeJsAttr(a.id)}')">✅ 관리자 입장 승인</button>
+                <button class="btn-sm danger" style="padding:8px 12px;" onclick="rejectAdminEntry('${escapeJsAttr(a.id)}')">거절</button>
               </div>
             </div>
           `).join('')}
@@ -7264,7 +7284,7 @@
                       <div class="member-meta">등록 ${escapeHtml(a.registeredAt || '-')} · 최근접속 ${escapeHtml(a.lastLoginAt || '-')}</div>
                     </div>
                     ${(!isMe && activeAdmins.length > 1)
-                      ? `<button class="btn-sm danger" onclick="removeAdminEntry('${a.id}')">관리자 해제</button>`
+                      ? `<button class="btn-sm danger" onclick="removeAdminEntry('${escapeJsAttr(a.id)}')">관리자 해제</button>`
                       : '<span style="font-size:11px; color:#94A3B8; font-weight:700;">' + (isMe ? '현재 접속중' : '최소 1인 유지') + '</span>'}
                   </div>
                 `;
@@ -7309,9 +7329,9 @@
                     <input id="approveRoleCustom-${m.id}" class="form-input" style="flex:1; min-width:110px; padding:5px 8px; font-size:12px;" maxlength="16" placeholder="또는 새 역할 직접 입력" />
                   </div>
                   <div style="display:flex; gap:6px; margin-top:10px;">
-                    <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberWithRole('${m.id}')">✅ 역할 부여 및 승인</button>
-                    <button class="btn-sm" style="padding:9px 11px;" onclick="rejectMember('${m.id}')">보류</button>
-                    <button class="btn-sm danger" style="padding:9px 11px;" onclick="deleteMember('${m.id}')">삭제</button>
+                    <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberWithRole('${escapeJsAttr(m.id)}')">✅ 역할 부여 및 승인</button>
+                    <button class="btn-sm" style="padding:9px 11px;" onclick="rejectMember('${escapeJsAttr(m.id)}')">보류</button>
+                    <button class="btn-sm danger" style="padding:9px 11px;" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>
                   </div>
                 </div>
               `;
@@ -7332,7 +7352,7 @@
                 <div class="card-top">
                   <div class="member-name">
                     <span>${escapeHtml(m.name)}</span>
-                    <span class="role-pill" style="background:${r.color};">${escapeHtml(r.name)}</span>
+                    <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
                   </div>
                   <span class="tag ${isExpired ? 'red' : 'warm'}">${isExpired ? '만료됨' : `코드: ${escapeHtml(m.resetCode || '-')}`}</span>
                 </div>
@@ -7343,10 +7363,10 @@
                 </div>
                 <div style="display:flex; gap:6px; flex-wrap:wrap;">
                   ${isExpired
-                    ? `<button class="btn-sm primary" onclick="initMemberPasswordReset('${m.id}')">🔄 코드 재발급</button>`
-                    : `<button class="btn-sm primary" onclick="showIssuedResetModal('${m.id}')">📋 안내 복사</button>`}
-                  <button class="btn-sm" onclick="cancelMemberPasswordReset('${m.id}')">초기화 취소</button>
-                  <button class="btn-sm danger" onclick="deleteMember('${m.id}')">삭제</button>
+                    ? `<button class="btn-sm primary" onclick="initMemberPasswordReset('${escapeJsAttr(m.id)}')">🔄 코드 재발급</button>`
+                    : `<button class="btn-sm primary" onclick="showIssuedResetModal('${escapeJsAttr(m.id)}')">📋 안내 복사</button>`}
+                  <button class="btn-sm" onclick="cancelMemberPasswordReset('${escapeJsAttr(m.id)}')">초기화 취소</button>
+                  <button class="btn-sm danger" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>
                 </div>
               </div>
             `;
@@ -7369,20 +7389,20 @@
                     <div>
                       <div class="member-name">
                         <span>${escapeHtml(m.name)}</span>
-                        <span class="role-pill" style="background:${r.color};">${escapeHtml(r.name)}</span>
+                        <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
                         ${isNewcomer ? '<span class="tag warm" style="font-size:10px; padding:2px 6px;">메인 표시중</span>' : ''}
                       </div>
                       <div class="member-meta">가입일 ${escapeHtml(m.createdAt)} · 🎂 ${escapeHtml(formatBirthdayDisplay(m.birthday))}</div>
                     </div>
                     <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                      <select class="role-select" onchange="changeMemberRole('${m.id}', this.value)">
+                      <select class="role-select" onchange="changeMemberRole('${escapeJsAttr(m.id)}', this.value)">
                         ${roleOptionsHtml(m.roleId)}
                       </select>
-                      <button class="btn-sm" type="button" title="역할 직접 입력" onclick="promptCustomRoleForMember('${m.id}')">✏️ 역할입력</button>
-                      ${isNewcomer ? `<button class="btn-sm primary" onclick="openReleaseNewcomerModal('${m.id}')">💐 새신자 해제</button>` : ''}
-                      <button class="btn-sm" onclick="openEditMemberBirthdayModal('${m.id}')">🎂 생일</button>
-                      ${!isSelf ? `<button class="btn-sm warn" onclick="initMemberPasswordReset('${m.id}')">비번 초기화</button>` : ''}
-                      ${!isSelf ? `<button class="btn-sm danger" onclick="deleteMember('${m.id}')">삭제</button>` : ''}
+                      <button class="btn-sm" type="button" title="역할 직접 입력" onclick="promptCustomRoleForMember('${escapeJsAttr(m.id)}')">✏️ 역할입력</button>
+                      ${isNewcomer ? `<button class="btn-sm primary" onclick="openReleaseNewcomerModal('${escapeJsAttr(m.id)}')">💐 새신자 해제</button>` : ''}
+                      <button class="btn-sm" onclick="openEditMemberBirthdayModal('${escapeJsAttr(m.id)}')">🎂 생일</button>
+                      ${!isSelf ? `<button class="btn-sm warn" onclick="initMemberPasswordReset('${escapeJsAttr(m.id)}')">비번 초기화</button>` : ''}
+                      ${!isSelf ? `<button class="btn-sm danger" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>` : ''}
                     </div>
                   </div>
                 `;
@@ -7402,8 +7422,8 @@
                   <div class="member-meta">${escapeHtml(m.createdAt)} 신청</div>
                 </div>
                 <div style="display:flex; gap:6px;">
-                  <button class="btn-sm approve" onclick="approveMemberWithRole('${m.id}')">승인</button>
-                  <button class="btn-sm danger" onclick="deleteMember('${m.id}')">삭제</button>
+                  <button class="btn-sm approve" onclick="approveMemberWithRole('${escapeJsAttr(m.id)}')">승인</button>
+                  <button class="btn-sm danger" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>
                 </div>
               </div>
             `).join('')}
@@ -7771,7 +7791,7 @@
               <div class="layout-item-head">
                 <div style="display:flex; align-items:center; gap:8px; min-width:0; flex-wrap:wrap;">
                   <strong style="font-size:13px; color:#64748B;">${idx + 1}.</strong>
-                  <span class="role-pill" style="background:${r.color}; font-size:12px; padding:4px 10px;">${escapeHtml(r.name)}</span>
+                  <span class="role-pill" style="background:${sanitizeHexColor(r.color)}; font-size:12px; padding:4px 10px;">${escapeHtml(r.name)}</span>
                   <span style="font-size:12px; color:#64748B; font-weight:600;">소속 ${count}명</span>
                 </div>
                 <div class="order-btns">
@@ -7784,11 +7804,11 @@
                   ${isLeaderGroupRoleObj(r)
                     ? '<span class="tag warm" style="font-size:10.5px;">👑 리더·교역자 그룹</span>'
                     : (isNewcomerRoleObj(r) ? '<span class="tag" style="font-size:10.5px;">💐 새신자 자동 환영</span>' : '<span style="font-size:11.5px; color:#64748B;">일반 직분 배지</span>')}
-                  <button class="btn-sm" type="button" style="padding:4px 8px; font-size:11px;" onclick="toggleRoleLeaderGroup('${r.id}')">${isLeaderGroupRoleObj(r) ? '리더 해제' : '👑 리더 포함'}</button>
+                  <button class="btn-sm" type="button" style="padding:4px 8px; font-size:11px;" onclick="toggleRoleLeaderGroup('${escapeJsAttr(r.id)}')">${isLeaderGroupRoleObj(r) ? '리더 해제' : '👑 리더 포함'}</button>
                 </div>
                 <div style="display:flex; gap:6px;">
-                  <button class="btn-sm" onclick="openEditRoleModal('${r.id}')">수정</button>
-                  <button class="btn-sm danger" onclick="deleteRole('${r.id}')" ${roles.length <= 1 ? 'disabled' : ''}>삭제</button>
+                  <button class="btn-sm" onclick="openEditRoleModal('${escapeJsAttr(r.id)}')">수정</button>
+                  <button class="btn-sm danger" onclick="deleteRole('${escapeJsAttr(r.id)}')" ${roles.length <= 1 ? 'disabled' : ''}>삭제</button>
                 </div>
               </div>
             </div>
@@ -9026,9 +9046,9 @@ ${m.body}`;
               <div class="bible-memo-body">${escapeHtml(m.body)}</div>
               <div style="display:flex; gap:6px; justify-content:flex-end; flex-wrap:wrap;">
                 ${ref ? `<button class="btn-sm primary" type="button" onclick="jumpToBibleMemoRef(${ref.bookId}, ${ref.chapter}, ${ref.verse || 0})">📖 말씀 바로가기</button>` : ''}
-                <button class="btn-sm" type="button" onclick="copyBibleMemo('${m.id}')">복사</button>
-                <button class="btn-sm" type="button" onclick="startEditBibleMemo('${m.id}')">수정</button>
-                <button class="btn-sm danger" type="button" onclick="deleteBibleMemo('${m.id}')">삭제</button>
+                <button class="btn-sm" type="button" onclick="copyBibleMemo('${escapeJsAttr(m.id)}')">복사</button>
+                <button class="btn-sm" type="button" onclick="startEditBibleMemo('${escapeJsAttr(m.id)}')">수정</button>
+                <button class="btn-sm danger" type="button" onclick="deleteBibleMemo('${escapeJsAttr(m.id)}')">삭제</button>
               </div>
             </div>
           `;
@@ -9217,7 +9237,7 @@ ${m.body}`;
     function buildReactionBarHtml(postId) {
       const stats = getQtReactionStats(postId);
       const btns = QT_REACTION_DEFS.map(def => `
-        <button class="react-btn ${stats.mine[def.key] ? def.cls : ''}" type="button" onclick="event.stopPropagation(); toggleQtReaction('${postId}', '${def.key}')">
+        <button class="react-btn ${stats.mine[def.key] ? def.cls : ''}" type="button" onclick="event.stopPropagation(); toggleQtReaction('${escapeJsAttr(postId)}', '${def.key}')">
           <span>${def.emoji}</span>
           <span>${def.label}</span>
           ${stats.counts[def.key] > 0 ? `<span>${stats.counts[def.key]}</span>` : ''}
@@ -9386,7 +9406,7 @@ ${m.body}`;
           : (isTodayReplace ? '✨ 오늘의 말씀 (관리자)' : '✍️ 관리자 작성 글');
         const badgeCls = (post.isAuto || isTodayReplace) ? 'warm' : '';
         return `
-          <div class="card clickable" style="${(post.isAuto || isTodayReplace) ? 'border-color:#A5B4FC;' : ''}" onclick="openQtDetail('${post.id}')">
+          <div class="card clickable" style="${(post.isAuto || isTodayReplace) ? 'border-color:#A5B4FC;' : ''}" onclick="openQtDetail('${escapeJsAttr(post.id)}')">
             <div class="card-top">
               <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                 <span class="tag ${badgeCls}">${badgeText}</span>
@@ -9410,7 +9430,7 @@ ${m.body}`;
             ` : ''}
 
             <div class="card-footer">
-              <button class="btn-sm" type="button" onclick="event.stopPropagation(); openQtDetail('${post.id}')">💬 댓글 ${cmts.length}개</button>
+              <button class="btn-sm" type="button" onclick="event.stopPropagation(); openQtDetail('${escapeJsAttr(post.id)}')">💬 댓글 ${cmts.length}개</button>
               ${canManageQt ? (post.isAuto ? `
                 <div style="display:flex; gap:6px;">
                   <button class="btn-sm" type="button" onclick="event.stopPropagation(); openEditAutoTodayQtModal()">수정</button>
@@ -9418,8 +9438,8 @@ ${m.body}`;
                 </div>
               ` : `
                 <div style="display:flex; gap:6px;">
-                  <button class="btn-sm" type="button" onclick="event.stopPropagation(); openEditQtModal('${post.id}')">수정</button>
-                  <button class="btn-sm danger" type="button" onclick="event.stopPropagation(); deleteQtPost('${post.id}')">삭제</button>
+                  <button class="btn-sm" type="button" onclick="event.stopPropagation(); openEditQtModal('${escapeJsAttr(post.id)}')">수정</button>
+                  <button class="btn-sm danger" type="button" onclick="event.stopPropagation(); deleteQtPost('${escapeJsAttr(post.id)}')">삭제</button>
                 </div>
               `) : '<span style="font-size:11.5px; color:#64748B; font-weight:600;">눌러서 댓글 달기 ▸</span>'}
             </div>
@@ -9491,19 +9511,19 @@ ${m.body}`;
                     <div class="qt-comment-head">
                       <div class="qt-comment-author">
                         <span>${escapeHtml(c.authorName)}</span>
-                        ${c.roleName ? `<span class="role-pill" style="background:${escapeHtml(c.roleColor || '#475569')}; font-size:9.5px; padding:1px 6px;">${escapeHtml(c.roleName)}</span>` : ''}
+                        ${c.roleName ? `<span class="role-pill" style="background:${sanitizeHexColor(c.roleColor)}; font-size:9.5px; padding:1px 6px;">${escapeHtml(c.roleName)}</span>` : ''}
                       </div>
                       <span class="card-date">${formatShortTime(c.createdTs)}${c.edited ? ' (수정됨)' : ''}</span>
                     </div>
                     <div class="qt-comment-body">${escapeHtml(c.body)}</div>
                     <div class="qt-comment-foot">
-                      <button class="comment-heart-btn ${iLiked ? 'liked' : ''}" type="button" onclick="toggleQtCommentLike('${c.id}')">
+                      <button class="comment-heart-btn ${iLiked ? 'liked' : ''}" type="button" onclick="toggleQtCommentLike('${escapeJsAttr(c.id)}')">
                         <span>${iLiked ? '❤️' : '🤍'}</span>
                         <span>${cLikes.length > 0 ? cLikes.length : '좋아요'}</span>
                       </button>
                       <div style="display:flex; gap:6px;">
-                        ${isMine ? `<button class="btn-sm" type="button" style="padding:3px 8px; font-size:11px;" onclick="startEditQtComment('${c.id}')">수정</button>` : ''}
-                        ${(isMine || canManageQt) ? `<button class="btn-sm danger" type="button" style="padding:3px 8px; font-size:11px;" onclick="deleteQtComment('${c.id}')">삭제</button>` : ''}
+                        ${isMine ? `<button class="btn-sm" type="button" style="padding:3px 8px; font-size:11px;" onclick="startEditQtComment('${escapeJsAttr(c.id)}')">수정</button>` : ''}
+                        ${(isMine || canManageQt) ? `<button class="btn-sm danger" type="button" style="padding:3px 8px; font-size:11px;" onclick="deleteQtComment('${escapeJsAttr(c.id)}')">삭제</button>` : ''}
                       </div>
                     </div>
                   </div>
@@ -9902,13 +9922,19 @@ ${m.body}`;
     }
 
     function normalizeExternalUrl(raw) {
-      let url = String(raw || '').trim();
+      let url = String(raw || '').replace(/[\u0000-\u001F\u007F]/g, '').trim();
       if (!url) return '';
-      if (/^(javascript|data|vbscript):/i.test(url)) return '';
+      if (/^(javascript|data|vbscript|file):/i.test(url)) return '';
       if (!/^https?:\/\//i.test(url)) {
         url = 'https://' + url;
       }
-      return url;
+      try {
+        const parsed = new URL(url);
+        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return '';
+        return parsed.href;
+      } catch {
+        return '';
+      }
     }
 
     function syncMoreTabActiveState() {
@@ -9972,7 +9998,7 @@ ${m.body}`;
         // 주소 미등록 항목 (관리자에게만 표시, 클릭 시 바로 주소 입력 모달 열기)
         return `
           <button class="quick-link-btn ${textCls}" type="button" style="background:${theme.css}; opacity:0.82;"
-                  onclick="closeQuickLinksSheet(); openEditQuickLinkModal('${ql.id}')">
+                  onclick="closeQuickLinksSheet(); openEditQuickLinkModal('${escapeJsAttr(ql.id)}')">
             <span class="quick-link-left">
               <span class="quick-link-icon">${theme.svg}</span>
               <span style="min-width:0;">
@@ -10906,7 +10932,7 @@ ${m.body}`;
             <span class="attendance-live-badge"><span class="attendance-live-dot"></span> ${escapeHtml(sess.label)} 출석 진행 중 · ${escapeHtml(sess.start)}~${escapeHtml(sess.end)}</span>
             <h2 class="attendance-home-title">오늘 ${escapeHtml(sess.label)}에 참석하셨나요?</h2>
             <p class="attendance-home-desc">출석 버튼을 누르면 출석부에 자동 기록됩니다. (1인 1회 · 완료 후 버튼 자동 숨김)</p>
-            <button id="attCheckBtn-${sess.sessionId}" class="btn-attendance-cta" type="button" onclick="handleMemberCheckIn('${sess.sessionId}')">
+            <button id="attCheckBtn-${sess.sessionId}" class="btn-attendance-cta" type="button" onclick="handleMemberCheckIn('${escapeJsAttr(sess.sessionId)}')">
               <span>✅</span>
               <span>${escapeHtml(sess.label)} 출석하기</span>
             </button>
@@ -11336,8 +11362,8 @@ ${m.body}`;
                     </div>
                   </div>
                   <div style="display:flex; gap:5px;">
-                    <button class="btn-sm" type="button" onclick="openEditAdminAttendanceModal('${r.id}')">수정</button>
-                    <button class="btn-sm danger" type="button" onclick="deleteAdminAttendance('${r.id}')">삭제</button>
+                    <button class="btn-sm" type="button" onclick="openEditAdminAttendanceModal('${escapeJsAttr(r.id)}')">수정</button>
+                    <button class="btn-sm danger" type="button" onclick="deleteAdminAttendance('${escapeJsAttr(r.id)}')">삭제</button>
                   </div>
                 </div>
               `).join('')}
@@ -11405,8 +11431,8 @@ ${m.body}`;
                       <div style="font-size:11.5px; color:#64748B;">${escapeHtml(formatDateWithDowKo(ev.date))} · ${escapeHtml(ev.start)}~${escapeHtml(ev.end)}</div>
                     </div>
                     <div style="display:flex; gap:5px;">
-                      <button class="btn-sm" type="button" onclick="renameSpecialEvent('${ev.id}')">✏️ 이름 변경</button>
-                      <button class="btn-sm danger" type="button" onclick="deleteSpecialEvent('${ev.id}')">삭제</button>
+                      <button class="btn-sm" type="button" onclick="renameSpecialEvent('${escapeJsAttr(ev.id)}')">✏️ 이름 변경</button>
+                      <button class="btn-sm danger" type="button" onclick="deleteSpecialEvent('${escapeJsAttr(ev.id)}')">삭제</button>
                     </div>
                   </div>
                 `).join('')}
