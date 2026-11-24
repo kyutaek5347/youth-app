@@ -1,11 +1,14 @@
-const CACHE_NAME = 'right-youth-app-v10.28';
+const CACHE_NAME = 'right-youth-app-v10.29';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
-  './badge-96.png'
+  './badge-96.png',
+  './firebase-app-compat.js',
+  './firebase-auth-compat.js',
+  './firebase-firestore-compat.js'
 ];
 
 self.addEventListener('install', (event) => {
