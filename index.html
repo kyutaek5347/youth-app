@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=148" />
+  <link rel="manifest" href="./manifest.json?v=149" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=148" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=148" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=149" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=149" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2857,13 +2857,13 @@
 
     <!-- 일반 회원 시점 미리보기 배너 (관리자 기능 점검용) -->
     <div id="previewMemberBar" class="preview-member-bar hidden">
-      <span>👁️ 일반 회원 시점 미리보기 중 (관리자 전용 칸·관리 탭 숨김)</span>
+      <span id="previewMemberBarText">👁️ 일반 회원 시점 미리보기 중 (관리자 전용 칸·관리 탭 숨김)</span>
       <button class="preview-member-exit" type="button" onclick="toggleMemberPreviewMode(false)">관리자 복귀</button>
     </div>
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=148" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=149" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3163,15 +3163,7 @@
             <button id="userGuideSearchClear" class="search-clear hidden" type="button" onclick="clearUserGuideSearch()">✕</button>
           </div>
 
-          <div class="quick-tags">
-            <button class="quick-tag" type="button" onclick="quickSearchUserGuide('설치')">#앱설치</button>
-            <button class="quick-tag" type="button" onclick="quickSearchUserGuide('출석')">#출석체크</button>
-            <button class="quick-tag" type="button" onclick="quickSearchUserGuide('성경')">#성경·메모</button>
-            <button class="quick-tag" type="button" onclick="quickSearchUserGuide('말씀')">#오늘의말씀</button>
-            <button class="quick-tag" type="button" onclick="quickSearchUserGuide('이름')">#이름·생일변경</button>
-            <button class="quick-tag" type="button" onclick="quickSearchUserGuide('QR')">#초대QR</button>
-            <button class="quick-tag" type="button" onclick="quickSearchUserGuide('알림')">#알림설정</button>
-          </div>
+          <div id="userGuideQuickTags" class="quick-tags"></div>
 
           <div id="userGuideSummaryBar" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
           <div id="userGuideResults"></div>
@@ -3296,7 +3288,7 @@
   <div id="biblePickerModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">📖 성경 이동</h3>
+        <h3 id="biblePickerModalTitle" class="modal-title">📖 성경 이동</h3>
         <button class="close-btn" data-close="biblePickerModal">✕</button>
       </div>
       <div class="modal-tabs-2">
@@ -3386,8 +3378,8 @@
       <div class="form-group">
         <label class="form-label" for="qtDisplayModeSelect">게시 방식 선택</label>
         <select id="qtDisplayModeSelect" class="form-select" onchange="updateQtDisplayModeHint()">
-          <option value="together">📌 오늘의 말씀과 같이 올리기 (자동 말씀 + 작성 글)</option>
-          <option value="replace">🔄 오늘의 말씀 대신 이 글만 올리기 (대체)</option>
+          <option id="qtOptTogether" value="together">📌 오늘의 말씀과 같이 올리기 (자동 말씀 + 작성 글)</option>
+          <option id="qtOptReplace" value="replace">🔄 오늘의 말씀 대신 이 글만 올리기 (대체)</option>
         </select>
         <div id="qtDisplayModeHint" class="info-box" style="margin-top:7px; margin-bottom:0; padding:9px 11px; font-size:11.5px;"></div>
       </div>
@@ -3498,8 +3490,8 @@
       <div id="notifDetailGroup">
         <div class="setting-row">
           <div>
-            <div class="setting-title">📢 메인 화면 새 소식 알림</div>
-            <div class="setting-sub">메인 화면에 새 공지·광고·배너, 생일·새신자 소식이 올라올 때</div>
+            <div id="notifHomeTitle" class="setting-title">📢 메인 화면 새 소식 알림</div>
+            <div id="notifHomeSub" class="setting-sub">메인 화면에 새 공지·광고·배너, 생일·새신자 소식이 올라올 때</div>
           </div>
           <label class="switch">
             <input type="checkbox" id="notifHomeToggle" onchange="toggleNotifOption('homeNews', this.checked)" />
@@ -3509,8 +3501,8 @@
 
         <div class="setting-row">
           <div>
-            <div class="setting-title">✨ 오늘의 말씀 알림</div>
-            <div class="setting-sub">새로운 오늘의 말씀이 올라올 때</div>
+            <div id="notifQtTitle" class="setting-title">✨ 오늘의 말씀 알림</div>
+            <div id="notifQtSub" class="setting-sub">새로운 오늘의 말씀이 올라올 때</div>
           </div>
           <label class="switch">
             <input type="checkbox" id="notifQtToggle" onchange="toggleNotifOption('newQt', this.checked)" />
@@ -4992,7 +4984,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=148" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=149" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5015,8 +5007,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=148', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=148', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=149', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=149', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5048,6 +5040,17 @@
     function renderNotifModalState() {
       const user = getCurrentUser();
       const canManageMembers = !!(user && user.isSuperAdmin);
+
+      const nhTitle = document.getElementById('notifHomeTitle');
+      const nhSub = document.getElementById('notifHomeSub');
+      const nqTitle = document.getElementById('notifQtTitle');
+      const nqSub = document.getElementById('notifQtSub');
+      const homeLbl = getTabLabel('home');
+      const qtLbl = getTabLabel('qt');
+      if (nhTitle) nhTitle.textContent = `📢 ${homeLbl} 새 소식 알림`;
+      if (nhSub) nhSub.textContent = `${homeLbl} 화면에 새 공지·광고·배너, 생일·새신자 소식이 올라올 때`;
+      if (nqTitle) nqTitle.textContent = `${getTabIcon('qt')} ${qtLbl} 알림`;
+      if (nqSub) nqSub.textContent = `새로운 ${qtLbl} 소식이 올라올 때`;
 
       document.getElementById('notifMasterToggle').checked = notifPrefs.enabled;
       document.getElementById('notifHomeToggle').checked = notifPrefs.homeNews;
@@ -5387,16 +5390,26 @@
     }
 
     function getTabLabel(key) {
-      return (tabLabels && tabLabels[key] && String(tabLabels[key]).trim())
+      const raw = (tabLabels && tabLabels[key] && String(tabLabels[key]).trim())
         ? String(tabLabels[key]).trim()
         : (DEFAULT_TAB_LABELS[key] || key);
+      if (key === 'manageQt' && raw === DEFAULT_TAB_LABELS.manageQt) {
+        const qtLbl = getTabLabel('qt');
+        if (qtLbl !== DEFAULT_TAB_LABELS.qt) return `${qtLbl} 관리`;
+      }
+      return raw;
     }
 
     function getTabIcon(key) {
       const custom = tabLabels && tabLabels.icons && tabLabels.icons[key];
-      return (custom && String(custom).trim())
+      const raw = (custom && String(custom).trim())
         ? String(custom).trim()
         : (DEFAULT_TAB_ICONS[key] || '•');
+      if (key === 'manageQt' && raw === DEFAULT_TAB_ICONS.manageQt) {
+        const qtIcon = getTabIcon('qt');
+        if (qtIcon !== DEFAULT_TAB_ICONS.qt) return qtIcon;
+      }
+      return raw;
     }
 
     function getValidTabOrder(rawOrder) {
@@ -6065,7 +6078,7 @@
               dispatchAppNotification({
                 type: 'notice',
                 icon: '📢',
-                title: isNew ? `메인 화면 새 ${n.category || '소식'}` : `메인 화면 ${n.category || '소식'} 업데이트`,
+                title: isNew ? `${getTabLabel('home')} 새 ${n.category || '소식'}` : `${getTabLabel('home')} ${n.category || '소식'} 업데이트`,
                 body: n.title,
                 onClick: () => {
                   switchMainTab('home');
@@ -7468,6 +7481,8 @@
 
       const previewBar = document.getElementById('previewMemberBar');
       if (previewBar) previewBar.classList.toggle('hidden', !previewAsMemberMode);
+      const previewBarTxt = document.getElementById('previewMemberBarText');
+      if (previewBarTxt) previewBarTxt.textContent = `👁️ 일반 회원 시점 미리보기 중 (관리자 전용 칸·${getTabLabel('manage')} 숨김)`;
 
       const header = document.getElementById('appHeader');
       header.className = `header ${isManageMode ? 'dark' : 'light'}`;
@@ -7539,6 +7554,8 @@
       if (ugTitleEl) ugTitleEl.textContent = `${getTabIcon('guide')} 라이트 청년부 앱 ${getTabLabel('guide')}`;
       const qsEditBtn = document.getElementById('quickSheetManageEditBtn');
       if (qsEditBtn) qsEditBtn.textContent = `⚙️ ${getTabLabel('manage')} 편집`;
+      const bpModalTitle = document.getElementById('biblePickerModalTitle');
+      if (bpModalTitle) bpModalTitle.textContent = `${getTabIcon('bible')} ${getTabLabel('bible')} 이동`;
 
       if (currentMainTab === 'home') renderHomeView(user);
       else if (currentMainTab === 'bible') renderBibleView();
@@ -7668,126 +7685,162 @@
       }
     };
 
-    // ==================== 10-2. 이용자용 사용방법 설명서 (📘 사용방법 탭) ====================
-    const USER_GUIDE_SECTIONS = [
-      {
-        id: 'ug_install',
-        icon: '📱',
-        title: '앱 설치 및 로그인 (홈 화면에 추가)',
-        sub: '아이폰·갤럭시 스마트폰에 앱처럼 설치해 편하게 이용하기',
-        keywords: '앱 설치 홈화면 사파리 크롬 카톡 로그인 자동로그인',
-        steps: [
-          '<b>아이폰 · 아이패드 (Safari):</b> 하단 또는 상단의 <b>공유(□↑)</b> 버튼을 누른 뒤 <b>[홈 화면에 추가]</b>를 선택하면 앱 아이콘이 생성됩니다.',
-          '<b>안드로이드 (Chrome / 삼성 인터넷):</b> 상단 설치 배너의 <b>[앱 설치]</b> 버튼 또는 브라우저 메뉴(⋮) → <b>[앱 설치 / 홈 화면에 추가]</b>를 누릅니다.',
-          '<b>카카오톡 안에서 열었을 때:</b> 카톡 내장 브라우저에서는 설치나 알림이 제한되므로, 우측 하단 <b>⋮ → 다른 브라우저로 열기</b>를 눌러 Safari나 Chrome으로 열어 주세요.',
-          '<b>로그인 유지:</b> 한 번 로그인하면 앱을 껐다 켜도 로그인 상태가 유지됩니다. (공용 기기에서는 상단 <b>로그아웃</b> 버튼을 눌러 주세요.)'
-        ],
-        tip: '홈 화면에 추가해 앱으로 실행하면 전체 화면으로 깔끔하게 보이고, 실시간 알림 기능도 더 안정적으로 작동합니다.'
-      },
-      {
-        id: 'ug_qr',
-        icon: '📲',
-        title: '회원가입 및 오늘의 초대 QR 공유',
-        sub: '신규 지체 초대 방법과 QR 유효기간 안내',
-        keywords: '초대 QR 회원가입 가입신청 승인 대기 재가입',
-        steps: [
-          '<b>신규 회원가입:</b> 기존 회원이나 관리자가 공유한 <b>오늘의 초대 QR 코드</b>를 스캔해 접속하면 회원가입 탭이 열립니다. 본인 성명, 생년월일(8자리 직접 입력 또는 달력 선택), 역할, 비밀번호(6자리 이상)를 입력해 신청합니다.',
-          '<b>실시간 자동 입장:</b> 가입 신청 후 관리자가 승인하면 별도로 새로고침하지 않아도 자동으로 메인 화면에 입장됩니다.',
-          '<b>친구 초대하기:</b> 앱 우측 상단의 <b>QR 아이콘</b>을 누르면 오늘의 초대 QR을 <b>카카오톡 이미지 공유</b>, <b>이미지 저장</b>, <b>초대 링크 복사</b>로 바로 전달할 수 있습니다.'
-        ],
-        tip: '초대 QR은 보안을 위해 매일 한국시간 자정(00:00)마다 자동으로 새 QR로 바뀌며, 지난 QR로는 가입할 수 없습니다. 이미 가입된 회원은 QR 없이 평소처럼 바로 로그인합니다.'
-      },
-      {
-        id: 'ug_home_att',
-        icon: '✅',
-        title: '메인 홈 소식 확인 & 예배 출석 체크',
-        sub: '공지·배너·생일/새신자 축하 & 주일/행사 출석 방법',
-        keywords: '메인 홈 공지 광고 소식 배너 생일 새신자 출석 체크 주일예배 행사',
-        steps: [
-          '<b>공지 · 광고 · 소식 확인:</b> 메인 홈 상단 고정 배너와 하단 공지 목록에서 청년부 소식을 확인합니다. 구분 칩(전체/공지/광고/소식/행사 등)으로 필터링할 수 있으며, 카드를 누르면 전체 본문이 열립니다.',
-          '<b>오늘의 생일 · 새신자 환영 배너:</b> 생일인 지체나 새로 온 새신자가 있으면 메인 홈 상단에 축하 배너가 자동으로 표시됩니다.',
-          '<b>예배 · 특별 행사 출석 체크:</b> 설정된 주일 예배 시간(기본 일요일 14:00~15:30) 또는 특별 행사 시간에만 메인 홈 맨 위에 <b>초록색 출석 카드</b>가 자동으로 나타납니다.',
-          '<b>1인 1회 출석 확인:</b> <b>[출석하기]</b> 버튼을 누르면 즉시 출석이 기록되고 카드가 자동으로 숨겨집니다. 출석 완료 여부와 최근 출석 기록은 우측 상단 <b>👤 내 계정</b>에서 언제든 확인할 수 있습니다.'
-        ],
-        tip: '출석 시간이 지났거나 깜빡하고 버튼을 못 누른 경우에는 관리자에게 말씀하시면 출석부에 수동으로 반영해 드립니다.'
-      },
-      {
-        id: 'ug_bible',
-        icon: '📖',
-        title: '성경 읽기 · 다중 색상 책갈피 · 개인 메모장',
-        sub: '66권 빠른 검색, 6색 형광펜 책갈피, 말씀 연결 메모',
-        keywords: '성경 개역한글 검색 장 이동 글자 크기 책갈피 색상 형광펜 메모 메모장 프라이버시',
-        steps: [
-          '<b>성경 이동 & 빠른 검색:</b> 상단 <b>[창세기 1장 ▾]</b> 버튼으로 66권·장을 고르거나, 검색창에 <b>시편 23:1</b>, <b>요3:16</b>처럼 입력하고 엔터를 누르면 해당 구절로 즉시 이동합니다.',
-          '<b>글자 크기 조절:</b> 상단 <b>[가-] / [가+]</b> 버튼으로 읽기 편한 글자 크기를 저장해 둘 수 있습니다.',
-          '<b>절 터치 기능 (책갈피 · 복사 · 메모):</b> 원하는 성경 절을 터치하면 <b>6가지 색상 책갈피</b>(노랑·분홍·하늘·초록·보라·주황), <b>말씀 복사</b>, <b>이 절에 메모 쓰기</b> 버튼이 나타납니다.',
-          '<b>⭐ 책갈피 & 📝 메모장 모아보기:</b> 상단 버튼에서 색상별로 책갈피를 모아보거나, 저장한 메모의 <b>[말씀 바로가기]</b>를 눌러 해당 성경 구절로 즉시 점프할 수 있습니다.'
-        ],
-        tip: '성경 책갈피·메모·검색 기록은 오직 본인 기기에만 저장되며, 관리자를 포함한 다른 사람에게 공개되거나 보안 로그에 남지 않습니다.'
-      },
-      {
-        id: 'ug_qt',
-        icon: '✨',
-        title: '오늘의 말씀 (큐티) · 공감 · 묵상 댓글',
-        sub: '매일 자정 자동 말씀과 지체들과의 은혜 나눔',
-        keywords: '오늘의 말씀 큐티 QT 하트 좋아요 아멘 은혜 도전 댓글 수정 삭제',
-        steps: [
-          '<b>매일 새 말씀:</b> 매일 한국시간 00:00에 새로운 오늘의 말씀이 자동으로 올라오며, 관리자가 올린 특별 말씀·묵상 글도 함께 확인할 수 있습니다.',
-          '<b>공감 버튼:</b> 말씀 하단의 <b>❤️ 좋아요 · 🙏 아멘 · 👏 은혜 · 🔥 도전</b> 버튼을 눌러 마음을 표현할 수 있습니다.',
-          '<b>묵상 댓글 나누기:</b> 카드를 누르거나 <b>[💬 댓글]</b> 버튼을 열어 묵상·기도제목을 남길 수 있으며, 본인이 작성한 댓글은 언제든 <b>수정 · 삭제</b>할 수 있습니다.'
-        ],
-        tip: '공동체 게시판의 건전한 운영을 위해 댓글 작성·수정·삭제 내역은 관리자 보안 로그에 기록됩니다.',
-        warn: true
-      },
-      {
-        id: 'ug_bylaws_more',
-        icon: '📜',
-        title: '청년부 회칙 검색 & 더보기(사이트 바로가기)',
-        sub: '회칙 키워드 검색·복사와 인스타/유튜브/교회 홈페이지 연결',
-        keywords: '회칙 검색 조항 복사 더보기 사이트 바로가기 인스타그램 유튜브 교회 홈페이지',
-        steps: [
-          '<b>회칙 검색:</b> <b>[📜 회칙]</b> 탭에서 <b>제5조</b>, <b>선거권</b>, <b>임기</b> 등 원하는 키워드나 추천 해시태그(#)를 눌러 해당 조항을 바로 찾을 수 있습니다. 각 조항 우측 <b>[복사]</b> 버튼으로 본문 복사도 가능합니다.',
-          '<b>사이트 바로가기 (☰ 더보기):</b> 하단 <b>[☰ 더보기]</b> 탭을 누르면 청년부 인스타그램, 유튜브 채널, 교회 홈페이지 등 등록된 외부 사이트로 한 번에 이동할 수 있습니다.'
-        ],
-        tip: '회칙 열람, 공지 확인, 사이트 바로가기 이동은 개인 활동으로 보안 로그에 남지 않습니다.'
-      },
-      {
-        id: 'ug_account',
-        icon: '👤',
-        title: '내 계정 관리 (이름·생일 변경 신청 / 비밀번호 / 탈퇴)',
-        sub: '상단 👤 버튼에서 내 정보 변경 및 비밀번호 분실 대처법',
-        keywords: '내 계정 이름 변경 신청 생일 변경 승인 거절 비밀번호 변경 초기화 분실 탈퇴 삭제',
-        steps: [
-          '<b>이름 변경 신청:</b> 우측 상단 <b>👤 버튼</b> → <b>[✏️ 내 이름 변경 신청]</b>에 새 성명(2~10글자)을 입력해 신청합니다. 관리자가 승인하면 즉시 새 이름으로 변경되며(다음 로그인부터 새 이름으로 로그인), 거절 시 기존 이름이 유지됩니다.',
-          '<b>생일 변경 신청:</b> <b>[🎂 내 생일 변경 신청]</b>에서 생년월일 8자리 입력 또는 달력 선택 후 신청합니다. 관리자 승인 후 반영되며, 대기 중에는 언제든 취소할 수 있습니다.',
-          '<b>비밀번호 변경:</b> 하단 <b>[비밀번호 변경]</b> 탭에서 현재 비밀번호와 새 비밀번호(6자리 이상)를 입력해 직접 변경할 수 있습니다. <b>(비밀번호 변경은 보안상 로그에 남지 않습니다.)</b>',
-          '<b>비밀번호를 잊어버렸을 때:</b> 관리자에게 비밀번호 초기화를 요청해 <b>8자리 초기화 코드(24시간 유효)</b>를 받은 뒤, 로그인 화면 하단의 <b>[🔑 새 비밀번호 설정]</b>에서 재설정하면 바로 로그인됩니다.'
-        ],
-        tip: '이름·생일 변경 신청/취소 및 회원 탈퇴는 보안상 관리자 로그에 기록되며, 비밀번호 변경은 기록되지 않습니다.'
-      },
-      {
-        id: 'ug_notif',
-        icon: '🔔',
-        title: '실시간 알림 설정',
-        sub: '새 공지·말씀·승인 결과를 알림으로 받아보기',
-        keywords: '알림 설정 팝업 기기알림 테스트알림',
-        steps: [
-          '우측 상단 <b>🔔 버튼</b>을 눌러 전체 알림과 항목별 알림(메인 화면 새 소식 / 오늘의 말씀)을 자유롭게 켜고 끌 수 있습니다.',
-          '<b>[기기 알림 허용하기]</b>를 눌러 권한을 허용하면 스마트폰 상단 알림으로도 소식을 받을 수 있으며, <b>[🔔 테스트 알림]</b>으로 정상 작동 여부를 바로 확인할 수 있습니다.'
-        ],
-        tip: '아이폰에서는 반드시 Safari → 공유 → [홈 화면에 추가]로 설치한 앱에서 열어야 기기 알림 허용 버튼이 활성화됩니다.'
-      }
-    ];
+    // ==================== 10-2. 이용자용 사용방법 설명서 (관리자 변경 명칭·이모지 실시간 자동 연동) ====================
+    function getUserGuideSections() {
+      const hLbl = escapeHtml(getTabLabel('home'));
+      const bLbl = escapeHtml(getTabLabel('bible'));
+      const bIcn = escapeHtml(getTabIcon('bible'));
+      const qLbl = escapeHtml(getTabLabel('qt'));
+      const qIcn = escapeHtml(getTabIcon('qt'));
+      const byLbl = escapeHtml(getTabLabel('bylaws'));
+      const byIcn = escapeHtml(getTabIcon('bylaws'));
+      const mLbl = escapeHtml(getTabLabel('more'));
+      const mIcn = escapeHtml(getTabIcon('more'));
+
+      return [
+        {
+          id: 'ug_install',
+          icon: '📱',
+          title: '앱 설치 및 로그인 (홈 화면에 추가)',
+          sub: '아이폰·갤럭시 스마트폰에 앱처럼 설치해 편하게 이용하기',
+          keywords: '앱 설치 홈화면 사파리 크롬 카톡 로그인 자동로그인',
+          steps: [
+            '<b>아이폰 · 아이패드 (Safari):</b> 하단 또는 상단의 <b>공유(□↑)</b> 버튼을 누른 뒤 <b>[홈 화면에 추가]</b>를 선택하면 앱 아이콘이 생성됩니다.',
+            '<b>안드로이드 (Chrome / 삼성 인터넷):</b> 상단 설치 배너의 <b>[앱 설치]</b> 버튼 또는 브라우저 메뉴(⋮) → <b>[앱 설치 / 홈 화면에 추가]</b>를 누릅니다.',
+            '<b>카카오톡 안에서 열었을 때:</b> 카톡 내장 브라우저에서는 설치나 알림이 제한되므로, 우측 하단 <b>⋮ → 다른 브라우저로 열기</b>를 눌러 Safari나 Chrome으로 열어 주세요.',
+            '<b>로그인 유지:</b> 한 번 로그인하면 앱을 껐다 켜도 로그인 상태가 유지됩니다. (공용 기기에서는 상단 <b>로그아웃</b> 버튼을 눌러 주세요.)'
+          ],
+          tip: '홈 화면에 추가해 앱으로 실행하면 전체 화면으로 깔끔하게 보이고, 실시간 알림 기능도 더 안정적으로 작동합니다.'
+        },
+        {
+          id: 'ug_qr',
+          icon: '📲',
+          title: '회원가입 및 오늘의 초대 QR 공유',
+          sub: '신규 지체 초대 방법과 QR 유효기간 안내',
+          keywords: '초대 QR 회원가입 가입신청 승인 대기 재가입',
+          steps: [
+            '<b>신규 회원가입:</b> 기존 회원이나 관리자가 공유한 <b>오늘의 초대 QR 코드</b>를 스캔해 접속하면 회원가입 탭이 열립니다. 본인 성명, 생년월일(8자리 직접 입력 또는 달력 선택), 역할, 비밀번호(6자리 이상)를 입력해 신청합니다.',
+            `<b>실시간 자동 입장:</b> 가입 신청 후 관리자가 승인하면 별도로 새로고침하지 않아도 자동으로 <b>${hLbl}</b> 화면에 입장됩니다.`,
+            '<b>친구 초대하기:</b> 앱 우측 상단의 <b>QR 아이콘</b>을 누르면 오늘의 초대 QR을 <b>카카오톡 이미지 공유</b>, <b>이미지 저장</b>, <b>초대 링크 복사</b>로 바로 전달할 수 있습니다.'
+          ],
+          tip: '초대 QR은 보안을 위해 매일 한국시간 자정(00:00)마다 자동으로 새 QR로 바뀌며, 지난 QR로는 가입할 수 없습니다. 이미 가입된 회원은 QR 없이 평소처럼 바로 로그인합니다.'
+        },
+        {
+          id: 'ug_home_att',
+          icon: getTabIcon('home'),
+          title: `${getTabLabel('home')} 소식 확인 & 예배 출석 체크`,
+          sub: '공지·배너·생일/새신자 축하 & 주일/행사 출석 방법',
+          keywords: `${getTabLabel('home')} 메인 홈 공지 광고 소식 배너 생일 새신자 출석 체크 주일예배 행사`,
+          steps: [
+            `<b>공지 · 광고 · 소식 확인:</b> <b>${hLbl}</b> 상단 고정 배너와 하단 공지 목록에서 청년부 소식을 확인합니다. 구분 칩(전체/공지/광고/소식/행사 등)으로 필터링할 수 있으며, 카드를 누르면 전체 본문이 열립니다.`,
+            `<b>오늘의 생일 · 새신자 환영 배너:</b> 생일인 지체나 새로 온 새신자가 있으면 <b>${hLbl}</b> 상단에 축하 배너가 자동으로 표시됩니다.`,
+            `<b>예배 · 특별 행사 출석 체크:</b> 설정된 주일 예배 시간(기본 일요일 14:00~15:30) 또는 특별 행사 시간에만 <b>${hLbl}</b> 맨 위에 <b>초록색 출석 카드</b>가 자동으로 나타납니다.`,
+            '<b>1인 1회 출석 확인:</b> <b>[출석하기]</b> 버튼을 누르면 즉시 출석이 기록되고 카드가 자동으로 숨겨집니다. 출석 완료 여부와 최근 출석 기록은 우측 상단 <b>👤 내 계정</b>에서 언제든 확인할 수 있습니다.'
+          ],
+          tip: '출석 시간이 지났거나 깜빡하고 버튼을 못 누른 경우에는 관리자에게 말씀하시면 출석부에 수동으로 반영해 드립니다.'
+        },
+        {
+          id: 'ug_bible',
+          icon: getTabIcon('bible'),
+          title: `${getTabLabel('bible')} 읽기 · 다중 색상 책갈피 · 개인 메모장`,
+          sub: '66권 빠른 검색, 6색 형광펜 책갈피, 말씀 연결 메모',
+          keywords: `${getTabLabel('bible')} 성경 개역한글 검색 장 이동 글자 크기 책갈피 색상 형광펜 메모 메모장 프라이버시`,
+          steps: [
+            `<b>${bLbl} 이동 & 빠른 검색:</b> <b>[${bIcn} ${bLbl}]</b> 탭 상단 <b>[창세기 1장 ▾]</b> 버튼으로 66권·장을 고르거나, 검색창에 <b>시편 23:1</b>, <b>요3:16</b>처럼 입력하고 엔터를 누르면 해당 구절로 즉시 이동합니다.`,
+            '<b>글자 크기 조절:</b> 상단 <b>[가-] / [가+]</b> 버튼으로 읽기 편한 글자 크기를 저장해 둘 수 있습니다.',
+            `<b>절 터치 기능 (책갈피 · 복사 · 메모):</b> 원하는 ${bLbl} 절을 터치하면 <b>6가지 색상 책갈피</b>(노랑·분홍·하늘·초록·보라·주황), <b>말씀 복사</b>, <b>이 절에 메모 쓰기</b> 버튼이 나타납니다.`,
+            `<b>⭐ 책갈피 & 📝 메모장 모아보기:</b> 상단 버튼에서 색상별로 책갈피를 모아보거나, 저장한 메모의 <b>[말씀 바로가기]</b>를 눌러 해당 ${bLbl} 구절로 즉시 점프할 수 있습니다.`
+          ],
+          tip: `${getTabLabel('bible')} 책갈피·메모·검색 기록은 오직 본인 기기에만 저장되며, 관리자를 포함한 다른 사람에게 공개되거나 보안 로그에 남지 않습니다.`
+        },
+        {
+          id: 'ug_qt',
+          icon: getTabIcon('qt'),
+          title: `${getTabLabel('qt')} · 공감 · 묵상 댓글`,
+          sub: '매일 자정 자동 말씀과 지체들과의 은혜 나눔',
+          keywords: `${getTabLabel('qt')} 오늘의 말씀 큐티 QT 하트 좋아요 아멘 은혜 도전 댓글 수정 삭제`,
+          steps: [
+            `<b>매일 새 말씀:</b> <b>[${qIcn} ${qLbl}]</b> 탭에 매일 한국시간 00:00마다 새로운 말씀이 자동으로 올라오며, 관리자가 올린 특별 말씀·묵상 글도 함께 확인할 수 있습니다.`,
+            '<b>공감 버튼:</b> 말씀 하단의 <b>❤️ 좋아요 · 🙏 아멘 · 👏 은혜 · 🔥 도전</b> 버튼을 눌러 마음을 표현할 수 있습니다.',
+            '<b>묵상 댓글 나누기:</b> 카드를 누르거나 <b>[💬 댓글]</b> 버튼을 열어 묵상·기도제목을 남길 수 있으며, 본인이 작성한 댓글은 언제든 <b>수정 · 삭제</b>할 수 있습니다.'
+          ],
+          tip: '공동체 게시판의 건전한 운영을 위해 댓글 작성·수정·삭제 내역은 관리자 보안 로그에 기록됩니다.',
+          warn: true
+        },
+        {
+          id: 'ug_bylaws_more',
+          icon: getTabIcon('bylaws'),
+          title: `청년부 ${getTabLabel('bylaws')} 검색 & ${getTabLabel('more')}(사이트 바로가기)`,
+          sub: `${getTabLabel('bylaws')} 키워드 검색·복사와 인스타/유튜브/교회 홈페이지 연결`,
+          keywords: `${getTabLabel('bylaws')} 회칙 검색 조항 복사 ${getTabLabel('more')} 더보기 사이트 바로가기 인스타그램 유튜브 교회 홈페이지`,
+          steps: [
+            `<b>${byLbl} 검색:</b> <b>[${byIcn} ${byLbl}]</b> 탭에서 <b>제5조</b>, <b>선거권</b>, <b>임기</b> 등 원하는 키워드나 추천 해시태그(#)를 눌러 해당 조항을 바로 찾을 수 있습니다. 각 조항 우측 <b>[복사]</b> 버튼으로 본문 복사도 가능합니다.`,
+            `<b>사이트 바로가기 (${mIcn} ${mLbl}):</b> 하단 <b>[${mIcn} ${mLbl}]</b> 탭을 누르면 청년부 인스타그램, 유튜브 채널, 교회 홈페이지 등 등록된 외부 사이트로 한 번에 이동할 수 있습니다.`
+          ],
+          tip: `${getTabLabel('bylaws')} 열람, 공지 확인, 사이트 바로가기 이동은 개인 활동으로 보안 로그에 남지 않습니다.`
+        },
+        {
+          id: 'ug_account',
+          icon: '👤',
+          title: '내 계정 관리 (이름·생일 변경 신청 / 비밀번호 / 탈퇴)',
+          sub: '상단 👤 버튼에서 내 정보 변경 및 비밀번호 분실 대처법',
+          keywords: '내 계정 이름 변경 신청 생일 변경 승인 거절 비밀번호 변경 초기화 분실 탈퇴 삭제',
+          steps: [
+            '<b>이름 변경 신청:</b> 우측 상단 <b>👤 버튼</b> → <b>[✏️ 내 이름 변경 신청]</b>에 새 성명(2~10글자)을 입력해 신청합니다. 관리자가 승인하면 즉시 새 이름으로 변경되며(다음 로그인부터 새 이름으로 로그인), 거절 시 기존 이름이 유지됩니다.',
+            '<b>생일 변경 신청:</b> <b>[🎂 내 생일 변경 신청]</b>에서 생년월일 8자리 입력 또는 달력 선택 후 신청합니다. 관리자 승인 후 반영되며, 대기 중에는 언제든 취소할 수 있습니다.',
+            '<b>비밀번호 변경:</b> 하단 <b>[비밀번호 변경]</b> 탭에서 현재 비밀번호와 새 비밀번호(6자리 이상)를 입력해 직접 변경할 수 있습니다. <b>(비밀번호 변경은 보안상 로그에 남지 않습니다.)</b>',
+            '<b>비밀번호를 잊어버렸을 때:</b> 관리자에게 비밀번호 초기화를 요청해 <b>8자리 초기화 코드(24시간 유효)</b>를 받은 뒤, 로그인 화면 하단의 <b>[🔑 새 비밀번호 설정]</b>에서 재설정하면 바로 로그인됩니다.'
+          ],
+          tip: '이름·생일 변경 신청/취소 및 회원 탈퇴는 보안상 관리자 로그에 기록되며, 비밀번호 변경은 기록되지 않습니다.'
+        },
+        {
+          id: 'ug_notif',
+          icon: '🔔',
+          title: '실시간 알림 설정',
+          sub: '새 공지·말씀·승인 결과를 알림으로 받아보기',
+          keywords: `알림 설정 팝업 기기알림 테스트알림 ${getTabLabel('home')} ${getTabLabel('qt')}`,
+          steps: [
+            `우측 상단 <b>🔔 버튼</b>을 눌러 전체 알림과 항목별 알림(<b>${hLbl} 새 소식</b> / <b>${qLbl}</b>)을 자유롭게 켜고 끌 수 있습니다.`,
+            '<b>[기기 알림 허용하기]</b>를 눌러 권한을 허용하면 스마트폰 상단 알림으로도 소식을 받을 수 있으며, <b>[🔔 테스트 알림]</b>으로 정상 작동 여부를 바로 확인할 수 있습니다.'
+          ],
+          tip: '아이폰에서는 반드시 Safari → 공유 → [홈 화면에 추가]로 설치한 앱에서 열어야 기기 알림 허용 버튼이 활성화됩니다.'
+        }
+      ];
+    }
 
     function renderUserGuideView() {
       const q = String(userGuideSearchQuery || '').trim();
       const clearBtn = document.getElementById('userGuideSearchClear');
       if (clearBtn) clearBtn.classList.toggle('hidden', !q);
 
+      const bLbl = getTabLabel('bible');
+      const qLbl = getTabLabel('qt');
+      const searchInp = document.getElementById('userGuideSearchInput');
+      if (searchInp) {
+        searchInp.placeholder = `궁금한 기능 검색 (예: 출석, ${bLbl}, ${qLbl}, 이름 변경, 비밀번호)`;
+      }
+
+      const tagsEl = document.getElementById('userGuideQuickTags');
+      if (tagsEl) {
+        const quickTagList = [
+          { q: '설치', label: '#앱설치' },
+          { q: '출석', label: '#출석체크' },
+          { q: bLbl, label: `#${bLbl}·메모` },
+          { q: qLbl, label: `#${qLbl}` },
+          { q: '이름', label: '#이름·생일변경' },
+          { q: 'QR', label: '#초대QR' },
+          { q: '알림', label: '#알림설정' }
+        ];
+        tagsEl.innerHTML = quickTagList.map(t => `
+          <button class="quick-tag" type="button" onclick="quickSearchUserGuide('${escapeJsAttr(t.q)}')">${escapeHtml(t.label)}</button>
+        `).join('');
+      }
+
       const qLower = q.toLowerCase();
       const qTokens = qLower.split(/\s+/).filter(Boolean);
 
-      const matched = USER_GUIDE_SECTIONS.filter(sec => {
+      const sections = getUserGuideSections();
+      const matched = sections.filter(sec => {
         if (!qLower) return true;
         const hay = `${sec.title} ${sec.sub} ${sec.keywords} ${sec.steps.join(' ')} ${sec.tip || ''}`.toLowerCase();
         return qTokens.every(tok => hay.includes(tok));
@@ -7808,7 +7861,7 @@
           <div class="card" style="text-align:center; padding:26px 16px; color:#64748B;">
             <div style="font-size:24px; margin-bottom:6px;">🔎</div>
             <div style="font-size:14px; font-weight:700; color:#334155;">일치하는 사용 안내가 없습니다.</div>
-            <div style="font-size:12.5px; margin-top:4px;">예: 출석, 성경, 메모, 이름, 생일, 비밀번호, QR 등으로 검색해 보세요.</div>
+            <div style="font-size:12.5px; margin-top:4px;">예: 출석, ${escapeHtml(bLbl)}, ${escapeHtml(qLbl)}, 메모, 이름, 생일, 비밀번호, QR 등으로 검색해 보세요.</div>
           </div>
         `;
         return;
@@ -7819,7 +7872,7 @@
           <details ${(q || idx === 0) ? 'open' : ''}>
             <summary>
               <div class="guide-summary-left">
-                <span class="guide-icon-badge">${sec.icon}</span>
+                <span class="guide-icon-badge">${escapeHtml(sec.icon)}</span>
                 <div style="min-width:0; flex:1;">
                   <div class="guide-card-title">${escapeHtml(sec.title)}</div>
                   <div class="guide-card-sub">${escapeHtml(sec.sub)}</div>
@@ -7857,140 +7910,195 @@
       renderUserGuideView();
     };
 
-    // ==================== 10-3. 관리자 전용 사용방법 · 인수인계 설명서 (관리 센터 [📖 사용방법]) ====================
-    const ADMIN_GUIDE_SECTIONS = [
-      {
-        id: 'ag_handover',
-        category: '인수인계 필수',
-        icon: '🤝',
-        title: '1. 새 관리자 인수인계 필수 절차',
-        sub: '관리자 등록 · 잠금 · 퇴임자 해제 · 내 이름 변경 방법',
-        keywords: '인수인계 새 관리자 로그인 성명 코드 잠금 해제 퇴임 이름 변경',
-        targetTab: 'members',
-        targetLabel: '👥 회원 승인 탭 열기',
-        steps: [
-          '<b>관리자 로그인:</b> 로그인 화면 상단 <b>[관리자]</b> 탭에서 <b>본인 성명(2~10글자)</b>과 <b>최고 관리자 코드</b>를 입력해 입장합니다. (관리자 코드는 <b>[🔐 관리자 코드]</b> 탭에서 확인·복사 가능)',
-          '<b>신규 관리자 자동 등록 잠금 활용:</b> 평상시에는 <b>[👥 회원 승인] → 🔒 신규 관리자 자동 등록 잠금</b>을 켜 두는 것을 권장합니다. 잠금이 켜진 상태에서 새 관리자가 로그인하면 기존 관리자의 승인 대기 목록에 뜨며, <b>[✅ 관리자 입장 승인]</b>을 눌러야 입장됩니다.',
-          '<b>퇴임·이전 관리자 해제:</b> 인수인계가 끝나면 <b>[👥 회원 승인] → 🔐 관리자 명단</b>에서 퇴임하는 관리자의 <b>[관리자 해제]</b> 버튼을 누릅니다. 해제된 관리자는 즉시 자동 로그아웃되며, 추후 재입장 시도 시 기존 관리자의 승인이 필요합니다.',
-          '<b>관리자 코드 변경 (인수인계 마감):</b> <b>[🔐 관리자 코드]</b> 탭에서 새 6자리 이상 코드로 변경(🎲 자동 생성 지원)하면 Firebase 로그인 비밀번호와 공유 코드가 동시에 바뀝니다.',
-          '<b>내 관리자 이름 변경:</b> 앱 우측 상단 <b>🔔 알림 버튼 바로 왼쪽의 ✏️ 버튼</b>을 눌러 본인 이름을 변경할 수 있습니다. (보안을 위해 <b>[📋 로그]</b>와 구글 시트 <b>[이름 변경 로그]</b> 탭에 자동 기록)'
-        ],
-        tip: '최소 1명의 활성 관리자는 항상 유지되어야 하므로, 새 관리자를 먼저 등록·승인한 뒤 이전 관리자를 해제해 주세요.',
-        warn: true
-      },
-      {
-        id: 'ag_content',
-        category: '공지·말씀',
-        icon: '🎨',
-        title: '2. 화면·공지 관리 (배너 · 역할별 공개 · 예약 게시 · 축하 멘트)',
-        sub: '메인 화면 구성, 특정 역할 전용 공지, 예약 게시(KST) 활용법',
-        keywords: '화면 공지 배너 칸 배치 순서 임시저장 예약 게시 역할 전용 생일 새신자 축하 멘트',
-        targetTab: 'content',
-        targetLabel: '🎨 화면·공지 관리 열기',
-        steps: [
-          '<b>메인 화면 배너·칸 관리:</b> <b>[+ 새 배너·칸]</b>으로 광고·새신자 안내·특정 역할 전용 칸을 추가하고, <b>▲/▼</b> 버튼으로 메인 홈 표시 순서를 즉시 변경할 수 있습니다.',
-          '<b>공지·광고 작성 및 상단 고정:</b> <b>[+ 새 공지·광고]</b>에서 구분(선택 또는 직접 입력)·제목·내용을 작성합니다. <b>[📌 상단 고정 공지 배너에도 함께 띄우기]</b>를 체크하면 메인 최상단 배너에 자동 연동됩니다.',
-          '<b>특정 역할에게만 보여주기 (서버 보안 분리):</b> 공개 대상에서 <b>[🎯 선택한 역할만 보기]</b>를 고르고 원하는 역할(예: 목사·부장·회장·팀장·셀장 등 중복 선택 가능)을 체크하면 해당 역할 회원에게만 표시됩니다.',
-          '<b>임시저장 & 예약 게시:</b> <b>[📝 임시저장]</b>은 관리자만 볼 수 있고, <b>[⏰ 예약 게시]</b>는 지정한 한국시간(KST)이 지나면 자동으로 공개됩니다.',
-          '<b>생일 · 새신자 축하 멘트 수정:</b> 상단 노란색 카드의 <b>[✏️ 멘트 수정]</b>에서 <b>{이름}</b> 변수를 넣어 생일/새신자 자동 배너와 알림 문구를 자유롭게 바꿀 수 있습니다.'
-        ],
-        tip: '예약 게시 항목은 보안상 관리자 전용 서버(adminNotices/adminBlocks)에 격리되어 있으며, 지정 시각 이후 관리자가 앱에 접속 중이거나 앱을 열 때 즉시 자동 공개됩니다.'
-      },
-      {
-        id: 'ag_qt_links',
-        category: '공지·말씀',
-        icon: '✨',
-        title: '3. 오늘의 말씀 관리 & 사이트 바로가기 관리',
-        sub: '자동 말씀 대체/함께 올리기, 댓글 관리, 더보기(☰) 링크 편집',
-        keywords: '오늘의 말씀 큐티 대체 함께 올리기 숨김 복원 댓글 삭제 사이트 바로가기 인스타그램 유튜브 교회',
-        targetTab: 'qt',
-        targetLabel: '✨ 오늘의 말씀 관리 열기',
-        steps: [
-          '<b>오늘의 말씀 관리:</b> 매일 00:00(KST) 자동 말씀이 표시됩니다. 관리자가 직접 글을 올릴 때 <b>[📌 오늘의 말씀과 같이 올리기]</b> 또는 <b>[🔄 오늘의 말씀 대신 이 글만 올리기(대체)]</b> 중 선택할 수 있으며, 자동 말씀을 하루 숨김·복원할 수도 있습니다.',
-          '<b>악성 댓글 삭제:</b> 말씀 카드의 <b>[💬 댓글·하트]</b>에서 부적절한 댓글을 즉시 삭제할 수 있습니다. (삭제 원문은 보안 로그에 자동 보존)',
-          '<b>사이트 바로가기 관리 ([🔗 사이트 바로가기 관리]):</b> 하단 <b>[☰ 더보기]</b> 메뉴에 표시되는 인스타그램·유튜브·교회 홈페이지 등의 링크를 추가·수정·순서 변경·삭제할 수 있습니다.'
-        ],
-        tip: '인스타그램·유튜브 URL을 등록하면 스마트폰에 해당 앱이 설치된 이용자가 눌렀을 때 앱으로 바로 연결됩니다.'
-      },
-      {
-        id: 'ag_members_roles',
-        category: '회원·역할',
-        icon: '👥',
-        title: '4. 회원 승인 · 이름/생일 변경 승인 · 역할별 명단 관리',
-        sub: '회원 승인 탭과 역할 설정 탭의 역할 분담 안내',
-        keywords: '회원 승인 가입 대기 보류 삭제 이름 변경 승인 거절 생일 변경 승인 비밀번호 초기화 역할 설정 명단 새신자 해제',
-        targetTab: 'roles',
-        targetLabel: '🏷️ 역할 설정(명단) 열기',
-        steps: [
-          '<b>[👥 회원 승인] 탭 (승인·삭제 전용):</b> 신규 가입 대기(역할 부여 후 승인 / 보류 / 삭제), <b>회원 이름 변경 신청</b>(승인 시 다음 로그인부터 새 이름 자동 적용 / 거절 시 기존 이름 유지), <b>회원 생일 변경 신청</b>(승인 / 거절), 비밀번호 초기화 대기, 보류된 신청만 깔끔하게 처리합니다.',
-          '<b>[🏷️ 역할 설정] 탭 (승인 회원 명단 · 역할 변경):</b> 상단의 역할별 탭(<b>전체 · 목사 · 부장 · 교사 · 회장 · 팀장 · 셀장 · 청년 · 새신자</b> 등)을 눌러 소속 명단을 한눈에 확인하고, 이름 검색·역할 변경·생일 직접 수정·새신자 해제·비밀번호 초기화·삭제를 처리합니다.',
-          '<b>새신자 해제:</b> 역할이 <b>새신자</b>인 회원은 메인 홈에 환영 배너가 자동 표시됩니다. 정착 후 <b>[💐 새신자 해제]</b>로 일반 역할(예: 청년)로 바꾸면 메인 환영 배너에서 자동으로 내려갑니다.',
-          '<b>회원 비밀번호 초기화:</b> 회원이 비밀번호를 잊으면 명단에서 <b>[비번 초기화]</b>를 눌러 <b>8자리 1회용 코드(24시간 유효)</b>를 발급하고 <b>[📋 안내 문구 복사]</b>로 카톡 전달해 주세요.'
-        ],
-        tip: '새 역할을 추가하거나 역할 순서를 바꾸고 싶을 때도 [🏷️ 역할 설정] 하단의 [+ 새 역할 만들기]와 ▲/▼ 버튼을 이용하면 됩니다.'
-      },
-      {
-        id: 'ag_worship_sheet',
-        category: '예배·시트',
-        icon: '⛪',
-        title: '5. 예배 출석 관리 & 구글 시트 8개 세부 탭 자동 연동',
-        sub: '정기/특별 예배 출석 설정, 수동 수정, 구글 시트 8개 탭 구조 및 배포 방법',
-        keywords: '예배 출석 정기 특별 행사 수련회 구글 시트 Apps Script 8개 탭 동기화 출석 0 정리',
-        targetTab: 'worship',
-        targetLabel: '⛪ 예배 관리 열기',
-        steps: [
-          '<b>출석 명단 관리:</b> 날짜/예배를 선택해 출석 인원을 확인하고, 누락된 회원은 <b>[+ 출석 추가]</b>, 시각 오기는 <b>[수정]</b>, 잘못된 기록은 <b>[삭제]</b>할 수 있습니다. <b>[✏️ 예배명 변경]</b>으로 특정 주일을 절기 예배 이름으로 바꿀 수 있습니다.',
-          '<b>정기 예배 · 특별 행사 설정:</b> 정기 예배 요일·시간(기본 주일 14:00~15:30)을 바꾸거나 <b>[+ 행사 추가]</b>로 수련회·금요기도회 등 특별 출석 일정을 등록합니다.',
-          '<b>구글 시트 Apps Script 배포 방법:</b> 구글 시트 상단 <b>[확장 프로그램 → Apps Script]</b>에 최신 8탭 스크립트를 붙여넣고 저장한 뒤, 우측 상단 <b>[배포 → 배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]</b>를 완료합니다. (웹 앱 URL은 <b>[⛪ 예배 관리]</b> 하단에 입력 후 저장)',
-          '<b>자동 저장 · 전체 동기화 · 버전 전환 시트 재정비:</b> 평소 출석·회원·관리자·보안 로그가 자동으로 각 전용 시트 탭에 분리 저장됩니다. 향후 업데이트로 시트 양식이 바뀌거나 테스트 흔적이 남았을 때는 <b>[⛪ 예배 관리 → 🛠️ 시트 재정비]</b> 버튼으로 <b>출석부·회원 명단·관리자 명단</b>을 최신 양식으로 안전하게 재생성할 수 있습니다. (5개 감사 로그 탭은 삭제 불가 유지)'
-        ],
-        sheetTabs: [
-          { name: '1. 출석부', desc: '예배·행사별 출석 시각 & 누적 출석' },
-          { name: '2. 회원 명단', desc: '성명·역할·생일·가입일·상태·이전이름' },
-          { name: '3. 관리자 명단', desc: '활성/해제 관리자 현황·접속일·횟수' },
-          { name: '4. 관리자 입퇴장 로그', desc: '관리자 등록·승인·거절·해제·재입장' },
-          { name: '5. 이름 변경 로그', desc: '관리자·회원 이름 변경(신청/승인/거절)' },
-          { name: '6. 생일 변경 로그', desc: '회원 생일 변경 신청/승인/거절·직접수정' },
-          { name: '7. 관리자 활동 로그', desc: '공지·배너·말씀·역할·메뉴·설정 전체' },
-          { name: '8. 이용자 활동 로그', desc: '댓글·가입/탈퇴·출석 체크 이력' }
-        ],
-        tip: '구글 시트 URL은 관리자 전용 문서(config/sheetSecret)에 격리되어 있어 일반 회원은 절대 볼 수 없습니다.'
-      },
-      {
-        id: 'ag_qr_logs',
-        category: '보안·로그',
-        icon: '📋',
-        title: '6. 초대 QR 관리 & 통합 보안 감사 로그',
-        sub: 'QR 긴급 폐기·재발급과 삭제 불가능한 보안 로그 조회법',
-        keywords: 'QR 관리 초대 재발급 폐기 보안 로그 감사 검색 필터 구글 시트 동기화',
-        targetTab: 'logs',
-        targetLabel: '📋 로그 탭 열기',
-        steps: [
-          '<b>초대 QR 관리 ([📲 QR 관리]):</b> 초대 링크가 외부에 유출되었을 때 <b>[🔄 새 QR 즉시 재발급]</b>을 누르면 기존 오늘 QR이 즉시 폐기되고 새 QR이 발급됩니다.',
-          '<b>통합 보안 감사 로그 ([📋 로그]):</b> 악의적 글 게시·임의 변경·장난을 방지하기 위해 <b>관리자의 모든 추가/수정/삭제/설정 변경</b>과 <b>이용자의 댓글·이름/생일 변경 신청·가입/탈퇴·출석 체크</b>가 날짜·시각(초 단위 KST)과 함께 기록됩니다.',
-          '<b>위변조·삭제 불가:</b> 보안상 최고 관리자도 앱에서 로그를 수정하거나 삭제할 수 없으며, 상단 필터(전체/관리자/이용자), 분류 선택, 검색창으로 빠르게 추적할 수 있습니다.',
-          '<b>프라이버시 미기록 범위:</b> 이용자 비밀번호 변경, 성경 메모·책갈피·검색, 외부 사이트 이동, 공지·회칙 단순 조회는 기록되지 않습니다.'
-        ],
-        tip: '로그 탭 상단의 [📊 시트 동기화]를 누르면 아직 시트에 반영되지 않은 미전송 로그가 각 전용 탭으로 일괄 저장됩니다.'
-      },
-      {
-        id: 'ag_labels_diag',
-        category: '보안·로그',
-        icon: '🧪',
-        title: '7. 메뉴·이름 편집 & 기능 점검 · 정기 서버 점검 모드',
-        sub: '탭 이모지/순서 커스터마이징, 6항목 점검, 서버 점검 차단 방법',
-        keywords: '메뉴 이름 이모지 순서 편집 기능 점검 시뮬레이션 일반 회원 미리보기 정기 서버 점검 모드',
-        targetTab: 'diagnostics',
-        targetLabel: '🧪 기능 점검 탭 열기',
-        steps: [
-          '<b>메뉴·이름 편집 ([✏️ 메뉴·이름]):</b> 하단 탭과 관리 센터 서브탭의 이모지, 이름, 표시 순서를 자유롭게 바꿀 수 있습니다. 저장 시 모든 회원 앱에 즉시 반영됩니다.',
-          '<b>전체 기능 점검 ([🧪 기능 점검]):</b> <b>[🚀 전체 6개 항목 한 번에 점검하기]</b>로 Firebase, 구글 시트 8개 탭, 초대 QR, 성경 API, 알림, 설정 무결성을 한 번에 진단합니다.',
-          '<b>일반 회원 시점 미리보기:</b> <b>[👁️ 일반 회원 화면 미리보기]</b>를 누르면 관리자 전용 칸과 관리 센터가 숨겨진 실제 일반 회원 화면을 안전하게 확인해 볼 수 있습니다.',
-          '<b>정기 서버 점검 모드:</b> 앱 업데이트나 대규모 정비 시 <b>[즉시 서버 점검 모드 켜기]</b> 또는 <b>[⏰ 예약 정기 점검 시간]</b>을 켜면 일반 회원에게는 점검 안내 화면만 표시되고 최고 관리자는 정상 작업할 수 있습니다.'
-        ],
-        tip: '작업이 끝나면 상단 빨간 안내 바의 [점검 해제] 버튼을 눌러 일반 회원 접속을 복구해 주세요.'
-      }
-    ];
+    // ==================== 10-3. 관리자 전용 사용방법 · 인수인계 설명서 (관리자 변경 명칭·이모지 실시간 자동 연동) ====================
+    function getAdminGuideCategories() {
+      const qLbl = getTabLabel('qt');
+      const lLbl = getTabLabel('manageLogs');
+      return [
+        { id: 'all', label: '전체' },
+        { id: 'handover', label: '인수인계 필수' },
+        { id: 'content_qt', label: `공지·${qLbl}` },
+        { id: 'member_role', label: '회원·역할' },
+        { id: 'worship_sheet', label: '예배·시트' },
+        { id: 'sec_log', label: `보안·${lLbl}` }
+      ];
+    }
+
+    function getAdminGuideSections() {
+      const mngLbl = escapeHtml(getTabLabel('manage'));
+      const hLbl = escapeHtml(getTabLabel('home'));
+      const bLbl = escapeHtml(getTabLabel('bible'));
+      const qLbl = escapeHtml(getTabLabel('qt'));
+      const byLbl = escapeHtml(getTabLabel('bylaws'));
+      const moreLbl = escapeHtml(getTabLabel('more'));
+      const moreIcn = escapeHtml(getTabIcon('more'));
+
+      const cLbl = escapeHtml(getTabLabel('manageContent'));
+      const cIcn = escapeHtml(getTabIcon('manageContent'));
+      const qlLbl = escapeHtml(getTabLabel('manageQuickLinks'));
+      const qlIcn = escapeHtml(getTabIcon('manageQuickLinks'));
+      const mQtLbl = escapeHtml(getTabLabel('manageQt'));
+      const mQtIcn = escapeHtml(getTabIcon('manageQt'));
+      const wLbl = escapeHtml(getTabLabel('manageWorship'));
+      const wIcn = escapeHtml(getTabIcon('manageWorship'));
+      const qrLbl = escapeHtml(getTabLabel('manageQr'));
+      const qrIcn = escapeHtml(getTabIcon('manageQr'));
+      const memLbl = escapeHtml(getTabLabel('manageMembers'));
+      const memIcn = escapeHtml(getTabIcon('manageMembers'));
+      const roleLbl = escapeHtml(getTabLabel('manageRoles'));
+      const roleIcn = escapeHtml(getTabIcon('manageRoles'));
+      const codeLbl = escapeHtml(getTabLabel('manageAdminCode'));
+      const codeIcn = escapeHtml(getTabIcon('manageAdminCode'));
+      const logLbl = escapeHtml(getTabLabel('manageLogs'));
+      const logIcn = escapeHtml(getTabIcon('manageLogs'));
+      const lblLbl = escapeHtml(getTabLabel('manageLabels'));
+      const lblIcn = escapeHtml(getTabIcon('manageLabels'));
+      const diagLbl = escapeHtml(getTabLabel('manageDiagnostics'));
+      const diagIcn = escapeHtml(getTabIcon('manageDiagnostics'));
+
+      const catMap = Object.fromEntries(getAdminGuideCategories().map(c => [c.id, c.label]));
+
+      return [
+        {
+          id: 'ag_handover',
+          catId: 'handover',
+          category: catMap.handover,
+          icon: '🤝',
+          title: '1. 새 관리자 인수인계 필수 절차',
+          sub: '관리자 등록 · 잠금 · 퇴임자 해제 · 내 이름 변경 방법',
+          keywords: `인수인계 새 관리자 로그인 성명 코드 잠금 해제 퇴임 이름 변경 ${getTabLabel('manageMembers')} ${getTabLabel('manageAdminCode')} ${getTabLabel('manageLogs')}`,
+          targetTab: 'members',
+          targetLabel: `${getTabIcon('manageMembers')} ${getTabLabel('manageMembers')} 탭 열기`,
+          steps: [
+            `<b>관리자 로그인:</b> 로그인 화면 상단 <b>[관리자]</b> 탭에서 <b>본인 성명(2~10글자)</b>과 <b>최고 관리자 코드</b>를 입력해 입장합니다. (관리자 코드는 <b>[${codeIcn} ${codeLbl}]</b> 탭에서 확인·복사 가능)`,
+            `<b>신규 관리자 자동 등록 잠금 활용:</b> 평상시에는 <b>[${memIcn} ${memLbl}] → 🔒 신규 관리자 자동 등록 잠금</b>을 켜 두는 것을 권장합니다. 잠금이 켜진 상태에서 새 관리자가 로그인하면 기존 관리자의 승인 대기 목록에 뜨며, <b>[✅ 관리자 입장 승인]</b>을 눌러야 입장됩니다.`,
+            `<b>퇴임·이전 관리자 해제:</b> 인수인계가 끝나면 <b>[${memIcn} ${memLbl}] → 🔐 관리자 명단</b>에서 퇴임하는 관리자의 <b>[관리자 해제]</b> 버튼을 누릅니다. 해제된 관리자는 즉시 자동 로그아웃되며, 추후 재입장 시도 시 기존 관리자의 승인이 필요합니다.`,
+            `<b>관리자 코드 변경 (인수인계 마감):</b> <b>[${codeIcn} ${codeLbl}]</b> 탭에서 새 6자리 이상 코드로 변경(🎲 자동 생성 지원)하면 Firebase 로그인 비밀번호와 공유 코드가 동시에 바뀝니다.`,
+            `<b>내 관리자 이름 변경:</b> 앱 우측 상단 <b>🔔 알림 버튼 바로 왼쪽의 ✏️ 버튼</b>을 눌러 본인 이름을 변경할 수 있습니다. (보안을 위해 <b>[${logIcn} ${logLbl}]</b>와 구글 시트 <b>[이름 변경 로그]</b> 탭에 자동 기록)`
+          ],
+          tip: '최소 1명의 활성 관리자는 항상 유지되어야 하므로, 새 관리자를 먼저 등록·승인한 뒤 이전 관리자를 해제해 주세요.',
+          warn: true
+        },
+        {
+          id: 'ag_content',
+          catId: 'content_qt',
+          category: catMap.content_qt,
+          icon: getTabIcon('manageContent'),
+          title: `2. ${getTabLabel('manageContent')} (배너 · 역할별 공개 · 예약 게시 · 축하 멘트)`,
+          sub: `${getTabLabel('home')} 화면 구성, 특정 역할 전용 공지, 예약 게시(KST) 활용법`,
+          keywords: `${getTabLabel('manageContent')} ${getTabLabel('home')} 화면 공지 배너 칸 배치 순서 임시저장 예약 게시 역할 전용 생일 새신자 축하 멘트`,
+          targetTab: 'content',
+          targetLabel: `${getTabIcon('manageContent')} ${getTabLabel('manageContent')} 열기`,
+          steps: [
+            `<b>${hLbl} 배너·칸 관리:</b> <b>[+ 새 배너·칸]</b>으로 광고·새신자 안내·특정 역할 전용 칸을 추가하고, <b>▲/▼</b> 버튼으로 ${hLbl} 표시 순서를 즉시 변경할 수 있습니다.`,
+            `<b>공지·광고 작성 및 상단 고정:</b> <b>[+ 새 공지·광고]</b>에서 구분(선택 또는 직접 입력)·제목·내용을 작성합니다. <b>[📌 상단 고정 공지 배너에도 함께 띄우기]</b>를 체크하면 ${hLbl} 최상단 배너에 자동 연동됩니다.`,
+            '<b>특정 역할에게만 보여주기 (서버 보안 분리):</b> 공개 대상에서 <b>[🎯 선택한 역할만 보기]</b>를 고르고 원하는 역할(예: 목사·부장·회장·팀장·셀장 등 중복 선택 가능)을 체크하면 해당 역할 회원에게만 표시됩니다.',
+            '<b>임시저장 & 예약 게시:</b> <b>[📝 임시저장]</b>은 관리자만 볼 수 있고, <b>[⏰ 예약 게시]</b>는 지정한 한국시간(KST)이 지나면 자동으로 공개됩니다.',
+            '<b>생일 · 새신자 축하 멘트 수정:</b> 상단 노란색 카드의 <b>[✏️ 멘트 수정]</b>에서 <b>{이름}</b> 변수를 넣어 생일/새신자 자동 배너와 알림 문구를 자유롭게 바꿀 수 있습니다.'
+          ],
+          tip: '예약 게시 항목은 보안상 관리자 전용 서버(adminNotices/adminBlocks)에 격리되어 있으며, 지정 시각 이후 관리자가 앱에 접속 중이거나 앱을 열 때 즉시 자동 공개됩니다.'
+        },
+        {
+          id: 'ag_qt_links',
+          catId: 'content_qt',
+          category: catMap.content_qt,
+          icon: getTabIcon('manageQt'),
+          title: `3. ${getTabLabel('manageQt')} & ${getTabLabel('manageQuickLinks')}`,
+          sub: `자동 말씀 대체/함께 올리기, 댓글 관리, ${getTabLabel('more')}(${getTabIcon('more')}) 링크 편집`,
+          keywords: `${getTabLabel('manageQt')} ${getTabLabel('qt')} ${getTabLabel('manageQuickLinks')} ${getTabLabel('more')} 오늘의 말씀 큐티 QT 대체 함께 올리기 숨김 복원 댓글 삭제 사이트 바로가기 인스타그램 유튜브 교회`,
+          targetTab: 'qt',
+          targetLabel: `${getTabIcon('manageQt')} ${getTabLabel('manageQt')} 열기`,
+          steps: [
+            `<b>${mQtLbl}:</b> 매일 00:00(KST) 자동 말씀이 표시됩니다. 관리자가 직접 글을 올릴 때 <b>[📌 ${qLbl}과 같이 올리기]</b> 또는 <b>[🔄 ${qLbl} 대신 이 글만 올리기(대체)]</b> 중 선택할 수 있으며, 자동 말씀을 하루 숨김·복원할 수도 있습니다.`,
+            '<b>악성 댓글 삭제:</b> 말씀 카드의 <b>[💬 댓글·하트]</b>에서 부적절한 댓글을 즉시 삭제할 수 있습니다. (삭제 원문은 보안 로그에 자동 보존)',
+            `<b>${qlLbl} ([${qlIcn} ${qlLbl}]):</b> 하단 <b>[${moreIcn} ${moreLbl}]</b> 메뉴에 표시되는 인스타그램·유튜브·교회 홈페이지 등의 링크를 추가·수정·순서 변경·삭제할 수 있습니다.`
+          ],
+          tip: '인스타그램·유튜브 URL을 등록하면 스마트폰에 해당 앱이 설치된 이용자가 눌렀을 때 앱으로 바로 연결됩니다.'
+        },
+        {
+          id: 'ag_members_roles',
+          catId: 'member_role',
+          category: catMap.member_role,
+          icon: getTabIcon('manageMembers'),
+          title: `4. ${getTabLabel('manageMembers')} · 이름/생일 변경 승인 · 역할별 명단 관리`,
+          sub: `${getTabLabel('manageMembers')} 탭과 ${getTabLabel('manageRoles')} 탭의 역할 분담 안내`,
+          keywords: `${getTabLabel('manageMembers')} ${getTabLabel('manageRoles')} 회원 승인 가입 대기 보류 삭제 이름 변경 승인 거절 생일 변경 승인 비밀번호 초기화 역할 설정 명단 새신자 해제`,
+          targetTab: 'roles',
+          targetLabel: `${getTabIcon('manageRoles')} ${getTabLabel('manageRoles')}(명단) 열기`,
+          steps: [
+            `<b>[${memIcn} ${memLbl}] 탭 (승인·삭제 전용):</b> 신규 가입 대기(역할 부여 후 승인 / 보류 / 삭제), <b>회원 이름 변경 신청</b>(승인 시 다음 로그인부터 새 이름 자동 적용 / 거절 시 기존 이름 유지), <b>회원 생일 변경 신청</b>(승인 / 거절), 비밀번호 초기화 대기, 보류된 신청만 깔끔하게 처리합니다.`,
+            `<b>[${roleIcn} ${roleLbl}] 탭 (승인 회원 명단 · 역할 변경):</b> 상단의 역할별 탭(<b>전체 · 목사 · 부장 · 교사 · 회장 · 팀장 · 셀장 · 청년 · 새신자</b> 등)을 눌러 소속 명단을 한눈에 확인하고, 이름 검색·역할 변경·생일 직접 수정·새신자 해제·비밀번호 초기화·삭제를 처리합니다.`,
+            `<b>새신자 해제:</b> 역할이 <b>새신자</b>인 회원은 ${hLbl}에 환영 배너가 자동 표시됩니다. 정착 후 <b>[💐 새신자 해제]</b>로 일반 역할(예: 청년)로 바꾸면 ${hLbl} 환영 배너에서 자동으로 내려갑니다.`,
+            '<b>회원 비밀번호 초기화:</b> 회원이 비밀번호를 잊으면 명단에서 <b>[비번 초기화]</b>를 눌러 <b>8자리 1회용 코드(24시간 유효)</b>를 발급하고 <b>[📋 안내 문구 복사]</b>로 카톡 전달해 주세요.'
+          ],
+          tip: `새 역할을 추가하거나 역할 순서를 바꾸고 싶을 때도 [${getTabIcon('manageRoles')} ${getTabLabel('manageRoles')}] 하단의 [+ 새 역할 만들기]와 ▲/▼ 버튼을 이용하면 됩니다.`
+        },
+        {
+          id: 'ag_worship_sheet',
+          catId: 'worship_sheet',
+          category: catMap.worship_sheet,
+          icon: getTabIcon('manageWorship'),
+          title: `5. ${getTabLabel('manageWorship')} (예배 출석) & 구글 시트 8개 세부 탭 자동 연동`,
+          sub: '정기/특별 예배 출석 설정, 수동 수정, 구글 시트 8개 탭 구조 및 배포 방법',
+          keywords: `${getTabLabel('manageWorship')} 예배 출석 정기 특별 행사 수련회 구글 시트 Apps Script 8개 탭 동기화 재정비 출석 0 정리`,
+          targetTab: 'worship',
+          targetLabel: `${getTabIcon('manageWorship')} ${getTabLabel('manageWorship')} 열기`,
+          steps: [
+            '<b>출석 명단 관리:</b> 날짜/예배를 선택해 출석 인원을 확인하고, 누락된 회원은 <b>[+ 출석 추가]</b>, 시각 오기는 <b>[수정]</b>, 잘못된 기록은 <b>[삭제]</b>할 수 있습니다. <b>[✏️ 예배명 변경]</b>으로 특정 주일을 절기 예배 이름으로 바꿀 수 있습니다.',
+            '<b>정기 예배 · 특별 행사 설정:</b> 정기 예배 요일·시간(기본 주일 14:00~15:30)을 바꾸거나 <b>[+ 행사 추가]</b>로 수련회·금요기도회 등 특별 출석 일정을 등록합니다.',
+            `<b>구글 시트 Apps Script 배포 방법:</b> 구글 시트 상단 <b>[확장 프로그램 → Apps Script]</b>에 최신 8탭 스크립트를 붙여넣고 저장한 뒤, 우측 상단 <b>[배포 → 배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]</b>를 완료합니다. (웹 앱 URL은 <b>[${wIcn} ${wLbl}]</b> 하단에 입력 후 저장)`,
+            `<b>자동 저장 · 전체 동기화 · 버전 전환 시트 재정비:</b> 평소 출석·회원·관리자·보안 로그가 자동으로 각 전용 시트 탭에 분리 저장됩니다. 향후 업데이트로 시트 양식이 바뀌거나 테스트 흔적이 남았을 때는 <b>[${wIcn} ${wLbl} → 🛠️ 시트 재정비]</b> 버튼으로 <b>출석부·회원 명단·관리자 명단</b>을 최신 양식으로 안전하게 재생성할 수 있습니다. (5개 감사 로그 탭은 삭제 불가 유지)`
+          ],
+          sheetTabs: [
+            { name: '1. 출석부', desc: '예배·행사별 출석 시각 & 누적 출석' },
+            { name: '2. 회원 명단', desc: '성명·역할·생일·가입일·상태·이전이름' },
+            { name: '3. 관리자 명단', desc: '활성/해제 관리자 현황·접속일·횟수' },
+            { name: '4. 관리자 입퇴장 로그', desc: '관리자 등록·승인·거절·해제·재입장' },
+            { name: '5. 이름 변경 로그', desc: '관리자·회원 이름 변경(신청/승인/거절)' },
+            { name: '6. 생일 변경 로그', desc: '회원 생일 변경 신청/승인/거절·직접수정' },
+            { name: '7. 관리자 활동 로그', desc: '공지·배너·말씀·역할·메뉴·설정 전체' },
+            { name: '8. 이용자 활동 로그', desc: '댓글·가입/탈퇴·출석 체크 이력' }
+          ],
+          tip: '구글 시트 URL은 관리자 전용 문서(config/sheetSecret)에 격리되어 있어 일반 회원은 절대 볼 수 없습니다.'
+        },
+        {
+          id: 'ag_qr_logs',
+          catId: 'sec_log',
+          category: catMap.sec_log,
+          icon: getTabIcon('manageLogs'),
+          title: `6. ${getTabLabel('manageQr')} & 통합 보안 감사 ${getTabLabel('manageLogs')}`,
+          sub: `QR 긴급 폐기·재발급과 삭제 불가능한 보안 ${getTabLabel('manageLogs')} 조회법`,
+          keywords: `${getTabLabel('manageQr')} ${getTabLabel('manageLogs')} QR 관리 초대 재발급 폐기 보안 로그 감사 검색 필터 구글 시트 동기화`,
+          targetTab: 'logs',
+          targetLabel: `${getTabIcon('manageLogs')} ${getTabLabel('manageLogs')} 탭 열기`,
+          steps: [
+            `<b>초대 QR 관리 ([${qrIcn} ${qrLbl}]):</b> 초대 링크가 외부에 유출되었을 때 <b>[🔄 새 QR 즉시 재발급]</b>을 누르면 기존 오늘 QR이 즉시 폐기되고 새 QR이 발급됩니다.`,
+            `<b>통합 보안 감사 로그 ([${logIcn} ${logLbl}]):</b> 악의적 글 게시·임의 변경·장난을 방지하기 위해 <b>관리자의 모든 추가/수정/삭제/설정 변경</b>과 <b>이용자의 댓글·이름/생일 변경 신청·가입/탈퇴·출석 체크</b>가 날짜·시각(초 단위 KST)과 함께 기록됩니다.`,
+            '<b>위변조·삭제 불가:</b> 보안상 최고 관리자도 앱에서 로그를 수정하거나 삭제할 수 없으며, 상단 필터(전체/관리자/이용자), 분류 선택, 검색창으로 빠르게 추적할 수 있습니다.',
+            `<b>프라이버시 미기록 범위:</b> 이용자 비밀번호 변경, ${bLbl} 메모·책갈피·검색, 외부 사이트 이동, 공지·${byLbl} 단순 조회는 기록되지 않습니다.`
+          ],
+          tip: `[${getTabIcon('manageLogs')} ${getTabLabel('manageLogs')}] 탭 상단의 [📊 시트 동기화]를 누르면 아직 시트에 반영되지 않은 미전송 로그가 각 전용 탭으로 일괄 저장됩니다.`
+        },
+        {
+          id: 'ag_labels_diag',
+          catId: 'sec_log',
+          category: catMap.sec_log,
+          icon: getTabIcon('manageDiagnostics'),
+          title: `7. ${getTabLabel('manageLabels')} 편집 & ${getTabLabel('manageDiagnostics')} · 정기 서버 점검 모드`,
+          sub: '탭 이모지/순서 커스터마이징, 6항목 점검, 서버 점검 차단 방법',
+          keywords: `${getTabLabel('manageLabels')} ${getTabLabel('manageDiagnostics')} ${getTabLabel('manage')} 메뉴 이름 이모지 순서 편집 기능 점검 시뮬레이션 일반 회원 미리보기 정기 서버 점검 모드`,
+          targetTab: 'diagnostics',
+          targetLabel: `${getTabIcon('manageDiagnostics')} ${getTabLabel('manageDiagnostics')} 탭 열기`,
+          steps: [
+            `<b>${lblLbl} 편집 ([${lblIcn} ${lblLbl}]):</b> 하단 탭과 <b>${mngLbl}</b> 서브탭의 이모지, 이름, 표시 순서를 자유롭게 바꿀 수 있습니다. 저장 시 모든 회원 앱과 사용 설명서의 명칭까지 즉시 자동 반영됩니다.`,
+            `<b>전체 기능 점검 ([${diagIcn} ${diagLbl}]):</b> <b>[🚀 전체 6개 항목 한 번에 점검하기]</b>로 Firebase, 구글 시트 8개 탭, 초대 QR, ${bLbl} API, 알림, 설정 무결성을 한 번에 진단합니다.`,
+            `<b>일반 회원 시점 미리보기:</b> <b>[👁️ 일반 회원 화면 미리보기]</b>를 누르면 관리자 전용 칸과 <b>${mngLbl}</b>가 숨겨진 실제 일반 회원 화면을 안전하게 확인해 볼 수 있습니다.`,
+            '<b>정기 서버 점검 모드:</b> 앱 업데이트나 대규모 정비 시 <b>[즉시 서버 점검 모드 켜기]</b> 또는 <b>[⏰ 예약 정기 점검 시간]</b>을 켜면 일반 회원에게는 점검 안내 화면만 표시되고 최고 관리자는 정상 작업할 수 있습니다.'
+          ],
+          tip: '작업이 끝나면 상단 빨간 안내 바의 [점검 해제] 버튼을 눌러 일반 회원 접속을 복구해 주세요.'
+        }
+      ];
+    }
 
     function renderAdminGuideListOnly() {
       const listEl = document.getElementById('adminGuideListArea');
@@ -8001,8 +8109,9 @@
       const clearBtn = document.getElementById('adminGuideSearchClear');
       if (clearBtn) clearBtn.classList.toggle('hidden', !q);
 
-      const filtered = ADMIN_GUIDE_SECTIONS.filter(sec => {
-        if (adminGuideCategoryFilter !== 'all' && sec.category !== adminGuideCategoryFilter) return false;
+      const sections = getAdminGuideSections();
+      const filtered = sections.filter(sec => {
+        if (adminGuideCategoryFilter !== 'all' && sec.catId !== adminGuideCategoryFilter) return false;
         if (!qLower) return true;
         const sheetTxt = Array.isArray(sec.sheetTabs) ? sec.sheetTabs.map(t => `${t.name} ${t.desc}`).join(' ') : '';
         const hay = `${sec.category} ${sec.title} ${sec.sub} ${sec.keywords} ${sec.steps.join(' ')} ${sheetTxt} ${sec.tip || ''}`.toLowerCase();
@@ -8021,7 +8130,7 @@
           <div class="card" style="text-align:center; padding:26px 16px; color:#64748B;">
             <div style="font-size:24px; margin-bottom:6px;">🔎</div>
             <div style="font-size:14px; font-weight:700; color:#334155;">일치하는 관리자 가이드가 없습니다.</div>
-            <div style="font-size:12px; margin-top:4px;">예: 인수인계, 구글 시트, 예약, QR, 역할, 로그, 점검 등으로 검색해 보세요.</div>
+            <div style="font-size:12px; margin-top:4px;">예: 인수인계, ${escapeHtml(getTabLabel('qt'))}, 구글 시트, 예약, QR, 역할, ${escapeHtml(getTabLabel('manageLogs'))}, 점검 등으로 검색해 보세요.</div>
           </div>
         `;
         return;
@@ -8032,7 +8141,7 @@
           <details ${(q || adminGuideCategoryFilter !== 'all' || idx === 0) ? 'open' : ''}>
             <summary>
               <div class="guide-summary-left">
-                <span class="guide-icon-badge admin">${sec.icon}</span>
+                <span class="guide-icon-badge admin">${escapeHtml(sec.icon)}</span>
                 <div style="min-width:0; flex:1;">
                   <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-bottom:2px;">
                     <span class="tag warm" style="font-size:10px; padding:2px 6px;">${escapeHtml(sec.category)}</span>
@@ -8094,14 +8203,17 @@
     };
 
     function renderManageGuide(el, user) {
-      const cats = ['all', '인수인계 필수', '공지·말씀', '회원·역할', '예배·시트', '보안·로그'];
+      const cats = getAdminGuideCategories();
+      if (!cats.some(c => c.id === adminGuideCategoryFilter)) {
+        adminGuideCategoryFilter = 'all';
+      }
       el.innerHTML = `
         <div class="guide-hero-admin">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:6px;">
             <span class="hero-badge" style="margin-bottom:0;">🔐 최고 관리자 전용 매뉴얼</span>
             <span style="font-size:11px; color:#FDE68A; font-weight:700;">일반 회원 비공개</span>
           </div>
-          <div class="bylaw-hero-title" style="margin-top:4px;">${escapeHtml(getTabIcon('manageGuide'))} 관리자 사용방법 · 인수인계 가이드</div>
+          <div class="bylaw-hero-title" style="margin-top:4px;">${escapeHtml(getTabIcon('manageGuide'))} 관리자 ${escapeHtml(getTabLabel('manageGuide'))} · 인수인계 가이드</div>
           <div class="bylaw-hero-dates">
             새로운 관리자가 들어와도 막힘없이 운영할 수 있도록 모든 관리 기능과 구글 시트 8개 탭 연동 방법을 정리했습니다.
           </div>
@@ -8109,15 +8221,15 @@
 
         <div id="adminGuideCatChips" class="filter-row" style="margin-bottom:8px;">
           ${cats.map(c => `
-            <button class="filter-chip ${adminGuideCategoryFilter === c ? 'active' : ''}" data-guide-cat="${escapeHtml(c)}" type="button" onclick="setAdminGuideCategory('${escapeJsAttr(c)}')">
-              ${c === 'all' ? '전체' : escapeHtml(c)}
+            <button class="filter-chip ${adminGuideCategoryFilter === c.id ? 'active' : ''}" data-guide-cat="${escapeHtml(c.id)}" type="button" onclick="setAdminGuideCategory('${escapeJsAttr(c.id)}')">
+              ${escapeHtml(c.label)}
             </button>
           `).join('')}
         </div>
 
         <div class="search-box" style="margin-bottom:8px;">
           <span class="search-icon">🔍</span>
-          <input id="adminGuideSearchInput" class="search-input" type="search" value="${escapeHtml(adminGuideSearchQuery)}" placeholder="관리자 기능 검색 (예: 인수인계, 구글 시트, 예약, QR, 로그)" oninput="onAdminGuideSearchInput(this.value)" />
+          <input id="adminGuideSearchInput" class="search-input" type="search" value="${escapeHtml(adminGuideSearchQuery)}" placeholder="관리자 기능 검색 (예: 인수인계, ${escapeHtml(getTabLabel('qt'))}, 구글 시트, 예약, QR, ${escapeHtml(getTabLabel('manageLogs'))})" oninput="onAdminGuideSearchInput(this.value)" />
           <button id="adminGuideSearchClear" class="search-clear ${adminGuideSearchQuery ? '' : 'hidden'}" type="button" onclick="clearAdminGuideSearch()">✕</button>
         </div>
         <div id="adminGuideSummaryText" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
@@ -8623,7 +8735,7 @@
 
         ${canLayout ? `
           <div class="section-head" style="margin-top:14px;">
-            <h2 class="section-title">🎨 메인 화면 배너·칸 배치</h2>
+            <h2 class="section-title">${escapeHtml(getTabIcon('manageContent'))} ${escapeHtml(getTabLabel('home'))} 배너·칸 배치</h2>
             <button class="btn-admin" onclick="openAddBlockModal()">+ 새 배너·칸</button>
           </div>
           ${blocks.length === 0
@@ -8790,7 +8902,7 @@
             <span class="card-date">${escapeHtml(autoToday.date)}</span>
           </div>
           <p class="card-body" style="margin-bottom:10px;">${escapeHtml(autoToday.scripture)}</p>
-          ${isReplaced ? '<div style="font-size:11.5px; color:#92400E; margin-bottom:9px;">오늘은 관리자가 올린 대체 글이 오늘의 말씀 자리에 표시됩니다. (언제든 수정·삭제 가능, 내일 00:00 새 자동 말씀 전환)</div>' : ''}
+          ${isReplaced ? `<div style="font-size:11.5px; color:#92400E; margin-bottom:9px;">오늘은 관리자가 올린 대체 글이 ${escapeHtml(getTabLabel('qt'))} 자리에 표시됩니다. (언제든 수정·삭제 가능, 내일 00:00 새 자동 말씀 전환)</div>` : ''}
           ${(!isReplaced && isHiddenManually) ? '<div style="font-size:11.5px; color:#475569; margin-bottom:9px;">오늘의 자동 말씀이 숨겨져 있습니다. 아래 [복원] 버튼으로 다시 표시할 수 있습니다.</div>' : ''}
           <div class="qt-manage-actions">
             <button class="btn-sm primary" onclick="openQtDetail('${autoToday.id}')">💬 댓글·하트</button>
@@ -8810,7 +8922,7 @@
                 <div class="card">
                   <div class="card-top">
                     <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                      <span class="tag ${isReplace ? 'warm' : 'slate'}">${isReplace ? (isTodayPost ? '🔄 오늘의 말씀 대체중' : '🔄 대체 게시') : '📌 말씀과 함께 게시'}</span>
+                      <span class="tag ${isReplace ? 'warm' : 'slate'}">${isReplace ? (isTodayPost ? `🔄 ${escapeHtml(getTabLabel('qt'))} 대체중` : '🔄 대체 게시') : '📌 말씀과 함께 게시'}</span>
                       ${q.passage ? `<span class="qt-passage-pill">📖 ${escapeHtml(q.passage)}</span>` : ''}
                     </div>
                     <span class="card-date">${escapeHtml(q.date || '')}</span>
@@ -11430,7 +11542,7 @@
                 </div>
                 <button class="btn-sm primary" type="button" onclick="copyBibleVerse(${v.verse})">📋 말씀 복사</button>
                 <button class="btn-sm" type="button" onclick="openBibleMemoForVerse(${v.verse})">${hasMemo ? '📝 이 절 메모 보기' : '📝 이 절 메모'}</button>
-                ${canWriteQt ? `<button class="btn-sm" type="button" onclick="createQtFromBibleVerse(${v.verse})">✨ 오늘의 말씀에 올리기</button>` : ''}
+                ${canWriteQt ? `<button class="btn-sm" type="button" onclick="createQtFromBibleVerse(${v.verse})">${escapeHtml(getTabIcon('qt'))} ${escapeHtml(getTabLabel('qt'))}에 올리기</button>` : ''}
               </div>
             ` : ''}
           `;
@@ -12265,7 +12377,7 @@ ${m.body}`;
         date: dot,
         passage: item.passage,
         scripture: item.scripture,
-        authorName: '오늘의 말씀'
+        authorName: getTabLabel('qt')
       };
     }
 
@@ -12287,7 +12399,7 @@ ${m.body}`;
             date: `${m[1]}.${m[2]}.${m[3]}`,
             passage: item.passage,
             scripture: item.scripture,
-            authorName: '오늘의 말씀'
+            authorName: getTabLabel('qt')
           };
         }
       }
@@ -12334,9 +12446,11 @@ ${m.body}`;
         const previewCmts = cmts.slice(-2);
         const verseText = post.scripture || post.guide || post.title || '';
         const isTodayReplace = !post.isAuto && post.displayMode === 'replace' && normalizeDotDate(post.date) === todayDot;
+        const qtLblDisp = escapeHtml(getTabLabel('qt'));
+        const qtIcnDisp = escapeHtml(getTabIcon('qt'));
         const badgeText = post.isAuto
-          ? '✨ 오늘의 말씀'
-          : (isTodayReplace ? '✨ 오늘의 말씀 (관리자)' : '✍️ 관리자 작성 글');
+          ? `${qtIcnDisp} ${qtLblDisp}`
+          : (isTodayReplace ? `${qtIcnDisp} ${qtLblDisp} (관리자)` : '✍️ 관리자 작성 글');
         const badgeCls = (post.isAuto || isTodayReplace) ? 'warm' : '';
         return `
           <div class="card clickable" style="${(post.isAuto || isTodayReplace) ? 'border-color:#A5B4FC;' : ''}" onclick="openQtDetail('${escapeJsAttr(post.id)}')">
@@ -12424,7 +12538,7 @@ ${m.body}`;
       const cmts = qtComments.filter(c => c.postId === post.id);
 
       const verseText = post.scripture || post.guide || post.title || '';
-      document.getElementById('qtDetailDateBadge').textContent = post.date || '오늘의 말씀';
+      document.getElementById('qtDetailDateBadge').textContent = post.date || getTabLabel('qt');
       document.getElementById('qtDetailBodyArea').innerHTML = `
         ${post.passage ? `<div style="margin-bottom:10px;"><span class="qt-passage-pill" style="font-size:13px; padding:4px 11px;">📖 ${escapeHtml(post.passage)}</span></div>` : ''}
         <div class="qt-scripture-box" style="font-size:15px; line-height:1.75; margin-top:4px;">${escapeHtml(verseText)}</div>
@@ -12585,21 +12699,33 @@ ${m.body}`;
       }
     };
 
+    function syncQtModalDynamicLabels() {
+      const qtLbl = getTabLabel('qt');
+      const optT = document.getElementById('qtOptTogether');
+      const optR = document.getElementById('qtOptReplace');
+      const saveBtn = document.getElementById('saveQtBtn');
+      if (optT) optT.textContent = `📌 ${qtLbl}과 같이 올리기 (자동 말씀 + 작성 글)`;
+      if (optR) optR.textContent = `🔄 ${qtLbl} 대신 이 글만 올리기 (대체)`;
+      if (saveBtn) saveBtn.textContent = `${qtLbl}에 게시하기`;
+    }
+
     window.updateQtDisplayModeHint = () => {
       const mode = document.getElementById('qtDisplayModeSelect').value;
       const hint = document.getElementById('qtDisplayModeHint');
       if (!hint) return;
+      const qtLbl = escapeHtml(getTabLabel('qt'));
       if (mode === 'replace') {
         hint.className = 'info-box warn';
-        hint.innerHTML = '🔄 <b>오늘의 말씀 대체:</b> 해당 날짜의 자동 말씀을 숨기고, 관리자가 작성한 이 글만 오늘의 말씀으로 표시합니다. 다음 날 00:00(한국시간)에는 새 자동 말씀이 다시 올라옵니다.';
+        hint.innerHTML = `🔄 <b>${qtLbl} 대체:</b> 해당 날짜의 자동 말씀을 숨기고, 관리자가 작성한 이 글만 ${qtLbl} 자리에 표시합니다. 다음 날 00:00(한국시간)에는 새 자동 말씀이 다시 올라옵니다.`;
       } else {
         hint.className = 'info-box';
-        hint.innerHTML = '📌 <b>같이 올리기:</b> 매일 00:00(한국시간)에 올라오는 자동 오늘의 말씀과 관리자가 작성한 이 글이 함께 표시됩니다.';
+        hint.innerHTML = `📌 <b>같이 올리기:</b> 매일 00:00(한국시간)에 올라오는 자동 말씀과 관리자가 작성한 이 글이 ${qtLbl} 화면에 함께 표시됩니다.`;
       }
     };
 
     window.openNewQtModal = (prefill = null) => {
-      document.getElementById('qtFormModalTitle').textContent = `✨ 새 ${getTabLabel('qt')} · 글 등록`;
+      syncQtModalDynamicLabels();
+      document.getElementById('qtFormModalTitle').textContent = `${getTabIcon('qt')} 새 ${getTabLabel('qt')} · 글 등록`;
       document.getElementById('editQtId').value = '';
       document.getElementById('qtDisplayModeSelect').value = (prefill && prefill.displayMode === 'replace') ? 'replace' : 'together';
       updateQtDisplayModeHint();
@@ -12621,7 +12747,7 @@ ${m.body}`;
     };
 
     window.hideAutoTodayQt = async () => {
-      if (!confirm('오늘 자동 표시된 말씀을 숨길까요?\n(언제든 새 글을 올리거나 관리 센터에서 복원할 수 있으며, 내일 00:00에는 새 자동 말씀이 올라옵니다.)')) return;
+      if (!confirm(`오늘 자동 표시된 말씀을 숨길까요?\n(언제든 새 글을 올리거나 ${getTabLabel('manage')}에서 복원할 수 있으며, 내일 00:00에는 새 자동 말씀이 올라옵니다.)`)) return;
       try {
         await db.collection('config').doc('layout').set({
           hiddenAutoQtDate: getKstDateParts().dot
@@ -12648,7 +12774,8 @@ ${m.body}`;
     window.openEditQtModal = (postId) => {
       const p = qtPosts.find(x => String(x.id) === String(postId));
       if (!p) return;
-      document.getElementById('qtFormModalTitle').textContent = `✨ ${getTabLabel('qt')} · 글 수정`;
+      syncQtModalDynamicLabels();
+      document.getElementById('qtFormModalTitle').textContent = `${getTabIcon('qt')} ${getTabLabel('qt')} · 글 수정`;
       document.getElementById('editQtId').value = p.id;
       document.getElementById('qtDisplayModeSelect').value = p.displayMode === 'replace' ? 'replace' : 'together';
       updateQtDisplayModeHint();
@@ -12686,8 +12813,8 @@ ${m.body}`;
             detail: `${displayMode === 'replace' ? '대체 게시' : '함께 게시'} · ${scripture}`
           });
           showToast(displayMode === 'replace'
-            ? '오늘의 말씀 대체 글로 수정되었습니다!'
-            : '오늘의 말씀과 함께 표시되도록 수정되었습니다!');
+            ? `${getTabLabel('qt')} 대체 글로 수정되었습니다!`
+            : `${getTabLabel('qt')}과 함께 표시되도록 수정되었습니다!`);
         } else {
           const targetId = String(Date.now());
           await db.collection('qtPosts').doc(targetId).set({
@@ -12702,8 +12829,8 @@ ${m.body}`;
             detail: `${displayMode === 'replace' ? '대체 게시' : '함께 게시'} · ${scripture}`
           });
           showToast(displayMode === 'replace'
-            ? '오늘의 말씀을 이 글로 대체하여 등록했습니다!'
-            : '오늘의 말씀과 함께 표시되도록 등록했습니다!');
+            ? `${getTabLabel('qt')}을 이 글로 대체하여 등록했습니다!`
+            : `${getTabLabel('qt')}과 함께 표시되도록 등록했습니다!`);
         }
         document.getElementById('qtFormModal').classList.remove('open');
       } catch (err) {
@@ -12934,12 +13061,31 @@ ${m.body}`;
     }
 
     window.onDraftTabNameInput = (key, val) => {
+      const prevVal = String(draftTabNames[key] ?? '').trim();
       draftTabNames[key] = val;
+      if (key === 'qt') {
+        const curManageQt = String(draftTabNames.manageQt ?? '').trim();
+        if (curManageQt === DEFAULT_TAB_LABELS.manageQt || (prevVal && curManageQt === `${prevVal} 관리`)) {
+          const nextQt = String(val || '').trim() || DEFAULT_TAB_LABELS.qt;
+          draftTabNames.manageQt = `${nextQt} 관리`;
+          const mQtInp = document.querySelector('[data-tab-name-key="manageQt"]');
+          if (mQtInp) mQtInp.value = draftTabNames.manageQt;
+        }
+      }
       syncLiveTabPreview();
     };
 
     window.onDraftTabIconInput = (key, val) => {
+      const prevIcn = String(draftTabIcons[key] ?? '').trim();
       draftTabIcons[key] = val;
+      if (key === 'qt') {
+        const curManageQtIcn = String(draftTabIcons.manageQt ?? '').trim();
+        if (curManageQtIcn === DEFAULT_TAB_ICONS.manageQt || (prevIcn && curManageQtIcn === prevIcn)) {
+          draftTabIcons.manageQt = String(val || '').trim() || DEFAULT_TAB_ICONS.qt;
+          const mQtIcnInp = document.querySelector('[data-tab-icon-key="manageQt"]');
+          if (mQtIcnInp) mQtIcnInp.value = draftTabIcons.manageQt;
+        }
+      }
       syncLiveTabPreview();
     };
 
@@ -14115,7 +14261,7 @@ ${m.body}`;
             <div class="attendance-home-card">
               <span class="attendance-live-badge"><span class="attendance-live-dot"></span> ${escapeHtml(sess.label)} 출석 진행 중 · ${escapeHtml(sess.start)}~${escapeHtml(sess.end)}</span>
               <h2 class="attendance-home-title">📋 현재 출석 인원: ${count}명</h2>
-              <p class="attendance-home-desc">관리 센터에서 실시간 출석 명단 확인 및 추가·수정·삭제를 할 수 있습니다.</p>
+              <p class="attendance-home-desc">${escapeHtml(getTabLabel('manage'))}에서 실시간 출석 명단 확인 및 추가·수정·삭제를 할 수 있습니다.</p>
               <button class="btn-attendance-cta" type="button" onclick="goToAttendanceManage()">✅ 출석 현황 관리 바로가기</button>
             </div>
           </div>
@@ -14678,7 +14824,7 @@ ${m.body}`;
 
     window.handleSyncRenameLogsToSheet = async () => {
       const url = getAdminSheetUrl();
-      if (!url) return showToast('먼저 [⛪ 예배 관리] 탭에서 구글 시트 Apps Script URL을 등록해 주세요.');
+      if (!url) return showToast(`먼저 [${getTabIcon('manageWorship')} ${getTabLabel('manageWorship')}] 탭에서 구글 시트 Apps Script URL을 등록해 주세요.`);
       const merged = getMergedAuditLogs();
       const unsynced = merged.filter(l => l && l.sheetSynced !== true);
       if (unsynced.length === 0) {
@@ -15273,7 +15419,7 @@ ${m.body}`;
 
         <div style="display:flex; gap:6px; margin-bottom:8px; align-items:center;">
           <select class="form-select" style="width:auto; min-width:118px; padding:9px 10px; font-size:12.5px; font-weight:700;" onchange="setAdminLogCategoryFilter(this.value)">
-            ${cats.map(c => `<option value="${escapeHtml(c)}" ${adminLogFilterCategory === c ? 'selected' : ''}>${c === 'all' ? '전체 분류' : escapeHtml(c)}</option>`).join('')}
+            ${cats.map(c => `<option value="${escapeHtml(c)}" ${adminLogFilterCategory === c ? 'selected' : ''}>${c === 'all' ? '전체 분류' : escapeHtml(c === '오늘의 말씀' ? getTabLabel('qt') : c)}</option>`).join('')}
           </select>
           <div class="search-box" style="flex:1; margin-bottom:0;">
             <span class="search-icon">🔍</span>
@@ -16421,7 +16567,7 @@ ${m.body}`;
         })()}
 
         <div class="section-head">
-          <h2 class="section-title">🧪 전체 기능 점검 센터</h2>
+          <h2 class="section-title">${escapeHtml(getTabIcon('manageDiagnostics'))} ${escapeHtml(getTabLabel('manageDiagnostics'))} 센터</h2>
           <span class="tag ${errCnt > 0 ? 'red' : (okCnt === DIAG_ITEMS.length ? 'green' : 'slate')}">
             정상 ${okCnt} · 주의 ${warnCnt} · 오류 ${errCnt}
           </span>
