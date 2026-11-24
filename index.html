@@ -6,13 +6,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=122" />
+  <link rel="manifest" href="./manifest.json?v=124" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=122" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=122" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=124" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=124" />
 
   <!-- Firebase SDK (Auth + Firestore Compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1868,7 +1868,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=122" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=124" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -2901,6 +2901,29 @@
   <div id="toast" class="toast"></div>
 
   <script>
+    window.__APP_SCRIPT_BOOTED__ = false;
+    window.addEventListener('error', function(ev) {
+      var ls = document.getElementById('loadingScreen');
+      if (ls && !ls.classList.contains('hidden')) {
+        var msgEl = document.getElementById('loadingMsg');
+        var retryBtn = document.getElementById('retryInitBtn');
+        if (msgEl) msgEl.textContent = '앱 초기화 중 오류가 발생했습니다: ' + (ev && ev.message ? ev.message : '스크립트 오류');
+        if (retryBtn) retryBtn.classList.remove('hidden');
+      }
+    });
+    setTimeout(function() {
+      var ls = document.getElementById('loadingScreen');
+      if (!window.__APP_SCRIPT_BOOTED__ && ls && !ls.classList.contains('hidden')) {
+        var msgEl = document.getElementById('loadingMsg');
+        var retryBtn = document.getElementById('retryInitBtn');
+        if (msgEl) msgEl.textContent = '앱을 불러오는 데 시간이 오래 걸리고 있습니다. 네트워크를 확인하고 다시 시도해 주세요.';
+        if (retryBtn) retryBtn.classList.remove('hidden');
+      }
+    }, 6000);
+  </script>
+
+  <script>
+    window.__APP_SCRIPT_BOOTED__ = true;
     // ==================== 0. Firebase 초기화 ====================
     const firebaseConfig = {
       apiKey: "AIzaSyDEbbb-WaUnAVw0BL77JOjzZLM8AjcmFGQ",
@@ -3600,7 +3623,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=122" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=124" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -3623,8 +3646,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=122', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=122', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=124', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=124', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -4816,11 +4839,37 @@
           items: Array.isArray(d.items) ? d.items : []
         };
 
-        if (!currentAdminName) return;
+        const activeList = adminRegistry.items.filter(a => a.status === 'active');
+        if (!currentAdminName) {
+          if (!isLoggingInAdmin) {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            applyScreen();
+          }
+          return;
+        }
         const me = adminRegistry.items.find(a => String(a.name || '').trim() === currentAdminName);
 
         if (!me || me.status === 'removed') {
           if (!isLoggingInAdmin) {
+            if (activeList.length === 0) {
+              // 초기화 직후 또는 빈 관리자 명단 상태에서 로그인한 경우 자동 등록
+              const nowStr = formatKstDateTime();
+              const nextItems = structuredClone(adminRegistry.items);
+              nextItems.push({
+                id: 'adm_' + Date.now(),
+                name: currentAdminName,
+                status: 'active',
+                registeredAt: nowStr,
+                lastLoginAt: nowStr,
+                lastLoginTs: Date.now(),
+                reentryCount: 0
+              });
+              db.collection('config').doc('adminRegistry').set({
+                lockAutoRegister: !!adminRegistry.lockAutoRegister,
+                items: nextItems
+              }).catch(() => {});
+              return;
+            }
             showToast('관리자 목록에서 해제되어 자동 로그아웃되었습니다.');
             logout();
           }
@@ -4895,7 +4944,12 @@
       if ((user.email || '').toLowerCase() === ADMIN_EMAIL) {
         const savedName = (localStorage.getItem(KEY_ADMIN_NAME) || '').trim();
         if (!savedName) {
-          await auth.signOut().catch(() => {});
+          currentAdminName = '';
+          fbUser = null;
+          document.getElementById('loadingScreen').classList.add('hidden');
+          applyScreen();
+          switchAuthTab('admin');
+          auth.signOut().catch(() => {});
           return;
         }
         currentAdminName = savedName;
@@ -4921,6 +4975,15 @@
         attachMemberProfileListener(user.uid, 0);
       }
     });
+
+    // 안전 장치: 네트워크·세션 초기화 지연 시 4.5초 후 로딩 화면 해제 후 화면 표시
+    setTimeout(() => {
+      const ls = document.getElementById('loadingScreen');
+      if (ls && !ls.classList.contains('hidden')) {
+        ls.classList.add('hidden');
+        applyScreen();
+      }
+    }, 4500);
 
     // ==================== 8. 인증 탭 및 로그인/회원가입 ====================
     window.switchAuthTab = (tab) => {
@@ -10744,12 +10807,7 @@ ${m.body}`;
 
     function warnIfOldAppsScript(res) {
       if (res && res.readable && res.data && !res.data.multiTab) {
-        alert('⚠️ 구글 시트의 Apps Script가 아직 예전(1탭) 버전으로 배포되어 있습니다!
-
-구글 시트 → 확장 프로그램 → Apps Script에서:
-1) 최신 3탭 코드를 붙여넣고 저장한 뒤
-2) 오른쪽 위 [배포 → 배포 관리 → ✏️(수정) → 버전: 새 버전 → 배포]를 꼭 눌러주세요.
-(저장만 해서는 새 버전이 반영되지 않습니다.)');
+        alert('⚠️ 구글 시트의 Apps Script가 아직 예전(1탭) 버전으로 배포되어 있습니다!\n\n구글 시트 → 확장 프로그램 → Apps Script에서:\n1) 최신 3탭 코드를 붙여넣고 저장한 뒤\n2) 오른쪽 위 [배포 → 배포 관리 → ✏️(수정) → 버전: 새 버전 → 배포]를 꼭 눌러주세요.\n(저장만 해서는 새 버전이 반영되지 않습니다.)');
         return true;
       }
       return false;
@@ -11417,9 +11475,17 @@ ${m.body}`;
           <h2 class="newcomer-auto-title">${escapeHtml(nTitle)}</h2>
           <p class="newcomer-auto-desc">${escapeHtml(nDesc)}</p>
         </div>
-        <button class="btn-full btn-dark" type="button" style="padding:11px; font-size:13.5px;" onclick="showInAppNotif('🎂', '${escapeHtml(bTitle)}', '${escapeHtml(bDesc.replace(/\s*\n\s*/g, ' '))}', () => {}); showToast('상단 팝업 알림 미리보기를 띄웠습니다!');">🔔 생일 축하 팝업 알림 띄워보기</button>
+        <button class="btn-full btn-dark" type="button" style="padding:11px; font-size:13.5px;" onclick="previewDiagCelebrationNotif()">🔔 생일 축하 팝업 알림 띄워보기</button>
       `;
       document.getElementById('diagSimModal').classList.add('open');
+    };
+
+    window.previewDiagCelebrationNotif = () => {
+      const sample = '홍길동';
+      const bTitle = renderCelebrationText(getCelebrationMsg('birthdayTitle'), sample);
+      const bDesc = renderCelebrationText(getCelebrationMsg('birthdayDesc'), sample).replace(/\s*\n\s*/g, ' ');
+      showInAppNotif('🎂', bTitle, bDesc, () => {});
+      showToast('상단 팝업 알림 미리보기를 띄웠습니다!');
     };
 
     window.runSheetLiveWriteTest = async () => {
