@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=150" />
+  <link rel="manifest" href="./manifest.json?v=151" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=150" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=150" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=151" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=151" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2846,6 +2846,115 @@
       .tab-btn { font-size: 8.4px; letter-spacing: -0.65px; }
       .tab-icon { font-size: 15.5px; height: 18px; }
     }
+
+    /* ==================== v10.51 관리 센터 긴 목록 아코디언(열고 닫기) 스타일 ==================== */
+    .acc-section-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: #FFFFFF;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 11px 13px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+      transition: border-color 0.16s ease, background 0.16s ease;
+    }
+    .acc-section-bar:active {
+      background: #F8FAFC;
+    }
+    .acc-section-bar.open {
+      border-color: #CBD5E1;
+      background: #F8FAFC;
+      margin-bottom: 9px;
+    }
+    .acc-section-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+    .acc-section-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1.35;
+      margin: 0;
+      letter-spacing: -0.25px;
+    }
+    .acc-section-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .acc-toggle-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #1E3A8A;
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 999px;
+      padding: 4px 9px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .acc-section-bar.open .acc-toggle-pill {
+      background: #111827;
+      border-color: #111827;
+      color: #FDE68A;
+    }
+    .acc-sub-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 9px 11px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .acc-sub-bar.open {
+      background: #F1F5F9;
+      border-color: #CBD5E1;
+    }
+    .acc-sub-bar.open .acc-toggle-pill {
+      background: #111827;
+      border-color: #111827;
+      color: #FDE68A;
+    }
+    .acc-fold-footer-btn {
+      width: 100%;
+      border: 1px dashed #CBD5E1;
+      background: #F8FAFC;
+      color: #475569;
+      border-radius: 11px;
+      padding: 9px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      margin-bottom: 6px;
+    }
+    .acc-fold-footer-btn:active {
+      background: #E2E8F0;
+    }
+    @media (max-width: 440px) {
+      .acc-section-bar { padding: 10px 11px; gap: 6px; }
+      .acc-section-title { font-size: 13.8px; }
+      .acc-toggle-pill { font-size: 11px; padding: 3.5px 8px; }
+    }
   </style>
 </head>
 <body>
@@ -2864,7 +2973,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=150" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=151" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4985,7 +5094,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=150" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=151" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5008,8 +5117,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=150', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=150', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=151', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=151', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5203,6 +5312,52 @@
     let adminLogFilterCategory = 'all';
     let selectedRoleMemberTab = 'all';
     let roleMemberSearchQuery = '';
+    let manageSectionOpen = {};
+
+    function isManageSectionOpen(key, defaultOpen = true) {
+      if (Object.prototype.hasOwnProperty.call(manageSectionOpen, key)) {
+        return !!manageSectionOpen[key];
+      }
+      return !!defaultOpen;
+    }
+
+    function buildManageAccordionBar({ key, titleHtml, badgeHtml = '', actionHtml = '', defaultOpen = true, idAttr = '', marginTop = '' }) {
+      const open = isManageSectionOpen(key, defaultOpen);
+      const styleStr = marginTop ? ` style="margin-top:${marginTop};"` : '';
+      const idStr = idAttr ? ` id="${escapeHtml(idAttr)}"` : '';
+      return `
+        <div${idStr} class="acc-section-bar ${open ? 'open' : ''}" data-acc-bar="${escapeHtml(key)}"${styleStr} onclick="toggleManageSection('${escapeJsAttr(key)}', ${defaultOpen ? 'true' : 'false'})">
+          <div class="acc-section-left">
+            <h2 class="acc-section-title">${titleHtml}</h2>
+            ${badgeHtml}
+          </div>
+          <div class="acc-section-right">
+            ${actionHtml ? `<span onclick="event.stopPropagation()">${actionHtml}</span>` : ''}
+            <span class="acc-toggle-pill" data-acc-pill="${escapeHtml(key)}">${open ? '접기 ▲' : '열기 ▼'}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    window.toggleManageSection = (key, defaultOpen = true, forceState = null) => {
+      const next = (forceState === true || forceState === false)
+        ? forceState
+        : !isManageSectionOpen(key, defaultOpen);
+      manageSectionOpen[key] = next;
+
+      const bar = document.querySelector(`[data-acc-bar="${key}"]`);
+      const body = document.querySelector(`[data-acc-body="${key}"]`);
+      const pill = document.querySelector(`[data-acc-pill="${key}"]`);
+      if (bar) bar.classList.toggle('open', next);
+      if (body) body.classList.toggle('hidden', !next);
+      if (pill) pill.textContent = next ? '접기 ▲' : '열기 ▼';
+    };
+
+    window.collapseManageSectionAndScroll = (key, defaultOpen = true) => {
+      toggleManageSection(key, defaultOpen, false);
+      const bar = document.querySelector(`[data-acc-bar="${key}"]`);
+      if (bar) bar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    };
     let knownPendingRenameMap = new Map();
     let knownPendingBdayMap = new Map();
     let pendingAdminStatus = null; // null | 'pending'
@@ -7388,6 +7543,7 @@
       currentAdminName = '';
       pendingAdminStatus = null;
       previewAsMemberMode = false;
+      manageSectionOpen = {};
       fbUser = null;
       myMemberDoc = null;
       members = [];
@@ -8759,10 +8915,15 @@
         ` : ''}
 
         ${canLayout ? `
-          <div class="section-head" style="margin-top:14px;">
-            <h2 class="section-title">${escapeHtml(getTabIcon('manageContent'))} ${escapeHtml(getTabLabel('home'))} 배너·칸 배치</h2>
-            <button class="btn-admin" onclick="openAddBlockModal()">+ 새 배너·칸</button>
-          </div>
+          ${buildManageAccordionBar({
+            key: 'content_blocks',
+            titleHtml: `${escapeHtml(getTabIcon('manageContent'))} ${escapeHtml(getTabLabel('home'))} 배너·칸 배치`,
+            badgeHtml: `<span class="tag slate">${blocks.length}개</span>`,
+            actionHtml: `<button class="btn-admin" type="button" style="padding:6px 10px; font-size:11.5px;" onclick="openAddBlockModal()">+ 배너·칸</button>`,
+            defaultOpen: true,
+            marginTop: '12px'
+          })}
+          <div data-acc-body="content_blocks" class="${isManageSectionOpen('content_blocks', true) ? '' : 'hidden'}">
           ${blocks.length === 0
             ? `<div class="card" style="text-align:center;color:#64748B;font-size:13px;">
                  <div>배치된 영역이 없습니다.</div>
@@ -8801,15 +8962,20 @@
                   </div>
                 `;
               }).join('')}
+          </div>
         ` : ''}
 
         ${canLayout && canNotices ? '<div class="manage-divider"></div>' : ''}
 
         ${canNotices ? `
-          <div class="section-head">
-            <h2 class="section-title">📝 공지·광고 목록 및 순서</h2>
-            <button class="btn-admin" onclick="openNewNoticeModal()">+ 새 공지·광고</button>
-          </div>
+          ${buildManageAccordionBar({
+            key: 'content_notices',
+            titleHtml: '📝 공지·광고 목록 및 순서',
+            badgeHtml: `<span class="tag slate">${notices.length}개</span>`,
+            actionHtml: `<button class="btn-admin" type="button" style="padding:6px 10px; font-size:11.5px;" onclick="openNewNoticeModal()">+ 공지·광고</button>`,
+            defaultOpen: notices.length <= 5
+          })}
+          <div data-acc-body="content_notices" class="${isManageSectionOpen('content_notices', notices.length <= 5) ? '' : 'hidden'}">
           ${notices.length === 0
             ? '<div class="card" style="text-align:center;color:#64748B;">등록된 공지가 없습니다.</div>'
             : notices.map((n, idx) => {
@@ -8842,6 +9008,8 @@
                   </div>
                 `;
               }).join('')}
+          ${notices.length >= 4 ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('content_notices', ${notices.length <= 5 ? 'true' : 'false'})">▲ 공지·광고 목록 접기</button>` : ''}
+          </div>
         ` : ''}
       `;
     }
@@ -8938,6 +9106,14 @@
           </div>
         </div>
 
+        ${buildManageAccordionBar({
+          key: 'qt_custom_list',
+          titleHtml: '✍️ 관리자 작성 글 목록',
+          badgeHtml: `<span class="tag slate">${qtPosts.length}개</span>`,
+          defaultOpen: qtPosts.length <= 5,
+          marginTop: '12px'
+        })}
+        <div data-acc-body="qt_custom_list" class="${isManageSectionOpen('qt_custom_list', qtPosts.length <= 5) ? '' : 'hidden'}">
         ${qtPosts.length === 0
           ? `<div class="card" style="text-align:center;color:#64748B;font-size:13px;">관리자가 추가한 말씀이 없습니다.<br>(매일 자동 말씀 1편은 하단 ${escapeHtml(getTabLabel('qt'))} 칸에 올라갑니다.)</div>`
           : qtPosts.slice(0, 30).map(q => {
@@ -8963,6 +9139,8 @@
                 </div>
               `;
             }).join('')}
+        ${qtPosts.length >= 4 ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('qt_custom_list', ${qtPosts.length <= 5 ? 'true' : 'false'})">▲ 관리자 작성 글 목록 접기</button>` : ''}
+        </div>
       `;
     }
 
@@ -9697,222 +9875,255 @@
       const activeAdmins = (adminRegistry.items || []).filter(a => a.status === 'active');
       const removedAdmins = (adminRegistry.items || []).filter(a => a.status === 'removed');
 
+      const adminsDefaultOpen = pendingAdmins.length > 0;
+      const adminsOpen = isManageSectionOpen('members_admins', adminsDefaultOpen);
+      const pendingDefaultOpen = pending.length > 0;
+      const pendingOpen = isManageSectionOpen('members_pending', pendingDefaultOpen);
+      const renameOpen = isManageSectionOpen('members_rename', true);
+      const bdayOpen = isManageSectionOpen('members_bday', true);
+      const resetOpen = isManageSectionOpen('members_reset', true);
+      const rejectedOpen = isManageSectionOpen('members_rejected', false);
+
       el.innerHTML = `
-        <div class="section-head">
-          <h2 class="section-title">🔐 관리자 명단 · 재입장 승인</h2>
-          <span class="tag warm">활성 ${activeAdmins.length}명</span>
-        </div>
-        <div class="card" style="background:#F8FAFC; margin-bottom:10px;">
-          <div class="setting-row" style="padding:2px 0;">
-            <div>
-              <div class="setting-title" style="font-size:13.5px;">🔒 신규 관리자 자동 등록 잠금</div>
-              <div class="setting-sub" style="font-size:11.5px;">켜면 등록된 관리자 외에는 코드를 알아도 기존 관리자의 승인이 필요합니다.</div>
+        ${buildManageAccordionBar({
+          key: 'members_admins',
+          titleHtml: '🔐 관리자 명단 · 재입장 승인',
+          badgeHtml: `<span class="tag warm">활성 ${activeAdmins.length}명</span>${pendingAdmins.length > 0 ? `<span class="tag red">대기 ${pendingAdmins.length}</span>` : ''}`,
+          defaultOpen: adminsDefaultOpen
+        })}
+        <div data-acc-body="members_admins" class="${adminsOpen ? '' : 'hidden'}">
+          <div class="card" style="background:#F8FAFC; margin-bottom:10px;">
+            <div class="setting-row" style="padding:2px 0;">
+              <div>
+                <div class="setting-title" style="font-size:13.5px;">🔒 신규 관리자 자동 등록 잠금</div>
+                <div class="setting-sub" style="font-size:11.5px;">켜면 등록된 관리자 외에는 코드를 알아도 기존 관리자의 승인이 필요합니다.</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" ${adminRegistry.lockAutoRegister ? 'checked' : ''} onchange="toggleAdminAutoRegisterLock(this.checked)" />
+                <span class="slider"></span>
+              </label>
             </div>
-            <label class="switch">
-              <input type="checkbox" ${adminRegistry.lockAutoRegister ? 'checked' : ''} onchange="toggleAdminAutoRegisterLock(this.checked)" />
-              <span class="slider"></span>
-            </label>
+          </div>
+
+          ${pendingAdmins.length > 0 ? `
+            ${pendingAdmins.map(a => `
+              <div class="card highlight-pending">
+                <div class="card-top">
+                  <div class="member-name">
+                    <span>${escapeHtml(a.name)}</span>
+                    <span class="tag ${a.isReentry ? 'red' : 'warm'}">${a.isReentry ? '🔄 삭제된 관리자 재입장 요청' : '🆕 신규 관리자 요청'}</span>
+                  </div>
+                  <span class="card-date">${escapeHtml(a.requestedAt || a.registeredAt || '')}</span>
+                </div>
+                <div style="font-size:12px; color:#92400E; margin-bottom:9px;">
+                  ${a.isReentry
+                    ? '이전에 관리자 목록에서 삭제되었던 분이 다시 입장을 요청했습니다. 승인 시 구글 시트에 재입장 기록이 남습니다.'
+                    : '신규 관리자 등록 잠금 상태에서 입장을 요청했습니다.'}
+                </div>
+                <div style="display:flex; gap:6px;">
+                  <button class="btn-sm approve" style="flex:1; padding:8px;" onclick="approveAdminEntry('${escapeJsAttr(a.id)}')">✅ 관리자 입장 승인</button>
+                  <button class="btn-sm danger" style="padding:8px 12px;" onclick="rejectAdminEntry('${escapeJsAttr(a.id)}')">거절</button>
+                </div>
+              </div>
+            `).join('')}
+          ` : ''}
+
+          <div class="card" style="margin-bottom:14px;">
+            ${activeAdmins.length === 0
+              ? '<div style="text-align:center;color:#64748B;font-size:12.5px;padding:6px 0;">등록된 관리자가 없습니다.</div>'
+              : activeAdmins.map(a => {
+                  const isMe = String(a.name || '').trim() === currentAdminName;
+                  return `
+                    <div class="member-row">
+                      <div>
+                        <div class="member-name">
+                          <span>${escapeHtml(a.name)}</span>
+                          <span class="role-pill" style="background:#D97706;">관리자</span>
+                          ${isMe ? '<span class="tag green" style="font-size:10px; padding:2px 6px;">나</span>' : ''}
+                          ${a.reentryCount ? `<span class="tag slate" style="font-size:10px; padding:2px 6px;">재입장 ${a.reentryCount}회</span>` : ''}
+                          ${a.renameCount ? `<span class="tag" style="font-size:10px; padding:2px 6px;">변경 ${a.renameCount}회</span>` : ''}
+                        </div>
+                        <div class="member-meta">등록 ${escapeHtml(a.registeredAt || '-')} · 최근접속 ${escapeHtml(a.lastLoginAt || '-')}${a.prevName ? ` · 이전 이름: ${escapeHtml(a.prevName)}` : ''}</div>
+                      </div>
+                      <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+                        <button class="btn-sm" type="button" onclick="openAdminRenameModal('${escapeJsAttr(a.id)}')">✏️ 이름 변경</button>
+                        ${(!isMe && activeAdmins.length > 1)
+                          ? `<button class="btn-sm danger" onclick="removeAdminEntry('${escapeJsAttr(a.id)}')">관리자 해제</button>`
+                          : (!isMe ? '<span style="font-size:11px; color:#94A3B8; font-weight:700;">최소 1인 유지</span>' : '')}
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+            ${removedAdmins.length > 0 ? `
+              <div style="margin-top:10px; padding-top:10px; border-top:1px dashed #E2E8F0; font-size:11.5px; color:#64748B;">
+                <b>해제된 관리자 (${removedAdmins.length}명):</b> ${removedAdmins.map(a => escapeHtml(a.name)).join(', ')}
+                <div style="margin-top:2px; font-size:11px;">해제된 관리자가 같은 성명으로 다시 로그인하면 위 승인 대기 칸에 표시됩니다.</div>
+              </div>
+            ` : ''}
           </div>
         </div>
 
-        ${pendingAdmins.length > 0 ? `
-          ${pendingAdmins.map(a => `
-            <div class="card highlight-pending">
-              <div class="card-top">
-                <div class="member-name">
-                  <span>${escapeHtml(a.name)}</span>
-                  <span class="tag ${a.isReentry ? 'red' : 'warm'}">${a.isReentry ? '🔄 삭제된 관리자 재입장 요청' : '🆕 신규 관리자 요청'}</span>
-                </div>
-                <span class="card-date">${escapeHtml(a.requestedAt || a.registeredAt || '')}</span>
-              </div>
-              <div style="font-size:12px; color:#92400E; margin-bottom:9px;">
-                ${a.isReentry
-                  ? '이전에 관리자 목록에서 삭제되었던 분이 다시 입장을 요청했습니다. 승인 시 구글 시트에 재입장 기록이 남습니다.'
-                  : '신규 관리자 등록 잠금 상태에서 입장을 요청했습니다.'}
-              </div>
-              <div style="display:flex; gap:6px;">
-                <button class="btn-sm approve" style="flex:1; padding:8px;" onclick="approveAdminEntry('${escapeJsAttr(a.id)}')">✅ 관리자 입장 승인</button>
-                <button class="btn-sm danger" style="padding:8px 12px;" onclick="rejectAdminEntry('${escapeJsAttr(a.id)}')">거절</button>
-              </div>
-            </div>
-          `).join('')}
-        ` : ''}
-
-        <div class="card" style="margin-bottom:16px;">
-          ${activeAdmins.length === 0
-            ? '<div style="text-align:center;color:#64748B;font-size:12.5px;padding:6px 0;">등록된 관리자가 없습니다.</div>'
-            : activeAdmins.map(a => {
-                const isMe = String(a.name || '').trim() === currentAdminName;
+        ${buildManageAccordionBar({
+          key: 'members_pending',
+          titleHtml: '⏳ 가입 승인 대기',
+          badgeHtml: `<span class="tag ${pending.length > 0 ? 'warm' : 'slate'}">${pending.length}명</span>`,
+          defaultOpen: pendingDefaultOpen,
+          marginTop: '12px'
+        })}
+        <div data-acc-body="members_pending" class="${pendingOpen ? '' : 'hidden'}">
+          ${pending.length === 0
+            ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">현재 승인 대기 중인 신청자가 없습니다.</div>'
+            : pending.map(m => {
+                const reqRoleById = m.requestedRoleId ? roles.find(r => String(r.id) === String(m.requestedRoleId)) : null;
+                const reqRoleName = String(reqRoleById ? reqRoleById.name : (m.requestedRole || '')).trim();
+                const matchedRole = reqRoleById || (reqRoleName ? roles.find(r => r.name.trim() === reqRoleName) : null);
+                const defaultApproveVal = matchedRole ? matchedRole.id : (m.roleId || (roles[0] ? roles[0].id : 'role_youth'));
                 return `
-                  <div class="member-row">
-                    <div>
-                      <div class="member-name">
-                        <span>${escapeHtml(a.name)}</span>
-                        <span class="role-pill" style="background:#D97706;">관리자</span>
-                        ${isMe ? '<span class="tag green" style="font-size:10px; padding:2px 6px;">나</span>' : ''}
-                        ${a.reentryCount ? `<span class="tag slate" style="font-size:10px; padding:2px 6px;">재입장 ${a.reentryCount}회</span>` : ''}
-                        ${a.renameCount ? `<span class="tag" style="font-size:10px; padding:2px 6px;">변경 ${a.renameCount}회</span>` : ''}
+                  <div class="card highlight-pending">
+                    <div class="card-top">
+                      <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                        <strong style="font-size:15px;">${escapeHtml(m.name)}</strong>
+                        ${memberHistoryMap.has(nameToHex(m.name)) ? '<span class="tag warm">🔄 재가입 신청</span>' : ''}
                       </div>
-                      <div class="member-meta">등록 ${escapeHtml(a.registeredAt || '-')} · 최근접속 ${escapeHtml(a.lastLoginAt || '-')}${a.prevName ? ` · 이전 이름: ${escapeHtml(a.prevName)}` : ''}</div>
+                      <span class="card-date">${escapeHtml(m.createdAt)} 신청</span>
                     </div>
-                    <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                      <button class="btn-sm" type="button" onclick="openAdminRenameModal('${escapeJsAttr(a.id)}')">✏️ 이름 변경</button>
-                      ${(!isMe && activeAdmins.length > 1)
-                        ? `<button class="btn-sm danger" onclick="removeAdminEntry('${escapeJsAttr(a.id)}')">관리자 해제</button>`
-                        : (!isMe ? '<span style="font-size:11px; color:#94A3B8; font-weight:700;">최소 1인 유지</span>' : '')}
+                    <div style="font-size:12.5px; color:#475569; margin-top:4px; line-height:1.55;">
+                      <div>🎂 <b>생일:</b> ${escapeHtml(formatBirthdayDisplay(m.birthday))}</div>
+                      ${reqRoleName ? `<div>🏷️ <b>신청 역할:</b> <span class="tag" style="margin-left:2px;">${escapeHtml(reqRoleName)}</span></div>` : ''}
+                    </div>
+                    <div style="display:flex; align-items:center; gap:6px; margin-top:9px; flex-wrap:wrap;">
+                      <span style="font-size:12px; font-weight:700; color:#475569;">부여 역할:</span>
+                      <select id="approveRole-${m.id}" class="role-select" style="flex:1; min-width:110px;">
+                        ${roleOptionsHtml(defaultApproveVal)}
+                      </select>
+                      <input id="approveRoleCustom-${m.id}" class="form-input" style="flex:1; min-width:110px; padding:5px 8px; font-size:12px;" maxlength="16" placeholder="또는 새 역할 직접 입력" />
+                    </div>
+                    <div style="display:flex; gap:6px; margin-top:10px;">
+                      <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberWithRole('${escapeJsAttr(m.id)}')">✅ 역할 부여 및 승인</button>
+                      <button class="btn-sm" style="padding:9px 11px;" onclick="rejectMember('${escapeJsAttr(m.id)}')">보류</button>
+                      <button class="btn-sm danger" style="padding:9px 11px;" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>
                     </div>
                   </div>
                 `;
               }).join('')}
-          ${removedAdmins.length > 0 ? `
-            <div style="margin-top:10px; padding-top:10px; border-top:1px dashed #E2E8F0; font-size:11.5px; color:#64748B;">
-              <b>해제된 관리자 (${removedAdmins.length}명):</b> ${removedAdmins.map(a => escapeHtml(a.name)).join(', ')}
-              <div style="margin-top:2px; font-size:11px;">해제된 관리자가 같은 성명으로 다시 로그인하면 위 승인 대기 칸에 표시됩니다.</div>
-            </div>
-          ` : ''}
         </div>
 
-        <div class="section-head">
-          <h2 class="section-title">⏳ 가입 승인 대기</h2>
-          <span class="tag warm">${pending.length}명</span>
-        </div>
-        ${pending.length === 0
-          ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">현재 승인 대기 중인 신청자가 없습니다.</div>'
-          : pending.map(m => {
-              const reqRoleById = m.requestedRoleId ? roles.find(r => String(r.id) === String(m.requestedRoleId)) : null;
-              const reqRoleName = String(reqRoleById ? reqRoleById.name : (m.requestedRole || '')).trim();
-              const matchedRole = reqRoleById || (reqRoleName ? roles.find(r => r.name.trim() === reqRoleName) : null);
-              const defaultApproveVal = matchedRole ? matchedRole.id : (m.roleId || (roles[0] ? roles[0].id : 'role_youth'));
+        ${renamePending.length > 0 ? `
+          ${buildManageAccordionBar({
+            key: 'members_rename',
+            titleHtml: '✏️ 회원 이름 변경 승인 대기',
+            badgeHtml: `<span class="tag warm">${renamePending.length}건</span>`,
+            defaultOpen: true,
+            marginTop: '14px'
+          })}
+          <div data-acc-body="members_rename" class="${renameOpen ? '' : 'hidden'}">
+            ${renamePending.map(m => {
+              const r = getRoleById(m.roleId);
+              const reqNew = String(m.pendingName || '').trim();
+              const isDup = members.some(other => String(other.id) !== String(m.id) && String(other.name || '').trim() === reqNew);
               return `
                 <div class="card highlight-pending">
                   <div class="card-top">
-                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                      <strong style="font-size:15px;">${escapeHtml(m.name)}</strong>
-                      ${memberHistoryMap.has(nameToHex(m.name)) ? '<span class="tag warm">🔄 재가입 신청</span>' : ''}
+                    <div class="member-name">
+                      <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
+                      <span class="tag warm">✏️ 이름 변경 신청</span>
                     </div>
-                    <span class="card-date">${escapeHtml(m.createdAt)} 신청</span>
+                    <span class="card-date">${escapeHtml(m.pendingNameAt || '')}</span>
                   </div>
-                  <div style="font-size:12.5px; color:#475569; margin-top:4px; line-height:1.55;">
-                    <div>🎂 <b>생일:</b> ${escapeHtml(formatBirthdayDisplay(m.birthday))}</div>
-                    ${reqRoleName ? `<div>🏷️ <b>신청 역할:</b> <span class="tag" style="margin-left:2px;">${escapeHtml(reqRoleName)}</span></div>` : ''}
+                  <div class="log-rename-diff" style="background:#FFF;">
+                    <span class="log-name-old">${escapeHtml(m.name)}</span>
+                    <span class="log-name-arrow">→</span>
+                    <span class="log-name-new">${escapeHtml(reqNew)}</span>
                   </div>
-                  <div style="display:flex; align-items:center; gap:6px; margin-top:9px; flex-wrap:wrap;">
-                    <span style="font-size:12px; font-weight:700; color:#475569;">부여 역할:</span>
-                    <select id="approveRole-${m.id}" class="role-select" style="flex:1; min-width:110px;">
-                      ${roleOptionsHtml(defaultApproveVal)}
-                    </select>
-                    <input id="approveRoleCustom-${m.id}" class="form-input" style="flex:1; min-width:110px; padding:5px 8px; font-size:12px;" maxlength="16" placeholder="또는 새 역할 직접 입력" />
-                  </div>
-                  <div style="display:flex; gap:6px; margin-top:10px;">
-                    <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberWithRole('${escapeJsAttr(m.id)}')">✅ 역할 부여 및 승인</button>
-                    <button class="btn-sm" style="padding:9px 11px;" onclick="rejectMember('${escapeJsAttr(m.id)}')">보류</button>
-                    <button class="btn-sm danger" style="padding:9px 11px;" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>
+                  ${isDup ? `<div style="font-size:12px; color:#DC2626; font-weight:700; margin-bottom:8px;">⚠️ 이미 다른 회원이 사용 중인 이름입니다. 거절 후 다른 이름으로 재신청하도록 안내해 주세요.</div>` : ''}
+                  <div style="display:flex; gap:6px; margin-top:8px;">
+                    <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberNameChange('${escapeJsAttr(m.id)}')" ${isDup ? 'disabled' : ''}>✅ 이름 변경 승인</button>
+                    <button class="btn-sm danger" style="padding:9px 12px;" onclick="rejectMemberNameChange('${escapeJsAttr(m.id)}')">❌ 거절 (기존 이름 유지)</button>
                   </div>
                 </div>
               `;
             }).join('')}
-
-        ${renamePending.length > 0 ? `
-          <div class="section-head" style="margin-top:20px;">
-            <h2 class="section-title">✏️ 회원 이름 변경 승인 대기</h2>
-            <span class="tag warm">${renamePending.length}건</span>
           </div>
-          ${renamePending.map(m => {
-            const r = getRoleById(m.roleId);
-            const reqNew = String(m.pendingName || '').trim();
-            const isDup = members.some(other => String(other.id) !== String(m.id) && String(other.name || '').trim() === reqNew);
-            return `
-              <div class="card highlight-pending">
-                <div class="card-top">
-                  <div class="member-name">
-                    <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
-                    <span class="tag warm">✏️ 이름 변경 신청</span>
-                  </div>
-                  <span class="card-date">${escapeHtml(m.pendingNameAt || '')}</span>
-                </div>
-                <div class="log-rename-diff" style="background:#FFF;">
-                  <span class="log-name-old">${escapeHtml(m.name)}</span>
-                  <span class="log-name-arrow">→</span>
-                  <span class="log-name-new">${escapeHtml(reqNew)}</span>
-                </div>
-                ${isDup ? `<div style="font-size:12px; color:#DC2626; font-weight:700; margin-bottom:8px;">⚠️ 이미 다른 회원이 사용 중인 이름입니다. 거절 후 다른 이름으로 재신청하도록 안내해 주세요.</div>` : ''}
-                <div style="display:flex; gap:6px; margin-top:8px;">
-                  <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberNameChange('${escapeJsAttr(m.id)}')" ${isDup ? 'disabled' : ''}>✅ 이름 변경 승인</button>
-                  <button class="btn-sm danger" style="padding:9px 12px;" onclick="rejectMemberNameChange('${escapeJsAttr(m.id)}')">❌ 거절 (기존 이름 유지)</button>
-                </div>
-              </div>
-            `;
-          }).join('')}
         ` : ''}
 
         ${bdayPending.length > 0 ? `
-          <div class="section-head" style="margin-top:20px;">
-            <h2 class="section-title">🎂 회원 생일 변경 승인 대기</h2>
-            <span class="tag warm">${bdayPending.length}건</span>
-          </div>
-          ${bdayPending.map(m => {
-            const r = getRoleById(m.roleId);
-            return `
-              <div class="card highlight-pending">
-                <div class="card-top">
-                  <div class="member-name">
-                    <span>${escapeHtml(m.name)}</span>
-                    <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
-                    <span class="tag warm">🎂 생일 변경 신청</span>
+          ${buildManageAccordionBar({
+            key: 'members_bday',
+            titleHtml: '🎂 회원 생일 변경 승인 대기',
+            badgeHtml: `<span class="tag warm">${bdayPending.length}건</span>`,
+            defaultOpen: true,
+            marginTop: '14px'
+          })}
+          <div data-acc-body="members_bday" class="${bdayOpen ? '' : 'hidden'}">
+            ${bdayPending.map(m => {
+              const r = getRoleById(m.roleId);
+              return `
+                <div class="card highlight-pending">
+                  <div class="card-top">
+                    <div class="member-name">
+                      <span>${escapeHtml(m.name)}</span>
+                      <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
+                      <span class="tag warm">🎂 생일 변경 신청</span>
+                    </div>
+                    <span class="card-date">${escapeHtml(m.pendingBirthdayAt || '')}</span>
                   </div>
-                  <span class="card-date">${escapeHtml(m.pendingBirthdayAt || '')}</span>
+                  <div class="log-rename-diff" style="background:#FFF;">
+                    <span class="log-name-old">${escapeHtml(formatBirthdayDisplay(m.birthday))}</span>
+                    <span class="log-name-arrow">→</span>
+                    <span class="log-name-new">${escapeHtml(formatBirthdayDisplay(m.pendingBirthday))}</span>
+                  </div>
+                  <div style="display:flex; gap:6px; margin-top:8px;">
+                    <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberBirthdayChange('${escapeJsAttr(m.id)}')">✅ 생일 변경 승인</button>
+                    <button class="btn-sm danger" style="padding:9px 12px;" onclick="rejectMemberBirthdayChange('${escapeJsAttr(m.id)}')">❌ 거절 (기존 생일 유지)</button>
+                  </div>
                 </div>
-                <div class="log-rename-diff" style="background:#FFF;">
-                  <span class="log-name-old">${escapeHtml(formatBirthdayDisplay(m.birthday))}</span>
-                  <span class="log-name-arrow">→</span>
-                  <span class="log-name-new">${escapeHtml(formatBirthdayDisplay(m.pendingBirthday))}</span>
-                </div>
-                <div style="display:flex; gap:6px; margin-top:8px;">
-                  <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberBirthdayChange('${escapeJsAttr(m.id)}')">✅ 생일 변경 승인</button>
-                  <button class="btn-sm danger" style="padding:9px 12px;" onclick="rejectMemberBirthdayChange('${escapeJsAttr(m.id)}')">❌ 거절 (기존 생일 유지)</button>
-                </div>
-              </div>
-            `;
-          }).join('')}
+              `;
+            }).join('')}
+          </div>
         ` : ''}
 
         ${resetPending.length > 0 ? `
-          <div class="section-head" style="margin-top:20px;">
-            <h2 class="section-title">🔑 비밀번호 초기화 대기</h2>
-            <span class="tag warm">${resetPending.length}명</span>
-          </div>
-          ${resetPending.map(m => {
-            const r = getRoleById(m.roleId);
-            const expTs = Number(m.resetExpiresAt || 0);
-            const isExpired = expTs > 0 && Date.now() >= expTs;
-            const remainHours = expTs > 0 ? Math.max(1, Math.ceil((expTs - Date.now()) / 3600000)) : null;
-            return `
-              <div class="card highlight-pending">
-                <div class="card-top">
-                  <div class="member-name">
-                    <span>${escapeHtml(m.name)}</span>
-                    <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
+          ${buildManageAccordionBar({
+            key: 'members_reset',
+            titleHtml: '🔑 비밀번호 초기화 대기',
+            badgeHtml: `<span class="tag warm">${resetPending.length}명</span>`,
+            defaultOpen: true,
+            marginTop: '14px'
+          })}
+          <div data-acc-body="members_reset" class="${resetOpen ? '' : 'hidden'}">
+            ${resetPending.map(m => {
+              const r = getRoleById(m.roleId);
+              const expTs = Number(m.resetExpiresAt || 0);
+              const isExpired = expTs > 0 && Date.now() >= expTs;
+              const remainHours = expTs > 0 ? Math.max(1, Math.ceil((expTs - Date.now()) / 3600000)) : null;
+              return `
+                <div class="card highlight-pending">
+                  <div class="card-top">
+                    <div class="member-name">
+                      <span>${escapeHtml(m.name)}</span>
+                      <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
+                    </div>
+                    <span class="tag ${isExpired ? 'red' : 'warm'}">${isExpired ? '만료됨' : `코드: ${escapeHtml(m.resetCode || '-')}`}</span>
                   </div>
-                  <span class="tag ${isExpired ? 'red' : 'warm'}">${isExpired ? '만료됨' : `코드: ${escapeHtml(m.resetCode || '-')}`}</span>
+                  <div style="font-size:12px; color:${isExpired ? '#DC2626' : '#92400E'}; margin-bottom:10px;">
+                    ${isExpired
+                      ? '초기화 코드 유효기간(24시간)이 만료되었습니다. [재발급]을 눌러 새 코드를 발급해 주세요.'
+                      : `이용자가 새 비밀번호를 설정할 때까지 대기 중입니다.${remainHours ? ` (약 ${remainHours}시간 남음)` : ''}`}
+                  </div>
+                  <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                    ${isExpired
+                      ? `<button class="btn-sm primary" onclick="initMemberPasswordReset('${escapeJsAttr(m.id)}')">🔄 코드 재발급</button>`
+                      : `<button class="btn-sm primary" onclick="showIssuedResetModal('${escapeJsAttr(m.id)}')">📋 안내 복사</button>`}
+                    <button class="btn-sm" onclick="cancelMemberPasswordReset('${escapeJsAttr(m.id)}')">초기화 취소</button>
+                    <button class="btn-sm danger" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>
+                  </div>
                 </div>
-                <div style="font-size:12px; color:${isExpired ? '#DC2626' : '#92400E'}; margin-bottom:10px;">
-                  ${isExpired
-                    ? '초기화 코드 유효기간(24시간)이 만료되었습니다. [재발급]을 눌러 새 코드를 발급해 주세요.'
-                    : `이용자가 새 비밀번호를 설정할 때까지 대기 중입니다.${remainHours ? ` (약 ${remainHours}시간 남음)` : ''}`}
-                </div>
-                <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                  ${isExpired
-                    ? `<button class="btn-sm primary" onclick="initMemberPasswordReset('${escapeJsAttr(m.id)}')">🔄 코드 재발급</button>`
-                    : `<button class="btn-sm primary" onclick="showIssuedResetModal('${escapeJsAttr(m.id)}')">📋 안내 복사</button>`}
-                  <button class="btn-sm" onclick="cancelMemberPasswordReset('${escapeJsAttr(m.id)}')">초기화 취소</button>
-                  <button class="btn-sm danger" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>
-                </div>
-              </div>
-            `;
-          }).join('')}
+              `;
+            }).join('')}
+          </div>
         ` : ''}
 
-        <div class="card" style="background:#F8FAFC; margin-top:16px;">
+        <div class="card" style="background:#F8FAFC; margin-top:14px;">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
             <div style="min-width:0; flex:1;">
               <div style="font-size:13px; font-weight:800; color:#0F172A;">🏷️ 승인된 회원 명단 (${approved.length}명) · 역할 변경</div>
@@ -9923,23 +10134,28 @@
         </div>
 
         ${rejected.length > 0 ? `
-          <div class="section-head" style="margin-top:20px;">
-            <h2 class="section-title">🚫 보류된 신청</h2>
-            <span class="tag red">${rejected.length}명</span>
-          </div>
-          <div class="card">
-            ${rejected.map(m => `
-              <div class="member-row">
-                <div>
-                  <div class="member-name">${escapeHtml(m.name)}</div>
-                  <div class="member-meta">${escapeHtml(m.createdAt)} 신청</div>
+          ${buildManageAccordionBar({
+            key: 'members_rejected',
+            titleHtml: '🚫 보류된 신청',
+            badgeHtml: `<span class="tag red">${rejected.length}명</span>`,
+            defaultOpen: false,
+            marginTop: '14px'
+          })}
+          <div data-acc-body="members_rejected" class="${rejectedOpen ? '' : 'hidden'}">
+            <div class="card">
+              ${rejected.map(m => `
+                <div class="member-row">
+                  <div>
+                    <div class="member-name">${escapeHtml(m.name)}</div>
+                    <div class="member-meta">${escapeHtml(m.createdAt)} 신청</div>
+                  </div>
+                  <div style="display:flex; gap:6px;">
+                    <button class="btn-sm approve" onclick="approveMemberWithRole('${escapeJsAttr(m.id)}')">승인</button>
+                    <button class="btn-sm danger" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>
+                  </div>
                 </div>
-                <div style="display:flex; gap:6px;">
-                  <button class="btn-sm approve" onclick="approveMemberWithRole('${escapeJsAttr(m.id)}')">승인</button>
-                  <button class="btn-sm danger" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>
-                </div>
-              </div>
-            `).join('')}
+              `).join('')}
+            </div>
           </div>
         ` : ''}
       `;
@@ -10418,11 +10634,16 @@
             </div>
           </div>
         `;
-      }).join('');
+      }).join('') + (filtered.length >= 4
+        ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('roles_members', false)">▲ 회원 명단 접기</button>`
+        : '');
     }
 
     window.selectRoleMemberTab = (roleId, shouldScroll = false) => {
       selectedRoleMemberTab = roleId || 'all';
+      if (shouldScroll) {
+        toggleManageSection('roles_members', false, true);
+      }
       const bar = document.getElementById('roleMemberTabBar');
       if (bar) {
         bar.querySelectorAll('.role-member-tab').forEach(btn => {
@@ -10456,81 +10677,94 @@
 
       const countByRoleId = (rid) => approved.filter(m => String(getRoleById(m.roleId).id) === String(rid)).length;
 
+      const rolesMembersOpen = isManageSectionOpen('roles_members', false);
+      const rolesListOpen = isManageSectionOpen('roles_list', true);
+
       el.innerHTML = `
-        <div id="roleMembersSectionHead" class="section-head">
-          <h2 class="section-title">👥 승인된 회원 명단 · 역할 변경</h2>
-          <span class="tag green">총 ${approved.length}명</span>
-        </div>
-        <div class="info-box" style="margin-top:0; margin-bottom:10px;">
-          아래 역할 탭(예: 목사, 부장, 교사 등)을 누르면 해당 역할에 속한 회원 명단을 바로 확인할 수 있으며, 이곳에서 역할 변경·생일 수정·비밀번호 초기화·삭제를 처리할 수 있습니다.
-        </div>
+        ${buildManageAccordionBar({
+          key: 'roles_members',
+          idAttr: 'roleMembersSectionHead',
+          titleHtml: '👥 승인된 회원 명단 · 역할 변경',
+          badgeHtml: `<span class="tag green">총 ${approved.length}명</span>`,
+          defaultOpen: false
+        })}
+        <div data-acc-body="roles_members" class="${rolesMembersOpen ? '' : 'hidden'}">
+          <div class="info-box" style="margin-top:0; margin-bottom:10px;">
+            아래 역할 탭(예: 목사, 부장, 교사 등)을 누르면 해당 역할에 속한 회원 명단을 바로 확인할 수 있으며, 이곳에서 역할 변경·생일 수정·비밀번호 초기화·삭제를 처리할 수 있습니다.
+          </div>
 
-        <div id="roleMemberTabBar" class="role-member-tabs">
-          <button class="role-member-tab ${selectedRoleMemberTab === 'all' ? 'active' : ''}" data-role-tab="all" type="button" onclick="selectRoleMemberTab('all')">
-            <span>전체</span>
-            <span class="role-tab-cnt">${approved.length}</span>
-          </button>
-          ${roles.map(r => {
-            const cnt = countByRoleId(r.id);
-            const active = String(selectedRoleMemberTab) === String(r.id);
-            return `
-              <button class="role-member-tab ${active ? 'active' : ''}" data-role-tab="${escapeHtml(r.id)}" type="button" onclick="selectRoleMemberTab('${escapeJsAttr(r.id)}')">
-                <span class="role-tab-dot" style="background:${sanitizeHexColor(r.color)};"></span>
-                <span>${escapeHtml(r.name)}</span>
-                <span class="role-tab-cnt">${cnt}</span>
-              </button>
-            `;
-          }).join('')}
-        </div>
+          <div id="roleMemberTabBar" class="role-member-tabs">
+            <button class="role-member-tab ${selectedRoleMemberTab === 'all' ? 'active' : ''}" data-role-tab="all" type="button" onclick="selectRoleMemberTab('all')">
+              <span>전체</span>
+              <span class="role-tab-cnt">${approved.length}</span>
+            </button>
+            ${roles.map(r => {
+              const cnt = countByRoleId(r.id);
+              const active = String(selectedRoleMemberTab) === String(r.id);
+              return `
+                <button class="role-member-tab ${active ? 'active' : ''}" data-role-tab="${escapeHtml(r.id)}" type="button" onclick="selectRoleMemberTab('${escapeJsAttr(r.id)}')">
+                  <span class="role-tab-dot" style="background:${sanitizeHexColor(r.color)};"></span>
+                  <span>${escapeHtml(r.name)}</span>
+                  <span class="role-tab-cnt">${cnt}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
 
-        <div class="search-box" style="margin-bottom:8px;">
-          <span class="search-icon">🔍</span>
-          <input id="roleMemberSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13.5px;" type="search" value="${escapeHtml(roleMemberSearchQuery)}" placeholder="회원 이름 검색..." oninput="onRoleMemberSearchInput(this.value)" />
-          <button id="roleMemberSearchClear" class="search-clear ${roleMemberSearchQuery ? '' : 'hidden'}" type="button" onclick="clearRoleMemberSearch()">✕</button>
+          <div class="search-box" style="margin-bottom:8px;">
+            <span class="search-icon">🔍</span>
+            <input id="roleMemberSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13.5px;" type="search" value="${escapeHtml(roleMemberSearchQuery)}" placeholder="회원 이름 검색..." oninput="onRoleMemberSearchInput(this.value)" />
+            <button id="roleMemberSearchClear" class="search-clear ${roleMemberSearchQuery ? '' : 'hidden'}" type="button" onclick="clearRoleMemberSearch()">✕</button>
+          </div>
+          <div id="roleMembersSummaryText" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 8px;"></div>
+          <div id="roleMembersListArea" class="card"></div>
         </div>
-        <div id="roleMembersSummaryText" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 8px;"></div>
-        <div id="roleMembersListArea" class="card"></div>
 
         <div class="manage-divider"></div>
 
-        <div class="section-head">
-          <h2 class="section-title">${escapeHtml(getTabIcon('manageRoles'))} ${escapeHtml(getTabLabel('manageRoles'))} (${roles.length}개)</h2>
-          <button class="btn-admin" onclick="openAddRoleModal()">+ 새 역할 만들기</button>
-        </div>
-        <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-          역할은 회원 이름 옆에 표시되는 직분 배지입니다.<br>
-          특정 역할에게만 보여주는 설정은 <b>공지·광고·배너 작성 화면</b>에서 원하는 역할을 직접 선택해 지정할 수 있습니다.
-        </div>
-        ${roles.map((r, idx) => {
-          const count = countByRoleId(r.id);
-          return `
-            <div class="card">
-              <div class="layout-item-head">
-                <div style="display:flex; align-items:center; gap:8px; min-width:0; flex-wrap:wrap;">
-                  <strong style="font-size:13px; color:#64748B;">${idx + 1}.</strong>
-                  <span class="role-pill" style="background:${sanitizeHexColor(r.color)}; font-size:12px; padding:4px 10px;">${escapeHtml(r.name)}</span>
-                  <span style="font-size:12px; color:#64748B; font-weight:600;">소속 ${count}명</span>
+        ${buildManageAccordionBar({
+          key: 'roles_list',
+          titleHtml: `${escapeHtml(getTabIcon('manageRoles'))} ${escapeHtml(getTabLabel('manageRoles'))}`,
+          badgeHtml: `<span class="tag slate">${roles.length}개</span>`,
+          actionHtml: `<button class="btn-admin" type="button" style="padding:6px 10px; font-size:11.5px;" onclick="openAddRoleModal()">+ 새 역할</button>`,
+          defaultOpen: true
+        })}
+        <div data-acc-body="roles_list" class="${rolesListOpen ? '' : 'hidden'}">
+          <div class="info-box" style="margin-top:0; margin-bottom:12px;">
+            역할은 회원 이름 옆에 표시되는 직분 배지입니다.<br>
+            특정 역할에게만 보여주는 설정은 <b>공지·광고·배너 작성 화면</b>에서 원하는 역할을 직접 선택해 지정할 수 있습니다.
+          </div>
+          ${roles.map((r, idx) => {
+            const count = countByRoleId(r.id);
+            return `
+              <div class="card">
+                <div class="layout-item-head">
+                  <div style="display:flex; align-items:center; gap:8px; min-width:0; flex-wrap:wrap;">
+                    <strong style="font-size:13px; color:#64748B;">${idx + 1}.</strong>
+                    <span class="role-pill" style="background:${sanitizeHexColor(r.color)}; font-size:12px; padding:4px 10px;">${escapeHtml(r.name)}</span>
+                    <span style="font-size:12px; color:#64748B; font-weight:600;">소속 ${count}명</span>
+                  </div>
+                  <div class="order-btns">
+                    <button class="order-btn" type="button" onclick="moveRole(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                    <button class="order-btn" type="button" onclick="moveRole(${idx}, 1)" ${idx === roles.length - 1 ? 'disabled' : ''}>▼</button>
+                  </div>
                 </div>
-                <div class="order-btns">
-                  <button class="order-btn" type="button" onclick="moveRole(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
-                  <button class="order-btn" type="button" onclick="moveRole(${idx}, 1)" ${idx === roles.length - 1 ? 'disabled' : ''}>▼</button>
+                <div class="card-footer">
+                  <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+                    <button class="btn-sm" type="button" onclick="selectRoleMemberTab('${escapeJsAttr(r.id)}', true)">👥 명단 보기 (${count})</button>
+                    ${isNewcomerRoleObj(r)
+                      ? '<span class="tag" style="font-size:10.5px;">💐 새신자 자동 환영</span>'
+                      : ''}
+                  </div>
+                  <div style="display:flex; gap:6px;">
+                    <button class="btn-sm" onclick="openEditRoleModal('${escapeJsAttr(r.id)}')">수정</button>
+                    <button class="btn-sm danger" onclick="deleteRole('${escapeJsAttr(r.id)}')" ${roles.length <= 1 ? 'disabled' : ''}>삭제</button>
+                  </div>
                 </div>
               </div>
-              <div class="card-footer">
-                <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                  <button class="btn-sm" type="button" onclick="selectRoleMemberTab('${escapeJsAttr(r.id)}', true)">👥 명단 보기 (${count})</button>
-                  ${isNewcomerRoleObj(r)
-                    ? '<span class="tag" style="font-size:10.5px;">💐 새신자 자동 환영</span>'
-                    : ''}
-                </div>
-                <div style="display:flex; gap:6px;">
-                  <button class="btn-sm" onclick="openEditRoleModal('${escapeJsAttr(r.id)}')">수정</button>
-                  <button class="btn-sm danger" onclick="deleteRole('${escapeJsAttr(r.id)}')" ${roles.length <= 1 ? 'disabled' : ''}>삭제</button>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('')}
+            `;
+          }).join('')}
+        </div>
       `;
 
       renderRoleMembersListOnly();
@@ -13020,8 +13254,14 @@ ${m.body}`;
           입력하거나 순서를 바꾸면 상단·하단 탭에 바로 미리보기되며, 아래 저장 버튼을 누르면 즉시 저장·반영됩니다.
         </div>
 
+        ${buildManageAccordionBar({
+          key: 'labels_bottom',
+          titleHtml: '📱 하단 메뉴 칸 (왼쪽 → 오른쪽 순)',
+          badgeHtml: `<span class="tag slate">${draftTabOrder.length}개</span>`,
+          defaultOpen: true
+        })}
+        <div data-acc-body="labels_bottom" class="${isManageSectionOpen('labels_bottom', true) ? '' : 'hidden'}">
         <div class="card">
-          <div style="font-size:13.5px; font-weight:800; color:#0F172A; margin-bottom:10px;">📱 하단 메뉴 칸 (왼쪽 → 오른쪽 순)</div>
           <div id="inlineBottomTabEditor">
             ${draftTabOrder.map((key, idx) => {
               const meta = BOTTOM_TAB_REGISTRY.find(t => t.key === key) || { defaultIcon: '•', defaultLabel: key, roleHint: '' };
@@ -13049,9 +13289,17 @@ ${m.body}`;
             }).join('')}
           </div>
         </div>
+        </div>
 
+        ${buildManageAccordionBar({
+          key: 'labels_manage',
+          titleHtml: `<span id="manageSubTabCardHeading">${escapeHtml(curManageIcon)} ${escapeHtml(curManageName)} 상단 탭 (왼쪽 → 오른쪽 순)</span>`,
+          badgeHtml: `<span class="tag slate">${draftManageSubTabOrder.length}개</span>`,
+          defaultOpen: false,
+          marginTop: '10px'
+        })}
+        <div data-acc-body="labels_manage" class="${isManageSectionOpen('labels_manage', false) ? '' : 'hidden'}">
         <div class="card">
-          <div id="manageSubTabCardHeading" style="font-size:13.5px; font-weight:800; color:#0F172A; margin-bottom:10px;">${escapeHtml(curManageIcon)} ${escapeHtml(curManageName)} 상단 탭 (왼쪽 → 오른쪽 순)</div>
           <div id="inlineManageSubTabEditor">
             ${draftManageSubTabOrder.map((subId, idx) => {
               const t = MANAGE_SUBTAB_REGISTRY.find(x => x.id === subId);
@@ -13080,8 +13328,9 @@ ${m.body}`;
             }).join('')}
           </div>
         </div>
+        </div>
 
-        <button id="saveTabLabelsInlineBtn" class="btn-full btn-dark" type="button" onclick="handleSaveTabLabels()">💾 전체 메뉴 이모지 · 이름 · 순서 저장하기</button>
+        <button id="saveTabLabelsInlineBtn" class="btn-full btn-dark" type="button" style="margin-top:6px;" onclick="handleSaveTabLabels()">💾 전체 메뉴 이모지 · 이름 · 순서 저장하기</button>
       `;
     }
 
@@ -15387,7 +15636,9 @@ ${m.body}`;
             </div>
           </div>
         `;
-      }).join('');
+      }).join('') + (filtered.length >= 4
+        ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('logs_list', true)">▲ 로그 목록 접기</button>`
+        : '');
     }
 
     window.onAdminLogSearchInput = (val) => {
@@ -15411,11 +15662,15 @@ ${m.body}`;
       const hasSheet = !!getAdminSheetUrl();
       const cats = ['all', '공지·배너', '오늘의 말씀', '댓글', '회원·생일', '역할·메뉴', '예배·출석', '바로가기', '보안·설정'];
 
+      const logsListOpen = isManageSectionOpen('logs_list', true);
       el.innerHTML = `
-        <div class="section-head">
-          <h2 class="section-title">${escapeHtml(getTabIcon('manageLogs'))} ${escapeHtml(getTabLabel('manageLogs'))} (${allLogs.length}건)</h2>
-          <span class="tag slate">삭제 불가</span>
-        </div>
+        ${buildManageAccordionBar({
+          key: 'logs_list',
+          titleHtml: `${escapeHtml(getTabIcon('manageLogs'))} ${escapeHtml(getTabLabel('manageLogs'))}`,
+          badgeHtml: `<span class="tag slate">${allLogs.length}건 · 삭제 불가</span>`,
+          defaultOpen: true
+        })}
+        <div data-acc-body="logs_list" class="${logsListOpen ? '' : 'hidden'}">
         <div class="info-box" style="margin-top:0; margin-bottom:12px;">
           🔐 <b>통합 보안 감사 로그 (위변조·삭제 불가)</b><br>
           • <b>관리자:</b> 모든 추가·수정·삭제·승인·설정 변경 자동 기록<br>
@@ -15454,6 +15709,7 @@ ${m.body}`;
         </div>
         <div id="adminLogsSummaryText" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
         <div id="adminLogsListArea"></div>
+        </div>
       `;
 
       renderAdminLogsListOnly();
@@ -15582,57 +15838,81 @@ ${m.body}`;
         return (s.displayTitle || s.colTitle || '').toLowerCase().includes(q);
       });
 
+      const worshipAttOpen = isManageSectionOpen('worship_att', true);
+      const worshipAttListDefault = sessRecords.length <= 5;
+      const worshipAttListOpen = isManageSectionOpen('worship_att_list', worshipAttListDefault);
+      const worshipSchedOpen = isManageSectionOpen('worship_schedule', false);
+      const worshipSheetOpen = isManageSectionOpen('worship_sheet', false);
+
       el.innerHTML = `
         <!-- 1) 예배 · 출석 현황 & 예배명 변경 -->
-        <div class="section-head">
-          <h2 class="section-title">⛪ 예배 · 출석 현황 (${sessRecords.length}명)</h2>
-          ${curSess ? `<button class="btn-admin" type="button" onclick="openAddAdminAttendanceModal()">+ 출석 추가</button>` : ''}
-        </div>
-        <div class="card">
-          <div class="form-group" style="margin-bottom:10px;">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:6px;">
-              <label class="form-label" for="adminAttSessionSelect" style="margin-bottom:0;">예배·행사 선택 (한국시간 기준)</label>
-              ${curSess ? `<button class="btn-sm" type="button" style="padding:4px 8px; font-size:11px;" onclick="renameSelectedWorshipSession()">✏️ 예배명 변경</button>` : ''}
+        ${buildManageAccordionBar({
+          key: 'worship_att',
+          titleHtml: '⛪ 예배 · 출석 현황',
+          badgeHtml: `<span class="tag green">${sessRecords.length}명</span>`,
+          actionHtml: curSess ? `<button class="btn-admin" type="button" style="padding:6px 10px; font-size:11.5px;" onclick="openAddAdminAttendanceModal()">+ 출석</button>` : '',
+          defaultOpen: true
+        })}
+        <div data-acc-body="worship_att" class="${worshipAttOpen ? '' : 'hidden'}">
+          <div class="card">
+            <div class="form-group" style="margin-bottom:10px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:6px;">
+                <label class="form-label" for="adminAttSessionSelect" style="margin-bottom:0;">예배·행사 선택 (한국시간 기준)</label>
+                ${curSess ? `<button class="btn-sm" type="button" style="padding:4px 8px; font-size:11px;" onclick="renameSelectedWorshipSession()">✏️ 예배명 변경</button>` : ''}
+              </div>
+              <input id="adminAttSessionSearchInput" class="form-input" style="margin-bottom:6px; padding:8px 11px; font-size:13px;" value="${escapeHtml(adminAttSessionSearchQuery)}" placeholder="날짜·예배명 검색 (예: 주일)" oninput="onAdminAttSessionSearchInput(this.value)" />
+              <select id="adminAttSessionSelect" class="form-select" onchange="onSelectAdminAttSession(this.value)">
+                ${filteredSessions.map(s => `
+                  <option value="${escapeHtml(s.sessionId)}" ${s.sessionId === selectedAdminAttSessionKey ? 'selected' : ''}>${escapeHtml(s.displayTitle || s.colTitle)}</option>
+                `).join('')}
+              </select>
             </div>
-            <input id="adminAttSessionSearchInput" class="form-input" style="margin-bottom:6px; padding:8px 11px; font-size:13px;" value="${escapeHtml(adminAttSessionSearchQuery)}" placeholder="날짜·예배명 검색 (예: 주일)" oninput="onAdminAttSessionSearchInput(this.value)" />
-            <select id="adminAttSessionSelect" class="form-select" onchange="onSelectAdminAttSession(this.value)">
-              ${filteredSessions.map(s => `
-                <option value="${escapeHtml(s.sessionId)}" ${s.sessionId === selectedAdminAttSessionKey ? 'selected' : ''}>${escapeHtml(s.displayTitle || s.colTitle)}</option>
-              `).join('')}
-            </select>
-          </div>
 
-          ${sessRecords.length === 0
-            ? '<div style="text-align:center; padding:18px 8px; color:#64748B; font-size:13px;">해당 예배·행사에 기록된 출석자가 없습니다.</div>'
-            : sessRecords.map(r => `
-                <div class="att-record-row">
-                  <div>
-                    <div class="member-name">
-                      <span>${escapeHtml(r.name)}</span>
-                      ${r.roleName ? `<span class="tag slate" style="font-size:10.5px;">${escapeHtml(r.roleName)}</span>` : ''}
-                      <span class="tag green" style="font-size:10.5px;">${escapeHtml(r.time || '-')}</span>
-                    </div>
-                    <div class="member-meta">
-                      ${r.modifiedBy
-                        ? `✍️ 관리자 처리: <b>${escapeHtml(r.modifiedBy)}</b>${r.modifiedAt ? ` (${escapeHtml(r.modifiedAt)})` : ''}`
-                        : '본인 앱 출석 체크'}
-                    </div>
-                  </div>
-                  <div style="display:flex; gap:5px;">
-                    <button class="btn-sm" type="button" onclick="openEditAdminAttendanceModal('${escapeJsAttr(r.id)}')">수정</button>
-                    <button class="btn-sm danger" type="button" onclick="deleteAdminAttendance('${escapeJsAttr(r.id)}')">삭제</button>
-                  </div>
+            ${sessRecords.length === 0
+              ? '<div style="text-align:center; padding:18px 8px; color:#64748B; font-size:13px;">해당 예배·행사에 기록된 출석자가 없습니다.</div>'
+              : `
+                <div class="acc-sub-bar ${worshipAttListOpen ? 'open' : ''}" data-acc-bar="worship_att_list" onclick="toggleManageSection('worship_att_list', ${worshipAttListDefault ? 'true' : 'false'})">
+                  <span style="font-size:12.5px; font-weight:800; color:#0F172A;">👥 출석자 명단 (${sessRecords.length}명)</span>
+                  <span class="acc-toggle-pill" data-acc-pill="worship_att_list">${worshipAttListOpen ? '접기 ▲' : '열기 ▼'}</span>
                 </div>
-              `).join('')}
+                <div data-acc-body="worship_att_list" class="${worshipAttListOpen ? '' : 'hidden'}">
+                  ${sessRecords.map(r => `
+                    <div class="att-record-row">
+                      <div>
+                        <div class="member-name">
+                          <span>${escapeHtml(r.name)}</span>
+                          ${r.roleName ? `<span class="tag slate" style="font-size:10.5px;">${escapeHtml(r.roleName)}</span>` : ''}
+                          <span class="tag green" style="font-size:10.5px;">${escapeHtml(r.time || '-')}</span>
+                        </div>
+                        <div class="member-meta">
+                          ${r.modifiedBy
+                            ? `✍️ 관리자 처리: <b>${escapeHtml(r.modifiedBy)}</b>${r.modifiedAt ? ` (${escapeHtml(r.modifiedAt)})` : ''}`
+                            : '본인 앱 출석 체크'}
+                        </div>
+                      </div>
+                      <div style="display:flex; gap:5px;">
+                        <button class="btn-sm" type="button" onclick="openEditAdminAttendanceModal('${escapeJsAttr(r.id)}')">수정</button>
+                        <button class="btn-sm danger" type="button" onclick="deleteAdminAttendance('${escapeJsAttr(r.id)}')">삭제</button>
+                      </div>
+                    </div>
+                  `).join('')}
+                  ${sessRecords.length >= 4 ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('worship_att_list', ${worshipAttListDefault ? 'true' : 'false'})">▲ 출석자 명단 접기</button>` : ''}
+                </div>
+              `}
+          </div>
         </div>
 
         <div class="manage-divider"></div>
 
         <!-- 2) 정기 예배 · 특별 행사 출석 시간 설정 -->
-        <div class="section-head">
-          <h2 class="section-title">⏰ 정기 예배·행사 설정</h2>
-          <button class="btn-admin" type="button" onclick="openSpecialEventModal()">+ 행사 추가</button>
-        </div>
+        ${buildManageAccordionBar({
+          key: 'worship_schedule',
+          titleHtml: '⏰ 정기 예배·행사 설정',
+          badgeHtml: `<span class="tag slate">행사 ${(cfg.specialEvents || []).length}건</span>`,
+          actionHtml: `<button class="btn-admin" type="button" style="padding:6px 10px; font-size:11.5px;" onclick="openSpecialEventModal()">+ 행사</button>`,
+          defaultOpen: false
+        })}
+        <div data-acc-body="worship_schedule" class="${worshipSchedOpen ? '' : 'hidden'}">
         <div class="card">
           <div class="setting-row" style="padding-top:0; margin-bottom:10px;">
             <div>
@@ -15696,16 +15976,18 @@ ${m.body}`;
           </div>
         </div>
 
+        </div>
+
         <div class="manage-divider"></div>
 
         <!-- 3) 구글 시트 자동 연동 설정 (관리자 전용 격리 보관) -->
-        <div class="section-head">
-          <h2 class="section-title">📊 구글 시트 자동 연동</h2>
-          <div style="display:flex; gap:5px; align-items:center; flex-wrap:wrap;">
-            <span class="tag warm">🔐 관리자 전용 보관</span>
-            <span class="tag ${getAdminSheetUrl() ? 'green' : 'slate'}">${getAdminSheetUrl() ? '연동 설정됨' : '미연동'}</span>
-          </div>
-        </div>
+        ${buildManageAccordionBar({
+          key: 'worship_sheet',
+          titleHtml: '📊 구글 시트 자동 연동',
+          badgeHtml: `<span class="tag ${getAdminSheetUrl() ? 'green' : 'slate'}">${getAdminSheetUrl() ? '연동됨' : '미연동'}</span>`,
+          defaultOpen: false
+        })}
+        <div data-acc-body="worship_sheet" class="${worshipSheetOpen ? '' : 'hidden'}">
         <div class="card">
           <div class="form-group">
             <label class="form-label" for="cfgSheetUrlInput">Google Apps Script 웹 앱 URL (일반 회원 비공개)</label>
@@ -15735,6 +16017,7 @@ ${m.body}`;
               <button class="btn-sm primary" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['attendance','members','admins'])">✨ 현황 3개 탭 일괄 재정비</button>
             </div>
           </div>
+        </div>
         </div>
       `;
     }
