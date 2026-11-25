@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=156b" />
+  <link rel="manifest" href="./manifest.json?v=157b" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=156b" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=156b" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=157b" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=157b" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3415,6 +3415,31 @@
       margin-top: 12px;
       line-height: 1.5;
     }
+
+    /* ==================== v10.57 출처 표기 · QT 순서 카드 스타일 ==================== */
+    .source-meta-line {
+      margin-top: 8px;
+      padding: 6px 9px;
+      background: #F8FAFC;
+      border-left: 3px solid #94A3B8;
+      border-radius: 0 8px 8px 0;
+      font-size: 11.5px;
+      color: #475569;
+      line-height: 1.48;
+      word-break: keep-all;
+    }
+    .dict-daily-card .source-meta-line {
+      background: rgba(240, 253, 244, 0.72);
+      border-left-color: #22C55E;
+      color: #166534;
+    }
+    .qt-order-card {
+      background: #F8FAFC;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 15px;
+      padding: 13px 14px;
+      margin-bottom: 13px;
+    }
   </style>
 </head>
 <body>
@@ -3439,7 +3464,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=156b" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=157b" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3608,10 +3633,10 @@
             <div class="hero-top-row">
               <div class="hero-top-text">
                 <div id="bibleViewTitle" class="hero-top-title">📖 성경</div>
-                <div class="hero-top-sub">개역한글 성경 본문 · 절 터치 시 복사/책갈피/메모</div>
+                <div id="bibleViewSub" class="hero-top-sub">개역한글 성경 본문 · 절 터치 시 복사/책갈피/메모</div>
               </div>
               <div class="hero-top-actions">
-                <button class="bible-mini-btn" type="button" onclick="openBibleDictModal()">📚 사전</button>
+                <button id="bibleDictOpenBtn" class="bible-mini-btn" type="button" onclick="openBibleDictModal()">📚 사전</button>
                 <button class="bible-mini-btn" type="button" onclick="openBibleMemoModal()">📝 메모</button>
                 <button class="bible-mini-btn" type="button" onclick="openBibleBookmarksModal()">⭐ 책갈피</button>
               </div>
@@ -3660,7 +3685,7 @@
             <div class="hero-top-row">
               <div class="hero-top-text">
                 <div id="qtViewTitle" class="hero-top-title">✨ 오늘의 말씀</div>
-                <div class="hero-top-sub">매일 00:00(한국시간) 새 말씀 자동 변경 · 하트와 댓글로 나눠보세요</div>
+                <div id="qtViewSub" class="hero-top-sub">매일 00:00(한국시간) 새 말씀 자동 변경 · 하트와 댓글로 나눠보세요</div>
               </div>
               <button id="qtWriteTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openNewQtModal()">+ 말씀·글 쓰기</button>
             </div>
@@ -3673,12 +3698,14 @@
         <section id="viewBylaws" class="hidden">
           <div class="subview-back-bar">
             <button id="bylawsBackToSettingsBtn" class="subview-back-btn" type="button" onclick="switchMainTab('settings')">← 설정으로 돌아가기</button>
+            <div id="bylawsAdminBar" class="hidden" style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="btn-sm primary" type="button" onclick="openBylawFormModal()">+ 조항 추가</button>
+              <button id="bylawsRestoreBtn" class="btn-sm hidden" type="button" onclick="restoreDefaultBylaws()">🔄 기본 복원</button>
+            </div>
           </div>
           <div class="bylaw-hero">
             <div id="bylawViewTitle" class="bylaw-hero-title">📜 구미제일감리교회 라이트 청년부 회칙</div>
-            <div class="bylaw-hero-dates">
-              <span style="white-space:nowrap;">2014.03.23 제정</span> · <span style="white-space:nowrap;">2023.10.29 개정</span> · <span style="white-space:nowrap;"><b>2026.11.22 최종개정</b></span>
-            </div>
+            <div id="bylawViewDates" class="bylaw-hero-dates">2014.03.23 제정 · 2023.10.29 개정 · 2026.11.22 최종개정</div>
           </div>
 
           <div class="search-box">
@@ -3710,7 +3737,7 @@
           </div>
           <div class="guide-hero-user">
             <div id="userGuideViewTitle" class="bylaw-hero-title">📘 라이트 청년부 앱 사용방법</div>
-            <div class="bylaw-hero-dates">
+            <div id="userGuideViewSub" class="bylaw-hero-dates">
               처음 사용하시는 분도 쉽게 따라 할 수 있도록 주요 기능과 이용 방법을 정리했습니다.
             </div>
           </div>
@@ -3725,6 +3752,28 @@
 
           <div id="userGuideSummaryBar" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
           <div id="userGuideResults"></div>
+        </section>
+
+        <!-- (5.5) 이용약관 화면 (설정 안에서 진입 · 관리자 추가/수정/삭제 지원) -->
+        <section id="viewTerms" class="hidden">
+          <div class="subview-back-bar">
+            <button id="termsBackToSettingsBtn" class="subview-back-btn" type="button" onclick="switchMainTab('settings')">← 설정으로 돌아가기</button>
+            <div id="termsAdminBar" class="hidden" style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="btn-sm primary" type="button" onclick="openTermsFormModal()">+ 조항 추가</button>
+              <button id="termsRestoreBtn" class="btn-sm hidden" type="button" onclick="restoreDefaultTerms()">🔄 기본 복원</button>
+            </div>
+          </div>
+          <div class="bylaw-hero" style="background:linear-gradient(135deg, #0F172A 0%, #334155 100%);">
+            <div id="termsViewTitle" class="bylaw-hero-title">📄 라이트 청년부 앱 이용약관</div>
+            <div id="termsViewSub" class="bylaw-hero-dates">구미제일감리교회 라이트 청년부 회칙을 바탕으로 작성된 서비스 이용약관입니다.</div>
+          </div>
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input id="termsSearchInput" class="search-input" type="search" placeholder="약관 검색 (예: 회원, 개인정보, 탈퇴)" oninput="onTermsSearchInput(this.value)" />
+            <button id="termsSearchClear" class="search-clear hidden" type="button" onclick="clearTermsSearch()">✕</button>
+          </div>
+          <div id="termsSummaryBar" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
+          <div id="termsResults"></div>
         </section>
 
         <!-- (6) 이용자 설정 화면 (카테고리 리스트 · 관리자 메뉴 미포함) -->
@@ -3956,6 +4005,11 @@
         <label class="form-label" for="qtScriptureInput">말씀 · 작성 글 내용 (필수)</label>
         <textarea id="qtScriptureInput" class="form-textarea" style="min-height:135px;" placeholder="성경 말씀이나 청년부원들과 나누고 싶은 글을 자유롭게 입력하세요."></textarea>
       </div>
+      <div class="form-group">
+        <label class="form-label" for="qtSourceInput">출처 (외부 인용 시 작성 · 선택)</label>
+        <input id="qtSourceInput" class="form-input" maxlength="80" placeholder="예: 성경전서 개역한글판(대한성서공회) / 참고 도서·자료명" />
+        <div style="font-size:11px; color:#64748B; margin-top:4px; line-height:1.45;">※ 외부 자료나 저작권이 있는 번역본을 무단 복사하지 말고, 인용 시 출처를 꼭 기재해 주세요.</div>
+      </div>
       <label class="checkbox-row" style="margin-bottom:14px;">
         <input type="checkbox" id="qtNotifyInput" checked />
         <span>등록 시 회원들에게 새 말씀·글 알림 띄우기</span>
@@ -4123,7 +4177,8 @@
       </div>
       <h3 id="detailTitle" style="margin:0 0 6px; font-size:18px;"></h3>
       <div id="detailDate" class="card-date" style="margin-bottom:14px;"></div>
-      <p id="detailBody" class="card-body" style="margin-bottom:18px;"></p>
+      <p id="detailBody" class="card-body" style="margin-bottom:12px;"></p>
+      <div id="detailSource" class="source-meta-line hidden" style="margin-bottom:16px;"></div>
       <div style="display:flex;">
         <button class="btn-outline" style="width:100%; padding:11px;" data-close="detailModal">닫기</button>
       </div>
@@ -4156,6 +4211,10 @@
       <div class="form-group">
         <label class="form-label">내용</label>
         <textarea id="noticeBodyInput" class="form-textarea" placeholder="일시, 장소, 준비물 등을 적어주세요."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="noticeSourceInput">출처 (외부 자료 인용 시 작성 · 선택)</label>
+        <input id="noticeSourceInput" class="form-input" maxlength="80" placeholder="예: 교회 주보 / 참고 자료 출처 (선택)" />
       </div>
 
       <div class="form-group">
@@ -4410,6 +4469,7 @@
       </div>
       <div style="display:flex; gap:8px; margin-top:8px;">
         <button id="saveAdminMemberBdayBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveAdminMemberBirthday()">생일 저장</button>
+        <button id="deleteAdminMemberBdayBtn" class="btn-sm danger hidden" type="button" style="padding:12px 13px; font-size:13px;" onclick="handleDeleteAdminMemberBirthday()">삭제</button>
         <button class="btn-outline" type="button" data-close="memberBirthdayModal">취소</button>
       </div>
     </div>
@@ -4550,9 +4610,10 @@
   <div id="specialEventModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">📅 특별 행사 · 수련회 출석 추가</h3>
+        <h3 id="spEventModalTitle" class="modal-title">📅 특별 행사 · 수련회 출석 추가</h3>
         <button class="close-btn" data-close="specialEventModal">✕</button>
       </div>
+      <input type="hidden" id="editSpEventId" />
       <div class="form-group">
         <label class="form-label" for="spEventTitleInput">행사 이름</label>
         <input id="spEventTitleInput" class="form-input" maxlength="24" placeholder="예: 겨울 수련회 / 금요 기도회" />
@@ -4681,8 +4742,11 @@
   <div id="bibleDictModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">📚 성경 용어 사전</h3>
-        <button class="close-btn" data-close="bibleDictModal">✕</button>
+        <h3 id="bibleDictModalTitle" class="modal-title">📚 성경 용어 사전</h3>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button id="bibleDictModalAddBtn" class="btn-sm primary hidden" type="button" onclick="openNewBibleDictModal()">+ 용어 추가</button>
+          <button class="close-btn" data-close="bibleDictModal">✕</button>
+        </div>
       </div>
       <div class="search-box" style="margin-bottom:8px;">
         <span class="search-icon">🔍</span>
@@ -4705,6 +4769,7 @@
         <button class="close-btn" data-close="bibleDictFormModal">✕</button>
       </div>
       <input type="hidden" id="editBibleDictId" />
+      <input type="hidden" id="overrideBuiltInDictId" />
       <div class="form-group">
         <label class="form-label" for="dictDisplayModeSelect">QT 화면 표시 방식</label>
         <select id="dictDisplayModeSelect" class="form-select">
@@ -4739,6 +4804,11 @@
       <div class="form-group">
         <label class="form-label" for="dictDefInput">용어 설명 (필수)</label>
         <textarea id="dictDefInput" class="form-textarea" style="min-height:115px;" maxlength="600" placeholder="청년부원들이 이해하기 쉽게 용어 뜻을 작성해 주세요."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="dictSourceInput">출처 (외부 참고 시 작성 · 선택)</label>
+        <input id="dictSourceInput" class="form-input" maxlength="90" placeholder="예: 라이트 청년부 자체 정리 / 참고 자료명 (미입력 시 기본 출처 표시)" />
+        <div style="font-size:11px; color:#64748B; margin-top:4px; line-height:1.45;">※ 외부 사전·도서 원문을 그대로 복사하지 말고, 참고한 자료가 있으면 출처를 기재해 주세요.</div>
       </div>
       <button id="saveBibleDictBtn" class="btn-full btn-dark" type="button" onclick="handleSaveBibleDictItem()">📚 성경 사전 저장하기</button>
     </div>
@@ -4808,6 +4878,98 @@
     </div>
   </div>
 
+  <!-- 관리자: 성경 본문 오타·오류 보정 (절 추가/수정) 모달 -->
+  <div id="bibleVerseEditModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="bibleVerseEditModalTitle" class="modal-title">✏️ 성경 본문 오타 · 오류 수정</h3>
+        <button class="close-btn" data-close="bibleVerseEditModal">✕</button>
+      </div>
+      <input type="hidden" id="editBibleVerseMode" />
+      <input type="hidden" id="editBibleVerseOrigNum" />
+      <div id="editBibleVerseRefBox" class="info-box" style="margin-top:0; margin-bottom:12px;"></div>
+      <div class="form-group">
+        <label class="form-label" for="editBibleVerseNumInput">절 번호</label>
+        <input id="editBibleVerseNumInput" type="number" min="1" max="200" class="form-input" placeholder="예: 1" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="editBibleVerseTextInput">성경 본문 (개역한글판 오타·누락 보정)</label>
+        <textarea id="editBibleVerseTextInput" class="form-textarea" style="min-height:115px;" maxlength="1200" placeholder="오타나 누락된 본문을 정확하게 입력해 주세요."></textarea>
+        <div style="font-size:11px; color:#64748B; margin-top:4px; line-height:1.45;">
+          ※ 저작권 보호를 위해 개역개정·새번역 등 타 번역본을 무단 복사하지 말고, 개역한글판 원문의 오타·누락 보정 용도로만 사용해 주세요.
+        </div>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button id="saveBibleVerseEditBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveBibleVerseEdit()">💾 보정 본문 저장</button>
+        <button class="btn-outline" type="button" data-close="bibleVerseEditModal">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 관리자: 이용약관 조항 추가/수정 모달 -->
+  <div id="termsFormModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="termsFormModalTitle" class="modal-title">📄 이용약관 조항 추가</h3>
+        <button class="close-btn" data-close="termsFormModal">✕</button>
+      </div>
+      <input type="hidden" id="editTermsId" />
+      <div class="form-group">
+        <label class="form-label" for="termsTitleInput">조항 제목 (필수)</label>
+        <input id="termsTitleInput" class="form-input" maxlength="60" placeholder="예: 제9조 (기타 운영 기준)" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="termsBodyInput">조항 내용 (필수)</label>
+        <textarea id="termsBodyInput" class="form-textarea" style="min-height:140px;" maxlength="2000" placeholder="약관 내용을 입력해 주세요."></textarea>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button id="saveTermsArticleBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveTermsArticle()">💾 이용약관 저장</button>
+        <button class="btn-outline" type="button" data-close="termsFormModal">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 관리자: 청년부 회칙 조항 추가/수정 모달 -->
+  <div id="bylawFormModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="bylawFormModalTitle" class="modal-title">📜 회칙 조항 추가</h3>
+        <button class="close-btn" data-close="bylawFormModal">✕</button>
+      </div>
+      <input type="hidden" id="editBylawIdx" />
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label" for="bylawChapterSelect">소속 장</label>
+          <select id="bylawChapterSelect" class="form-select">
+            <option value="ch1">제1장 총칙</option>
+            <option value="ch2">제2장 회원</option>
+            <option value="ch3">제3장 조직</option>
+            <option value="ch4">제4장 임원 선거·임기</option>
+            <option value="ch5">제5장 회의·집회</option>
+            <option value="ch6">제6장 재정</option>
+            <option value="ch7">제7장 부칙</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="bylawNumInput">조 번호 (예: 제29조)</label>
+          <input id="bylawNumInput" class="form-input" maxlength="16" placeholder="예: 제29조" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="bylawTitleInput">조항 제목 (필수)</label>
+        <input id="bylawTitleInput" class="form-input" maxlength="60" placeholder="예: 제29조 (시행세칙)" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="bylawBodyInput">조항 본문 (필수)</label>
+        <textarea id="bylawBodyInput" class="form-textarea" style="min-height:140px;" maxlength="2500" placeholder="회칙 본문을 입력해 주세요."></textarea>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button id="saveBylawArticleBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveBylawArticle()">💾 회칙 조항 저장</button>
+        <button class="btn-outline" type="button" data-close="bylawFormModal">취소</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 관리자: 기능 점검 안전 시뮬레이션 모달 -->
   <div id="diagSimModal" class="modal-backdrop">
     <div class="modal">
@@ -4871,7 +5033,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 25;
-    const APP_CLIENT_BUILD = 156;
+    const APP_CLIENT_BUILD = 157;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -5014,10 +5176,33 @@
       { key: 'guide', group: '청년부 안내 · 소통', defaultIcon: '📘', defaultLabel: '가이드', roleHint: '설정 · 앱 사용 설명서' },
       { key: 'setInquiry', group: '청년부 안내 · 소통', defaultIcon: '💬', defaultLabel: '문의 사항', roleHint: '설정 · 불편/개선/의견 전달' },
       { key: 'setInstall', group: '앱 이용 · 보안', defaultIcon: '📱', defaultLabel: '앱 설치 방법', roleHint: '설정 · 홈 화면 추가 안내' },
+      { key: 'setTerms', group: '앱 이용 · 보안', defaultIcon: '📄', defaultLabel: '이용약관', roleHint: '설정 · 서비스 이용약관' },
       { key: 'setPrivacy', group: '앱 이용 · 보안', defaultIcon: '🔒', defaultLabel: '개인정보 · 보안 안내', roleHint: '설정 · 프라이버시 보호 안내' },
       { key: 'setLogout', group: '앱 이용 · 보안', defaultIcon: '🚪', defaultLabel: '로그아웃', roleHint: '설정 · 계정 로그아웃' }
     ];
     const DEFAULT_SETTINGS_ITEM_ORDER = SETTINGS_ITEM_REGISTRY.map(t => t.key);
+    const UI_TEXT_REGISTRY = [
+      { key: 'dailyDictTitle', defaultVal: '📚 오늘의 성경 사전', hint: 'QT 화면 내 오늘의 성경 사전 카드 제목', max: 28 },
+      { key: 'bibleDictModalTitle', defaultVal: '📚 성경 용어 사전', hint: '성경 사전 검색 창 상단 제목', max: 28 },
+      { key: 'bibleDictBtnLabel', defaultVal: '📚 사전', hint: '성경 화면 우측 상단 사전 버튼', max: 12 },
+      { key: 'qtHeroSub', defaultVal: '매일 00:00(한국시간) 새 말씀 자동 변경 · 하트와 댓글로 나눠보세요', hint: 'QT 화면 상단 안내 문구', max: 70 },
+      { key: 'qtAdminPostBadge', defaultVal: '✍️ 관리자 작성 글', hint: 'QT 관리자 직접 작성 글 배지', max: 20 },
+      { key: 'bibleHeroSub', defaultVal: '개역한글 성경 본문 · 절 터치 시 복사/책갈피/메모', hint: '성경 화면 상단 안내 문구', max: 60 },
+      { key: 'bylawsHeroTitle', defaultVal: '구미제일감리교회 라이트 청년부 회칙', hint: '회칙 화면 상단 제목', max: 36 },
+      { key: 'bylawsHeroDates', defaultVal: '2014.03.23 제정 · 2023.10.29 개정 · 2026.11.22 최종개정', hint: '회칙 화면 제정·개정일 문구', max: 60 },
+      { key: 'guideHeroTitle', defaultVal: '라이트 청년부 앱 가이드', hint: '이용자 가이드 화면 상단 제목', max: 32 },
+      { key: 'guideHeroSub', defaultVal: '처음 사용하시는 분도 쉽게 따라 할 수 있도록 주요 기능과 이용 방법을 정리했습니다.', hint: '이용자 가이드 화면 상단 안내 문구', max: 80 },
+      { key: 'termsHeroTitle', defaultVal: '라이트 청년부 앱 이용약관', hint: '이용약관 화면 상단 제목', max: 36 },
+      { key: 'termsHeroSub', defaultVal: '구미제일감리교회 라이트 청년부 회칙을 바탕으로 작성된 서비스 이용약관입니다.', hint: '이용약관 화면 상단 안내 문구', max: 80 },
+      { key: 'settingsProfileSub', defaultVal: '이용자 개인 설정 · 변경 내용은 내 기기에만 적용됩니다.', hint: '설정 프로필 하단 안내 문구', max: 60 },
+      { key: 'settingsGroup1', defaultVal: '내 정보 · 화면', hint: '설정 1번 카테고리 제목', max: 20 },
+      { key: 'settingsGroup2', defaultVal: '청년부 안내 · 소통', hint: '설정 2번 카테고리 제목', max: 20 },
+      { key: 'settingsGroup3', defaultVal: '앱 이용 · 보안', hint: '설정 3번 카테고리 제목', max: 20 }
+    ];
+    const DEFAULT_UI_TEXTS = Object.fromEntries(UI_TEXT_REGISTRY.map(x => [x.key, x.defaultVal]));
+    const DEFAULT_DICT_SOURCE_LABEL = '라이트 청년부 자체 정리 (성경 인용: 「성경전서 개역한글판」 · 대한성서공회)';
+    const DEFAULT_QT_SECTION_ORDER = ['dict', 'qt'];
+
     const MANAGE_SUBTAB_REGISTRY = [
       { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', permCheck: p => !!(p.canEditLayout || p.canManageNotices) },
       { id: 'quicklinks', labelKey: 'manageQuickLinks', defaultIcon: '🔗', defaultLabel: '사이트 바로가기 관리', permCheck: p => !!p.canEditLayout },
@@ -5044,7 +5229,7 @@
       Object.fromEntries(MANAGE_SUBTAB_REGISTRY.map(t => [t.labelKey, t.defaultIcon]))
     );
     const DEFAULT_TAB_LABELS = Object.assign(
-      { tabOrder: DEFAULT_TAB_ORDER, manageSubTabOrder: DEFAULT_MANAGE_SUBTAB_ORDER, settingsItemOrder: DEFAULT_SETTINGS_ITEM_ORDER, icons: DEFAULT_TAB_ICONS },
+      { tabOrder: DEFAULT_TAB_ORDER, manageSubTabOrder: DEFAULT_MANAGE_SUBTAB_ORDER, settingsItemOrder: DEFAULT_SETTINGS_ITEM_ORDER, icons: DEFAULT_TAB_ICONS, uiTexts: DEFAULT_UI_TEXTS },
       Object.fromEntries(BOTTOM_TAB_REGISTRY.map(t => [t.key, t.defaultLabel])),
       Object.fromEntries(SETTINGS_ITEM_REGISTRY.map(t => [t.key, t.defaultLabel])),
       Object.fromEntries(MANAGE_SUBTAB_REGISTRY.map(t => [t.labelKey, t.defaultLabel]))
@@ -5814,7 +5999,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=156b" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=157b" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5838,8 +6023,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=156b', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=156b', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=157b', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=157b', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -6135,7 +6320,13 @@
     let currentQtDetailId = null;
     let hiddenAutoQtDate = '';
     let bibleDictCustomItems = [];
+    let hiddenBuiltInDictIds = [];
     let hiddenAutoDictDate = '';
+    let qtSectionOrder = [...DEFAULT_QT_SECTION_ORDER];
+    let bibleVerseEdits = {};
+    let customTermsArticles = null;
+    let customBylawsArticles = null;
+    let termsSearchQuery = '';
     let bibleDictCatFilter = '전체';
     let settingsFontOpen = false;
     let inquiries = [];
@@ -6365,6 +6556,28 @@
       return getTabIcon(key);
     }
 
+    function getUiText(key, overrideUiTexts = null) {
+      if (overrideUiTexts && overrideUiTexts[key] !== undefined) {
+        const v = String(overrideUiTexts[key]).trim();
+        if (v) return v;
+      }
+      const saved = tabLabels && tabLabels.uiTexts && tabLabels.uiTexts[key];
+      if (saved && String(saved).trim()) return String(saved).trim();
+      return DEFAULT_UI_TEXTS[key] || '';
+    }
+
+    function getValidQtSectionOrder(raw) {
+      const src = Array.isArray(raw) ? raw : qtSectionOrder;
+      const valid = [];
+      (Array.isArray(src) ? src : []).forEach(k => {
+        if ((k === 'dict' || k === 'qt') && !valid.includes(k)) valid.push(k);
+      });
+      DEFAULT_QT_SECTION_ORDER.forEach(k => {
+        if (!valid.includes(k)) valid.push(k);
+      });
+      return valid;
+    }
+
     function getQuickSheetIcon(overrideIcons = null) {
       const moreIcn = getEffectiveTabIcon('more', overrideIcons);
       if (moreIcn && moreIcn !== '☰') return moreIcn;
@@ -6393,24 +6606,47 @@
         : `${ic} ${lb} · 이모지 · 순서`;
     }
 
-    function syncAllDynamicLabelsUI(overrideNames = null, overrideIcons = null) {
+    function syncAllDynamicLabelsUI(overrideNames = null, overrideIcons = null, overrideUiTexts = null) {
       const lbl = (k) => getEffectiveTabLabel(k, overrideNames);
       const icn = (k) => getEffectiveTabIcon(k, overrideIcons);
+      const ut = (k) => getUiText(k, overrideUiTexts);
 
       const previewBarTxt = document.getElementById('previewMemberBarText');
       if (previewBarTxt) previewBarTxt.textContent = `👁️ 일반 회원 시점 미리보기 중 (관리자 전용 칸·${lbl('manage')} 숨김)`;
 
       const bibleTitle = document.getElementById('bibleViewTitle');
       if (bibleTitle) bibleTitle.textContent = `${icn('bible')} ${lbl('bible')}`;
+      const bibleSub = document.getElementById('bibleViewSub');
+      if (bibleSub) bibleSub.textContent = ut('bibleHeroSub');
+      const bibleDictBtn = document.getElementById('bibleDictOpenBtn');
+      if (bibleDictBtn) bibleDictBtn.textContent = ut('bibleDictBtnLabel');
+      const bibleDictModalTitle = document.getElementById('bibleDictModalTitle');
+      if (bibleDictModalTitle) bibleDictModalTitle.textContent = ut('bibleDictModalTitle');
 
       const qtTitle = document.getElementById('qtViewTitle');
       if (qtTitle) qtTitle.textContent = `${icn('qt')} ${lbl('qt')}`;
+      const qtSub = document.getElementById('qtViewSub');
+      if (qtSub) qtSub.textContent = ut('qtHeroSub');
 
       const bylawTitle = document.getElementById('bylawViewTitle');
-      if (bylawTitle) bylawTitle.textContent = `${icn('bylaws')} 구미제일감리교회 라이트 청년부 ${lbl('bylaws')}`;
+      if (bylawTitle) {
+        const customByTitle = ut('bylawsHeroTitle');
+        bylawTitle.textContent = (customByTitle === DEFAULT_UI_TEXTS.bylawsHeroTitle)
+          ? `${icn('bylaws')} 구미제일감리교회 라이트 청년부 ${lbl('bylaws')}`
+          : `${icn('bylaws')} ${customByTitle}`;
+      }
+      const bylawDates = document.getElementById('bylawViewDates');
+      if (bylawDates) bylawDates.textContent = ut('bylawsHeroDates');
 
       const ugTitleEl = document.getElementById('userGuideViewTitle');
-      if (ugTitleEl) ugTitleEl.textContent = `${icn('guide')} 라이트 청년부 앱 ${lbl('guide')}`;
+      if (ugTitleEl) {
+        const customUgTitle = ut('guideHeroTitle');
+        ugTitleEl.textContent = (customUgTitle === DEFAULT_UI_TEXTS.guideHeroTitle)
+          ? `${icn('guide')} 라이트 청년부 앱 ${lbl('guide')}`
+          : `${icn('guide')} ${customUgTitle}`;
+      }
+      const ugSubEl = document.getElementById('userGuideViewSub');
+      if (ugSubEl) ugSubEl.textContent = ut('guideHeroSub');
 
       const qsTitleEl = document.getElementById('quickSheetTitle');
       if (qsTitleEl) qsTitleEl.textContent = `${getQuickSheetIcon(overrideIcons)} ${getQuickSheetLabel(overrideNames)}`;
@@ -6462,6 +6698,12 @@
       if (bBack) bBack.textContent = `← ${stLbl}으로 돌아가기`;
       const gBack = document.getElementById('guideBackToSettingsBtn');
       if (gBack) gBack.textContent = `← ${stLbl}으로 돌아가기`;
+      const tBack = document.getElementById('termsBackToSettingsBtn');
+      if (tBack) tBack.textContent = `← ${stLbl}으로 돌아가기`;
+      const tTitle = document.getElementById('termsViewTitle');
+      if (tTitle) tTitle.textContent = `${icn('setTerms')} ${ut('termsHeroTitle')}`;
+      const tSub = document.getElementById('termsViewSub');
+      if (tSub) tSub.textContent = ut('termsHeroSub');
     }
 
     function fitSearchPlaceholder(prefix, examples, maxWeight = 18) {
@@ -7403,6 +7645,14 @@
 
         if (promotedCount > 0) {
           await batch.commit();
+          const titles = [...dueNotices.map(n => n.title), ...dueBlocks.map(b => getBlockDisplayLabel(b))].filter(Boolean);
+          recordAuditLog({
+            actorType: 'admin',
+            category: '공지·배너',
+            action: '예약 항목 자동 공개',
+            target: `${promotedCount}건`,
+            detail: titles.join(', ')
+          });
           showToast(`⏰ 예약된 항목 ${promotedCount}건이 자동 공개되었습니다!`);
         }
       } catch (err) {
@@ -7657,7 +7907,12 @@
             }
             hiddenAutoQtDate = normalizeDotDate(d.hiddenAutoQtDate || '');
             bibleDictCustomItems = Array.isArray(d.bibleDictItems) ? d.bibleDictItems : [];
+            hiddenBuiltInDictIds = Array.isArray(d.hiddenBuiltInDictIds) ? d.hiddenBuiltInDictIds.map(String) : [];
             hiddenAutoDictDate = normalizeDotDate(d.hiddenAutoDictDate || '');
+            qtSectionOrder = getValidQtSectionOrder(d.qtSectionOrder);
+            bibleVerseEdits = (d.bibleVerseEdits && typeof d.bibleVerseEdits === 'object') ? d.bibleVerseEdits : {};
+            customTermsArticles = Array.isArray(d.customTerms) ? d.customTerms : null;
+            customBylawsArticles = Array.isArray(d.customBylaws) ? d.customBylaws : null;
             if (d.securityConfig && typeof d.securityConfig === 'object') {
               securityConfig = { ...DEFAULT_SECURITY_CONFIG, ...d.securityConfig };
             } else {
@@ -7685,13 +7940,14 @@
             tabLabels = {
               ...DEFAULT_TAB_LABELS,
               ...d,
-              icons: { ...DEFAULT_TAB_ICONS, ...(d.icons || {}) }
+              icons: { ...DEFAULT_TAB_ICONS, ...(d.icons || {}) },
+              uiTexts: { ...DEFAULT_UI_TEXTS, ...(d.uiTexts || {}) }
             };
           } else {
             tabLabels = structuredClone(DEFAULT_TAB_LABELS);
           }
           const activeEl = document.activeElement;
-          const isEditingLabels = !!(activeEl && (activeEl.hasAttribute('data-tab-name-key') || activeEl.hasAttribute('data-tab-icon-key')));
+          const isEditingLabels = !!(activeEl && (activeEl.hasAttribute('data-tab-name-key') || activeEl.hasAttribute('data-tab-icon-key') || activeEl.hasAttribute('data-ui-text-key')));
           if (!isEditingLabels) {
             draftTabInitialized = false;
             applyScreen();
@@ -8500,6 +8756,8 @@
           target.lastLoginAt = nowStr;
           target.lastLoginTs = nowTs;
           pendingAdminStatus = null;
+          sheetLogStatus = '활성 (관리자 로그인)';
+          sheetLogNote = '정상 접속';
         } else if (target && target.status === 'removed') {
           // 삭제된 관리자가 같은 성명+코드로 재입장 요청 → 다른 관리자 승인 대기
           target.status = 'pending';
@@ -8578,6 +8836,14 @@
         document.getElementById('adminNameInput').value = '';
         if (document.getElementById('adminNameInput')) document.getElementById('adminNameInput').value = '';
       document.getElementById('adminPinInput').value = '';
+        recordAuditLog({
+          actorType: 'admin',
+          actorName: adminName,
+          category: '보안·설정',
+          action: pendingAdminStatus === 'pending' ? '관리자 입장 승인 요청' : '관리자 로그인',
+          target: adminName,
+          detail: sheetLogNote || '관리자 접속'
+        });
         currentMainTab = 'manage';
         currentManageSubTab = getValidManageSubTabOrder()[0];
         isLoggingInAdmin = false;
@@ -8755,7 +9021,7 @@
       tabbar.className = `tabbar ${isManageMode ? 'dark' : 'light'}`;
       const orderedTabs = getValidTabOrder().filter(k => k !== 'manage' || canManage);
       const isMoreOpen = document.getElementById('quickLinksSheet').classList.contains('open');
-      const activeVisualTab = (currentMainTab === 'bylaws' || currentMainTab === 'guide') ? 'settings' : currentMainTab;
+      const activeVisualTab = (currentMainTab === 'bylaws' || currentMainTab === 'guide' || currentMainTab === 'terms') ? 'settings' : currentMainTab;
       tabbar.innerHTML = orderedTabs.map(key => {
         const iconVal = getTabIcon(key);
         if (key === 'more') {
@@ -8797,6 +9063,7 @@
       document.getElementById('viewQt').classList.toggle('hidden', currentMainTab !== 'qt');
       document.getElementById('viewBylaws').classList.toggle('hidden', currentMainTab !== 'bylaws');
       document.getElementById('viewGuide').classList.toggle('hidden', currentMainTab !== 'guide');
+      document.getElementById('viewTerms').classList.toggle('hidden', currentMainTab !== 'terms');
       document.getElementById('viewSettings').classList.toggle('hidden', currentMainTab !== 'settings');
       document.getElementById('viewManage').classList.toggle('hidden', currentMainTab !== 'manage');
 
@@ -8808,6 +9075,7 @@
       else if (currentMainTab === 'qt') renderQtView();
       else if (currentMainTab === 'bylaws') renderBylawsView();
       else if (currentMainTab === 'guide') renderUserGuideView();
+      else if (currentMainTab === 'terms') renderTermsView();
       else if (currentMainTab === 'settings') renderSettingsView(user);
       else if (currentMainTab === 'manage') renderManageView(user);
     }
@@ -8833,7 +9101,20 @@
       return safe.replace(pattern, '<mark class="bylaw-mark">$1</mark>');
     }
 
+    function getActiveBylawsArticles() {
+      return (Array.isArray(customBylawsArticles) && customBylawsArticles.length > 0)
+        ? customBylawsArticles
+        : BYLAWS_ARTICLES;
+    }
+
     function renderBylawsView() {
+      const user = getCurrentUser();
+      const canManage = !!(user && user.isSuperAdmin);
+      const admBar = document.getElementById('bylawsAdminBar');
+      if (admBar) admBar.classList.toggle('hidden', !canManage);
+      const rstBtn = document.getElementById('bylawsRestoreBtn');
+      if (rstBtn) rstBtn.classList.toggle('hidden', !(canManage && Array.isArray(customBylawsArticles)));
+
       const chipsEl = document.getElementById('bylawChapterChips');
       chipsEl.innerHTML = BYLAWS_CHAPTERS.map(ch => `
         <button class="filter-chip ${bylawChapterFilter === ch.id ? 'active' : ''}" type="button" onclick="setBylawChapter('${ch.id}')">
@@ -8846,14 +9127,17 @@
 
       const qCompact = q.replace(/\s+/g, '').toLowerCase();
       const qTokens = q.toLowerCase().split(/\s+/).filter(Boolean);
+      const allArts = getActiveBylawsArticles();
 
-      const matched = BYLAWS_ARTICLES.filter(art => {
-        if (bylawChapterFilter !== 'all' && art.chapterId !== bylawChapterFilter) return false;
-        if (!q) return true;
-        const hay = `${art.chapter} ${art.num} ${art.title} ${art.body}`.toLowerCase();
-        const hayCompact = hay.replace(/\s+/g, '');
-        return hayCompact.includes(qCompact) || qTokens.every(tok => hay.includes(tok));
-      });
+      const matched = allArts
+        .map((art, idx) => ({ art, idx }))
+        .filter(({ art }) => {
+          if (bylawChapterFilter !== 'all' && art.chapterId !== bylawChapterFilter) return false;
+          if (!q) return true;
+          const hay = `${art.chapter} ${art.num} ${art.title} ${art.body}`.toLowerCase();
+          const hayCompact = hay.replace(/\s+/g, '');
+          return hayCompact.includes(qCompact) || qTokens.every(tok => hay.includes(tok));
+        });
 
       const summaryEl = document.getElementById('bylawSummaryBar');
       summaryEl.textContent = q
@@ -8873,7 +9157,7 @@
       }
 
       let lastChapter = '';
-      resEl.innerHTML = matched.map(art => {
+      resEl.innerHTML = matched.map(({ art, idx }) => {
         let headerHtml = '';
         if (art.chapter !== lastChapter) {
           lastChapter = art.chapter;
@@ -8888,7 +9172,11 @@
           <div class="bylaw-article-card">
             <div class="bylaw-article-head">
               <span class="bylaw-article-title">${highlightText(art.title, q)}</span>
-              <button class="btn-sm" type="button" onclick="copyBylawArticle('${art.num}')">복사</button>
+              <div style="display:flex; gap:5px; flex-shrink:0;">
+                <button class="btn-sm" type="button" onclick="copyBylawArticle(${idx})">복사</button>
+                ${canManage ? `<button class="btn-sm" type="button" onclick="openBylawFormModal(${idx})">수정</button>` : ''}
+                ${canManage ? `<button class="btn-sm danger" type="button" onclick="deleteBylawArticle(${idx})">삭제</button>` : ''}
+              </div>
             </div>
             <div class="bylaw-article-body">${highlightText(art.body, q)}</div>
           </div>
@@ -8921,8 +9209,9 @@
       renderBylawsView();
     };
 
-    window.copyBylawArticle = async (num) => {
-      const art = BYLAWS_ARTICLES.find(a => a.num === num);
+    window.copyBylawArticle = async (idxOrNum) => {
+      const allArts = getActiveBylawsArticles();
+      const art = typeof idxOrNum === 'number' ? allArts[idxOrNum] : allArts.find(a => a.num === idxOrNum);
       if (!art) return;
       const text = `[라이트 청년부 ${getTabLabel('bylaws')} · ${art.chapter}]\n${art.title}\n${art.body}`;
       try {
@@ -9923,6 +10212,12 @@
       document.getElementById('detailTitle').textContent = n.title;
       document.getElementById('detailDate').textContent = n.date;
       document.getElementById('detailBody').textContent = n.body;
+      const srcEl = document.getElementById('detailSource');
+      if (srcEl) {
+        const srcTxt = String(n.source || '').trim();
+        srcEl.textContent = srcTxt ? `📌 출처: ${srcTxt}` : '';
+        srcEl.classList.toggle('hidden', !srcTxt);
+      }
       document.getElementById('detailModal').classList.add('open');
     };
 
@@ -10175,8 +10470,10 @@
           <button class="btn-admin" onclick="openNewQtModal()">+ 말씀·글 추가</button>
         </div>
         <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-          하단 <b>${escapeHtml(getTabIcon('qt'))} ${escapeHtml(getTabLabel('qt'))}</b> 메뉴에 표시되는 매일 자동 말씀과 관리자 작성 글을 관리합니다.
+          하단 <b>${escapeHtml(getTabIcon('qt'))} ${escapeHtml(getTabLabel('qt'))}</b> 메뉴에 표시되는 매일 자동 말씀, 관리자 작성 글, 성경 사전 및 표시 순서를 관리합니다.
         </div>
+
+        ${buildQtSectionOrderCardHtml()}
 
         <div class="card" style="border-color:${isSuppressed ? '#CBD5E1' : '#C7D2FE'}; background:${isSuppressed ? '#F8FAFC' : '#F5F7FF'}; ${isSuppressed ? 'opacity:0.82;' : ''}">
           <div class="card-top">
@@ -10775,6 +11072,8 @@
       onNoticeCategorySelectChange();
       document.getElementById('noticeTitleInput').value = '';
       document.getElementById('noticeBodyInput').value = '';
+      const nsInp = document.getElementById('noticeSourceInput');
+      if (nsInp) nsInp.value = '';
       document.getElementById('noticeAudienceSelect').value = 'all';
       renderRoleChecklist('notice', []);
       onNoticeAudienceChange();
@@ -10804,6 +11103,8 @@
       onNoticeCategorySelectChange();
       document.getElementById('noticeTitleInput').value = n.title;
       document.getElementById('noticeBodyInput').value = n.body;
+      const nsInp = document.getElementById('noticeSourceInput');
+      if (nsInp) nsInp.value = n.source || '';
       const audVal = n.audience || 'all';
       const initRoles = Array.isArray(n.targetRoles) ? n.targetRoles : [];
       document.getElementById('noticeAudienceSelect').value = audVal;
@@ -10841,6 +11142,7 @@
       if (!category) return showToast('구분을 선택하거나 직접 입력해 주세요.');
       const title = document.getElementById('noticeTitleInput').value.trim();
       const body = document.getElementById('noticeBodyInput').value.trim();
+      const source = ((document.getElementById('noticeSourceInput') || {}).value || '').trim();
       const audience = document.getElementById('noticeAudienceSelect').value || 'all';
       const targetRoles = audience === 'roles' ? getSelectedRoleIds('notice') : [];
       const publishMode = document.getElementById('noticePublishModeSelect').value || 'now';
@@ -10848,7 +11150,7 @@
       const notify = document.getElementById('noticeNotifyInput').checked;
 
       if (!title || !body) return showToast('제목과 내용을 모두 입력해 주세요.');
-      if (!enforceInputSecurity(`${category}\n${title}\n${body}`, `공지·광고(${title})`, true)) return;
+      if (!enforceInputSecurity(`${category}\n${title}\n${body}\n${source}`, `공지·광고(${title})`, true)) return;
       if (audience === 'roles' && targetRoles.length === 0) {
         return showToast('이 공지를 볼 수 있는 역할을 1개 이상 선택해 주세요.');
       }
@@ -10893,6 +11195,7 @@
           category,
           title,
           body,
+          source,
           pinned,
           audience,
           targetRoles,
@@ -11344,7 +11647,10 @@
       if (!m) return;
       document.getElementById('memberBdayModalTitle').textContent = `🎂 ${m.name}님 생일 설정`;
       document.getElementById('editMemberBdayId').value = m.id;
-      document.getElementById('adminMemberBdayInput').value = isValidBirthdayStr(m.birthday) ? formatBirthdayDisplay(m.birthday) : '';
+      const hasBday = isValidBirthdayStr(m.birthday);
+      document.getElementById('adminMemberBdayInput').value = hasBday ? formatBirthdayDisplay(m.birthday) : '';
+      const delBtn = document.getElementById('deleteAdminMemberBdayBtn');
+      if (delBtn) delBtn.classList.toggle('hidden', !hasBday);
       document.getElementById('memberBirthdayModal').classList.add('open');
     };
 
@@ -11392,6 +11698,44 @@
         handleDbError(err, '생일 저장');
       } finally {
         btn.disabled = false;
+      }
+    };
+
+    window.handleDeleteAdminMemberBirthday = async () => {
+      const id = document.getElementById('editMemberBdayId').value;
+      const m = members.find(x => String(x.id) === String(id));
+      if (!m || !isValidBirthdayStr(m.birthday)) return;
+      if (!confirm(`${m.name}님의 등록된 생일(${formatBirthdayDisplay(m.birthday)})을 삭제(초기화)할까요?`)) return;
+      const delBtn = document.getElementById('deleteAdminMemberBdayBtn');
+      if (delBtn) delBtn.disabled = true;
+      try {
+        const prevBday = formatBirthdayDisplay(m.birthday);
+        const batch = db.batch();
+        batch.update(db.collection('members').doc(String(id)), { birthday: '' });
+        batch.delete(db.collection('birthdays').doc(String(id)));
+        await batch.commit();
+        recordAuditLog({
+          actorType: 'admin',
+          category: '회원·생일',
+          action: '회원 생일 삭제',
+          target: m.name,
+          beforeVal: prevBday,
+          afterVal: '미등록'
+        });
+        syncMemberEventToSheet({
+          name: m.name,
+          role: m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미정'),
+          birthday: '미등록',
+          joinedAt: m.createdAt || formatKstDateTime(),
+          status: m.status === 'approved' ? '승인' : m.status,
+          prevName: m.prevName || ''
+        });
+        document.getElementById('memberBirthdayModal').classList.remove('open');
+        showToast(`${m.name}님의 생일 정보가 삭제되었습니다.`);
+      } catch (err) {
+        handleDbError(err, '생일 삭제');
+      } finally {
+        if (delBtn) delBtn.disabled = false;
       }
     };
 
@@ -12868,6 +13212,46 @@
       localStorage.setItem(KEY_BIBLE_MEMOS, JSON.stringify(list));
     }
 
+    function getChapterVerseEditBucket(bookId, chapter) {
+      const k = `${bookId}:${chapter}`;
+      const b = (bibleVerseEdits && bibleVerseEdits[k]) ? bibleVerseEdits[k] : {};
+      return {
+        overrides: (b.overrides && typeof b.overrides === 'object') ? b.overrides : {},
+        added: (b.added && typeof b.added === 'object') ? b.added : {},
+        deleted: Array.isArray(b.deleted) ? b.deleted.map(Number) : []
+      };
+    }
+
+    function getEffectiveChapterVerses(bookId, chapter, rawVerses) {
+      const bucket = getChapterVerseEditBucket(bookId, chapter);
+      const delSet = new Set(bucket.deleted);
+      const vMap = new Map();
+      (Array.isArray(rawVerses) ? rawVerses : []).forEach(v => {
+        const vn = Number(v.verse);
+        if (delSet.has(vn)) return;
+        const ov = bucket.overrides[String(vn)];
+        vMap.set(vn, {
+          verse: vn,
+          text: ov !== undefined ? String(ov) : String(v.text || ''),
+          isEdited: ov !== undefined,
+          isAdded: false,
+          origText: String(v.text || '')
+        });
+      });
+      Object.entries(bucket.added).forEach(([kStr, txt]) => {
+        const vn = Number(kStr);
+        if (!vn || delSet.has(vn)) return;
+        vMap.set(vn, {
+          verse: vn,
+          text: String(txt || ''),
+          isEdited: false,
+          isAdded: true,
+          origText: ''
+        });
+      });
+      return Array.from(vMap.values()).sort((a, b) => a.verse - b.verse);
+    }
+
     function renderBibleVersesHtml() {
       const book = getBibleBook(biblePos.bookId);
       const chapter = biblePos.chapter;
@@ -12875,14 +13259,25 @@
       const memos = loadBibleMemos();
       const user = getCurrentUser();
       const canWriteQt = hasUserPerm(user, 'canManageQt');
+      const bucket = getChapterVerseEditBucket(book.id, chapter);
+      const effectiveVerses = getEffectiveChapterVerses(book.id, chapter, bibleCurrentVerses);
 
       const area = document.getElementById('bibleContentArea');
       area.innerHTML = `
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:0 4px 10px; margin-bottom:6px; border-bottom:1px solid #F1F5F9;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap; padding:0 4px 10px; margin-bottom:6px; border-bottom:1px solid #F1F5F9;">
           <strong style="font-size:15px; color:#0F172A;">${escapeHtml(book.name)} ${chapter}장</strong>
-          <span style="font-size:11.5px; color:#64748B; font-weight:600;">총 ${bibleCurrentVerses.length}절</span>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-size:11.5px; color:#64748B; font-weight:600;">총 ${effectiveVerses.length}절</span>
+            ${canWriteQt ? `<button class="btn-sm primary" type="button" style="padding:4px 8px; font-size:11px;" onclick="openAddBibleVerseModal()">+ 절 추가</button>` : ''}
+          </div>
         </div>
-        ${bibleCurrentVerses.map(v => {
+        ${(canWriteQt && bucket.deleted.length > 0) ? `
+          <div class="info-box warn" style="margin-top:0; margin-bottom:9px; padding:8px 10px; display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+            <span>🗑️ 숨김(삭제)된 절: ${bucket.deleted.sort((a, b) => a - b).map(n => `${n}절`).join(', ')}</span>
+            <button class="btn-sm approve" type="button" style="padding:4px 8px; font-size:11px;" onclick="restoreDeletedBibleVersesInChapter()">🔄 삭제 절 복원</button>
+          </div>
+        ` : ''}
+        ${effectiveVerses.map(v => {
           const isSelected = bibleSelectedVerse === v.verse;
           const markObj = marks.find(m => m.bookId === book.id && m.chapter === chapter && m.verse === v.verse);
           const markColor = markObj ? getBookmarkColorObj(markObj.color) : null;
@@ -12893,7 +13288,7 @@
           return `
             <div class="bible-verse-row ${isSelected ? 'selected' : ''} ${markObj ? 'bookmarked' : ''}" style="${rowStyle}" onclick="selectBibleVerse(${v.verse})">
               <span class="bible-vnum" style="${markColor ? `color:${markColor.text};` : ''}">${v.verse}</span>
-              <span class="bible-vtext" style="font-size:${bibleFontSize}px;">${escapeHtml(v.text)}${hasMemo ? '<span class="bible-memo-badge" title="메모 있음">📝</span>' : ''}</span>
+              <span class="bible-vtext" style="font-size:${bibleFontSize}px;">${escapeHtml(v.text)}${hasMemo ? '<span class="bible-memo-badge" title="메모 있음">📝</span>' : ''}${(canWriteQt && (v.isEdited || v.isAdded)) ? `<span class="tag slate" style="margin-left:5px; font-size:9.5px; padding:1px 5px;">${v.isAdded ? '추가' : '보정'}</span>` : ''}</span>
             </div>
             ${isSelected ? `
               <div class="bible-verse-actions">
@@ -12908,6 +13303,9 @@
                 <button class="btn-sm primary" type="button" onclick="copyBibleVerse(${v.verse})">📋 말씀 복사</button>
                 <button class="btn-sm" type="button" onclick="openBibleMemoForVerse(${v.verse})">${hasMemo ? '📝 이 절 메모 보기' : '📝 이 절 메모'}</button>
                 ${canWriteQt ? `<button class="btn-sm" type="button" onclick="createQtFromBibleVerse(${v.verse})">${escapeHtml(getTabIcon('qt'))} ${escapeHtml(getTabLabel('qt'))}에 올리기</button>` : ''}
+                ${canWriteQt ? `<button class="btn-sm" type="button" onclick="openEditBibleVerseModal(${v.verse})">✏️ 오타 수정</button>` : ''}
+                ${(canWriteQt && v.isEdited) ? `<button class="btn-sm approve" type="button" onclick="restoreSingleBibleVerse(${v.verse})">🔄 원문 복원</button>` : ''}
+                ${canWriteQt ? `<button class="btn-sm danger" type="button" onclick="deleteBibleVerseByAdmin(${v.verse})">🗑️ 절 삭제</button>` : ''}
               </div>
             ` : ''}
           `;
@@ -12922,7 +13320,7 @@
 
     window.copyBibleVerse = async (vNum) => {
       const book = getBibleBook(biblePos.bookId);
-      const v = bibleCurrentVerses.find(x => x.verse === vNum);
+      const v = getEffectiveChapterVerses(book.id, biblePos.chapter, bibleCurrentVerses).find(x => x.verse === vNum);
       if (!v) return;
       const text = `${book.name} ${biblePos.chapter}:${v.verse}\n"${v.text}"`;
       try {
@@ -12935,7 +13333,7 @@
 
     window.setBibleBookmarkColor = (vNum, colorId) => {
       const book = getBibleBook(biblePos.bookId);
-      const v = bibleCurrentVerses.find(x => x.verse === vNum);
+      const v = getEffectiveChapterVerses(book.id, biblePos.chapter, bibleCurrentVerses).find(x => x.verse === vNum);
       if (!v) return;
       const cObj = getBookmarkColorObj(colorId);
       let marks = loadBibleMarks();
@@ -12979,7 +13377,7 @@
 
     window.createQtFromBibleVerse = (vNum) => {
       const book = getBibleBook(biblePos.bookId);
-      const v = bibleCurrentVerses.find(x => x.verse === vNum);
+      const v = getEffectiveChapterVerses(book.id, biblePos.chapter, bibleCurrentVerses).find(x => x.verse === vNum);
       if (!v) return;
       openNewQtModal({
         passage: `${book.name} ${biblePos.chapter}:${v.verse}`,
@@ -13792,33 +14190,34 @@ ${m.body}`;
       const container = document.getElementById('qtListContainer');
       const dailyDictHtml = buildDailyBibleDictCardHtml(canManageQt);
       const krvFooterHtml = '<div class="copyright-footnote">📖 성경 본문 출처: <b>「성경전서 개역한글판」(대한성서공회)</b> · 저작재산권 만료 원문</div>';
-      if (combined.length === 0) {
-        container.innerHTML = dailyDictHtml + `
-          <div class="card" style="text-align:center; padding:34px 18px; color:#64748B;">
-            <div style="font-size:28px; margin-bottom:8px;">${escapeHtml(getTabIcon('qt'))}</div>
-            <div style="font-size:14.5px; font-weight:800; color:#1E293B; margin-bottom:5px;">오늘 표시된 말씀이 없습니다.</div>
-            <div style="font-size:12.5px; line-height:1.5; margin-bottom:14px;">관리자가 언제든 새 말씀·글을 올리거나 자동 말씀을 복원할 수 있습니다.</div>
-            ${canManageQt ? `
-              <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
-                <button class="btn-sm primary" type="button" onclick="openNewQtModal()">+ 말씀·글 쓰기</button>
-                ${isAutoTodayQtHiddenManually() ? '<button class="btn-sm approve" type="button" onclick="restoreAutoTodayQt()">🔄 오늘 자동 말씀 복원</button>' : ''}
-              </div>
-            ` : ''}
-          </div>
-        `;
-        return;
-      }
-      container.innerHTML = dailyDictHtml + combined.map((post) => {
+      const secOrder = getValidQtSectionOrder();
+      const qtCardsHtml = combined.length === 0 ? `
+        <div class="card" style="text-align:center; padding:34px 18px; color:#64748B;">
+          <div style="font-size:28px; margin-bottom:8px;">${escapeHtml(getTabIcon('qt'))}</div>
+          <div style="font-size:14.5px; font-weight:800; color:#1E293B; margin-bottom:5px;">오늘 표시된 말씀이 없습니다.</div>
+          <div style="font-size:12.5px; line-height:1.5; margin-bottom:14px;">관리자가 언제든 새 말씀·글을 올리거나 자동 말씀을 복원할 수 있습니다.</div>
+          ${canManageQt ? `
+            <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+              <button class="btn-sm primary" type="button" onclick="openNewQtModal()">+ 말씀·글 쓰기</button>
+              ${isAutoTodayQtHiddenManually() ? '<button class="btn-sm approve" type="button" onclick="restoreAutoTodayQt()">🔄 오늘 자동 말씀 복원</button>' : ''}
+            </div>
+          ` : ''}
+        </div>
+      ` : combined.map((post) => {
         const cmts = qtComments.filter(c => c.postId === post.id);
         const previewCmts = cmts.slice(-2);
         const verseText = post.scripture || post.guide || post.title || '';
         const isTodayReplace = !post.isAuto && post.displayMode === 'replace' && normalizeDotDate(post.date) === todayDot;
         const qtLblDisp = escapeHtml(getTabLabel('qt'));
         const qtIcnDisp = escapeHtml(getTabIcon('qt'));
+        const adminBadgeDisp = escapeHtml(getUiText('qtAdminPostBadge'));
         const badgeText = post.isAuto
           ? `${qtIcnDisp} ${qtLblDisp}`
-          : (isTodayReplace ? `${qtIcnDisp} ${qtLblDisp} (관리자)` : '✍️ 관리자 작성 글');
+          : (isTodayReplace ? `${qtIcnDisp} ${qtLblDisp} (관리자)` : adminBadgeDisp);
         const badgeCls = (post.isAuto || isTodayReplace) ? 'warm' : '';
+        const srcText = post.isAuto
+          ? '「성경전서 개역한글판」(대한성서공회)'
+          : String(post.source || '').trim();
         return `
           <div class="card clickable" style="${(post.isAuto || isTodayReplace) ? 'border-color:#A5B4FC;' : ''}" onclick="openQtDetail('${escapeJsAttr(post.id)}')">
             <div class="card-top">
@@ -13829,6 +14228,7 @@ ${m.body}`;
               <span class="card-date">${escapeHtml(post.date || '')}</span>
             </div>
             <div class="qt-scripture-box" style="margin:6px 0 4px; font-size:14.5px; line-height:1.72;">${escapeHtml(verseText)}</div>
+            ${srcText ? `<div class="source-meta-line">📌 출처: ${escapeHtml(srcText)}</div>` : ''}
 
             ${buildReactionBarHtml(post.id)}
 
@@ -13859,7 +14259,9 @@ ${m.body}`;
             </div>
           </div>
         `;
-      }).join('') + krvFooterHtml;
+      }).join('');
+      const sectionHtmlMap = { dict: dailyDictHtml, qt: qtCardsHtml };
+      container.innerHTML = secOrder.map(k => sectionHtmlMap[k] || '').join('') + krvFooterHtml;
     }
 
     window.toggleQtReaction = async (postId, key) => {
@@ -13909,6 +14311,9 @@ ${m.body}`;
       document.getElementById('qtDetailBodyArea').innerHTML = `
         ${post.passage ? `<div style="margin-bottom:10px;"><span class="qt-passage-pill" style="font-size:13px; padding:4px 11px;">📖 ${escapeHtml(post.passage)}</span></div>` : ''}
         <div class="qt-scripture-box" style="font-size:15px; line-height:1.75; margin-top:4px;">${escapeHtml(verseText)}</div>
+        ${(post.isAuto || String(post.source || '').trim())
+          ? `<div class="source-meta-line">📌 출처: ${escapeHtml(post.isAuto ? '「성경전서 개역한글판」(대한성서공회)' : String(post.source || '').trim())}</div>`
+          : ''}
 
         ${buildReactionBarHtml(post.id)}
 
@@ -14101,6 +14506,8 @@ ${m.body}`;
       document.getElementById('qtDateInput').value = getKstDateParts().dot;
       document.getElementById('qtPassageInput').value = prefill && prefill.passage ? prefill.passage : '';
       document.getElementById('qtScriptureInput').value = prefill && prefill.scripture ? prefill.scripture : '';
+      const qSrcInp = document.getElementById('qtSourceInput');
+      if (qSrcInp) qSrcInp.value = prefill && prefill.source ? prefill.source : '';
       document.getElementById('qtNotifyInput').checked = true;
       document.getElementById('qtFormModal').classList.add('open');
     };
@@ -14151,6 +14558,8 @@ ${m.body}`;
       document.getElementById('qtDateInput').value = p.date || getKstDateParts().dot;
       document.getElementById('qtPassageInput').value = p.passage || '';
       document.getElementById('qtScriptureInput').value = p.scripture || p.guide || '';
+      const qSrcInp = document.getElementById('qtSourceInput');
+      if (qSrcInp) qSrcInp.value = p.source || '';
       document.getElementById('qtNotifyInput').checked = false;
       document.getElementById('qtFormModal').classList.add('open');
     };
@@ -14164,17 +14573,18 @@ ${m.body}`;
       const date = normalizeDotDate(rawDate) || getKstDateParts().dot;
       const passage = document.getElementById('qtPassageInput').value.trim();
       const scripture = document.getElementById('qtScriptureInput').value.trim();
+      const source = ((document.getElementById('qtSourceInput') || {}).value || '').trim();
       const notifyOnPublish = document.getElementById('qtNotifyInput').checked;
 
       if (!scripture) return showToast('말씀이나 작성 글 내용을 입력해 주세요.');
-      if (!enforceInputSecurity(`${passage}\n${scripture}`, `${getTabLabel('qt')} 글`, true)) return;
+      if (!enforceInputSecurity(`${passage}\n${scripture}\n${source}`, `${getTabLabel('qt')} 글`, true)) return;
 
       const btn = document.getElementById('saveQtBtn');
       btn.disabled = true;
       try {
         lastSelfQtEditTs = Date.now();
         if (editId) {
-          await db.collection('qtPosts').doc(editId).update({ date, passage, scripture, displayMode });
+          await db.collection('qtPosts').doc(editId).update({ date, passage, scripture, source, displayMode });
           recordAuditLog({
             actorType: 'admin',
             category: '오늘의 말씀',
@@ -14188,7 +14598,7 @@ ${m.body}`;
         } else {
           const targetId = String(Date.now());
           await db.collection('qtPosts').doc(targetId).set({
-            id: targetId, date, passage, scripture, displayMode,
+            id: targetId, date, passage, scripture, source, displayMode,
             authorName: user.name, notifyOnPublish, createdTs: Date.now()
           });
           recordAuditLog({
@@ -14249,6 +14659,7 @@ ${m.body}`;
     let draftSettingsItemOrder = [...DEFAULT_SETTINGS_ITEM_ORDER];
     let draftTabNames = {};
     let draftTabIcons = {};
+    let draftUiTexts = {};
     let draftTabInitialized = false;
 
     function initDraftTabEditorFromCurrent(force = false) {
@@ -14270,6 +14681,10 @@ ${m.body}`;
         draftTabNames[t.labelKey] = getTabLabel(t.labelKey);
         draftTabIcons[t.labelKey] = getTabIcon(t.labelKey);
       });
+      draftUiTexts = {};
+      UI_TEXT_REGISTRY.forEach(u => {
+        draftUiTexts[u.key] = getUiText(u.key);
+      });
       draftTabInitialized = true;
     }
 
@@ -14281,6 +14696,10 @@ ${m.body}`;
       document.querySelectorAll('[data-tab-icon-key]').forEach(inp => {
         const k = inp.getAttribute('data-tab-icon-key');
         if (k) draftTabIcons[k] = inp.value;
+      });
+      document.querySelectorAll('[data-ui-text-key]').forEach(inp => {
+        const k = inp.getAttribute('data-ui-text-key');
+        if (k) draftUiTexts[k] = inp.value;
       });
     }
 
@@ -14355,7 +14774,7 @@ ${m.body}`;
         const mName = String(draftTabNames.manage ?? '').trim() || getTabLabel('manage');
         manageTitleEl.textContent = `${mIcon} ${mName} 상단 탭 (왼쪽 → 오른쪽 순)`;
       }
-      syncAllDynamicLabelsUI(draftTabNames, draftTabIcons);
+      syncAllDynamicLabelsUI(draftTabNames, draftTabIcons, draftUiTexts);
     }
 
     function renderManageLabels(el, user) {
@@ -14485,7 +14904,35 @@ ${m.body}`;
         </div>
         </div>
 
-        <button id="saveTabLabelsInlineBtn" class="btn-full btn-dark" type="button" style="margin-top:6px;" onclick="handleSaveTabLabels()">💾 전체 메뉴 이모지 · 이름 · 순서 저장하기</button>
+        ${buildManageAccordionBar({
+          key: 'labels_ui_texts',
+          titleHtml: '🏷️ 화면 세부 제목 · 안내 문구 설정 (성경 사전·QT·회칙·가이드·설정)',
+          badgeHtml: `<span class="tag slate">${UI_TEXT_REGISTRY.length}개</span>`,
+          defaultOpen: false,
+          marginTop: '10px'
+        })}
+        <div data-acc-body="labels_ui_texts" class="${isManageSectionOpen('labels_ui_texts', false) ? '' : 'hidden'}">
+          <div class="card">
+            <div style="font-size:12px; color:#64748B; line-height:1.5; margin-bottom:10px;">
+              오늘의 성경 사전 제목, 성경·QT·회칙·가이드 상단 안내 문구, 설정 카테고리 제목 등을 자유롭게 수정할 수 있습니다. (비워두면 기본값 사용)
+            </div>
+            ${UI_TEXT_REGISTRY.map(u => {
+              const curVal = draftUiTexts[u.key] !== undefined ? draftUiTexts[u.key] : getUiText(u.key);
+              return `
+                <div class="form-group" style="margin-bottom:10px;">
+                  <label class="form-label" style="font-size:12px; margin-bottom:4px;">${escapeHtml(u.hint)}</label>
+                  <input class="form-input" style="padding:8px 10px; font-size:13px;" maxlength="${u.max}"
+                         data-ui-text-key="${escapeHtml(u.key)}"
+                         value="${escapeHtml(curVal)}"
+                         placeholder="${escapeHtml(u.defaultVal)}"
+                         oninput="onDraftUiTextInput('${escapeJsAttr(u.key)}', this.value)" />
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <button id="saveTabLabelsInlineBtn" class="btn-full btn-dark" type="button" style="margin-top:8px;" onclick="handleSaveTabLabels()">💾 전체 메뉴 · 세부 제목 · 순서 저장하기</button>
       `;
     }
 
@@ -14502,6 +14949,23 @@ ${m.body}`;
         }
       }
       syncLiveTabPreview();
+    };
+
+    window.onDraftUiTextInput = (key, val) => {
+      draftUiTexts[key] = val;
+      syncLiveTabPreview();
+    };
+
+    window.openUiTextsEditor = () => {
+      draftTabInitialized = false;
+      manageSectionOpen.labels_ui_texts = true;
+      currentMainTab = 'manage';
+      currentManageSubTab = 'labels';
+      applyScreen();
+      setTimeout(() => {
+        const bar = document.querySelector('[data-acc-bar="labels_ui_texts"]');
+        if (bar) bar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 120);
     };
 
     window.onDraftTabIconInput = (key, val) => {
@@ -14578,6 +15042,10 @@ ${m.body}`;
         draftTabNames[t.labelKey] = t.defaultLabel;
         draftTabIcons[t.labelKey] = t.defaultIcon;
       });
+      draftUiTexts = {};
+      UI_TEXT_REGISTRY.forEach(u => {
+        draftUiTexts[u.key] = u.defaultVal;
+      });
       draftTabInitialized = true;
       syncLiveTabPreview();
       const u = getCurrentUser();
@@ -14593,7 +15061,8 @@ ${m.body}`;
         tabOrder: getValidTabOrder(draftTabOrder),
         manageSubTabOrder: getValidManageSubTabOrder(draftManageSubTabOrder),
         settingsItemOrder: getValidSettingsItemOrder(draftSettingsItemOrder),
-        icons: {}
+        icons: {},
+        uiTexts: {}
       };
       BOTTOM_TAB_REGISTRY.forEach(t => {
         next[t.key] = String(draftTabNames[t.key] ?? '').trim() || t.defaultLabel;
@@ -14607,6 +15076,9 @@ ${m.body}`;
         next[t.labelKey] = String(draftTabNames[t.labelKey] ?? '').trim() || t.defaultLabel;
         next.icons[t.labelKey] = String(draftTabIcons[t.labelKey] ?? '').trim() || t.defaultIcon;
       });
+      UI_TEXT_REGISTRY.forEach(u => {
+        next.uiTexts[u.key] = String(draftUiTexts[u.key] ?? '').trim() || u.defaultVal;
+      });
 
       const btn = document.getElementById('saveTabLabelsInlineBtn') || document.getElementById('saveTabLabelsBtn');
       if (btn) btn.disabled = true;
@@ -14614,7 +15086,8 @@ ${m.body}`;
         tabLabels = {
           ...DEFAULT_TAB_LABELS,
           ...next,
-          icons: { ...DEFAULT_TAB_ICONS, ...next.icons }
+          icons: { ...DEFAULT_TAB_ICONS, ...next.icons },
+          uiTexts: { ...DEFAULT_UI_TEXTS, ...next.uiTexts }
         };
         draftTabInitialized = false;
         await db.collection('config').doc('labels').set(next);
@@ -14664,7 +15137,7 @@ ${m.body}`;
         // Restore active state on current main tab button
         document.querySelectorAll('#appTabbar .tab-btn').forEach(btn => {
           const oc = btn.getAttribute('onclick') || '';
-          const visTab = (currentMainTab === 'bylaws' || currentMainTab === 'guide') ? 'settings' : currentMainTab;
+          const visTab = (currentMainTab === 'bylaws' || currentMainTab === 'guide' || currentMainTab === 'terms') ? 'settings' : currentMainTab;
           if (oc.includes(`'${visTab}'`)) btn.classList.add('active');
         });
       } else if (sheetOpen) {
@@ -16328,6 +16801,7 @@ ${m.body}`;
       const c1 = await syncUnsyncedRenameLogsToSheet();
       const c2 = await syncUnsyncedAuditLogsToSheet();
       const total = c1 + c2;
+      if (total > 0) recordAuditLog({ actorType: 'admin', category: '보안·설정', action: '미반영 로그 시트 동기화', target: `${total}건`, detail: '관리자 수동 시트 동기화 실행' });
       showToast(total > 0 ? `✅ 로그 ${total}건을 구글 시트에 기록했습니다!` : '구글 시트 전송에 실패했습니다. 네트워크와 URL을 확인해 주세요.');
     };
 
@@ -16786,7 +17260,7 @@ ${m.body}`;
         const catDisp = adminLogFilterCategory === '오늘의 말씀' ? getTabLabel('qt')
           : (adminLogFilterCategory === '바로가기' ? getQuickSheetLabel()
             : (adminLogFilterCategory === '예배·출석' ? getTabLabel('manageWorship')
-              : (adminLogFilterCategory === '문의' ? getTabLabel('setInquiry') : adminLogFilterCategory)));
+              : (adminLogFilterCategory === '문의' ? getTabLabel('setInquiry') : (adminLogFilterCategory === '성경' ? getTabLabel('bible') : adminLogFilterCategory))));
         const catLbl = adminLogFilterCategory !== 'all' ? `[${catDisp}] ` : '';
         summaryEl.textContent = q
           ? `'${adminLogSearchQuery.trim()}' 검색 결과 ${filtered.length}건 (전체 ${allLogs.length}건)`
@@ -16881,7 +17355,7 @@ ${m.body}`;
       const memberCnt = allLogs.filter(l => l && l.actorType === 'member').length;
       const unsyncedCount = allLogs.filter(l => l && l.sheetSynced !== true).length;
       const hasSheet = !!getAdminSheetUrl();
-      const cats = ['all', '공지·배너', '오늘의 말씀', '댓글', '회원·생일', '역할·메뉴', '예배·출석', '바로가기', '문의', '보안·설정'];
+      const cats = ['all', '공지·배너', '오늘의 말씀', '성경', '댓글', '회원·생일', '역할·메뉴', '예배·출석', '바로가기', '약관·회칙', '문의', '보안·설정'];
 
       const logsListOpen = isManageSectionOpen('logs_list', true);
       el.innerHTML = `
@@ -16925,7 +17399,7 @@ ${m.body}`;
                 : (c === '오늘의 말씀' ? getTabLabel('qt')
                   : (c === '바로가기' ? getQuickSheetLabel()
                     : (c === '예배·출석' ? getTabLabel('manageWorship')
-                      : (c === '문의' ? getTabLabel('setInquiry') : c))));
+                      : (c === '문의' ? getTabLabel('setInquiry') : (c === '성경' ? getTabLabel('bible') : c)))));
               return `<option value="${escapeHtml(c)}" ${adminLogFilterCategory === c ? 'selected' : ''}>${escapeHtml(disp)}</option>`;
             }).join('')}
           </select>
@@ -17196,7 +17670,7 @@ ${m.body}`;
                       <div style="font-size:11.5px; color:#64748B;">${escapeHtml(formatDateWithDowKo(ev.date))} · ${escapeHtml(ev.start)}~${escapeHtml(ev.end)}</div>
                     </div>
                     <div style="display:flex; gap:5px;">
-                      <button class="btn-sm" type="button" onclick="renameSpecialEvent('${escapeJsAttr(ev.id)}')">✏️ 이름 변경</button>
+                      <button class="btn-sm" type="button" onclick="openEditSpecialEventModal('${escapeJsAttr(ev.id)}')">✏️ 수정</button>
                       <button class="btn-sm danger" type="button" onclick="deleteSpecialEvent('${escapeJsAttr(ev.id)}')">삭제</button>
                     </div>
                   </div>
@@ -17346,14 +17820,37 @@ ${m.body}`;
     };
 
     window.openSpecialEventModal = () => {
+      const mTitle = document.getElementById('spEventModalTitle');
+      if (mTitle) mTitle.textContent = '📅 특별 행사 · 수련회 출석 추가';
+      const editEl = document.getElementById('editSpEventId');
+      if (editEl) editEl.value = '';
       document.getElementById('spEventTitleInput').value = '';
       document.getElementById('spEventDateInput').value = getKstNowInfo().dot;
       document.getElementById('spEventStartInput').value = '19:00';
       document.getElementById('spEventEndInput').value = '21:00';
+      const saveBtn = document.getElementById('saveSpEventBtn');
+      if (saveBtn) saveBtn.textContent = '행사 출석 일정 추가';
+      document.getElementById('specialEventModal').classList.add('open');
+    };
+
+    window.openEditSpecialEventModal = (evId) => {
+      const ev = (attendanceConfig.specialEvents || []).find(e => String(e.id) === String(evId));
+      if (!ev) return;
+      const mTitle = document.getElementById('spEventModalTitle');
+      if (mTitle) mTitle.textContent = '✏️ 특별 행사 · 수련회 일정 수정';
+      const editEl = document.getElementById('editSpEventId');
+      if (editEl) editEl.value = ev.id;
+      document.getElementById('spEventTitleInput').value = getCustomSessionLabel(ev.id, ev.title);
+      document.getElementById('spEventDateInput').value = String(ev.date || '').replace(/-/g, '.');
+      document.getElementById('spEventStartInput').value = ev.start || '19:00';
+      document.getElementById('spEventEndInput').value = ev.end || '21:00';
+      const saveBtn = document.getElementById('saveSpEventBtn');
+      if (saveBtn) saveBtn.textContent = '💾 행사 일정 수정 저장';
       document.getElementById('specialEventModal').classList.add('open');
     };
 
     window.handleSaveSpecialEvent = async () => {
+      const editId = ((document.getElementById('editSpEventId') || {}).value || '').trim();
       const title = document.getElementById('spEventTitleInput').value.trim();
       const date = normalizeDateAnyInput(document.getElementById('spEventDateInput').value);
       const start = normalizeTimeInput(document.getElementById('spEventStartInput').value);
@@ -17361,27 +17858,44 @@ ${m.body}`;
       if (!title) return showToast('행사 이름을 입력해 주세요.');
       if (!date) return showToast('출석 날짜 8자리(예: 2026.12.25)를 올바르게 입력해 주세요.');
       if (!start || !end || start >= end) return showToast('시작·종료 시간(예: 19:00 ~ 21:00)을 올바르게 입력해 주세요.');
+      if (!enforceInputSecurity(title, '특별 행사 이름', true)) return;
 
-      const nextEvents = [...(attendanceConfig.specialEvents || []), {
-        id: 'evt_' + Date.now(),
-        title, date, start, end
-      }].sort((a, b) => String(a.date).localeCompare(String(b.date)));
+      const curEvents = structuredClone(attendanceConfig.specialEvents || []);
+      let prevEv = null;
+      let nextEvents;
+      if (editId) {
+        prevEv = curEvents.find(e => String(e.id) === editId) || null;
+        nextEvents = curEvents.map(e => String(e.id) === editId ? { ...e, title, date, start, end } : e)
+          .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+      } else {
+        nextEvents = [...curEvents, {
+          id: 'evt_' + Date.now(),
+          title, date, start, end
+        }].sort((a, b) => String(a.date).localeCompare(String(b.date)));
+      }
 
       const btn = document.getElementById('saveSpEventBtn');
       btn.disabled = true;
       try {
-        await db.collection('config').doc('attendance').set({ specialEvents: nextEvents }, { merge: true });
+        const patch = { specialEvents: nextEvents };
+        if (editId) {
+          const nextSessionNames = { ...(attendanceConfig.sessionNames || {}), [editId]: title };
+          patch.sessionNames = nextSessionNames;
+        }
+        await db.collection('config').doc('attendance').set(patch, { merge: true });
         recordAuditLog({
           actorType: 'admin',
           category: '예배·출석',
-          action: '특별 행사 일정 추가',
+          action: editId ? '특별 행사 일정 수정' : '특별 행사 일정 추가',
           target: title,
+          beforeVal: prevEv ? `${prevEv.title} (${prevEv.date} ${prevEv.start}~${prevEv.end})` : '',
+          afterVal: `${title} (${date} ${start}~${end})`,
           detail: `${date} ${start}~${end}`
         });
         document.getElementById('specialEventModal').classList.remove('open');
-        showToast(`[${title}] 특별 출석 일정이 추가되었습니다!`);
+        showToast(editId ? `[${title}] 행사 일정이 수정되었습니다!` : `[${title}] 특별 출석 일정이 추가되었습니다!`);
       } catch (err) {
-        handleDbError(err, '행사 일정 추가');
+        handleDbError(err, editId ? '행사 일정 수정' : '행사 일정 추가');
       } finally {
         btn.disabled = false;
       }
@@ -17662,6 +18176,7 @@ ${m.body}`;
             latestRenameLogs.forEach(l => { if (l) l.sheetSynced = true; });
             db.collection('config').doc('adminRegistry').set({ renameLogs: latestRenameLogs }, { merge: true }).catch(() => {});
           }
+          recordAuditLog({ actorType: 'admin', category: '보안·설정', action: '구글 시트 전체 동기화', target: '8개 세부 탭', detail: `회원 ${members.length}명 · 출석 ${attendanceRecords.length}건 · 로그 ${auditLogs.length}건` });
           showToast('✅ 구글 시트 8개 세부 탭 전체 동기화 완료!');
         } else {
           await syncUnsyncedRenameLogsToSheet().catch(() => {});
@@ -19955,6 +20470,19 @@ ${m.body}`;
               <span class="settings-row-right">▸</span>
             </button>
           `;
+        } else if (key === 'setTerms') {
+          rowHtml = `
+            <button class="settings-row-btn" type="button" onclick="openFromSettingsTab('terms')">
+              <span class="settings-row-left">
+                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span style="min-width:0;">
+                  <div class="settings-row-title">${escapeHtml(lb)}</div>
+                  <div class="settings-row-sub">청년부 회칙 기반 앱 서비스 이용약관 확인</div>
+                </span>
+              </span>
+              <span class="settings-row-right">▸</span>
+            </button>
+          `;
         } else if (key === 'setPrivacy') {
           rowHtml = `
             <button class="settings-row-btn" type="button" onclick="openPrivacyGuideModal()">
@@ -19997,9 +20525,15 @@ ${m.body}`;
           buf = [];
         };
         visibleItems.forEach(it => {
-          if (it.group !== curGroup) {
+          const groupTitleMap = {
+            '내 정보 · 화면': getUiText('settingsGroup1'),
+            '청년부 안내 · 소통': getUiText('settingsGroup2'),
+            '앱 이용 · 보안': getUiText('settingsGroup3')
+          };
+          const dispGroup = groupTitleMap[it.group] || it.group;
+          if (dispGroup !== curGroup) {
             flush();
-            curGroup = it.group;
+            curGroup = dispGroup;
           }
           buf.push(it.html);
         });
@@ -20020,7 +20554,7 @@ ${m.body}`;
             <div style="font-size:12px; color:#CBD5E1; margin-top:4px; line-height:1.4;">
               ${todayAtt
                 ? `✅ 오늘 ${escapeHtml(todayAtt.label || '예배')} 출석 완료 (${escapeHtml(todayAtt.time || '')})`
-                : '이용자 개인 설정 · 변경 내용은 내 기기에만 적용됩니다.'}
+                : escapeHtml(getUiText('settingsProfileSub'))}
             </div>
           </div>
         </div>
@@ -20169,18 +20703,102 @@ ${m.body}`;
       { id: 'bd_60', cat: '지명', term: '시내산 (Mount Sinai)', ref: '출애굽기 19:20', def: '출애굽한 이스라엘 백성이 하나님과 언약을 맺고 모세를 통해 십계명과 율법을 받은 거룩한 산(호렙산)입니다.' }
     ];
 
+    function buildQtSectionOrderCardHtml() {
+      const order = getValidQtSectionOrder();
+      const meta = {
+        dict: { label: getUiText('dailyDictTitle'), desc: '매일 자정(KST) 자동 변경되는 성경 용어 해설' },
+        qt: { label: `${getTabIcon('qt')} ${getTabLabel('qt')}`, desc: '매일 자동 말씀 + 관리자 작성 글 · 댓글/공감' }
+      };
+      return `
+        <div class="qt-order-card">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:9px;">
+            <strong style="font-size:13.5px; color:#0F172A;">🔀 ${escapeHtml(getTabLabel('qt'))} 화면 표시 순서 (위 → 아래)</strong>
+            <div style="display:flex; gap:5px; flex-wrap:wrap;">
+              <button class="btn-sm primary" type="button" onclick="swapQtSectionOrder()">↕️ 순서 바꾸기</button>
+              <button class="btn-sm" type="button" onclick="openUiTextsEditor()">✏️ 제목·문구 수정</button>
+            </div>
+          </div>
+          ${order.map((k, idx) => {
+            const m = meta[k] || { label: k, desc: '' };
+            return `
+              <div class="tab-order-row" style="margin-bottom:${idx === 0 ? '6px' : '0'}; background:#FFFFFF;">
+                <span class="tab-order-num">${idx + 1}</span>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:13px; font-weight:800; color:#0F172A;">${escapeHtml(m.label)}</div>
+                  <div style="font-size:11px; color:#64748B; margin-top:1px;">${escapeHtml(m.desc)}</div>
+                </div>
+                <div class="order-btns">
+                  <button class="order-btn" type="button" onclick="swapQtSectionOrder()" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                  <button class="order-btn" type="button" onclick="swapQtSectionOrder()" ${idx === 1 ? 'disabled' : ''}>▼</button>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    window.swapQtSectionOrder = async () => {
+      const cur = getValidQtSectionOrder();
+      const next = [cur[1], cur[0]];
+      try {
+        await db.collection('config').doc('layout').set({ qtSectionOrder: next }, { merge: true });
+        qtSectionOrder = next;
+        const nameMap = { dict: getUiText('dailyDictTitle'), qt: getTabLabel('qt') };
+        recordAuditLog({
+          actorType: 'admin',
+          category: '오늘의 말씀',
+          action: 'QT·성경 사전 표시 순서 변경',
+          target: `${getTabLabel('qt')} 화면`,
+          beforeVal: `${nameMap[cur[0]]} → ${nameMap[cur[1]]}`,
+          afterVal: `${nameMap[next[0]]} → ${nameMap[next[1]]}`
+        });
+        applyScreen();
+        showToast(`표시 순서를 [${nameMap[next[0]]} → ${nameMap[next[1]]}]로 변경했습니다!`);
+      } catch (err) {
+        handleDbError(err, '표시 순서 변경');
+      }
+    };
+
+    function getDictItemSourceLabel(item) {
+      if (!item) return DEFAULT_DICT_SOURCE_LABEL;
+      const customSrc = String(item.source || '').trim();
+      return customSrc || DEFAULT_DICT_SOURCE_LABEL;
+    }
+
+    function getActiveBuiltInDictPool() {
+      const hiddenSet = new Set((hiddenBuiltInDictIds || []).map(String));
+      const overrideMap = new Map();
+      (bibleDictCustomItems || []).forEach(c => {
+        if (c && c.overrideId) overrideMap.set(String(c.overrideId), c);
+      });
+      return DEFAULT_BIBLE_DICTIONARY
+        .filter(b => !hiddenSet.has(String(b.id)))
+        .map(b => {
+          const ov = overrideMap.get(String(b.id));
+          if (ov) {
+            return { ...ov, isCustom: true, overrideId: String(b.id) };
+          }
+          return { ...b, source: DEFAULT_DICT_SOURCE_LABEL, isCustom: false };
+        });
+    }
+
     function getAllBibleDictEntries() {
       const custom = Array.isArray(bibleDictCustomItems) ? bibleDictCustomItems : [];
-      const customTerms = new Set(custom.map(c => String(c.term || '').trim()));
-      const base = DEFAULT_BIBLE_DICTIONARY.filter(d => !customTerms.has(d.term));
-      return [...custom.map(c => ({ ...c, isCustom: true })), ...base.map(b => ({ ...b, isCustom: false }))];
+      const standaloneCustom = custom.filter(c => !c.overrideId).map(c => ({ ...c, isCustom: true }));
+      const builtInActive = getActiveBuiltInDictPool();
+      const seenTerms = new Set(standaloneCustom.map(c => String(c.term || '').trim()));
+      const filteredBuiltIn = builtInActive.filter(b => !seenTerms.has(String(b.term || '').trim()));
+      return [...standaloneCustom, ...filteredBuiltIn];
     }
 
     function getAutoDailyDictForToday() {
       const { dot, y, m, d } = getKstDateParts();
+      const pool = getActiveBuiltInDictPool();
+      const srcPool = pool.length > 0 ? pool : DEFAULT_BIBLE_DICTIONARY;
       const dayNumber = Math.floor(Date.UTC(Number(y), Number(m) - 1, Number(d)) / 86400000);
-      const idx = ((dayNumber % DEFAULT_BIBLE_DICTIONARY.length) + DEFAULT_BIBLE_DICTIONARY.length) % DEFAULT_BIBLE_DICTIONARY.length;
-      const item = DEFAULT_BIBLE_DICTIONARY[idx];
+      const idx = ((dayNumber % srcPool.length) + srcPool.length) % srcPool.length;
+      const item = srcPool[idx];
       return { ...item, date: dot, isAuto: true };
     }
 
@@ -20196,7 +20814,7 @@ ${m.body}`;
     function buildDailyBibleDictCardHtml(canManage) {
       const todayDot = getKstDateParts().dot;
       const autoToday = getAutoDailyDictForToday();
-      const todayCustom = (bibleDictCustomItems || []).filter(d => normalizeDotDate(d.date) === todayDot);
+      const todayCustom = (bibleDictCustomItems || []).filter(d => !d.overrideId && normalizeDotDate(d.date) === todayDot);
       const todayReplaces = todayCustom.filter(d => d.displayMode === 'replace');
       const todayTogethers = todayCustom.filter(d => d.displayMode !== 'replace');
       const suppressAuto = todayReplaces.length > 0 || isAutoTodayDictHiddenManually();
@@ -20205,10 +20823,12 @@ ${m.body}`;
         ? [...todayReplaces, ...todayTogethers]
         : [autoToday, ...todayTogethers];
 
+      const dailyBadgeTitle = escapeHtml(getUiText('dailyDictTitle'));
+
       if (displayList.length === 0) {
         return canManage ? `
           <div class="card" style="background:#F0FDF4; border-color:#BBF7D0; padding:12px 14px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
-            <span style="font-size:12.5px; color:#166534; font-weight:700;">📚 오늘의 자동 성경 사전이 숨겨져 있습니다.</span>
+            <span style="font-size:12.5px; color:#166534; font-weight:700;">${dailyBadgeTitle}이(가) 오늘 숨겨져 있습니다.</span>
             <div style="display:flex; gap:6px;">
               <button class="btn-sm approve" type="button" onclick="restoreAutoTodayDict()">🔄 복원</button>
               <button class="btn-sm primary" type="button" onclick="openNewBibleDictModal()">+ 용어 추가</button>
@@ -20221,7 +20841,7 @@ ${m.body}`;
         <div class="dict-daily-card">
           <div class="card-top" style="margin-bottom:4px;">
             <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-              <span class="tag green">📚 오늘의 성경 사전</span>
+              <span class="tag green">${dailyBadgeTitle}</span>
               <span class="tag slate">${escapeHtml(item.cat || '용어')}</span>
               ${item.ref ? `<span class="qt-passage-pill">📖 ${escapeHtml(item.ref)}</span>` : ''}
             </div>
@@ -20229,6 +20849,7 @@ ${m.body}`;
           </div>
           <div class="dict-term-title">${escapeHtml(item.term)}</div>
           <div class="dict-term-def">${escapeHtml(item.def)}</div>
+          <div class="source-meta-line">📌 출처: ${escapeHtml(getDictItemSourceLabel(item))}</div>
           <div class="card-footer" style="margin-top:10px; padding-top:8px;">
             <button class="btn-sm" type="button" onclick="openBibleDictModal()">📚 전체 사전 검색</button>
             ${canManage ? (item.isAuto ? `
@@ -20252,15 +20873,18 @@ ${m.body}`;
       const isReplaced = hasTodayReplaceDict();
       const isHidden = isAutoTodayDictHiddenManually();
       const customList = Array.isArray(bibleDictCustomItems) ? bibleDictCustomItems : [];
+      const hiddenBuiltIns = DEFAULT_BIBLE_DICTIONARY.filter(b => (hiddenBuiltInDictIds || []).includes(String(b.id)));
       const dictListOpen = isManageSectionOpen('qt_dict_list', customList.length <= 5);
+      const dailyTitle = getUiText('dailyDictTitle');
 
       return `
         <div class="section-head">
-          <h2 class="section-title">📚 성경 사전 관리 (매일 자동 + 직접 관리)</h2>
+          <h2 class="section-title">${escapeHtml(dailyTitle)} 관리 (매일 자동 + 직접 관리)</h2>
           <button class="btn-admin" type="button" onclick="openNewBibleDictModal()">+ 용어 추가</button>
         </div>
         <div class="info-box" style="margin-top:0; margin-bottom:10px;">
-          매일 00:00(KST)마다 자체 성경 용어 사전(기본 60개) 중 1개가 <b>${escapeHtml(getTabLabel('qt'))}</b> 화면에 자동 표시됩니다. 관리자가 용어를 직접 추가·수정·대체·삭제할 수 있습니다.
+          매일 00:00(KST)마다 자체 성경 용어 사전 중 1개가 <b>${escapeHtml(getTabLabel('qt'))}</b> 화면에 자동 표시됩니다.<br>
+          <b>[📚 전체 사전 보기]</b>를 열면 기본 60개 용어도 개별로 수정·삭제할 수 있습니다.
         </div>
 
         <div class="card" style="border-color:${(isReplaced || isHidden) ? '#CBD5E1' : '#86EFAC'}; background:${(isReplaced || isHidden) ? '#F8FAFC' : '#F0FDF4'};">
@@ -20271,9 +20895,10 @@ ${m.body}`;
             </div>
             <span class="card-date">${escapeHtml(autoToday.date)}</span>
           </div>
-          <p class="card-body" style="margin-bottom:9px;">${escapeHtml(autoToday.def)}</p>
+          <p class="card-body" style="margin-bottom:6px;">${escapeHtml(autoToday.def)}</p>
+          <div class="source-meta-line" style="margin-bottom:9px;">📌 출처: ${escapeHtml(getDictItemSourceLabel(autoToday))}</div>
           <div class="qt-manage-actions">
-            <button class="btn-sm primary" type="button" onclick="openBibleDictModal()">📚 전체 사전 보기</button>
+            <button class="btn-sm primary" type="button" onclick="openBibleDictModal()">📚 전체 사전 관리</button>
             <button class="btn-sm" type="button" onclick="openEditAutoTodayDictModal()">✏️ 수정(대체)</button>
             ${isHidden
               ? '<button class="btn-sm approve" type="button" onclick="restoreAutoTodayDict()">🔄 복원</button>'
@@ -20281,33 +20906,50 @@ ${m.body}`;
           </div>
         </div>
 
+        ${hiddenBuiltIns.length > 0 ? `
+          <div class="card" style="background:#FFFBEB; border-color:#FDE68A; margin-bottom:10px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:6px;">
+              <strong style="font-size:13px; color:#92400E;">🗑️ 삭제(숨김)된 기본 사전 용어 (${hiddenBuiltIns.length}개)</strong>
+              <button class="btn-sm approve" type="button" onclick="restoreAllHiddenBuiltInDicts()">🔄 전체 복원</button>
+            </div>
+            <div style="display:flex; gap:5px; flex-wrap:wrap;">
+              ${hiddenBuiltIns.map(b => `
+                <button class="btn-sm" type="button" onclick="restoreBuiltInDictItem('${escapeJsAttr(b.id)}')">🔄 ${escapeHtml(b.term)}</button>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+
         ${buildManageAccordionBar({
           key: 'qt_dict_list',
-          titleHtml: '✍️ 관리자 등록 성경 사전 목록',
+          titleHtml: '✍️ 관리자 등록 · 수정 사전 용어 목록',
           badgeHtml: `<span class="tag slate">${customList.length}개</span>`,
           defaultOpen: customList.length <= 5,
           marginTop: '10px'
         })}
         <div data-acc-body="qt_dict_list" class="${dictListOpen ? '' : 'hidden'}">
           ${customList.length === 0
-            ? '<div class="card" style="text-align:center; color:#64748B; font-size:13px;">관리자가 직접 추가한 사전 용어가 없습니다.<br>(기본 60개 용어는 성경 사전 및 매일 자동 사전에 표시됩니다.)</div>'
+            ? '<div class="card" style="text-align:center; color:#64748B; font-size:13px;">관리자가 직접 추가·수정한 사전 용어가 없습니다.<br>(기본 60개 용어는 성경 사전 및 매일 자동 사전에 표시됩니다.)</div>'
             : customList.map(d => `
                 <div class="card">
                   <div class="card-top">
                     <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
                       <strong style="font-size:14px; color:#065F46;">${escapeHtml(d.term)}</strong>
                       <span class="tag slate">${escapeHtml(d.cat || '용어')}</span>
-                      <span class="tag ${d.displayMode === 'replace' ? 'warm' : 'green'}">${d.displayMode === 'replace' ? '🔄 대체' : '📌 함께'}</span>
+                      ${d.overrideId
+                        ? '<span class="tag">✏️ 기본 용어 수정본</span>'
+                        : `<span class="tag ${d.displayMode === 'replace' ? 'warm' : 'green'}">${d.displayMode === 'replace' ? '🔄 대체' : '📌 함께'}</span>`}
                     </div>
                     <span class="card-date">${escapeHtml(d.date || '')}</span>
                   </div>
                   ${d.ref ? `<div style="margin-bottom:5px;"><span class="qt-passage-pill">📖 ${escapeHtml(d.ref)}</span></div>` : ''}
                   <p class="card-body">${escapeHtml(d.def)}</p>
+                  <div class="source-meta-line">📌 출처: ${escapeHtml(getDictItemSourceLabel(d))}</div>
                   <div class="card-footer">
                     <span style="font-size:11px; color:#64748B;">작성: ${escapeHtml(d.author || '관리자')}</span>
                     <div style="display:flex; gap:6px;">
                       <button class="btn-sm" type="button" onclick="openEditBibleDictModal('${escapeJsAttr(d.id)}')">수정</button>
-                      <button class="btn-sm danger" type="button" onclick="deleteBibleDictItem('${escapeJsAttr(d.id)}')">삭제</button>
+                      <button class="btn-sm danger" type="button" onclick="deleteBibleDictItem('${escapeJsAttr(d.id)}')">${d.overrideId ? '기본 복원' : '삭제'}</button>
                     </div>
                   </div>
                 </div>
@@ -20318,6 +20960,12 @@ ${m.body}`;
 
     window.openBibleDictModal = () => {
       bibleDictCatFilter = '전체';
+      const titleEl = document.getElementById('bibleDictModalTitle');
+      if (titleEl) titleEl.textContent = getUiText('bibleDictModalTitle');
+      const u = getCurrentUser();
+      const canManage = hasUserPerm(u, 'canManageQt');
+      const addBtn = document.getElementById('bibleDictModalAddBtn');
+      if (addBtn) addBtn.classList.toggle('hidden', !canManage);
       const inp = document.getElementById('bibleDictSearchInput');
       if (inp) inp.value = '';
       renderBibleDictModalList();
@@ -20330,6 +20978,8 @@ ${m.body}`;
     };
 
     window.renderBibleDictModalList = () => {
+      const u = getCurrentUser();
+      const canManage = hasUserPerm(u, 'canManageQt');
       const all = getAllBibleDictEntries();
       const cats = ['전체', '신학·용어', '인물', '지명', '예배·절기', '기타'];
       const chipsEl = document.getElementById('bibleDictCatChips');
@@ -20342,7 +20992,7 @@ ${m.body}`;
       const filtered = all.filter(item => {
         if (bibleDictCatFilter !== '전체' && (item.cat || '기타') !== bibleDictCatFilter) return false;
         if (!q) return true;
-        const hay = `${item.term || ''} ${item.def || ''} ${item.ref || ''} ${item.cat || ''}`.toLowerCase();
+        const hay = `${item.term || ''} ${item.def || ''} ${item.ref || ''} ${item.cat || ''} ${item.source || ''}`.toLowerCase();
         return hay.includes(q);
       });
       const sumEl = document.getElementById('bibleDictModalSummary');
@@ -20360,11 +21010,21 @@ ${m.body}`;
             <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
               <strong style="font-size:14.5px; color:#065F46;">${escapeHtml(item.term)}</strong>
               <span class="tag slate">${escapeHtml(item.cat || '용어')}</span>
-              ${item.isCustom ? '<span class="tag green">관리자 등록</span>' : ''}
+              ${item.isCustom ? `<span class="tag green">${item.overrideId ? '관리자 수정' : '관리자 등록'}</span>` : ''}
             </div>
             ${item.ref ? `<span class="qt-passage-pill">📖 ${escapeHtml(item.ref)}</span>` : ''}
           </div>
           <div style="font-size:13px; color:#334155; line-height:1.58; white-space:pre-line;">${escapeHtml(item.def)}</div>
+          <div class="source-meta-line">📌 출처: ${escapeHtml(getDictItemSourceLabel(item))}</div>
+          ${canManage ? `
+            <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:8px; padding-top:7px; border-top:1px solid #F1F5F9;">
+              ${item.isCustom
+                ? `<button class="btn-sm" type="button" onclick="openEditBibleDictModal('${escapeJsAttr(item.id)}')">✏️ 수정</button>
+                   <button class="btn-sm danger" type="button" onclick="deleteBibleDictItem('${escapeJsAttr(item.id)}')">${item.overrideId ? '기본 복원' : '삭제'}</button>`
+                : `<button class="btn-sm" type="button" onclick="openEditBuiltInDictModal('${escapeJsAttr(item.id)}')">✏️ 수정</button>
+                   <button class="btn-sm danger" type="button" onclick="deleteBuiltInDictItem('${escapeJsAttr(item.id)}')">삭제</button>`}
+            </div>
+          ` : ''}
         </div>
       `).join('');
     };
@@ -20372,13 +21032,32 @@ ${m.body}`;
     window.openNewBibleDictModal = (prefill = null) => {
       document.getElementById('bibleDictFormModalTitle').textContent = '📚 새 성경 사전 용어 등록';
       document.getElementById('editBibleDictId').value = '';
+      const ovEl = document.getElementById('overrideBuiltInDictId');
+      if (ovEl) ovEl.value = (prefill && prefill.overrideId) || '';
       document.getElementById('dictDisplayModeSelect').value = (prefill && prefill.displayMode === 'replace') ? 'replace' : 'together';
       document.getElementById('dictDateInput').value = getKstDateParts().dot;
       document.getElementById('dictCatInput').value = (prefill && prefill.cat) || '신학·용어';
       document.getElementById('dictTermInput').value = (prefill && prefill.term) || '';
       document.getElementById('dictRefInput').value = (prefill && prefill.ref) || '';
       document.getElementById('dictDefInput').value = (prefill && prefill.def) || '';
+      const srcEl = document.getElementById('dictSourceInput');
+      if (srcEl) srcEl.value = (prefill && prefill.source) || '';
       document.getElementById('bibleDictFormModal').classList.add('open');
+    };
+
+    window.openEditBuiltInDictModal = (builtInId) => {
+      const item = DEFAULT_BIBLE_DICTIONARY.find(x => String(x.id) === String(builtInId));
+      if (!item) return;
+      openNewBibleDictModal({
+        overrideId: item.id,
+        cat: item.cat,
+        term: item.term,
+        ref: item.ref,
+        def: item.def,
+        source: DEFAULT_DICT_SOURCE_LABEL,
+        displayMode: 'together'
+      });
+      document.getElementById('bibleDictFormModalTitle').textContent = '✏️ 기본 성경 사전 용어 수정';
     };
 
     window.openEditAutoTodayDictModal = () => {
@@ -20388,9 +21067,10 @@ ${m.body}`;
         term: autoToday.term,
         ref: autoToday.ref,
         def: autoToday.def,
+        source: getDictItemSourceLabel(autoToday),
         displayMode: 'replace'
       });
-      document.getElementById('bibleDictFormModalTitle').textContent = '📚 오늘의 성경 사전 수정 (대체 등록)';
+      document.getElementById('bibleDictFormModalTitle').textContent = `✏️ ${getUiText('dailyDictTitle')} 수정 (대체 등록)`;
     };
 
     window.openEditBibleDictModal = (id) => {
@@ -20398,27 +21078,33 @@ ${m.body}`;
       if (!item) return;
       document.getElementById('bibleDictFormModalTitle').textContent = '📚 성경 사전 용어 수정';
       document.getElementById('editBibleDictId').value = item.id;
+      const ovEl = document.getElementById('overrideBuiltInDictId');
+      if (ovEl) ovEl.value = item.overrideId || '';
       document.getElementById('dictDisplayModeSelect').value = item.displayMode === 'replace' ? 'replace' : 'together';
       document.getElementById('dictDateInput').value = item.date || getKstDateParts().dot;
       document.getElementById('dictCatInput').value = item.cat || '신학·용어';
       document.getElementById('dictTermInput').value = item.term || '';
       document.getElementById('dictRefInput').value = item.ref || '';
       document.getElementById('dictDefInput').value = item.def || '';
+      const srcEl = document.getElementById('dictSourceInput');
+      if (srcEl) srcEl.value = item.source || '';
       document.getElementById('bibleDictFormModal').classList.add('open');
     };
 
     window.handleSaveBibleDictItem = async () => {
       const editId = document.getElementById('editBibleDictId').value;
+      const overrideId = ((document.getElementById('overrideBuiltInDictId') || {}).value || '').trim();
       const displayMode = document.getElementById('dictDisplayModeSelect').value === 'replace' ? 'replace' : 'together';
       const date = normalizeDotDate(document.getElementById('dictDateInput').value.trim()) || getKstDateParts().dot;
       const cat = document.getElementById('dictCatInput').value || '신학·용어';
       const term = document.getElementById('dictTermInput').value.trim();
       const ref = document.getElementById('dictRefInput').value.trim();
       const def = document.getElementById('dictDefInput').value.trim();
+      const source = ((document.getElementById('dictSourceInput') || {}).value || '').trim();
 
       if (!term) return showToast('용어 이름을 입력해 주세요.');
       if (!def) return showToast('용어 설명을 입력해 주세요.');
-      if (!enforceInputSecurity(`${term}\n${ref}\n${def}`, '성경 사전', true)) return;
+      if (!enforceInputSecurity(`${term}\n${ref}\n${def}\n${source}`, '성경 사전', true)) return;
 
       const btn = document.getElementById('saveBibleDictBtn');
       if (btn) btn.disabled = true;
@@ -20433,31 +21119,48 @@ ${m.body}`;
             target.term = term;
             target.ref = ref;
             target.def = def;
+            target.source = source;
             target.updatedTs = Date.now();
           }
         } else {
-          next.unshift({
-            id: 'bdict_' + Date.now(),
-            displayMode,
-            date,
-            cat,
-            term,
-            ref,
-            def,
-            author: currentAdminName || '관리자',
-            createdTs: Date.now()
-          });
+          const existingOv = overrideId ? next.find(x => String(x.overrideId || '') === overrideId) : null;
+          if (existingOv) {
+            existingOv.cat = cat;
+            existingOv.term = term;
+            existingOv.ref = ref;
+            existingOv.def = def;
+            existingOv.source = source;
+            existingOv.updatedTs = Date.now();
+          } else {
+            next.unshift({
+              id: 'bdict_' + Date.now(),
+              overrideId: overrideId || '',
+              displayMode,
+              date,
+              cat,
+              term,
+              ref,
+              def,
+              source,
+              author: currentAdminName || '관리자',
+              createdTs: Date.now()
+            });
+          }
         }
         await db.collection('config').doc('layout').set({ bibleDictItems: next }, { merge: true });
+        bibleDictCustomItems = next;
         recordAuditLog({
           actorType: 'admin',
           category: '오늘의 말씀',
-          action: editId ? '성경 사전 수정' : '성경 사전 추가',
+          action: (editId || overrideId) ? '성경 사전 수정' : '성경 사전 추가',
           target: term,
-          detail: `${cat} · ${def}`
+          detail: `${cat}${source ? ` · 출처: ${source}` : ''} · ${def}`
         });
         document.getElementById('bibleDictFormModal').classList.remove('open');
-        showToast(editId ? '성경 사전 용어가 수정되었습니다!' : '새 성경 사전 용어가 등록되었습니다!');
+        if (document.getElementById('bibleDictModal').classList.contains('open')) {
+          renderBibleDictModalList();
+        }
+        showToast((editId || overrideId) ? '성경 사전 용어가 수정되었습니다!' : '새 성경 사전 용어가 등록되었습니다!');
       } catch (err) {
         handleDbError(err, '성경 사전 저장');
       } finally {
@@ -20467,20 +21170,86 @@ ${m.body}`;
 
     window.deleteBibleDictItem = async (id) => {
       const target = (bibleDictCustomItems || []).find(x => String(x.id) === String(id));
-      if (!target || !confirm(`[${target.term}] 용어를 삭제할까요?`)) return;
+      if (!target) return;
+      const msg = target.overrideId
+        ? `[${target.term}] 수정본을 삭제하고 기본 사전 내용으로 복원할까요?`
+        : `[${target.term}] 용어를 삭제할까요?`;
+      if (!confirm(msg)) return;
       try {
         const next = (bibleDictCustomItems || []).filter(x => String(x.id) !== String(id));
         await db.collection('config').doc('layout').set({ bibleDictItems: next }, { merge: true });
+        bibleDictCustomItems = next;
         recordAuditLog({
           actorType: 'admin',
           category: '오늘의 말씀',
-          action: '성경 사전 삭제',
+          action: target.overrideId ? '성경 사전 기본 복원' : '성경 사전 삭제',
           target: target.term,
           detail: target.def || ''
         });
-        showToast('성경 사전 용어가 삭제되었습니다.');
+        if (document.getElementById('bibleDictModal').classList.contains('open')) {
+          renderBibleDictModalList();
+        }
+        showToast(target.overrideId ? '기본 사전 내용으로 복원했습니다.' : '성경 사전 용어가 삭제되었습니다.');
       } catch (err) {
         handleDbError(err, '성경 사전 삭제');
+      }
+    };
+
+    window.deleteBuiltInDictItem = async (builtInId) => {
+      const item = DEFAULT_BIBLE_DICTIONARY.find(x => String(x.id) === String(builtInId));
+      if (!item || !confirm(`[${item.term}] 기본 사전 용어를 삭제(숨김)할까요?\n(QT 관리에서 언제든 다시 복원할 수 있습니다.)`)) return;
+      try {
+        const nextHidden = Array.from(new Set([...(hiddenBuiltInDictIds || []), String(builtInId)]));
+        await db.collection('config').doc('layout').set({ hiddenBuiltInDictIds: nextHidden }, { merge: true });
+        hiddenBuiltInDictIds = nextHidden;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '오늘의 말씀',
+          action: '기본 성경 사전 용어 삭제(숨김)',
+          target: item.term,
+          detail: item.def || ''
+        });
+        if (document.getElementById('bibleDictModal').classList.contains('open')) {
+          renderBibleDictModalList();
+        }
+        showToast(`[${item.term}] 용어를 사전에서 삭제했습니다.`);
+      } catch (err) {
+        handleDbError(err, '기본 사전 삭제');
+      }
+    };
+
+    window.restoreBuiltInDictItem = async (builtInId) => {
+      const item = DEFAULT_BIBLE_DICTIONARY.find(x => String(x.id) === String(builtInId));
+      try {
+        const nextHidden = (hiddenBuiltInDictIds || []).filter(id => String(id) !== String(builtInId));
+        await db.collection('config').doc('layout').set({ hiddenBuiltInDictIds: nextHidden }, { merge: true });
+        hiddenBuiltInDictIds = nextHidden;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '오늘의 말씀',
+          action: '기본 성경 사전 용어 복원',
+          target: item ? item.term : String(builtInId)
+        });
+        showToast(`[${item ? item.term : '용어'}]가 복원되었습니다!`);
+      } catch (err) {
+        handleDbError(err, '기본 사전 복원');
+      }
+    };
+
+    window.restoreAllHiddenBuiltInDicts = async () => {
+      if (!confirm('삭제(숨김)된 기본 성경 사전 용어를 모두 복원할까요?')) return;
+      try {
+        await db.collection('config').doc('layout').set({ hiddenBuiltInDictIds: [] }, { merge: true });
+        hiddenBuiltInDictIds = [];
+        recordAuditLog({
+          actorType: 'admin',
+          category: '오늘의 말씀',
+          action: '기본 성경 사전 전체 복원',
+          target: '성경 용어 사전'
+        });
+        showToast('삭제된 기본 사전 용어를 모두 복원했습니다!');
+      } catch (err) {
+        handleDbError(err, '기본 사전 전체 복원');
       }
     };
 
@@ -21320,6 +22089,517 @@ service cloud.firestore {
         );
       }
     }
+
+
+    // ==================== 27. 성경 오타 보정 · 이용약관(회칙 기반) · 회칙 관리자 CRUD ====================
+    // --- (A) 성경 본문 오타·오류 관리자 추가/수정/삭제/복원 ---
+    window.openAddBibleVerseModal = () => {
+      const book = getBibleBook(biblePos.bookId);
+      const chapter = biblePos.chapter;
+      const effective = getEffectiveChapterVerses(book.id, chapter, bibleCurrentVerses);
+      const nextNum = effective.length > 0 ? (Math.max(...effective.map(v => v.verse)) + 1) : 1;
+      document.getElementById('bibleVerseEditModalTitle').textContent = '➕ 성경 누락 절 추가';
+      document.getElementById('editBibleVerseMode').value = 'add';
+      document.getElementById('editBibleVerseOrigNum').value = '';
+      document.getElementById('editBibleVerseRefBox').innerHTML = `📖 대상 위치: <b>${escapeHtml(book.name)} ${chapter}장</b> (개역한글판 누락 절 보완)`;
+      const numInp = document.getElementById('editBibleVerseNumInput');
+      numInp.value = String(nextNum);
+      numInp.disabled = false;
+      document.getElementById('editBibleVerseTextInput').value = '';
+      document.getElementById('bibleVerseEditModal').classList.add('open');
+    };
+
+    window.openEditBibleVerseModal = (vNum) => {
+      const book = getBibleBook(biblePos.bookId);
+      const chapter = biblePos.chapter;
+      const effective = getEffectiveChapterVerses(book.id, chapter, bibleCurrentVerses);
+      const v = effective.find(x => x.verse === Number(vNum));
+      if (!v) return;
+      document.getElementById('bibleVerseEditModalTitle').textContent = '✏️ 성경 본문 오타 · 오류 수정';
+      document.getElementById('editBibleVerseMode').value = v.isAdded ? 'edit_added' : 'edit';
+      document.getElementById('editBibleVerseOrigNum').value = String(v.verse);
+      document.getElementById('editBibleVerseRefBox').innerHTML = `📖 수정 대상: <b>${escapeHtml(book.name)} ${chapter}장 ${v.verse}절</b>`;
+      const numInp = document.getElementById('editBibleVerseNumInput');
+      numInp.value = String(v.verse);
+      numInp.disabled = true;
+      document.getElementById('editBibleVerseTextInput').value = v.text || '';
+      document.getElementById('bibleVerseEditModal').classList.add('open');
+    };
+
+    window.handleSaveBibleVerseEdit = async () => {
+      const book = getBibleBook(biblePos.bookId);
+      const chapter = biblePos.chapter;
+      const mode = document.getElementById('editBibleVerseMode').value || 'edit';
+      const vNum = Math.floor(Number(document.getElementById('editBibleVerseNumInput').value || 0));
+      const text = document.getElementById('editBibleVerseTextInput').value.trim();
+      if (!vNum || vNum < 1 || vNum > 200) return showToast('올바른 절 번호(1~200)를 입력해 주세요.');
+      if (!text) return showToast('성경 본문 내용을 입력해 주세요.');
+      if (!enforceInputSecurity(text, `${book.name} ${chapter}:${vNum}`, true)) return;
+
+      const key = `${book.id}:${chapter}`;
+      const nextEdits = structuredClone(bibleVerseEdits || {});
+      const curBucket = getChapterVerseEditBucket(book.id, chapter);
+      const prevEffective = getEffectiveChapterVerses(book.id, chapter, bibleCurrentVerses).find(x => x.verse === vNum);
+
+      if (mode === 'add' || mode === 'edit_added') {
+        curBucket.added[String(vNum)] = text;
+        curBucket.deleted = curBucket.deleted.filter(n => n !== vNum);
+      } else {
+        curBucket.overrides[String(vNum)] = text;
+      }
+      nextEdits[key] = curBucket;
+
+      const btn = document.getElementById('saveBibleVerseEditBtn');
+      if (btn) btn.disabled = true;
+      try {
+        await db.collection('config').doc('layout').set({ bibleVerseEdits: nextEdits }, { merge: true });
+        bibleVerseEdits = nextEdits;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '성경',
+          action: mode === 'add' ? '성경 절 추가' : '성경 오타·본문 수정',
+          target: `${book.name} ${chapter}:${vNum}`,
+          beforeVal: prevEffective ? prevEffective.text : '',
+          afterVal: text
+        });
+        document.getElementById('bibleVerseEditModal').classList.remove('open');
+        renderBibleVersesHtml();
+        showToast(mode === 'add' ? `${book.name} ${chapter}:${vNum} 절이 추가되었습니다.` : `${book.name} ${chapter}:${vNum} 오타가 수정되었습니다.`);
+      } catch (err) {
+        handleDbError(err, '성경 본문 저장');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    };
+
+    window.restoreSingleBibleVerse = async (vNum) => {
+      const book = getBibleBook(biblePos.bookId);
+      const chapter = biblePos.chapter;
+      if (!confirm(`${book.name} ${chapter}:${vNum} 절을 개역한글판 원문으로 복원할까요?`)) return;
+      const key = `${book.id}:${chapter}`;
+      const nextEdits = structuredClone(bibleVerseEdits || {});
+      const curBucket = getChapterVerseEditBucket(book.id, chapter);
+      const prevTxt = curBucket.overrides[String(vNum)] || '';
+      delete curBucket.overrides[String(vNum)];
+      nextEdits[key] = curBucket;
+      try {
+        await db.collection('config').doc('layout').set({ bibleVerseEdits: nextEdits }, { merge: true });
+        bibleVerseEdits = nextEdits;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '성경',
+          action: '성경 절 원문 복원',
+          target: `${book.name} ${chapter}:${vNum}`,
+          beforeVal: prevTxt
+        });
+        renderBibleVersesHtml();
+        showToast(`${book.name} ${chapter}:${vNum} 원문이 복원되었습니다.`);
+      } catch (err) {
+        handleDbError(err, '성경 원문 복원');
+      }
+    };
+
+    window.deleteBibleVerseByAdmin = async (vNum) => {
+      const book = getBibleBook(biblePos.bookId);
+      const chapter = biblePos.chapter;
+      const effective = getEffectiveChapterVerses(book.id, chapter, bibleCurrentVerses);
+      const v = effective.find(x => x.verse === Number(vNum));
+      if (!v) return;
+      if (!confirm(`${book.name} ${chapter}:${vNum} 절을 화면에서 삭제(숨김)할까요?`)) return;
+      const key = `${book.id}:${chapter}`;
+      const nextEdits = structuredClone(bibleVerseEdits || {});
+      const curBucket = getChapterVerseEditBucket(book.id, chapter);
+      if (v.isAdded) {
+        delete curBucket.added[String(vNum)];
+      } else {
+        delete curBucket.overrides[String(vNum)];
+        if (!curBucket.deleted.includes(Number(vNum))) curBucket.deleted.push(Number(vNum));
+      }
+      nextEdits[key] = curBucket;
+      try {
+        await db.collection('config').doc('layout').set({ bibleVerseEdits: nextEdits }, { merge: true });
+        bibleVerseEdits = nextEdits;
+        bibleSelectedVerse = null;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '성경',
+          action: '성경 절 삭제',
+          target: `${book.name} ${chapter}:${vNum}`,
+          detail: v.text || ''
+        });
+        renderBibleVersesHtml();
+        showToast(`${book.name} ${chapter}:${vNum} 절이 삭제되었습니다.`);
+      } catch (err) {
+        handleDbError(err, '성경 절 삭제');
+      }
+    };
+
+    window.restoreDeletedBibleVersesInChapter = async () => {
+      const book = getBibleBook(biblePos.bookId);
+      const chapter = biblePos.chapter;
+      const key = `${book.id}:${chapter}`;
+      const nextEdits = structuredClone(bibleVerseEdits || {});
+      const curBucket = getChapterVerseEditBucket(book.id, chapter);
+      const cnt = curBucket.deleted.length;
+      if (cnt === 0) return;
+      curBucket.deleted = [];
+      nextEdits[key] = curBucket;
+      try {
+        await db.collection('config').doc('layout').set({ bibleVerseEdits: nextEdits }, { merge: true });
+        bibleVerseEdits = nextEdits;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '성경',
+          action: '삭제된 성경 절 복원',
+          target: `${book.name} ${chapter}장`,
+          detail: `${cnt}개 절 복원`
+        });
+        renderBibleVersesHtml();
+        showToast(`${book.name} ${chapter}장의 삭제된 ${cnt}개 절을 복원했습니다.`);
+      } catch (err) {
+        handleDbError(err, '성경 절 복원');
+      }
+    };
+
+    // --- (B) 라이트 청년부 앱 이용약관 (회칙 제1장~제7장 참고 기본 8개 조항 + 관리자 추가/수정/삭제/순서변경) ---
+    const DEFAULT_TERMS_ARTICLES = [
+      {
+        id: 'tos_1',
+        title: '제1조 (목적 및 적용 범위)',
+        body: '① 본 약관은 기독교대한감리회 구미제일교회 라이트 청년부(이하 "본회")가 운영하는 라이트 청년부 웹 앱(이하 "앱")의 이용 조건, 회원 및 관리자의 권리·의무, 운영 기준을 정함을 목적으로 합니다.\n② 본 약관에서 정하지 않은 공동체 조직·회원·회의·운영에 관한 사항은 「구미제일감리교회 라이트 청년부 회칙」(제1조~제28조)을 따릅니다.'
+      },
+      {
+        id: 'tos_2',
+        title: '제2조 (회원 자격 및 가입·승인)',
+        body: '① 앱의 이용 자격은 회칙 제4조에 따라 본회에 등록하여 출석하는 20세 이상 40세 미만의 미혼남녀 청년 및 본회 지도교역자·부장·교사 등 관계자로 합니다.\n② 신규 회원가입은 본회가 발급한 당일 유효 초대 QR 코드를 통해 신청하며, 본인 성명·생년월일·역할을 정확히 입력한 뒤 관리자의 승인을 거쳐 정식 이용이 가능합니다.\n③ 허위 정보 기재, 타인 사칭 또는 공동체 목적에 반하는 신청은 보류·거절될 수 있습니다.'
+      },
+      {
+        id: 'tos_3',
+        title: '제3조 (회원의 권리와 의무)',
+        body: '① 승인된 회원은 앱에서 공지·소식 열람, 예배·행사 출석 체크, 성경 읽기·사전·메모·책갈피, QT 공감·묵상 댓글, 회칙 열람, 문의 사항 등록 등의 기능을 이용할 수 있습니다.\n② 회원은 회칙 제6조에 따라 예배와 교육에 성실히 참여하고 교회 질서와 회칙을 준수하며, 앱 내 댓글과 소통 공간에서 공동체의 덕을 세우는 언어와 태도를 지켜야 합니다.\n③ 타인의 계정을 도용하거나, 악성 코드·피싱 링크 삽입, 도배 행위 등 앱의 정상적인 운영을 방해하는 행위는 금지됩니다.'
+      },
+      {
+        id: 'tos_4',
+        title: '제4조 (개인정보 최소 수집 및 프라이버시 보호)',
+        body: '① 본 앱은 개인정보 피해 가능성을 최소화하기 위해 전화번호·집주소·주민등록번호·이메일을 수집하지 않으며, 공동체 운영에 꼭 필요한 [성명]과 [생년월일]만 수집합니다.\n② 로그인 비밀번호는 암호화되어 저장되며 관리자를 포함한 누구도 열람할 수 없습니다.\n③ 회원의 성경 개인 메모, 6색 책갈피, 성경 검색 기록, 글자 크기 및 알림 설정은 오직 본인 기기에만 저장되며 관리자에게 공개되거나 로그에 기록되지 않습니다.\n④ 회칙 제18조 제3항의 정신에 따라 개인의 신앙생활 및 상담과 관련된 비밀사항은 철저히 보호합니다.'
+      },
+      {
+        id: 'tos_5',
+        title: '제5조 (게시물 · 댓글 · 문의 사항 및 보안 로그)',
+        body: '① 회원이 작성한 묵상 댓글과 문의 사항의 책임은 작성자 본인에게 있으며, 본인이 작성한 댓글과 문의 사항은 언제든 직접 수정·삭제할 수 있습니다.\n② 비방·욕설·허위사실 유포·광고성 스팸·악성 링크 등 공동체 질서를 해치는 게시물은 사전 통보 없이 차단 또는 삭제될 수 있습니다.\n③ 건전한 공동체 운영과 보안 사고 예방을 위해 관리자 활동 전반과 회원의 댓글(작성·수정·삭제), 문의 사항(작성·수정·삭제), 이름·생일 변경 신청, 가입·탈퇴, 출석 체크 내역은 삭제 불가 보안 로그에 기록됩니다.'
+      },
+      {
+        id: 'tos_6',
+        title: '제6조 (운영 조직 및 관리 권한)',
+        body: '① 앱의 공지·배너 게시, 회원 승인, 역할 배정, 출석부·보안 관리 권한은 회칙 제7조·제8조에 따른 지도교역자·부장·회장 및 위임받은 최고 관리자에게 부여됩니다.\n② 관리자는 회원의 개인정보를 본회 사역 외의 목적으로 외부에 유출하거나 무단 이용해서는 안 되며, 임기 종료·인수인계 시 즉시 관리자 권한을 해제하고 관리자 코드를 변경하여야 합니다.'
+      },
+      {
+        id: 'tos_7',
+        title: '제7조 (저작권 및 출처 준수)',
+        body: '① 앱에 제공되는 성경 본문 및 매일 자동 말씀은 저작재산권 보호기간이 만료된 「성경전서 개역한글판」(대한성서공회) 원문을 사용하며, 성경 용어 사전은 라이트 청년부가 자체 정리한 해설을 제공합니다.\n② 관리자 및 회원은 외부 저작물(유료 번역본·도서·기사 등)을 무단 복제하여 게시해서는 안 되며, 허용된 범위 내 인용 시 반드시 출처를 표기하여야 합니다.'
+      },
+      {
+        id: 'tos_8',
+        title: '제8조 (회원 탈퇴, 자격 상실 및 약관 개정)',
+        body: '① 회원은 언제든지 앱 내 [설정 → 내 계정 관리 → 계정 삭제]를 통해 직접 탈퇴할 수 있으며, 탈퇴 시 계정 정보는 즉시 삭제됩니다.\n② 회칙 제4조 제2항에 따라 소속 변경 또는 회원 자격 상실 사유가 발생한 경우 지도교역자·부장·회장의 확인을 거쳐 회원 명부에서 정리될 수 있습니다.\n③ 본 약관은 공동체 운영 필요 또는 회칙 개정에 따라 수정될 수 있으며, 변경 사항은 앱 공지 및 이용약관 화면을 통해 안내합니다.'
+      }
+    ];
+
+    function getActiveTermsArticles() {
+      return (Array.isArray(customTermsArticles) && customTermsArticles.length > 0)
+        ? customTermsArticles
+        : DEFAULT_TERMS_ARTICLES;
+    }
+
+    function renderTermsView() {
+      const user = getCurrentUser();
+      const canManage = !!(user && user.isSuperAdmin);
+      const admBar = document.getElementById('termsAdminBar');
+      if (admBar) admBar.classList.toggle('hidden', !canManage);
+      const rstBtn = document.getElementById('termsRestoreBtn');
+      if (rstBtn) rstBtn.classList.toggle('hidden', !(canManage && Array.isArray(customTermsArticles)));
+
+      const q = String(termsSearchQuery || '').trim();
+      const clr = document.getElementById('termsSearchClear');
+      if (clr) clr.classList.toggle('hidden', !q);
+
+      const all = getActiveTermsArticles();
+      const qLower = q.toLowerCase();
+      const qTokens = qLower.split(/\s+/).filter(Boolean);
+      const matched = all
+        .map((art, idx) => ({ art, idx }))
+        .filter(({ art }) => {
+          if (!qLower) return true;
+          const hay = `${art.title || ''} ${art.body || ''}`.toLowerCase();
+          return qTokens.every(t => hay.includes(t));
+        });
+
+      const sumEl = document.getElementById('termsSummaryBar');
+      if (sumEl) {
+        sumEl.textContent = q ? `'${q}' 검색 결과 ${matched.length}개 조항` : `총 ${matched.length}개 조항 (구미제일감리교회 라이트 청년부 회칙 준거)`;
+      }
+
+      const resEl = document.getElementById('termsResults');
+      if (!resEl) return;
+      if (matched.length === 0) {
+        resEl.innerHTML = `
+          <div class="card" style="text-align:center; padding:26px 16px; color:#64748B;">
+            <div style="font-size:24px; margin-bottom:6px;">🔎</div>
+            <div style="font-size:14px; font-weight:700; color:#334155;">일치하는 이용약관 조항이 없습니다.</div>
+          </div>
+        `;
+        return;
+      }
+
+      resEl.innerHTML = matched.map(({ art, idx }) => `
+        <div class="bylaw-article-card">
+          <div class="bylaw-article-head">
+            <span class="bylaw-article-title">${highlightText(art.title || '', q)}</span>
+            <div style="display:flex; gap:5px; flex-shrink:0; align-items:center;">
+              <button class="btn-sm" type="button" onclick="copyTermsArticle(${idx})">복사</button>
+              ${canManage ? `<button class="btn-sm" type="button" onclick="moveTermsArticle(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>` : ''}
+              ${canManage ? `<button class="btn-sm" type="button" onclick="moveTermsArticle(${idx}, 1)" ${idx === all.length - 1 ? 'disabled' : ''}>▼</button>` : ''}
+              ${canManage ? `<button class="btn-sm" type="button" onclick="openTermsFormModal(${idx})">수정</button>` : ''}
+              ${canManage ? `<button class="btn-sm danger" type="button" onclick="deleteTermsArticle(${idx})">삭제</button>` : ''}
+            </div>
+          </div>
+          <div class="bylaw-article-body">${highlightText(art.body || '', q)}</div>
+        </div>
+      `).join('');
+    }
+
+    window.onTermsSearchInput = (val) => {
+      termsSearchQuery = val;
+      renderTermsView();
+    };
+
+    window.clearTermsSearch = () => {
+      termsSearchQuery = '';
+      const inp = document.getElementById('termsSearchInput');
+      if (inp) { inp.value = ''; inp.focus(); }
+      renderTermsView();
+    };
+
+    window.copyTermsArticle = async (idx) => {
+      const art = getActiveTermsArticles()[idx];
+      if (!art) return;
+      try {
+        await navigator.clipboard.writeText(`[라이트 청년부 이용약관]\n${art.title}\n${art.body}`);
+        showToast(`${art.title} 내용이 복사되었습니다.`);
+      } catch {
+        showToast('복사를 지원하지 않는 브라우저입니다.');
+      }
+    };
+
+    window.openTermsFormModal = (idx = null) => {
+      const hasIdx = idx !== null && idx !== undefined && idx >= 0;
+      const art = hasIdx ? getActiveTermsArticles()[idx] : null;
+      document.getElementById('termsFormModalTitle').textContent = art ? '✏️ 이용약관 조항 수정' : '📄 이용약관 조항 추가';
+      document.getElementById('editTermsId').value = art ? String(idx) : '';
+      document.getElementById('termsTitleInput').value = art ? (art.title || '') : `제${getActiveTermsArticles().length + 1}조 ()`;
+      document.getElementById('termsBodyInput').value = art ? (art.body || '') : '';
+      document.getElementById('termsFormModal').classList.add('open');
+    };
+
+    window.handleSaveTermsArticle = async () => {
+      const idxRaw = document.getElementById('editTermsId').value;
+      const title = document.getElementById('termsTitleInput').value.trim();
+      const body = document.getElementById('termsBodyInput').value.trim();
+      if (!title || !body) return showToast('조항 제목과 내용을 모두 입력해 주세요.');
+      if (!enforceInputSecurity(`${title}\n${body}`, '이용약관', true)) return;
+
+      const next = structuredClone(getActiveTermsArticles());
+      const isEdit = idxRaw !== '' && next[Number(idxRaw)];
+      const prevArt = isEdit ? structuredClone(next[Number(idxRaw)]) : null;
+      if (isEdit) {
+        next[Number(idxRaw)] = { ...next[Number(idxRaw)], title, body };
+      } else {
+        next.push({ id: 'tos_' + Date.now(), title, body });
+      }
+
+      const btn = document.getElementById('saveTermsArticleBtn');
+      if (btn) btn.disabled = true;
+      try {
+        await db.collection('config').doc('layout').set({ customTerms: next }, { merge: true });
+        customTermsArticles = next;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '약관·회칙',
+          action: isEdit ? '이용약관 조항 수정' : '이용약관 조항 추가',
+          target: title,
+          beforeVal: prevArt ? `${prevArt.title} / ${prevArt.body}` : '',
+          afterVal: `${title} / ${body}`
+        });
+        document.getElementById('termsFormModal').classList.remove('open');
+        renderTermsView();
+        showToast(isEdit ? '이용약관 조항이 수정되었습니다!' : '새 이용약관 조항이 추가되었습니다!');
+      } catch (err) {
+        handleDbError(err, '이용약관 저장');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    };
+
+    window.moveTermsArticle = async (idx, dir) => {
+      const next = structuredClone(getActiveTermsArticles());
+      const t = idx + dir;
+      if (t < 0 || t >= next.length) return;
+      const movedTitle = next[idx].title;
+      [next[idx], next[t]] = [next[t], next[idx]];
+      try {
+        await db.collection('config').doc('layout').set({ customTerms: next }, { merge: true });
+        customTermsArticles = next;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '약관·회칙',
+          action: '이용약관 순서 변경',
+          target: movedTitle,
+          detail: `${idx + 1}번 → ${t + 1}번`
+        });
+        renderTermsView();
+        showToast('이용약관 순서가 변경되었습니다.');
+      } catch (err) {
+        handleDbError(err, '이용약관 순서 변경');
+      }
+    };
+
+    window.deleteTermsArticle = async (idx) => {
+      const cur = getActiveTermsArticles();
+      const target = cur[idx];
+      if (!target || !confirm(`[${target.title}] 이용약관 조항을 삭제할까요?`)) return;
+      const next = structuredClone(cur);
+      next.splice(idx, 1);
+      try {
+        await db.collection('config').doc('layout').set({ customTerms: next }, { merge: true });
+        customTermsArticles = next;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '약관·회칙',
+          action: '이용약관 조항 삭제',
+          target: target.title,
+          detail: target.body || ''
+        });
+        renderTermsView();
+        showToast('이용약관 조항이 삭제되었습니다.');
+      } catch (err) {
+        handleDbError(err, '이용약관 삭제');
+      }
+    };
+
+    window.restoreDefaultTerms = async () => {
+      if (!confirm('이용약관을 기본 8개 조항으로 복원할까요?')) return;
+      try {
+        await db.collection('config').doc('layout').set({ customTerms: FieldValue.delete() }, { merge: true });
+        customTermsArticles = null;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '약관·회칙',
+          action: '이용약관 기본 복원',
+          target: '기본 8개 조항'
+        });
+        renderTermsView();
+        showToast('이용약관이 기본 조항으로 복원되었습니다.');
+      } catch (err) {
+        handleDbError(err, '이용약관 복원');
+      }
+    };
+
+    // --- (C) 청년부 회칙 관리자 추가/수정/삭제/기본 복원 ---
+    window.openBylawFormModal = (idx = null) => {
+      const hasIdx = idx !== null && idx !== undefined && idx >= 0;
+      const art = hasIdx ? getActiveBylawsArticles()[idx] : null;
+      document.getElementById('bylawFormModalTitle').textContent = art ? '✏️ 회칙 조항 수정' : '📜 회칙 조항 추가';
+      document.getElementById('editBylawIdx').value = art ? String(idx) : '';
+      document.getElementById('bylawChapterSelect').value = art ? (art.chapterId || 'ch1') : 'ch7';
+      document.getElementById('bylawNumInput').value = art ? (art.num || '') : `제${getActiveBylawsArticles().length + 1}조`;
+      document.getElementById('bylawTitleInput').value = art ? (art.title || '') : `제${getActiveBylawsArticles().length + 1}조 ()`;
+      document.getElementById('bylawBodyInput').value = art ? (art.body || '') : '';
+      document.getElementById('bylawFormModal').classList.add('open');
+    };
+
+    window.handleSaveBylawArticle = async () => {
+      const idxRaw = document.getElementById('editBylawIdx').value;
+      const chapterId = document.getElementById('bylawChapterSelect').value || 'ch1';
+      const chObj = BYLAWS_CHAPTERS.find(c => c.id === chapterId) || { label: '제1장 총칙' };
+      const num = document.getElementById('bylawNumInput').value.trim() || '조항';
+      const title = document.getElementById('bylawTitleInput').value.trim();
+      const body = document.getElementById('bylawBodyInput').value.trim();
+      if (!title || !body) return showToast('조항 제목과 본문을 모두 입력해 주세요.');
+      if (!enforceInputSecurity(`${num}\n${title}\n${body}`, '회칙 조항', true)) return;
+
+      const next = structuredClone(getActiveBylawsArticles());
+      const isEdit = idxRaw !== '' && next[Number(idxRaw)];
+      const prevArt = isEdit ? structuredClone(next[Number(idxRaw)]) : null;
+      const entry = { chapterId, chapter: chObj.label, num, title, body };
+      if (isEdit) {
+        next[Number(idxRaw)] = entry;
+      } else {
+        next.push(entry);
+      }
+
+      const btn = document.getElementById('saveBylawArticleBtn');
+      if (btn) btn.disabled = true;
+      try {
+        await db.collection('config').doc('layout').set({ customBylaws: next }, { merge: true });
+        customBylawsArticles = next;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '약관·회칙',
+          action: isEdit ? '회칙 조항 수정' : '회칙 조항 추가',
+          target: title,
+          beforeVal: prevArt ? `${prevArt.title} / ${prevArt.body}` : '',
+          afterVal: `${title} / ${body}`
+        });
+        document.getElementById('bylawFormModal').classList.remove('open');
+        renderBylawsView();
+        showToast(isEdit ? '회칙 조항이 수정되었습니다!' : '새 회칙 조항이 추가되었습니다!');
+      } catch (err) {
+        handleDbError(err, '회칙 저장');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    };
+
+    window.deleteBylawArticle = async (idx) => {
+      const cur = getActiveBylawsArticles();
+      const target = cur[idx];
+      if (!target || !confirm(`[${target.title}] 회칙 조항을 삭제할까요?`)) return;
+      const next = structuredClone(cur);
+      next.splice(idx, 1);
+      try {
+        await db.collection('config').doc('layout').set({ customBylaws: next }, { merge: true });
+        customBylawsArticles = next;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '약관·회칙',
+          action: '회칙 조항 삭제',
+          target: target.title,
+          detail: target.body || ''
+        });
+        renderBylawsView();
+        showToast('회칙 조항이 삭제되었습니다.');
+      } catch (err) {
+        handleDbError(err, '회칙 삭제');
+      }
+    };
+
+    window.restoreDefaultBylaws = async () => {
+      if (!confirm('회칙을 기본 28개 조항(2026.11.22 최종개정본)으로 복원할까요?')) return;
+      try {
+        await db.collection('config').doc('layout').set({ customBylaws: FieldValue.delete() }, { merge: true });
+        customBylawsArticles = null;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '약관·회칙',
+          action: '회칙 기본 복원',
+          target: '기본 28개 조항'
+        });
+        renderBylawsView();
+        showToast('회칙이 기본 조항으로 복원되었습니다.');
+      } catch (err) {
+        handleDbError(err, '회칙 복원');
+      }
+    };
 
     // 초기 로드 시 공식 도메인 · HTTPS 즉시 검증
     checkCloneDomainWarning();
