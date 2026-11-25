@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=162" />
+  <link rel="manifest" href="./manifest.json?v=163" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=162" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=162" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=163" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=163" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -1735,7 +1735,7 @@
 
       .hero-banner, .newcomer-card, .leader-card, .custom-banner-card,
       .birthday-banner, .newcomer-auto-banner, .attendance-home-card,
-      .bylaw-hero {
+      .bylaw-hero, .sermon-hero, .ccm-hero, .video-hero {
         padding: 15px 14px;
         border-radius: 16px;
       }
@@ -1837,7 +1837,7 @@
       }
       .hero-banner, .newcomer-card, .leader-card, .custom-banner-card,
       .birthday-banner, .newcomer-auto-banner, .attendance-home-card,
-      .bylaw-hero {
+      .bylaw-hero, .sermon-hero, .ccm-hero, .video-hero {
         padding: 20px 22px;
       }
       .hero-title, .birthday-title, .newcomer-auto-title, .attendance-home-title {
@@ -2863,6 +2863,22 @@
       margin-bottom: 13px;
       box-shadow: 0 8px 22px rgba(185, 28, 28, 0.24);
     }
+    .sermon-hero {
+      background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 56%, #2563EB 100%);
+      color: #FFFFFF;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 13px;
+      box-shadow: 0 8px 22px rgba(37, 99, 235, 0.24);
+    }
+    .ccm-hero {
+      background: linear-gradient(135deg, #4C1D95 0%, #9333EA 54%, #DB2777 100%);
+      color: #FFFFFF;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 13px;
+      box-shadow: 0 8px 22px rgba(147, 51, 234, 0.24);
+    }
     .video-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -2984,7 +3000,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=162" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=163" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3146,6 +3162,47 @@
       <main id="appMain" class="main">
         <!-- (1) 메인 홈 화면 -->
         <section id="viewHome" class="hidden"></section>
+
+        <!-- (2) 설교 화면 (하단 탭) -->
+        <section id="viewSermon" class="hidden">
+          <div class="sermon-hero">
+            <div class="hero-top-row">
+              <div class="hero-top-text">
+                <div id="sermonViewTitle" class="hero-top-title">🎙️ 설교</div>
+                <div id="sermonViewSub" class="hero-top-sub">자동 보안·채널 검사를 통과한 교회 설교·특강 영상을 편하게 시청하세요.</div>
+              </div>
+              <button id="sermonRecommendTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openVideoSubmitModal('설교')">+ 설교 추천</button>
+            </div>
+          </div>
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input id="sermonSearchInput" class="search-input" type="search" placeholder="설교 제목·채널·추천글 검색..." oninput="onSermonSearchInput(this.value)" />
+            <button id="sermonSearchClear" class="search-clear hidden" type="button" onclick="clearSermonSearch()">✕</button>
+          </div>
+          <div id="sermonCatChips" class="filter-row"></div>
+          <div id="sermonListArea"></div>
+          <div id="mySubmittedSermonArea"></div>
+        </section>
+
+        <!-- (3) CCM 화면 (하단 탭) -->
+        <section id="viewCcm" class="hidden">
+          <div class="ccm-hero">
+            <div class="hero-top-row">
+              <div class="hero-top-text">
+                <div id="ccmViewTitle" class="hero-top-title">🎵 CCM</div>
+                <div id="ccmViewSub" class="hero-top-sub">은혜로운 CCM과 찬양 영상을 함께 듣고 나누는 공간입니다.</div>
+              </div>
+              <button id="ccmRecommendTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openVideoSubmitModal('CCM')">+ CCM 추천</button>
+            </div>
+          </div>
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input id="ccmSearchInput" class="search-input" type="search" placeholder="CCM 제목·채널·추천글 검색..." oninput="onCcmSearchInput(this.value)" />
+            <button id="ccmSearchClear" class="search-clear hidden" type="button" onclick="clearCcmSearch()">✕</button>
+          </div>
+          <div id="ccmListArea"></div>
+          <div id="mySubmittedCcmArea"></div>
+        </section>
 
         <!-- (4) 청년부 회칙 화면 (설정 안에서 진입 · 검색창 고정) -->
         <section id="viewBylaws" class="hidden">
@@ -4260,7 +4317,7 @@
           <label class="form-label" for="videoCategorySelect">영상 분류</label>
           <select id="videoCategorySelect" class="form-select">
             <option value="설교">설교</option>
-            <option value="찬양">찬양</option>
+            <option value="CCM">CCM · 찬양</option>
             <option value="청년부 영상">청년부 영상</option>
             <option value="간증·특강">간증·특강</option>
           </select>
@@ -4396,8 +4453,8 @@
     const authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 27;
-    const APP_CLIENT_BUILD = 162;
+    const CURRENT_SCHEMA_VERSION = 28;
+    const APP_CLIENT_BUILD = 163;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -4505,6 +4562,8 @@
     // 중앙 탭 레지스트리: 여기에 새 탭을 추가하면 실제 메뉴와 [✏️ 메뉴·이름] 편집 화면에 자동 반영됩니다.
     const BOTTOM_TAB_REGISTRY = [
       { key: 'home', defaultIcon: '🏠', defaultLabel: '홈', roleHint: '메인 홈' },
+      { key: 'sermon', defaultIcon: '🎙️', defaultLabel: '설교', roleHint: '설교 영상' },
+      { key: 'ccm', defaultIcon: '🎵', defaultLabel: 'CCM', roleHint: 'CCM · 찬양 영상' },
       { key: 'more', defaultIcon: '🌐', defaultLabel: '바로가기', roleHint: '사이트 바로가기' },
       { key: 'settings', defaultIcon: '⚙️', defaultLabel: '설정', roleHint: '이용자 설정' },
       { key: 'manage', defaultIcon: '🛠️', defaultLabel: '관리', roleHint: '관리자 전용' }
@@ -4531,8 +4590,10 @@
       { key: 'guideHeroSub', defaultVal: '처음 사용하시는 분도 쉽게 따라 할 수 있도록 주요 기능과 이용 방법을 정리했습니다.', hint: '이용자 가이드 화면 상단 안내 문구', max: 80 },
       { key: 'termsHeroTitle', defaultVal: '라이트 청년부 앱 이용약관', hint: '이용약관 화면 상단 제목', max: 36 },
       { key: 'termsHeroSub', defaultVal: '구미제일감리교회 라이트 청년부 회칙을 바탕으로 작성된 서비스 이용약관입니다.', hint: '이용약관 화면 상단 안내 문구', max: 80 },
-      { key: 'videosHeroTitle', defaultVal: '설교 · 찬양 영상', hint: '유튜브 영상 화면 및 홈 영상 섹션 제목', max: 28 },
-      { key: 'videosHeroSub', defaultVal: '자동 보안·채널 검사를 통과한 교회 설교와 찬양 영상을 안전하게 나눕니다.', hint: '유튜브 영상 화면 상단 안내 문구', max: 80 },
+      { key: 'sermonHeroSub', defaultVal: '자동 보안·채널 검사를 통과한 교회 설교·특강 영상을 편하게 시청하세요.', hint: '설교 탭 상단 안내 문구', max: 80 },
+      { key: 'ccmHeroSub', defaultVal: '은혜로운 CCM과 찬양 영상을 함께 듣고 나누는 공간입니다.', hint: 'CCM 탭 상단 안내 문구', max: 80 },
+      { key: 'videosHeroTitle', defaultVal: '설교 · CCM 영상', hint: '유튜브 전체 영상 화면 및 홈 영상 섹션 제목', max: 28 },
+      { key: 'videosHeroSub', defaultVal: '자동 보안·채널 검사를 통과한 교회 설교와 CCM 영상을 안전하게 나눕니다.', hint: '유튜브 전체 영상 화면 상단 안내 문구', max: 80 },
       { key: 'settingsProfileSub', defaultVal: '이용자 개인 설정 · 변경 내용은 내 기기에만 적용됩니다.', hint: '설정 프로필 하단 안내 문구', max: 60 },
       { key: 'settingsGroup1', defaultVal: '내 정보 · 화면', hint: '설정 1번 카테고리 제목', max: 20 },
       { key: 'settingsGroup2', defaultVal: '청년부 안내 · 소통', hint: '설정 2번 카테고리 제목', max: 20 },
@@ -5259,7 +5320,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=162" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=163" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5283,8 +5344,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=162', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=162', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=163', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=163', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5599,6 +5660,9 @@
     let videoSettings = structuredClone(DEFAULT_VIDEO_SETTINGS);
     let videoSearchQuery = '';
     let videoCatFilter = '전체';
+    let sermonSearchQuery = '';
+    let sermonCatFilter = '전체';
+    let ccmSearchQuery = '';
     let lastVideoInspectResult = null;
     let lastVideoSubmitTs = 0;
 
@@ -5906,6 +5970,24 @@
       if (tTitle) tTitle.textContent = `${icn('setTerms')} ${ut('termsHeroTitle')}`;
       const tSub = document.getElementById('termsViewSub');
       if (tSub) tSub.textContent = ut('termsHeroSub');
+      const sTitle = document.getElementById('sermonViewTitle');
+      if (sTitle) sTitle.textContent = `${icn('sermon')} ${lbl('sermon')}`;
+      const sSub = document.getElementById('sermonViewSub');
+      if (sSub) sSub.textContent = ut('sermonHeroSub');
+      const sBtn = document.getElementById('sermonRecommendTopBtn');
+      if (sBtn) sBtn.textContent = `+ ${lbl('sermon')} 추천`;
+      const sInp = document.getElementById('sermonSearchInput');
+      if (sInp) sInp.placeholder = `${lbl('sermon')} 제목·채널·추천글 검색...`;
+
+      const cTitle = document.getElementById('ccmViewTitle');
+      if (cTitle) cTitle.textContent = `${icn('ccm')} ${lbl('ccm')}`;
+      const cSub = document.getElementById('ccmViewSub');
+      if (cSub) cSub.textContent = ut('ccmHeroSub');
+      const cBtn = document.getElementById('ccmRecommendTopBtn');
+      if (cBtn) cBtn.textContent = `+ ${lbl('ccm')} 추천`;
+      const cInp = document.getElementById('ccmSearchInput');
+      if (cInp) cInp.placeholder = `${lbl('ccm')} 제목·채널·추천글 검색...`;
+
       const vBack = document.getElementById('videosBackBtn');
       if (vBack) vBack.textContent = `← ${lbl('home')}으로 돌아가기`;
       const vTitle = document.getElementById('videosViewTitle');
@@ -5942,7 +6024,14 @@
       });
       DEFAULT_TAB_ORDER.forEach(k => {
         if (!valid.includes(k)) {
-          if (k === 'settings' && valid.includes('manage')) {
+          if (k === 'sermon') {
+            const hIdx = valid.indexOf('home');
+            valid.splice(hIdx >= 0 ? hIdx + 1 : 0, 0, 'sermon');
+          } else if (k === 'ccm') {
+            const sIdx = valid.indexOf('sermon');
+            const hIdx = valid.indexOf('home');
+            valid.splice(sIdx >= 0 ? sIdx + 1 : (hIdx >= 0 ? hIdx + 1 : 0), 0, 'ccm');
+          } else if (k === 'settings' && valid.includes('manage')) {
             valid.splice(valid.indexOf('manage'), 0, 'settings');
           } else {
             valid.push(k);
@@ -6423,6 +6512,20 @@
           }
         }
 
+        // 12) v10.63 (schemaVersion 28): 하단 탭에 설교 · CCM 탭 추가 (홈 바로 뒤 배치, 기존 사용자 설정 보존)
+        if ((appSnap.data().schemaVersion || 0) < 28) {
+          try {
+            const lblSnap28 = await db.collection('config').doc('labels').get();
+            const curOrder = (lblSnap28.exists && Array.isArray(lblSnap28.data().tabOrder))
+              ? lblSnap28.data().tabOrder.filter(k => k !== 'qt' && k !== 'bible')
+              : ['home', 'more', 'settings', 'manage'];
+            const nextOrder = getValidTabOrder(curOrder);
+            await db.collection('config').doc('labels').set({ tabOrder: nextOrder }, { merge: true });
+          } catch (v28Err) {
+            console.warn('v10.63 sermon/ccm tab migration error:', v28Err);
+          }
+        }
+
         await appRef.set({
           initialized: true,
           schemaVersion: CURRENT_SCHEMA_VERSION,
@@ -6752,10 +6855,10 @@
                 if (v.autoApproved && v.uid !== (fbUser ? fbUser.uid : '')) {
                   dispatchAppNotification({
                     type: 'video_new',
-                    icon: '🎬',
-                    title: '공식 채널 영상 자동 게시',
-                    body: `[${v.category || '영상'}] ${v.title || ''}`,
-                    onClick: () => { switchMainTab('videos'); }
+                    icon: isCcmVideo(v) ? '🎵' : '🎙️',
+                    title: `공식 채널 ${isCcmVideo(v) ? getTabLabel('ccm') : getTabLabel('sermon')} 자동 게시`,
+                    body: `[${getVideoCategoryDisplayLabel(v.category)}] ${v.title || ''}`,
+                    onClick: () => { switchMainTab(isCcmVideo(v) ? 'ccm' : 'sermon'); }
                   });
                 }
               }
@@ -7180,10 +7283,10 @@
                   knownApprovedVideoIds.add(v.id);
                   dispatchAppNotification({
                     type: 'video_new',
-                    icon: '🎬',
-                    title: `새 ${v.category || '설교·찬양'} 영상`,
+                    icon: isCcmVideo(v) ? '🎵' : '🎙️',
+                    title: `새 ${isCcmVideo(v) ? getTabLabel('ccm') : getTabLabel('sermon')} 영상`,
                     body: `${v.title || '유튜브 영상'} (${v.channelName || '유튜브'})`,
-                    onClick: () => { switchMainTab('videos'); }
+                    onClick: () => { switchMainTab(isCcmVideo(v) ? 'ccm' : 'sermon'); }
                   });
                 }
               });
@@ -7197,7 +7300,9 @@
           .onSnapshot(snap => {
             myVideoItems = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
               .sort((a, b) => Number(b.createdTs || 0) - Number(a.createdTs || 0));
-            if (currentMainTab === 'videos') renderVideosView();
+            if (currentMainTab === 'sermon') renderSermonView();
+            else if (currentMainTab === 'ccm') renderCcmView();
+            else if (currentMainTab === 'videos') renderVideosView();
           }, () => {});
       }
 
@@ -8312,6 +8417,8 @@
 
       // 현재 보고 있는 탭은 자동 읽음 처리
       if (currentMainTab === 'home' && homeNoticesLoaded && homeBlocksLoaded) markTabAsSeen('home');
+      if (currentMainTab === 'sermon') markTabAsSeen('sermon');
+      if (currentMainTab === 'ccm') markTabAsSeen('ccm');
 
       const unreadInqCount = inquiries.filter(q => q.status === 'new').length;
       const pendingVideoCount = videoItems.filter(v => v.status === 'pending').length;
@@ -8349,6 +8456,8 @@
         let badgeCnt = 0;
         if (key === 'manage' && perms.canManageMembers) badgeCnt = pendingCount;
         else if (key === 'home' && currentMainTab !== 'home') badgeCnt = getUnreadCountForTab('home', user);
+        else if (key === 'sermon' && currentMainTab !== 'sermon') badgeCnt = getUnreadCountForTab('sermon', user);
+        else if (key === 'ccm' && currentMainTab !== 'ccm') badgeCnt = getUnreadCountForTab('ccm', user);
         else if (key === 'settings') badgeCnt = getUnreadCountForTab('settings', user);
 
         const badgeDisp = badgeCnt > 99 ? '99+' : String(badgeCnt);
@@ -8363,6 +8472,8 @@
       }).join('');
 
       document.getElementById('viewHome').classList.toggle('hidden', currentMainTab !== 'home');
+      document.getElementById('viewSermon').classList.toggle('hidden', currentMainTab !== 'sermon');
+      document.getElementById('viewCcm').classList.toggle('hidden', currentMainTab !== 'ccm');
       document.getElementById('viewBylaws').classList.toggle('hidden', currentMainTab !== 'bylaws');
       document.getElementById('viewGuide').classList.toggle('hidden', currentMainTab !== 'guide');
       document.getElementById('viewTerms').classList.toggle('hidden', currentMainTab !== 'terms');
@@ -8374,6 +8485,8 @@
       syncAllDynamicLabelsUI();
 
       if (currentMainTab === 'home') renderHomeView(user);
+      else if (currentMainTab === 'sermon') renderSermonView();
+      else if (currentMainTab === 'ccm') renderCcmView();
       else if (currentMainTab === 'bylaws') renderBylawsView();
       else if (currentMainTab === 'guide') renderUserGuideView();
       else if (currentMainTab === 'terms') renderTermsView();
@@ -8387,7 +8500,7 @@
       if (currentMainTab === 'manage' && tab !== 'manage') {
         draftTabInitialized = false;
       }
-      if (tab === 'home') markTabAsSeen(tab);
+      if (tab === 'home' || tab === 'sermon' || tab === 'ccm') markTabAsSeen(tab);
       currentMainTab = tab;
       applyScreen();
     };
@@ -8575,6 +8688,19 @@
             `<b>1인 1회 출석 확인:</b> <b>[출석하기]</b> 버튼을 누르면 즉시 출석이 기록되고 카드가 자동으로 숨겨집니다. 출석 완료 여부와 최근 출석 기록은 하단 <b>[${stIcn} ${stLbl}] → 👤 내 계정 관리</b>에서 언제든 확인할 수 있습니다.`
           ],
           tip: '출석 시간이 지났거나 깜빡하고 버튼을 못 누른 경우에는 관리자에게 말씀하시면 출석부에 수동으로 반영해 드립니다.'
+        },
+        {
+          id: 'ug_sermon_ccm',
+          icon: getTabIcon('sermon'),
+          title: `${getTabLabel('sermon')} · ${getTabLabel('ccm')} 영상 시청 및 추천`,
+          sub: `하단 ${getTabLabel('sermon')}·${getTabLabel('ccm')} 탭에서 교회 설교와 은혜로운 찬양 바로 보기`,
+          keywords: `${getTabLabel('sermon')} ${getTabLabel('ccm')} 설교 CCM 찬양 유튜브 영상 재생 추천`,
+          steps: [
+            `<b>${escapeHtml(getTabLabel('sermon'))} 탭 (${escapeHtml(getTabIcon('sermon'))}):</b> 주일 설교, 간증·특강, 청년부 영상을 한곳에서 검색하고 앱 안에서 바로 재생할 수 있습니다.`,
+            `<b>${escapeHtml(getTabLabel('ccm'))} 탭 (${escapeHtml(getTabIcon('ccm'))}):</b> 청년부원들이 나눈 CCM·찬양 영상을 검색해 바로 들을 수 있습니다.`,
+            '<b>영상 추천하기:</b> 추천 권한이 있는 지체는 우측 상단 <b>[+ 추천]</b> 버튼에서 유튜브 링크를 넣고 <b>[🔍 자동 검사]</b>를 누르면 공식 원본 제목이 자동 생성되어 안전하게 등록됩니다.'
+          ],
+          tip: '공식 채널(구미제일감리교회·라이트 청년부 등) 영상은 4단계 자동 검사 통과 시 즉시 게시되며, 미등록 채널 영상은 관리자 확인 후 게시됩니다.'
         },
         {
           id: 'ug_bylaws_more',
@@ -18156,16 +18282,20 @@
     function loadTabSeenTs() {
       try {
         const raw = JSON.parse(localStorage.getItem(KEY_TAB_SEEN_TS) || '{}');
+        const now = Date.now();
         if (!raw || typeof raw !== 'object' || !raw.initialized) {
-          const now = Date.now();
-          const init = { initialized: true, home: now, inquiryReply: now };
+          const init = { initialized: true, home: now, sermon: now, ccm: now, inquiryReply: now };
           localStorage.setItem(KEY_TAB_SEEN_TS, JSON.stringify(init));
           return init;
         }
+        let changed = false;
+        if (raw.sermon === undefined) { raw.sermon = now; changed = true; }
+        if (raw.ccm === undefined) { raw.ccm = now; changed = true; }
+        if (changed) localStorage.setItem(KEY_TAB_SEEN_TS, JSON.stringify(raw));
         return raw;
       } catch {
         const now = Date.now();
-        return { initialized: true, home: now, inquiryReply: now };
+        return { initialized: true, home: now, sermon: now, ccm: now, inquiryReply: now };
       }
     }
 
@@ -18197,8 +18327,19 @@
           if (!canUserSeeTarget(user, b) || getPublishState(b) !== 'live') return false;
           return Number(b.alertTs || 0) > lastSeen;
         }).length;
-        const newVideos = (videoItems || []).filter(v => v.status === 'approved' && Number(v.approvedTs || v.createdTs || 0) > lastSeen).length;
-        return newNotices + newBlocks + newVideos;
+        return newNotices + newBlocks;
+      }
+      if (tabKey === 'sermon') {
+        const lastSeen = Number(seen.sermon || 0);
+        return (videoItems || []).filter(v =>
+          v.status === 'approved' && isSermonVideo(v) && Number(v.approvedTs || v.createdTs || 0) > lastSeen
+        ).length;
+      }
+      if (tabKey === 'ccm') {
+        const lastSeen = Number(seen.ccm || 0);
+        return (videoItems || []).filter(v =>
+          v.status === 'approved' && isCcmVideo(v) && Number(v.approvedTs || v.createdTs || 0) > lastSeen
+        ).length;
       }
       if (tabKey === 'settings') {
         let cnt = 0;
@@ -20180,6 +20321,22 @@ ${handleUrl}`);
       return allowedRoles.includes(String(user.role && user.role.id));
     }
 
+    function isCcmVideo(v) {
+      const cat = String((v && v.category) || '').trim();
+      return cat === 'CCM' || cat === '찬양';
+    }
+
+    function isSermonVideo(v) {
+      return !isCcmVideo(v);
+    }
+
+    function getVideoCategoryDisplayLabel(cat) {
+      const c = String(cat || '').trim();
+      if (c === 'CCM' || c === '찬양') return getTabLabel('ccm');
+      if (!c || c === '설교') return getTabLabel('sermon');
+      return c;
+    }
+
     function buildHomeVideosSectionHtml(user) {
       if (!videoSettings || videoSettings.showOnHome === false) return '';
       const approved = (videoItems || []).filter(v => v.status === 'approved');
@@ -20192,20 +20349,21 @@ ${handleUrl}`);
         <div class="home-block">
           <div class="section-head">
             <h2 class="section-title">${escapeHtml(secIcon)} ${escapeHtml(secTitle)}</h2>
-            <div style="display:flex; gap:5px; align-items:center;">
+            <div style="display:flex; gap:5px; align-items:center; flex-wrap:wrap;">
+              <button class="btn-sm" type="button" onclick="switchMainTab('sermon')">${escapeHtml(getTabIcon('sermon'))} ${escapeHtml(getTabLabel('sermon'))}</button>
+              <button class="btn-sm" type="button" onclick="switchMainTab('ccm')">${escapeHtml(getTabIcon('ccm'))} ${escapeHtml(getTabLabel('ccm'))}</button>
               ${canSubmit ? `<button class="btn-sm primary" type="button" onclick="openVideoSubmitModal()">+ 추천</button>` : ''}
-              <button class="btn-sm" type="button" onclick="switchMainTab('videos')">전체 보기 (${approved.length})</button>
             </div>
           </div>
           ${latest.length === 0
-            ? `<div class="card" style="text-align:center; color:#64748B; font-size:12.5px; padding:18px 12px;">아직 등록된 설교·찬양 영상이 없습니다.${canSubmit ? '<br>오른쪽 위 <b>[+ 추천]</b> 버튼으로 공식 채널 영상을 올려 보세요!' : ''}</div>`
+            ? `<div class="card" style="text-align:center; color:#64748B; font-size:12.5px; padding:18px 12px;">아직 등록된 설교·CCM 영상이 없습니다.${canSubmit ? '<br>오른쪽 위 <b>[+ 추천]</b> 버튼으로 공식 채널 영상을 올려 보세요!' : ''}</div>`
             : latest.map(v => `
                 <div class="card" style="padding:11px 12px; margin-bottom:9px;">
                   <div class="video-compact-row" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">
                     <img class="video-compact-thumb" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="썸네일" loading="lazy" />
                     <div style="min-width:0; flex:1;">
                       <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap; margin-bottom:3px;">
-                        <span class="tag slate" style="font-size:10px; padding:2px 6px;">${escapeHtml(v.category || '설교')}</span>
+                        <span class="tag slate" style="font-size:10px; padding:2px 6px;">${escapeHtml(getVideoCategoryDisplayLabel(v.category))}</span>
                         ${v.officialVerified ? '<span class="tag green" style="font-size:10px; padding:2px 6px;">✅ 공식 채널</span>' : '<span class="tag" style="font-size:10px; padding:2px 6px;">🛡️ 관리자 검증</span>'}
                       </div>
                       <div style="font-size:13.5px; font-weight:800; color:#0F172A; line-height:1.35; margin-bottom:3px;">${escapeHtml(v.title || '')}</div>
@@ -20281,6 +20439,192 @@ ${handleUrl}`);
       if (wrapEl) wrapEl.innerHTML = '';
     };
 
+    function buildVideoFeedCardHtml(v, user) {
+      const isMine = fbUser && String(v.uid) === String(fbUser.uid);
+      const canEdit = user.isSuperAdmin || isMine;
+      return `
+        <div class="video-card">
+          <div class="video-thumb-wrap" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">
+            <img class="video-thumb-img" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="${escapeHtml(v.title || '영상')}" loading="lazy" />
+            <div class="video-play-overlay">
+              <span class="video-play-pill">▶ 바로 재생</span>
+            </div>
+          </div>
+          <div class="video-card-body">
+            <div class="card-top" style="margin-bottom:5px;">
+              <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+                <span class="tag slate">${escapeHtml(getVideoCategoryDisplayLabel(v.category))}</span>
+                ${v.officialVerified
+                  ? '<span class="tag green">✅ 공식 채널 · 자동 검사 통과</span>'
+                  : '<span class="tag">🛡️ 관리자 검증 완료</span>'}
+              </div>
+              <span class="card-date">${escapeHtml(v.createdAt ? String(v.createdAt).slice(0, 10) : '')}</span>
+            </div>
+            <div style="font-size:15px; font-weight:800; color:#0F172A; line-height:1.38; margin-bottom:4px;">${escapeHtml(v.title || '')}</div>
+            <div style="font-size:12px; color:#475569; margin-bottom:${v.note ? '7px' : '0'};">
+              📺 <b>${escapeHtml(v.channelName || '유튜브')}</b> · 추천: ${escapeHtml(v.authorName || '회원')}${v.roleName ? ` (${escapeHtml(v.roleName)})` : ''}
+            </div>
+            ${v.note ? `<div class="video-note-box" style="margin:6px 0 0;">${escapeHtml(v.note)}</div>` : ''}
+            <div class="card-footer" style="margin-top:10px; padding-top:8px;">
+              <button class="btn-sm primary" type="button" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">▶ 앱에서 재생</button>
+              ${canEdit ? `
+                <div style="display:flex; gap:5px;">
+                  <button class="btn-sm" type="button" onclick="openEditVideoModal('${escapeJsAttr(v.id)}')">수정</button>
+                  <button class="btn-sm danger" type="button" onclick="deleteVideoItem('${escapeJsAttr(v.id)}')">삭제</button>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function buildMySubmittedVideosHtml(user, filterFn, headingLabel) {
+      const canSubmit = canUserSubmitVideo(user);
+      if (user.isSuperAdmin || (!canSubmit && myVideoItems.length === 0)) return '';
+      const nonApproved = myVideoItems.filter(v => v.status !== 'approved' && (!filterFn || filterFn(v)));
+      if (nonApproved.length === 0) return '';
+      return `
+        <div class="manage-divider" style="margin:18px 0 12px;"></div>
+        <div class="section-head">
+          <h3 class="section-title">📋 ${escapeHtml(headingLabel)} (${nonApproved.length})</h3>
+        </div>
+        ${nonApproved.map(v => `
+          <div class="card ${v.status === 'pending' ? 'highlight-pending' : ''}">
+            <div class="card-top">
+              <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                <span class="tag slate">${escapeHtml(getVideoCategoryDisplayLabel(v.category))}</span>
+                ${v.status === 'pending' ? '<span class="tag warm">⏳ 관리자 검토 대기중</span>' : '<span class="tag red">❌ 반려됨</span>'}
+              </div>
+              <span class="card-date">${escapeHtml(v.createdAt || '')}</span>
+            </div>
+            <div style="font-size:14px; font-weight:800; color:#0F172A; margin-bottom:4px;">${escapeHtml(v.title || '')}</div>
+            <div style="font-size:12px; color:#475569;">📺 ${escapeHtml(v.channelName || '유튜브')}</div>
+            ${v.rejectReason ? `<div class="info-box warn" style="margin-top:7px; padding:7px 10px;">반려 사유: ${escapeHtml(v.rejectReason)}</div>` : ''}
+            <div class="card-footer" style="margin-top:9px; padding-top:8px; justify-content:flex-end;">
+              <button class="btn-sm" type="button" onclick="openEditVideoModal('${escapeJsAttr(v.id)}')">수정</button>
+              <button class="btn-sm danger" type="button" onclick="deleteVideoItem('${escapeJsAttr(v.id)}')">삭제</button>
+            </div>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    function renderSermonView() {
+      const user = getCurrentUser();
+      if (!user) return;
+      const canSubmit = canUserSubmitVideo(user);
+      const topBtn = document.getElementById('sermonRecommendTopBtn');
+      if (topBtn) topBtn.classList.toggle('hidden', !canSubmit);
+
+      const approved = (videoItems || []).filter(v => v.status === 'approved' && isSermonVideo(v));
+      const cats = ['전체', '설교', '간증·특강', '청년부 영상'];
+      const chipsEl = document.getElementById('sermonCatChips');
+      if (chipsEl) {
+        chipsEl.innerHTML = cats.map(c => `
+          <button class="filter-chip ${sermonCatFilter === c ? 'active' : ''}" type="button" onclick="setSermonCatFilter('${escapeJsAttr(c)}')">${escapeHtml(c)}</button>
+        `).join('');
+      }
+
+      const q = String(sermonSearchQuery || '').trim().toLowerCase();
+      const clr = document.getElementById('sermonSearchClear');
+      if (clr) clr.classList.toggle('hidden', !q);
+
+      const filtered = approved.filter(v => {
+        if (sermonCatFilter !== '전체' && (v.category || '설교') !== sermonCatFilter) return false;
+        if (!q) return true;
+        const hay = `${v.title || ''} ${v.channelName || ''} ${v.note || ''} ${v.authorName || ''} ${v.category || ''}`.toLowerCase();
+        return hay.includes(q);
+      });
+
+      const listEl = document.getElementById('sermonListArea');
+      if (listEl) {
+        const sLbl = getTabLabel('sermon');
+        if (filtered.length === 0) {
+          listEl.innerHTML = `
+            <div class="card" style="text-align:center; padding:30px 16px; color:#64748B;">
+              <div style="font-size:28px; margin-bottom:7px;">${escapeHtml(getTabIcon('sermon'))}</div>
+              <div style="font-size:14px; font-weight:800; color:#334155;">등록된 ${escapeHtml(sLbl)} 영상이 없습니다.</div>
+              <div style="font-size:12px; margin-top:4px;">${canSubmit ? `오른쪽 위 [+ ${escapeHtml(sLbl)} 추천] 버튼으로 교회 설교 영상을 올려 보세요.` : `새로운 ${escapeHtml(sLbl)} 영상이 등록되면 이곳에 표시됩니다.`}</div>
+            </div>
+          `;
+        } else {
+          listEl.innerHTML = filtered.map(v => buildVideoFeedCardHtml(v, user)).join('');
+        }
+      }
+
+      const myArea = document.getElementById('mySubmittedSermonArea');
+      if (myArea) {
+        myArea.innerHTML = buildMySubmittedVideosHtml(user, isSermonVideo, `내가 추천한 검토 대기 · 반려 ${getTabLabel('sermon')} 영상`);
+      }
+    }
+
+    window.setSermonCatFilter = (cat) => {
+      sermonCatFilter = cat;
+      renderSermonView();
+    };
+    window.onSermonSearchInput = (val) => {
+      sermonSearchQuery = val;
+      renderSermonView();
+    };
+    window.clearSermonSearch = () => {
+      sermonSearchQuery = '';
+      const inp = document.getElementById('sermonSearchInput');
+      if (inp) { inp.value = ''; inp.focus(); }
+      renderSermonView();
+    };
+
+    function renderCcmView() {
+      const user = getCurrentUser();
+      if (!user) return;
+      const canSubmit = canUserSubmitVideo(user);
+      const topBtn = document.getElementById('ccmRecommendTopBtn');
+      if (topBtn) topBtn.classList.toggle('hidden', !canSubmit);
+
+      const approved = (videoItems || []).filter(v => v.status === 'approved' && isCcmVideo(v));
+      const q = String(ccmSearchQuery || '').trim().toLowerCase();
+      const clr = document.getElementById('ccmSearchClear');
+      if (clr) clr.classList.toggle('hidden', !q);
+
+      const filtered = approved.filter(v => {
+        if (!q) return true;
+        const hay = `${v.title || ''} ${v.channelName || ''} ${v.note || ''} ${v.authorName || ''} ${v.category || ''}`.toLowerCase();
+        return hay.includes(q);
+      });
+
+      const listEl = document.getElementById('ccmListArea');
+      if (listEl) {
+        const cLbl = getTabLabel('ccm');
+        if (filtered.length === 0) {
+          listEl.innerHTML = `
+            <div class="card" style="text-align:center; padding:30px 16px; color:#64748B;">
+              <div style="font-size:28px; margin-bottom:7px;">${escapeHtml(getTabIcon('ccm'))}</div>
+              <div style="font-size:14px; font-weight:800; color:#334155;">등록된 ${escapeHtml(cLbl)} 영상이 없습니다.</div>
+              <div style="font-size:12px; margin-top:4px;">${canSubmit ? `오른쪽 위 [+ ${escapeHtml(cLbl)} 추천] 버튼으로 은혜로운 찬양 영상을 올려 보세요.` : `새로운 ${escapeHtml(cLbl)} 영상이 등록되면 이곳에 표시됩니다.`}</div>
+            </div>
+          `;
+        } else {
+          listEl.innerHTML = filtered.map(v => buildVideoFeedCardHtml(v, user)).join('');
+        }
+      }
+
+      const myArea = document.getElementById('mySubmittedCcmArea');
+      if (myArea) {
+        myArea.innerHTML = buildMySubmittedVideosHtml(user, isCcmVideo, `내가 추천한 검토 대기 · 반려 ${getTabLabel('ccm')} 영상`);
+      }
+    }
+
+    window.onCcmSearchInput = (val) => {
+      ccmSearchQuery = val;
+      renderCcmView();
+    };
+    window.clearCcmSearch = () => {
+      ccmSearchQuery = '';
+      const inp = document.getElementById('ccmSearchInput');
+      if (inp) { inp.value = ''; inp.focus(); }
+      renderCcmView();
+    };
+
     function renderVideosView() {
       const user = getCurrentUser();
       if (!user) return;
@@ -20289,7 +20633,7 @@ ${handleUrl}`);
       if (topBtn) topBtn.classList.toggle('hidden', !canSubmit);
 
       const approved = (videoItems || []).filter(v => v.status === 'approved');
-      const cats = ['전체', '설교', '찬양', '청년부 영상', '간증·특강'];
+      const cats = ['전체', '설교', 'CCM', '청년부 영상', '간증·특강'];
       const chipsEl = document.getElementById('videoCatChips');
       if (chipsEl) {
         chipsEl.innerHTML = cats.map(c => `
@@ -20302,7 +20646,13 @@ ${handleUrl}`);
       if (clr) clr.classList.toggle('hidden', !q);
 
       const filtered = approved.filter(v => {
-        if (videoCatFilter !== '전체' && (v.category || '설교') !== videoCatFilter) return false;
+        if (videoCatFilter !== '전체') {
+          if (videoCatFilter === 'CCM') {
+            if (!isCcmVideo(v)) return false;
+          } else if ((v.category || '설교') !== videoCatFilter) {
+            return false;
+          }
+        }
         if (!q) return true;
         const hay = `${v.title || ''} ${v.channelName || ''} ${v.note || ''} ${v.authorName || ''} ${v.category || ''}`.toLowerCase();
         return hay.includes(q);
@@ -20315,88 +20665,17 @@ ${handleUrl}`);
             <div class="card" style="text-align:center; padding:30px 16px; color:#64748B;">
               <div style="font-size:28px; margin-bottom:7px;">🎬</div>
               <div style="font-size:14px; font-weight:800; color:#334155;">표시할 영상이 없습니다.</div>
-              <div style="font-size:12px; margin-top:4px;">${canSubmit ? '오른쪽 위 [+ 영상 추천] 버튼으로 교회 설교·찬양 영상을 올려 보세요.' : '새로운 설교·찬양 영상이 등록되면 이곳에 표시됩니다.'}</div>
+              <div style="font-size:12px; margin-top:4px;">${canSubmit ? '오른쪽 위 [+ 영상 추천] 버튼으로 교회 설교·CCM 영상을 올려 보세요.' : '새로운 설교·CCM 영상이 등록되면 이곳에 표시됩니다.'}</div>
             </div>
           `;
         } else {
-          listEl.innerHTML = filtered.map(v => {
-            const isMine = fbUser && String(v.uid) === String(fbUser.uid);
-            const canEdit = user.isSuperAdmin || isMine;
-            return `
-              <div class="video-card">
-                <div class="video-thumb-wrap" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">
-                  <img class="video-thumb-img" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="${escapeHtml(v.title || '영상')}" loading="lazy" />
-                  <div class="video-play-overlay">
-                    <span class="video-play-pill">▶ 바로 재생</span>
-                  </div>
-                </div>
-                <div class="video-card-body">
-                  <div class="card-top" style="margin-bottom:5px;">
-                    <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                      <span class="tag slate">${escapeHtml(v.category || '설교')}</span>
-                      ${v.officialVerified
-                        ? '<span class="tag green">✅ 공식 채널 · 자동 검사 통과</span>'
-                        : '<span class="tag">🛡️ 관리자 검증 완료</span>'}
-                    </div>
-                    <span class="card-date">${escapeHtml(v.createdAt ? String(v.createdAt).slice(0, 10) : '')}</span>
-                  </div>
-                  <div style="font-size:15px; font-weight:800; color:#0F172A; line-height:1.38; margin-bottom:4px;">${escapeHtml(v.title || '')}</div>
-                  <div style="font-size:12px; color:#475569; margin-bottom:${v.note ? '7px' : '0'};">
-                    📺 <b>${escapeHtml(v.channelName || '유튜브')}</b> · 추천: ${escapeHtml(v.authorName || '회원')}${v.roleName ? ` (${escapeHtml(v.roleName)})` : ''}
-                  </div>
-                  ${v.note ? `<div class="video-note-box" style="margin:6px 0 0;">${escapeHtml(v.note)}</div>` : ''}
-                  <div class="card-footer" style="margin-top:10px; padding-top:8px;">
-                    <button class="btn-sm primary" type="button" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">▶ 앱에서 재생</button>
-                    ${canEdit ? `
-                      <div style="display:flex; gap:5px;">
-                        <button class="btn-sm" type="button" onclick="openEditVideoModal('${escapeJsAttr(v.id)}')">수정</button>
-                        <button class="btn-sm danger" type="button" onclick="deleteVideoItem('${escapeJsAttr(v.id)}')">삭제</button>
-                      </div>
-                    ` : ''}
-                  </div>
-                </div>
-              </div>
-            `;
-          }).join('');
+          listEl.innerHTML = filtered.map(v => buildVideoFeedCardHtml(v, user)).join('');
         }
       }
 
-      // 추천 권한이 있는 일반 회원의 '내가 추천한 영상 내역' (검토 대기 · 거절 포함)
       const myArea = document.getElementById('mySubmittedVideosArea');
       if (myArea) {
-        if (user.isSuperAdmin || (!canSubmit && myVideoItems.length === 0)) {
-          myArea.innerHTML = '';
-        } else {
-          const nonApproved = myVideoItems.filter(v => v.status !== 'approved');
-          if (nonApproved.length === 0) {
-            myArea.innerHTML = '';
-          } else {
-            myArea.innerHTML = `
-              <div class="manage-divider" style="margin:18px 0 12px;"></div>
-              <div class="section-head">
-                <h3 class="section-title">📋 내가 추천한 검토 대기 · 반려 영상 (${nonApproved.length})</h3>
-              </div>
-              ${nonApproved.map(v => `
-                <div class="card ${v.status === 'pending' ? 'highlight-pending' : ''}">
-                  <div class="card-top">
-                    <div style="display:flex; gap:5px; flex-wrap:wrap;">
-                      <span class="tag slate">${escapeHtml(v.category || '설교')}</span>
-                      ${v.status === 'pending' ? '<span class="tag warm">⏳ 관리자 검토 대기중</span>' : '<span class="tag red">❌ 반려됨</span>'}
-                    </div>
-                    <span class="card-date">${escapeHtml(v.createdAt || '')}</span>
-                  </div>
-                  <div style="font-size:14px; font-weight:800; color:#0F172A; margin-bottom:4px;">${escapeHtml(v.title || '')}</div>
-                  <div style="font-size:12px; color:#475569;">📺 ${escapeHtml(v.channelName || '유튜브')}</div>
-                  ${v.rejectReason ? `<div class="info-box warn" style="margin-top:7px; padding:7px 10px;">반려 사유: ${escapeHtml(v.rejectReason)}</div>` : ''}
-                  <div class="card-footer" style="margin-top:9px; padding-top:8px; justify-content:flex-end;">
-                    <button class="btn-sm" type="button" onclick="openEditVideoModal('${escapeJsAttr(v.id)}')">수정</button>
-                    <button class="btn-sm danger" type="button" onclick="deleteVideoItem('${escapeJsAttr(v.id)}')">삭제</button>
-                  </div>
-                </div>
-              `).join('')}
-            `;
-          }
-        }
+        myArea.innerHTML = buildMySubmittedVideosHtml(user, null, '내가 추천한 검토 대기 · 반려 영상');
       }
     }
 
@@ -20452,15 +20731,18 @@ ${handleUrl}`);
       }
     };
 
-    window.openVideoSubmitModal = () => {
+    window.openVideoSubmitModal = (defaultCat = '') => {
       const user = getCurrentUser();
       if (!canUserSubmitVideo(user)) return showToast('영상 추천 권한이 없습니다.');
       lastVideoInspectResult = null;
-      document.getElementById('videoSubmitModalTitle').textContent = user.isSuperAdmin ? '🎬 유튜브 영상 등록 (자동 검사)' : '🎬 유튜브 영상 추천 신청';
+      const initCat = defaultCat || (currentMainTab === 'ccm' ? 'CCM' : '설교');
+      document.getElementById('videoSubmitModalTitle').textContent = user.isSuperAdmin
+        ? `🎬 ${initCat === 'CCM' ? getTabLabel('ccm') : getTabLabel('sermon')} · 유튜브 영상 등록`
+        : `🎬 ${initCat === 'CCM' ? getTabLabel('ccm') : getTabLabel('sermon')} 영상 추천 신청`;
       document.getElementById('editVideoDocId').value = '';
       document.getElementById('videoUrlFieldGroup').classList.remove('hidden');
       document.getElementById('videoUrlInput').value = '';
-      document.getElementById('videoCategorySelect').value = '설교';
+      document.getElementById('videoCategorySelect').value = (initCat === '찬양' ? 'CCM' : initCat);
       document.getElementById('videoTitleInput').value = '';
       applyVideoTitleFieldLock(user);
       document.getElementById('videoNoteInput').value = '';
@@ -20482,7 +20764,7 @@ ${handleUrl}`);
       document.getElementById('videoSubmitModalTitle').textContent = '✏️ 영상 정보 수정';
       document.getElementById('editVideoDocId').value = v.id;
       document.getElementById('videoUrlFieldGroup').classList.add('hidden');
-      document.getElementById('videoCategorySelect').value = v.category || '설교';
+      document.getElementById('videoCategorySelect').value = (v.category === '찬양' ? 'CCM' : (v.category || '설교'));
       document.getElementById('videoTitleInput').value = v.title || '';
       applyVideoTitleFieldLock(user);
       document.getElementById('videoNoteInput').value = v.note || '';
