@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=170" />
+  <link rel="manifest" href="./manifest.json?v=171" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=170" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=170" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=171" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=171" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2957,7 +2957,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=170" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=171" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4365,7 +4365,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 29;
-    const APP_CLIENT_BUILD = 170;
+    const APP_CLIENT_BUILD = 171;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -5211,7 +5211,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=170" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=171" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5235,8 +5235,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=170', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=170', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=171', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=171', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -14800,7 +14800,6 @@
             <button id="saveSheetUrlBtn" class="btn-sm primary" type="button" style="flex:1; padding:9px;" onclick="handleSaveSheetUrl()">💾 연동 주소 저장</button>
             <button class="btn-sm" type="button" style="padding:9px 11px;" onclick="handleTestSheetConnection()">🔔 연동 테스트</button>
             <button class="btn-sm approve" type="button" style="padding:9px 11px;" onclick="handleSyncAllToGoogleSheet()">🔄 전체 시트 동기화</button>
-            <button class="btn-sm primary" type="button" style="width:100%; padding:9px;" onclick="copyLatestAppsScriptCode()">📋 최신 Apps Script (7개 세부 탭) 코드 복사</button>
             <button class="btn-sm danger" type="button" style="width:100%; padding:9px;" onclick="handleCleanupZeroSheetEntries()">🧹 출석 0인 날짜·인원(테스트 흔적) 시트에서 정리</button>
           </div>
 
@@ -15098,802 +15097,6 @@
       return false;
     }
 
-    window.copyLatestAppsScriptCode = async () => {
-      const scriptCode = `/**
- * 구미제일감리교회 라이트 청년부 앱 — Google Apps Script (v10.69 · 7개 세부 탭 · 생년월일 완전 폐기)
- *
- * [구성 탭 7개]
- * 1. 출석부 (현황)
- * 2. 회원 명단 (현황 · 생일 열 제거 완료)
- * 3. 관리자 명단 (현황)
- * 4. 관리자 입퇴장 로그 (보안 감사)
- * 5. 이름 변경 로그 (보안 감사)
- * 6. 관리자 활동 로그 (보안 감사)
- * 7. 이용자 활동 로그 (보안 감사)
- *
- * [배포 방법]
- * 구글 시트 → 확장 프로그램 → Apps Script에 전체 붙여넣고 저장(Ctrl+S)한 뒤,
- * 오른쪽 위 [배포 → 배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]를 눌러 반영해 주세요.
- */
-
-var SCRIPT_VERSION = 'v10.69-7tab';
-
-var SHEET_NAMES = {
-  ATTENDANCE: '출석부',
-  MEMBERS: '회원 명단',
-  ADMINS: '관리자 명단',
-  ADMIN_ENTRY: '관리자 입퇴장 로그',
-  RENAME_LOG: '이름 변경 로그',
-  ADMIN_AUDIT: '관리자 활동 로그',
-  MEMBER_AUDIT: '이용자 활동 로그'
-};
-
-var HEADERS = {
-  ATTENDANCE: ['성명', '역할', '출석 횟수'],
-  MEMBERS: ['성명', '역할', '가입일', '상태', '이전 이름', '최근 업데이트'],
-  ADMINS: ['성명', '상태', '최초 등록일시', '최근 로그인', '재입장 횟수', '이름변경 횟수', '이전 이름', '비고'],
-  ADMIN_ENTRY: ['기록일시', '관리자 성명', '상태', '비고', '로그ID'],
-  RENAME_LOG: ['기록일시', '구분', '실행자', '작업', '변경 전', '변경 후', '상세', '로그ID'],
-  ADMIN_AUDIT: ['기록일시', '분류', '실행자', '작업', '대상', '변경 전', '변경 후', '상세', '로그ID'],
-  MEMBER_AUDIT: ['기록일시', '분류', '실행자', '작업', '대상', '변경 전', '변경 후', '상세', '로그ID']
-};
-
-function jsonOut(obj) {
-  return ContentService
-    .createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-function doGet() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  return jsonOut({
-    ok: true,
-    version: SCRIPT_VERSION,
-    multiTab: true,
-    tabCount: 7,
-    supportsRebuild: true,
-    supportsBirthdayPurge: true,
-    legacyDetected: detectLegacyFormats(ss),
-    birthdayRemnants: detectBirthdayRemnants(ss)
-  });
-}
-
-function doPost(e) {
-  var lock = LockService.getScriptLock();
-  var locked = false;
-  try {
-    locked = lock.tryLock(25000);
-    var raw = (e && e.postData && e.postData.contents) ? e.postData.contents : '{}';
-    var data = JSON.parse(raw);
-    var action = String(data.action || '').trim();
-
-    if (action === 'youtube_inspect') {
-      return jsonOut(inspectYouTubeVideoServer(data));
-    }
-    if (action === 'youtube_channel_inspect') {
-      return jsonOut(inspectYouTubeChannelServer(data));
-    }
-
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    ensureAllSevenTabs(ss);
-
-    if (action === 'test') {
-      return jsonOut({
-        ok: true,
-        version: SCRIPT_VERSION,
-        multiTab: true,
-        tabCount: 7,
-        supportsRebuild: true,
-        supportsBirthdayPurge: true,
-        legacyDetected: detectLegacyFormats(ss),
-        birthdayRemnants: detectBirthdayRemnants(ss),
-        message: '7개 세부 탭 연동 정상'
-      });
-    }
-
-    if (action === 'purge_birthday_sheet') {
-      var purgeRes = purgeBirthdayFromSpreadsheet(ss);
-      return jsonOut({
-        ok: true,
-        version: SCRIPT_VERSION,
-        multiTab: true,
-        tabCount: 7,
-        supportsRebuild: true,
-        supportsBirthdayPurge: true,
-        result: purgeRes
-      });
-    }
-
-    if (action === 'attendance_upsert') {
-      upsertAttendance(ss, data);
-      return jsonOut({ ok: true, version: SCRIPT_VERSION, multiTab: true, tabCount: 7 });
-    }
-
-    if (action === 'attendance_delete') {
-      deleteAttendance(ss, data);
-      return jsonOut({ ok: true, version: SCRIPT_VERSION, multiTab: true, tabCount: 7 });
-    }
-
-    if (action === 'cleanup_zeros') {
-      var cleanRes = cleanupZeroAttendance(ss);
-      return jsonOut({ ok: true, version: SCRIPT_VERSION, multiTab: true, tabCount: 7, result: cleanRes });
-    }
-
-    if (action === 'member_upsert') {
-      upsertMember(ss, data);
-      return jsonOut({ ok: true, version: SCRIPT_VERSION, multiTab: true, tabCount: 7 });
-    }
-
-    if (action === 'admin_upsert') {
-      upsertAdmin(ss, data);
-      return jsonOut({ ok: true, version: SCRIPT_VERSION, multiTab: true, tabCount: 7 });
-    }
-
-    if (action === 'admin_entry_log') {
-      appendAdminEntryLog(ss, data);
-      if (data.adminRow) upsertAdmin(ss, data.adminRow);
-      return jsonOut({ ok: true, version: SCRIPT_VERSION, multiTab: true, tabCount: 7 });
-    }
-
-    if (action === 'audit_log') {
-      appendAuditLogRow(ss, data);
-      return jsonOut({ ok: true, version: SCRIPT_VERSION, multiTab: true, tabCount: 7 });
-    }
-
-    if (action === 'sync_all') {
-      var attList = Array.isArray(data.attendance) ? data.attendance : [];
-      var memList = Array.isArray(data.members) ? data.members : [];
-      var admList = Array.isArray(data.admins) ? data.admins : [];
-      var logList = Array.isArray(data.auditLogs) ? data.auditLogs : [];
-
-      for (var i = 0; i < attList.length; i++) upsertAttendance(ss, attList[i]);
-      for (var j = 0; j < memList.length; j++) upsertMember(ss, memList[j]);
-      for (var k = 0; k < admList.length; k++) upsertAdmin(ss, admList[k]);
-      for (var m = 0; m < logList.length; m++) appendAuditLogRow(ss, logList[m]);
-
-      return jsonOut({
-        ok: true,
-        version: SCRIPT_VERSION,
-        multiTab: true,
-        tabCount: 7,
-        supportsRebuild: true,
-        supportsBirthdayPurge: true,
-        result: {
-          attendance: attList.length,
-          members: memList.length,
-          admins: admList.length,
-          auditLogs: logList.length
-        }
-      });
-    }
-
-    if (action === 'rebuild_tabs') {
-      var targets = Array.isArray(data.targets) ? data.targets : [];
-      var counts = {};
-      if (targets.indexOf('attendance') !== -1) {
-        resetSheetWithHeader(ss, SHEET_NAMES.ATTENDANCE, HEADERS.ATTENDANCE, '#065F46');
-        var aList = Array.isArray(data.attendance) ? data.attendance : [];
-        for (var ai = 0; ai < aList.length; ai++) upsertAttendance(ss, aList[ai]);
-        counts.attendance = aList.length;
-      }
-      if (targets.indexOf('members') !== -1) {
-        resetSheetWithHeader(ss, SHEET_NAMES.MEMBERS, HEADERS.MEMBERS, '#1E3A8A');
-        var mList = Array.isArray(data.members) ? data.members : [];
-        for (var mi = 0; mi < mList.length; mi++) upsertMember(ss, mList[mi]);
-        counts.members = mList.length;
-      }
-      if (targets.indexOf('admins') !== -1) {
-        resetSheetWithHeader(ss, SHEET_NAMES.ADMINS, HEADERS.ADMINS, '#92400E');
-        var dList = Array.isArray(data.admins) ? data.admins : [];
-        for (var di = 0; di < dList.length; di++) upsertAdmin(ss, dList[di]);
-        counts.admins = dList.length;
-      }
-      return jsonOut({
-        ok: true,
-        version: SCRIPT_VERSION,
-        multiTab: true,
-        tabCount: 7,
-        supportsRebuild: true,
-        supportsBirthdayPurge: true,
-        result: { counts: counts }
-      });
-    }
-
-    return jsonOut({ ok: false, error: 'unknown_action', action: action });
-  } catch (err) {
-    return jsonOut({ ok: false, error: String(err && err.message ? err.message : err) });
-  } finally {
-    if (locked) {
-      try { lock.releaseLock(); } catch (e2) {}
-    }
-  }
-}
-
-function getOrCreateSheet(ss, name, headerRow, bgHex) {
-  var sh = ss.getSheetByName(name);
-  if (!sh) {
-    sh = ss.insertSheet(name);
-  }
-  if (sh.getLastRow() === 0 && headerRow && headerRow.length > 0) {
-    sh.getRange(1, 1, 1, headerRow.length).setValues([headerRow]);
-    styleHeaderRow(sh, headerRow.length, bgHex || '#0F172A');
-  }
-  return sh;
-}
-
-function styleHeaderRow(sh, colCount, bgHex) {
-  var r = sh.getRange(1, 1, 1, colCount);
-  r.setBackground(bgHex || '#0F172A');
-  r.setFontColor('#FFFFFF');
-  r.setFontWeight('bold');
-  sh.setFrozenRows(1);
-}
-
-function resetSheetWithHeader(ss, name, headerRow, bgHex) {
-  var sh = ss.getSheetByName(name);
-  if (!sh) sh = ss.insertSheet(name);
-  sh.clear();
-  sh.getRange(1, 1, 1, headerRow.length).setValues([headerRow]);
-  styleHeaderRow(sh, headerRow.length, bgHex);
-  return sh;
-}
-
-function ensureAllSevenTabs(ss) {
-  getOrCreateSheet(ss, SHEET_NAMES.ATTENDANCE, HEADERS.ATTENDANCE, '#065F46');
-  getOrCreateSheet(ss, SHEET_NAMES.MEMBERS, HEADERS.MEMBERS, '#1E3A8A');
-  getOrCreateSheet(ss, SHEET_NAMES.ADMINS, HEADERS.ADMINS, '#92400E');
-  getOrCreateSheet(ss, SHEET_NAMES.ADMIN_ENTRY, HEADERS.ADMIN_ENTRY, '#334155');
-  getOrCreateSheet(ss, SHEET_NAMES.RENAME_LOG, HEADERS.RENAME_LOG, '#3730A3');
-  getOrCreateSheet(ss, SHEET_NAMES.ADMIN_AUDIT, HEADERS.ADMIN_AUDIT, '#0F172A');
-  getOrCreateSheet(ss, SHEET_NAMES.MEMBER_AUDIT, HEADERS.MEMBER_AUDIT, '#1D4ED8');
-}
-
-function detectBirthdayRemnants(ss) {
-  var found = [];
-  if (ss.getSheetByName('생일 변경 로그')) {
-    found.push('생일 변경 로그 탭');
-  }
-  var shMem = ss.getSheetByName(SHEET_NAMES.MEMBERS);
-  if (shMem && shMem.getLastRow() >= 1 && shMem.getLastColumn() >= 1) {
-    var mHdr = shMem.getRange(1, 1, 1, shMem.getLastColumn()).getValues()[0];
-    for (var i = 0; i < mHdr.length; i++) {
-      var h = String(mHdr[i] || '').trim();
-      if (h === '생일' || h === '생년월일') {
-        found.push('회원 명단(생일 열)');
-        break;
-      }
-    }
-  }
-  return found;
-}
-
-function detectLegacyFormats(ss) {
-  var legacy = [];
-  var shMem = ss.getSheetByName(SHEET_NAMES.MEMBERS);
-  if (shMem && shMem.getLastRow() >= 1 && shMem.getLastColumn() >= 1) {
-    var mHdr = shMem.getRange(1, 1, 1, shMem.getLastColumn()).getValues()[0].map(function(v) { return String(v || '').trim(); });
-    if (mHdr.indexOf('생일') !== -1 || mHdr.indexOf('생년월일') !== -1 || mHdr.length !== HEADERS.MEMBERS.length || mHdr[0] !== '성명') {
-      legacy.push(SHEET_NAMES.MEMBERS);
-    }
-  }
-  var shAtt = ss.getSheetByName(SHEET_NAMES.ATTENDANCE);
-  if (shAtt && shAtt.getLastRow() >= 1 && shAtt.getLastColumn() >= 1) {
-    var aHdr = shAtt.getRange(1, 1, 1, Math.min(3, shAtt.getLastColumn())).getValues()[0].map(function(v) { return String(v || '').trim(); });
-    if (aHdr[0] !== '성명' || aHdr[1] !== '역할' || aHdr[2] !== '출석 횟수') {
-      legacy.push(SHEET_NAMES.ATTENDANCE);
-    }
-  }
-  return legacy;
-}
-
-function purgeBirthdayFromSpreadsheet(ss) {
-  var deletedBdayTab = false;
-  var deletedBdayCols = 0;
-  var deletedBdayLogRows = 0;
-  var scrubbedCells = 0;
-
-  // 1) '생일 변경 로그' 탭 영구 삭제
-  var bdayTab = ss.getSheetByName('생일 변경 로그');
-  if (bdayTab) {
-    if (ss.getSheets().length <= 1) {
-      ensureAllSevenTabs(ss);
-    }
-    ss.deleteSheet(bdayTab);
-    deletedBdayTab = true;
-  }
-
-  // 2) '회원 명단'에서 '생일'/'생년월일' 열 삭제
-  var shMem = ss.getSheetByName(SHEET_NAMES.MEMBERS);
-  if (shMem && shMem.getLastRow() >= 1 && shMem.getLastColumn() >= 1) {
-    var mHdr = shMem.getRange(1, 1, 1, shMem.getLastColumn()).getValues()[0];
-    for (var c = mHdr.length; c >= 1; c--) {
-      var h = String(mHdr[c - 1] || '').trim();
-      if (h === '생일' || h === '생년월일') {
-        shMem.deleteColumn(c);
-        deletedBdayCols++;
-      }
-    }
-  }
-
-  // 3) 로그 탭에서 순수 생일 행 삭제 및 구버전 가입 로그의 ' · 생일: ...' 문구 제거
-  var logTabs = [SHEET_NAMES.ADMIN_AUDIT, SHEET_NAMES.MEMBER_AUDIT, SHEET_NAMES.RENAME_LOG, SHEET_NAMES.ADMIN_ENTRY];
-  for (var t = 0; t < logTabs.length; t++) {
-    var sh = ss.getSheetByName(logTabs[t]);
-    if (!sh || sh.getLastRow() <= 1) continue;
-    var vals = sh.getDataRange().getValues();
-    for (var r = vals.length - 1; r >= 1; r--) {
-      var row = vals[r];
-      var joined = row.map(function(v) { return String(v || ''); }).join(' ');
-      if (/생일\\s*변경|회원\\s*생일|생일\\s*직접|생일\\s*삭제/.test(joined)) {
-        sh.deleteRow(r + 1);
-        deletedBdayLogRows++;
-        continue;
-      }
-      var rowChanged = false;
-      for (var k = 0; k < row.length; k++) {
-        var cell = String(row[k] || '');
-        if (cell === '회원·생일') {
-          row[k] = '회원';
-          rowChanged = true;
-          scrubbedCells++;
-        } else if (cell.indexOf('생일:') !== -1 || cell.indexOf('생년월일:') !== -1) {
-          var cleaned = cell
-            .replace(/\\s*·\\s*생일\\s*:\\s*[^·\\n]+/g, '')
-            .replace(/\\s*·\\s*생년월일\\s*:\\s*[^·\\n]+/g, '')
-            .replace(/생일\\s*:\\s*[^·\\n]+/g, '')
-            .trim();
-          if (cleaned !== cell) {
-            row[k] = cleaned;
-            rowChanged = true;
-            scrubbedCells++;
-          }
-        }
-      }
-      if (rowChanged) {
-        sh.getRange(r + 1, 1, 1, row.length).setValues([row]);
-      }
-    }
-  }
-
-  return {
-    deletedBdayTab: deletedBdayTab,
-    deletedBdayCols: deletedBdayCols,
-    deletedBdayLogRows: deletedBdayLogRows,
-    scrubbedCells: scrubbedCells
-  };
-}
-
-function upsertAttendance(ss, item) {
-  var name = String(item.name || '').trim();
-  var colTitle = String(item.colTitle || item.date || '').trim();
-  if (!name || !colTitle) return;
-
-  var sh = getOrCreateSheet(ss, SHEET_NAMES.ATTENDANCE, HEADERS.ATTENDANCE, '#065F46');
-  var lastRow = Math.max(1, sh.getLastRow());
-  var lastCol = Math.max(HEADERS.ATTENDANCE.length, sh.getLastColumn());
-  var hdr = sh.getRange(1, 1, 1, lastCol).getValues()[0];
-
-  var colIdx = -1;
-  for (var c = 3; c < hdr.length; c++) {
-    if (String(hdr[c] || '').trim() === colTitle) {
-      colIdx = c + 1;
-      break;
-    }
-  }
-  if (colIdx === -1) {
-    colIdx = hdr.length + 1;
-    sh.getRange(1, colIdx).setValue(colTitle);
-    styleHeaderRow(sh, colIdx, '#065F46');
-  }
-
-  var rowIdx = -1;
-  if (lastRow >= 2) {
-    var names = sh.getRange(2, 1, lastRow - 1, 1).getValues();
-    for (var r = 0; r < names.length; r++) {
-      if (String(names[r][0] || '').trim() === name) {
-        rowIdx = r + 2;
-        break;
-      }
-    }
-  }
-  if (rowIdx === -1) {
-    rowIdx = lastRow + 1;
-    sh.getRange(rowIdx, 1, 1, 3).setValues([[name, String(item.role || ''), 0]]);
-  } else if (item.role) {
-    sh.getRange(rowIdx, 2).setValue(String(item.role));
-  }
-
-  var cellVal = String(item.time || '출석');
-  if (item.modifiedBy) {
-    cellVal = cellVal + ' (' + String(item.modifiedBy) + ')';
-  }
-  sh.getRange(rowIdx, colIdx).setValue(cellVal);
-  recalcAttendanceRowCount(sh, rowIdx);
-}
-
-function deleteAttendance(ss, item) {
-  var name = String(item.name || '').trim();
-  var colTitle = String(item.colTitle || item.date || '').trim();
-  if (!name || !colTitle) return;
-  var sh = ss.getSheetByName(SHEET_NAMES.ATTENDANCE);
-  if (!sh || sh.getLastRow() < 2) return;
-
-  var lastCol = sh.getLastColumn();
-  var hdr = sh.getRange(1, 1, 1, lastCol).getValues()[0];
-  var colIdx = -1;
-  for (var c = 3; c < hdr.length; c++) {
-    if (String(hdr[c] || '').trim() === colTitle) {
-      colIdx = c + 1;
-      break;
-    }
-  }
-  if (colIdx === -1) return;
-
-  var names = sh.getRange(2, 1, sh.getLastRow() - 1, 1).getValues();
-  for (var r = 0; r < names.length; r++) {
-    if (String(names[r][0] || '').trim() === name) {
-      sh.getRange(r + 2, colIdx).clearContent();
-      recalcAttendanceRowCount(sh, r + 2);
-      break;
-    }
-  }
-}
-
-function recalcAttendanceRowCount(sh, rowIdx) {
-  var lastCol = sh.getLastColumn();
-  if (lastCol <= 3) {
-    sh.getRange(rowIdx, 3).setValue(0);
-    return;
-  }
-  var rowVals = sh.getRange(rowIdx, 4, 1, lastCol - 3).getValues()[0];
-  var cnt = 0;
-  for (var i = 0; i < rowVals.length; i++) {
-    if (String(rowVals[i] || '').trim() !== '') cnt++;
-  }
-  sh.getRange(rowIdx, 3).setValue(cnt);
-}
-
-function cleanupZeroAttendance(ss) {
-  var sh = ss.getSheetByName(SHEET_NAMES.ATTENDANCE);
-  if (!sh) return { deletedCols: 0, deletedRows: 0 };
-  var deletedCols = 0;
-  var deletedRows = 0;
-
-  var lastRow = sh.getLastRow();
-  var lastCol = sh.getLastColumn();
-  if (lastRow >= 2 && lastCol >= 4) {
-    for (var c = lastCol; c >= 4; c--) {
-      var vals = sh.getRange(2, c, lastRow - 1, 1).getValues();
-      var hasAny = false;
-      for (var r = 0; r < vals.length; r++) {
-        if (String(vals[r][0] || '').trim() !== '') { hasAny = true; break; }
-      }
-      if (!hasAny) {
-        sh.deleteColumn(c);
-        deletedCols++;
-      }
-    }
-  }
-
-  lastRow = sh.getLastRow();
-  if (lastRow >= 2) {
-    for (var r2 = lastRow; r2 >= 2; r2--) {
-      recalcAttendanceRowCount(sh, r2);
-      var cnt = Number(sh.getRange(r2, 3).getValue() || 0);
-      var nm = String(sh.getRange(r2, 1).getValue() || '').trim();
-      if (cnt === 0 || nm === '[테스트점검]') {
-        sh.deleteRow(r2);
-        deletedRows++;
-      }
-    }
-  }
-  return { deletedCols: deletedCols, deletedRows: deletedRows };
-}
-
-function upsertMember(ss, item) {
-  var name = String(item.name || '').trim();
-  if (!name) return;
-  var prevName = String(item.prevName || '').trim();
-  var sh = getOrCreateSheet(ss, SHEET_NAMES.MEMBERS, HEADERS.MEMBERS, '#1E3A8A');
-
-  // 구버전 '생일' 열이 남아있으면 자동 제거 후 6열 기준으로 기록
-  var hdr = sh.getRange(1, 1, 1, Math.max(1, sh.getLastColumn())).getValues()[0];
-  for (var c = hdr.length; c >= 1; c--) {
-    var h = String(hdr[c - 1] || '').trim();
-    if (h === '생일' || h === '생년월일') {
-      sh.deleteColumn(c);
-    }
-  }
-
-  var rowVals = [
-    name,
-    String(item.role || ''),
-    String(item.joinedAt || ''),
-    String(item.status || ''),
-    prevName,
-    String(item.updatedAt || '')
-  ];
-
-  var lastRow = sh.getLastRow();
-  var targetRow = -1;
-  if (lastRow >= 2) {
-    var names = sh.getRange(2, 1, lastRow - 1, 1).getValues();
-    for (var r = 0; r < names.length; r++) {
-      var cur = String(names[r][0] || '').trim();
-      if (cur === name || (prevName && cur === prevName)) {
-        targetRow = r + 2;
-        break;
-      }
-    }
-  }
-  if (targetRow === -1) {
-    sh.appendRow(rowVals);
-  } else {
-    sh.getRange(targetRow, 1, 1, rowVals.length).setValues([rowVals]);
-  }
-}
-
-function upsertAdmin(ss, item) {
-  var name = String(item.name || '').trim();
-  if (!name) return;
-  var prevName = String(item.prevName || '').trim();
-  var sh = getOrCreateSheet(ss, SHEET_NAMES.ADMINS, HEADERS.ADMINS, '#92400E');
-
-  var rowVals = [
-    name,
-    String(item.status || '활성'),
-    String(item.registeredAt || ''),
-    String(item.lastLoginAt || item.time || ''),
-    Number(item.reentryCount || 0),
-    Number(item.renameCount || 0),
-    prevName,
-    String(item.note || '')
-  ];
-
-  var lastRow = sh.getLastRow();
-  var targetRow = -1;
-  if (lastRow >= 2) {
-    var names = sh.getRange(2, 1, lastRow - 1, 1).getValues();
-    for (var r = 0; r < names.length; r++) {
-      var cur = String(names[r][0] || '').trim();
-      if (cur === name || (prevName && cur === prevName)) {
-        targetRow = r + 2;
-        break;
-      }
-    }
-  }
-  if (targetRow === -1) {
-    sh.appendRow(rowVals);
-  } else {
-    sh.getRange(targetRow, 1, 1, rowVals.length).setValues([rowVals]);
-  }
-}
-
-function hasLogId(sh, idColIndex, logId) {
-  if (!logId || sh.getLastRow() < 2) return false;
-  var vals = sh.getRange(2, idColIndex, sh.getLastRow() - 1, 1).getValues();
-  for (var i = 0; i < vals.length; i++) {
-    if (String(vals[i][0] || '').trim() === logId) return true;
-  }
-  return false;
-}
-
-function appendAdminEntryLog(ss, item) {
-  var sh = getOrCreateSheet(ss, SHEET_NAMES.ADMIN_ENTRY, HEADERS.ADMIN_ENTRY, '#334155');
-  var logId = String(item.logId || '').trim();
-  if (logId && hasLogId(sh, 5, logId)) return;
-  sh.appendRow([
-    String(item.time || ''),
-    String(item.name || ''),
-    String(item.status || ''),
-    String(item.note || ''),
-    logId
-  ]);
-}
-
-function appendAuditLogRow(ss, item) {
-  var act = String(item.actionLabel || item.status || '').trim();
-  if (act.indexOf('생일') !== -1 || String(item.sheetTab || '') === '생일 변경 로그') {
-    return;
-  }
-  var tab = String(item.sheetTab || '').trim();
-  var logId = String(item.logId || '').trim();
-  var dt = String(item.time || item.date || '');
-  var actor = String(item.actorName || item.name || '');
-  var cat = String(item.category || '일반').replace('회원·생일', '회원');
-  var detail = String(item.detail || item.note || '')
-    .replace(/\\s*·\\s*생일\\s*:\\s*[^·\\n]+/g, '')
-    .trim();
-
-  if (tab === SHEET_NAMES.RENAME_LOG) {
-    var shR = getOrCreateSheet(ss, SHEET_NAMES.RENAME_LOG, HEADERS.RENAME_LOG, '#3730A3');
-    if (logId && hasLogId(shR, 8, logId)) return;
-    shR.appendRow([
-      dt,
-      item.actorType === 'member' ? '이용자' : '관리자',
-      actor,
-      act,
-      String(item.beforeVal || ''),
-      String(item.afterVal || ''),
-      detail,
-      logId
-    ]);
-    return;
-  }
-
-  if (tab === SHEET_NAMES.ADMIN_ENTRY) {
-    var shE = getOrCreateSheet(ss, SHEET_NAMES.ADMIN_ENTRY, HEADERS.ADMIN_ENTRY, '#334155');
-    if (logId && hasLogId(shE, 5, logId)) return;
-    shE.appendRow([dt, String(item.target || actor), act, detail, logId]);
-    return;
-  }
-
-  var isMember = item.actorType === 'member' || tab === SHEET_NAMES.MEMBER_AUDIT;
-  var targetSheet = isMember
-    ? getOrCreateSheet(ss, SHEET_NAMES.MEMBER_AUDIT, HEADERS.MEMBER_AUDIT, '#1D4ED8')
-    : getOrCreateSheet(ss, SHEET_NAMES.ADMIN_AUDIT, HEADERS.ADMIN_AUDIT, '#0F172A');
-
-  if (logId && hasLogId(targetSheet, 9, logId)) return;
-  targetSheet.appendRow([
-    dt,
-    cat,
-    actor,
-    act,
-    String(item.target || ''),
-    String(item.beforeVal || ''),
-    String(item.afterVal || ''),
-    detail,
-    logId
-  ]);
-}
-
-function inspectYouTubeVideoServer(data) {
-  var videoId = String(data.videoId || '').trim();
-  if (!/^[A-Za-z0-9_-]{11}$/.test(videoId)) {
-    return { ok: false, error: 'invalid_video_id' };
-  }
-  var watchUrl = 'https://www.youtube.com/watch?v=' + videoId;
-  var title = '';
-  var channelName = '';
-  var channelUrl = '';
-  var channelId = '';
-  var handleUrl = '';
-
-  try {
-    var oeResp = UrlFetchApp.fetch('https://www.youtube.com/oembed?url=' + encodeURIComponent(watchUrl) + '&format=json', {
-      muteHttpExceptions: true
-    });
-    if (oeResp.getResponseCode() === 200) {
-      var oe = JSON.parse(oeResp.getContentText());
-      title = String(oe.title || '').trim();
-      channelName = String(oe.author_name || '').trim();
-      channelUrl = String(oe.author_url || '').trim();
-      var hm = channelUrl.match(/https?:\\/\\/(?:www\\.)?youtube\\.com\\/(@[A-Za-z0-9._-]+)/i);
-      if (hm) handleUrl = 'https://www.youtube.com/' + hm[1];
-      var cm = channelUrl.match(/\\/channel\\/(UC[A-Za-z0-9_-]{22})/);
-      if (cm) channelId = cm[1];
-    }
-  } catch (e1) {}
-
-  try {
-    var pageResp = UrlFetchApp.fetch(watchUrl, { muteHttpExceptions: true, followRedirects: true });
-    if (pageResp.getResponseCode() === 200) {
-      var html = pageResp.getContentText();
-      if (!channelId) {
-        var cidM = html.match(/"channelId"\\s*:\\s*"(UC[A-Za-z0-9_-]{22})"/);
-        if (cidM) channelId = cidM[1];
-      }
-      if (!handleUrl) {
-        var hM = html.match(/"canonicalBaseUrl"\\s*:\\s*"\\/(@[A-Za-z0-9._-]+)"/);
-        if (hM) handleUrl = 'https://www.youtube.com/' + hM[1];
-      }
-    }
-  } catch (e2) {}
-
-  if (!title && !channelName) {
-    return { ok: false, error: 'video_not_found' };
-  }
-  return {
-    ok: true,
-    source: 'Apps Script 서버 정밀 조회',
-    video: {
-      title: title,
-      channelName: channelName,
-      channelUrl: handleUrl || channelUrl,
-      channelId: channelId,
-      handleUrl: handleUrl,
-      embeddable: true,
-      privacyStatus: 'public'
-    }
-  };
-}
-
-function inspectYouTubeChannelServer(data) {
-  var url = String(data.url || '').trim();
-  var channelId = String(data.channelId || '').trim();
-  var targetUrl = url || (channelId ? ('https://www.youtube.com/channel/' + channelId) : '');
-  if (!targetUrl) return { ok: false, error: 'missing_url' };
-
-  var name = '';
-  var handleUrl = '';
-  try {
-    var resp = UrlFetchApp.fetch(targetUrl, { muteHttpExceptions: true, followRedirects: true });
-    if (resp.getResponseCode() === 200) {
-      var html = resp.getContentText();
-      var titleM = html.match(/<meta\\s+property="og:title"\\s+content="([^"]+)"/i);
-      if (titleM) name = titleM[1].trim();
-      var cidM = html.match(/"externalId"\\s*:\\s*"(UC[A-Za-z0-9_-]{22})"/) || html.match(/"browseId"\\s*:\\s*"(UC[A-Za-z0-9_-]{22})"/);
-      if (cidM) channelId = cidM[1];
-      var hM = html.match(/https?:\\/\\/(?:www\\.)?youtube\\.com\\/(@[A-Za-z0-9._-]+)/i) || html.match(/"vanityChannelUrl"\\s*:\\s*"https?:\\/\\/(?:www\\.)?youtube\\.com\\/(@[A-Za-z0-9._-]+)"/i);
-      if (hM) handleUrl = 'https://www.youtube.com/' + hM[1];
-    }
-  } catch (e) {}
-
-  if (!name && !channelId && !handleUrl) {
-    return { ok: false, error: 'channel_not_found' };
-  }
-  return {
-    ok: true,
-    source: 'Apps Script 서버 조회',
-    channel: {
-      name: name,
-      channelId: channelId,
-      handleUrl: handleUrl
-    }
-  };
-}
-`;
-      try {
-        await navigator.clipboard.writeText(scriptCode);
-        showToast('📋 최신 Apps Script (7개 세부 탭) 코드가 복사되었습니다!');
-      } catch {
-        showToast('복사를 지원하지 않는 브라우저입니다. 첨부된 .gs 파일을 사용해 주세요.');
-      }
-    };
-
-    window.handlePurgeBirthdayFromSheet = async () => {
-      const url = (document.getElementById('cfgSheetUrlInput') ? document.getElementById('cfgSheetUrlInput').value.trim() : '') || getAdminSheetUrl();
-      if (!url) return showToast('먼저 Apps Script 웹 앱 URL을 입력하고 저장해 주세요.');
-      const ok = confirm(
-        '구글 시트에서 생년월일 관련 항목을 모두 영구 삭제할까요?\n\n' +
-        '• [생일 변경 로그] 탭 삭제\n' +
-        '• [회원 명단]의 생일 열 삭제\n' +
-        '• 활동 로그 내 생일 변경 행 삭제 및 잔여 생일 문구 정리'
-      );
-      if (!ok) return;
-      showToast('구글 시트의 생년월일 기록을 정리하는 중...');
-      const res = await postToGoogleSheet({ action: 'purge_birthday_sheet' }, url, true);
-      if (warnIfOldAppsScript(res)) return;
-      if (res.readable && res.data && res.data.supportsBirthdayPurge !== true) {
-        alert(
-          '⚠️ 구글 시트의 Apps Script가 아직 v10.69(7탭 · 생일 폐기) 이전 버전입니다!\n\n' +
-          '1) [📋 최신 Apps Script (7탭 · 생일 폐기) 코드 복사] 버튼을 눌러 코드를 복사하고\n' +
-          '2) 구글 시트 → 확장 프로그램 → Apps Script에 덮어쓰고 저장한 뒤\n' +
-          '3) 오른쪽 위 [배포 → 배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]를 완료한 다음 다시 눌러 주세요.'
-        );
-        return;
-      }
-      if (res.ok) {
-        const r = (res.data && res.data.result) || {};
-        const parts = [];
-        if (r.deletedBdayTab) parts.push('생일 변경 로그 탭 삭제');
-        if (Number(r.deletedBdayCols || 0) > 0) parts.push(`회원 명단 생일 열 ${r.deletedBdayCols}개 삭제`);
-        if (Number(r.deletedBdayLogRows || 0) > 0) parts.push(`생일 로그 ${r.deletedBdayLogRows}행 삭제`);
-        if (Number(r.scrubbedCells || 0) > 0) parts.push(`잔여 문구 ${r.scrubbedCells}셀 정리`);
-        const summary = parts.length > 0 ? parts.join(' · ') : '이미 생일 흔적이 모두 정리되어 있습니다';
-        recordAuditLog({
-          actorType: 'admin',
-          category: '보안·설정',
-          action: '구글 시트 생년월일 기록 영구 폐기',
-          target: '구글 시트 7탭',
-          detail: summary
-        });
-        showToast(`✅ 시트 정리 완료! (${summary})`);
-      } else {
-        showToast('시트 정리 요청에 실패했습니다. URL과 Apps Script 배포 상태를 확인해 주세요.');
-      }
-    };
-
     window.handleSaveSheetUrl = async () => {
       const url = document.getElementById('cfgSheetUrlInput').value.trim();
       if (url && !/^https:\/\/script\.google\.com\/macros\/s\//i.test(url)) {
@@ -15951,14 +15154,14 @@ function inspectYouTubeChannelServer(data) {
         const legacy = Array.isArray(res.data.legacyDetected) ? res.data.legacyDetected : [];
         const bRem = Array.isArray(res.data.birthdayRemnants) ? res.data.birthdayRemnants : [];
         if (bRem.length > 0) {
-          showToast(`⚠️ 7탭 연동 정상! 단 [${bRem.join(', ')}]이 남아 있어 아래 [시트 생일 열 · 탭 삭제]를 눌러 주세요.`);
+          showToast(`⚠️ 7탭 연동 정상! 단 구글 시트에 [${bRem.join(', ')}]이 남아 있습니다. 시트에서 정리하거나 아래 재정비를 실행해 주세요.`);
         } else if (legacy.length > 0) {
           showToast(`⚠️ 7탭 연동 정상! 단 [${legacy.join(', ')}]에 구버전 양식이 남아 있어 아래 재정비 버튼을 눌러 주세요.`);
         } else {
           showToast('✅ 구글 시트 7개 세부 탭 + 앱 내 재정비 기능 모두 정상!');
         }
       } else if (res.ok && res.readable && res.data && isSheetResponseEightTab(res.data)) {
-        showToast('⚠️ 구버전 8탭(생일 포함) 스크립트입니다. 위 [최신 Apps Script 코드 복사] 후 새 버전 배포해 주세요.');
+        showToast('⚠️ 구버전 8탭 스크립트입니다. 별도 보관한 최신 7탭 Apps Script를 배포 관리에서 새 버전으로 배포해 주세요.');
       } else if (res.ok && res.readable && res.data && isSheetResponseMultiTab(res.data)) {
         showToast('✅ 연동 정상 (구버전 스크립트 · 최신 v10.69 7탭 Apps Script 배포를 권장합니다)');
       } else {
@@ -16731,7 +15934,7 @@ function inspectYouTubeChannelServer(data) {
             } else if (res.readable && res.data && !isSheetResponseMultiTab(res.data)) {
               setDiagResult(id, 'err', 'Apps Script가 예전 1탭 버전입니다.', {
                 reason: '구글 시트 스크립트에 코드를 붙여넣고 저장만 했거나, 아직 최신 7탭 버전(v10.69)으로 [새 버전 배포]를 하지 않아 구버전 코드가 실행 중입니다.',
-                solution: `[${wLbl}] → [📋 최신 Apps Script 코드 복사] 후 구글 시트 Apps Script에 저장하고, 오른쪽 위 [배포 → 배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]를 눌러 주세요.`,
+                solution: '구글 시트 → 확장 프로그램 → Apps Script에 별도 보관한 최신 7탭 코드를 저장하고, 오른쪽 위 [배포 → 배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]를 눌러 주세요.',
                 actions: [
                   { label: `${getTabIcon('manageWorship')} ${wLbl}로 이동`, type: 'subtab', param: 'worship', primary: true },
                   { label: '🔄 재테스트', type: 'retest_diag', param: 'sheet' }
@@ -16743,7 +15946,7 @@ function inspectYouTubeChannelServer(data) {
               if (bRem.length > 0) {
                 setDiagResult(id, 'warn', `7탭 연동 정상(${res.data.version}) · 단 [${bRem.join(', ')}]이 아직 시트에 남아 있습니다.`, {
                   reason: '폐기된 생년월일 관련 열 또는 탭이 구글 시트에 남아 있습니다.',
-                  solution: `[${wLbl}] → [구글 시트 자동 연동]에서 [🧹 시트 생일 열 · 생일 변경 로그 탭 영구 삭제] 버튼을 누르면 즉시 깔끔하게 제거됩니다.`,
+                  solution: `[${wLbl}] → [구글 시트 자동 연동] → [🛠️ 시트 재정비]를 실행하거나 구글 시트에서 해당 열·탭을 삭제해 주세요.`,
                   actions: [{ label: `${getTabIcon('manageWorship')} ${wLbl}로 이동`, type: 'subtab', param: 'worship', primary: true }]
                 });
               } else if (legacy.length > 0) {
@@ -16758,13 +15961,13 @@ function inspectYouTubeChannelServer(data) {
             } else if (res.readable && res.data && isSheetResponseEightTab(res.data)) {
               setDiagResult(id, 'warn', `구버전 8탭(생일 포함) 스크립트(${res.data.version || '8탭'})가 실행 중입니다.`, {
                 reason: '아직 [생일 변경 로그] 탭과 생일 열이 포함된 구버전 8탭 Apps Script가 배포되어 있습니다.',
-                solution: `[${wLbl}]에서 [📋 최신 Apps Script (7탭 · 생일 폐기) 코드 복사] 후 새 버전 배포하고, [🧹 시트 생일 열 · 탭 영구 삭제]를 실행해 주세요.`,
+                solution: '구글 시트 → 확장 프로그램 → Apps Script에 별도 보관한 최신 7탭 코드를 저장하고 [배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]를 완료해 주세요.',
                 actions: [{ label: `${getTabIcon('manageWorship')} ${wLbl}로 이동`, type: 'subtab', param: 'worship', primary: true }]
               });
             } else if (res.readable && res.data && isSheetResponseMultiTab(res.data)) {
               setDiagResult(id, 'warn', `연동은 정상이나 구버전 스크립트(${res.data.version || '3탭'})입니다.`, {
                 reason: '구버전 스크립트가 실행 중이어서 7개 세부 탭 분리 및 생일 폐기 정리가 지원되지 않습니다.',
-                solution: `[${wLbl}]에서 최신 v10.69 7탭 코드를 복사해 [배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]를 진행해 주세요.`,
+                solution: '구글 시트 → 확장 프로그램 → Apps Script에 별도 보관한 최신 7탭 코드를 저장하고 [배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]를 진행해 주세요.',
                 actions: [{ label: `${getTabIcon('manageWorship')} ${wLbl}로 이동`, type: 'subtab', param: 'worship', primary: true }]
               });
             } else {
