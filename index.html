@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=169" />
+  <link rel="manifest" href="./manifest.json?v=170" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=169" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=169" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=170" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=170" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2957,7 +2957,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=169" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=170" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3603,7 +3603,7 @@
             <div>
               <label class="form-label" for="noticeScheduleDateInput" style="font-size:11.5px; margin-bottom:4px;">예약 날짜 (KST)</label>
               <div class="combo-input-row">
-                <input id="noticeScheduleDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="2026.11.29" oninput="formatBirthdayTyping(this)" />
+                <input id="noticeScheduleDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="2026.11.29" oninput="formatDateTyping(this)" />
                 <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="달력에서 선택" onclick="openNativePicker('noticeScheduleDatePicker', 'noticeScheduleDateInput', 'date')">📅</button>
                 <input id="noticeScheduleDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('noticeScheduleDatePicker', 'noticeScheduleDateInput', 'date')" />
               </div>
@@ -3701,7 +3701,7 @@
             <div>
               <label class="form-label" for="blockScheduleDateInput" style="font-size:11.5px; margin-bottom:4px;">예약 날짜 (KST)</label>
               <div class="combo-input-row">
-                <input id="blockScheduleDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="2026.11.29" oninput="formatBirthdayTyping(this)" />
+                <input id="blockScheduleDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="2026.11.29" oninput="formatDateTyping(this)" />
                 <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="달력에서 선택" onclick="openNativePicker('blockScheduleDatePicker', 'blockScheduleDateInput', 'date')">📅</button>
                 <input id="blockScheduleDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('blockScheduleDatePicker', 'blockScheduleDateInput', 'date')" />
               </div>
@@ -3939,7 +3939,7 @@
       <div class="form-group">
         <label class="form-label" for="spEventDateInput">출석 날짜 (직접 입력 또는 달력 선택)</label>
         <div class="combo-input-row">
-          <input id="spEventDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1;" placeholder="예: 2026.12.25" oninput="formatBirthdayTyping(this)" />
+          <input id="spEventDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1;" placeholder="예: 2026.12.25" oninput="formatDateTyping(this)" />
           <button class="combo-picker-btn" type="button" title="달력에서 선택" onclick="openNativePicker('spEventDatePicker', 'spEventDateInput', 'date')">📅</button>
           <input id="spEventDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('spEventDatePicker', 'spEventDateInput', 'date')" />
         </div>
@@ -4049,7 +4049,7 @@
       </div>
       <div class="info-box warn" style="margin-top:0; margin-bottom:14px;">
         <b>3. 공동체 게시판 기록 범위</b><br>
-        건전한 공동체 운영을 위해 유튜브 영상 추천·수정·삭제, 문의 사항 작성·수정·삭제, 가입·탈퇴, 이름·생일 변경 신청, 예배 출석 체크 내역만 관리 기록에 남습니다.
+        건전한 공동체 운영을 위해 유튜브 영상 추천·수정·삭제, 문의 사항 작성·수정·삭제, 가입·탈퇴, 이름 변경 신청, 예배 출석 체크 내역만 관리 기록에 남습니다.
       </div>
       <button class="btn-full btn-dark" type="button" style="padding:11px;" data-close="privacyGuideModal">확인</button>
     </div>
@@ -4365,7 +4365,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 29;
-    const APP_CLIENT_BUILD = 169;
+    const APP_CLIENT_BUILD = 170;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -5044,7 +5044,7 @@
 
     const RESET_CODE_TTL_MS = 24 * 60 * 60 * 1000;
 
-    function normalizeBirthdayInput(raw) {
+    function normalizeDateInput(raw) {
       const s = String(raw || '').trim();
       if (!s) return '';
       const digits = s.replace(/\D/g, '');
@@ -5058,7 +5058,7 @@
       return s;
     }
 
-    window.formatBirthdayTyping = (el) => {
+    window.formatDateTyping = (el) => {
       if (!el) return;
       const digits = String(el.value || '').replace(/\D/g, '').slice(0, 8);
       let formatted = digits;
@@ -5069,21 +5069,6 @@
       }
       el.value = formatted;
     };
-
-    function isValidBirthdayStr(str) {
-      const s = normalizeBirthdayInput(str);
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
-      const [y, m, d] = s.split('-').map(Number);
-      const curYear = new Date().getFullYear();
-      if (y < 1940 || y > curYear || m < 1 || m > 12 || d < 1 || d > 31) return false;
-      const dt = new Date(Date.UTC(y, m - 1, d));
-      return dt.getUTCFullYear() === y && (dt.getUTCMonth() + 1) === m && dt.getUTCDate() === d;
-    }
-
-    function formatBirthdayDisplay(str) {
-      if (!isValidBirthdayStr(str)) return '미등록';
-      return String(str).trim().replace(/-/g, '.');
-    }
 
     const ROLE_COLORS = ['#7C3AED', '#1E3A8A', '#059669', '#D97706', '#2563EB', '#475569', '#DB2777', '#DC2626', '#0D9488'];
     const BANNER_THEMES = [
@@ -5226,7 +5211,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=169" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=170" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5250,8 +5235,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=169', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=169', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=170', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=170', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -6066,7 +6051,7 @@
         return isAdmin ? 'Firebase에 관리자 계정이 등록되지 않았습니다.' : '등록되지 않은 성명입니다. 회원가입 탭에서 가입 신청을 해주세요.';
       }
       if (code === 'auth/email-already-in-use') {
-        return '이미 등록된 성명입니다. 동명이인은 이름 뒤에 생년 등을 붙여주세요. (예: 홍길동01)';
+        return '이미 등록된 성명입니다. 동명이인은 이름 뒤에 숫자 등을 붙여주세요. (예: 홍길동01)';
       }
       if (code === 'auth/weak-password') {
         return '비밀번호는 6자리 이상으로 입력해 주세요.';
@@ -7934,7 +7919,7 @@
             const idxData = idxSnap.data() || {};
             if (idxData.loginEmail && typeof idxData.loginEmail === 'string') {
               isSigningUp = false;
-              return showError('signupError', '이미 등록된 성명입니다. 동명이인은 이름 뒤에 생년 등을 붙여주세요. (예: 홍길동01)');
+              return showError('signupError', '이미 등록된 성명입니다. 동명이인은 이름 뒤에 숫자 등을 붙여주세요. (예: 홍길동01)');
             }
             if (typeof idxData.v === 'number') authVer = idxData.v;
           }
@@ -8595,7 +8580,7 @@
           sub: '신규 지체 초대 방법과 QR 유효기간 안내',
           keywords: '초대 QR 회원가입 가입신청 승인 대기 재가입',
           steps: [
-            '<b>신규 회원가입:</b> 기존 회원이나 관리자가 공유한 <b>오늘의 초대 QR 코드</b>를 스캔해 접속하면 회원가입 탭이 열립니다. 본인 성명, 생년월일(8자리 직접 입력 또는 달력 선택), 역할, 비밀번호(6자리 이상)를 입력해 신청합니다.',
+            '<b>신규 회원가입:</b> 기존 회원이나 관리자가 공유한 <b>오늘의 초대 QR 코드</b>를 스캔해 접속하면 회원가입 탭이 열립니다. 본인 성명, 역할, 비밀번호(6자리 이상)를 입력해 신청합니다.',
             `<b>실시간 자동 입장:</b> 가입 신청 후 관리자가 승인하면 별도로 새로고침하지 않아도 자동으로 <b>${hLbl}</b> 화면에 입장됩니다.`,
             `<b>친구 초대하기:</b> 하단 <b>[${stIcn} ${stLbl}] → 오늘의 초대 QR</b>을 누르면 <b>카카오톡 이미지 공유</b>, <b>이미지 저장</b>, <b>초대 링크 복사</b>로 바로 전달할 수 있습니다.`
           ],
@@ -8605,11 +8590,11 @@
           id: 'ug_home_att',
           icon: getTabIcon('home'),
           title: `${getTabLabel('home')} 소식 확인 & 예배 출석 체크`,
-          sub: '공지·배너·생일/새신자 축하 & 주일/행사 출석 방법',
-          keywords: `${getTabLabel('home')} 메인 홈 공지 광고 소식 배너 생일 새신자 출석 체크 주일예배 행사`,
+          sub: '공지·배너·새신자 환영 & 주일/행사 출석 방법',
+          keywords: `${getTabLabel('home')} 메인 홈 공지 광고 소식 배너 새신자 출석 체크 주일예배 행사`,
           steps: [
             `<b>공지 · 광고 · 소식 확인:</b> <b>${hLbl}</b> 상단 고정 배너와 하단 공지 목록에서 청년부 소식을 확인합니다. 구분 칩(전체/공지/광고/소식/행사 등)으로 필터링할 수 있으며, 카드를 누르면 전체 본문이 열립니다.`,
-            `<b>오늘의 생일 · 새신자 환영 배너:</b> 생일인 지체나 새로 온 새신자가 있으면 <b>${hLbl}</b> 상단에 축하 배너가 자동으로 표시됩니다.`,
+            `<b>새신자 환영 배너:</b> 새로 온 새신자가 있으면 <b>${hLbl}</b> 상단에 환영 배너가 자동으로 표시됩니다.`,
             `<b>예배 · 특별 행사 출석 체크:</b> 설정된 주일 예배 시간(기본 일요일 14:00~15:30) 또는 특별 행사 시간에만 <b>${hLbl}</b> 맨 위에 <b>초록색 출석 카드</b>가 자동으로 나타납니다.`,
             `<b>1인 1회 출석 확인:</b> <b>[출석하기]</b> 버튼을 누르면 즉시 출석이 기록되고 카드가 자동으로 숨겨집니다. 출석 완료 여부와 최근 출석 기록은 하단 <b>[${stIcn} ${stLbl}] → 👤 내 계정 관리</b>에서 언제든 확인할 수 있습니다.`
           ],
@@ -8643,17 +8628,16 @@
         {
           id: 'ug_account',
           icon: '👤',
-          title: '내 계정 관리 (이름·생일 변경 신청 / 비밀번호 / 탈퇴)',
+          title: '내 계정 관리 (이름 변경 신청 / 비밀번호 / 탈퇴)',
           sub: `하단 ${getTabLabel('settings')}에서 내 정보 변경 · 글자 크기 · 비밀번호 관리`,
-          keywords: `내 계정 ${getTabLabel('settings')} 글자 크기 이름 변경 신청 생일 변경 승인 거절 비밀번호 변경 초기화 분실 탈퇴 삭제`,
+          keywords: `내 계정 ${getTabLabel('settings')} 글자 크기 이름 변경 신청 승인 거절 비밀번호 변경 초기화 분실 탈퇴 삭제`,
           steps: [
             `<b>이름 변경 신청:</b> 하단 <b>[${stIcn} ${stLbl}] → 👤 내 계정 관리 → [✏️ 내 이름 변경 신청]</b>에 새 성명(2~10글자)을 입력해 신청합니다. 관리자가 승인하면 즉시 새 이름으로 변경되며(다음 로그인부터 새 이름으로 로그인), 거절 시 기존 이름이 유지됩니다.`,
-            `<b>전체 글자 크기 조절:</b> 하단 <b>[${stIcn} ${stLbl}] → 🔤 전체 글자 크기</b>에서 보통·크게·아주 크게를 선택하면 앱 전체 글자가 보기 편하게 커집니다.`, 
-            '<b>생일 변경 신청:</b> <b>[🎂 내 생일 변경 신청]</b>에서 생년월일 8자리 입력 또는 달력 선택 후 신청합니다. 관리자 승인 후 반영되며, 대기 중에는 언제든 취소할 수 있습니다.',
+            `<b>전체 글자 크기 조절:</b> 하단 <b>[${stIcn} ${stLbl}] → 🔤 전체 글자 크기</b>에서 보통·크게·아주 크게를 선택하면 앱 전체 글자가 보기 편하게 커집니다.`,
             '<b>비밀번호 변경:</b> 하단 <b>[비밀번호 변경]</b> 탭에서 현재 비밀번호와 새 비밀번호(6자리 이상)를 입력해 직접 변경할 수 있습니다. <b>(비밀번호 변경은 보안상 로그에 남지 않습니다.)</b>',
             '<b>비밀번호를 잊어버렸을 때:</b> 관리자에게 비밀번호 초기화를 요청해 <b>8자리 초기화 코드(24시간 유효)</b>를 받은 뒤, 로그인 화면 하단의 <b>[🔑 새 비밀번호 설정]</b>에서 재설정하면 바로 로그인됩니다.'
           ],
-          tip: '이름·생일 변경 신청/취소 및 회원 탈퇴는 보안상 관리자 로그에 기록되며, 비밀번호 변경은 기록되지 않습니다.'
+          tip: '이름 변경 신청/취소 및 회원 탈퇴는 보안상 관리자 로그에 기록되며, 비밀번호 변경은 기록되지 않습니다.'
         },
         {
           id: 'ug_notif',
@@ -8685,7 +8669,7 @@
         const quickTagList = [
           { q: '설치', label: '#앱설치' },
           { q: '출석', label: '#출석체크' },
-          { q: '이름', label: '#이름·생일변경' },
+          { q: '이름', label: '#이름변경' },
           { q: 'QR', label: '#초대QR' },
           { q: '알림', label: '#알림설정' }
         ];
@@ -8719,7 +8703,7 @@
           <div class="card" style="text-align:center; padding:26px 16px; color:#64748B;">
             <div style="font-size:24px; margin-bottom:6px;">🔎</div>
             <div style="font-size:14px; font-weight:700; color:#334155;">일치하는 사용 안내가 없습니다.</div>
-            <div style="font-size:12.5px; margin-top:4px;">예: 출석, 영상, 이름, 생일, 비밀번호, QR, 알림 등으로 검색해 보세요.</div>
+            <div style="font-size:12.5px; margin-top:4px;">예: 출석, 영상, 이름, 비밀번호, QR, 알림 등으로 검색해 보세요.</div>
           </div>
         `;
         return;
@@ -8839,9 +8823,9 @@
           catId: 'content_qt',
           category: catMap.content_qt,
           icon: getTabIcon('manageContent'),
-          title: `2. ${getTabLabel('manageContent')} (배너 · 역할별 공개 · 예약 게시 · 축하 멘트)`,
+          title: `2. ${getTabLabel('manageContent')} (배너 · 역할별 공개 · 예약 게시 · 환영 멘트)`,
           sub: `${getTabLabel('home')} 화면 구성, 특정 역할 전용 공지, 예약 게시(KST) 활용법`,
-          keywords: `${getTabLabel('manageContent')} ${getTabLabel('home')} 화면 공지 배너 칸 배치 순서 임시저장 예약 게시 역할 전용 생일 새신자 축하 멘트`,
+          keywords: `${getTabLabel('manageContent')} ${getTabLabel('home')} 화면 공지 배너 칸 배치 순서 임시저장 예약 게시 역할 전용 새신자 환영 멘트`,
           targetTab: 'content',
           targetLabel: `${getTabIcon('manageContent')} ${getTabLabel('manageContent')} 열기`,
           steps: [
@@ -8849,7 +8833,7 @@
             `<b>공지·광고 작성 및 상단 고정:</b> <b>[+ 새 공지·광고]</b>에서 구분(선택 또는 직접 입력)·제목·내용을 작성합니다. <b>[📌 상단 고정 공지 배너에도 함께 띄우기]</b>를 체크하면 ${hLbl} 최상단 배너에 자동 연동됩니다.`,
             '<b>특정 역할에게만 보여주기 (서버 보안 분리):</b> 공개 대상에서 <b>[🎯 선택한 역할만 보기]</b>를 고르고 원하는 역할(예: 목사·부장·회장·팀장·셀장 등 중복 선택 가능)을 체크하면 해당 역할 회원에게만 표시됩니다.',
             '<b>임시저장 & 예약 게시:</b> <b>[📝 임시저장]</b>은 관리자만 볼 수 있고, <b>[⏰ 예약 게시]</b>는 지정한 한국시간(KST)이 지나면 자동으로 공개됩니다.',
-            '<b>생일 · 새신자 축하 멘트 수정:</b> 상단 노란색 카드의 <b>[✏️ 멘트 수정]</b>에서 <b>{이름}</b> 변수를 넣어 생일/새신자 자동 배너와 알림 문구를 자유롭게 바꿀 수 있습니다.'
+            '<b>새신자 환영 멘트 수정:</b> 상단 노란색 카드의 <b>[✏️ 멘트 수정]</b>에서 <b>{이름}</b> 변수를 넣어 새신자 자동 배너와 알림 문구를 자유롭게 바꿀 수 있습니다.'
           ],
           tip: '예약 게시 항목은 보안상 관리자 전용 서버(adminNotices/adminBlocks)에 격리되어 있으며, 지정 시각 이후 관리자가 앱에 접속 중이거나 앱을 열 때 즉시 자동 공개됩니다.'
         },
@@ -8874,14 +8858,14 @@
           catId: 'member_role',
           category: catMap.member_role,
           icon: getTabIcon('manageMembers'),
-          title: `4. ${getTabLabel('manageMembers')} · 이름/생일 변경 승인 · 역할별 명단 관리`,
+          title: `4. ${getTabLabel('manageMembers')} · 이름 변경 승인 · 역할별 명단 관리`,
           sub: `${getTabLabel('manageMembers')} 탭과 ${getTabLabel('manageRoles')} 탭의 역할 분담 안내`,
-          keywords: `${getTabLabel('manageMembers')} ${getTabLabel('manageRoles')} 회원 승인 가입 대기 보류 삭제 이름 변경 승인 거절 생일 변경 승인 비밀번호 초기화 역할 설정 명단 새신자 해제`,
+          keywords: `${getTabLabel('manageMembers')} ${getTabLabel('manageRoles')} 회원 승인 가입 대기 보류 삭제 이름 변경 승인 거절 비밀번호 초기화 역할 설정 명단 새신자 해제`,
           targetTab: 'roles',
           targetLabel: `${getTabIcon('manageRoles')} ${getTabLabel('manageRoles')}(명단) 열기`,
           steps: [
-            `<b>[${memIcn} ${memLbl}] 탭 (승인·삭제 전용):</b> 신규 가입 대기(역할 부여 후 승인 / 보류 / 삭제), <b>회원 이름 변경 신청</b>(승인 시 다음 로그인부터 새 이름 자동 적용 / 거절 시 기존 이름 유지), <b>회원 생일 변경 신청</b>(승인 / 거절), 비밀번호 초기화 대기, 보류된 신청만 깔끔하게 처리합니다.`,
-            `<b>[${roleIcn} ${roleLbl}] 탭 (승인 회원 명단 · 역할 변경):</b> 상단의 역할별 탭(<b>전체 · 목사 · 부장 · 교사 · 회장 · 팀장 · 셀장 · 청년 · 새신자</b> 등)을 눌러 소속 명단을 한눈에 확인하고, 이름 검색·역할 변경·생일 직접 수정·새신자 해제·비밀번호 초기화·삭제를 처리합니다.`,
+            `<b>[${memIcn} ${memLbl}] 탭 (승인·삭제 전용):</b> 신규 가입 대기(역할 부여 후 승인 / 보류 / 삭제), <b>회원 이름 변경 신청</b>(승인 시 다음 로그인부터 새 이름 자동 적용 / 거절 시 기존 이름 유지), 비밀번호 초기화 대기, 보류된 신청만 깔끔하게 처리합니다.`,
+            `<b>[${roleIcn} ${roleLbl}] 탭 (승인 회원 명단 · 역할 변경):</b> 상단의 역할별 탭(<b>전체 · 목사 · 부장 · 교사 · 회장 · 팀장 · 셀장 · 청년 · 새신자</b> 등)을 눌러 소속 명단을 한눈에 확인하고, 이름 검색·역할 변경·새신자 해제·비밀번호 초기화·삭제를 처리합니다.`,
             `<b>새신자 해제:</b> 역할이 <b>새신자</b>인 회원은 ${hLbl}에 환영 배너가 자동 표시됩니다. 정착 후 <b>[💐 새신자 해제]</b>로 일반 역할(예: 청년)로 바꾸면 ${hLbl} 환영 배너에서 자동으로 내려갑니다.`,
             '<b>회원 비밀번호 초기화:</b> 회원이 비밀번호를 잊으면 명단에서 <b>[비번 초기화]</b>를 눌러 <b>8자리 1회용 코드(24시간 유효)</b>를 발급하고 <b>[📋 안내 문구 복사]</b>로 카톡 전달해 주세요.'
           ],
@@ -8892,26 +8876,25 @@
           catId: 'worship_sheet',
           category: catMap.worship_sheet,
           icon: getTabIcon('manageWorship'),
-          title: `5. ${getTabLabel('manageWorship')} (예배 출석) & 구글 시트 8개 세부 탭 자동 연동`,
-          sub: '정기/특별 예배 출석 설정, 수동 수정, 구글 시트 8개 탭 구조 및 배포 방법',
-          keywords: `${getTabLabel('manageWorship')} 예배 출석 정기 특별 행사 수련회 구글 시트 Apps Script 8개 탭 동기화 재정비 출석 0 정리`,
+          title: `5. ${getTabLabel('manageWorship')} (예배 출석) & 구글 시트 7개 세부 탭 자동 연동`,
+          sub: '정기/특별 예배 출석 설정, 수동 수정, 구글 시트 7개 탭 구조 및 배포 방법',
+          keywords: `${getTabLabel('manageWorship')} 예배 출석 정기 특별 행사 수련회 구글 시트 Apps Script 7개 탭 동기화 재정비 출석 0 정리`,
           targetTab: 'worship',
           targetLabel: `${getTabIcon('manageWorship')} ${getTabLabel('manageWorship')} 열기`,
           steps: [
             '<b>출석 명단 관리:</b> 날짜/예배를 선택해 출석 인원을 확인하고, 누락된 회원은 <b>[+ 출석 추가]</b>, 시각 오기는 <b>[수정]</b>, 잘못된 기록은 <b>[삭제]</b>할 수 있습니다. <b>[✏️ 예배명 변경]</b>으로 특정 주일을 절기 예배 이름으로 바꿀 수 있습니다.',
             '<b>정기 예배 · 특별 행사 설정:</b> 정기 예배 요일·시간(기본 주일 14:00~15:30)을 바꾸거나 <b>[+ 행사 추가]</b>로 수련회·금요기도회 등 특별 출석 일정을 등록합니다.',
-            `<b>구글 시트 Apps Script 배포 방법:</b> 구글 시트 상단 <b>[확장 프로그램 → Apps Script]</b>에 최신 8탭 스크립트를 붙여넣고 저장한 뒤, 우측 상단 <b>[배포 → 배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]</b>를 완료합니다. (웹 앱 URL은 <b>[${wIcn} ${wLbl}]</b> 하단에 입력 후 저장)`,
-            `<b>자동 저장 · 전체 동기화 · 버전 전환 시트 재정비:</b> 평소 출석·회원·관리자·보안 로그가 자동으로 각 전용 시트 탭에 분리 저장됩니다. 향후 업데이트로 시트 양식이 바뀌거나 테스트 흔적이 남았을 때는 <b>[${wIcn} ${wLbl} → 🛠️ 시트 재정비]</b> 버튼으로 <b>출석부·회원 명단·관리자 명단</b>을 최신 양식으로 안전하게 재생성할 수 있습니다. (5개 감사 로그 탭은 삭제 불가 유지)`
+            `<b>구글 시트 Apps Script 배포 방법:</b> 구글 시트 상단 <b>[확장 프로그램 → Apps Script]</b>에 최신 7탭 스크립트를 붙여넣고 저장한 뒤, 우측 상단 <b>[배포 → 배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]</b>를 완료합니다. (웹 앱 URL은 <b>[${wIcn} ${wLbl}]</b> 하단에 입력 후 저장)`,
+            `<b>자동 저장 · 전체 동기화 · 버전 전환 시트 재정비:</b> 평소 출석·회원·관리자·보안 로그가 자동으로 각 전용 시트 탭에 분리 저장됩니다. 향후 업데이트로 시트 양식이 바뀌거나 테스트 흔적이 남았을 때는 <b>[${wIcn} ${wLbl} → 🛠️ 시트 재정비]</b> 버튼으로 <b>출석부·회원 명단·관리자 명단</b>을 최신 양식으로 안전하게 재생성할 수 있습니다. (4개 감사 로그 탭은 삭제 불가 유지)`
           ],
           sheetTabs: [
             { name: '1. 출석부', desc: '예배·행사별 출석 시각 & 누적 출석' },
-            { name: '2. 회원 명단', desc: '성명·역할·생일·가입일·상태·이전이름' },
+            { name: '2. 회원 명단', desc: '성명·역할·가입일·상태·이전이름' },
             { name: '3. 관리자 명단', desc: '활성/해제 관리자 현황·접속일·횟수' },
             { name: '4. 관리자 입퇴장 로그', desc: '관리자 등록·승인·거절·해제·재입장' },
             { name: '5. 이름 변경 로그', desc: '관리자·회원 이름 변경(신청/승인/거절)' },
-            { name: '6. 생일 변경 로그', desc: '회원 생일 변경 신청/승인/거절·직접수정' },
-            { name: '7. 관리자 활동 로그', desc: '공지·배너·말씀·역할·메뉴·설정 전체' },
-            { name: '8. 이용자 활동 로그', desc: '영상 추천·문의·가입/탈퇴·출석 이력' }
+            { name: '6. 관리자 활동 로그', desc: '공지·배너·영상·역할·메뉴·설정 전체' },
+            { name: '7. 이용자 활동 로그', desc: '영상 추천·문의·가입/탈퇴·출석 이력' }
           ],
           tip: '구글 시트 URL은 관리자 전용 문서(config/sheetSecret)에 격리되어 있어 일반 회원은 절대 볼 수 없습니다.'
         },
@@ -8927,7 +8910,7 @@
           targetLabel: `${getTabIcon('manageLogs')} ${getTabLabel('manageLogs')} 탭 열기`,
           steps: [
             `<b>초대 QR 관리 ([${qrIcn} ${qrLbl}]):</b> 초대 링크가 외부에 유출되었을 때 <b>[🔄 새 QR 즉시 재발급]</b>을 누르면 기존 오늘 QR이 즉시 폐기되고 새 QR이 발급됩니다.`,
-            `<b>통합 보안 감사 로그 ([${logIcn} ${logLbl}]):</b> 악의적 글 게시·임의 변경·장난을 방지하기 위해 <b>관리자의 모든 추가/수정/삭제/설정 변경</b>과 <b>이용자의 영상 추천·문의·이름/생일 변경 신청·가입/탈퇴·출석 체크</b>가 날짜·시각(초 단위 KST)과 함께 기록됩니다.`,
+            `<b>통합 보안 감사 로그 ([${logIcn} ${logLbl}]):</b> 악의적 글 게시·임의 변경·장난을 방지하기 위해 <b>관리자의 모든 추가/수정/삭제/설정 변경</b>과 <b>이용자의 영상 추천·문의·이름 변경 신청·가입/탈퇴·출석 체크</b>가 날짜·시각(초 단위 KST)과 함께 기록됩니다.`,
             '<b>위변조·삭제 불가:</b> 보안상 최고 관리자도 앱에서 로그를 수정하거나 삭제할 수 없으며, 상단 필터(전체/관리자/이용자), 분류 선택, 검색창으로 빠르게 추적할 수 있습니다.',
             `<b>프라이버시 미기록 범위:</b> 이용자 비밀번호 변경, 전체 글자 크기·알림 설정, 외부 사이트 이동, 공지·${byLbl} 단순 조회는 기록되지 않습니다.`
           ],
@@ -14811,14 +14794,13 @@
           </div>
           <div style="font-size:11.5px; color:#64748B; line-height:1.5; margin-bottom:10px;">
             • 보안 강화를 위해 연동 주소는 <b>최고 관리자 전용 서버(config/sheetSecret)</b>에만 격리 보관되며 일반 회원에게는 노출되지 않습니다.<br>
-            • <b>7개 세부 탭 자동 분리 저장 (생년월일 폐기 완료):</b> <b>출석부 · 회원 명단 · 관리자 명단 · 관리자 입퇴장 로그 · 이름 변경 로그 · 관리자 활동 로그 · 이용자 활동 로그</b>가 각각 별도 탭에 자동 기록됩니다.
+            • <b>7개 세부 탭 자동 분리 저장:</b> <b>출석부 · 회원 명단 · 관리자 명단 · 관리자 입퇴장 로그 · 이름 변경 로그 · 관리자 활동 로그 · 이용자 활동 로그</b>가 각각 별도 탭에 자동 기록됩니다.
           </div>
           <div style="display:flex; gap:6px; flex-wrap:wrap;">
             <button id="saveSheetUrlBtn" class="btn-sm primary" type="button" style="flex:1; padding:9px;" onclick="handleSaveSheetUrl()">💾 연동 주소 저장</button>
             <button class="btn-sm" type="button" style="padding:9px 11px;" onclick="handleTestSheetConnection()">🔔 연동 테스트</button>
             <button class="btn-sm approve" type="button" style="padding:9px 11px;" onclick="handleSyncAllToGoogleSheet()">🔄 전체 시트 동기화</button>
-            <button class="btn-sm primary" type="button" style="width:100%; padding:9px;" onclick="copyLatestAppsScriptCode()">📋 최신 Apps Script (7탭 · 생일 폐기) 코드 복사</button>
-            <button class="btn-sm warn" type="button" style="width:100%; padding:9px;" onclick="handlePurgeBirthdayFromSheet()">🧹 시트 생일 열 · [생일 변경 로그] 탭 영구 삭제</button>
+            <button class="btn-sm primary" type="button" style="width:100%; padding:9px;" onclick="copyLatestAppsScriptCode()">📋 최신 Apps Script (7개 세부 탭) 코드 복사</button>
             <button class="btn-sm danger" type="button" style="width:100%; padding:9px;" onclick="handleCleanupZeroSheetEntries()">🧹 출석 0인 날짜·인원(테스트 흔적) 시트에서 정리</button>
           </div>
 
@@ -15863,7 +15845,7 @@ function inspectYouTubeChannelServer(data) {
 `;
       try {
         await navigator.clipboard.writeText(scriptCode);
-        showToast('📋 최신 Apps Script (v10.69 · 7탭 · 생일 폐기) 코드가 복사되었습니다!');
+        showToast('📋 최신 Apps Script (7개 세부 탭) 코드가 복사되었습니다!');
       } catch {
         showToast('복사를 지원하지 않는 브라우저입니다. 첨부된 .gs 파일을 사용해 주세요.');
       }
@@ -15973,7 +15955,7 @@ function inspectYouTubeChannelServer(data) {
         } else if (legacy.length > 0) {
           showToast(`⚠️ 7탭 연동 정상! 단 [${legacy.join(', ')}]에 구버전 양식이 남아 있어 아래 재정비 버튼을 눌러 주세요.`);
         } else {
-          showToast('✅ 구글 시트 7개 세부 탭(생일 폐기 완료) + 재정비 기능 모두 정상!');
+          showToast('✅ 구글 시트 7개 세부 탭 + 앱 내 재정비 기능 모두 정상!');
         }
       } else if (res.ok && res.readable && res.data && isSheetResponseEightTab(res.data)) {
         showToast('⚠️ 구버전 8탭(생일 포함) 스크립트입니다. 위 [최신 Apps Script 코드 복사] 후 새 버전 배포해 주세요.');
@@ -16297,7 +16279,7 @@ function inspectYouTubeChannelServer(data) {
     }
 
     function normalizeDateAnyInput(raw) {
-      const s = normalizeBirthdayInput(raw);
+      const s = normalizeDateInput(raw);
       if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return '';
       const [y, m, d] = s.split('-').map(Number);
       if (y < 1940 || y > 2100 || m < 1 || m > 12 || d < 1 || d > 31) return '';
@@ -16488,7 +16470,7 @@ function inspectYouTubeChannelServer(data) {
                   <div>
                     <label class="form-label" style="font-size:11.5px; margin-bottom:4px;">점검 시작 날짜 (KST)</label>
                     <div class="combo-input-row">
-                      <input id="cfgMaintStartDate" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" value="${escapeHtml(startDateVal)}" oninput="formatBirthdayTyping(this)" />
+                      <input id="cfgMaintStartDate" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" value="${escapeHtml(startDateVal)}" oninput="formatDateTyping(this)" />
                       <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" onclick="openNativePicker('cfgMaintStartDatePicker', 'cfgMaintStartDate', 'date')">📅</button>
                       <input id="cfgMaintStartDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('cfgMaintStartDatePicker', 'cfgMaintStartDate', 'date')" />
                     </div>
@@ -16506,7 +16488,7 @@ function inspectYouTubeChannelServer(data) {
                   <div>
                     <label class="form-label" style="font-size:11.5px; margin-bottom:4px;">점검 종료 날짜 (KST)</label>
                     <div class="combo-input-row">
-                      <input id="cfgMaintEndDate" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" value="${escapeHtml(endDateVal)}" oninput="formatBirthdayTyping(this)" />
+                      <input id="cfgMaintEndDate" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" value="${escapeHtml(endDateVal)}" oninput="formatDateTyping(this)" />
                       <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" onclick="openNativePicker('cfgMaintEndDatePicker', 'cfgMaintEndDate', 'date')">📅</button>
                       <input id="cfgMaintEndDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('cfgMaintEndDatePicker', 'cfgMaintEndDate', 'date')" />
                     </div>
@@ -16771,7 +16753,7 @@ function inspectYouTubeChannelServer(data) {
                   actions: [{ label: `${getTabIcon('manageWorship')} ${wLbl}로 이동`, type: 'subtab', param: 'worship', primary: true }]
                 });
               } else {
-                setDiagResult(id, 'ok', `🔐 관리자 전용 URL 격리 정상 · 7개 세부 탭(생일 폐기 완료) + 앱 내 시트 재정비 지원 확인 (${res.data.version})`);
+                setDiagResult(id, 'ok', `🔐 관리자 전용 URL 격리 정상 · 7개 세부 탭 자동 분리 + 앱 내 시트 재정비 지원 확인 (${res.data.version})`);
               }
             } else if (res.readable && res.data && isSheetResponseEightTab(res.data)) {
               setDiagResult(id, 'warn', `구버전 8탭(생일 포함) 스크립트(${res.data.version || '8탭'})가 실행 중입니다.`, {
@@ -19046,7 +19028,7 @@ service cloud.firestore {
 `;
       try {
         await navigator.clipboard.writeText(fullRules);
-        showToast('Firebase Firestore 최신 전체 보안 규칙(생일 폐기 반영)이 복사되었습니다!');
+        showToast('Firebase Firestore 최신 전체 보안 규칙이 복사되었습니다!');
       } catch {
         showToast('복사를 지원하지 않는 브라우저입니다.');
       }
@@ -19372,7 +19354,7 @@ service cloud.firestore {
       {
         id: 'tos_2',
         title: '제2조 (회원 자격 및 가입·승인)',
-        body: '① 앱의 이용 자격은 회칙 제4조에 따라 본회에 등록하여 출석하는 20세 이상 40세 미만의 미혼남녀 청년 및 본회 지도교역자·부장·교사 등 관계자로 합니다.\n② 신규 회원가입은 본회가 발급한 당일 유효 초대 QR 코드를 통해 신청하며, 본인 성명·생년월일·역할을 정확히 입력한 뒤 관리자의 승인을 거쳐 정식 이용이 가능합니다.\n③ 허위 정보 기재, 타인 사칭 또는 공동체 목적에 반하는 신청은 보류·거절될 수 있습니다.'
+        body: '① 앱의 이용 자격은 회칙 제4조에 따라 본회에 등록하여 출석하는 20세 이상 40세 미만의 미혼남녀 청년 및 본회 지도교역자·부장·교사 등 관계자로 합니다.\n② 신규 회원가입은 본회가 발급한 당일 유효 초대 QR 코드를 통해 신청하며, 본인 성명·역할을 정확히 입력한 뒤 관리자의 승인을 거쳐 정식 이용이 가능합니다.\n③ 허위 정보 기재, 타인 사칭 또는 공동체 목적에 반하는 신청은 보류·거절될 수 있습니다.'
       },
       {
         id: 'tos_3',
@@ -19382,12 +19364,12 @@ service cloud.firestore {
       {
         id: 'tos_4',
         title: '제4조 (개인정보 최소 수집 및 프라이버시 보호)',
-        body: '① 본 앱은 개인정보 피해 가능성을 최소화하기 위해 전화번호·집주소·주민등록번호·이메일을 수집하지 않으며, 공동체 운영에 꼭 필요한 [성명]과 [생년월일]만 수집합니다.\n② 로그인 비밀번호는 암호화되어 저장되며 관리자를 포함한 누구도 열람할 수 없습니다.\n③ 회원의 글자 크기 및 알림 설정은 오직 본인 기기에만 저장되며 관리자에게 공개되거나 로그에 기록되지 않습니다.\n④ 회칙 제18조 제3항의 정신에 따라 개인의 신앙생활 및 상담과 관련된 비밀사항은 철저히 보호합니다.'
+        body: '① 본 앱은 개인정보 피해 가능성을 최소화하기 위해 전화번호·집주소·주민등록번호·생년월일·이메일을 수집하지 않으며, 공동체 운영에 꼭 필요한 [성명]만 수집합니다.\n② 로그인 비밀번호는 암호화되어 저장되며 관리자를 포함한 누구도 열람할 수 없습니다.\n③ 회원의 글자 크기 및 알림 설정은 오직 본인 기기에만 저장되며 관리자에게 공개되거나 로그에 기록되지 않습니다.\n④ 회칙 제18조 제3항의 정신에 따라 개인의 신앙생활 및 상담과 관련된 비밀사항은 철저히 보호합니다.'
       },
       {
         id: 'tos_5',
         title: '제5조 (영상 추천 · 문의 사항 및 보안 로그)',
-        body: '① 회원이 작성한 설교·찬양 영상 추천과 문의 사항의 책임은 작성자 본인에게 있으며, 본인이 작성한 글은 언제든 직접 수정·삭제할 수 있습니다.\n② 비방·욕설·허위사실 유포·광고성 스팸·악성 링크 등 공동체 질서를 해치는 게시물은 사전 통보 없이 차단 또는 삭제될 수 있습니다.\n③ 건전한 공동체 운영과 보안 사고 예방을 위해 관리자 활동 전반과 회원의 영상 추천(등록·수정·삭제), 문의 사항(작성·수정·삭제), 이름·생일 변경 신청, 가입·탈퇴, 출석 체크 내역은 삭제 불가 보안 로그에 기록됩니다.'
+        body: '① 회원이 작성한 설교·찬양 영상 추천과 문의 사항의 책임은 작성자 본인에게 있으며, 본인이 작성한 글은 언제든 직접 수정·삭제할 수 있습니다.\n② 비방·욕설·허위사실 유포·광고성 스팸·악성 링크 등 공동체 질서를 해치는 게시물은 사전 통보 없이 차단 또는 삭제될 수 있습니다.\n③ 건전한 공동체 운영과 보안 사고 예방을 위해 관리자 활동 전반과 회원의 영상 추천(등록·수정·삭제), 문의 사항(작성·수정·삭제), 이름 변경 신청, 가입·탈퇴, 출석 체크 내역은 삭제 불가 보안 로그에 기록됩니다.'
       },
       {
         id: 'tos_6',
