@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=166" />
+  <link rel="manifest" href="./manifest.json?v=167" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=166" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=166" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=167" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=167" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2957,7 +2957,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=166" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=167" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3808,31 +3808,6 @@
   </div>
 
 
-  <!-- 관리자: 회원 생일 등록/수정 모달 -->
-  <div id="memberBirthdayModal" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-head">
-        <h3 id="memberBdayModalTitle" class="modal-title">🎂 회원 생일 수정</h3>
-        <button class="close-btn" data-close="memberBirthdayModal">✕</button>
-      </div>
-      <input type="hidden" id="editMemberBdayId" />
-      <div class="form-group">
-        <label class="form-label" for="adminMemberBdayInput">생년월일 (직접 입력 또는 달력 선택)</label>
-        <div class="combo-input-row">
-          <input id="adminMemberBdayInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1;" placeholder="예: 1998.01.16 (숫자 8자리)" oninput="formatBirthdayTyping(this)" />
-          <button class="combo-picker-btn" type="button" title="달력에서 선택" onclick="openNativePicker('adminMemberBdayPicker', 'adminMemberBdayInput', 'date')">📅</button>
-          <input id="adminMemberBdayPicker" type="date" class="hidden-native-picker" min="1940-01-01" onchange="syncPickerToText('adminMemberBdayPicker', 'adminMemberBdayInput', 'date')" />
-        </div>
-      </div>
-      <div style="display:flex; gap:8px; margin-top:8px;">
-        <button id="saveAdminMemberBdayBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveAdminMemberBirthday()">생일 저장</button>
-        <button id="deleteAdminMemberBdayBtn" class="btn-sm danger hidden" type="button" style="padding:12px 13px; font-size:13px;" onclick="handleDeleteAdminMemberBirthday()">삭제</button>
-        <button class="btn-outline" type="button" data-close="memberBirthdayModal">취소</button>
-      </div>
-    </div>
-  </div>
-
-
   <!-- 관리자: 새신자 역할 해제 및 다른 역할 지정 모달 -->
   <div id="releaseNewcomerModal" class="modal-backdrop">
     <div class="modal">
@@ -4390,7 +4365,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 28;
-    const APP_CLIENT_BUILD = 166;
+    const APP_CLIENT_BUILD = 167;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -5255,7 +5230,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=166" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=167" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5279,8 +5254,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=166', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=166', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=167', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=167', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5531,7 +5506,6 @@
       if (bar) bar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     };
     let knownPendingRenameMap = new Map();
-    let knownPendingBdayMap = new Map();
     let pendingAdminStatus = null; // null | 'pending'
     let memberHistoryMap = new Map();
     let unsubAdminRegistry = null;
@@ -5664,7 +5638,6 @@
       knownNoticeIds = new Set();
       knownPendingMemberIds = new Set();
       knownPendingRenameMap = new Map();
-      knownPendingBdayMap = new Map();
       knownNoticeAlertMap = new Map();
       lastSeenLayoutAlertTs = 0;
       birthdayList = [];
@@ -6488,7 +6461,6 @@
         membersFirstSnap = true;
         knownPendingMemberIds = new Set();
         knownPendingRenameMap = new Map();
-        knownPendingBdayMap = new Map();
         unsubMembersAll = db.collection('members').onSnapshot(snap => {
           const nextMembers = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
             .sort((a, b) => Number(b.createdTs || 0) - Number(a.createdTs || 0));
@@ -6498,9 +6470,6 @@
               if (m.status === 'pending') knownPendingMemberIds.add(m.id);
               if (m.status === 'approved' && m.pendingName) {
                 knownPendingRenameMap.set(m.id, `${m.pendingName}:${m.pendingNameTs || 0}`);
-              }
-              if (m.status === 'approved' && m.pendingBirthday) {
-                knownPendingBdayMap.set(m.id, `${m.pendingBirthday}:${m.pendingBirthdayTs || 0}`);
               }
             });
             membersFirstSnap = false;
@@ -6539,25 +6508,6 @@
               } else {
                 knownPendingRenameMap.delete(m.id);
               }
-              if (m.status === 'approved' && m.pendingBirthday) {
-                const bSig = `${m.pendingBirthday}:${m.pendingBirthdayTs || 0}`;
-                if (knownPendingBdayMap.get(m.id) !== bSig) {
-                  knownPendingBdayMap.set(m.id, bSig);
-                  dispatchAppNotification({
-                    type: 'member',
-                    icon: '🎂',
-                    title: '회원 생일 변경 승인 요청',
-                    body: `${m.name}님이 생일 변경(${formatBirthdayDisplay(m.pendingBirthday)})을 신청했습니다.`,
-                    onClick: () => {
-                      currentMainTab = 'manage';
-                      currentManageSubTab = 'members';
-                      applyScreen();
-                    }
-                  });
-                }
-              } else {
-                knownPendingBdayMap.delete(m.id);
-              }
             });
           }
 
@@ -6585,7 +6535,6 @@
         membersFirstSnap = true;
         knownPendingMemberIds = new Set();
         knownPendingRenameMap = new Map();
-        knownPendingBdayMap = new Map();
       }
 
       if (needsAllMembers && !unsubAdminSecret) {
@@ -8321,7 +8270,6 @@
       const pendingVideoCount = videoItems.filter(v => v.status === 'pending').length;
       const pendingCount = members.filter(m => m.status === 'pending').length
         + members.filter(m => m.status === 'approved' && m.pendingName).length
-        + members.filter(m => m.status === 'approved' && m.pendingBirthday).length
         + (adminRegistry.items || []).filter(a => a.status === 'pending').length
         + unreadInqCount
         + pendingVideoCount;
@@ -10388,8 +10336,6 @@
       const pending = members.filter(m => m.status === 'pending');
       const renamePending = members.filter(m => m.status === 'approved' && m.pendingName)
         .sort((a, b) => Number(b.pendingNameTs || 0) - Number(a.pendingNameTs || 0));
-      const bdayPending = members.filter(m => m.status === 'approved' && m.pendingBirthday)
-        .sort((a, b) => Number(b.pendingBirthdayTs || 0) - Number(a.pendingBirthdayTs || 0));
       const resetPending = members.filter(m => m.status === 'reset_pending');
       const approved = members.filter(m => m.status === 'approved');
       const rejected = members.filter(m => m.status === 'rejected');
@@ -10407,7 +10353,6 @@
       const pendingDefaultOpen = pending.length > 0;
       const pendingOpen = isManageSectionOpen('members_pending', pendingDefaultOpen);
       const renameOpen = isManageSectionOpen('members_rename', true);
-      const bdayOpen = isManageSectionOpen('members_bday', true);
       const resetOpen = isManageSectionOpen('members_reset', true);
       const rejectedOpen = isManageSectionOpen('members_rejected', false);
 
@@ -10525,7 +10470,6 @@
                       <span class="card-date">${escapeHtml(m.createdAt)} 신청</span>
                     </div>
                     <div style="font-size:12.5px; color:#475569; margin-top:4px; line-height:1.55;">
-                      <div>🎂 <b>생일:</b> ${escapeHtml(formatBirthdayDisplay(m.birthday))}</div>
                       ${reqRoleName ? `<div>🏷️ <b>신청 역할:</b> <span class="tag" style="margin-left:2px;">${escapeHtml(reqRoleName)}</span></div>` : ''}
                     </div>
                     <div style="display:flex; align-items:center; gap:6px; margin-top:9px; flex-wrap:wrap;">
@@ -10583,42 +10527,6 @@
           </div>
         ` : ''}
 
-        ${bdayPending.length > 0 ? `
-          ${buildManageAccordionBar({
-            key: 'members_bday',
-            titleHtml: '🎂 회원 생일 변경 승인 대기',
-            badgeHtml: `<span class="tag warm">${bdayPending.length}건</span>`,
-            defaultOpen: true,
-            marginTop: '14px'
-          })}
-          <div data-acc-body="members_bday" class="${bdayOpen ? '' : 'hidden'}">
-            ${bdayPending.map(m => {
-              const r = getRoleById(m.roleId);
-              return `
-                <div class="card highlight-pending">
-                  <div class="card-top">
-                    <div class="member-name">
-                      <span>${escapeHtml(m.name)}</span>
-                      <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
-                      <span class="tag warm">🎂 생일 변경 신청</span>
-                    </div>
-                    <span class="card-date">${escapeHtml(m.pendingBirthdayAt || '')}</span>
-                  </div>
-                  <div class="log-rename-diff" style="background:#FFF;">
-                    <span class="log-name-old">${escapeHtml(formatBirthdayDisplay(m.birthday))}</span>
-                    <span class="log-name-arrow">→</span>
-                    <span class="log-name-new">${escapeHtml(formatBirthdayDisplay(m.pendingBirthday))}</span>
-                  </div>
-                  <div style="display:flex; gap:6px; margin-top:8px;">
-                    <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberBirthdayChange('${escapeJsAttr(m.id)}')">✅ 생일 변경 승인</button>
-                    <button class="btn-sm danger" style="padding:9px 12px;" onclick="rejectMemberBirthdayChange('${escapeJsAttr(m.id)}')">❌ 거절 (기존 생일 유지)</button>
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        ` : ''}
-
         ${resetPending.length > 0 ? `
           ${buildManageAccordionBar({
             key: 'members_reset',
@@ -10664,7 +10572,7 @@
           <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
             <div style="min-width:0; flex:1;">
               <div style="font-size:13px; font-weight:800; color:#0F172A;">🏷️ 승인된 회원 명단 (${approved.length}명) · 역할 변경</div>
-              <div style="font-size:11.5px; color:#64748B; margin-top:2px; line-height:1.45;">역할별 회원 명단 확인 및 역할·생일·계정 관리는 <b>[${escapeHtml(getTabLabel('manageRoles'))}]</b> 탭에서 할 수 있습니다.</div>
+              <div style="font-size:11.5px; color:#64748B; margin-top:2px; line-height:1.45;">역할별 회원 명단 확인 및 역할·계정 관리는 <b>[${escapeHtml(getTabLabel('manageRoles'))}]</b> 탭에서 할 수 있습니다.</div>
             </div>
             <button class="btn-sm primary" type="button" onclick="switchManageSubTab('roles')">${escapeHtml(getTabIcon('manageRoles'))} 이동하기</button>
           </div>
@@ -10767,103 +10675,6 @@
           ? `${m.name}님을 [${assignedRoleName}]로 승인했습니다! 메인 화면에 환영 배너가 추가됩니다.`
           : `${m.name}님을 [${assignedRoleName}] 역할로 승인했습니다!`);
       } catch (err) { handleDbError(err, '회원 승인'); }
-    };
-
-    window.openEditMemberBirthdayModal = (id) => {
-      const m = members.find(x => String(x.id) === String(id));
-      if (!m) return;
-      document.getElementById('memberBdayModalTitle').textContent = `🎂 ${m.name}님 생일 설정`;
-      document.getElementById('editMemberBdayId').value = m.id;
-      const hasBday = isValidBirthdayStr(m.birthday);
-      document.getElementById('adminMemberBdayInput').value = hasBday ? formatBirthdayDisplay(m.birthday) : '';
-      const delBtn = document.getElementById('deleteAdminMemberBdayBtn');
-      if (delBtn) delBtn.classList.toggle('hidden', !hasBday);
-      document.getElementById('memberBirthdayModal').classList.add('open');
-    };
-
-    window.handleSaveAdminMemberBirthday = async () => {
-      const id = document.getElementById('editMemberBdayId').value;
-      const m = members.find(x => String(x.id) === String(id));
-      if (!m) return;
-      const birthday = normalizeBirthdayInput(document.getElementById('adminMemberBdayInput').value);
-      if (!isValidBirthdayStr(birthday)) {
-        return showToast('생년월일 8자리(예: 1998.01.16)를 올바르게 입력해 주세요.');
-      }
-      const btn = document.getElementById('saveAdminMemberBdayBtn');
-      btn.disabled = true;
-      try {
-        const batch = db.batch();
-        batch.update(db.collection('members').doc(String(id)), { birthday });
-        if (m.status === 'approved') {
-          batch.set(db.collection('birthdays').doc(String(id)), {
-            uid: String(id),
-            name: m.name,
-            md: birthdayToMd(birthday),
-            updatedAt: Date.now()
-          });
-        }
-        await batch.commit();
-        recordAuditLog({
-          actorType: 'admin',
-          category: '회원·생일',
-          action: '회원 생일 직접 수정',
-          target: m.name,
-          beforeVal: formatBirthdayDisplay(m.birthday),
-          afterVal: formatBirthdayDisplay(birthday)
-        });
-        syncMemberEventToSheet({
-          name: m.name,
-          role: m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미정'),
-          birthday: formatBirthdayDisplay(birthday),
-          joinedAt: m.createdAt || formatKstDateTime(),
-          status: m.status === 'approved' ? '승인' : m.status,
-          prevName: m.prevName || ''
-        });
-        document.getElementById('memberBirthdayModal').classList.remove('open');
-        showToast(`${m.name}님의 생일이 저장되었습니다!`);
-      } catch (err) {
-        handleDbError(err, '생일 저장');
-      } finally {
-        btn.disabled = false;
-      }
-    };
-
-    window.handleDeleteAdminMemberBirthday = async () => {
-      const id = document.getElementById('editMemberBdayId').value;
-      const m = members.find(x => String(x.id) === String(id));
-      if (!m || !isValidBirthdayStr(m.birthday)) return;
-      if (!confirm(`${m.name}님의 등록된 생일(${formatBirthdayDisplay(m.birthday)})을 삭제(초기화)할까요?`)) return;
-      const delBtn = document.getElementById('deleteAdminMemberBdayBtn');
-      if (delBtn) delBtn.disabled = true;
-      try {
-        const prevBday = formatBirthdayDisplay(m.birthday);
-        const batch = db.batch();
-        batch.update(db.collection('members').doc(String(id)), { birthday: '' });
-        batch.delete(db.collection('birthdays').doc(String(id)));
-        await batch.commit();
-        recordAuditLog({
-          actorType: 'admin',
-          category: '회원·생일',
-          action: '회원 생일 삭제',
-          target: m.name,
-          beforeVal: prevBday,
-          afterVal: '미등록'
-        });
-        syncMemberEventToSheet({
-          name: m.name,
-          role: m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미정'),
-          birthday: '미등록',
-          joinedAt: m.createdAt || formatKstDateTime(),
-          status: m.status === 'approved' ? '승인' : m.status,
-          prevName: m.prevName || ''
-        });
-        document.getElementById('memberBirthdayModal').classList.remove('open');
-        showToast(`${m.name}님의 생일 정보가 삭제되었습니다.`);
-      } catch (err) {
-        handleDbError(err, '생일 삭제');
-      } finally {
-        if (delBtn) delBtn.disabled = false;
-      }
     };
 
     window.changeMemberRole = async (id, newRoleId) => {
@@ -11159,7 +10970,7 @@
         const effectiveRole = getRoleById(m.roleId);
         if (selectedRoleObj && String(effectiveRole.id) !== String(selectedRoleObj.id)) return false;
         if (!q) return true;
-        const hay = `${m.name || ''} ${m.prevName || ''} ${effectiveRole.name || ''} ${m.birthday || ''}`.toLowerCase();
+        const hay = `${m.name || ''} ${m.prevName || ''} ${effectiveRole.name || ''}`.toLowerCase();
         return hay.includes(q);
       });
 
@@ -11196,9 +11007,8 @@
                 <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
                 ${isNewcomer ? '<span class="tag warm" style="font-size:10px; padding:2px 6px;">메인 표시중</span>' : ''}
                 ${m.pendingName ? `<span class="tag warm" style="font-size:10px; padding:2px 6px;">✏️ 이름신청: ${escapeHtml(m.pendingName)}</span>` : ''}
-                ${m.pendingBirthday ? `<span class="tag warm" style="font-size:10px; padding:2px 6px;">🎂 생일신청: ${escapeHtml(formatBirthdayDisplay(m.pendingBirthday))}</span>` : ''}
               </div>
-              <div class="member-meta">가입일 ${escapeHtml(m.createdAt)} · 🎂 ${escapeHtml(formatBirthdayDisplay(m.birthday))}${m.prevName ? ` · 이전 이름: ${escapeHtml(m.prevName)}` : ''}</div>
+              <div class="member-meta">가입일 ${escapeHtml(m.createdAt)}${m.prevName ? ` · 이전 이름: ${escapeHtml(m.prevName)}` : ''}</div>
             </div>
             <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
               <select class="role-select" onchange="changeMemberRole('${escapeJsAttr(m.id)}', this.value)">
@@ -11206,7 +11016,6 @@
               </select>
               <button class="btn-sm" type="button" title="역할 직접 입력" onclick="promptCustomRoleForMember('${escapeJsAttr(m.id)}')">✏️ 역할입력</button>
               ${isNewcomer ? `<button class="btn-sm primary" onclick="openReleaseNewcomerModal('${escapeJsAttr(m.id)}')">💐 새신자 해제</button>` : ''}
-              <button class="btn-sm" onclick="openEditMemberBirthdayModal('${escapeJsAttr(m.id)}')">🎂 생일</button>
               ${!isSelf ? `<button class="btn-sm warn" onclick="initMemberPasswordReset('${escapeJsAttr(m.id)}')">비번 초기화</button>` : ''}
               ${!isSelf ? `<button class="btn-sm danger" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>` : ''}
             </div>
@@ -11268,7 +11077,7 @@
         })}
         <div data-acc-body="roles_members" class="${rolesMembersOpen ? '' : 'hidden'}">
           <div class="info-box" style="margin-top:0; margin-bottom:10px;">
-            아래 역할 탭(예: 목사, 부장, 교사 등)을 누르면 해당 역할에 속한 회원 명단을 바로 확인할 수 있으며, 이곳에서 역할 변경·생일 수정·비밀번호 초기화·삭제를 처리할 수 있습니다.
+            아래 역할 탭(예: 목사, 부장, 교사 등)을 누르면 해당 역할에 속한 회원 명단을 바로 확인할 수 있으며, 이곳에서 역할 변경·비밀번호 초기화·삭제를 처리할 수 있습니다.
           </div>
 
           <div id="roleMemberTabBar" class="role-member-tabs">
@@ -12158,7 +11967,7 @@
       const tabbar = document.getElementById('appTabbar');
       if (tabbar) {
         const canManage = hasAnyManagePerm(perms);
-        const pendingCount = members.filter(m => m.status === 'pending').length + members.filter(m => m.status === 'approved' && m.pendingName).length + members.filter(m => m.status === 'approved' && m.pendingBirthday).length + (adminRegistry.items || []).filter(a => a.status === 'pending').length;
+        const pendingCount = members.filter(m => m.status === 'pending').length + members.filter(m => m.status === 'approved' && m.pendingName).length + (adminRegistry.items || []).filter(a => a.status === 'pending').length;
         const orderedTabs = getValidTabOrder(draftTabOrder).filter(k => k !== 'manage' || canManage);
         const isMoreOpen = document.getElementById('quickLinksSheet').classList.contains('open');
         tabbar.innerHTML = orderedTabs.map(key => {
@@ -14364,123 +14173,6 @@
         showToast(`[${oldName}]님의 이름 변경 신청을 거절(기존 이름 유지)하고 보안 로그에 기록했습니다.`);
       } catch (err) {
         handleDbError(err, '회원 이름 변경 거절');
-      }
-    };
-
-    // --- 관리자: 회원 생일 변경 신청 승인 / 거절 ---
-    window.approveMemberBirthdayChange = async (memberId) => {
-      const user = getCurrentUser();
-      if (!user || !user.isSuperAdmin) return;
-      const m = members.find(x => String(x.id) === String(memberId));
-      if (!m || !m.pendingBirthday) return showToast('대기 중인 생일 변경 신청이 없습니다.');
-
-      const oldBday = isValidBirthdayStr(m.birthday) ? m.birthday : '';
-      const newBday = normalizeBirthdayInput(m.pendingBirthday);
-      if (!isValidBirthdayStr(newBday)) return showToast('신청된 생일 형식이 올바르지 않습니다.');
-      const reqAt = m.pendingBirthdayAt || '';
-
-      if (!confirm(`[${m.name}]님의 생일을 [${formatBirthdayDisplay(oldBday)}] → [${formatBirthdayDisplay(newBday)}](으)로 변경 승인할까요?`)) return;
-
-      const actorName = currentAdminName || '관리자';
-      const nowInfo = getKstNowInfo();
-      const nowTs = Date.now();
-
-      try {
-        const batch = db.batch();
-        batch.update(db.collection('members').doc(String(m.id)), {
-          birthday: newBday,
-          pendingBirthday: FieldValue.delete(),
-          pendingBirthdayAt: FieldValue.delete(),
-          pendingBirthdayTs: FieldValue.delete(),
-          lastBirthdayResult: {
-            status: 'approved',
-            oldBirthday: oldBday,
-            newBirthday: newBday,
-            by: actorName,
-            at: nowInfo.dateTimeFull,
-            ts: nowTs
-          }
-        });
-        batch.set(db.collection('birthdays').doc(String(m.id)), {
-          uid: String(m.id),
-          name: m.name,
-          md: birthdayToMd(newBday),
-          updatedAt: nowTs
-        });
-        await batch.commit();
-
-        await recordAuditLog({
-          actorType: 'admin',
-          actorName,
-          category: '회원·생일',
-          action: '회원 생일 변경 승인',
-          target: m.name,
-          beforeVal: formatBirthdayDisplay(oldBday),
-          afterVal: formatBirthdayDisplay(newBday),
-          detail: reqAt ? `회원 신청 일시: ${reqAt}` : '승인 완료',
-          decision: 'approved'
-        });
-
-        syncMemberEventToSheet({
-          name: m.name,
-          role: getRoleById(m.roleId).name,
-          birthday: formatBirthdayDisplay(newBday),
-          joinedAt: m.createdAt || nowInfo.dateTime,
-          status: '승인',
-          prevName: m.prevName || ''
-        });
-        showToast(`✅ [${m.name}]님의 생일 변경을 승인하고 보안 로그에 기록했습니다!`);
-      } catch (err) {
-        handleDbError(err, '회원 생일 변경 승인');
-      }
-    };
-
-    window.rejectMemberBirthdayChange = async (memberId) => {
-      const user = getCurrentUser();
-      if (!user || !user.isSuperAdmin) return;
-      const m = members.find(x => String(x.id) === String(memberId));
-      if (!m || !m.pendingBirthday) return showToast('대기 중인 생일 변경 신청이 없습니다.');
-
-      const oldBday = isValidBirthdayStr(m.birthday) ? m.birthday : '';
-      const reqBday = normalizeBirthdayInput(m.pendingBirthday);
-      const reqAt = m.pendingBirthdayAt || '';
-
-      if (!confirm(`[${m.name}]님의 생일 변경 신청(${formatBirthdayDisplay(reqBday)})을 거절할까요?\n거절 시 기존 생일(${formatBirthdayDisplay(oldBday)})이 유지됩니다.`)) return;
-
-      const actorName = currentAdminName || '관리자';
-      const nowInfo = getKstNowInfo();
-      const nowTs = Date.now();
-
-      try {
-        await db.collection('members').doc(String(m.id)).update({
-          pendingBirthday: FieldValue.delete(),
-          pendingBirthdayAt: FieldValue.delete(),
-          pendingBirthdayTs: FieldValue.delete(),
-          lastBirthdayResult: {
-            status: 'rejected',
-            oldBirthday: oldBday,
-            requestedBirthday: reqBday,
-            by: actorName,
-            at: nowInfo.dateTimeFull,
-            ts: nowTs
-          }
-        });
-
-        await recordAuditLog({
-          actorType: 'admin',
-          actorName,
-          category: '회원·생일',
-          action: '회원 생일 변경 거절',
-          target: m.name,
-          beforeVal: formatBirthdayDisplay(oldBday),
-          afterVal: formatBirthdayDisplay(reqBday),
-          detail: `기존 생일(${formatBirthdayDisplay(oldBday)}) 유지${reqAt ? ` · 신청 일시: ${reqAt}` : ''}`,
-          decision: 'rejected'
-        });
-
-        showToast(`[${m.name}]님의 생일 변경 신청을 거절(기존 생일 유지)하고 보안 로그에 기록했습니다.`);
-      } catch (err) {
-        handleDbError(err, '회원 생일 변경 거절');
       }
     };
 
