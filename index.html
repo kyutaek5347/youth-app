@@ -2,19 +2,19 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://right-youth-app.firebaseapp.com https://api.getbible.net https://bolls.life https://www.youtube.com https://script.google.com https://script.googleusercontent.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://right-youth-app.firebaseapp.com https://api.getbible.net https://bolls.life https://www.youtube.com https://noembed.com https://script.google.com https://script.googleusercontent.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=158" />
+  <link rel="manifest" href="./manifest.json?v=158b" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=158" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=158" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=158b" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=158b" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3553,7 +3553,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=158" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=158b" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -6275,7 +6275,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=158" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=158b" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6299,8 +6299,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=158', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=158', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=158b', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=158b', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -19786,7 +19786,8 @@ ${m.body}`;
         if (lvl === 'danger' || (lvl === 'warn' && riskLevel === 'safe')) riskLevel = lvl;
       };
 
-      if (parsed.username || parsed.password || cleaned.includes('@')) {
+      const authorityPart = cleaned.replace(/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//, '').split(/[/?#]/)[0] || '';
+      if (parsed.username || parsed.password || authorityPart.includes('@')) {
         elevate('danger');
         reasons.push('주소 위장(@ 기호 피싱 수법) 의심');
       }
@@ -22014,7 +22015,9 @@ service cloud.firestore {
     }
 
     function myRoleId() {
-      return isAdmin() ? 'super_admin' : (hasMemberDoc() ? myMember().roleId : '');
+      return isAdmin() ? 'super_admin' : (
+        hasMemberDoc() && ('roleId' in myMember()) ? myMember().roleId : 'role_youth'
+      );
     }
 
     function hasValidResetKey(key) {
@@ -22056,7 +22059,6 @@ service cloud.firestore {
     match /notices/{docId} {
       allow read: if isAdmin() || (
         isApprovedMember()
-        && resource.data.visibleTo is list
         && ('__all__' in resource.data.visibleTo || myRoleId() in resource.data.visibleTo)
       );
       allow write: if isAdmin();
@@ -22067,7 +22069,6 @@ service cloud.firestore {
     match /homeBlocks/{docId} {
       allow read: if isAdmin() || (
         isApprovedMember()
-        && resource.data.visibleTo is list
         && ('__all__' in resource.data.visibleTo || myRoleId() in resource.data.visibleTo)
       );
       allow write: if isAdmin();
@@ -23163,7 +23164,7 @@ service cloud.firestore {
       if (risk.riskLevel === 'danger') {
         return { ok: false, error: `위험 주소 감지: ${risk.reasons.join(', ')}`, securityThreat: true };
       }
-      if (SHORTENER_HOSTS.includes(risk.host)) {
+      if (SUSPICIOUS_SHORTENERS.some(d => risk.host === d || risk.host.endsWith('.' + d))) {
         return { ok: false, error: '보안을 위해 단축 URL은 사용할 수 없습니다. 유튜브 공식 링크를 입력해 주세요.', securityThreat: true };
       }
 
@@ -23292,27 +23293,84 @@ service cloud.firestore {
       }
 
       if (!meta) {
+        let notFoundConfirmed = false;
+        // (2-1) YouTube 공식 oEmbed 시도
         try {
           const oembedUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(parsed.cleanUrl)}&format=json`;
           const resp = await fetch(oembedUrl);
-          if (!resp.ok) {
-            steps.push({ ok: false, text: '2단계 영상 실존 확인 실패: 비공개·삭제되었거나 존재하지 않는 유튜브 영상입니다.' });
-            return { ok: false, error: '비공개·삭제되었거나 존재하지 않는 유튜브 영상입니다.', steps };
+          if (resp.ok) {
+            const data = await resp.json();
+            const authorUrl = normalizeYouTubeChannelUrl(data.author_url || '');
+            meta = {
+              title: String(data.title || '').trim(),
+              channelName: String(data.author_name || '').trim(),
+              channelUrl: authorUrl,
+              channelId: extractChannelIdFromUrl(authorUrl),
+              description: '',
+              embeddable: true,
+              privacyStatus: 'public'
+            };
+          } else if (resp.status === 401 || resp.status === 403 || resp.status === 404) {
+            notFoundConfirmed = true;
           }
-          const data = await resp.json();
-          const authorUrl = normalizeYouTubeChannelUrl(data.author_url || '');
-          meta = {
-            title: String(data.title || '').trim(),
-            channelName: String(data.author_name || '').trim(),
-            channelUrl: authorUrl,
-            channelId: extractChannelIdFromUrl(authorUrl),
-            description: '',
-            embeddable: true,
-            privacyStatus: 'public'
-          };
-        } catch {
-          steps.push({ ok: false, text: '2단계 영상 실존 확인 실패: 유튜브 공식 정보 조회에 실패했습니다. 네트워크를 확인해 주세요.' });
-          return { ok: false, error: '유튜브 공식 정보 조회에 실패했습니다. 잠시 후 다시 시도해 주세요.', steps };
+        } catch {}
+
+        // (2-2) 브라우저 CORS 제한 시 noembed.com 공식 oEmbed 브리지 폴백
+        if (!meta && !notFoundConfirmed) {
+          try {
+            const noembedUrl = `https://noembed.com/embed?url=${encodeURIComponent(parsed.cleanUrl)}`;
+            const resp2 = await fetch(noembedUrl);
+            if (resp2.ok) {
+              const data2 = await resp2.json();
+              if (data2 && !data2.error && data2.title) {
+                const authorUrl2 = normalizeYouTubeChannelUrl(data2.author_url || '');
+                meta = {
+                  title: String(data2.title || '').trim(),
+                  channelName: String(data2.author_name || '').trim(),
+                  channelUrl: authorUrl2,
+                  channelId: extractChannelIdFromUrl(authorUrl2),
+                  description: '',
+                  embeddable: true,
+                  privacyStatus: 'public'
+                };
+                inspectSource = 'oEmbed 정보 조회';
+              } else if (data2 && data2.error) {
+                notFoundConfirmed = true;
+              }
+            }
+          } catch {}
+        }
+
+        // (2-3) 네트워크/CORS로 oEmbed 모두 불가할 때 유튜브 공식 썸네일 실존 확인 폴백 (채널 미확인이므로 관리자 검토 대기 접수)
+        if (!meta && !notFoundConfirmed) {
+          const thumbExists = await new Promise((resolve) => {
+            const img = new Image();
+            let done = false;
+            const finish = (v) => { if (!done) { done = true; resolve(v); } };
+            const timer = setTimeout(() => finish(false), 5000);
+            img.onload = () => { clearTimeout(timer); finish(img.naturalWidth > 120); };
+            img.onerror = () => { clearTimeout(timer); finish(false); };
+            img.src = parsed.thumbnailUrl;
+          });
+          if (thumbExists) {
+            meta = {
+              title: '',
+              channelName: '확인 필요 (관리자 검토)',
+              channelUrl: '',
+              channelId: '',
+              description: '',
+              embeddable: true,
+              privacyStatus: 'public'
+            };
+            inspectSource = '유튜브 썸네일 실존 확인';
+          } else {
+            notFoundConfirmed = true;
+          }
+        }
+
+        if (!meta) {
+          steps.push({ ok: false, text: '2단계 영상 실존 확인 실패: 비공개·삭제되었거나 존재하지 않는 유튜브 영상입니다.' });
+          return { ok: false, error: '비공개·삭제되었거나 존재하지 않는 유튜브 영상입니다.', steps };
         }
       }
 
@@ -23711,6 +23769,9 @@ service cloud.firestore {
           }
           showToast(`🚨 검사 실패: ${res.error}`);
         }
+      } catch (err) {
+        console.error('YouTube inspect error:', err);
+        showToast('검사 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
       } finally {
         if (btn) { btn.disabled = false; btn.textContent = '🔍 자동 검사'; }
       }
