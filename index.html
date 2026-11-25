@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=163" />
+  <link rel="manifest" href="./manifest.json?v=164" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=163" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=163" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=164" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=164" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3000,7 +3000,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=163" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=164" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3171,7 +3171,7 @@
                 <div id="sermonViewTitle" class="hero-top-title">🎙️ 설교</div>
                 <div id="sermonViewSub" class="hero-top-sub">자동 보안·채널 검사를 통과한 교회 설교·특강 영상을 편하게 시청하세요.</div>
               </div>
-              <button id="sermonRecommendTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openVideoSubmitModal('설교')">+ 설교 추천</button>
+              <button id="sermonRecommendTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openVideoSubmitModal(sermonCatFilter === '라이트 청년부' ? '라이트 청년부' : '설교')">+ 설교 추천</button>
             </div>
           </div>
           <div class="search-box">
@@ -3197,9 +3197,10 @@
           </div>
           <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input id="ccmSearchInput" class="search-input" type="search" placeholder="CCM 제목·채널·추천글 검색..." oninput="onCcmSearchInput(this.value)" />
+            <input id="ccmSearchInput" class="search-input" type="search" placeholder="CCM 제목·찬양팀·추천글 검색..." oninput="onCcmSearchInput(this.value)" />
             <button id="ccmSearchClear" class="search-clear hidden" type="button" onclick="clearCcmSearch()">✕</button>
           </div>
+          <div id="ccmTeamChips" class="filter-row"></div>
           <div id="ccmListArea"></div>
           <div id="mySubmittedCcmArea"></div>
         </section>
@@ -4315,11 +4316,10 @@
       <div class="form-grid-2">
         <div class="form-group">
           <label class="form-label" for="videoCategorySelect">영상 분류</label>
-          <select id="videoCategorySelect" class="form-select">
-            <option value="설교">설교</option>
-            <option value="CCM">CCM · 찬양</option>
-            <option value="청년부 영상">청년부 영상</option>
-            <option value="간증·특강">간증·특강</option>
+          <select id="videoCategorySelect" class="form-select" onchange="onVideoCategorySelectChange()">
+            <option value="설교">설교 (교회별 탭 자동 생성)</option>
+            <option value="라이트 청년부">라이트 청년부</option>
+            <option value="CCM">CCM · 찬양 (찬양팀별 탭 자동 생성)</option>
           </select>
         </div>
         <div class="form-group">
@@ -4454,7 +4454,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 28;
-    const APP_CLIENT_BUILD = 163;
+    const APP_CLIENT_BUILD = 164;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -4590,8 +4590,8 @@
       { key: 'guideHeroSub', defaultVal: '처음 사용하시는 분도 쉽게 따라 할 수 있도록 주요 기능과 이용 방법을 정리했습니다.', hint: '이용자 가이드 화면 상단 안내 문구', max: 80 },
       { key: 'termsHeroTitle', defaultVal: '라이트 청년부 앱 이용약관', hint: '이용약관 화면 상단 제목', max: 36 },
       { key: 'termsHeroSub', defaultVal: '구미제일감리교회 라이트 청년부 회칙을 바탕으로 작성된 서비스 이용약관입니다.', hint: '이용약관 화면 상단 안내 문구', max: 80 },
-      { key: 'sermonHeroSub', defaultVal: '자동 보안·채널 검사를 통과한 교회 설교·특강 영상을 편하게 시청하세요.', hint: '설교 탭 상단 안내 문구', max: 80 },
-      { key: 'ccmHeroSub', defaultVal: '은혜로운 CCM과 찬양 영상을 함께 듣고 나누는 공간입니다.', hint: 'CCM 탭 상단 안내 문구', max: 80 },
+      { key: 'sermonHeroSub', defaultVal: '교회별·라이트 청년부 탭으로 자동 분류된 설교 영상을 편하게 시청하세요.', hint: '설교 탭 상단 안내 문구', max: 80 },
+      { key: 'ccmHeroSub', defaultVal: '찬양팀 이름별(어노인팅·마커스 등) 탭으로 자동 분류된 CCM을 바로 찾아 들어보세요.', hint: 'CCM 탭 상단 안내 문구', max: 80 },
       { key: 'videosHeroTitle', defaultVal: '설교 · CCM 영상', hint: '유튜브 전체 영상 화면 및 홈 영상 섹션 제목', max: 28 },
       { key: 'videosHeroSub', defaultVal: '자동 보안·채널 검사를 통과한 교회 설교와 CCM 영상을 안전하게 나눕니다.', hint: '유튜브 전체 영상 화면 상단 안내 문구', max: 80 },
       { key: 'settingsProfileSub', defaultVal: '이용자 개인 설정 · 변경 내용은 내 기기에만 적용됩니다.', hint: '설정 프로필 하단 안내 문구', max: 60 },
@@ -5320,7 +5320,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=163" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=164" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5344,8 +5344,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=163', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=163', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=164', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=164', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5663,6 +5663,7 @@
     let sermonSearchQuery = '';
     let sermonCatFilter = '전체';
     let ccmSearchQuery = '';
+    let ccmTeamFilter = '전체';
     let lastVideoInspectResult = null;
     let lastVideoSubmitTs = 0;
 
@@ -5977,7 +5978,7 @@
       const sBtn = document.getElementById('sermonRecommendTopBtn');
       if (sBtn) sBtn.textContent = `+ ${lbl('sermon')} 추천`;
       const sInp = document.getElementById('sermonSearchInput');
-      if (sInp) sInp.placeholder = `${lbl('sermon')} 제목·채널·추천글 검색...`;
+      if (sInp) sInp.placeholder = `${lbl('sermon')} 제목·교회·추천글 검색...`;
 
       const cTitle = document.getElementById('ccmViewTitle');
       if (cTitle) cTitle.textContent = `${icn('ccm')} ${lbl('ccm')}`;
@@ -5986,7 +5987,7 @@
       const cBtn = document.getElementById('ccmRecommendTopBtn');
       if (cBtn) cBtn.textContent = `+ ${lbl('ccm')} 추천`;
       const cInp = document.getElementById('ccmSearchInput');
-      if (cInp) cInp.placeholder = `${lbl('ccm')} 제목·채널·추천글 검색...`;
+      if (cInp) cInp.placeholder = `${lbl('ccm')} 제목·찬양팀·추천글 검색...`;
 
       const vBack = document.getElementById('videosBackBtn');
       if (vBack) vBack.textContent = `← ${lbl('home')}으로 돌아가기`;
@@ -8696,8 +8697,8 @@
           sub: `하단 ${getTabLabel('sermon')}·${getTabLabel('ccm')} 탭에서 교회 설교와 은혜로운 찬양 바로 보기`,
           keywords: `${getTabLabel('sermon')} ${getTabLabel('ccm')} 설교 CCM 찬양 유튜브 영상 재생 추천`,
           steps: [
-            `<b>${escapeHtml(getTabLabel('sermon'))} 탭 (${escapeHtml(getTabIcon('sermon'))}):</b> 주일 설교, 간증·특강, 청년부 영상을 한곳에서 검색하고 앱 안에서 바로 재생할 수 있습니다.`,
-            `<b>${escapeHtml(getTabLabel('ccm'))} 탭 (${escapeHtml(getTabIcon('ccm'))}):</b> 청년부원들이 나눈 CCM·찬양 영상을 검색해 바로 들을 수 있습니다.`,
+            `<b>${escapeHtml(getTabLabel('sermon'))} 탭 (${escapeHtml(getTabIcon('sermon'))}):</b> 설교 영상을 올리면 해당 교회 이름과 <b>라이트 청년부</b> 탭이 자동으로 생성되어 교회별로 바로 찾아볼 수 있습니다.`,
+            `<b>${escapeHtml(getTabLabel('ccm'))} 탭 (${escapeHtml(getTabIcon('ccm'))}):</b> CCM 영상을 올리면 해당 찬양팀 이름(예: 어노인팅, 마커스) 탭이 자동으로 생성되어 원하는 찬양팀 곡만 모아 들을 수 있습니다.`,
             '<b>영상 추천하기:</b> 추천 권한이 있는 지체는 우측 상단 <b>[+ 추천]</b> 버튼에서 유튜브 링크를 넣고 <b>[🔍 자동 검사]</b>를 누르면 공식 원본 제목이 자동 생성되어 안전하게 등록됩니다.'
           ],
           tip: '공식 채널(구미제일감리교회·라이트 청년부 등) 영상은 4단계 자동 검사 통과 시 즉시 게시되며, 미등록 채널 영상은 관리자 확인 후 게시됩니다.'
@@ -20321,6 +20322,66 @@ ${handleUrl}`);
       return allowedRoles.includes(String(user.role && user.role.id));
     }
 
+    const CCM_TEAM_ALIASES = [
+      { name: '어노인팅', re: /어노인팅|anointing/i },
+      { name: '마커스', re: /마커스|markers\s*worship|markers/i },
+      { name: '제이어스', re: /제이어스|j[\s\-]?us/i },
+      { name: '위러브', re: /위러브|welove/i },
+      { name: '아이자야씩스티원', re: /아이자야\s*씩스티원|isaiah\s*6tyone/i },
+      { name: '피아워십', re: /피아워십|피아\s*워십|fia\s*worship/i },
+      { name: '팀룩워십', re: /팀룩워십|팀룩|team\s*luke/i },
+      { name: '예람워십', re: /예람워십|예람|yeram/i },
+      { name: '예수전도단', re: /예수전도단|ywam|화요모임|캠퍼스워십/i },
+      { name: '디사이플스', re: /디사이플스|disciples/i },
+      { name: '히즈윌', re: /히즈윌|hiswill|his\s*will/i },
+      { name: '옹기장이', re: /옹기장이|onggijangyi/i },
+      { name: '다윗의장막', re: /다윗의\s*장막/i },
+      { name: '홀리임팩트', re: /홀리임팩트|holy\s*impact/i },
+      { name: '리바이츠', re: /리바이츠|levites/i },
+      { name: '기프티드', re: /기프티드|gifted/i },
+      { name: '아이빅밴드', re: /아이빅밴드|ibigband/i },
+      { name: '헤리티지', re: /헤리티지|heritage/i },
+      { name: '올네이션스', re: /올네이션스|all\s*nations/i },
+      { name: '찬미워십', re: /찬미워십|chanmi/i },
+      { name: '뉴제너레이션워십', re: /뉴제너레이션|newgen/i },
+      { name: '레위지파', re: /레위지파/i },
+      { name: '러빔', re: /러빔|luvim/i },
+      { name: '소리엘', re: /소리엘/i },
+      { name: '시와그림', re: /시와\s*그림/i },
+      { name: '소향', re: /소향|sohyang/i },
+      { name: '김복유', re: /김복유/i },
+      { name: '손경민', re: /손경민/i },
+      { name: '김윤진', re: /김윤진/i },
+      { name: '우미쉘', re: /우미쉘/i },
+      { name: '강찬', re: /강찬/i },
+      { name: '축복의사람', re: /축복의\s*사람/i },
+      { name: '조찬미', re: /조찬미/i }
+    ];
+
+    function isPlaceholderChannelName(raw) {
+      const s = String(raw || '').trim();
+      return !s || s === '유튜브' || s === '알 수 없음' || s.startsWith('확인 필요');
+    }
+
+    function cleanYouTubeEntityName(raw) {
+      let s = String(raw || '').trim();
+      if (isPlaceholderChannelName(s)) return '';
+      s = s.replace(/\s*-\s*Topic$/i, '');
+      s = s.replace(/[\[\(]\s*(?:공식(?:\s*채널|\s*유튜브)?|official(?:\s*channel)?)\s*[\]\)]/gi, '');
+      // 구분자(|, /, -) 뒤에 영문 번역이나 부가 설명이 붙은 경우 앞쪽 한글 명칭 우선
+      const delimParts = s.split(/\s*(?:\||\/|·|—|–|\s-\s)\s*/);
+      if (delimParts.length > 1 && /[가-힣]{2,}/.test(delimParts[0])) {
+        s = delimParts[0];
+      }
+      // 불필요한 미디어 접미사 제거 (남은 글자가 2자 이상일 때만 적용)
+      const stripped = s
+        .replace(/\s*(?:공식\s*유튜브|공식\s*채널|공식채널|공식|official\s*channel|official\s*youtube|official|유튜브\s*채널|유튜브|youtube\s*channel|youtube|방송국|미디어\s*채널|미디어|설교\s*채널|찬양\s*채널|채널|channel|tv)$/gi, '')
+        .replace(/\s*(?:공식|유튜브|youtube|tv|official)$/gi, '')
+        .trim();
+      if (stripped.length >= 2) s = stripped;
+      return s.replace(/\s+/g, ' ').trim().slice(0, 24);
+    }
+
     function isCcmVideo(v) {
       const cat = String((v && v.category) || '').trim();
       return cat === 'CCM' || cat === '찬양';
@@ -20330,9 +20391,78 @@ ${handleUrl}`);
       return !isCcmVideo(v);
     }
 
+    function isRightYouthVideo(v) {
+      if (!v) return false;
+      const cat = String(v.category || '').trim();
+      if (cat === '라이트 청년부' || cat === '청년부 영상') return true;
+      if (String(v.channelId || '').trim() === 'UCJYj5Gqi646MsjTti2D6UZw') return true;
+      const hay = `${v.matchedChannelName || ''} ${v.channelName || ''}`;
+      return /라이트\s*청년부|right\s*youth/i.test(hay);
+    }
+
+    function getCcmTeamLabel(v) {
+      if (!v) return '기타 찬양팀';
+      if (isRightYouthVideo(v)) return '라이트 청년부';
+      const primary = [v.matchedChannelName, v.channelName].filter(x => !isPlaceholderChannelName(x)).join(' ');
+      for (const rule of CCM_TEAM_ALIASES) {
+        if (primary && rule.re.test(primary)) return rule.name;
+      }
+      // 채널명이 없거나 일반 개인/종합 채널인 경우 영상 제목에서도 유명 찬양팀 감지
+      const titleStr = String(v.title || v.fetchedTitle || '');
+      if (!primary) {
+        for (const rule of CCM_TEAM_ALIASES) {
+          if (titleStr && rule.re.test(titleStr)) return rule.name;
+        }
+      }
+      const raw = !isPlaceholderChannelName(v.matchedChannelName)
+        ? v.matchedChannelName
+        : (!isPlaceholderChannelName(v.channelName) ? v.channelName : '');
+      const cleaned = cleanYouTubeEntityName(raw);
+      if (cleaned) {
+        // 한글 찬양팀명 뒤에 영문 번역이 붙은 경우(예: "은혜워십 Grace Worship") 한글만 깔끔히 분리
+        const koEng = cleaned.match(/^([가-힣0-9\s]{2,18})\s+[A-Za-z][A-Za-z0-9\s&'\-\.]{2,}$/);
+        if (koEng && /[가-힣]{2,}/.test(koEng[1])) return koEng[1].trim();
+        return cleaned;
+      }
+      return '기타 찬양팀';
+    }
+
+    function getSermonChurchLabel(v) {
+      if (!v) return '기타 교회';
+      if (isRightYouthVideo(v)) return '라이트 청년부';
+      if (String(v.channelId || '').trim() === 'UC73u0Ss6qFvj2PXWD2C37VA') return '구미제일감리교회';
+      const combined = `${v.matchedChannelName || ''} ${v.channelName || ''}`;
+      if (/구미제일(?:감리)?교회/i.test(combined)) return '구미제일감리교회';
+
+      const raw = !isPlaceholderChannelName(v.matchedChannelName)
+        ? v.matchedChannelName
+        : (!isPlaceholderChannelName(v.channelName) ? v.channelName : '');
+      let cleaned = cleanYouTubeEntityName(raw);
+      if (cleaned) {
+        // "...교회" 뒤에 영문 번역이나 부가 문구가 붙은 경우 교회명만 깔끔하게 추출
+        const churchTail = cleaned.match(/^([가-힣A-Za-z0-9·\s]{1,20}?교회)(?:\s+[A-Za-z0-9\s&'\-\.]+)?$/);
+        if (churchTail && churchTail[1]) {
+          cleaned = churchTail[1].trim();
+        } else {
+          const churchMid = cleaned.match(/([가-힣0-9·]{2,16}교회)/);
+          if (churchMid && churchMid[1] && !/청년부|대학부|고등부|중등부|선교회/.test(cleaned)) {
+            cleaned = churchMid[1].trim();
+          }
+        }
+        return cleaned.slice(0, 24);
+      }
+      return '기타 교회';
+    }
+
+    function getVideoAutoGroupLabel(v) {
+      if (!v) return '';
+      return isCcmVideo(v) ? getCcmTeamLabel(v) : getSermonChurchLabel(v);
+    }
+
     function getVideoCategoryDisplayLabel(cat) {
       const c = String(cat || '').trim();
       if (c === 'CCM' || c === '찬양') return getTabLabel('ccm');
+      if (c === '라이트 청년부' || c === '청년부 영상') return '라이트 청년부';
       if (!c || c === '설교') return getTabLabel('sermon');
       return c;
     }
@@ -20357,13 +20487,16 @@ ${handleUrl}`);
           </div>
           ${latest.length === 0
             ? `<div class="card" style="text-align:center; color:#64748B; font-size:12.5px; padding:18px 12px;">아직 등록된 설교·CCM 영상이 없습니다.${canSubmit ? '<br>오른쪽 위 <b>[+ 추천]</b> 버튼으로 공식 채널 영상을 올려 보세요!' : ''}</div>`
-            : latest.map(v => `
+            : latest.map(v => {
+                const grp = getVideoAutoGroupLabel(v);
+                const ccm = isCcmVideo(v);
+                return `
                 <div class="card" style="padding:11px 12px; margin-bottom:9px;">
                   <div class="video-compact-row" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">
                     <img class="video-compact-thumb" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="썸네일" loading="lazy" />
                     <div style="min-width:0; flex:1;">
                       <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap; margin-bottom:3px;">
-                        <span class="tag slate" style="font-size:10px; padding:2px 6px;">${escapeHtml(getVideoCategoryDisplayLabel(v.category))}</span>
+                        <span class="tag slate" style="font-size:10px; padding:2px 6px;">${ccm ? '🎵' : (grp === '라이트 청년부' ? '✨' : '⛪')} ${escapeHtml(grp)}</span>
                         ${v.officialVerified ? '<span class="tag green" style="font-size:10px; padding:2px 6px;">✅ 공식 채널</span>' : '<span class="tag" style="font-size:10px; padding:2px 6px;">🛡️ 관리자 검증</span>'}
                       </div>
                       <div style="font-size:13.5px; font-weight:800; color:#0F172A; line-height:1.35; margin-bottom:3px;">${escapeHtml(v.title || '')}</div>
@@ -20371,7 +20504,7 @@ ${handleUrl}`);
                     </div>
                   </div>
                 </div>
-              `).join('')}
+              `; }).join('')}
         </div>
       `;
     }
@@ -20389,7 +20522,8 @@ ${handleUrl}`);
 
       const badgesEl = document.getElementById('videoPlayerBadges');
       if (badgesEl) {
-        const catTag = `<span class="tag slate">${escapeHtml((rec && rec.category) || '설교·찬양')}</span>`;
+        const grpLbl = rec ? getVideoAutoGroupLabel(rec) : '설교·CCM';
+        const catTag = `<span class="tag slate">${rec && isCcmVideo(rec) ? '🎵' : (grpLbl === '라이트 청년부' ? '✨' : '⛪')} ${escapeHtml(grpLbl)}</span>`;
         const verTag = rec
           ? (rec.officialVerified
               ? '<span class="tag green">✅ 공식 채널</span>'
@@ -20442,6 +20576,11 @@ ${handleUrl}`);
     function buildVideoFeedCardHtml(v, user) {
       const isMine = fbUser && String(v.uid) === String(fbUser.uid);
       const canEdit = user.isSuperAdmin || isMine;
+      const ccm = isCcmVideo(v);
+      const grp = getVideoAutoGroupLabel(v);
+      const grpBadgeHtml = ccm
+        ? `<button class="tag" type="button" style="border:none; cursor:pointer; background:#F3E8FF; color:#7E22CE;" onclick="jumpToCcmTeam('${escapeJsAttr(grp)}')">🎵 ${escapeHtml(grp)}</button>`
+        : `<button class="tag slate" type="button" style="border:none; cursor:pointer;" onclick="jumpToSermonChurch('${escapeJsAttr(grp)}')">${grp === '라이트 청년부' ? '✨' : '⛪'} ${escapeHtml(grp)}</button>`;
       return `
         <div class="video-card">
           <div class="video-thumb-wrap" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">
@@ -20453,7 +20592,7 @@ ${handleUrl}`);
           <div class="video-card-body">
             <div class="card-top" style="margin-bottom:5px;">
               <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                <span class="tag slate">${escapeHtml(getVideoCategoryDisplayLabel(v.category))}</span>
+                ${grpBadgeHtml}
                 ${v.officialVerified
                   ? '<span class="tag green">✅ 공식 채널 · 자동 검사 통과</span>'
                   : '<span class="tag">🛡️ 관리자 검증 완료</span>'}
@@ -20478,6 +20617,24 @@ ${handleUrl}`);
         </div>
       `;
     }
+
+    window.jumpToSermonChurch = (churchName) => {
+      sermonCatFilter = churchName || '전체';
+      if (currentMainTab !== 'sermon') {
+        switchMainTab('sermon');
+      } else {
+        renderSermonView();
+      }
+    };
+
+    window.jumpToCcmTeam = (teamName) => {
+      ccmTeamFilter = teamName || '전체';
+      if (currentMainTab !== 'ccm') {
+        switchMainTab('ccm');
+      } else {
+        renderCcmView();
+      }
+    };
 
     function buildMySubmittedVideosHtml(user, filterFn, headingLabel) {
       const canSubmit = canUserSubmitVideo(user);
@@ -20518,12 +20675,32 @@ ${handleUrl}`);
       if (topBtn) topBtn.classList.toggle('hidden', !canSubmit);
 
       const approved = (videoItems || []).filter(v => v.status === 'approved' && isSermonVideo(v));
-      const cats = ['전체', '설교', '간증·특강', '청년부 영상'];
+      const churchCountMap = new Map();
+      approved.forEach(v => {
+        const chName = getSermonChurchLabel(v);
+        churchCountMap.set(chName, (churchCountMap.get(chName) || 0) + 1);
+      });
+
+      // 기본 탭: [전체] + [라이트 청년부] 고정 생성, 나머지 교회 탭은 영상 등록 시 자동 생성
+      const dynamicChurches = Array.from(churchCountMap.keys())
+        .filter(name => name !== '라이트 청년부')
+        .sort((a, b) => {
+          if (a === '구미제일감리교회') return -1;
+          if (b === '구미제일감리교회') return 1;
+          return (churchCountMap.get(b) - churchCountMap.get(a)) || a.localeCompare(b, 'ko');
+        });
+      const churchTabs = ['전체', '라이트 청년부', ...dynamicChurches];
+      if (!churchTabs.includes(sermonCatFilter)) {
+        sermonCatFilter = '전체';
+      }
+
       const chipsEl = document.getElementById('sermonCatChips');
       if (chipsEl) {
-        chipsEl.innerHTML = cats.map(c => `
-          <button class="filter-chip ${sermonCatFilter === c ? 'active' : ''}" type="button" onclick="setSermonCatFilter('${escapeJsAttr(c)}')">${escapeHtml(c)}</button>
-        `).join('');
+        chipsEl.innerHTML = churchTabs.map(name => {
+          const cnt = name === '전체' ? approved.length : (churchCountMap.get(name) || 0);
+          const countTxt = cnt > 0 ? ` (${cnt})` : '';
+          return `<button class="filter-chip ${sermonCatFilter === name ? 'active' : ''}" type="button" onclick="setSermonCatFilter('${escapeJsAttr(name)}')">${escapeHtml(name)}${countTxt}</button>`;
+        }).join('');
       }
 
       const q = String(sermonSearchQuery || '').trim().toLowerCase();
@@ -20531,9 +20708,10 @@ ${handleUrl}`);
       if (clr) clr.classList.toggle('hidden', !q);
 
       const filtered = approved.filter(v => {
-        if (sermonCatFilter !== '전체' && (v.category || '설교') !== sermonCatFilter) return false;
+        const chName = getSermonChurchLabel(v);
+        if (sermonCatFilter !== '전체' && chName !== sermonCatFilter) return false;
         if (!q) return true;
-        const hay = `${v.title || ''} ${v.channelName || ''} ${v.note || ''} ${v.authorName || ''} ${v.category || ''}`.toLowerCase();
+        const hay = `${v.title || ''} ${v.channelName || ''} ${chName} ${v.note || ''} ${v.authorName || ''}`.toLowerCase();
         return hay.includes(q);
       });
 
@@ -20544,8 +20722,8 @@ ${handleUrl}`);
           listEl.innerHTML = `
             <div class="card" style="text-align:center; padding:30px 16px; color:#64748B;">
               <div style="font-size:28px; margin-bottom:7px;">${escapeHtml(getTabIcon('sermon'))}</div>
-              <div style="font-size:14px; font-weight:800; color:#334155;">등록된 ${escapeHtml(sLbl)} 영상이 없습니다.</div>
-              <div style="font-size:12px; margin-top:4px;">${canSubmit ? `오른쪽 위 [+ ${escapeHtml(sLbl)} 추천] 버튼으로 교회 설교 영상을 올려 보세요.` : `새로운 ${escapeHtml(sLbl)} 영상이 등록되면 이곳에 표시됩니다.`}</div>
+              <div style="font-size:14px; font-weight:800; color:#334155;">${sermonCatFilter === '전체' ? `등록된 ${escapeHtml(sLbl)} 영상이 없습니다.` : `[${escapeHtml(sermonCatFilter)}] 영상이 아직 없습니다.`}</div>
+              <div style="font-size:12px; margin-top:4px; line-height:1.5;">${canSubmit ? `오른쪽 위 [+ ${escapeHtml(sLbl)} 추천]으로 영상을 올리면 해당 교회 이름 탭이 자동으로 생성됩니다.` : `교회별 설교나 라이트 청년부 영상이 등록되면 이곳에 자동 분류됩니다.`}</div>
             </div>
           `;
         } else {
@@ -20582,13 +20760,39 @@ ${handleUrl}`);
       if (topBtn) topBtn.classList.toggle('hidden', !canSubmit);
 
       const approved = (videoItems || []).filter(v => v.status === 'approved' && isCcmVideo(v));
+      const teamCountMap = new Map();
+      approved.forEach(v => {
+        const teamName = getCcmTeamLabel(v);
+        teamCountMap.set(teamName, (teamCountMap.get(teamName) || 0) + 1);
+      });
+
+      // CCM 영상 등록 시 해당 찬양팀 이름(어노인팅, 마커스 등) 탭 자동 생성
+      const dynamicTeams = Array.from(teamCountMap.keys()).sort((a, b) =>
+        (teamCountMap.get(b) - teamCountMap.get(a)) || a.localeCompare(b, 'ko')
+      );
+      const teamTabs = ['전체', ...dynamicTeams];
+      if (!teamTabs.includes(ccmTeamFilter)) {
+        ccmTeamFilter = '전체';
+      }
+
+      const chipsEl = document.getElementById('ccmTeamChips');
+      if (chipsEl) {
+        chipsEl.innerHTML = teamTabs.map(name => {
+          const cnt = name === '전체' ? approved.length : (teamCountMap.get(name) || 0);
+          const countTxt = cnt > 0 ? ` (${cnt})` : '';
+          return `<button class="filter-chip ${ccmTeamFilter === name ? 'active' : ''}" type="button" onclick="setCcmTeamFilter('${escapeJsAttr(name)}')">${escapeHtml(name)}${countTxt}</button>`;
+        }).join('');
+      }
+
       const q = String(ccmSearchQuery || '').trim().toLowerCase();
       const clr = document.getElementById('ccmSearchClear');
       if (clr) clr.classList.toggle('hidden', !q);
 
       const filtered = approved.filter(v => {
+        const teamName = getCcmTeamLabel(v);
+        if (ccmTeamFilter !== '전체' && teamName !== ccmTeamFilter) return false;
         if (!q) return true;
-        const hay = `${v.title || ''} ${v.channelName || ''} ${v.note || ''} ${v.authorName || ''} ${v.category || ''}`.toLowerCase();
+        const hay = `${v.title || ''} ${v.channelName || ''} ${teamName} ${v.note || ''} ${v.authorName || ''}`.toLowerCase();
         return hay.includes(q);
       });
 
@@ -20599,8 +20803,8 @@ ${handleUrl}`);
           listEl.innerHTML = `
             <div class="card" style="text-align:center; padding:30px 16px; color:#64748B;">
               <div style="font-size:28px; margin-bottom:7px;">${escapeHtml(getTabIcon('ccm'))}</div>
-              <div style="font-size:14px; font-weight:800; color:#334155;">등록된 ${escapeHtml(cLbl)} 영상이 없습니다.</div>
-              <div style="font-size:12px; margin-top:4px;">${canSubmit ? `오른쪽 위 [+ ${escapeHtml(cLbl)} 추천] 버튼으로 은혜로운 찬양 영상을 올려 보세요.` : `새로운 ${escapeHtml(cLbl)} 영상이 등록되면 이곳에 표시됩니다.`}</div>
+              <div style="font-size:14px; font-weight:800; color:#334155;">${ccmTeamFilter === '전체' ? `등록된 ${escapeHtml(cLbl)} 영상이 없습니다.` : `[${escapeHtml(ccmTeamFilter)}] 찬양이 없습니다.`}</div>
+              <div style="font-size:12px; margin-top:4px; line-height:1.5;">${canSubmit ? `오른쪽 위 [+ ${escapeHtml(cLbl)} 추천]으로 영상을 올리면 해당 찬양팀 이름 탭(예: 어노인팅, 마커스)이 자동으로 생성됩니다.` : `찬양 영상이 등록되면 찬양팀별 탭이 자동으로 생성됩니다.`}</div>
             </div>
           `;
         } else {
@@ -20614,6 +20818,10 @@ ${handleUrl}`);
       }
     }
 
+    window.setCcmTeamFilter = (team) => {
+      ccmTeamFilter = team;
+      renderCcmView();
+    };
     window.onCcmSearchInput = (val) => {
       ccmSearchQuery = val;
       renderCcmView();
@@ -20633,7 +20841,8 @@ ${handleUrl}`);
       if (topBtn) topBtn.classList.toggle('hidden', !canSubmit);
 
       const approved = (videoItems || []).filter(v => v.status === 'approved');
-      const cats = ['전체', '설교', 'CCM', '청년부 영상', '간증·특강'];
+      const cats = ['전체', '설교', '라이트 청년부', 'CCM'];
+      if (!cats.includes(videoCatFilter)) videoCatFilter = '전체';
       const chipsEl = document.getElementById('videoCatChips');
       if (chipsEl) {
         chipsEl.innerHTML = cats.map(c => `
@@ -20646,15 +20855,18 @@ ${handleUrl}`);
       if (clr) clr.classList.toggle('hidden', !q);
 
       const filtered = approved.filter(v => {
+        const grp = getVideoAutoGroupLabel(v);
         if (videoCatFilter !== '전체') {
           if (videoCatFilter === 'CCM') {
             if (!isCcmVideo(v)) return false;
-          } else if ((v.category || '설교') !== videoCatFilter) {
-            return false;
+          } else if (videoCatFilter === '라이트 청년부') {
+            if (!isRightYouthVideo(v)) return false;
+          } else if (videoCatFilter === '설교') {
+            if (!isSermonVideo(v) || isRightYouthVideo(v)) return false;
           }
         }
         if (!q) return true;
-        const hay = `${v.title || ''} ${v.channelName || ''} ${v.note || ''} ${v.authorName || ''} ${v.category || ''}`.toLowerCase();
+        const hay = `${v.title || ''} ${v.channelName || ''} ${grp} ${v.note || ''} ${v.authorName || ''} ${v.category || ''}`.toLowerCase();
         return hay.includes(q);
       });
 
@@ -20735,14 +20947,15 @@ ${handleUrl}`);
       const user = getCurrentUser();
       if (!canUserSubmitVideo(user)) return showToast('영상 추천 권한이 없습니다.');
       lastVideoInspectResult = null;
-      const initCat = defaultCat || (currentMainTab === 'ccm' ? 'CCM' : '설교');
+      const initCat = defaultCat || (currentMainTab === 'ccm' ? 'CCM' : (currentMainTab === 'sermon' && sermonCatFilter === '라이트 청년부' ? '라이트 청년부' : '설교'));
+      const modalCatLabel = initCat === 'CCM' ? getTabLabel('ccm') : (initCat === '라이트 청년부' ? '라이트 청년부' : getTabLabel('sermon'));
       document.getElementById('videoSubmitModalTitle').textContent = user.isSuperAdmin
-        ? `🎬 ${initCat === 'CCM' ? getTabLabel('ccm') : getTabLabel('sermon')} · 유튜브 영상 등록`
-        : `🎬 ${initCat === 'CCM' ? getTabLabel('ccm') : getTabLabel('sermon')} 영상 추천 신청`;
+        ? `🎬 ${modalCatLabel} · 유튜브 영상 등록`
+        : `🎬 ${modalCatLabel} 영상 추천 신청`;
       document.getElementById('editVideoDocId').value = '';
       document.getElementById('videoUrlFieldGroup').classList.remove('hidden');
       document.getElementById('videoUrlInput').value = '';
-      document.getElementById('videoCategorySelect').value = (initCat === '찬양' ? 'CCM' : initCat);
+      document.getElementById('videoCategorySelect').value = (initCat === '찬양' ? 'CCM' : (initCat === '청년부 영상' ? '라이트 청년부' : (['설교', '라이트 청년부', 'CCM'].includes(initCat) ? initCat : '설교')));
       document.getElementById('videoTitleInput').value = '';
       applyVideoTitleFieldLock(user);
       document.getElementById('videoNoteInput').value = '';
@@ -20764,7 +20977,7 @@ ${handleUrl}`);
       document.getElementById('videoSubmitModalTitle').textContent = '✏️ 영상 정보 수정';
       document.getElementById('editVideoDocId').value = v.id;
       document.getElementById('videoUrlFieldGroup').classList.add('hidden');
-      document.getElementById('videoCategorySelect').value = (v.category === '찬양' ? 'CCM' : (v.category || '설교'));
+      document.getElementById('videoCategorySelect').value = (isCcmVideo(v) ? 'CCM' : (isRightYouthVideo(v) ? '라이트 청년부' : '설교'));
       document.getElementById('videoTitleInput').value = v.title || '';
       applyVideoTitleFieldLock(user);
       document.getElementById('videoNoteInput').value = v.note || '';
@@ -20792,12 +21005,22 @@ ${handleUrl}`);
           <span>${escapeHtml(st.text)}</span>
         </div>
       `).join('');
+      const curCatVal = (document.getElementById('videoCategorySelect') && document.getElementById('videoCategorySelect').value) || '설교';
+      const autoGrp = res.ok ? getVideoAutoGroupLabel({
+        category: curCatVal,
+        channelId: res.channelId || '',
+        channelName: res.channelName || '',
+        matchedChannelName: res.matchedOfficialChannel ? res.matchedOfficialChannel.name : '',
+        title: res.fetchedTitle || ''
+      }) : '';
+      const autoGrpPrefix = curCatVal === 'CCM' ? '🎵 자동 찬양팀 탭' : (autoGrp === '라이트 청년부' ? '✨ 자동 분류 탭' : '⛪ 자동 교회 탭');
       const previewCard = res.ok ? `
         <div style="display:flex; gap:10px; align-items:center; background:rgba(255,255,255,0.75); border-radius:10px; padding:8px; margin-bottom:8px;">
           <img src="${escapeHtml(res.thumbnailUrl)}" alt="미리보기" style="width:92px; height:52px; border-radius:8px; object-fit:cover; flex-shrink:0;" />
           <div style="min-width:0; flex:1;">
             <div style="font-size:12.5px; font-weight:800; color:#0F172A; line-height:1.35;">${escapeHtml(res.fetchedTitle || '제목 없음')}</div>
             <div style="font-size:11.5px; color:#475569; margin-top:2px;">📺 ${escapeHtml(res.channelName || '알 수 없음')}</div>
+            ${autoGrp ? `<div style="margin-top:4px;"><span class="tag" style="font-size:10.5px; padding:2px 7px; background:${curCatVal === 'CCM' ? '#F3E8FF' : '#EFF6FF'}; color:${curCatVal === 'CCM' ? '#7E22CE' : '#1D4ED8'};">${autoGrpPrefix}: <b>${escapeHtml(autoGrp)}</b></span></div>` : ''}
           </div>
         </div>
       ` : '';
@@ -20822,6 +21045,12 @@ ${handleUrl}`);
       }
     }
 
+    window.onVideoCategorySelectChange = () => {
+      if (lastVideoInspectResult && lastVideoInspectResult.ok) {
+        renderVideoInspectPreview(lastVideoInspectResult);
+      }
+    };
+
     window.handleInspectYouTubeInput = async () => {
       const user = getCurrentUser();
       const isAdmin = !!(user && user.isSuperAdmin);
@@ -20835,6 +21064,15 @@ ${handleUrl}`);
       try {
         const res = await inspectYouTubeVideoAutomatic(rawUrl, titleVal, noteVal);
         lastVideoInspectResult = res.ok ? { ...res, rawUrl } : null;
+        const catSel = document.getElementById('videoCategorySelect');
+        if (res.ok && catSel && catSel.value === '설교' && isRightYouthVideo({
+          category: '설교',
+          channelId: res.channelId,
+          channelName: res.channelName,
+          matchedChannelName: res.matchedOfficialChannel ? res.matchedOfficialChannel.name : ''
+        })) {
+          catSel.value = '라이트 청년부';
+        }
         renderVideoInspectPreview(res);
         if (res.ok) {
           const titleInp = document.getElementById('videoTitleInput');
@@ -20896,8 +21134,14 @@ ${handleUrl}`);
           const riskEdit = scanYouTubeVideoContentRisk({ title: finalEditTitle, note });
           if (riskEdit.blocked) return showToast(`🚨 보안 차단: ${riskEdit.reasons.join(', ')}`);
           const nowFull = getKstNowInfo().dateTimeFull;
+          const editGroupLabel = getVideoAutoGroupLabel({
+            ...(existingVid || {}),
+            category,
+            title: finalEditTitle
+          });
           const editPatch = {
             category,
+            groupLabel: editGroupLabel,
             note,
             edited: true,
             updatedAt: nowFull,
@@ -21013,6 +21257,13 @@ ${handleUrl}`);
           channelName: res.channelName || '유튜브',
           channelUrl: res.channelUrl || '',
           channelId: res.channelId || '',
+          groupLabel: getVideoAutoGroupLabel({
+            category,
+            channelId: res.channelId || '',
+            channelName: res.channelName || '',
+            matchedChannelName: res.matchedOfficialChannel ? res.matchedOfficialChannel.name : '',
+            title: finalTitle
+          }),
           officialVerified: !!res.officialVerified,
           matchedChannelName: res.matchedOfficialChannel ? res.matchedOfficialChannel.name : '',
           nameHintOnly: !!res.nameHintOnly,
@@ -21174,7 +21425,7 @@ ${handleUrl}`);
                 <div class="card-top">
                   <div style="display:flex; gap:5px; flex-wrap:wrap;">
                     <span class="tag red">⏳ 검토 대기</span>
-                    <span class="tag slate">${escapeHtml(v.category || '설교')}</span>
+                    <span class="tag slate">${isCcmVideo(v) ? '🎵' : (getVideoAutoGroupLabel(v) === '라이트 청년부' ? '✨' : '⛪')} ${escapeHtml(getVideoAutoGroupLabel(v))}</span>
                     ${v.nameHintOnly ? '<span class="tag warm">⭐ 공식 채널명 일치 · 1회 핸들 확인</span>' : ''}
                     ${v.hasRiskWarning ? '<span class="tag red">⚠️ 주의 문구 감지</span>' : ''}
                   </div>
@@ -21310,7 +21561,7 @@ ${handleUrl}`);
                     <img class="video-compact-thumb" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="썸네일" loading="lazy" />
                     <div style="min-width:0; flex:1;">
                       <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:3px;">
-                        <span class="tag slate" style="font-size:10px;">${escapeHtml(v.category || '설교')}</span>
+                        <span class="tag slate" style="font-size:10px;">${isCcmVideo(v) ? '🎵' : (getVideoAutoGroupLabel(v) === '라이트 청년부' ? '✨' : '⛪')} ${escapeHtml(getVideoAutoGroupLabel(v))}</span>
                         ${v.autoApproved ? '<span class="tag green" style="font-size:10px;">⚡ 공식 자동 게시</span>' : '<span class="tag" style="font-size:10px;">✅ 관리자 승인</span>'}
                       </div>
                       <div style="font-size:13.5px; font-weight:800; color:#0F172A; line-height:1.35;">${escapeHtml(v.title || '')}</div>
