@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=153" />
+  <link rel="manifest" href="./manifest.json?v=154" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=153" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=153" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=154" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=154" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3092,7 +3092,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=153" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=154" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3549,7 +3549,7 @@
   <div id="bibleBookmarksModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">⭐ 저장한 말씀 책갈피</h3>
+        <h3 id="bibleBookmarksModalTitle" class="modal-title">⭐ 저장한 말씀 책갈피</h3>
         <button class="close-btn" data-close="bibleBookmarksModal">✕</button>
       </div>
       <div id="bibleBookmarkColorFilters" class="filter-row" style="margin-bottom:10px;"></div>
@@ -3686,7 +3686,7 @@
   <div id="homePublishConfirmModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">📌 메인 화면에 띄우시겠습니까?</h3>
+        <h3 id="homePublishConfirmTitle" class="modal-title">📌 메인 화면에 띄우시겠습니까?</h3>
         <button class="close-btn" data-close="homePublishConfirmModal">✕</button>
       </div>
       <div id="homePublishConfirmDesc" class="publish-confirm-box"></div>
@@ -4136,7 +4136,7 @@
   <div id="inviteQrModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">📲 오늘의 초대 QR 공유</h3>
+        <h3 id="inviteQrModalTitle" class="modal-title">📲 오늘의 초대 QR 공유</h3>
         <button class="close-btn" data-close="inviteQrModal">✕</button>
       </div>
       <div class="qr-canvas-card">
@@ -5036,7 +5036,7 @@
         const p = tsToKstParts(item.publishAtTs);
         return `<span class="tag" style="background:#EEF2FF;color:#4338CA;">⏰ ${escapeHtml(p ? p.shortLabel : '')} 예약됨</span>`;
       }
-      return '<span class="tag green">메인 표시중</span>';
+      return `<span class="tag green">${escapeHtml(getTabLabel('home'))} 표시중</span>`;
     }
 
     function getBlockDisplayLabel(b) {
@@ -5246,7 +5246,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=153" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=154" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5269,8 +5269,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=153', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=153', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=154', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=154', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5725,6 +5725,115 @@
         if (qtIcon !== DEFAULT_TAB_ICONS.qt) return qtIcon;
       }
       return raw;
+    }
+
+    function getEffectiveTabLabel(key, overrideNames = null) {
+      if (overrideNames && overrideNames[key] !== undefined) {
+        const v = String(overrideNames[key]).trim();
+        if (v) return v;
+      }
+      return getTabLabel(key);
+    }
+
+    function getEffectiveTabIcon(key, overrideIcons = null) {
+      if (overrideIcons && overrideIcons[key] !== undefined) {
+        const v = String(overrideIcons[key]).trim();
+        if (v) return v;
+      }
+      return getTabIcon(key);
+    }
+
+    function getQuickSheetIcon(overrideIcons = null) {
+      const moreIcn = getEffectiveTabIcon('more', overrideIcons);
+      if (moreIcn && moreIcn !== '☰') return moreIcn;
+      return getEffectiveTabIcon('manageQuickLinks', overrideIcons);
+    }
+
+    function getQuickSheetLabel(overrideNames = null) {
+      const moreLbl = getEffectiveTabLabel('more', overrideNames);
+      if (moreLbl && moreLbl !== DEFAULT_TAB_LABELS.more) return moreLbl;
+      const qlLbl = getEffectiveTabLabel('manageQuickLinks', overrideNames);
+      if (qlLbl && qlLbl !== DEFAULT_TAB_LABELS.manageQuickLinks) return qlLbl;
+      return '사이트 바로가기';
+    }
+
+    function formatManageGuideHeading(overrideNames = null, overrideIcons = null) {
+      const ic = getEffectiveTabIcon('manageGuide', overrideIcons);
+      const lb = getEffectiveTabLabel('manageGuide', overrideNames);
+      return lb.includes('관리자') ? `${ic} ${lb} · 인수인계 가이드` : `${ic} 관리자 ${lb} · 인수인계 가이드`;
+    }
+
+    function formatManageLabelsHeading(overrideNames = null, overrideIcons = null) {
+      const ic = getEffectiveTabIcon('manageLabels', overrideIcons);
+      const lb = getEffectiveTabLabel('manageLabels', overrideNames);
+      return (lb.includes('순서') || lb.includes('명칭') || lb.includes('변경'))
+        ? `${ic} ${lb}`
+        : `${ic} ${lb} · 이모지 · 순서`;
+    }
+
+    function syncAllDynamicLabelsUI(overrideNames = null, overrideIcons = null) {
+      const lbl = (k) => getEffectiveTabLabel(k, overrideNames);
+      const icn = (k) => getEffectiveTabIcon(k, overrideIcons);
+
+      const previewBarTxt = document.getElementById('previewMemberBarText');
+      if (previewBarTxt) previewBarTxt.textContent = `👁️ 일반 회원 시점 미리보기 중 (관리자 전용 칸·${lbl('manage')} 숨김)`;
+
+      const bibleTitle = document.getElementById('bibleViewTitle');
+      if (bibleTitle) bibleTitle.textContent = `${icn('bible')} ${lbl('bible')}`;
+
+      const qtTitle = document.getElementById('qtViewTitle');
+      if (qtTitle) qtTitle.textContent = `${icn('qt')} ${lbl('qt')}`;
+
+      const bylawTitle = document.getElementById('bylawViewTitle');
+      if (bylawTitle) bylawTitle.textContent = `${icn('bylaws')} 구미제일감리교회 라이트 청년부 ${lbl('bylaws')}`;
+
+      const ugTitleEl = document.getElementById('userGuideViewTitle');
+      if (ugTitleEl) ugTitleEl.textContent = `${icn('guide')} 라이트 청년부 앱 ${lbl('guide')}`;
+
+      const qsTitleEl = document.getElementById('quickSheetTitle');
+      if (qsTitleEl) qsTitleEl.textContent = `${getQuickSheetIcon(overrideIcons)} ${getQuickSheetLabel(overrideNames)}`;
+
+      const qsEditBtn = document.getElementById('quickSheetManageEditBtn');
+      if (qsEditBtn) qsEditBtn.textContent = `${icn('manage')} ${lbl('manage')} 편집`;
+
+      const saveQlBtn = document.getElementById('saveQuickLinkBtn');
+      if (saveQlBtn) saveQlBtn.textContent = `${lbl('manageQuickLinks')} 저장`;
+
+      const bpModalTitle = document.getElementById('biblePickerModalTitle');
+      if (bpModalTitle) bpModalTitle.textContent = `${icn('bible')} ${lbl('bible')} 이동`;
+
+      const bmModalTitle = document.getElementById('bibleBookmarksModalTitle');
+      if (bmModalTitle) bmModalTitle.textContent = `⭐ 저장한 ${lbl('bible')} 책갈피`;
+
+      const memoModalTitle = document.getElementById('bibleMemoModalTitle');
+      if (memoModalTitle) memoModalTitle.textContent = `📝 ${lbl('bible')} 메모장`;
+
+      const bibleSearchInp = document.getElementById('bibleQuickSearchInput');
+      if (bibleSearchInp) bibleSearchInp.placeholder = fitSearchPlaceholder(`${lbl('bible')} 검색`, ['시편 23:1', '요3:16'], 17.5);
+
+      const bibleBookSearchInp = document.getElementById('bibleBookSearchInput');
+      if (bibleBookSearchInp) bibleBookSearchInp.placeholder = `${lbl('bible')} 이름 검색 (예: 시편, 요한)`;
+
+      const bylawSearchInp = document.getElementById('bylawSearchInput');
+      if (bylawSearchInp) bylawSearchInp.placeholder = fitSearchPlaceholder(`${lbl('bylaws')} 검색`, ['제5조', '임기'], 17.5);
+
+      const hpcTitle = document.getElementById('homePublishConfirmTitle');
+      if (hpcTitle) hpcTitle.textContent = `📌 ${lbl('home')} 화면에 띄우시겠습니까?`;
+      const hpcYes = document.getElementById('confirmPublishYesBtn');
+      if (hpcYes) hpcYes.textContent = `✅ 네, ${lbl('home')} 화면에 바로 띄우기`;
+      const hpcNo = document.getElementById('confirmPublishNoBtn');
+      if (hpcNo) hpcNo.textContent = `목록에만 저장 (${lbl('home')} 화면엔 안 띄움)`;
+
+      const invQrTitle = document.getElementById('inviteQrModalTitle');
+      if (invQrTitle) invQrTitle.textContent = `${icn('manageQr')} 오늘의 초대 QR 공유`;
+
+      const admRenameWarn = document.getElementById('adminRenameWarnBox');
+      if (admRenameWarn) {
+        admRenameWarn.innerHTML = `🔐 보안을 위해 관리자 이름을 변경하면 <b>처리 관리자 · 변경 전/후 이름 · 변경 날짜 · 변경 시각</b>이 <b>[${escapeHtml(icn('manageLogs'))} ${escapeHtml(lbl('manageLogs'))}]</b> 탭과 <b>구글 시트</b>에 자동 기록되며, 앱에서 삭제할 수 없습니다.`;
+      }
+
+      const labelsHead = document.getElementById('labelsPageHeading');
+      if (labelsHead) labelsHead.textContent = formatManageLabelsHeading(overrideNames, overrideIcons);
     }
 
     function fitSearchPlaceholder(prefix, examples, maxWeight = 18) {
@@ -7833,8 +7942,6 @@
 
       const previewBar = document.getElementById('previewMemberBar');
       if (previewBar) previewBar.classList.toggle('hidden', !previewAsMemberMode);
-      const previewBarTxt = document.getElementById('previewMemberBarText');
-      if (previewBarTxt) previewBarTxt.textContent = `👁️ 일반 회원 시점 미리보기 중 (관리자 전용 칸·${getTabLabel('manage')} 숨김)`;
 
       const header = document.getElementById('appHeader');
       header.className = `header ${isManageMode ? 'dark' : 'light'}`;
@@ -7898,20 +8005,8 @@
       document.getElementById('viewGuide').classList.toggle('hidden', currentMainTab !== 'guide');
       document.getElementById('viewManage').classList.toggle('hidden', currentMainTab !== 'manage');
 
-      // 동적 칸 이모지 + 이름 제목 동기화
-      document.getElementById('bibleViewTitle').textContent = `${getTabIcon('bible')} ${getTabLabel('bible')}`;
-      document.getElementById('qtViewTitle').textContent = `${getTabIcon('qt')} ${getTabLabel('qt')}`;
-      document.getElementById('bylawViewTitle').textContent = `${getTabIcon('bylaws')} 구미제일감리교회 라이트 청년부 ${getTabLabel('bylaws')}`;
-      const ugTitleEl = document.getElementById('userGuideViewTitle');
-      if (ugTitleEl) ugTitleEl.textContent = `${getTabIcon('guide')} 라이트 청년부 앱 ${getTabLabel('guide')}`;
-      const qsEditBtn = document.getElementById('quickSheetManageEditBtn');
-      if (qsEditBtn) qsEditBtn.textContent = `⚙️ ${getTabLabel('manage')} 편집`;
-      const bpModalTitle = document.getElementById('biblePickerModalTitle');
-      if (bpModalTitle) bpModalTitle.textContent = `${getTabIcon('bible')} ${getTabLabel('bible')} 이동`;
-      const bibleSearchInp = document.getElementById('bibleQuickSearchInput');
-      if (bibleSearchInp) bibleSearchInp.placeholder = fitSearchPlaceholder(`${getTabLabel('bible')} 검색`, ['시편 23:1', '요3:16'], 17.5);
-      const bylawSearchInp = document.getElementById('bylawSearchInput');
-      if (bylawSearchInp) bylawSearchInp.placeholder = fitSearchPlaceholder(`${getTabLabel('bylaws')} 검색`, ['제5조', '임기'], 17.5);
+      // 동적 칸 이모지 + 이름 전체 UI 통합 동기화
+      syncAllDynamicLabelsUI();
 
       if (currentMainTab === 'home') renderHomeView(user);
       else if (currentMainTab === 'bible') renderBibleView();
@@ -8032,7 +8127,7 @@
     window.copyBylawArticle = async (num) => {
       const art = BYLAWS_ARTICLES.find(a => a.num === num);
       if (!art) return;
-      const text = `[라이트 청년부 회칙 · ${art.chapter}]\n${art.title}\n${art.body}`;
+      const text = `[라이트 청년부 ${getTabLabel('bylaws')} · ${art.chapter}]\n${art.title}\n${art.body}`;
       try {
         await navigator.clipboard.writeText(text);
         showToast(`${art.title} 내용이 복사되었습니다.`);
@@ -8126,14 +8221,14 @@
         {
           id: 'ug_bylaws_more',
           icon: getTabIcon('bylaws'),
-          title: `청년부 ${getTabLabel('bylaws')} 검색 & ${getTabLabel('more')}(사이트 바로가기)`,
+          title: `청년부 ${getTabLabel('bylaws')} 검색 & ${getTabLabel('more')}`,
           sub: `${getTabLabel('bylaws')} 키워드 검색·복사와 인스타/유튜브/교회 홈페이지 연결`,
           keywords: `${getTabLabel('bylaws')} 회칙 검색 조항 복사 ${getTabLabel('more')} 더보기 사이트 바로가기 인스타그램 유튜브 교회 홈페이지`,
           steps: [
             `<b>${byLbl} 검색:</b> <b>[${byIcn} ${byLbl}]</b> 탭에서 <b>제5조</b>, <b>선거권</b>, <b>임기</b> 등 원하는 키워드나 추천 해시태그(#)를 눌러 해당 조항을 바로 찾을 수 있습니다. 각 조항 우측 <b>[복사]</b> 버튼으로 본문 복사도 가능합니다.`,
-            `<b>사이트 바로가기 (${mIcn} ${mLbl}):</b> 하단 <b>[${mIcn} ${mLbl}]</b> 탭을 누르면 청년부 인스타그램, 유튜브 채널, 교회 홈페이지 등 등록된 외부 사이트로 한 번에 이동할 수 있습니다.`
+            `<b>${mIcn} ${mLbl}:</b> 하단 <b>[${mIcn} ${mLbl}]</b> 탭을 누르면 청년부 인스타그램, 유튜브 채널, 교회 홈페이지 등 등록된 외부 사이트로 한 번에 이동할 수 있습니다.`
           ],
-          tip: `${getTabLabel('bylaws')} 열람, 공지 확인, 사이트 바로가기 이동은 개인 활동으로 보안 로그에 남지 않습니다.`
+          tip: `${getTabLabel('bylaws')} 열람, 공지 확인, ${getTabLabel('more')} 이동은 개인 활동으로 보안 로그에 남지 않습니다.`
         },
         {
           id: 'ug_account',
@@ -8471,7 +8566,7 @@
             '<b>의심 링크·문구 즉시 검사기:</b> 카카오톡이나 문자로 받은 의심스러운 링크·문구를 붙여넣어 피싱·위장 주소·악성 코드 포함 여부를 즉시 분석해 볼 수 있습니다.',
             `<b>기능 점검과 역할 분리:</b> 앱 오류·연동·화면 체험은 <b>[${diagIcn} ${diagLbl}]</b>에서, 해킹·피싱·보안 방어는 <b>[${secIcn} ${secLbl}]</b>에서 각각 전문적으로 점검합니다.`
           ],
-          tip: '악성 스크립트나 피싱 링크 입력이 차단되면 실행자·시각·시도 내용이 [보안 로그]에 자동 기록되어 추적할 수 있습니다.'
+          tip: `악성 스크립트나 피싱 링크 입력이 차단되면 실행자·시각·시도 내용이 [${getTabIcon('manageLogs')} ${getTabLabel('manageLogs')}]에 자동 기록되어 추적할 수 있습니다.`
         }
       ];
     }
@@ -8589,7 +8684,7 @@
             <span class="hero-badge" style="margin-bottom:0;">🔐 최고 관리자 전용 매뉴얼</span>
             <span style="font-size:11px; color:#FDE68A; font-weight:700;">일반 회원 비공개</span>
           </div>
-          <div class="bylaw-hero-title" style="margin-top:4px;">${escapeHtml(getTabIcon('manageGuide'))} 관리자 ${escapeHtml(getTabLabel('manageGuide'))} · 인수인계 가이드</div>
+          <div class="bylaw-hero-title" style="margin-top:4px;">${escapeHtml(formatManageGuideHeading())}</div>
           <div class="bylaw-hero-dates">
             새로운 관리자가 들어와도 막힘없이 운영할 수 있도록 모든 관리 기능과 구글 시트 8개 탭 연동 방법을 정리했습니다.
           </div>
@@ -9085,7 +9180,7 @@
         <div class="stats-grid-3">
           <div class="stat-box" onclick="switchMainTab('home')">
             <div class="stat-num">${liveBlockCount}</div>
-            <div class="stat-label">메인 표시</div>
+            <div class="stat-label">${escapeHtml(getTabLabel('home'))} 표시</div>
           </div>
           <div class="stat-box">
             <div class="stat-num">${liveNoticeCount}</div>
@@ -9124,7 +9219,7 @@
             ? `<div class="card" style="text-align:center;color:#64748B;font-size:13px;">
                  <div>배치된 영역이 없습니다.</div>
                  <div style="margin-top:10px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
-                   <button class="btn-sm primary" type="button" onclick="restoreDefaultLayoutBlocks()">✨ 기본 메인 칸 자동 채우기</button>
+                   <button class="btn-sm primary" type="button" onclick="restoreDefaultLayoutBlocks()">✨ 기본 ${escapeHtml(getTabLabel('home'))} 칸 자동 채우기</button>
                    <button class="btn-sm" type="button" onclick="openAddBlockModal()">+ 직접 칸 추가</button>
                  </div>
                </div>`
@@ -9221,7 +9316,7 @@
           여기서 추가·수정·순서 변경(▲/▼)한 사이트 목록이 하단 <b>${escapeHtml(getTabIcon('more'))} ${escapeHtml(getTabLabel('more'))}</b> 메뉴에 실시간 반영됩니다.
         </div>
         ${quickLinks.length === 0
-          ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">등록된 사이트 바로가기가 없습니다.<br>인스타·유튜브·교회 홈페이지 등을 추가해 보세요.</div>'
+          ? `<div class="card" style="text-align:center;color:#64748B;font-size:13px;">등록된 ${escapeHtml(getTabLabel('manageQuickLinks'))} 항목이 없습니다.<br>인스타·유튜브·교회 홈페이지 등을 추가해 보세요.</div>`
           : quickLinks.map((ql, idx) => {
               const theme = getQuickLinkTheme(ql.theme);
               const safeManageUrl = normalizeExternalUrl(ql.url);
@@ -12540,7 +12635,7 @@ ${m.body}`;
           return `
             <div class="bible-memo-card">
               <div class="card-top" style="margin-bottom:4px;">
-                <strong style="font-size:14px; color:#0F172A;">📝 ${escapeHtml(m.title || '성경 메모')}</strong>
+                <strong style="font-size:14px; color:#0F172A;">📝 ${escapeHtml(m.title || `${getTabLabel('bible')} 메모`)}</strong>
                 <span class="card-date">${escapeHtml(m.updatedAt || '')}</span>
               </div>
               ${refLabel ? `<div class="bible-memo-ref-pill">📖 ${escapeHtml(refLabel)}</div>` : ''}
@@ -12885,7 +12980,7 @@ ${m.body}`;
       if (combined.length === 0) {
         container.innerHTML = `
           <div class="card" style="text-align:center; padding:34px 18px; color:#64748B;">
-            <div style="font-size:28px; margin-bottom:8px;">✨</div>
+            <div style="font-size:28px; margin-bottom:8px;">${escapeHtml(getTabIcon('qt'))}</div>
             <div style="font-size:14.5px; font-weight:800; color:#1E293B; margin-bottom:5px;">오늘 표시된 말씀이 없습니다.</div>
             <div style="font-size:12.5px; line-height:1.5; margin-bottom:14px;">관리자가 언제든 새 말씀·글을 올리거나 자동 말씀을 복원할 수 있습니다.</div>
             ${canManageQt ? `
@@ -13202,7 +13297,7 @@ ${m.body}`;
         scripture: autoToday.scripture,
         displayMode: 'replace'
       });
-      document.getElementById('qtFormModalTitle').textContent = `✨ ${getTabLabel('qt')} 수정 (대체 등록)`;
+      document.getElementById('qtFormModalTitle').textContent = `${getTabIcon('qt')} ${getTabLabel('qt')} 수정 (대체 등록)`;
     };
 
     window.hideAutoTodayQt = async () => {
@@ -13432,13 +13527,14 @@ ${m.body}`;
         }).join('');
       }
 
-      // 3) 카드 상단 제목의 관리 명칭도 실시간 반영
+      // 3) 카드 상단 제목·시트·모달 명칭도 실시간 반영
       const manageTitleEl = document.getElementById('manageSubTabCardHeading');
       if (manageTitleEl) {
         const mIcon = String(draftTabIcons.manage ?? '').trim() || getTabIcon('manage');
         const mName = String(draftTabNames.manage ?? '').trim() || getTabLabel('manage');
         manageTitleEl.textContent = `${mIcon} ${mName} 상단 탭 (왼쪽 → 오른쪽 순)`;
       }
+      syncAllDynamicLabelsUI(draftTabNames, draftTabIcons);
     }
 
     function renderManageLabels(el, user) {
@@ -13447,7 +13543,7 @@ ${m.body}`;
       const curManageIcon = String(draftTabIcons.manage ?? '').trim() || getTabIcon('manage');
       el.innerHTML = `
         <div class="section-head">
-          <h2 class="section-title">${escapeHtml(getTabIcon('manageLabels'))} ${escapeHtml(getTabLabel('manageLabels'))} · 이모지 · 순서</h2>
+          <h2 id="labelsPageHeading" class="section-title">${escapeHtml(formatManageLabelsHeading())}</h2>
           <button class="btn-sm" type="button" onclick="resetTabLabelsDefaults()">기본값 복원</button>
         </div>
         <div class="info-box" style="margin-top:0; margin-bottom:14px;">
@@ -13703,6 +13799,13 @@ ${m.body}`;
       const canEdit = hasUserPerm(user, 'canEditLayout');
       document.getElementById('quickLinksSheetAdminBar').classList.toggle('hidden', !canEdit);
 
+      const sheetIcon = getQuickSheetIcon();
+      const sheetLabel = getQuickSheetLabel();
+      const titleEl = document.getElementById('quickSheetTitle');
+      if (titleEl) titleEl.textContent = `${sheetIcon} ${sheetLabel}`;
+      const editBtnEl = document.getElementById('quickSheetManageEditBtn');
+      if (editBtnEl) editBtnEl.textContent = `${getTabIcon('manage')} ${getTabLabel('manage')} 편집`;
+
       const listEl = document.getElementById('quickLinksSheetList');
       const displayLinks = canEdit
         ? quickLinks
@@ -13711,8 +13814,8 @@ ${m.body}`;
       if (displayLinks.length === 0) {
         listEl.innerHTML = `
           <div style="text-align:center; padding:28px 12px; color:#94A3B8; font-size:13.5px; line-height:1.6;">
-            <div style="font-size:26px; margin-bottom:8px;">🔗</div>
-            <div style="font-weight:700; color:#E2E8F0; margin-bottom:4px;">아직 등록된 사이트가 없습니다.</div>
+            <div style="font-size:26px; margin-bottom:8px;">${escapeHtml(sheetIcon)}</div>
+            <div style="font-weight:700; color:#E2E8F0; margin-bottom:4px;">아직 등록된 ${escapeHtml(sheetLabel)} 항목이 없습니다.</div>
             <div>${canEdit ? '아래 [+ 사이트 추가] 버튼을 눌러 인스타·유튜브·교회 사이트를 등록해 보세요.' : '관리자가 사이트를 등록하면 이곳에서 바로 이동할 수 있습니다.'}</div>
           </div>
         `;
@@ -13827,7 +13930,9 @@ ${m.body}`;
     };
 
     window.openAddQuickLinkModal = () => {
-      document.getElementById('quickLinkModalTitle').textContent = '🔗 새 사이트 바로가기 추가';
+      document.getElementById('quickLinkModalTitle').textContent = `${getTabIcon('manageQuickLinks')} 새 ${getTabLabel('manageQuickLinks')} 추가`;
+      const sb = document.getElementById('saveQuickLinkBtn');
+      if (sb) sb.textContent = `${getTabLabel('manageQuickLinks')} 저장`;
       document.getElementById('editQuickLinkId').value = '';
       document.getElementById('quickLinkLabelInput').value = '';
       document.getElementById('quickLinkUrlInput').value = '';
@@ -13840,7 +13945,9 @@ ${m.body}`;
     window.openEditQuickLinkModal = (id) => {
       const ql = quickLinks.find(x => x.id === id);
       if (!ql) return;
-      document.getElementById('quickLinkModalTitle').textContent = '🔗 사이트 바로가기 수정';
+      document.getElementById('quickLinkModalTitle').textContent = `${getTabIcon('manageQuickLinks')} ${getTabLabel('manageQuickLinks')} 수정`;
+      const sb = document.getElementById('saveQuickLinkBtn');
+      if (sb) sb.textContent = `${getTabLabel('manageQuickLinks')} 저장`;
       document.getElementById('editQuickLinkId').value = ql.id;
       document.getElementById('quickLinkLabelInput').value = ql.label || '';
       document.getElementById('quickLinkUrlInput').value = ql.url || '';
@@ -13906,7 +14013,7 @@ ${m.body}`;
       const btn = document.getElementById('saveQuickLinkBtn');
       btn.disabled = true;
       try {
-        await saveQuickLinksToCloud(next, id ? '사이트 바로가기가 수정되었습니다!' : '새 사이트 바로가기가 추가되었습니다!');
+        await saveQuickLinksToCloud(next, id ? `${getTabLabel('manageQuickLinks')} 항목이 수정되었습니다!` : `새 ${getTabLabel('manageQuickLinks')} 항목이 추가되었습니다!`);
         recordAuditLog({
           actorType: 'admin',
           category: '바로가기',
@@ -13925,7 +14032,7 @@ ${m.body}`;
       if (t < 0 || t >= quickLinks.length) return;
       const next = structuredClone(quickLinks);
       [next[idx], next[t]] = [next[t], next[idx]];
-      await saveQuickLinksToCloud(next, '사이트 바로가기 순서가 변경되었습니다.');
+      await saveQuickLinksToCloud(next, `${getTabLabel('manageQuickLinks')} 순서가 변경되었습니다.`);
       recordAuditLog({
         actorType: 'admin',
         category: '바로가기',
@@ -13939,7 +14046,7 @@ ${m.body}`;
       const ql = quickLinks.find(x => x.id === id);
       if (!ql || !confirm(`[${ql.label}] 바로가기를 삭제할까요?`)) return;
       const next = quickLinks.filter(x => x.id !== id);
-      await saveQuickLinksToCloud(next, '사이트 바로가기가 삭제되었습니다.');
+      await saveQuickLinksToCloud(next, `${getTabLabel('manageQuickLinks')} 항목이 삭제되었습니다.`);
       recordAuditLog({
         actorType: 'admin',
         category: '바로가기',
@@ -15796,7 +15903,10 @@ ${m.body}`;
       const summaryEl = document.getElementById('adminLogsSummaryText');
       if (summaryEl) {
         const whoLbl = adminLogFilterType === 'admin' ? '관리자 ' : (adminLogFilterType === 'member' ? '이용자 ' : '');
-        const catLbl = adminLogFilterCategory !== 'all' ? `[${adminLogFilterCategory}] ` : '';
+        const catDisp = adminLogFilterCategory === '오늘의 말씀' ? getTabLabel('qt')
+          : (adminLogFilterCategory === '바로가기' ? getQuickSheetLabel()
+            : (adminLogFilterCategory === '예배·출석' ? getTabLabel('manageWorship') : adminLogFilterCategory));
+        const catLbl = adminLogFilterCategory !== 'all' ? `[${catDisp}] ` : '';
         summaryEl.textContent = q
           ? `'${adminLogSearchQuery.trim()}' 검색 결과 ${filtered.length}건 (전체 ${allLogs.length}건)`
           : `${whoLbl}${catLbl}보안 로그 ${filtered.length}건 (전체 ${allLogs.length}건)`;
@@ -15905,7 +16015,7 @@ ${m.body}`;
           🔐 <b>통합 보안 감사 로그 (위변조·삭제 불가)</b><br>
           • <b>관리자:</b> 모든 추가·수정·삭제·승인·설정 변경 자동 기록<br>
           • <b>이용자:</b> 댓글 작성/수정/삭제, 이름·생일 변경 신청/취소, 가입·탈퇴, 출석 체크만 기록<br>
-          • <b>미기록(프라이버시 보호):</b> 이용자 비밀번호 변경, 성경 메모·책갈피·검색, 사이트 이동, 공지·소식 단순 조회
+          • <b>미기록(프라이버시 보호):</b> 이용자 비밀번호 변경, ${escapeHtml(getTabLabel('bible'))} 메모·책갈피·검색, ${escapeHtml(getQuickSheetLabel())} 이동, 공지·소식 단순 조회
         </div>
 
         ${hasSheet ? `
@@ -15929,7 +16039,13 @@ ${m.body}`;
 
         <div style="display:flex; gap:6px; margin-bottom:8px; align-items:center;">
           <select class="form-select" style="width:auto; min-width:118px; padding:9px 10px; font-size:12.5px; font-weight:700;" onchange="setAdminLogCategoryFilter(this.value)">
-            ${cats.map(c => `<option value="${escapeHtml(c)}" ${adminLogFilterCategory === c ? 'selected' : ''}>${c === 'all' ? '전체 분류' : escapeHtml(c === '오늘의 말씀' ? getTabLabel('qt') : c)}</option>`).join('')}
+            ${cats.map(c => {
+              const disp = c === 'all' ? '전체 분류'
+                : (c === '오늘의 말씀' ? getTabLabel('qt')
+                  : (c === '바로가기' ? getQuickSheetLabel()
+                    : (c === '예배·출석' ? getTabLabel('manageWorship') : c)));
+              return `<option value="${escapeHtml(c)}" ${adminLogFilterCategory === c ? 'selected' : ''}>${escapeHtml(disp)}</option>`;
+            }).join('')}
           </select>
           <div class="search-box" style="flex:1; margin-bottom:0;">
             <span class="search-icon">🔍</span>
@@ -16020,7 +16136,7 @@ ${m.body}`;
 
       el.innerHTML = `
         <div class="section-head">
-          <h2 class="section-title">📲 오늘의 초대 QR (매일 00:00 자동 갱신)</h2>
+          <h2 class="section-title">${escapeHtml(getTabIcon('manageQr'))} ${escapeHtml(getTabLabel('manageQr'))} (매일 00:00 자동 갱신)</h2>
           <span class="tag ${qrReady ? 'green' : 'warm'}">${qrReady ? `${todayInfo.dot} 활성` : '생성 대기'}</span>
         </div>
         <div class="card">
@@ -16078,7 +16194,7 @@ ${m.body}`;
         <!-- 1) 예배 · 출석 현황 & 예배명 변경 -->
         ${buildManageAccordionBar({
           key: 'worship_att',
-          titleHtml: '⛪ 예배 · 출석 현황',
+          titleHtml: `${escapeHtml(getTabIcon('manageWorship'))} ${escapeHtml(getTabLabel('manageWorship'))} 현황`, 
           badgeHtml: `<span class="tag green">${sessRecords.length}명</span>`,
           actionHtml: curSess ? `<button class="btn-admin" type="button" style="padding:6px 10px; font-size:11.5px;" onclick="openAddAdminAttendanceModal()">+ 출석</button>` : '',
           defaultOpen: true
@@ -17107,7 +17223,7 @@ ${m.body}`;
         <div class="card" style="background:#ECFDF5; border-color:#6EE7B7; margin-bottom:12px; padding:11px 13px;">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
             <div style="font-size:12px; color:#065F46; line-height:1.45; flex:1; min-width:180px;">
-              <b>🛡️ 해킹 · 피싱 · 악성 링크 방어 점검</b>은 전용 <b>[${escapeHtml(getTabIcon('manageSecurity'))} ${escapeHtml(getTabLabel('manageSecurity'))}]</b> 탭에서 분리 관리합니다.
+              <b>${escapeHtml(getTabIcon('manageSecurity'))} 해킹 · 피싱 · 악성 링크 방어 점검</b>은 전용 <b>[${escapeHtml(getTabIcon('manageSecurity'))} ${escapeHtml(getTabLabel('manageSecurity'))}]</b> 탭에서 분리 관리합니다.
             </div>
             <button class="btn-sm approve" type="button" onclick="switchManageSubTab('security')">${escapeHtml(getTabIcon('manageSecurity'))} 이동</button>
           </div>
@@ -17374,7 +17490,7 @@ ${m.body}`;
           }
         } else if (id === 'notif') {
           const perm = getNotifPermissionState();
-          showInAppNotif('🧪', '기능 점검 테스트 알림', '앱 내 실시간 상단 팝업 알림이 정상 작동 중입니다.', () => {});
+          showInAppNotif(getTabIcon('manageDiagnostics'), `${getTabLabel('manageDiagnostics')} 테스트 알림`, '앱 내 실시간 상단 팝업 알림이 정상 작동 중입니다.', () => {});
           if (perm === 'granted' && notifPrefs.enabled) {
             setDiagResult(id, 'ok', '기기 알림 권한 허용됨 · 앱 내 알림 켜짐 · 상단 테스트 팝업 표시 완료');
           } else if (perm === 'denied') {
@@ -17471,7 +17587,7 @@ ${m.body}`;
       if (!diagSimAttCheckedTime) {
         body.innerHTML = `
           <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-            실제 주일 예배 시간(14:00~15:30)에 일반 회원 메인 홈 최상단에 뜨는 출석 카드입니다. 아래 버튼을 눌러 동작을 체험해 보세요. (실제 DB 저장 없음)
+            실제 주일 예배 시간(14:00~15:30)에 일반 회원 ${escapeHtml(getTabLabel('home'))} 최상단에 뜨는 출석 카드입니다. 아래 버튼을 눌러 동작을 체험해 보세요. (실제 DB 저장 없음)
           </div>
           <div class="attendance-home-card" style="margin-bottom:12px;">
             <span class="attendance-live-badge"><span class="attendance-live-dot"></span> 주일 예배 출석 진행 중 · 14:00~15:30</span>
@@ -18267,7 +18383,7 @@ ${m.body}`;
           key: 'sec_threat_feed',
           titleHtml: '🚨 최근 보안 위협 · 차단 기록',
           badgeHtml: `<span class="tag ${threatLogs.length > 0 ? 'warm' : 'green'}">${threatLogs.length}건</span>`,
-          actionHtml: `<button class="btn-sm primary" type="button" onclick="switchManageSubTab('logs')">전체 로그</button>`,
+          actionHtml: `<button class="btn-sm primary" type="button" onclick="switchManageSubTab('logs')">${escapeHtml(getTabLabel('manageLogs'))} 보기</button>`,
           defaultOpen: threatLogs.length > 0 && threatLogs.length <= 5
         })}
         <div data-acc-body="sec_threat_feed" class="${threatsOpen ? '' : 'hidden'}">
