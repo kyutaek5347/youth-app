@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=160b" />
+  <link rel="manifest" href="./manifest.json?v=161" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=160b" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=160b" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=161" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=161" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -763,156 +763,18 @@
     }
 
 
-    /* ==================== v10.3 큐티(QT) 카드 & 인스타·카톡 스타일 반응 ==================== */
-    .qt-hero {
-      background: linear-gradient(135deg, #312E81 0%, #4F46E5 55%, #7C3AED 100%);
-      color: #fff;
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 14px;
-      box-shadow: 0 8px 22px rgba(79, 70, 229, 0.24);
-    }
-    .qt-scripture-box {
+    /* ==================== 설교·찬양 영상 추천글 박스 스타일 ==================== */
+    .video-note-box {
       background: #F8FAFC;
-      border-left: 3.5px solid #4F46E5;
+      border-left: 3.5px solid #DC2626;
       border-radius: 0 12px 12px 0;
-      padding: 12px 14px;
-      margin: 10px 0 12px;
-      font-size: 13.5px;
+      padding: 11px 13px;
+      margin: 6px 0 10px;
+      font-size: 13px;
       color: #1E293B;
-      line-height: 1.65;
+      line-height: 1.62;
       white-space: pre-line;
       word-break: keep-all;
-    }
-    .qt-passage-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: #EEF2FF;
-      color: #3730A3;
-      font-size: 11.5px;
-      font-weight: 800;
-      padding: 3px 9px;
-      border-radius: 999px;
-    }
-    .reaction-bar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 11px;
-      padding-top: 10px;
-      border-top: 1px solid #F1F5F9;
-    }
-    .react-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      border: 1px solid #E2E8F0;
-      background: #F8FAFC;
-      color: #334155;
-      border-radius: 999px;
-      padding: 6px 11px;
-      font-size: 12.5px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.14s ease, background 0.15s ease, border-color 0.15s ease;
-    }
-    .react-btn:active { transform: scale(1.16); }
-    .react-btn.active-heart {
-      background: #FFF1F2;
-      border-color: #FDA4AF;
-      color: #E11D48;
-    }
-    .react-btn.active-amen {
-      background: #EEF2FF;
-      border-color: #A5B4FC;
-      color: #4338CA;
-    }
-    .react-btn.active-grace {
-      background: #FFFBEB;
-      border-color: #FCD34D;
-      color: #B45309;
-    }
-    .react-btn.active-fire {
-      background: #FFF7ED;
-      border-color: #FDBA74;
-      color: #C2410C;
-    }
-    .react-summary {
-      font-size: 11.5px;
-      color: #64748B;
-      margin-top: 7px;
-      font-weight: 600;
-    }
-    .qt-comment-preview {
-      margin-top: 9px;
-      padding: 9px 11px;
-      background: #F8FAFC;
-      border-radius: 11px;
-      font-size: 12.5px;
-      color: #334155;
-      line-height: 1.48;
-    }
-    .qt-comment-item {
-      padding: 11px 0;
-      border-bottom: 1px solid #F1F5F9;
-    }
-    .qt-comment-item:last-child { border-bottom: none; }
-    .qt-comment-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      margin-bottom: 5px;
-    }
-    .qt-comment-author {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      font-weight: 800;
-      color: #0F172A;
-    }
-    .qt-comment-body {
-      font-size: 13.5px;
-      color: #1E293B;
-      line-height: 1.55;
-      white-space: pre-line;
-      word-break: break-word;
-    }
-    .qt-comment-foot {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 6px;
-      gap: 8px;
-    }
-    .comment-heart-btn {
-      border: 1px solid #E2E8F0;
-      background: #fff;
-      color: #64748B;
-      border-radius: 999px;
-      padding: 3px 9px;
-      font-size: 11.5px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .comment-heart-btn.liked {
-      background: #FFF1F2;
-      border-color: #FDA4AF;
-      color: #E11D48;
-    }
-    .comment-compose-box {
-      display: flex;
-      gap: 8px;
-      align-items: flex-end;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
     }
     .stats-grid-3 {
       display: grid;
@@ -924,43 +786,6 @@
       height: 1px;
       background: var(--border);
       margin: 22px 0 18px;
-    }
-
-
-    /* ==================== v10.4 메인홈 하루 큐티 카드 & 배너 개선 ==================== */
-    .home-qt-card {
-      background: #FFFFFF;
-      border: 1.5px solid #C7D2FE;
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: 0 6px 18px rgba(79, 70, 229, 0.1);
-    }
-    .home-qt-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
-    }
-    .home-qt-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 999px;
-    }
-    .home-qt-admin-bar {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px dashed #E2E8F0;
     }
 
 
@@ -1661,7 +1486,7 @@
     .hero-title, .hero-desc, .card-title, .card-body, .section-title,
     .birthday-title, .birthday-desc, .newcomer-auto-title, .newcomer-auto-desc,
     .attendance-home-title, .attendance-home-desc, .bylaw-hero-title, .bylaw-hero-dates,
-    .bylaw-article-title, .bylaw-article-body, .qt-scripture-box, .qt-comment-body,
+    .bylaw-article-title, .bylaw-article-body, .video-note-box,
     .info-box, .status-desc, .status-meta, .setting-title, .setting-sub,
     .diag-msg, .publish-confirm-box, .modal-title, .form-label {
       word-break: keep-all;
@@ -1672,7 +1497,7 @@
     }
 
     /* 버튼·배지 줄바꿈 깨짐 방지 */
-    .exit-btn, .btn-admin, .btn-sm, .tag, .hero-badge, .qt-passage-pill,
+    .exit-btn, .btn-admin, .btn-sm, .tag, .hero-badge,
     .birthday-badge, .newcomer-auto-badge, .attendance-live-badge, .role-pill,
     .filter-chip, .sub-tab-btn, .quick-tag {
       white-space: nowrap;
@@ -1691,7 +1516,6 @@
     }
     .layout-item-head,
     .bylaw-article-head,
-    .qt-comment-head,
     .card-top,
     .card-footer,
     .member-row,
@@ -1749,7 +1573,7 @@
       line-height: 1.3;
     }
 
-    /* 큐티 히어로 상단 바 반응형 래핑 */
+    /* 히어로 상단 바 반응형 래핑 */
     .hero-top-row {
       display: flex;
       align-items: flex-start;
@@ -1911,7 +1735,7 @@
 
       .hero-banner, .newcomer-card, .leader-card, .custom-banner-card,
       .birthday-banner, .newcomer-auto-banner, .attendance-home-card,
-      .qt-hero, .bylaw-hero {
+      .bylaw-hero {
         padding: 15px 14px;
         border-radius: 16px;
       }
@@ -1928,8 +1752,7 @@
       .bylaw-article-card { padding: 13px; border-radius: 14px; }
       .bylaw-article-title { font-size: 14px; line-height: 1.4; }
       .bylaw-article-body { font-size: 13px; line-height: 1.64; }
-      .qt-scripture-box { font-size: 13px; padding: 11px 12px; }
-      .react-btn { padding: 5px 10px; font-size: 12px; }
+      .video-note-box { font-size: 12.5px; padding: 10px 12px; }
       .filter-chip { padding: 6px 11px; font-size: 12px; }
       .sub-tab-btn { padding: 7px 10px; font-size: 12px; }
       .modal { padding: 18px 14px calc(22px + var(--safe-bottom)); }
@@ -2014,7 +1837,7 @@
       }
       .hero-banner, .newcomer-card, .leader-card, .custom-banner-card,
       .birthday-banner, .newcomer-auto-banner, .attendance-home-card,
-      .qt-hero, .bylaw-hero {
+      .bylaw-hero {
         padding: 20px 22px;
       }
       .hero-title, .birthday-title, .newcomer-auto-title, .attendance-home-title {
@@ -2118,19 +1941,6 @@
     .celeb-manage-card {
       background: #FFFBEB;
       border: 1px dashed #F59E0B;
-    }
-
-    /* 오늘의 말씀 관리 버튼 3개 1줄 정렬 */
-    .qt-manage-actions {
-      display: flex;
-      gap: 5px;
-      flex-wrap: wrap;
-    }
-    .qt-manage-actions .btn-sm {
-      flex: 1 1 auto;
-      text-align: center;
-      padding: 7px 6px;
-      font-size: 11.5px;
     }
 
     @media (max-width: 440px) {
@@ -2916,8 +2726,7 @@
     html[data-font-scale="large"] .newcomer-auto-desc,
     html[data-font-scale="large"] .attendance-home-desc,
     html[data-font-scale="large"] .bylaw-article-body,
-    html[data-font-scale="large"] .qt-scripture-box,
-    html[data-font-scale="large"] .qt-comment-body,
+    html[data-font-scale="large"] .video-note-box,
     html[data-font-scale="large"] .guide-card-body { font-size: 15.5px; line-height: 1.66; }
     html[data-font-scale="large"] .bylaw-article-title,
     html[data-font-scale="large"] .guide-card-title,
@@ -2944,8 +2753,7 @@
     html[data-font-scale="xlarge"] .newcomer-auto-desc,
     html[data-font-scale="xlarge"] .attendance-home-desc,
     html[data-font-scale="xlarge"] .bylaw-article-body,
-    html[data-font-scale="xlarge"] .qt-scripture-box,
-    html[data-font-scale="xlarge"] .qt-comment-body,
+    html[data-font-scale="xlarge"] .video-note-box,
     html[data-font-scale="xlarge"] .guide-card-body { font-size: 17.5px; line-height: 1.7; }
     html[data-font-scale="xlarge"] .bylaw-article-title,
     html[data-font-scale="xlarge"] .guide-card-title,
@@ -3033,7 +2841,7 @@
       line-height: 1.5;
     }
 
-    /* ==================== v10.57 출처 표기 · QT 순서 카드 스타일 ==================== */
+    /* ==================== v10.57 출처 표기 스타일 ==================== */
     .source-meta-line {
       margin-top: 8px;
       padding: 6px 9px;
@@ -3044,13 +2852,6 @@
       color: #475569;
       line-height: 1.48;
       word-break: keep-all;
-    }
-    .qt-order-card {
-      background: #F8FAFC;
-      border: 1.5px solid #CBD5E1;
-      border-radius: 15px;
-      padding: 13px 14px;
-      margin-bottom: 13px;
     }
 
     /* ==================== v10.58 설교 · 찬양 유튜브 영상 · 자동 검사 리포트 스타일 ==================== */
@@ -3183,7 +2984,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=160b" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=161" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3346,21 +3147,6 @@
         <!-- (1) 메인 홈 화면 -->
         <section id="viewHome" class="hidden"></section>
 
-        <!-- (3) 오늘의 말씀 (큐티) 화면 -->
-        <section id="viewQt" class="hidden">
-          <div class="qt-hero">
-            <div class="hero-top-row">
-              <div class="hero-top-text">
-                <div id="qtViewTitle" class="hero-top-title">✨ 오늘의 말씀</div>
-                <div id="qtViewSub" class="hero-top-sub">매일 00:00(한국시간) 새 말씀 자동 변경 · 하트와 댓글로 나눠보세요</div>
-              </div>
-              <button id="qtWriteTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openNewQtModal()">+ 말씀·글 쓰기</button>
-            </div>
-          </div>
-
-          <div id="qtListContainer"></div>
-        </section>
-
         <!-- (4) 청년부 회칙 화면 (설정 안에서 진입 · 검색창 고정) -->
         <section id="viewBylaws" class="hidden">
           <div class="subview-back-bar">
@@ -3411,7 +3197,7 @@
 
           <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input id="userGuideSearchInput" class="search-input" type="search" placeholder="기능 검색 (예: 출석, QT, 알림)" oninput="onUserGuideSearchInput(this.value)" />
+            <input id="userGuideSearchInput" class="search-input" type="search" placeholder="기능 검색 (예: 출석, 영상, 알림)" oninput="onUserGuideSearchInput(this.value)" />
             <button id="userGuideSearchClear" class="search-clear hidden" type="button" onclick="clearUserGuideSearch()">✕</button>
           </div>
 
@@ -3585,62 +3371,6 @@
   </div>
 
 
-  <!-- 오늘의 말씀 등록 / 수정 모달 -->
-  <div id="qtFormModal" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-head">
-        <h3 id="qtFormModalTitle" class="modal-title">✨ 새 말씀·글 등록</h3>
-        <button class="close-btn" data-close="qtFormModal">✕</button>
-      </div>
-      <input type="hidden" id="editQtId" />
-      <div class="form-group">
-        <label class="form-label" for="qtDisplayModeSelect">게시 방식 선택</label>
-        <select id="qtDisplayModeSelect" class="form-select" onchange="updateQtDisplayModeHint()">
-          <option id="qtOptTogether" value="together">📌 오늘의 말씀과 같이 올리기 (자동 말씀 + 작성 글)</option>
-          <option id="qtOptReplace" value="replace">🔄 오늘의 말씀 대신 이 글만 올리기 (대체)</option>
-        </select>
-        <div id="qtDisplayModeHint" class="info-box" style="margin-top:7px; margin-bottom:0; padding:9px 11px; font-size:11.5px;"></div>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="qtDateInput">날짜 (한국시간 기준)</label>
-        <input id="qtDateInput" class="form-input" placeholder="예: 2026.11.24" />
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="qtPassageInput">제목 또는 성경 구절 (선택)</label>
-        <input id="qtPassageInput" class="form-input" placeholder="예: 시편 23:1-3 또는 제목 (선택)" />
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="qtScriptureInput">말씀 · 작성 글 내용 (필수)</label>
-        <textarea id="qtScriptureInput" class="form-textarea" style="min-height:135px;" placeholder="성경 말씀이나 청년부원들과 나누고 싶은 글을 자유롭게 입력하세요."></textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="qtSourceInput">출처 (외부 인용 시 작성 · 선택)</label>
-        <input id="qtSourceInput" class="form-input" maxlength="80" placeholder="예: 성경전서 개역한글판(대한성서공회) / 참고 도서·자료명" />
-        <div style="font-size:11px; color:#64748B; margin-top:4px; line-height:1.45;">※ 외부 자료나 저작권이 있는 번역본을 무단 복사하지 말고, 인용 시 출처를 꼭 기재해 주세요.</div>
-      </div>
-      <label class="checkbox-row" style="margin-bottom:14px;">
-        <input type="checkbox" id="qtNotifyInput" checked />
-        <span>등록 시 회원들에게 새 말씀·글 알림 띄우기</span>
-      </label>
-      <button id="saveQtBtn" class="btn-full btn-dark" type="button" onclick="handleSaveQt()">오늘의 말씀에 게시하기</button>
-    </div>
-  </div>
-
-  <!-- 큐티 상세 · 좋아요 · 댓글 모달 -->
-  <div id="qtDetailModal" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-head">
-        <span id="qtDetailDateBadge" class="tag">2026.11.23</span>
-        <button class="close-btn" data-close="qtDetailModal">✕</button>
-      </div>
-      <div id="qtDetailBodyArea"></div>
-      <div class="comment-compose-box">
-        <textarea id="qtCommentInput" class="form-input" rows="2" style="resize:none; min-height:42px; flex:1;" placeholder="묵상이나 은혜를 댓글로 나눠보세요..."></textarea>
-        <button id="qtCommentSubmitBtn" class="btn-admin" type="button" style="height:42px; white-space:nowrap;" onclick="handleSubmitQtComment()">등록</button>
-      </div>
-    </div>
-  </div>
-
   <!-- 관리자: 하단 메뉴 칸 순서 · 이름 설정 모달 -->
   <div id="tabLabelsModal" class="modal-backdrop">
     <div class="modal">
@@ -3718,17 +3448,6 @@
           </div>
           <label class="switch">
             <input type="checkbox" id="notifHomeToggle" onchange="toggleNotifOption('homeNews', this.checked)" />
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="setting-row">
-          <div>
-            <div id="notifQtTitle" class="setting-title">✨ 오늘의 말씀 알림</div>
-            <div id="notifQtSub" class="setting-sub">새로운 오늘의 말씀이 올라올 때</div>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="notifQtToggle" onchange="toggleNotifOption('newQt', this.checked)" />
             <span class="slider"></span>
           </label>
         </div>
@@ -4361,7 +4080,7 @@
       </div>
       <div class="info-box warn" style="margin-top:0; margin-bottom:14px;">
         <b>3. 공동체 게시판 기록 범위</b><br>
-        건전한 공동체 운영을 위해 묵상 댓글 작성·수정·삭제, 문의 사항 작성·수정·삭제, 가입·탈퇴, 이름·생일 변경 신청, 예배 출석 체크 내역만 관리 기록에 남습니다.
+        건전한 공동체 운영을 위해 유튜브 영상 추천·수정·삭제, 문의 사항 작성·수정·삭제, 가입·탈퇴, 이름·생일 변경 신청, 예배 출석 체크 내역만 관리 기록에 남습니다.
       </div>
       <button class="btn-full btn-dark" type="button" style="padding:11px;" data-close="privacyGuideModal">확인</button>
     </div>
@@ -4505,7 +4224,7 @@
       <div id="videoPlayerFrameWrap" class="video-player-frame-wrap"></div>
       <div id="videoPlayerTitle" style="font-size:15.5px; font-weight:800; color:#0F172A; line-height:1.38; margin-bottom:4px;"></div>
       <div id="videoPlayerMeta" style="font-size:12px; color:#64748B; margin-bottom:8px;"></div>
-      <div id="videoPlayerNote" class="qt-scripture-box hidden" style="margin:6px 0 10px; font-size:13px; border-left-color:#DC2626;"></div>
+      <div id="videoPlayerNote" class="video-note-box hidden"></div>
       <div style="display:flex; gap:8px; margin-top:10px;">
         <a id="videoPlayerExternalLink" class="btn-outline" href="#" target="_blank" rel="noopener noreferrer" style="flex:1; text-align:center; text-decoration:none; padding:10px 12px;">▶ 유튜브에서 열기 ↗</a>
         <button class="btn-dark" type="button" style="border:none; border-radius:10px; padding:10px 18px; font-size:13px; font-weight:800; cursor:pointer;" onclick="closeVideoPlayerModal()">닫기</button>
@@ -4677,74 +4396,11 @@
     const authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 26;
-    const APP_CLIENT_BUILD = 160;
+    const CURRENT_SCHEMA_VERSION = 27;
+    const APP_CLIENT_BUILD = 161;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
-    // 매일 자정(KST) 자동 변경되는 일일 오늘의 말씀(QT) 풀 (60편)
-    const DAILY_QT_POOL = [
-      { title: '여호와는 나의 목자시니', passage: '시편 23:1-3', scripture: '1 여호와는 나의 목자시니 내가 부족함이 없으리로다\n2 그가 나를 푸른 초장에 누이시며 쉴만한 물 가으로 인도하시는도다\n3 내 영혼을 소생시키시고 자기 이름을 위하여 의의 길로 인도하시는도다', guide: '오늘 하루 나를 인도하시는 주님의 손길을 묵상하며, 감사한 제목 한 가지를 댓글로 나눠보세요.' },
-      { title: '마음을 강하게 하고 담대히 하라', passage: '여호수아 1:9', scripture: '내가 네게 명한 것이 아니냐 마음을 강하게 하고 담대히 하라 두려워 말며 놀라지 말라 네가 어디로 가든지 네 하나님 여호와가 너와 함께 하느니라 하시니라', guide: '요즘 마음속에 두려움이나 걱정이 되는 일이 있다면 주님께 맡기는 한 줄 기도를 남겨보세요.' },
-      { title: '내게 능력 주시는 자 안에서', passage: '빌립보서 4:13', scripture: '내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라', guide: '내 힘이 아닌 주님의 능력으로 감당하고 싶은 오늘의 일은 무엇인가요?' },
-      { title: '아무것도 염려하지 말고', passage: '빌립보서 4:6-7', scripture: '6 아무것도 염려하지 말고 오직 모든 일에 기도와 간구로, 너희 구할 것을 감사함으로 하나님께 아뢰라\n7 그리하면 모든 지각에 뛰어난 하나님의 평강이 그리스도 예수 안에서 너희 마음과 생각을 지키시리라', guide: '염려를 기도로 바꾸어 올려드릴 때 주시는 평안을 구하며 오늘의 기도제목을 나눠보세요.' },
-      { title: '너희를 향한 나의 생각', passage: '예레미야 29:11', scripture: '나 여호와가 말하노라 너희를 향한 나의 생각은 내가 아나니 재앙이 아니라 곧 평안이요 너희 장래에 소망을 주려하는 생각이라', guide: '미래에 대한 불안감 대신 하나님이 예비하신 소망을 기대하며 한마디 고백을 적어보세요.' },
-      { title: '먼저 그의 나라와 그의 의를 구하라', passage: '마태복음 6:33', scripture: '너희는 먼저 그의 나라와 그의 의를 구하라 그리하면 이 모든 것을 너희에게 더하시리라', guide: '오늘 내가 가장 먼저 우선순위에 두고 싶은 하나님과의 약속은 무엇인가요?' },
-      { title: '수고하고 무거운 짐진 자들아', passage: '마태복음 11:28', scripture: '수고하고 무거운 짐진 자들아 다 내게로 오라 내가 너희를 쉬게 하리라', guide: '최근 지치고 무거웠던 마음의 짐을 주님 앞에 내려놓고 쉼을 누리는 시간을 가져보세요.' },
-      { title: '하나님이 세상을 이처럼 사랑하사', passage: '요한복음 3:16', scripture: '하나님이 세상을 이처럼 사랑하사 독생자를 주셨으니 이는 저를 믿는 자마다 멸망치 않고 영생을 얻게 하려 하심이니라', guide: '나를 향한 하나님의 변함없는 사랑을 기억하며 오늘 주변 사람에게 전하고 싶은 따뜻한 말은?' },
-      { title: '항상 기뻐하라 쉬지 말고 기도하라', passage: '데살로니가전서 5:16-18', scripture: '16 항상 기뻐하라\n17 쉬지 말고 기도하라\n18 범사에 감사하라 이는 그리스도 예수 안에서 너희를 향하신 하나님의 뜻이니라', guide: '오늘 하루 일상 속에서 발견한 작은 감사 3가지를 댓글로 함께 나눠보세요.' },
-      { title: '주의 말씀은 내 발에 등이요', passage: '시편 119:105', scripture: '주의 말씀은 내 발에 등이요 내 길에 빛이니이다', guide: '인생의 갈림길에서 말씀의 빛을 따라 걸어가고 싶은 영역이 있다면 나눠보세요.' },
-      { title: '오직 여호와를 앙망하는 자는', passage: '이사야 40:31', scripture: '오직 여호와를 앙망하는 자는 새 힘을 얻으리니 독수리의 날개치며 올라감 같을 것이요 달음박질하여도 곤비치 아니하겠고 걸어가도 피곤치 아니하리로다', guide: '새 힘이 필요한 오늘, 주님을 바라보며 서로를 응원하는 댓글을 남겨보세요.' },
-      { title: '두려워 말라 내가 너와 함께 함이니라', passage: '이사야 41:10', scripture: '두려워 말라 내가 너와 함께 함이니라 놀라지 말라 나는 네 하나님이 됨이니라 내가 너를 굳세게 하리라 참으로 너를 도와 주리라 참으로 나의 의로운 오른손으로 너를 붙들리라', guide: '주님의 오른손이 나를 붙들고 계심을 믿으며 오늘 담대히 나아가고 싶은 일을 적어보세요.' },
-      { title: '마음을 다하여 여호와를 의뢰하라', passage: '잠언 3:5-6', scripture: '5 너는 마음을 다하여 여호와를 의뢰하고 네 명철을 의지하지 말라\n6 너는 범사에 그를 인정하라 그리하면 네 길을 지도하시리라', guide: '내 생각보다 하나님의 인도하심을 신뢰하기로 결단할 부분은 무엇인가요?' },
-      { title: '무릇 지킬만한 것보다 더욱 네 마음을 지키라', passage: '잠언 4:23', scripture: '무릇 지킬만한 것보다 더욱 네 마음을 지키라 생명의 근원이 이에서 남이니라', guide: '오늘 내 마음을 빼앗기지 않고 주님께 집중하기 위해 실천할 작은 습관은?' },
-      { title: '사랑은 오래 참고 온유하며', passage: '고린도전서 13:4-7', scripture: '4 사랑은 오래 참고 사랑은 온유하며 투기하는 자가 되지 아니하며 사랑은 자랑하지 아니하며 교만하지 아니하며\n5 무례히 행치 아니하며 자기의 유익을 구치 아니하며 성내지 아니하며 악한 것을 생각지 아니하며\n7 모든 것을 참으며 모든 것을 믿으며 모든 것을 바라며 모든 것을 견디느니라', guide: '오늘 내가 사랑으로 품고 오래 참아주고 싶은 사람은 누구인가요?' },
-      { title: '모든 것이 합력하여 선을 이루느니라', passage: '로마서 8:28', scripture: '우리가 알거니와 하나님을 사랑하는 자 곧 그 뜻대로 부르심을 입은 자들에게는 모든 것이 합력하여 선을 이루느니라', guide: '지금은 이해되지 않지만 결국 선으로 바꾸실 하나님을 신뢰하는 고백을 나눠보세요.' },
-      { title: '이 세대를 본받지 말고', passage: '로마서 12:2', scripture: '너희는 이 세대를 본받지 말고 오직 마음을 새롭게 함으로 변화를 받아 하나님의 선하시고 기뻐하시고 온전하신 뜻이 무엇인지 분별하도록 하라', guide: '세상의 기준보다 하나님의 기뻐하시는 뜻을 선택하고 싶은 오늘의 순간은?' },
-      { title: '내가 산을 향하여 눈을 들리라', passage: '시편 121:1-2', scripture: '1 내가 산을 향하여 눈을 들리라 나의 도움이 어디서 올꼬\n2 나의 도움이 천지를 지으신 여호와에게서로다', guide: '도움이 필요한 순간 가장 먼저 주님을 올려다보는 하루가 되기를 기도해요.' },
-      { title: '너희는 세상의 빛이라', passage: '마태복음 5:14-16', scripture: '14 너희는 세상의 빛이라 산 위에 있는 동네가 숨기우지 못할 것이요\n16 이같이 너희 빛을 사람 앞에 비취게 하여 저희로 너희 착한 행실을 보고 하늘에 계신 너희 아버지께 영광을 돌리게 하라', guide: '라이트(RIGHT/LIGHT) 청년으로서 오늘 직장·학교·가정에서 비추고 싶은 작은 빛은 무엇인가요?' },
-      { title: '내가 곧 길이요 진리요 생명이니', passage: '요한복음 14:6', scripture: '예수께서 가라사대 내가 곧 길이요 진리요 생명이니 나로 말미암지 않고는 아버지께로 올 자가 없느니라', guide: '오늘도 유일한 길이 되시는 예수님과 동행하는 감사의 마음을 나눠보세요.' },
-      { title: '평안을 너희에게 끼치노니', passage: '요한복음 14:27', scripture: '평안을 너희에게 끼치노니 곧 나의 평안을 너희에게 주노라 내가 너희에게 주는 것은 세상이 주는 것 같지 아니하니라 너희는 마음에 근심도 말고 두려워하지도 말라', guide: '세상이 줄 수 없는 주님의 평안이 오늘 누구의 마음에 흘러가길 기도하나요?' },
-      { title: '나는 포도나무요 너희는 가지니', passage: '요한복음 15:5', scripture: '나는 포도나무요 너희는 가지니 저가 내 안에, 내가 저 안에 있으면 이 사람은 과실을 많이 맺나니 나를 떠나서는 너희가 아무 것도 할 수 없음이라', guide: '오늘 주님께 딱 붙어 있기 위해 10분만 따로 드리고 싶은 기도·말씀 시간은 언제인가요?' },
-      { title: '그리스도 안에 있으면 새로운 피조물이라', passage: '고린도후서 5:17', scripture: '그런즉 누구든지 그리스도 안에 있으면 새로운 피조물이라 이전 것은 지나갔으니 보라 새것이 되었도다', guide: '과거의 후회나 실수를 내려놓고 주님 안에서 새롭게 시작하고 싶은 다짐을 적어보세요.' },
-      { title: '오직 성령의 열매는', passage: '갈라디아서 5:22-23', scripture: '22 오직 성령의 열매는 사랑과 희락과 화평과 오래 참음과 자비와 양선과 충성과\n23 온유와 절제니 이같은 것을 금지할 법이 없느니라', guide: '아홉 가지 성령의 열매 중 오늘 내 삶에 가장 맺히길 바라는 열매는 무엇인가요?' },
-      { title: '선을 행하되 낙심하지 말찌니', passage: '갈라디아서 6:9', scripture: '우리가 선을 행하되 낙심하지 말찌니 피곤하지 아니하면 때가 이르매 거두리라', guide: '포기하고 싶었던 일 가운데 끝까지 인내하며 이어가고 싶은 다짐을 나눠보세요.' },
-      { title: '우리는 그의 만드신 바라', passage: '에베소서 2:10', scripture: '우리는 그의 만드신 바라 그리스도 예수 안에서 선한 일을 위하여 지으심을 받은 자니 이 일은 하나님이 전에 예비하사 우리로 그 가운데서 행하게 하려 하심이니라', guide: '하나님의 걸작품으로 지음 받은 나 자신을 축복하고 격려하는 한마디를 남겨보세요.' },
-      { title: '지혜가 부족하거든 구하라', passage: '야고보서 1:5', scripture: '너희 중에 누구든지 지혜가 부족하거든 모든 사람에게 후히 주시고 꾸짖지 아니하시는 하나님께 구하라 그리하면 주시리라', guide: '오늘 결정해야 하거나 지혜가 필요한 일을 주님께 아뢰어 보세요.' },
-      { title: '너희 염려를 다 주께 맡겨 버리라', passage: '베드로전서 5:7', scripture: '너희 염려를 다 주께 맡겨 버리라 이는 저가 너희를 권고하심이니라', guide: '주님이 나를 세밀하게 돌보신다는 사실을 기억하며 오늘 마음속 걱정 하나를 맡겨보세요.' },
-      { title: '사랑하는 자들아 우리가 서로 사랑하자', passage: '요한일서 4:7', scripture: '사랑하는 자들아 우리가 서로 사랑하자 사랑은 하나님께 속한 것이니 사랑하는 자마다 하나님께로 나서 하나님을 알고', guide: '이번 주 청년부 공동체 안에서 먼저 안부를 묻고 싶은 지체가 있나요?' },
-      { title: '사람이 마음으로 자기의 길을 계획할찌라도', passage: '잠언 16:9', scripture: '사람이 마음으로 자기의 길을 계획할찌라도 그 걸음을 인도하는 자는 여호와시니라', guide: '오늘 세운 계획 위에 하나님의 선하신 인도하심을 구하는 기도를 나눠보세요.' },
-      { title: '여호와를 기뻐하라', passage: '시편 37:4-5', scripture: '4 또 여호와를 기뻐하라 저가 네 마음의 소원을 이루어 주시리로다\n5 너의 길을 여호와께 맡기라 저를 의지하면 저가 이루시고', guide: '요즘 하나님께 품고 있는 소원이나 비전이 있다면 함께 나눠보세요.' },
-      { title: '하나님은 우리의 피난처시요', passage: '시편 46:1', scripture: '하나님은 우리의 피난처시요 힘이시니 환난 중에 만날 큰 도움이시라', guide: '지칠 때 달려갈 피난처가 되시는 하나님께 감사의 고백을 올려드려 보세요.' },
-      { title: '여호와의 선하심을 맛보아 알찌어다', passage: '시편 34:8', scripture: '너희는 여호와의 선하심을 맛보아 알찌어다 그에게 피하는 자는 복이 있도다', guide: '최근 삶에서 경험한 하나님의 선하심이나 작은 은혜를 댓글로 나눠보세요.' },
-      { title: '정직한 영을 새롭게 하소서', passage: '시편 51:10', scripture: '하나님이여 내 속에 정한 마음을 창조하시고 내 안에 정직한 영을 새롭게 하소서', guide: '오늘 하루 정직하고 깨끗한 마음으로 살아가기 위해 다짐할 한 가지는?' },
-      { title: '구하라 그러면 너희에게 주실 것이요', passage: '마태복음 7:7', scripture: '구하라 그러면 너희에게 주실 것이요 찾으라 그러면 찾을 것이요 문을 두드리라 그러면 너희에게 열릴 것이니', guide: '포기하지 않고 계속 두드리고 있는 기도제목이 있다면 서로 중보해요.' },
-      { title: '너희가 짐을 서로 지라', passage: '갈라디아서 6:2', scripture: '너희가 짐을 서로 지라 그리하여 그리스도의 법을 성취하라', guide: '오늘 누군가의 짐을 조금이나마 함께 져줄 수 있는 작은 섬김은 무엇일까요?' },
-      { title: '무슨 일을 하든지 마음을 다하여', passage: '골로새서 3:23', scripture: '무슨 일을 하든지 마음을 다하여 주께 하듯 하고 사람에게 하듯 하지 말라', guide: '오늘 맡겨진 공부나 직장 업무를 주님께 드리듯 성실히 감당해 보아요.' },
-      { title: '너의 행사를 여호와께 맡기라', passage: '잠언 16:3', scripture: '너의 행사를 여호와께 맡기라 그리하면 너의 경영하는 것이 이루리라', guide: '오늘 시작하는 모든 일의 첫 단추를 기도로 맡겨드려 보세요.' },
-      { title: '여호와께서 너를 지켜', passage: '시편 121:7-8', scripture: '7 여호와께서 너를 지켜 모든 환난을 면케 하시며 또 네 영혼을 지키시리로다\n8 여호와께서 너의 출입을 지금부터 영원까지 지키시리로다', guide: '오늘의 출입을 지켜주실 하나님을 신뢰하며 청년부 지체들을 축복해 주세요.' },
-      { title: '믿음은 바라는 것들의 실상이요', passage: '히브리서 11:1', scripture: '믿음은 바라는 것들의 실상이요 보지 못하는 것들의 증거니', guide: '눈에 보이지 않아도 믿음으로 선포하고 기대하는 하나님의 약속은 무엇인가요?' },
-      { title: '예수 그리스도는 어제나 오늘이나', passage: '히브리서 13:8', scripture: '예수 그리스도는 어제나 오늘이나 영원토록 동일하시니라', guide: '변화무쌍한 일상 속에서 변함없으신 예수님을 의지하는 고백을 나눠보세요.' },
-      { title: '하나님이 우리에게 주신 것은', passage: '디모데후서 1:7', scripture: '하나님이 우리에게 주신 것은 두려워하는 마음이 아니요 오직 능력과 사랑과 근신하는 마음이니', guide: '능력·사랑·근신(절제) 중 오늘 내게 가장 필요한 마음을 구하며 기도해 보세요.' },
-      { title: '너는 청년의 때 곧 곤고한 날이 이르기 전에', passage: '전도서 12:1', scripture: '너는 청년의 때 곧 곤고한 날이 이르기 전, 나는 아무 낙이 없다고 할 해가 가깝기 전에 너의 창조자를 기억하라', guide: '가장 빛나는 청년의 시기를 하나님과 함께 어떻게 채워가고 싶나요?' },
-      { title: '네 연소함을 업신여기지 못하게 하고', passage: '디모데전서 4:12', scripture: '누구든지 네 연소함을 업신여기지 못하게 하고 오직 말과 행실과 사랑과 믿음과 정절에 대하여 믿는 자에게 본이 되어', guide: '말과 행실, 사랑과 믿음 가운데 오늘 내가 본이 되고 싶은 한 가지는?' },
-      { title: '너희가 내 안에 거하고', passage: '요한복음 15:7', scripture: '너희가 내 안에 거하고 내 말이 너희 안에 거하면 무엇이든지 원하는대로 구하라 그리하면 이루리라', guide: '오늘 하루 마음에 꼭 품고 살아갈 한 구절을 되새겨 보세요.' },
-      { title: '그리스도 예수 안에 있는 하나님의 사랑에서', passage: '로마서 8:38-39', scripture: '38 내가 확신하노니 사망이나 생명이나 천사들이나 권세자들이나 현재 일이나 장래 일이나 능력이나\n39 높음이나 깊음이나 다른 아무 피조물이라도 우리를 우리 주 그리스도 예수 안에 있는 하나님의 사랑에서 끊을 수 없으리라', guide: '어떤 상황에서도 끊어지지 않는 하나님의 사랑 안에서 오늘 위로받는 마음을 나눠보세요.' },
-      { title: '소망의 하나님이 모든 기쁨과 평강을', passage: '로마서 15:13', scripture: '소망의 하나님이 모든 기쁨과 평강을 믿음 안에서 너희에게 충만케 하사 성령의 능력으로 소망이 넘치게 하시기를 원하노라', guide: '오늘 하루 기쁨과 평강이 넘치길 바라는 마음으로 서로에게 축복 댓글을 달아보세요.' },
-      { title: '여호와는 나의 빛이요 나의 구원이시니', passage: '시편 27:1', scripture: '여호와는 나의 빛이요 나의 구원이시니 내가 누구를 두려워하리요 여호와는 내 생명의 능력이시니 내가 누구를 무서워하리요', guide: '빛과 구원이 되시는 주님을 의지하며 오늘 당당히 이겨내고 싶은 도전은?' },
-      { title: '주께서 심지가 견고한 자를 평강에 평강으로', passage: '이사야 26:3', scripture: '주께서 심지가 견고한 자를 평강에 평강으로 지키시리니 이는 그가 주를 의뢰함이니이다', guide: '흔들리지 않는 믿음으로 오늘 중심을 지키고 싶은 영역은 무엇인가요?' },
-      { title: '보라 내가 새 일을 행하리니', passage: '이사야 43:19', scripture: '보라 내가 새 일을 행하리니 이제 나타낼 것이라 너희가 그것을 알지 못하겠느냐 정녕히 내가 광야에 길과 사막에 강을 내리니', guide: '막막해 보이는 광야 같은 상황 속에 새 길을 내실 하나님을 기대해 보아요.' },
-      { title: '여호와를 경외하는 것이 지혜의 근본이요', passage: '잠언 9:10', scripture: '여호와를 경외하는 것이 지혜의 근본이요 거룩하신 자를 아는 것이 명철이니라', guide: '오늘 하나님을 존중하고 경외하는 태도로 대하고 싶은 일은 무엇인가요?' },
-      { title: '마음의 즐거움은 양약이라도', passage: '잠언 17:22', scripture: '마음의 즐거움은 양약이라도 심령의 근심은 뼈로 마르게 하느니라', guide: '오늘 내 마음에 웃음과 즐거움을 주는 감사한 일 하나를 나눠보세요.' },
-      { title: '하나님은 사랑이시라', passage: '요한일서 4:16', scripture: '하나님이 우리를 사랑하시는 사랑을 우리가 알고 믿었노니 하나님은 사랑이시라 사랑 안에 거하는 자는 하나님 안에 거하고 하나님도 그 안에 거하시느니라', guide: '사랑 자체이신 하나님 안에 머무는 따뜻한 하루가 되길 축복합니다.' },
-      { title: '너희 모든 일을 사랑으로 행하라', passage: '고린도전서 16:14', scripture: '너희 모든 일을 사랑으로 행하라', guide: '오늘 해야 할 일 중 특별히 사랑의 마음을 담아 행하고 싶은 일은?' },
-      { title: '내 은혜가 네게 족하도다', passage: '고린도후서 12:9', scripture: '내게 이르시기를 내 은혜가 네게 족하도다 이는 내 능력이 약한데서 온전하여짐이라 하신지라 이러므로 도리어 크게 기뻐함으로 나의 여러 약한 것들에 대하여 자랑하리니 이는 그리스도의 능력으로 내게 머물게 하려 함이라', guide: '나의 연약함마저 사용하시는 하나님의 은혜를 묵상해 보세요.' },
-      { title: '오직 성령이 너희에게 임하시면', passage: '사도행전 1:8', scripture: '오직 성령이 너희에게 임하시면 너희가 권능을 받고 예루살렘과 온 유대와 사마리아와 땅 끝까지 이르러 내 증인이 되리라 하시니라', guide: '내가 살아가는 삶의 자리에서 작은 증인으로 살아갈 방법을 생각해 보세요.' },
-      { title: '서로 인자하게 하며 불쌍히 여기며', passage: '에베소서 4:32', scripture: '서로 인자하게 하며 불쌍히 여기며 서로 용서하기를 하나님이 그리스도 안에서 너희를 용서하심과 같이 하라', guide: '오늘 만나는 사람들에게 건네고 싶은 친절한 말 한마디는 무엇인가요?' },
-      { title: '그리스도의 평강이 너희 마음을 주장하게 하라', passage: '골로새서 3:15', scripture: '그리스도의 평강이 너희 마음을 주장하게 하라 평강을 위하여 너희가 한 몸으로 부르심을 받았나니 또한 너희는 감사하는 자가 되라', guide: '감사가 넘치는 라이트 청년부 공동체를 위해 짧은 축복 기도를 남겨보세요.' },
-      { title: '여호와는 네게 복을 주시고 너를 지키시기를', passage: '민수기 6:24-26', scripture: '24 여호와는 네게 복을 주시고 너를 지키시기를 원하며\n25 여호와는 그 얼굴로 네게 비취사 은혜 베푸시기를 원하며\n26 여호와는 그 얼굴을 네게로 향하여 드사 평강 주시기를 원하노라', guide: '오늘 이 축복의 말씀을 떠올리며 가장 먼저 생각나는 지체의 이름을 마음속으로 축복해 보세요.' },
-      { title: '내가 너를 지명하여 불렀나니 너는 내 것이라', passage: '이사야 43:1', scripture: '야곱아 너를 창조하신 여호와께서 이제 말씀하시느니라 이스라엘아 너를 조성하신 자가 이제 말씀하시느니라 너는 두려워 말라 내가 너를 구속하였고 내가 너를 지명하여 불렀나니 너는 내 것이라', guide: '내 이름을 아시고 "너는 내 것이라" 말씀하시는 주님의 음성을 묵상하며 아멘으로 화답해 보세요.' }
-    ];
     const KEY_NOTIF_PREFS = 'right_youth_notif_prefs_v103';
     const KEY_MEMBER_CACHE = 'right_youth_member_cache_v1';
     const KEY_ADMIN_NAME = 'right_youth_admin_name_v20';
@@ -4799,7 +4455,6 @@
       confirmExternalLinks: false,
       detectCloneDomain: true,
       alertAdminOnSecurityEvent: true,
-      commentCooldownSec: 5,
       officialHost: 'kyutaek5347.github.io'
     };
     const DEFAULT_MAINTENANCE_CONFIG = {
@@ -4821,8 +4476,8 @@
     };
     const KEY_CELEB_DATE_NOTIFIED = 'right_youth_celeb_date_notified_v1';
     const KEY_NEWCOMER_NOTIFIED = 'right_youth_newcomer_notified_v1';
-    // 기존 기기에 남아 있던 성경 탭 · 책갈피 · 메모 · 캐시 기록 즉시 영구 폐기
-    (function purgeLegacyBibleStorage() {
+    // 기존 기기에 남아 있던 성경·QT 잔여 로컬 기록 즉시 영구 폐기
+    (function purgeLegacyFeatureStorage() {
       const legacyKeys = [
         'right_youth_bible_pos_v103',
         'right_youth_bible_cache_v103',
@@ -4831,12 +4486,25 @@
         'right_youth_bible_font_v103'
       ];
       legacyKeys.forEach(k => { try { localStorage.removeItem(k); } catch {} });
+      try {
+        const seen = JSON.parse(localStorage.getItem(KEY_TAB_SEEN_TS) || '{}');
+        if (seen && typeof seen === 'object' && Object.prototype.hasOwnProperty.call(seen, 'qt')) {
+          delete seen.qt;
+          localStorage.setItem(KEY_TAB_SEEN_TS, JSON.stringify(seen));
+        }
+      } catch {}
+      try {
+        const np = JSON.parse(localStorage.getItem(KEY_NOTIF_PREFS) || '{}');
+        if (np && typeof np === 'object' && Object.prototype.hasOwnProperty.call(np, 'newQt')) {
+          delete np.newQt;
+          localStorage.setItem(KEY_NOTIF_PREFS, JSON.stringify(np));
+        }
+      } catch {}
     })();
 
     // 중앙 탭 레지스트리: 여기에 새 탭을 추가하면 실제 메뉴와 [✏️ 메뉴·이름] 편집 화면에 자동 반영됩니다.
     const BOTTOM_TAB_REGISTRY = [
       { key: 'home', defaultIcon: '🏠', defaultLabel: '홈', roleHint: '메인 홈' },
-      { key: 'qt', defaultIcon: '✨', defaultLabel: 'QT', roleHint: '오늘의 말씀' },
       { key: 'more', defaultIcon: '🌐', defaultLabel: '바로가기', roleHint: '사이트 바로가기' },
       { key: 'settings', defaultIcon: '⚙️', defaultLabel: '설정', roleHint: '이용자 설정' },
       { key: 'manage', defaultIcon: '🛠️', defaultLabel: '관리', roleHint: '관리자 전용' }
@@ -4857,8 +4525,6 @@
     ];
     const DEFAULT_SETTINGS_ITEM_ORDER = SETTINGS_ITEM_REGISTRY.map(t => t.key);
     const UI_TEXT_REGISTRY = [
-      { key: 'qtHeroSub', defaultVal: '매일 00:00(한국시간) 새 말씀 자동 변경 · 하트와 댓글로 나눠보세요', hint: 'QT 화면 상단 안내 문구', max: 70 },
-      { key: 'qtAdminPostBadge', defaultVal: '✍️ 관리자 작성 글', hint: 'QT 관리자 직접 작성 글 배지', max: 20 },
       { key: 'bylawsHeroTitle', defaultVal: '구미제일감리교회 라이트 청년부 회칙', hint: '회칙 화면 상단 제목', max: 36 },
       { key: 'bylawsHeroDates', defaultVal: '2014.03.23 제정 · 2023.10.29 개정 · 2026.11.22 최종개정', hint: '회칙 화면 제정·개정일 문구', max: 60 },
       { key: 'guideHeroTitle', defaultVal: '라이트 청년부 앱 가이드', hint: '이용자 가이드 화면 상단 제목', max: 32 },
@@ -4877,7 +4543,6 @@
     const MANAGE_SUBTAB_REGISTRY = [
       { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', permCheck: p => !!(p.canEditLayout || p.canManageNotices) },
       { id: 'quicklinks', labelKey: 'manageQuickLinks', defaultIcon: '🔗', defaultLabel: '사이트 바로가기 관리', permCheck: p => !!p.canEditLayout },
-      { id: 'qt', labelKey: 'manageQt', defaultIcon: '✨', defaultLabel: '오늘의 말씀 관리', permCheck: p => !!p.canManageQt },
       { id: 'videos', labelKey: 'manageVideos', defaultIcon: '🎬', defaultLabel: '영상 관리', permCheck: p => !!p.canManageMembers },
       { id: 'worship', labelKey: 'manageWorship', defaultIcon: '⛪', defaultLabel: '예배 관리', permCheck: p => !!p.canManageMembers },
       { id: 'qr', labelKey: 'manageQr', defaultIcon: '📲', defaultLabel: 'QR 관리', permCheck: p => !!p.canManageMembers },
@@ -4971,13 +4636,6 @@
       newcomerTitle: '🎉 새신자 {이름}님을 환영합니다!',
       newcomerDesc: '라이트 청년부의 새 가족이 되신 것을 진심으로 축복합니다. 만나면 반갑게 인사해 주세요! 😊'
     };
-
-    const QT_REACTION_DEFS = [
-      { key: 'heart', emoji: '❤️', label: '좋아요', cls: 'active-heart' },
-      { key: 'amen', emoji: '🙏', label: '아멘', cls: 'active-amen' },
-      { key: 'grace', emoji: '👏', label: '은혜', cls: 'active-grace' },
-      { key: 'fire', emoji: '🔥', label: '도전', cls: 'active-fire' }
-    ];
 
     // 1. 서비스 워커 등록 및 새 버전 안전 새로고침 (로그인 세션 유지)
     let swRegistration = null;
@@ -5193,14 +4851,12 @@
     const ADMIN_PERMS_TRUE = {
       canViewHome: true,
       canManageNotices: true,
-      canManageQt: true,
       canEditLayout: true,
       canManageMembers: true
     };
     const MEMBER_PERMS_READONLY = {
       canViewHome: true,
       canManageNotices: false,
-      canManageQt: false,
       canEditLayout: false,
       canManageMembers: false
     };
@@ -5564,7 +5220,6 @@
         return {
           enabled: raw.enabled !== undefined ? !!raw.enabled : true,
           homeNews: raw.homeNews !== undefined ? !!raw.homeNews : legacyHome,
-          newQt: raw.newQt !== undefined ? !!raw.newQt : true,
           memberPending: raw.memberPending !== undefined ? !!raw.memberPending : true,
           inquiryNew: raw.inquiryNew !== undefined ? !!raw.inquiryNew : true,
           inquiryReply: raw.inquiryReply !== undefined ? !!raw.inquiryReply : true,
@@ -5572,7 +5227,7 @@
           videoPending: raw.videoPending !== undefined ? !!raw.videoPending : true
         };
       } catch {
-        return { enabled: true, homeNews: true, newQt: true, memberPending: true, inquiryNew: true, inquiryReply: true, newVideo: true, videoPending: true };
+        return { enabled: true, homeNews: true, memberPending: true, inquiryNew: true, inquiryReply: true, newVideo: true, videoPending: true };
       }
     }
 
@@ -5604,7 +5259,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=160b" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=161" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5628,8 +5283,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=160b', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=160b', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=161', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=161', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5651,7 +5306,6 @@
     function dispatchAppNotification({ type, icon, title, body, onClick }) {
       if (!notifPrefs.enabled) return;
       if ((type === 'notice' || type === 'banner') && !notifPrefs.homeNews) return;
-      if (type === 'qt' && !notifPrefs.newQt) return;
       if (type === 'member' && !notifPrefs.memberPending) return;
       if (type === 'inquiry_new' && !notifPrefs.inquiryNew) return;
       if (type === 'inquiry_reply' && !notifPrefs.inquiryReply) return;
@@ -5668,18 +5322,12 @@
 
       const nhTitle = document.getElementById('notifHomeTitle');
       const nhSub = document.getElementById('notifHomeSub');
-      const nqTitle = document.getElementById('notifQtTitle');
-      const nqSub = document.getElementById('notifQtSub');
       const homeLbl = getTabLabel('home');
-      const qtLbl = getTabLabel('qt');
       if (nhTitle) nhTitle.textContent = `📢 ${homeLbl} 새 소식 알림`;
       if (nhSub) nhSub.textContent = `${homeLbl} 화면에 새 공지·광고·배너, 생일·새신자 소식이 올라올 때`;
-      if (nqTitle) nqTitle.textContent = `${getTabIcon('qt')} ${qtLbl} 알림`;
-      if (nqSub) nqSub.textContent = `새로운 ${qtLbl} 소식이 올라올 때`;
 
       document.getElementById('notifMasterToggle').checked = notifPrefs.enabled;
       document.getElementById('notifHomeToggle').checked = notifPrefs.homeNews;
-      document.getElementById('notifQtToggle').checked = notifPrefs.newQt;
       document.getElementById('notifMemberToggle').checked = notifPrefs.memberPending;
       const inqNewEl = document.getElementById('notifInquiryNewToggle');
       const inqRepEl = document.getElementById('notifInquiryReplyToggle');
@@ -5691,7 +5339,6 @@
       if (vidPendEl) vidPendEl.checked = notifPrefs.videoPending;
 
       document.getElementById('notifHomeToggle').disabled = !notifPrefs.enabled;
-      document.getElementById('notifQtToggle').disabled = !notifPrefs.enabled;
       document.getElementById('notifMemberToggle').disabled = !notifPrefs.enabled;
       if (inqNewEl) inqNewEl.disabled = !notifPrefs.enabled;
       if (inqRepEl) inqRepEl.disabled = !notifPrefs.enabled;
@@ -5801,10 +5448,6 @@
     let tabLabels = structuredClone(DEFAULT_TAB_LABELS);
     let celebrationMsgs = structuredClone(DEFAULT_CELEBRATION_MSGS);
     let notices = [];
-    let qtPosts = [];
-    let qtReactions = [];
-    let qtComments = [];
-    let qtCommentLikes = [];
     let lastSeenLayoutAlertTs = 0;
     let knownNoticeAlertMap = new Map();
     let knownBlockAlertMap = new Map();
@@ -5911,8 +5554,6 @@
     let secCheckRunningAll = false;
     let pendingExternalGuardUrl = '';
     let cloneBannerDismissed = false;
-    let lastCommentSubmitTs = 0;
-    let commentSpamWarnCount = 0;
     let auditLogsFirstSnap = true;
     let knownAuditLogIds = new Set();
     let silentSecWatchDone = false;
@@ -5929,11 +5570,6 @@
     document.documentElement.setAttribute('data-font-scale', appFontScale);
     let adminAttCandidateMembers = [];
     let adminAttSessionSearchQuery = '';
-    let lastSelfQtEditTs = 0;
-    let qtFirstSnap = true;
-    let knownQtIds = new Set();
-    let currentQtDetailId = null;
-    let hiddenAutoQtDate = '';
     let customTermsArticles = null;
     let customBylawsArticles = null;
     let termsSearchQuery = '';
@@ -5965,7 +5601,6 @@
     let videoCatFilter = '전체';
     let lastVideoInspectResult = null;
     let lastVideoSubmitTs = 0;
-    let editingCommentId = null;
 
     let unsubMyMember = null;
     let memberProfileRetryTimer = null;
@@ -6026,12 +5661,10 @@
       noticesFirstSnap = true;
       layoutFirstSnap = true;
       membersFirstSnap = true;
-      qtFirstSnap = true;
       knownNoticeIds = new Set();
       knownPendingMemberIds = new Set();
       knownPendingRenameMap = new Map();
       knownPendingBdayMap = new Map();
-      knownQtIds = new Set();
       knownNoticeAlertMap = new Map();
       lastSeenLayoutAlertTs = 0;
       birthdayList = [];
@@ -6130,17 +5763,13 @@
     }
 
     function hasAnyManagePerm(perms) {
-      return !!(perms.canEditLayout || perms.canManageNotices || perms.canManageQt || perms.canManageMembers);
+      return !!(perms.canEditLayout || perms.canManageNotices || perms.canManageMembers);
     }
 
     function getTabLabel(key) {
       const raw = (tabLabels && tabLabels[key] && String(tabLabels[key]).trim())
         ? String(tabLabels[key]).trim()
         : (DEFAULT_TAB_LABELS[key] || key);
-      if (key === 'manageQt' && raw === DEFAULT_TAB_LABELS.manageQt) {
-        const qtLbl = getTabLabel('qt');
-        if (qtLbl !== DEFAULT_TAB_LABELS.qt) return `${qtLbl} 관리`;
-      }
       return raw;
     }
 
@@ -6149,10 +5778,6 @@
       const raw = (custom && String(custom).trim())
         ? String(custom).trim()
         : (DEFAULT_TAB_ICONS[key] || '•');
-      if (key === 'manageQt' && raw === DEFAULT_TAB_ICONS.manageQt) {
-        const qtIcon = getTabIcon('qt');
-        if (qtIcon !== DEFAULT_TAB_ICONS.qt) return qtIcon;
-      }
       return raw;
     }
 
@@ -6219,10 +5844,6 @@
       if (previewBarTxt) previewBarTxt.textContent = `👁️ 일반 회원 시점 미리보기 중 (관리자 전용 칸·${lbl('manage')} 숨김)`;
 
 
-      const qtTitle = document.getElementById('qtViewTitle');
-      if (qtTitle) qtTitle.textContent = `${icn('qt')} ${lbl('qt')}`;
-      const qtSub = document.getElementById('qtViewSub');
-      if (qtSub) qtSub.textContent = ut('qtHeroSub');
 
       const bylawTitle = document.getElementById('bylawViewTitle');
       if (bylawTitle) {
@@ -6762,6 +6383,43 @@
             }
           } catch (v26Err) {
             console.warn('v10.60 Bible cleanup error:', v26Err);
+          }
+        }
+
+        // 11) v10.61 (schemaVersion 27): QT(오늘의 말씀) 탭 · 댓글 · 공감 · 서버 기록 전면 폐기
+        if ((appSnap.data().schemaVersion || 0) < 27) {
+          try {
+            const qtCols = ['qtPosts', 'qtReactions', 'qtComments', 'qtCommentLikes'];
+            for (const colName of qtCols) {
+              try {
+                const snap = await db.collection(colName).get();
+                const docs = snap.docs;
+                for (let i = 0; i < docs.length; i += 400) {
+                  const b = db.batch();
+                  docs.slice(i, i + 400).forEach(d => b.delete(d.ref));
+                  await b.commit();
+                }
+              } catch (colErr) {
+                console.warn(`v10.61 ${colName} cleanup skipped:`, colErr);
+              }
+            }
+            await db.collection('config').doc('layout').set({
+              hiddenAutoQtDate: FieldValue.delete()
+            }, { merge: true });
+            const lblSnap27 = await db.collection('config').doc('labels').get();
+            if (lblSnap27.exists) {
+              const ld = lblSnap27.data() || {};
+              const lblPatch27 = { qt: FieldValue.delete(), manageQt: FieldValue.delete() };
+              if (Array.isArray(ld.tabOrder)) {
+                lblPatch27.tabOrder = ld.tabOrder.filter(k => k !== 'qt' && k !== 'bible');
+              }
+              if (Array.isArray(ld.manageSubTabOrder)) {
+                lblPatch27.manageSubTabOrder = ld.manageSubTabOrder.filter(k => k !== 'qt');
+              }
+              await db.collection('config').doc('labels').set(lblPatch27, { merge: true });
+            }
+          } catch (v27Err) {
+            console.warn('v10.61 QT cleanup error:', v27Err);
           }
         }
 
@@ -7608,7 +7266,6 @@
             } else {
               celebrationMsgs = structuredClone(DEFAULT_CELEBRATION_MSGS);
             }
-            hiddenAutoQtDate = normalizeDotDate(d.hiddenAutoQtDate || '');
             customTermsArticles = Array.isArray(d.customTerms) ? d.customTerms : null;
             customBylawsArticles = Array.isArray(d.customBylaws) ? d.customBylaws : null;
             hiddenDefaultYtChannelIds = Array.isArray(d.hiddenDefaultYtChannelIds) ? d.hiddenDefaultYtChannelIds.map(String) : [];
@@ -7670,75 +7327,6 @@
         }, () => {})
       );
 
-      qtFirstSnap = true;
-      knownQtIds = new Set();
-      unsubCore.push(
-        db.collection('qtPosts').onSnapshot(snap => {
-          const nextQts = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
-            .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || (Number(b.createdTs || 0) - Number(a.createdTs || 0)));
-
-          if (qtFirstSnap) {
-            nextQts.forEach(q => knownQtIds.add(q.id));
-            qtFirstSnap = false;
-          } else {
-            nextQts.forEach(q => {
-              if (!knownQtIds.has(q.id)) {
-                knownQtIds.add(q.id);
-                if (q.notifyOnPublish !== false) {
-                  dispatchAppNotification({
-                    type: 'qt',
-                    icon: '✨',
-                    title: `${getTabLabel('qt')} 알림`,
-                    body: q.passage || (q.scripture || '').split('\n')[0] || '새 말씀이 등록되었습니다.',
-                    onClick: () => {
-                      switchMainTab('qt');
-                      openQtDetail(q.id);
-                    }
-                  });
-                }
-              }
-            });
-          }
-
-          qtPosts = nextQts;
-          if (currentMainTab === 'qt' || currentMainTab === 'home' || currentMainTab === 'manage') {
-            applyScreen();
-          }
-          if (currentQtDetailId && document.getElementById('qtDetailModal').classList.contains('open')) {
-            renderQtDetailModalBody(currentQtDetailId);
-          }
-        }, err => handleDbError(err, '큐티 동기화'))
-      );
-
-      unsubCore.push(
-        db.collection('qtReactions').onSnapshot(snap => {
-          qtReactions = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }));
-          if (currentMainTab === 'qt') renderQtView();
-          if (currentQtDetailId && document.getElementById('qtDetailModal').classList.contains('open')) {
-            renderQtDetailModalBody(currentQtDetailId);
-          }
-        }, () => {})
-      );
-
-      unsubCore.push(
-        db.collection('qtComments').onSnapshot(snap => {
-          qtComments = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
-            .sort((a, b) => Number(a.createdTs || 0) - Number(b.createdTs || 0));
-          if (currentMainTab === 'qt') renderQtView();
-          if (currentQtDetailId && document.getElementById('qtDetailModal').classList.contains('open')) {
-            renderQtDetailModalBody(currentQtDetailId);
-          }
-        }, () => {})
-      );
-
-      unsubCore.push(
-        db.collection('qtCommentLikes').onSnapshot(snap => {
-          qtCommentLikes = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }));
-          if (currentQtDetailId && document.getElementById('qtDetailModal').classList.contains('open')) {
-            renderQtDetailModalBody(currentQtDetailId);
-          }
-        }, () => {})
-      );
     }
 
     function scheduleMemberProfileRetry(uid, retryCount = 0) {
@@ -8705,7 +8293,7 @@
 
       const perms = user.role.perms;
       const canManage = hasAnyManagePerm(perms);
-      if (currentMainTab === 'bible') currentMainTab = 'home';
+      if (currentMainTab === 'bible' || currentMainTab === 'qt') currentMainTab = 'home';
       if (currentMainTab === 'manage' && !canManage) currentMainTab = 'home';
 
       const isManageMode = currentMainTab === 'manage';
@@ -8724,7 +8312,6 @@
 
       // 현재 보고 있는 탭은 자동 읽음 처리
       if (currentMainTab === 'home' && homeNoticesLoaded && homeBlocksLoaded) markTabAsSeen('home');
-      if (currentMainTab === 'qt') markTabAsSeen('qt');
 
       const unreadInqCount = inquiries.filter(q => q.status === 'new').length;
       const pendingVideoCount = videoItems.filter(v => v.status === 'pending').length;
@@ -8762,7 +8349,6 @@
         let badgeCnt = 0;
         if (key === 'manage' && perms.canManageMembers) badgeCnt = pendingCount;
         else if (key === 'home' && currentMainTab !== 'home') badgeCnt = getUnreadCountForTab('home', user);
-        else if (key === 'qt' && currentMainTab !== 'qt') badgeCnt = getUnreadCountForTab('qt', user);
         else if (key === 'settings') badgeCnt = getUnreadCountForTab('settings', user);
 
         const badgeDisp = badgeCnt > 99 ? '99+' : String(badgeCnt);
@@ -8777,7 +8363,6 @@
       }).join('');
 
       document.getElementById('viewHome').classList.toggle('hidden', currentMainTab !== 'home');
-      document.getElementById('viewQt').classList.toggle('hidden', currentMainTab !== 'qt');
       document.getElementById('viewBylaws').classList.toggle('hidden', currentMainTab !== 'bylaws');
       document.getElementById('viewGuide').classList.toggle('hidden', currentMainTab !== 'guide');
       document.getElementById('viewTerms').classList.toggle('hidden', currentMainTab !== 'terms');
@@ -8789,7 +8374,6 @@
       syncAllDynamicLabelsUI();
 
       if (currentMainTab === 'home') renderHomeView(user);
-      else if (currentMainTab === 'qt') renderQtView();
       else if (currentMainTab === 'bylaws') renderBylawsView();
       else if (currentMainTab === 'guide') renderUserGuideView();
       else if (currentMainTab === 'terms') renderTermsView();
@@ -8803,7 +8387,7 @@
       if (currentMainTab === 'manage' && tab !== 'manage') {
         draftTabInitialized = false;
       }
-      if (tab === 'home' || tab === 'qt') markTabAsSeen(tab);
+      if (tab === 'home') markTabAsSeen(tab);
       currentMainTab = tab;
       applyScreen();
     };
@@ -8943,8 +8527,6 @@
     // ==================== 10-2. 이용자용 사용방법 설명서 (관리자 변경 명칭·이모지 실시간 자동 연동) ====================
     function getUserGuideSections() {
       const hLbl = escapeHtml(getTabLabel('home'));
-      const qLbl = escapeHtml(getTabLabel('qt'));
-      const qIcn = escapeHtml(getTabIcon('qt'));
       const byLbl = escapeHtml(getTabLabel('bylaws'));
       const byIcn = escapeHtml(getTabIcon('bylaws'));
       const mLbl = escapeHtml(getTabLabel('more'));
@@ -8995,20 +8577,6 @@
           tip: '출석 시간이 지났거나 깜빡하고 버튼을 못 누른 경우에는 관리자에게 말씀하시면 출석부에 수동으로 반영해 드립니다.'
         },
         {
-          id: 'ug_qt',
-          icon: getTabIcon('qt'),
-          title: `${getTabLabel('qt')} · 공감 · 묵상 댓글`,
-          sub: '매일 자정 자동 말씀과 지체들과의 은혜 나눔',
-          keywords: `${getTabLabel('qt')} 오늘의 말씀 큐티 QT 하트 좋아요 아멘 은혜 도전 댓글 수정 삭제`,
-          steps: [
-            `<b>매일 새 말씀:</b> <b>[${qIcn} ${qLbl}]</b> 탭에 매일 한국시간 00:00마다 새로운 말씀이 자동으로 올라오며, 관리자가 올린 특별 말씀·묵상 글도 함께 확인할 수 있습니다.`,
-            '<b>공감 버튼:</b> 말씀 하단의 <b>❤️ 좋아요 · 🙏 아멘 · 👏 은혜 · 🔥 도전</b> 버튼을 눌러 마음을 표현할 수 있습니다.',
-            '<b>묵상 댓글 나누기:</b> 카드를 누르거나 <b>[💬 댓글]</b> 버튼을 열어 묵상·기도제목을 남길 수 있으며, 본인이 작성한 댓글은 언제든 <b>수정 · 삭제</b>할 수 있습니다.'
-          ],
-          tip: '공동체 게시판의 건전한 운영을 위해 댓글 작성·수정·삭제 내역은 관리자 보안 로그에 기록됩니다.',
-          warn: true
-        },
-        {
           id: 'ug_bylaws_more',
           icon: getTabIcon('bylaws'),
           title: `청년부 ${getTabLabel('bylaws')} 검색 & ${getTabLabel('more')}`,
@@ -9040,9 +8608,9 @@
           icon: '🔔',
           title: '실시간 알림 설정',
           sub: '새 공지·말씀·승인 결과를 알림으로 받아보기',
-          keywords: `알림 설정 팝업 기기알림 테스트알림 ${getTabLabel('home')} ${getTabLabel('qt')}`,
+          keywords: `알림 설정 팝업 기기알림 테스트알림 ${getTabLabel('home')} 영상 문의`,
           steps: [
-            `하단 <b>[${stIcn} ${stLbl}] → 🔔 알림 설정</b>을 눌러 전체 알림과 항목별 알림(<b>${hLbl} 새 소식</b> / <b>${qLbl}</b>)을 자유롭게 켜고 끌 수 있습니다.`,
+            `하단 <b>[${stIcn} ${stLbl}] → 🔔 알림 설정</b>을 눌러 전체 알림과 항목별 알림(<b>${hLbl} 새 소식</b> / <b>새 설교·찬양 영상</b> / <b>내 문의 답변</b>)을 자유롭게 켜고 끌 수 있습니다.`,
             '<b>[기기 알림 허용하기]</b>를 눌러 권한을 허용하면 스마트폰 상단 알림으로도 소식을 받을 수 있으며, <b>[🔔 테스트 알림]</b>으로 정상 작동 여부를 바로 확인할 수 있습니다.'
           ],
           tip: '아이폰에서는 반드시 Safari → 공유 → [홈 화면에 추가]로 설치한 앱에서 열어야 기기 알림 허용 버튼이 활성화됩니다.'
@@ -9055,10 +8623,9 @@
       const clearBtn = document.getElementById('userGuideSearchClear');
       if (clearBtn) clearBtn.classList.toggle('hidden', !q);
 
-      const qLbl = getTabLabel('qt');
       const searchInp = document.getElementById('userGuideSearchInput');
       if (searchInp) {
-        searchInp.placeholder = fitSearchPlaceholder('기능 검색', ['출석', qLbl, '알림'], 17.5);
+        searchInp.placeholder = fitSearchPlaceholder('기능 검색', ['출석', '영상', '알림'], 17.5);
       }
 
       const tagsEl = document.getElementById('userGuideQuickTags');
@@ -9066,7 +8633,6 @@
         const quickTagList = [
           { q: '설치', label: '#앱설치' },
           { q: '출석', label: '#출석체크' },
-          { q: qLbl, label: `#${qLbl}` },
           { q: '이름', label: '#이름·생일변경' },
           { q: 'QR', label: '#초대QR' },
           { q: '알림', label: '#알림설정' }
@@ -9101,7 +8667,7 @@
           <div class="card" style="text-align:center; padding:26px 16px; color:#64748B;">
             <div style="font-size:24px; margin-bottom:6px;">🔎</div>
             <div style="font-size:14px; font-weight:700; color:#334155;">일치하는 사용 안내가 없습니다.</div>
-            <div style="font-size:12.5px; margin-top:4px;">예: 출석, ${escapeHtml(qLbl)}, 영상, 이름, 생일, 비밀번호, QR, 알림 등으로 검색해 보세요.</div>
+            <div style="font-size:12.5px; margin-top:4px;">예: 출석, 영상, 이름, 생일, 비밀번호, QR, 알림 등으로 검색해 보세요.</div>
           </div>
         `;
         return;
@@ -9152,12 +8718,11 @@
 
     // ==================== 10-3. 관리자 전용 사용방법 · 인수인계 설명서 (관리자 변경 명칭·이모지 실시간 자동 연동) ====================
     function getAdminGuideCategories() {
-      const qLbl = getTabLabel('qt');
       const lLbl = getTabLabel('manageLogs');
       return [
         { id: 'all', label: '전체' },
         { id: 'handover', label: '인수인계 필수' },
-        { id: 'content_qt', label: `공지·${qLbl}` },
+        { id: 'content_qt', label: '공지·바로가기' },
         { id: 'member_role', label: '회원·역할' },
         { id: 'worship_sheet', label: '예배·시트' },
         { id: 'sec_log', label: `보안·${lLbl}` }
@@ -9167,7 +8732,6 @@
     function getAdminGuideSections() {
       const mngLbl = escapeHtml(getTabLabel('manage'));
       const hLbl = escapeHtml(getTabLabel('home'));
-      const qLbl = escapeHtml(getTabLabel('qt'));
       const byLbl = escapeHtml(getTabLabel('bylaws'));
       const moreLbl = escapeHtml(getTabLabel('more'));
       const moreIcn = escapeHtml(getTabIcon('more'));
@@ -9176,8 +8740,6 @@
       const cIcn = escapeHtml(getTabIcon('manageContent'));
       const qlLbl = escapeHtml(getTabLabel('manageQuickLinks'));
       const qlIcn = escapeHtml(getTabIcon('manageQuickLinks'));
-      const mQtLbl = escapeHtml(getTabLabel('manageQt'));
-      const mQtIcn = escapeHtml(getTabIcon('manageQt'));
       const wLbl = escapeHtml(getTabLabel('manageWorship'));
       const wIcn = escapeHtml(getTabIcon('manageWorship'));
       const qrLbl = escapeHtml(getTabLabel('manageQr'));
@@ -9243,16 +8805,15 @@
           id: 'ag_qt_links',
           catId: 'content_qt',
           category: catMap.content_qt,
-          icon: getTabIcon('manageQt'),
-          title: `3. ${getTabLabel('manageQt')} & ${getTabLabel('manageQuickLinks')}`,
-          sub: `자동 말씀 대체/함께 올리기, 댓글 관리, ${getTabLabel('more')}(${getTabIcon('more')}) 링크 편집`,
-          keywords: `${getTabLabel('manageQt')} ${getTabLabel('qt')} ${getTabLabel('manageQuickLinks')} ${getTabLabel('more')} 오늘의 말씀 큐티 QT 대체 함께 올리기 숨김 복원 댓글 삭제 사이트 바로가기 인스타그램 유튜브 교회`,
-          targetTab: 'qt',
-          targetLabel: `${getTabIcon('manageQt')} ${getTabLabel('manageQt')} 열기`,
+          icon: getTabIcon('manageQuickLinks'),
+          title: `3. ${getTabLabel('manageQuickLinks')} & ${getTabLabel('manageVideos')}`,
+          sub: `${getTabLabel('more')}(${getTabIcon('more')}) 링크 편집 및 설교·찬양 유튜브 영상 관리`,
+          keywords: `${getTabLabel('manageQuickLinks')} ${getTabLabel('manageVideos')} ${getTabLabel('more')} 사이트 바로가기 인스타그램 유튜브 교회 영상 공식 채널 승인`,
+          targetTab: 'quicklinks',
+          targetLabel: `${getTabIcon('manageQuickLinks')} ${getTabLabel('manageQuickLinks')} 열기`,
           steps: [
-            `<b>${mQtLbl}:</b> 매일 00:00(KST) 자동 말씀이 표시됩니다. 관리자가 직접 글을 올릴 때 <b>[📌 ${qLbl}과 같이 올리기]</b> 또는 <b>[🔄 ${qLbl} 대신 이 글만 올리기(대체)]</b> 중 선택할 수 있으며, 자동 말씀을 하루 숨김·복원할 수도 있습니다.`,
-            '<b>악성 댓글 삭제:</b> 말씀 카드의 <b>[💬 댓글·하트]</b>에서 부적절한 댓글을 즉시 삭제할 수 있습니다. (삭제 원문은 보안 로그에 자동 보존)',
-            `<b>${qlLbl} ([${qlIcn} ${qlLbl}]):</b> 하단 <b>[${moreIcn} ${moreLbl}]</b> 메뉴에 표시되는 인스타그램·유튜브·교회 홈페이지 등의 링크를 추가·수정·순서 변경·삭제할 수 있습니다.`
+            `<b>${qlLbl} ([${qlIcn} ${qlLbl}]):</b> 하단 <b>[${moreIcn} ${moreLbl}]</b> 메뉴에 표시되는 인스타그램·유튜브·교회 홈페이지 등의 링크를 추가·수정·순서 변경·삭제할 수 있습니다.`,
+            `<b>${escapeHtml(getTabLabel('manageVideos'))}:</b> 공식 유튜브 채널(구미제일감리교회·라이트 청년부)은 4단계 자동 검사 통과 시 즉시 게시되며, 미등록 채널 추천 영상은 알림을 받고 승인(공식 채널 자동 추가) 또는 거절할 수 있습니다.`
           ],
           tip: '인스타그램·유튜브 URL을 등록하면 스마트폰에 해당 앱이 설치된 이용자가 눌렀을 때 앱으로 바로 연결됩니다.'
         },
@@ -9298,7 +8859,7 @@
             { name: '5. 이름 변경 로그', desc: '관리자·회원 이름 변경(신청/승인/거절)' },
             { name: '6. 생일 변경 로그', desc: '회원 생일 변경 신청/승인/거절·직접수정' },
             { name: '7. 관리자 활동 로그', desc: '공지·배너·말씀·역할·메뉴·설정 전체' },
-            { name: '8. 이용자 활동 로그', desc: '댓글·가입/탈퇴·출석 체크 이력' }
+            { name: '8. 이용자 활동 로그', desc: '영상 추천·문의·가입/탈퇴·출석 이력' }
           ],
           tip: '구글 시트 URL은 관리자 전용 문서(config/sheetSecret)에 격리되어 있어 일반 회원은 절대 볼 수 없습니다.'
         },
@@ -9314,7 +8875,7 @@
           targetLabel: `${getTabIcon('manageLogs')} ${getTabLabel('manageLogs')} 탭 열기`,
           steps: [
             `<b>초대 QR 관리 ([${qrIcn} ${qrLbl}]):</b> 초대 링크가 외부에 유출되었을 때 <b>[🔄 새 QR 즉시 재발급]</b>을 누르면 기존 오늘 QR이 즉시 폐기되고 새 QR이 발급됩니다.`,
-            `<b>통합 보안 감사 로그 ([${logIcn} ${logLbl}]):</b> 악의적 글 게시·임의 변경·장난을 방지하기 위해 <b>관리자의 모든 추가/수정/삭제/설정 변경</b>과 <b>이용자의 댓글·이름/생일 변경 신청·가입/탈퇴·출석 체크</b>가 날짜·시각(초 단위 KST)과 함께 기록됩니다.`,
+            `<b>통합 보안 감사 로그 ([${logIcn} ${logLbl}]):</b> 악의적 글 게시·임의 변경·장난을 방지하기 위해 <b>관리자의 모든 추가/수정/삭제/설정 변경</b>과 <b>이용자의 영상 추천·문의·이름/생일 변경 신청·가입/탈퇴·출석 체크</b>가 날짜·시각(초 단위 KST)과 함께 기록됩니다.`,
             '<b>위변조·삭제 불가:</b> 보안상 최고 관리자도 앱에서 로그를 수정하거나 삭제할 수 없으며, 상단 필터(전체/관리자/이용자), 분류 선택, 검색창으로 빠르게 추적할 수 있습니다.',
             `<b>프라이버시 미기록 범위:</b> 이용자 비밀번호 변경, 전체 글자 크기·알림 설정, 외부 사이트 이동, 공지·${byLbl} 단순 조회는 기록되지 않습니다.`
           ],
@@ -9350,7 +8911,7 @@
           targetLabel: `${getTabIcon('manageSecurity')} ${getTabLabel('manageSecurity')} 탭 열기`,
           steps: [
             `<b>7개 항목 보안 일괄 점검 ([${secIcn} ${secLbl}]):</b> 공식 HTTPS 도메인, CSP·로컬 SDK 무결성, 앱 내 전체 링크 피싱 스캔, 악성 스크립트(XSS) 흔적 스캔, 관리자 잠금·비밀 격리, QR·비번 초기화 만료, 최근 7일 차단 위협을 한 번에 점검합니다.`,
-            '<b>실시간 방어 스위치 & 관리자 전용 보안 알림:</b> 악성 스크립트·피싱 링크 차단, 외부 사이트 이동 전 도메인 확인창, 복제 사이트 경고, 댓글 도배 방지 쿨타임과 <b>🚨 보안 문제 발생 시 관리자 실시간 알림</b>을 켜고 끌 수 있습니다. (보안 알림은 최고 관리자에게만 표시)',
+            '<b>실시간 방어 스위치 & 관리자 전용 보안 알림:</b> 악성 스크립트·피싱 링크 차단, 외부 사이트 이동 전 도메인 확인창, 복제 사이트 경고와 <b>🚨 보안 문제 발생 시 관리자 실시간 알림</b>을 켜고 끌 수 있습니다. (보안 알림은 최고 관리자에게만 표시)',
             '<b>의심 링크·문구 즉시 검사기:</b> 카카오톡이나 문자로 받은 의심스러운 링크·문구를 붙여넣어 피싱·위장 주소·악성 코드 포함 여부를 즉시 분석해 볼 수 있습니다.',
             `<b>기능 점검과 역할 분리:</b> 앱 오류·연동·화면 체험은 <b>[${diagIcn} ${diagLbl}]</b>에서, 해킹·피싱·보안 방어는 <b>[${secIcn} ${secLbl}]</b>에서 각각 전문적으로 점검합니다.`
           ],
@@ -9389,7 +8950,7 @@
           <div class="card" style="text-align:center; padding:26px 16px; color:#64748B;">
             <div style="font-size:24px; margin-bottom:6px;">🔎</div>
             <div style="font-size:14px; font-weight:700; color:#334155;">일치하는 관리자 가이드가 없습니다.</div>
-            <div style="font-size:12px; margin-top:4px;">예: 인수인계, ${escapeHtml(getTabLabel('qt'))}, 구글 시트, 예약, QR, 역할, ${escapeHtml(getTabLabel('manageLogs'))}, 점검 등으로 검색해 보세요.</div>
+            <div style="font-size:12px; margin-top:4px;">예: 인수인계, 영상, 구글 시트, 예약, QR, 역할, ${escapeHtml(getTabLabel('manageLogs'))}, 점검 등으로 검색해 보세요.</div>
           </div>
         `;
         return;
@@ -9488,7 +9049,7 @@
 
         <div class="search-box" style="margin-bottom:8px;">
           <span class="search-icon">🔍</span>
-          <input id="adminGuideSearchInput" class="search-input" type="search" value="${escapeHtml(adminGuideSearchQuery)}" placeholder="${escapeHtml(fitSearchPlaceholder('기능 검색', ['인수인계', getTabLabel('qt'), '시트', getTabLabel('manageLogs')], 17.5))}" oninput="onAdminGuideSearchInput(this.value)" />
+          <input id="adminGuideSearchInput" class="search-input" type="search" value="${escapeHtml(adminGuideSearchQuery)}" placeholder="${escapeHtml(fitSearchPlaceholder('기능 검색', ['인수인계', '영상', '시트', getTabLabel('manageLogs')], 17.5))}" oninput="onAdminGuideSearchInput(this.value)" />
           <button id="adminGuideSearchClear" class="search-clear ${adminGuideSearchQuery ? '' : 'hidden'}" type="button" onclick="clearAdminGuideSearch()">✕</button>
         </div>
         <div id="adminGuideSummaryText" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
@@ -9549,7 +9110,6 @@
         const u = getCurrentUser();
         if (u) {
           if (currentMainTab === 'home') renderHomeView(u);
-          else if (currentMainTab === 'qt') renderQtView();
           else if (currentMainTab === 'manage') renderManageView(u);
         }
       }
@@ -9940,7 +9500,6 @@
       const content = document.getElementById('manageContent');
       if (currentManageSubTab === 'content') renderManageContent(content, user);
       else if (currentManageSubTab === 'quicklinks') renderManageQuickLinks(content, user);
-      else if (currentManageSubTab === 'qt') renderManageQt(content, user);
       else if (currentManageSubTab === 'videos') renderManageVideos(content, user);
       else if (currentManageSubTab === 'worship') renderManageWorship(content, user);
       else if (currentManageSubTab === 'qr') renderManageQr(content, user);
@@ -10150,86 +9709,6 @@
                 </div>
               `;
             }).join('')}
-      `;
-    }
-
-    // (A-3) 오늘의 말씀 관리 (독립 탭)
-    function renderManageQt(el, user) {
-      const autoToday = getAutoDailyQtForToday();
-      const isReplaced = hasTodayReplaceQt();
-      const isHiddenManually = isAutoTodayQtHiddenManually();
-      const isSuppressed = isReplaced || isHiddenManually;
-      const statusTag = isReplaced
-        ? '<span class="tag warm">관리자 글로 대체됨</span>'
-        : (isHiddenManually
-          ? '<span class="tag slate">오늘 자동 말씀 숨김됨</span>'
-          : '<span class="tag green">매일 00:00(KST) 자동 표시중</span>');
-
-      el.innerHTML = `
-        <div class="section-head">
-          <h2 class="section-title">${escapeHtml(getTabIcon('manageQt'))} ${escapeHtml(getTabLabel('manageQt'))}</h2>
-          <button class="btn-admin" onclick="openNewQtModal()">+ 말씀·글 추가</button>
-        </div>
-        <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-          하단 <b>${escapeHtml(getTabIcon('qt'))} ${escapeHtml(getTabLabel('qt'))}</b> 메뉴에 표시되는 매일 자동 말씀과 관리자 작성 글을 관리합니다.
-        </div>
-
-        <div class="card" style="border-color:${isSuppressed ? '#CBD5E1' : '#C7D2FE'}; background:${isSuppressed ? '#F8FAFC' : '#F5F7FF'}; ${isSuppressed ? 'opacity:0.82;' : ''}">
-          <div class="card-top">
-            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-              <span class="qt-passage-pill">📖 ${escapeHtml(autoToday.passage)}</span>
-              ${statusTag}
-            </div>
-            <span class="card-date">${escapeHtml(autoToday.date)}</span>
-          </div>
-          <p class="card-body" style="margin-bottom:10px;">${escapeHtml(autoToday.scripture)}</p>
-          ${isReplaced ? `<div style="font-size:11.5px; color:#92400E; margin-bottom:9px;">오늘은 관리자가 올린 대체 글이 ${escapeHtml(getTabLabel('qt'))} 자리에 표시됩니다. (언제든 수정·삭제 가능, 내일 00:00 새 자동 말씀 전환)</div>` : ''}
-          ${(!isReplaced && isHiddenManually) ? '<div style="font-size:11.5px; color:#475569; margin-bottom:9px;">오늘의 자동 말씀이 숨겨져 있습니다. 아래 [복원] 버튼으로 다시 표시할 수 있습니다.</div>' : ''}
-          <div class="qt-manage-actions">
-            <button class="btn-sm primary" onclick="openQtDetail('${autoToday.id}')">💬 댓글·하트</button>
-            <button class="btn-sm" onclick="openEditAutoTodayQtModal()">✏️ 수정(대체)</button>
-            ${isHiddenManually
-              ? `<button class="btn-sm approve" onclick="restoreAutoTodayQt()">🔄 복원</button>`
-              : `<button class="btn-sm danger" onclick="hideAutoTodayQt()">삭제(숨김)</button>`}
-          </div>
-        </div>
-
-        ${buildManageAccordionBar({
-          key: 'qt_custom_list',
-          titleHtml: '✍️ 관리자 작성 글 목록',
-          badgeHtml: `<span class="tag slate">${qtPosts.length}개</span>`,
-          defaultOpen: qtPosts.length <= 5,
-          marginTop: '12px'
-        })}
-        <div data-acc-body="qt_custom_list" class="${isManageSectionOpen('qt_custom_list', qtPosts.length <= 5) ? '' : 'hidden'}">
-        ${qtPosts.length === 0
-          ? `<div class="card" style="text-align:center;color:#64748B;font-size:13px;">관리자가 추가한 말씀이 없습니다.<br>(매일 자동 말씀 1편은 하단 ${escapeHtml(getTabLabel('qt'))} 칸에 올라갑니다.)</div>`
-          : qtPosts.slice(0, 30).map(q => {
-              const isReplace = q.displayMode === 'replace';
-              const isTodayPost = normalizeDotDate(q.date) === getKstDateParts().dot;
-              return `
-                <div class="card">
-                  <div class="card-top">
-                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                      <span class="tag ${isReplace ? 'warm' : 'slate'}">${isReplace ? (isTodayPost ? `🔄 ${escapeHtml(getTabLabel('qt'))} 대체중` : '🔄 대체 게시') : '📌 말씀과 함께 게시'}</span>
-                      ${q.passage ? `<span class="qt-passage-pill">📖 ${escapeHtml(q.passage)}</span>` : ''}
-                    </div>
-                    <span class="card-date">${escapeHtml(q.date || '')}</span>
-                  </div>
-                  <p class="card-body">${escapeHtml(q.scripture || q.title || '')}</p>
-                  <div class="card-footer">
-                    <button class="btn-sm" onclick="openQtDetail('${escapeJsAttr(q.id)}')">💬 댓글·하트</button>
-                    <div style="display:flex; gap:6px;">
-                      <button class="btn-sm" onclick="openEditQtModal('${escapeJsAttr(q.id)}')">수정</button>
-                      <button class="btn-sm danger" onclick="deleteQtPost('${escapeJsAttr(q.id)}')">삭제</button>
-                    </div>
-                  </div>
-                </div>
-              `;
-            }).join('')}
-        ${qtPosts.length >= 4 ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('qt_custom_list', ${qtPosts.length <= 5 ? 'true' : 'false'})">▲ 관리자 작성 글 목록 접기</button>` : ''}
-        </div>
-
       `;
     }
 
@@ -10524,12 +10003,7 @@
             const copy = structuredClone(tpl);
             copy.hiddenOnHome = false;
             if (reqType === 'hero_notice') next.unshift(copy);
-            else if (reqType === 'today_qt') {
-              const heroIdx = next.findIndex(b => b.type === 'hero_notice');
-              next.splice(heroIdx >= 0 ? heroIdx + 1 : 0, 0, copy);
-            } else {
-              next.push(copy);
-            }
+            else next.push(copy);
             changed = true;
           }
         }
@@ -12747,7 +12221,7 @@
     };
 
 
-    // ==================== 15. 큐티(QT) · 인스타/카톡 좋아요·하트 · 댓글 ====================
+    // ==================== 15. 한국시간(KST) 날짜 · 자정 자동 갱신 유틸리티 ====================
     function formatShortTime(ts) {
       if (!ts) return '';
       const d = new Date(Number(ts));
@@ -12756,45 +12230,6 @@
       const hh = String(d.getHours()).padStart(2, '0');
       const mi = String(d.getMinutes()).padStart(2, '0');
       return `${mm}.${dd} ${hh}:${mi}`;
-    }
-
-    function getQtReactionStats(postId) {
-      const uid = fbUser ? fbUser.uid : '';
-      const list = qtReactions.filter(r => r.postId === postId);
-      const counts = { heart: 0, amen: 0, grace: 0, fire: 0 };
-      const mine = { heart: false, amen: false, grace: false, fire: false };
-      const names = [];
-      list.forEach(r => {
-        let any = false;
-        QT_REACTION_DEFS.forEach(def => {
-          if (r[def.key]) {
-            counts[def.key]++;
-            any = true;
-            if (r.uid === uid) mine[def.key] = true;
-          }
-        });
-        if (any && r.name) names.push(r.name);
-      });
-      return { counts, mine, totalPeople: names.length, names };
-    }
-
-    function buildReactionBarHtml(postId) {
-      const stats = getQtReactionStats(postId);
-      const btns = QT_REACTION_DEFS.map(def => `
-        <button class="react-btn ${stats.mine[def.key] ? def.cls : ''}" type="button" onclick="event.stopPropagation(); toggleQtReaction('${escapeJsAttr(postId)}', '${def.key}')">
-          <span>${def.emoji}</span>
-          <span>${def.label}</span>
-          ${stats.counts[def.key] > 0 ? `<span>${stats.counts[def.key]}</span>` : ''}
-        </button>
-      `).join('');
-
-      let summaryHtml = '';
-      if (stats.totalPeople === 1) {
-        summaryHtml = `<div class="react-summary">${escapeHtml(stats.names[0])}님이 공감했습니다</div>`;
-      } else if (stats.totalPeople > 1) {
-        summaryHtml = `<div class="react-summary">${escapeHtml(stats.names[0])}님 외 ${stats.totalPeople - 1}명이 공감했습니다</div>`;
-      }
-      return `<div class="reaction-bar">${btns}</div>${summaryHtml}`;
     }
 
     function getKstDateParts() {
@@ -12834,8 +12269,7 @@
           if (document.getElementById('inviteQrModal').classList.contains('open')) {
             ensureTodayInviteQrExists().then(() => renderInviteQrModalCanvas()).catch(() => {});
           }
-          if (currentMainTab === 'qt') renderQtView();
-          else if (currentMainTab === 'home') renderHomeView(u);
+          if (currentMainTab === 'home') renderHomeView(u);
           else if (currentMainTab === 'manage') renderManageView(u);
         }
       }
@@ -12849,542 +12283,6 @@
       }, msUntilNextKstMidnight());
     }
     scheduleKstMidnightRefresh();
-
-    function hasTodayReplaceQt() {
-      const todayDot = getKstDateParts().dot;
-      return qtPosts.some(p => p.displayMode === 'replace' && normalizeDotDate(p.date) === todayDot);
-    }
-
-    function isAutoTodayQtHiddenManually() {
-      return !!hiddenAutoQtDate && normalizeDotDate(hiddenAutoQtDate) === getKstDateParts().dot;
-    }
-
-    function isAutoTodayQtHiddenOrReplaced() {
-      return hasTodayReplaceQt() || isAutoTodayQtHiddenManually();
-    }
-
-    function getAutoDailyQtForToday() {
-      const { dot, compact, dayNumber } = getKstDateParts();
-      // 60편 성경말씀을 매일 한국시간 00:00마다 겹치지 않게 자동 업로드 (구절 + 말씀 본문만 표시)
-      const n = DAILY_QT_POOL.length;
-      const idx = ((dayNumber * 17 + 7) % n + n) % n;
-      const item = DAILY_QT_POOL[idx];
-      return {
-        id: `auto_qt_${compact}_${idx}`,
-        isAuto: true,
-        autoIndex: idx,
-        date: dot,
-        passage: item.passage,
-        scripture: item.scripture,
-        authorName: getTabLabel('qt')
-      };
-    }
-
-    function findQtById(postId) {
-      const pid = String(postId || '');
-      const autoToday = getAutoDailyQtForToday();
-      if (autoToday && autoToday.id === pid) return autoToday;
-      const custom = qtPosts.find(p => String(p.id) === pid);
-      if (custom) return { ...custom, isAuto: false };
-      const m = pid.match(/^auto_qt_(\d{4})(\d{2})(\d{2})_(\d+)$/);
-      if (m) {
-        const idx = Number(m[4]);
-        const item = DAILY_QT_POOL[idx];
-        if (item) {
-          return {
-            id: pid,
-            isAuto: true,
-            autoIndex: idx,
-            date: `${m[1]}.${m[2]}.${m[3]}`,
-            passage: item.passage,
-            scripture: item.scripture,
-            authorName: getTabLabel('qt')
-          };
-        }
-      }
-      return null;
-    }
-
-    function renderQtView() {
-      const user = getCurrentUser();
-      const canManageQt = hasUserPerm(user, 'canManageQt');
-      document.getElementById('qtWriteTopBtn').classList.toggle('hidden', !canManageQt);
-
-      const todayDot = getKstDateParts().dot;
-      const autoToday = getAutoDailyQtForToday();
-      const suppressAuto = isAutoTodayQtHiddenOrReplaced();
-
-      const mappedCustom = qtPosts.map(p => ({ ...p, isAuto: false }));
-      const todayReplacePosts = mappedCustom.filter(p => p.displayMode === 'replace' && normalizeDotDate(p.date) === todayDot);
-      const otherCustomPosts = mappedCustom.filter(p => !(p.displayMode === 'replace' && normalizeDotDate(p.date) === todayDot));
-
-      // 관리자가 오늘 날짜를 대체(replace)하거나 숨김 처리한 경우 자동 말씀 숨김, 아니면 자동 말씀 + 관리자 글 함께 표시
-      const combined = suppressAuto
-        ? [...todayReplacePosts, ...otherCustomPosts]
-        : [autoToday, ...mappedCustom];
-
-      const container = document.getElementById('qtListContainer');
-      const krvFooterHtml = '<div class="copyright-footnote">📖 말씀 본문 출처: <b>「성경전서 개역한글판」(대한성서공회)</b> · 저작재산권 만료 원문</div>';
-      const qtCardsHtml = combined.length === 0 ? `
-        <div class="card" style="text-align:center; padding:34px 18px; color:#64748B;">
-          <div style="font-size:28px; margin-bottom:8px;">${escapeHtml(getTabIcon('qt'))}</div>
-          <div style="font-size:14.5px; font-weight:800; color:#1E293B; margin-bottom:5px;">오늘 표시된 말씀이 없습니다.</div>
-          <div style="font-size:12.5px; line-height:1.5; margin-bottom:14px;">관리자가 언제든 새 말씀·글을 올리거나 자동 말씀을 복원할 수 있습니다.</div>
-          ${canManageQt ? `
-            <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
-              <button class="btn-sm primary" type="button" onclick="openNewQtModal()">+ 말씀·글 쓰기</button>
-              ${isAutoTodayQtHiddenManually() ? '<button class="btn-sm approve" type="button" onclick="restoreAutoTodayQt()">🔄 오늘 자동 말씀 복원</button>' : ''}
-            </div>
-          ` : ''}
-        </div>
-      ` : combined.map((post) => {
-        const cmts = qtComments.filter(c => c.postId === post.id);
-        const previewCmts = cmts.slice(-2);
-        const verseText = post.scripture || post.guide || post.title || '';
-        const isTodayReplace = !post.isAuto && post.displayMode === 'replace' && normalizeDotDate(post.date) === todayDot;
-        const qtLblDisp = escapeHtml(getTabLabel('qt'));
-        const qtIcnDisp = escapeHtml(getTabIcon('qt'));
-        const adminBadgeDisp = escapeHtml(getUiText('qtAdminPostBadge'));
-        const badgeText = post.isAuto
-          ? `${qtIcnDisp} ${qtLblDisp}`
-          : (isTodayReplace ? `${qtIcnDisp} ${qtLblDisp} (관리자)` : adminBadgeDisp);
-        const badgeCls = (post.isAuto || isTodayReplace) ? 'warm' : '';
-        const srcText = post.isAuto
-          ? '「성경전서 개역한글판」(대한성서공회)'
-          : String(post.source || '').trim();
-        return `
-          <div class="card clickable" style="${(post.isAuto || isTodayReplace) ? 'border-color:#A5B4FC;' : ''}" onclick="openQtDetail('${escapeJsAttr(post.id)}')">
-            <div class="card-top">
-              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                <span class="tag ${badgeCls}">${badgeText}</span>
-                ${post.passage ? `<span class="qt-passage-pill">📖 ${escapeHtml(post.passage)}</span>` : ''}
-              </div>
-              <span class="card-date">${escapeHtml(post.date || '')}</span>
-            </div>
-            <div class="qt-scripture-box" style="margin:6px 0 4px; font-size:14.5px; line-height:1.72;">${escapeHtml(verseText)}</div>
-            ${srcText ? `<div class="source-meta-line">📌 출처: ${escapeHtml(srcText)}</div>` : ''}
-
-            ${buildReactionBarHtml(post.id)}
-
-            ${previewCmts.length > 0 ? `
-              <div class="qt-comment-preview">
-                ${previewCmts.map(c => `
-                  <div style="margin-bottom:3px;">
-                    <b style="color:#0F172A;">${escapeHtml(c.authorName)}</b>
-                    <span>${escapeHtml(c.body.length > 52 ? c.body.slice(0, 52) + '…' : c.body)}</span>
-                  </div>
-                `).join('')}
-              </div>
-            ` : ''}
-
-            <div class="card-footer">
-              <button class="btn-sm" type="button" onclick="event.stopPropagation(); openQtDetail('${escapeJsAttr(post.id)}')">💬 댓글 ${cmts.length}개</button>
-              ${canManageQt ? (post.isAuto ? `
-                <div style="display:flex; gap:6px;">
-                  <button class="btn-sm" type="button" onclick="event.stopPropagation(); openEditAutoTodayQtModal()">수정</button>
-                  <button class="btn-sm danger" type="button" onclick="event.stopPropagation(); hideAutoTodayQt()">삭제</button>
-                </div>
-              ` : `
-                <div style="display:flex; gap:6px;">
-                  <button class="btn-sm" type="button" onclick="event.stopPropagation(); openEditQtModal('${escapeJsAttr(post.id)}')">수정</button>
-                  <button class="btn-sm danger" type="button" onclick="event.stopPropagation(); deleteQtPost('${escapeJsAttr(post.id)}')">삭제</button>
-                </div>
-              `) : '<span style="font-size:11.5px; color:#64748B; font-weight:600;">눌러서 댓글 달기 ▸</span>'}
-            </div>
-          </div>
-        `;
-      }).join('');
-      container.innerHTML = qtCardsHtml + krvFooterHtml;
-    }
-
-    window.toggleQtReaction = async (postId, key) => {
-      const user = getCurrentUser();
-      if (!user || !fbUser) return;
-      const docId = `${postId}_${fbUser.uid}`;
-      const existing = qtReactions.find(r => r.id === docId) || {
-        postId, uid: fbUser.uid, name: user.name,
-        heart: false, amen: false, grace: false, fire: false
-      };
-      const nextVal = !existing[key];
-      try {
-        await db.collection('qtReactions').doc(docId).set({
-          postId,
-          uid: fbUser.uid,
-          name: user.name,
-          heart: key === 'heart' ? nextVal : !!existing.heart,
-          amen: key === 'amen' ? nextVal : !!existing.amen,
-          grace: key === 'grace' ? nextVal : !!existing.grace,
-          fire: key === 'fire' ? nextVal : !!existing.fire,
-          updatedAt: Date.now()
-        });
-      } catch (err) {
-        handleDbError(err, '공감 표시');
-      }
-    };
-
-    window.openQtDetail = (postId) => {
-      currentQtDetailId = String(postId);
-      editingCommentId = null;
-      document.getElementById('qtCommentInput').value = '';
-      document.getElementById('qtCommentSubmitBtn').textContent = '등록';
-      renderQtDetailModalBody(currentQtDetailId);
-      document.getElementById('qtDetailModal').classList.add('open');
-    };
-
-    function renderQtDetailModalBody(postId) {
-      const post = findQtById(postId);
-      if (!post) return;
-      const user = getCurrentUser();
-      const uid = fbUser ? fbUser.uid : '';
-      const canManageQt = hasUserPerm(user, 'canManageQt');
-      const cmts = qtComments.filter(c => c.postId === post.id);
-
-      const verseText = post.scripture || post.guide || post.title || '';
-      document.getElementById('qtDetailDateBadge').textContent = post.date || getTabLabel('qt');
-      document.getElementById('qtDetailBodyArea').innerHTML = `
-        ${post.passage ? `<div style="margin-bottom:10px;"><span class="qt-passage-pill" style="font-size:13px; padding:4px 11px;">📖 ${escapeHtml(post.passage)}</span></div>` : ''}
-        <div class="qt-scripture-box" style="font-size:15px; line-height:1.75; margin-top:4px;">${escapeHtml(verseText)}</div>
-        ${(post.isAuto || String(post.source || '').trim())
-          ? `<div class="source-meta-line">📌 출처: ${escapeHtml(post.isAuto ? '「성경전서 개역한글판」(대한성서공회)' : String(post.source || '').trim())}</div>`
-          : ''}
-
-        ${buildReactionBarHtml(post.id)}
-
-        <div style="margin-top:16px; padding-top:12px; border-top:1px solid #E2E8F0;">
-          <div style="font-size:13.5px; font-weight:800; color:#0F172A; margin-bottom:8px;">💬 묵상 나눔 댓글 (${cmts.length})</div>
-          ${cmts.length === 0
-            ? '<div style="text-align:center; padding:16px 8px; color:#94A3B8; font-size:12.5px;">첫 번째 묵상 댓글을 남겨보세요!</div>'
-            : cmts.map(c => {
-                const isMine = c.uid === uid;
-                const cLikes = qtCommentLikes.filter(l => l.commentId === c.id);
-                const iLiked = cLikes.some(l => l.uid === uid);
-                return `
-                  <div class="qt-comment-item">
-                    <div class="qt-comment-head">
-                      <div class="qt-comment-author">
-                        <span>${escapeHtml(c.authorName)}</span>
-                        ${c.roleName ? `<span class="role-pill" style="background:${sanitizeHexColor(c.roleColor)}; font-size:9.5px; padding:1px 6px;">${escapeHtml(c.roleName)}</span>` : ''}
-                      </div>
-                      <span class="card-date">${formatShortTime(c.createdTs)}${c.edited ? ' (수정됨)' : ''}</span>
-                    </div>
-                    <div class="qt-comment-body">${escapeHtml(c.body)}</div>
-                    <div class="qt-comment-foot">
-                      <button class="comment-heart-btn ${iLiked ? 'liked' : ''}" type="button" onclick="toggleQtCommentLike('${escapeJsAttr(c.id)}')">
-                        <span>${iLiked ? '❤️' : '🤍'}</span>
-                        <span>${cLikes.length > 0 ? cLikes.length : '좋아요'}</span>
-                      </button>
-                      <div style="display:flex; gap:6px;">
-                        ${isMine ? `<button class="btn-sm" type="button" style="padding:3px 8px; font-size:11px;" onclick="startEditQtComment('${escapeJsAttr(c.id)}')">수정</button>` : ''}
-                        ${(isMine || canManageQt) ? `<button class="btn-sm danger" type="button" style="padding:3px 8px; font-size:11px;" onclick="deleteQtComment('${escapeJsAttr(c.id)}')">삭제</button>` : ''}
-                      </div>
-                    </div>
-                  </div>
-                `;
-              }).join('')}
-        </div>
-      `;
-    }
-
-    window.handleSubmitQtComment = async () => {
-      const user = getCurrentUser();
-      if (!user || !fbUser || !currentQtDetailId) return;
-      const input = document.getElementById('qtCommentInput');
-      const body = input.value.trim();
-      if (!body) return showToast('댓글 내용을 입력해 주세요.');
-      if (body.length > 1000) return showToast('댓글은 1000자 이내로 입력해 주세요.');
-      if (!editingCommentId && !checkCommentSpamCooldown(user)) return;
-      if (!enforceInputSecurity(body, `${getTabLabel('qt')} 댓글`, !!user.isSuperAdmin)) return;
-
-      const btn = document.getElementById('qtCommentSubmitBtn');
-      btn.disabled = true;
-      try {
-        const qtPostObj = getQtPostById(currentQtDetailId);
-        const qtPostTitle = (qtPostObj && (qtPostObj.passage || qtPostObj.title)) ? (qtPostObj.passage || qtPostObj.title) : currentQtDetailId;
-        if (editingCommentId) {
-          const prevC = qtComments.find(x => x.id === editingCommentId);
-          await db.collection('qtComments').doc(editingCommentId).update({
-            body,
-            edited: true,
-            updatedTs: Date.now()
-          });
-          recordAuditLog({
-            actorType: user.isSuperAdmin ? 'admin' : 'member',
-            actorName: user.name,
-            category: '댓글',
-            action: '댓글 수정',
-            target: qtPostTitle,
-            beforeVal: prevC ? prevC.body : '',
-            afterVal: body
-          });
-          editingCommentId = null;
-          btn.textContent = '등록';
-          showToast('댓글이 수정되었습니다.');
-        } else {
-          const cid = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-          await db.collection('qtComments').doc(cid).set({
-            id: cid,
-            postId: currentQtDetailId,
-            uid: fbUser.uid,
-            authorName: user.name,
-            roleName: user.role.name,
-            roleColor: user.role.color,
-            body,
-            createdTs: Date.now()
-          });
-          recordAuditLog({
-            actorType: user.isSuperAdmin ? 'admin' : 'member',
-            actorName: user.name,
-            category: '댓글',
-            action: '댓글 작성',
-            target: qtPostTitle,
-            detail: body
-          });
-          showToast('묵상 댓글이 등록되었습니다!');
-        }
-        input.value = '';
-      } catch (err) {
-        handleDbError(err, '댓글 저장');
-      } finally {
-        btn.disabled = false;
-      }
-    };
-
-    window.startEditQtComment = (cid) => {
-      const c = qtComments.find(x => x.id === cid);
-      if (!c) return;
-      editingCommentId = cid;
-      const input = document.getElementById('qtCommentInput');
-      input.value = c.body;
-      input.focus();
-      document.getElementById('qtCommentSubmitBtn').textContent = '수정';
-      showToast('아래 입력창에서 댓글을 수정해 주세요.');
-    };
-
-    window.deleteQtComment = async (cid) => {
-      if (!confirm('이 댓글을 삭제할까요?')) return;
-      const targetC = qtComments.find(x => x.id === cid);
-      const curU = getCurrentUser();
-      try {
-        await db.collection('qtComments').doc(cid).delete();
-        recordAuditLog({
-          actorType: (curU && curU.isSuperAdmin) ? 'admin' : 'member',
-          actorName: curU ? curU.name : '회원',
-          category: '댓글',
-          action: '댓글 삭제',
-          target: targetC ? `${targetC.authorName || '작성자'}의 댓글` : cid,
-          detail: targetC ? targetC.body : ''
-        });
-        if (editingCommentId === cid) {
-          editingCommentId = null;
-          document.getElementById('qtCommentInput').value = '';
-          document.getElementById('qtCommentSubmitBtn').textContent = '등록';
-        }
-        showToast('댓글이 삭제되었습니다.');
-      } catch (err) {
-        handleDbError(err, '댓글 삭제');
-      }
-    };
-
-    window.toggleQtCommentLike = async (commentId) => {
-      const user = getCurrentUser();
-      if (!user || !fbUser) return;
-      const docId = `${commentId}_${fbUser.uid}`;
-      const exists = qtCommentLikes.some(l => l.id === docId);
-      try {
-        if (exists) {
-          await db.collection('qtCommentLikes').doc(docId).delete();
-        } else {
-          await db.collection('qtCommentLikes').doc(docId).set({
-            commentId,
-            uid: fbUser.uid,
-            name: user.name,
-            createdTs: Date.now()
-          });
-        }
-      } catch (err) {
-        handleDbError(err, '댓글 하트');
-      }
-    };
-
-    function syncQtModalDynamicLabels() {
-      const qtLbl = getTabLabel('qt');
-      const optT = document.getElementById('qtOptTogether');
-      const optR = document.getElementById('qtOptReplace');
-      const saveBtn = document.getElementById('saveQtBtn');
-      if (optT) optT.textContent = `📌 ${qtLbl}과 같이 올리기 (자동 말씀 + 작성 글)`;
-      if (optR) optR.textContent = `🔄 ${qtLbl} 대신 이 글만 올리기 (대체)`;
-      if (saveBtn) saveBtn.textContent = `${qtLbl}에 게시하기`;
-    }
-
-    window.updateQtDisplayModeHint = () => {
-      const mode = document.getElementById('qtDisplayModeSelect').value;
-      const hint = document.getElementById('qtDisplayModeHint');
-      if (!hint) return;
-      const qtLbl = escapeHtml(getTabLabel('qt'));
-      if (mode === 'replace') {
-        hint.className = 'info-box warn';
-        hint.innerHTML = `🔄 <b>${qtLbl} 대체:</b> 해당 날짜의 자동 말씀을 숨기고, 관리자가 작성한 이 글만 ${qtLbl} 자리에 표시합니다. 다음 날 00:00(한국시간)에는 새 자동 말씀이 다시 올라옵니다.`;
-      } else {
-        hint.className = 'info-box';
-        hint.innerHTML = `📌 <b>같이 올리기:</b> 매일 00:00(한국시간)에 올라오는 자동 말씀과 관리자가 작성한 이 글이 ${qtLbl} 화면에 함께 표시됩니다.`;
-      }
-    };
-
-    window.openNewQtModal = (prefill = null) => {
-      syncQtModalDynamicLabels();
-      document.getElementById('qtFormModalTitle').textContent = `${getTabIcon('qt')} 새 ${getTabLabel('qt')} · 글 등록`;
-      document.getElementById('editQtId').value = '';
-      document.getElementById('qtDisplayModeSelect').value = (prefill && prefill.displayMode === 'replace') ? 'replace' : 'together';
-      updateQtDisplayModeHint();
-      document.getElementById('qtDateInput').value = getKstDateParts().dot;
-      document.getElementById('qtPassageInput').value = prefill && prefill.passage ? prefill.passage : '';
-      document.getElementById('qtScriptureInput').value = prefill && prefill.scripture ? prefill.scripture : '';
-      const qSrcInp = document.getElementById('qtSourceInput');
-      if (qSrcInp) qSrcInp.value = prefill && prefill.source ? prefill.source : '';
-      document.getElementById('qtNotifyInput').checked = true;
-      document.getElementById('qtFormModal').classList.add('open');
-    };
-
-    window.openEditAutoTodayQtModal = () => {
-      const autoToday = getAutoDailyQtForToday();
-      openNewQtModal({
-        passage: autoToday.passage,
-        scripture: autoToday.scripture,
-        displayMode: 'replace'
-      });
-      document.getElementById('qtFormModalTitle').textContent = `${getTabIcon('qt')} ${getTabLabel('qt')} 수정 (대체 등록)`;
-    };
-
-    window.hideAutoTodayQt = async () => {
-      if (!confirm(`오늘 자동 표시된 말씀을 숨길까요?\n(언제든 새 글을 올리거나 ${getTabLabel('manage')}에서 복원할 수 있으며, 내일 00:00에는 새 자동 말씀이 올라옵니다.)`)) return;
-      try {
-        await db.collection('config').doc('layout').set({
-          hiddenAutoQtDate: getKstDateParts().dot
-        }, { merge: true });
-        recordAuditLog({ actorType: 'admin', category: '오늘의 말씀', action: '오늘 자동 말씀 숨김', target: getKstDateParts().dot });
-        showToast('오늘의 자동 말씀을 숨겼습니다.');
-      } catch (err) {
-        handleDbError(err, '자동 말씀 숨김');
-      }
-    };
-
-    window.restoreAutoTodayQt = async () => {
-      try {
-        await db.collection('config').doc('layout').set({
-          hiddenAutoQtDate: ''
-        }, { merge: true });
-        recordAuditLog({ actorType: 'admin', category: '오늘의 말씀', action: '오늘 자동 말씀 복원', target: getKstDateParts().dot });
-        showToast('오늘의 자동 말씀을 복원했습니다!');
-      } catch (err) {
-        handleDbError(err, '자동 말씀 복원');
-      }
-    };
-
-    window.openEditQtModal = (postId) => {
-      const p = qtPosts.find(x => String(x.id) === String(postId));
-      if (!p) return;
-      syncQtModalDynamicLabels();
-      document.getElementById('qtFormModalTitle').textContent = `${getTabIcon('qt')} ${getTabLabel('qt')} · 글 수정`;
-      document.getElementById('editQtId').value = p.id;
-      document.getElementById('qtDisplayModeSelect').value = p.displayMode === 'replace' ? 'replace' : 'together';
-      updateQtDisplayModeHint();
-      document.getElementById('qtDateInput').value = p.date || getKstDateParts().dot;
-      document.getElementById('qtPassageInput').value = p.passage || '';
-      document.getElementById('qtScriptureInput').value = p.scripture || p.guide || '';
-      const qSrcInp = document.getElementById('qtSourceInput');
-      if (qSrcInp) qSrcInp.value = p.source || '';
-      document.getElementById('qtNotifyInput').checked = false;
-      document.getElementById('qtFormModal').classList.add('open');
-    };
-
-    window.handleSaveQt = async () => {
-      const user = getCurrentUser();
-      if (!user) return;
-      const editId = document.getElementById('editQtId').value;
-      const displayMode = document.getElementById('qtDisplayModeSelect').value === 'replace' ? 'replace' : 'together';
-      const rawDate = document.getElementById('qtDateInput').value.trim();
-      const date = normalizeDotDate(rawDate) || getKstDateParts().dot;
-      const passage = document.getElementById('qtPassageInput').value.trim();
-      const scripture = document.getElementById('qtScriptureInput').value.trim();
-      const source = ((document.getElementById('qtSourceInput') || {}).value || '').trim();
-      const notifyOnPublish = document.getElementById('qtNotifyInput').checked;
-
-      if (!scripture) return showToast('말씀이나 작성 글 내용을 입력해 주세요.');
-      if (!enforceInputSecurity(`${passage}\n${scripture}\n${source}`, `${getTabLabel('qt')} 글`, true)) return;
-
-      const btn = document.getElementById('saveQtBtn');
-      btn.disabled = true;
-      try {
-        lastSelfQtEditTs = Date.now();
-        if (editId) {
-          await db.collection('qtPosts').doc(editId).update({ date, passage, scripture, source, displayMode });
-          recordAuditLog({
-            actorType: 'admin',
-            category: '오늘의 말씀',
-            action: '말씀·글 수정',
-            target: passage || date,
-            detail: `${displayMode === 'replace' ? '대체 게시' : '함께 게시'} · ${scripture}`
-          });
-          showToast(displayMode === 'replace'
-            ? `${getTabLabel('qt')} 대체 글로 수정되었습니다!`
-            : `${getTabLabel('qt')}과 함께 표시되도록 수정되었습니다!`);
-        } else {
-          const targetId = String(Date.now());
-          await db.collection('qtPosts').doc(targetId).set({
-            id: targetId, date, passage, scripture, source, displayMode,
-            authorName: user.name, notifyOnPublish, createdTs: Date.now()
-          });
-          recordAuditLog({
-            actorType: 'admin',
-            category: '오늘의 말씀',
-            action: '말씀·글 등록',
-            target: passage || date,
-            detail: `${displayMode === 'replace' ? '대체 게시' : '함께 게시'} · ${scripture}`
-          });
-          showToast(displayMode === 'replace'
-            ? `${getTabLabel('qt')}을 이 글로 대체하여 등록했습니다!`
-            : `${getTabLabel('qt')}과 함께 표시되도록 등록했습니다!`);
-        }
-        document.getElementById('qtFormModal').classList.remove('open');
-      } catch (err) {
-        handleDbError(err, '말씀 저장');
-      } finally {
-        btn.disabled = false;
-      }
-    };
-
-    window.deleteQtPost = async (postId) => {
-      if (!confirm('이 큐티 글과 관련 댓글·반응을 모두 삭제할까요?')) return;
-      const targetQt = qtPosts.find(x => String(x.id) === String(postId));
-      try {
-        const batch = db.batch();
-        batch.delete(db.collection('qtPosts').doc(String(postId)));
-        qtReactions.filter(r => r.postId === String(postId)).forEach(r => {
-          batch.delete(db.collection('qtReactions').doc(r.id));
-        });
-        const relatedCmts = qtComments.filter(c => c.postId === String(postId));
-        relatedCmts.forEach(c => {
-          batch.delete(db.collection('qtComments').doc(c.id));
-          qtCommentLikes.filter(l => l.commentId === c.id).forEach(l => {
-            batch.delete(db.collection('qtCommentLikes').doc(l.id));
-          });
-        });
-        await batch.commit();
-        recordAuditLog({
-          actorType: 'admin',
-          category: '오늘의 말씀',
-          action: '말씀·글 삭제',
-          target: targetQt ? (targetQt.passage || targetQt.date || String(postId)) : String(postId),
-          detail: targetQt ? (targetQt.scripture || '') : ''
-        });
-        if (currentQtDetailId === String(postId)) {
-          document.getElementById('qtDetailModal').classList.remove('open');
-        }
-        showToast('큐티가 삭제되었습니다.');
-      } catch (err) {
-        handleDbError(err, '큐티 삭제');
-      }
-    };
 
     // ==================== 16. 전용 [✏️ 메뉴·이름] 탭 (중앙 레지스트리 자동 연동 · 이모지/이름/순서 편집) ====================
     let draftTabOrder = [...DEFAULT_TAB_ORDER];
@@ -13639,7 +12537,7 @@
 
         ${buildManageAccordionBar({
           key: 'labels_ui_texts',
-          titleHtml: '🏷️ 화면 세부 제목 · 안내 문구 설정 (QT·회칙·가이드·설정)',
+          titleHtml: '🏷️ 화면 세부 제목 · 안내 문구 설정 (회칙·가이드·영상·설정)',
           badgeHtml: `<span class="tag slate">${UI_TEXT_REGISTRY.length}개</span>`,
           defaultOpen: false,
           marginTop: '10px'
@@ -13647,7 +12545,7 @@
         <div data-acc-body="labels_ui_texts" class="${isManageSectionOpen('labels_ui_texts', false) ? '' : 'hidden'}">
           <div class="card">
             <div style="font-size:12px; color:#64748B; line-height:1.5; margin-bottom:10px;">
-              QT·회칙·가이드·영상 상단 안내 문구, 설정 카테고리 제목 등을 자유롭게 수정할 수 있습니다. (비워두면 기본값 사용)
+              회칙·가이드·영상 상단 안내 문구, 설정 카테고리 제목 등을 자유롭게 수정할 수 있습니다. (비워두면 기본값 사용)
             </div>
             ${UI_TEXT_REGISTRY.map(u => {
               const curVal = draftUiTexts[u.key] !== undefined ? draftUiTexts[u.key] : getUiText(u.key);
@@ -13672,15 +12570,6 @@
     window.onDraftTabNameInput = (key, val) => {
       const prevVal = String(draftTabNames[key] ?? '').trim();
       draftTabNames[key] = val;
-      if (key === 'qt') {
-        const curManageQt = String(draftTabNames.manageQt ?? '').trim();
-        if (curManageQt === DEFAULT_TAB_LABELS.manageQt || (prevVal && curManageQt === `${prevVal} 관리`)) {
-          const nextQt = String(val || '').trim() || DEFAULT_TAB_LABELS.qt;
-          draftTabNames.manageQt = `${nextQt} 관리`;
-          const mQtInp = document.querySelector('[data-tab-name-key="manageQt"]');
-          if (mQtInp) mQtInp.value = draftTabNames.manageQt;
-        }
-      }
       syncLiveTabPreview();
     };
 
@@ -13704,14 +12593,6 @@
     window.onDraftTabIconInput = (key, val) => {
       const prevIcn = String(draftTabIcons[key] ?? '').trim();
       draftTabIcons[key] = val;
-      if (key === 'qt') {
-        const curManageQtIcn = String(draftTabIcons.manageQt ?? '').trim();
-        if (curManageQtIcn === DEFAULT_TAB_ICONS.manageQt || (prevIcn && curManageQtIcn === prevIcn)) {
-          draftTabIcons.manageQt = String(val || '').trim() || DEFAULT_TAB_ICONS.qt;
-          const mQtIcnInp = document.querySelector('[data-tab-icon-key="manageQt"]');
-          if (mQtIcnInp) mQtIcnInp.value = draftTabIcons.manageQt;
-        }
-      }
       syncLiveTabPreview();
     };
 
@@ -15087,8 +13968,6 @@
         renderHomeView(u);
       } else if (currentMainTab === 'manage' && currentManageSubTab === 'content') {
         renderManageContent(document.getElementById('manageContent'), u);
-      } else if (currentMainTab === 'manage' && currentManageSubTab === 'qt') {
-        renderManageQt(document.getElementById('manageContent'), u);
       }
     }, 30000);
 
@@ -15992,10 +14871,9 @@
       const summaryEl = document.getElementById('adminLogsSummaryText');
       if (summaryEl) {
         const whoLbl = adminLogFilterType === 'admin' ? '관리자 ' : (adminLogFilterType === 'member' ? '이용자 ' : '');
-        const catDisp = adminLogFilterCategory === '오늘의 말씀' ? getTabLabel('qt')
-          : (adminLogFilterCategory === '바로가기' ? getQuickSheetLabel()
-            : (adminLogFilterCategory === '예배·출석' ? getTabLabel('manageWorship')
-              : (adminLogFilterCategory === '문의' ? getTabLabel('setInquiry') : adminLogFilterCategory)));
+        const catDisp = adminLogFilterCategory === '바로가기' ? getQuickSheetLabel()
+          : (adminLogFilterCategory === '예배·출석' ? getTabLabel('manageWorship')
+            : (adminLogFilterCategory === '문의' ? getTabLabel('setInquiry') : adminLogFilterCategory));
         const catLbl = adminLogFilterCategory !== 'all' ? `[${catDisp}] ` : '';
         summaryEl.textContent = q
           ? `'${adminLogSearchQuery.trim()}' 검색 결과 ${filtered.length}건 (전체 ${allLogs.length}건)`
@@ -16090,7 +14968,7 @@
       const memberCnt = allLogs.filter(l => l && l.actorType === 'member').length;
       const unsyncedCount = allLogs.filter(l => l && l.sheetSynced !== true).length;
       const hasSheet = !!getAdminSheetUrl();
-      const cats = ['all', '공지·배너', '오늘의 말씀', '영상', '댓글', '회원·생일', '역할·메뉴', '예배·출석', '바로가기', '약관·회칙', '문의', '보안·설정'];
+      const cats = ['all', '공지·배너', '영상', '회원·생일', '역할·메뉴', '예배·출석', '바로가기', '약관·회칙', '문의', '보안·설정'];
 
       const logsListOpen = isManageSectionOpen('logs_list', true);
       el.innerHTML = `
@@ -16104,7 +14982,7 @@
         <div class="info-box" style="margin-top:0; margin-bottom:12px;">
           🔐 <b>통합 보안 감사 로그 (위변조·삭제 불가)</b><br>
           • <b>관리자:</b> 모든 추가·수정·삭제·승인·설정 변경 자동 기록<br>
-          • <b>이용자:</b> 댓글 작성/수정/삭제, 유튜브 영상 추천/수정/삭제, 문의 사항 작성/수정/삭제, 이름·생일 변경 신청/취소, 가입·탈퇴, 출석 체크만 기록<br>
+          • <b>이용자:</b> 유튜브 영상 추천/수정/삭제, 문의 사항 작성/수정/삭제, 이름·생일 변경 신청/취소, 가입·탈퇴, 출석 체크만 기록<br>
           • <b>미기록(프라이버시 보호):</b> 이용자 비밀번호 변경, 전체 글자 크기·알림 설정, ${escapeHtml(getQuickSheetLabel())} 이동, 공지·소식 단순 조회
         </div>
 
@@ -16131,10 +15009,9 @@
           <select class="form-select" style="width:auto; min-width:118px; padding:9px 10px; font-size:12.5px; font-weight:700;" onchange="setAdminLogCategoryFilter(this.value)">
             ${cats.map(c => {
               const disp = c === 'all' ? '전체 분류'
-                : (c === '오늘의 말씀' ? getTabLabel('qt')
-                  : (c === '바로가기' ? getQuickSheetLabel()
-                    : (c === '예배·출석' ? getTabLabel('manageWorship')
-                      : (c === '문의' ? getTabLabel('setInquiry') : c))));
+                : (c === '바로가기' ? getQuickSheetLabel()
+                  : (c === '예배·출석' ? getTabLabel('manageWorship')
+                    : (c === '문의' ? getTabLabel('setInquiry') : c)));
               return `<option value="${escapeHtml(c)}" ${adminLogFilterCategory === c ? 'selected' : ''}>${escapeHtml(disp)}</option>`;
             }).join('')}
           </select>
@@ -18175,7 +17052,7 @@
               actorType: 'member',
               category: '보안·설정',
               action: '피싱·의심 링크 차단',
-              target: contextLabel || '댓글',
+              target: contextLabel || '입력란',
               detail: warnLinks.map(l => `${l.url} [${l.reasons.join(', ')}]`).join(' / ')
             });
             alert(`🛡️ 보안 정책으로 의심 링크(단축 URL·비암호화 HTTP 등)는 등록할 수 없습니다.\n\n• 감지 주소: ${warnLinks[0].url}\n• 사유: ${warnLinks[0].reasons.join(', ')}\n\n안전한 공식 HTTPS 주소를 사용해 주세요.`);
@@ -18187,32 +17064,6 @@
         }
       }
 
-      return true;
-    }
-
-    function checkCommentSpamCooldown(user) {
-      if (!user || user.isSuperAdmin) return true;
-      const cdSec = Math.max(0, Number((securityConfig && securityConfig.commentCooldownSec) ?? 5));
-      if (cdSec <= 0) return true;
-      const elapsed = (Date.now() - lastCommentSubmitTs) / 1000;
-      if (lastCommentSubmitTs > 0 && elapsed < cdSec) {
-        const remain = Math.max(1, Math.ceil(cdSec - elapsed));
-        commentSpamWarnCount++;
-        if (commentSpamWarnCount === 3) {
-          recordAuditLog({
-            actorType: 'member',
-            actorName: user.name,
-            category: '보안·설정',
-            action: '댓글 도배 시도 차단',
-            target: `${getTabLabel('qt')} 댓글`,
-            detail: `쿨타임(${cdSec}초) 내 반복 등록 시도 3회 감지`
-          });
-        }
-        showToast(`🛡️ 도배 방지를 위해 ${remain}초 후에 다시 댓글을 등록할 수 있습니다.`);
-        return false;
-      }
-      lastCommentSubmitTs = Date.now();
-      commentSpamWarnCount = 0;
       return true;
     }
 
@@ -18312,8 +17163,8 @@
     const SEC_CHECK_ITEMS = [
       { id: 'domain_https', title: '1. 공식 도메인 · HTTPS 암호화 연결', desc: '현재 접속 주소가 공식 도메인이며 전 구간 HTTPS로 암호화되어 있는지 점검합니다.' },
       { id: 'csp_sdk', title: '2. CSP 보안 헤더 · 로컬 SDK 무결성', desc: '외부 악성 스크립트 차단(CSP) 헤더 및 외부 CDN 미사용(로컬 SDK 보관) 여부를 점검합니다.' },
-      { id: 'link_scan', title: '3. 앱 전체 피싱 · 위험 링크 정밀 스캔', desc: '바로가기·공지·배너·말씀·댓글에 피싱·단축URL·비암호화·IP 링크가 있는지 전수 검사합니다.' },
-      { id: 'xss_scan', title: '4. 악성 스크립트(XSS) 입력 흔적 스캔', desc: '공지·배너·말씀·댓글·회원명에 스크립트 삽입이나 위험 HTML 태그 흔적이 있는지 검사합니다.' },
+      { id: 'link_scan', title: '3. 앱 전체 피싱 · 위험 링크 정밀 스캔', desc: '바로가기·공지·배너·영상에 피싱·단축URL·비암호화·IP 링크가 있는지 전수 검사합니다.' },
+      { id: 'xss_scan', title: '4. 악성 스크립트(XSS) 입력 흔적 스캔', desc: '공지·배너·영상·회원명에 스크립트 삽입이나 위험 HTML 태그 흔적이 있는지 검사합니다.' },
       { id: 'admin_access', title: '5. 관리자 접근 통제 · 잠금 · 비밀 격리', desc: '신규 관리자 자동 등록 잠금, 관리자 코드 강도, 구글 시트 URL 서버 격리 상태를 점검합니다.' },
       { id: 'qr_reset', title: '6. 초대 QR · 비밀번호 초기화 만료 점검', desc: '오늘의 초대 QR 유효성과 24시간이 지난 만료 비밀번호 초기화 코드 잔존 여부를 점검합니다.' },
       { id: 'threat_logs', title: '7. 최근 7일 보안 위협 · 차단 활동 감지', desc: '감사 로그에서 악성 입력 차단, 피싱 링크 차단, 도배 시도, 대량 삭제 이상 징후를 분석합니다.' }
@@ -18363,7 +17214,7 @@
             </span>
           </div>
           <div style="font-size:12px; color:#CBD5E1; line-height:1.5; margin-top:6px;">
-            해킹(XSS)·피싱 링크·복제 도메인·댓글 도배 등 악의적 공격을 <b>실시간 감지·차단</b>하고, 앱 전체 데이터의 보안 상태를 점검합니다.
+            해킹(XSS)·피싱 링크·복제 도메인 등 악의적 공격을 <b>실시간 감지·차단</b>하고, 앱 전체 데이터의 보안 상태를 점검합니다.
           </div>
           <div class="sec-score-row">
             <span class="sec-pill ok">✅ 안전 ${okCnt}</span>
@@ -18445,7 +17296,7 @@
             <div class="setting-row" style="padding-top:2px;">
               <div>
                 <div class="setting-title" style="font-size:13.5px;">🛡️ 악성 스크립트(XSS) 입력 차단</div>
-                <div class="setting-sub" style="font-size:11.5px;">댓글·공지·배너 등에 &lt;script&gt;, iframe, javascript: 삽입 시 즉시 차단하고 로그에 기록합니다.</div>
+                <div class="setting-sub" style="font-size:11.5px;">공지·배너·영상·문의 등에 &lt;script&gt;, iframe, javascript: 삽입 시 즉시 차단하고 로그에 기록합니다.</div>
               </div>
               <label class="switch">
                 <input type="checkbox" id="cfgSecBlockXss" ${cfg.blockMaliciousInput !== false ? 'checked' : ''} />
@@ -18481,16 +17332,6 @@
                 <input type="checkbox" id="cfgSecDetectClone" ${cfg.detectCloneDomain !== false ? 'checked' : ''} />
                 <span class="slider"></span>
               </label>
-            </div>
-            <div class="form-group" style="margin-top:10px; margin-bottom:10px;">
-              <label class="form-label" for="cfgSecCommentCooldown">⏱️ 댓글 도배 방지 쿨타임 (일반 회원)</label>
-              <select id="cfgSecCommentCooldown" class="form-select">
-                ${[0, 3, 5, 10, 30].map(sec => `
-                  <option value="${sec}" ${Number(cfg.commentCooldownSec ?? 5) === sec ? 'selected' : ''}>
-                    ${sec === 0 ? '사용 안 함 (0초)' : `${sec}초 간격 제한${sec === 5 ? ' (권장)' : ''}`}
-                  </option>
-                `).join('')}
-              </select>
             </div>
             <button id="saveSecCfgBtn" class="btn-full btn-dark" type="button" style="padding:11px; font-size:13.5px;" onclick="handleSaveSecurityConfig()">💾 보안 방어 설정 저장</button>
           </div>
@@ -18573,8 +17414,6 @@
         const cIcn = getTabIcon('manageContent');
         const qlLbl = getTabLabel('manageQuickLinks');
         const qlIcn = getTabIcon('manageQuickLinks');
-        const qLbl = getTabLabel('manageQt');
-        const qIcn = getTabIcon('manageQt');
 
         if (id === 'domain_https') {
           const host = (window.location.hostname || '').toLowerCase();
@@ -18653,19 +17492,6 @@
               foundAreas.add('content');
             });
           });
-          (qtPosts || []).forEach(q => {
-            scanTextForSuspiciousLinks(`${q.passage || ''} ${q.scripture || ''}`).forEach(r => {
-              findings.push(`[말씀:${q.date}] ${r.url} (${r.reasons[0]})`);
-              foundAreas.add('qt');
-            });
-          });
-          (qtComments || []).forEach(c => {
-            scanTextForSuspiciousLinks(c.body || '').forEach(r => {
-              findings.push(`[댓글:${c.authorName || '회원'}] ${r.url} (${r.reasons[0]})`);
-              foundAreas.add('qt');
-            });
-          });
-
           (videoItems || []).forEach(v => {
             if (v && v.url && !/^https:\/\/www\.youtube\.com\/watch\?v=[A-Za-z0-9_-]{11}$/.test(String(v.url))) {
               findings.push(`[영상:${v.title || v.id}] 비정규화 URL (${v.url})`);
@@ -18676,7 +17502,7 @@
               foundAreas.add('videos');
             });
           });
-          const totalItems = (quickLinks || []).length + (notices || []).length + (blocks || []).length + (qtPosts || []).length + (qtComments || []).length + (videoItems || []).length;
+          const totalItems = (quickLinks || []).length + (notices || []).length + (blocks || []).length + (videoItems || []).length;
           if (findings.length === 0) {
             setSecCheckResult(id, 'ok', `전체 콘텐츠 ${totalItems}건 정밀 스캔 완료 · 피싱·위험·단축 URL 0건 감지`);
           } else {
@@ -18684,7 +17510,7 @@
             const actions = [];
             if (foundAreas.has('quicklinks')) actions.push({ label: `${qlIcn} ${qlLbl}`, type: 'subtab', param: 'quicklinks', primary: true });
             if (foundAreas.has('content')) actions.push({ label: `${cIcn} ${cLbl}`, type: 'subtab', param: 'content', primary: actions.length === 0 });
-            if (foundAreas.has('qt')) actions.push({ label: `${qIcn} ${qLbl}`, type: 'subtab', param: 'qt', primary: actions.length === 0 });
+            if (foundAreas.has('videos')) actions.push({ label: `${getTabIcon('manageVideos')} ${getTabLabel('manageVideos')}`, type: 'subtab', param: 'videos', primary: actions.length === 0 });
 
             setSecCheckResult(id, hasDanger ? 'err' : 'warn', `의심 링크 ${findings.length}건 발견:\n• ${findings.slice(0, 4).join('\n• ')}${findings.length > 4 ? `\n외 ${findings.length - 4}건` : ''}`, {
               reason: hasDanger
@@ -18706,21 +17532,19 @@
           };
           (notices || []).forEach(n => checkObj(`[공지:${n.title}]`, `${n.title || ''} ${n.body || ''}`, 'content'));
           (blocks || []).forEach(b => checkObj(`[배너:${b.title || b.label}]`, `${b.badge || ''} ${b.title || ''} ${b.desc || ''}`, 'content'));
-          (qtPosts || []).forEach(q => checkObj(`[말씀:${q.date}]`, `${q.passage || ''} ${q.scripture || ''}`, 'qt'));
-          (qtComments || []).forEach(c => checkObj(`[댓글:${c.authorName || '회원'}]`, c.body || '', 'qt'));
           (members || []).forEach(m => checkObj(`[회원:${m.name}]`, `${m.name || ''} ${m.pendingName || ''}`, 'members'));
           (videoItems || []).forEach(v => checkObj(`[영상:${v.title || v.id}]`, `${v.title || ''} ${v.channelName || ''} ${v.note || ''}`, 'videos'));
 
           if (hits.length === 0) {
-            setSecCheckResult(id, 'ok', '공지·배너·말씀·댓글·회원 데이터 전수 스캔 완료 · 악성 스크립트(XSS) 흔적 0건');
+            setSecCheckResult(id, 'ok', '공지·배너·영상·회원 데이터 전수 스캔 완료 · 악성 스크립트(XSS) 흔적 0건');
           } else {
             const actions = [];
             if (hitAreas.has('content')) actions.push({ label: `${cIcn} ${cLbl}`, type: 'subtab', param: 'content', primary: true });
-            if (hitAreas.has('qt')) actions.push({ label: `${qIcn} ${qLbl}`, type: 'subtab', param: 'qt', primary: actions.length === 0 });
+            if (hitAreas.has('videos')) actions.push({ label: `${getTabIcon('manageVideos')} ${getTabLabel('manageVideos')}`, type: 'subtab', param: 'videos', primary: actions.length === 0 });
             if (hitAreas.has('members')) actions.push({ label: `${mIcn} ${mLbl}`, type: 'subtab', param: 'members' });
 
             setSecCheckResult(id, 'err', `악성 스크립트 흔적 ${hits.length}건 감지:\n• ${hits.slice(0, 4).join('\n• ')}`, {
-              reason: '저장된 게시물·댓글·이름 중에 <script>, iframe, javascript:, HTML 이벤트 속성 등 코드 실행을 노리는 위험 문자열이 포함되어 있습니다.',
+              reason: '저장된 공지·배너·영상·이름 중에 <script>, iframe, javascript:, HTML 이벤트 속성 등 코드 실행을 노리는 위험 문자열이 포함되어 있습니다.',
               solution: '즉시 해당 항목을 삭제하거나 위험 태그를 제거해 주세요. 앱 화면은 자동으로 텍스트 이스케이프 처리되어 실행되지는 않지만 원본 데이터도 삭제하는 것이 안전합니다.',
               actions
             });
@@ -18806,7 +17630,7 @@
           const deletes = recent.filter(l => { return /삭제|해제|탈퇴/.test(String(l.action || '')); });
           if (blocked.length > 0) {
             setSecCheckResult(id, 'warn', `최근 7일간 악성 입력·피싱 링크·도배 차단 ${blocked.length}건 감지됨 · 삭제/해제 이벤트 ${deletes.length}건`, {
-              reason: '최근 7일 이내에 악성 스크립트 입력, 피싱·단축 URL 등록, 또는 댓글 도배 시도가 감지되어 실시간 방어 기능이 차단했습니다.',
+              reason: '최근 7일 이내에 악성 스크립트 입력이나 피싱·단축 URL 등록 시도가 감지되어 실시간 방어 기능이 차단했습니다.',
               solution: `아래 [🚨 최근 보안 위협 · 차단 기록] 또는 [${logLbl}] 탭에서 실행자와 시도 내용을 확인하세요. 악의적 계정이 반복 시도할 경우 계정 삭제 또는 관리자 코드 변경을 권장합니다.`,
               actions: [{ label: `${logIcn} ${logLbl} 확인`, type: 'subtab', param: 'logs', primary: true }]
             });
@@ -18857,7 +17681,6 @@
         confirmExternalLinksV59: true,
         detectCloneDomain: !!(document.getElementById('cfgSecDetectClone') && document.getElementById('cfgSecDetectClone').checked),
         alertAdminOnSecurityEvent: !!(document.getElementById('cfgSecAdminAlert') ? document.getElementById('cfgSecAdminAlert').checked : (securityConfig.alertAdminOnSecurityEvent !== false)),
-        commentCooldownSec: Math.max(0, Math.min(60, Number((document.getElementById('cfgSecCommentCooldown') || {}).value || 5))),
         officialHost: (securityConfig && securityConfig.officialHost) || DEFAULT_SECURITY_CONFIG.officialHost
       };
       const btn = document.getElementById('saveSecCfgBtn');
@@ -18871,7 +17694,7 @@
           category: '보안·설정',
           action: '보안 방어 설정 변경',
           target: '실시간 보안 방어',
-          detail: `XSS차단:${next.blockMaliciousInput ? 'ON' : 'OFF'} · 피싱차단:${next.blockSuspiciousLinks ? 'ON' : 'OFF'} · 외부확인:${next.confirmExternalLinks ? 'ON' : 'OFF'} · 도배쿨타임:${next.commentCooldownSec}초`
+          detail: `XSS차단:${next.blockMaliciousInput ? 'ON' : 'OFF'} · 피싱차단:${next.blockSuspiciousLinks ? 'ON' : 'OFF'} · 외부확인:${next.confirmExternalLinks ? 'ON' : 'OFF'}`
         });
         showToast('🛡️ 보안 방어 설정이 저장 및 즉시 적용되었습니다!');
       } catch (err) {
@@ -19103,7 +17926,7 @@
                 <span class="settings-row-icon">${escapeHtml(ic)}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title">${escapeHtml(lb)}</div>
-                  <div class="settings-row-sub">새 공지·말씀·문의 알림 및 기기 알림 권한</div>
+                  <div class="settings-row-sub">새 공지·영상·문의 알림 및 기기 알림 권한</div>
                 </span>
               </span>
               <span class="settings-row-right">
@@ -19170,7 +17993,7 @@
                 <span class="settings-row-icon">${escapeHtml(ic)}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title">${escapeHtml(lb)}</div>
-                  <div class="settings-row-sub">출석·말씀·영상·알림 등 앱 사용 방법 안내</div>
+                  <div class="settings-row-sub">출석·공지·영상·알림 등 앱 사용 방법 안내</div>
                 </span>
               </span>
               <span class="settings-row-right">▸</span>
@@ -19242,7 +18065,7 @@
                 <span class="settings-row-icon">${escapeHtml(ic)}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title">${escapeHtml(lb)}</div>
-                  <div class="settings-row-sub">개인 메모·책갈피 보호 및 보안 방어 안내</div>
+                  <div class="settings-row-sub">최소 수집 원칙 및 실시간 보안 방어 안내</div>
                 </span>
               </span>
               <span class="settings-row-right">▸</span>
@@ -19335,14 +18158,14 @@
         const raw = JSON.parse(localStorage.getItem(KEY_TAB_SEEN_TS) || '{}');
         if (!raw || typeof raw !== 'object' || !raw.initialized) {
           const now = Date.now();
-          const init = { initialized: true, home: now, qt: now, inquiryReply: now };
+          const init = { initialized: true, home: now, inquiryReply: now };
           localStorage.setItem(KEY_TAB_SEEN_TS, JSON.stringify(init));
           return init;
         }
         return raw;
       } catch {
         const now = Date.now();
-        return { initialized: true, home: now, qt: now, inquiryReply: now };
+        return { initialized: true, home: now, inquiryReply: now };
       }
     }
 
@@ -19376,11 +18199,6 @@
         }).length;
         const newVideos = (videoItems || []).filter(v => v.status === 'approved' && Number(v.approvedTs || v.createdTs || 0) > lastSeen).length;
         return newNotices + newBlocks + newVideos;
-      }
-      if (tabKey === 'qt') {
-        const lastSeen = Number(seen.qt || 0);
-        const newQts = (qtPosts || []).filter(q => Number(q.createdTs || 0) > lastSeen).length;
-        return newQts;
       }
       if (tabKey === 'settings') {
         let cnt = 0;
@@ -19831,32 +18649,22 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
-    // 6. QT(오늘의 말씀) · 공감 · 댓글
+    // 6. 폐기된 QT 컬렉션 전면 차단 (관리자 기존 잔여 데이터 삭제용 읽기·삭제만 허용)
     match /qtPosts/{docId} {
-      allow read: if isApprovedMember();
-      allow write: if isAdmin();
+      allow read, delete: if isAdmin();
+      allow create, update: if false;
     }
     match /qtReactions/{docId} {
-      allow read: if isApprovedMember();
-      allow create, update: if isAdmin() || (isApprovedMember() && request.resource.data.uid == request.auth.uid);
-      allow delete: if isAdmin() || (isApprovedMember() && resource.data.uid == request.auth.uid);
+      allow read, delete: if isAdmin();
+      allow create, update: if false;
     }
     match /qtComments/{docId} {
-      allow read: if isApprovedMember();
-      allow create: if isAdmin() || (isApprovedMember() && request.resource.data.uid == request.auth.uid);
-      allow update: if isAdmin() || (
-        isApprovedMember()
-        && resource.data.uid == request.auth.uid
-        && request.resource.data.uid == request.auth.uid
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['body', 'edited', 'updatedTs'])
-      );
-      allow delete: if isAdmin() || (isApprovedMember() && resource.data.uid == request.auth.uid);
+      allow read, delete: if isAdmin();
+      allow create, update: if false;
     }
     match /qtCommentLikes/{docId} {
-      allow read: if isApprovedMember();
-      allow create: if isAdmin() || (isApprovedMember() && request.resource.data.uid == request.auth.uid);
-      allow delete: if isAdmin() || (isApprovedMember() && resource.data.uid == request.auth.uid);
-      allow update: if false;
+      allow read, delete: if isAdmin();
+      allow create, update: if false;
     }
 
     // 7. 이용자 문의 사항 (작성자 본인: 추가·조회·수정·삭제 / 관리자: 전체 조회·답변·해결 처리 및 해결된 문의만 삭제)
@@ -20222,9 +19030,9 @@ service cloud.firestore {
 
       // 저장된 콘텐츠 내 XSS 흔적 빠른 검사
       const hasXss = (notices || []).some(n => !detectMaliciousCode(`${n.title || ''} ${n.body || ''}`).safe)
-        || (qtComments || []).some(c => !detectMaliciousCode(c.body || '').safe);
+        || (videoItems || []).some(v => !detectMaliciousCode(`${v.title || ''} ${v.note || ''}`).safe);
       if (hasXss) {
-        alerts.push('게시물·댓글 내 악성 스크립트 흔적 발견');
+        alerts.push('게시물·영상 내 악성 스크립트 흔적 발견');
       }
 
       if (alerts.length > 0) {
@@ -20252,7 +19060,7 @@ service cloud.firestore {
       {
         id: 'tos_3',
         title: '제3조 (회원의 권리와 의무)',
-        body: '① 승인된 회원은 앱에서 공지·소식 열람, 예배·행사 출석 체크, QT 공감·묵상 댓글, 설교·찬양 영상 시청 및 추천, 회칙 열람, 문의 사항 등록 등의 기능을 이용할 수 있습니다.\n② 회원은 회칙 제6조에 따라 예배와 교육에 성실히 참여하고 교회 질서와 회칙을 준수하며, 앱 내 댓글과 소통 공간에서 공동체의 덕을 세우는 언어와 태도를 지켜야 합니다.\n③ 타인의 계정을 도용하거나, 악성 코드·피싱 링크 삽입, 도배 행위 등 앱의 정상적인 운영을 방해하는 행위는 금지됩니다.'
+        body: '① 승인된 회원은 앱에서 공지·소식 열람, 예배·행사 출석 체크, 설교·찬양 영상 시청 및 추천, 회칙 열람, 문의 사항 등록 등의 기능을 이용할 수 있습니다.\n② 회원은 회칙 제6조에 따라 예배와 교육에 성실히 참여하고 교회 질서와 회칙을 준수하며, 앱 내 소통 공간에서 공동체의 덕을 세우는 언어와 태도를 지켜야 합니다.\n③ 타인의 계정을 도용하거나, 악성 코드·피싱 링크 삽입, 도배 행위 등 앱의 정상적인 운영을 방해하는 행위는 금지됩니다.'
       },
       {
         id: 'tos_4',
@@ -20261,8 +19069,8 @@ service cloud.firestore {
       },
       {
         id: 'tos_5',
-        title: '제5조 (게시물 · 댓글 · 문의 사항 및 보안 로그)',
-        body: '① 회원이 작성한 묵상 댓글과 문의 사항의 책임은 작성자 본인에게 있으며, 본인이 작성한 댓글과 문의 사항은 언제든 직접 수정·삭제할 수 있습니다.\n② 비방·욕설·허위사실 유포·광고성 스팸·악성 링크 등 공동체 질서를 해치는 게시물은 사전 통보 없이 차단 또는 삭제될 수 있습니다.\n③ 건전한 공동체 운영과 보안 사고 예방을 위해 관리자 활동 전반과 회원의 댓글(작성·수정·삭제), 문의 사항(작성·수정·삭제), 이름·생일 변경 신청, 가입·탈퇴, 출석 체크 내역은 삭제 불가 보안 로그에 기록됩니다.'
+        title: '제5조 (영상 추천 · 문의 사항 및 보안 로그)',
+        body: '① 회원이 작성한 설교·찬양 영상 추천과 문의 사항의 책임은 작성자 본인에게 있으며, 본인이 작성한 글은 언제든 직접 수정·삭제할 수 있습니다.\n② 비방·욕설·허위사실 유포·광고성 스팸·악성 링크 등 공동체 질서를 해치는 게시물은 사전 통보 없이 차단 또는 삭제될 수 있습니다.\n③ 건전한 공동체 운영과 보안 사고 예방을 위해 관리자 활동 전반과 회원의 영상 추천(등록·수정·삭제), 문의 사항(작성·수정·삭제), 이름·생일 변경 신청, 가입·탈퇴, 출석 체크 내역은 삭제 불가 보안 로그에 기록됩니다.'
       },
       {
         id: 'tos_6',
@@ -20272,7 +19080,7 @@ service cloud.firestore {
       {
         id: 'tos_7',
         title: '제7조 (저작권 및 출처 준수)',
-        body: '① 앱에 제공되는 매일 자동 말씀은 저작재산권 보호기간이 만료된 「성경전서 개역한글판」(대한성서공회) 원문을 사용합니다.\n② 관리자 및 회원은 외부 저작물(유료 번역본·도서·기사 등)을 무단 복제하여 게시해서는 안 되며, 허용된 범위 내 인용 시 반드시 출처를 표기하여야 합니다.'
+        body: '① 앱에 연결되는 설교·찬양 영상은 교회 및 원작자가 운영하는 공식 유튜브 채널 링크를 기준으로 하며, 무단 복제·불법 업로드 영상은 공유하지 않습니다.\n② 관리자 및 회원은 외부 저작물(유료 번역본·도서·기사·음원 등)을 무단 복제하여 게시해서는 안 되며, 허용된 범위 내 인용 시 반드시 출처를 표기하여야 합니다.'
       },
       {
         id: 'tos_8',
@@ -21106,7 +19914,7 @@ service cloud.firestore {
                   <div style="font-size:12px; color:#475569; margin-bottom:${v.note ? '7px' : '0'};">
                     📺 <b>${escapeHtml(v.channelName || '유튜브')}</b> · 추천: ${escapeHtml(v.authorName || '회원')}${v.roleName ? ` (${escapeHtml(v.roleName)})` : ''}
                   </div>
-                  ${v.note ? `<div class="qt-scripture-box" style="margin:6px 0 0; font-size:13px; border-left-color:#DC2626;">${escapeHtml(v.note)}</div>` : ''}
+                  ${v.note ? `<div class="video-note-box" style="margin:6px 0 0;">${escapeHtml(v.note)}</div>` : ''}
                   <div class="card-footer" style="margin-top:10px; padding-top:8px;">
                     <button class="btn-sm primary" type="button" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">▶ 앱에서 재생</button>
                     ${canEdit ? `
