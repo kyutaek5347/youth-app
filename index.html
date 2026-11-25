@@ -2,19 +2,19 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://right-youth-app.firebaseapp.com https://api.getbible.net https://bolls.life https://www.youtube.com https://noembed.com https://script.google.com https://script.googleusercontent.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://right-youth-app.firebaseapp.com https://www.youtube.com https://noembed.com https://script.google.com https://script.googleusercontent.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=159" />
+  <link rel="manifest" href="./manifest.json?v=160" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=159" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=159" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=160" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=160" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -763,150 +763,7 @@
     }
 
 
-    /* ==================== v10.3 성경 & 큐티 스타일 ==================== */
-    .bible-hero {
-      background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%);
-      color: #fff;
-      border-radius: 18px;
-      padding: 16px 18px;
-      margin-bottom: 12px;
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
-    }
-    .bible-toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-    .bible-picker-btn {
-      background: rgba(255,255,255,0.16);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.28);
-      border-radius: 10px;
-      padding: 8px 12px;
-      font-size: 13.5px;
-      font-weight: 800;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .bible-font-btns {
-      display: inline-flex;
-      gap: 4px;
-    }
-    .bible-mini-btn {
-      background: rgba(255,255,255,0.14);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.22);
-      border-radius: 8px;
-      padding: 6px 9px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .bible-nav-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin: 10px 0;
-    }
-    .bible-verse-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 14px 15px;
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-    }
-    .bible-verse-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 9px;
-      padding: 7px 6px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .bible-verse-row:hover { background: #F8FAFC; }
-    .bible-verse-row.selected { background: #EFF6FF; }
-    .bible-verse-row.bookmarked { background: #FEFCE8; }
-    .bible-vnum {
-      font-size: 11.5px;
-      font-weight: 800;
-      color: #2563EB;
-      min-width: 22px;
-      padding-top: 3px;
-      flex-shrink: 0;
-      text-align: right;
-    }
-    .bible-vtext {
-      color: #1E293B;
-      line-height: 1.72;
-      word-break: keep-all;
-      flex: 1;
-    }
-    .bible-verse-actions {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      padding: 6px 6px 4px 31px;
-    }
-    .bible-grid-books {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      max-height: 46vh;
-      overflow-y: auto;
-      padding: 2px;
-    }
-    .bible-book-btn {
-      border: 1px solid var(--border);
-      background: #F8FAFC;
-      color: #0F172A;
-      border-radius: 10px;
-      padding: 9px 6px;
-      font-size: 12.5px;
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .bible-book-btn.active {
-      background: #1E3A8A;
-      color: #fff;
-      border-color: #1E3A8A;
-    }
-    .bible-grid-chapters {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 6px;
-      max-height: 44vh;
-      overflow-y: auto;
-      padding: 2px;
-    }
-    .bible-chap-btn {
-      border: 1px solid var(--border);
-      background: #F8FAFC;
-      color: #0F172A;
-      border-radius: 9px;
-      padding: 9px 0;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-    }
-    .bible-chap-btn.active {
-      background: #2563EB;
-      color: #fff;
-      border-color: #2563EB;
-    }
-
-    /* 큐티(QT) 카드 & 인스타·카톡 스타일 반응 */
+    /* ==================== v10.3 큐티(QT) 카드 & 인스타·카톡 스타일 반응 ==================== */
     .qt-hero {
       background: linear-gradient(135deg, #312E81 0%, #4F46E5 55%, #7C3AED 100%);
       color: #fff;
@@ -1107,56 +964,7 @@
     }
 
 
-    /* ==================== v10.5 성경 빠른 검색 & 메인 게시 확인 모달 ==================== */
-    .bible-quick-results {
-      background: #FFFFFF;
-      border: 1.5px solid #BFDBFE;
-      border-radius: 14px;
-      padding: 11px 12px;
-      margin: -2px 0 12px;
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.08);
-    }
-    .bible-quick-jump-btn {
-      width: 100%;
-      border: none;
-      background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
-      color: #fff;
-      border-radius: 11px;
-      padding: 11px 13px;
-      font-size: 13.5px;
-      font-weight: 800;
-      cursor: pointer;
-      text-align: left;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-    .bible-quick-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 6px;
-    }
-    .bible-quick-chip {
-      border: 1px solid #DBEAFE;
-      background: #EFF6FF;
-      color: #1E40AF;
-      border-radius: 999px;
-      padding: 5px 10px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .bible-quick-verse-hit {
-      padding: 8px 6px;
-      border-bottom: 1px solid #F1F5F9;
-      cursor: pointer;
-      font-size: 12.5px;
-      color: #334155;
-      line-height: 1.5;
-    }
-    .bible-quick-verse-hit:last-child { border-bottom: none; padding-bottom: 2px; }
+    /* ==================== v10.5 메인 게시 확인 모달 ==================== */
     .publish-confirm-box {
       background: #EFF6FF;
       border: 1px solid #BFDBFE;
@@ -1485,151 +1293,6 @@
       font-size: 11px;
       font-weight: 700;
       cursor: pointer;
-    }
-
-
-    /* ==================== v10.17 성경 다중 색상 책갈피 & 메모장 ==================== */
-    .bible-verse-row.selected {
-      box-shadow: inset 0 0 0 1.5px #93C5FD;
-    }
-    .bible-mark-palette {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      flex-wrap: wrap;
-      width: 100%;
-      padding: 6px 8px;
-      background: #F8FAFC;
-      border: 1px solid #E2E8F0;
-      border-radius: 10px;
-      margin-bottom: 4px;
-    }
-    .bible-mark-dot {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: 2px solid rgba(15, 23, 42, 0.14);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 900;
-      color: #fff;
-      transition: transform 0.14s ease, border-color 0.14s ease;
-      padding: 0;
-    }
-    .bible-mark-dot:active { transform: scale(1.16); }
-    .bible-mark-dot.active {
-      border-color: #0F172A;
-      transform: scale(1.12);
-      box-shadow: 0 0 0 2px #fff inset;
-    }
-    .bible-mark-dot-sm {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(15, 23, 42, 0.16);
-      cursor: pointer;
-      padding: 0;
-    }
-    .bible-mark-dot-sm.active {
-      border-color: #0F172A;
-      transform: scale(1.15);
-    }
-    .bible-memo-badge {
-      display: inline-flex;
-      align-items: center;
-      font-size: 11px;
-      margin-left: 4px;
-      opacity: 0.85;
-    }
-    .bible-memo-editor-card {
-      background: #F8FAFC;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 13px;
-      margin-bottom: 14px;
-    }
-    .bible-memo-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      border-left: 3.5px solid #2563EB;
-      border-radius: 13px;
-      padding: 12px 13px;
-      margin-bottom: 9px;
-    }
-    .bible-memo-body {
-      font-size: 13.5px;
-      color: #1E293B;
-      line-height: 1.6;
-      white-space: pre-line;
-      word-break: break-word;
-      margin: 6px 0 9px;
-    }
-
-
-    /* ==================== v10.19 성경 메모 말씀 바로가기 스타일 ==================== */
-    @keyframes bibleVersePulse {
-      0% { box-shadow: 0 0 0 2px #2563EB inset; background: #DBEAFE; }
-      65% { box-shadow: 0 0 0 2px #3B82F6 inset; background: #EFF6FF; }
-      100% { box-shadow: inset 0 0 0 1.5px #93C5FD; }
-    }
-    .bible-verse-row.jump-flash {
-      animation: bibleVersePulse 1.5s ease-out;
-    }
-    .bible-memo-link-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      background: #EFF6FF;
-      border: 1px solid #BFDBFE;
-      border-radius: 10px;
-      padding: 8px 10px;
-      margin-bottom: 10px;
-      font-size: 12px;
-      color: #1E3A8A;
-      font-weight: 700;
-      flex-wrap: wrap;
-    }
-    .bible-memo-saved-banner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      background: #ECFDF5;
-      border: 1.5px solid #6EE7B7;
-      border-radius: 12px;
-      padding: 10px 12px;
-      margin-bottom: 12px;
-      font-size: 12.5px;
-      color: #065F46;
-      font-weight: 700;
-      flex-wrap: wrap;
-    }
-    .bible-memo-ref-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: #EFF6FF;
-      color: #1D4ED8;
-      border: 1px solid #BFDBFE;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 999px;
-      margin-bottom: 5px;
-    }
-    .bible-memo-verse-quote {
-      background: #F8FAFC;
-      border-left: 3px solid #93C5FD;
-      border-radius: 0 8px 8px 0;
-      padding: 7px 10px;
-      font-size: 12px;
-      color: #475569;
-      line-height: 1.5;
-      margin: 4px 0 7px;
     }
 
 
@@ -1999,7 +1662,7 @@
     .birthday-title, .birthday-desc, .newcomer-auto-title, .newcomer-auto-desc,
     .attendance-home-title, .attendance-home-desc, .bylaw-hero-title, .bylaw-hero-dates,
     .bylaw-article-title, .bylaw-article-body, .qt-scripture-box, .qt-comment-body,
-    .bible-vtext, .info-box, .status-desc, .status-meta, .setting-title, .setting-sub,
+    .info-box, .status-desc, .status-meta, .setting-title, .setting-sub,
     .diag-msg, .publish-confirm-box, .modal-title, .form-label {
       word-break: keep-all;
       overflow-wrap: anywhere;
@@ -2011,7 +1674,7 @@
     /* 버튼·배지 줄바꿈 깨짐 방지 */
     .exit-btn, .btn-admin, .btn-sm, .tag, .hero-badge, .qt-passage-pill,
     .birthday-badge, .newcomer-auto-badge, .attendance-live-badge, .role-pill,
-    .bible-mini-btn, .bible-picker-btn, .filter-chip, .sub-tab-btn, .quick-tag {
+    .filter-chip, .sub-tab-btn, .quick-tag {
       white-space: nowrap;
       flex-shrink: 0;
     }
@@ -2086,7 +1749,7 @@
       line-height: 1.3;
     }
 
-    /* 성경·큐티 히어로 상단 바 반응형 래핑 */
+    /* 큐티 히어로 상단 바 반응형 래핑 */
     .hero-top-row {
       display: flex;
       align-items: flex-start;
@@ -2248,7 +1911,7 @@
 
       .hero-banner, .newcomer-card, .leader-card, .custom-banner-card,
       .birthday-banner, .newcomer-auto-banner, .attendance-home-card,
-      .bible-hero, .qt-hero, .bylaw-hero {
+      .qt-hero, .bylaw-hero {
         padding: 15px 14px;
         border-radius: 16px;
       }
@@ -2299,8 +1962,6 @@
       .main { padding: 12px 11px calc(84px + var(--safe-bottom)); }
       .tab-btn { font-size: 9.2px; letter-spacing: -0.55px; padding: 4px 1px; }
       .tab-icon { font-size: 16.5px; height: 19px; }
-      .bible-grid-books { grid-template-columns: repeat(2, 1fr); }
-      .bible-grid-chapters { grid-template-columns: repeat(5, 1fr); }
       .diag-sim-grid { grid-template-columns: 1fr; }
       .auth-tab-btn { font-size: 12.5px; }
     }
@@ -2353,7 +2014,7 @@
       }
       .hero-banner, .newcomer-card, .leader-card, .custom-banner-card,
       .birthday-banner, .newcomer-auto-banner, .attendance-home-card,
-      .bible-hero, .qt-hero, .bylaw-hero {
+      .qt-hero, .bylaw-hero {
         padding: 20px 22px;
       }
       .hero-title, .birthday-title, .newcomer-auto-title, .attendance-home-title {
@@ -2385,12 +2046,6 @@
       .filter-row {
         flex-wrap: wrap;
         overflow-x: visible;
-      }
-      .bible-grid-books {
-        grid-template-columns: repeat(4, 1fr);
-      }
-      .bible-grid-chapters {
-        grid-template-columns: repeat(8, 1fr);
       }
       /* 태블릿·PC에서는 모달을 화면 중앙에 깔끔한 팝업 카드로 표시 */
       .modal-backdrop {
@@ -2427,12 +2082,6 @@
       }
       .main {
         padding: 22px 26px calc(94px + var(--safe-bottom));
-      }
-      .bible-grid-books {
-        grid-template-columns: repeat(4, 1fr);
-      }
-      .bible-grid-chapters {
-        grid-template-columns: repeat(9, 1fr);
       }
       .modal {
         max-width: 560px;
@@ -3249,7 +2898,7 @@
     }
     .tabbar.dark .tab-update-dot { border-color: var(--admin-bg); }
 
-    /* 전체 글자 크기 확대 (성경 본문 글자 크기는 성경 탭 가-/가+에서 독립 조절) */
+    /* 전체 글자 크기 확대 */
     html[data-font-scale="large"] {
       --fs-xs: 13px;
       --fs-sm: 14px;
@@ -3306,7 +2955,7 @@
     html[data-font-scale="xlarge"] .guide-card-sub,
     html[data-font-scale="xlarge"] .diag-msg { font-size: 15px; }
 
-    /* ==================== v10.56 하단 탭바 확대 · 성경 사전 · 문의 사항 · 접이식 글자 크기 ==================== */
+    /* ==================== v10.56 하단 탭바 확대 · 문의 사항 · 접이식 글자 크기 ==================== */
     .main {
       padding-bottom: calc(102px + var(--safe-bottom)) !important;
     }
@@ -3359,38 +3008,6 @@
       border-bottom: 1px solid #F1F5F9;
     }
 
-    /* 성경 용어 사전 카드 (QT 탭 내 오늘의 성경 사전) */
-    .dict-daily-card {
-      background: linear-gradient(180deg, #F0FDF4 0%, #FFFFFF 45%);
-      border: 1.5px solid #86EFAC;
-      border-radius: 17px;
-      padding: 15px 15px 14px;
-      margin-bottom: 13px;
-      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.08);
-    }
-    .dict-term-title {
-      font-size: 16.5px;
-      font-weight: 900;
-      color: #065F46;
-      margin: 4px 0 6px;
-      line-height: 1.35;
-    }
-    .dict-term-def {
-      font-size: var(--fs-base);
-      color: #1E293B;
-      line-height: 1.65;
-      white-space: pre-line;
-      word-break: keep-all;
-    }
-    .dict-modal-item {
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      border-left: 3.5px solid #16A34A;
-      border-radius: 13px;
-      padding: 12px 13px;
-      margin-bottom: 9px;
-    }
-
     /* 문의 사항 답변 박스 */
     .inquiry-reply-box {
       background: #EFF6FF;
@@ -3427,11 +3044,6 @@
       color: #475569;
       line-height: 1.48;
       word-break: keep-all;
-    }
-    .dict-daily-card .source-meta-line {
-      background: rgba(240, 253, 244, 0.72);
-      border-left-color: #22C55E;
-      color: #166534;
     }
     .qt-order-card {
       background: #F8FAFC;
@@ -3571,7 +3183,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=159" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=160" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3734,58 +3346,6 @@
         <!-- (1) 메인 홈 화면 -->
         <section id="viewHome" class="hidden"></section>
 
-        <!-- (2) 성경 읽기 화면 -->
-        <section id="viewBible" class="hidden">
-          <div class="bible-hero">
-            <div class="hero-top-row">
-              <div class="hero-top-text">
-                <div id="bibleViewTitle" class="hero-top-title">📖 성경</div>
-                <div id="bibleViewSub" class="hero-top-sub">개역한글 성경 본문 · 절 터치 시 복사/책갈피/메모</div>
-              </div>
-              <div class="hero-top-actions">
-                <button id="bibleDictOpenBtn" class="bible-mini-btn" type="button" onclick="openBibleDictModal()">📚 사전</button>
-                <button class="bible-mini-btn" type="button" onclick="openBibleMemoModal()">📝 메모</button>
-                <button class="bible-mini-btn" type="button" onclick="openBibleBookmarksModal()">⭐ 책갈피</button>
-              </div>
-            </div>
-            <div class="bible-toolbar">
-              <button id="biblePickerTrigger" class="bible-picker-btn" type="button" onclick="openBiblePickerModal('book')">
-                <span id="bibleCurrentRef">창세기 1장</span> ▾
-              </button>
-              <div class="bible-font-btns">
-                <button class="bible-mini-btn" type="button" onclick="adjustBibleFont(-1)">가-</button>
-                <button class="bible-mini-btn" type="button" onclick="adjustBibleFont(1)">가+</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="search-box" style="margin-bottom:8px;">
-            <span class="search-icon">🔍</span>
-            <input id="bibleQuickSearchInput" class="search-input" type="search" placeholder="성경 검색 (예: 시편 23:1, 요3:16)" oninput="onBibleQuickSearchInput(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault(); executeBibleQuickJump();}" />
-            <button id="bibleQuickSearchClear" class="search-clear hidden" type="button" onclick="clearBibleQuickSearch()">✕</button>
-          </div>
-          <div id="bibleQuickSearchResults" class="bible-quick-results hidden"></div>
-
-          <div class="bible-nav-row">
-            <button id="biblePrevBtn" class="btn-outline" type="button" style="flex:1; padding:9px;" onclick="moveBibleChapter(-1)">◀ 이전 장</button>
-            <button class="btn-outline" type="button" style="padding:9px 12px;" onclick="openBiblePickerModal('chapter')">장 선택</button>
-            <button id="bibleNextBtn" class="btn-outline" type="button" style="flex:1; padding:9px;" onclick="moveBibleChapter(1)">다음 장 ▶</button>
-          </div>
-
-          <div id="bibleContentArea" class="bible-verse-card">
-            <div style="text-align:center; padding:26px 10px; color:#64748B; font-size:13.5px;">성경 말씀을 불러오는 중입니다...</div>
-          </div>
-
-          <div class="bible-nav-row" style="margin-top:12px;">
-            <button class="btn-outline" type="button" style="flex:1; padding:9px;" onclick="moveBibleChapter(-1)">◀ 이전 장</button>
-            <button class="btn-outline" type="button" style="flex:1; padding:9px;" onclick="moveBibleChapter(1)">다음 장 ▶</button>
-          </div>
-
-          <div class="copyright-footnote">
-            📖 본문 출처: <b>「성경전서 개역한글판」(대한성서공회)</b> · 저작재산권 보호기간 만료 원문 사용
-          </div>
-        </section>
-
         <!-- (3) 오늘의 말씀 (큐티) 화면 -->
         <section id="viewQt" class="hidden">
           <div class="qt-hero">
@@ -3851,7 +3411,7 @@
 
           <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input id="userGuideSearchInput" class="search-input" type="search" placeholder="기능 검색 (예: 출석, 성경, 알림)" oninput="onUserGuideSearchInput(this.value)" />
+            <input id="userGuideSearchInput" class="search-input" type="search" placeholder="기능 검색 (예: 출석, QT, 알림)" oninput="onUserGuideSearchInput(this.value)" />
             <button id="userGuideSearchClear" class="search-clear hidden" type="button" onclick="clearUserGuideSearch()">✕</button>
           </div>
 
@@ -4024,89 +3584,6 @@
     </div>
   </div>
 
-
-  <!-- 성경 책 · 장 선택 모달 -->
-  <div id="biblePickerModal" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-head">
-        <h3 id="biblePickerModalTitle" class="modal-title">📖 성경 이동</h3>
-        <button class="close-btn" data-close="biblePickerModal">✕</button>
-      </div>
-      <div class="modal-tabs-2">
-        <button id="bpTabBook" class="modal-tab-btn active" type="button" onclick="switchBiblePickerTab('book')">권 선택 (66권)</button>
-        <button id="bpTabChapter" class="modal-tab-btn" type="button" onclick="switchBiblePickerTab('chapter')">장 선택</button>
-      </div>
-
-      <div id="bpPanelBook">
-        <div class="search-box" style="margin-bottom:8px;">
-          <span class="search-icon">🔍</span>
-          <input id="bibleBookSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13.5px;" placeholder="성경 이름 검색 (예: 시편, 요한)" oninput="renderBibleBookGrid()" />
-        </div>
-        <div class="filter-row" style="margin-bottom:8px;">
-          <button id="bpTestAll" class="filter-chip active" type="button" onclick="setBibleTestamentFilter('all')">전체 (66)</button>
-          <button id="bpTestOT" class="filter-chip" type="button" onclick="setBibleTestamentFilter('OT')">구약 (39)</button>
-          <button id="bpTestNT" class="filter-chip" type="button" onclick="setBibleTestamentFilter('NT')">신약 (27)</button>
-        </div>
-        <div id="bibleBookGrid" class="bible-grid-books"></div>
-      </div>
-
-      <div id="bpPanelChapter" class="hidden">
-        <div id="bpSelectedBookTitle" style="font-size:14px; font-weight:800; color:#1E3A8A; margin-bottom:10px;"></div>
-        <div id="bibleChapterGrid" class="bible-grid-chapters"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 성경 책갈피 모달 -->
-  <div id="bibleBookmarksModal" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-head">
-        <h3 id="bibleBookmarksModalTitle" class="modal-title">⭐ 저장한 말씀 책갈피</h3>
-        <button class="close-btn" data-close="bibleBookmarksModal">✕</button>
-      </div>
-      <div id="bibleBookmarkColorFilters" class="filter-row" style="margin-bottom:10px;"></div>
-      <div id="bibleBookmarksList"></div>
-    </div>
-  </div>
-
-  <!-- 성경 메모장 모달 -->
-  <div id="bibleMemoModal" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-head">
-        <h3 id="bibleMemoModalTitle" class="modal-title">📝 성경 메모장</h3>
-        <button class="close-btn" data-close="bibleMemoModal">✕</button>
-      </div>
-      <div id="bibleMemoSavedBanner" class="bible-memo-saved-banner hidden"></div>
-      <div class="bible-memo-editor-card">
-        <input type="hidden" id="editBibleMemoId" />
-        <input type="hidden" id="bibleMemoLinkBookId" />
-        <input type="hidden" id="bibleMemoLinkChapter" />
-        <input type="hidden" id="bibleMemoLinkVerse" />
-        <div class="bible-memo-link-bar">
-          <span id="bibleMemoLinkDisplay">📖 연결 말씀: 창세기 1장</span>
-          <button class="btn-sm" type="button" style="padding:4px 8px; font-size:11px;" onclick="linkCurrentBiblePosToMemo()">현재 보는 말씀으로 맞추기</button>
-        </div>
-        <div class="form-group" style="margin-bottom:8px;">
-          <label class="form-label" for="bibleMemoTitleInput">제목 또는 말씀 구절 (선택)</label>
-          <input id="bibleMemoTitleInput" class="form-input" style="background:#fff;" maxlength="50" placeholder="예: 시편 23:1 / 주일 설교 메모" oninput="onBibleMemoTitleInput()" />
-        </div>
-        <div class="form-group" style="margin-bottom:9px;">
-          <label class="form-label" for="bibleMemoBodyInput">메모 내용</label>
-          <textarea id="bibleMemoBodyInput" class="form-textarea" style="background:#fff; min-height:110px;" placeholder="묵상한 내용, 은혜 받은 구절, 기도제목 등 원하는 글을 자유롭게 적어보세요."></textarea>
-        </div>
-        <div style="display:flex; gap:6px;">
-          <button id="saveBibleMemoBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:11px; font-size:13.5px;" onclick="handleSaveBibleMemo()">💾 메모 저장</button>
-          <button id="cancelEditBibleMemoBtn" class="btn-outline hidden" type="button" onclick="resetBibleMemoForm()">취소</button>
-        </div>
-      </div>
-
-      <div class="search-box" style="margin-bottom:10px;">
-        <span class="search-icon">🔍</span>
-        <input id="bibleMemoSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13.5px;" type="search" placeholder="저장한 메모 검색..." oninput="renderBibleMemoList()" />
-      </div>
-      <div id="bibleMemoList"></div>
-    </div>
-  </div>
 
   <!-- 오늘의 말씀 등록 / 수정 모달 -->
   <div id="qtFormModal" class="modal-backdrop">
@@ -4873,8 +4350,7 @@
       </div>
       <div class="info-box" style="margin-top:0; margin-bottom:10px;">
         <b>1. 내 기기에서만 보관 (관리자 열람 불가 · 미기록)</b><br>
-        • 성경 개인 메모, 6색 책갈피, 성경 검색 기록<br>
-        • 글자 크기 설정, 알림 수신 설정<br>
+        • 전체 글자 크기 설정, 알림 수신 설정<br>
         • 비밀번호 변경 내역 및 공지·회칙·바로가기 단순 열람
       </div>
       <div class="info-box" style="margin-top:0; margin-bottom:10px;">
@@ -4888,82 +4364,6 @@
         건전한 공동체 운영을 위해 묵상 댓글 작성·수정·삭제, 문의 사항 작성·수정·삭제, 가입·탈퇴, 이름·생일 변경 신청, 예배 출석 체크 내역만 관리 기록에 남습니다.
       </div>
       <button class="btn-full btn-dark" type="button" style="padding:11px;" data-close="privacyGuideModal">확인</button>
-    </div>
-  </div>
-
-  <!-- 성경 용어 사전 검색 모달 (자체 해설 · 저작권 안전) -->
-  <div id="bibleDictModal" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-head">
-        <h3 id="bibleDictModalTitle" class="modal-title">📚 성경 용어 사전</h3>
-        <div style="display:flex; align-items:center; gap:6px;">
-          <button id="bibleDictModalAddBtn" class="btn-sm primary hidden" type="button" onclick="openNewBibleDictModal()">+ 용어 추가</button>
-          <button class="close-btn" data-close="bibleDictModal">✕</button>
-        </div>
-      </div>
-      <div class="search-box" style="margin-bottom:8px;">
-        <span class="search-icon">🔍</span>
-        <input id="bibleDictSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13.5px;" type="search" placeholder="용어·인물·지명 검색 (예: 은혜, 언약, 갈릴리)" oninput="renderBibleDictModalList()" />
-      </div>
-      <div id="bibleDictCatChips" class="filter-row" style="margin-bottom:10px;"></div>
-      <div id="bibleDictModalSummary" style="font-size:12px; color:#64748B; font-weight:700; margin-bottom:8px;"></div>
-      <div id="bibleDictModalList" style="max-height:52vh; overflow-y:auto;"></div>
-      <div class="copyright-footnote" style="margin-top:10px;">
-        📚 라이트 청년부 자체 정리 성경 용어 해설 (성경 인용: 「성경전서 개역한글판」 · 대한성서공회)
-      </div>
-    </div>
-  </div>
-
-  <!-- 관리자: 성경 사전 용어 추가/수정 모달 -->
-  <div id="bibleDictFormModal" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-head">
-        <h3 id="bibleDictFormModalTitle" class="modal-title">📚 새 성경 사전 용어 등록</h3>
-        <button class="close-btn" data-close="bibleDictFormModal">✕</button>
-      </div>
-      <input type="hidden" id="editBibleDictId" />
-      <input type="hidden" id="overrideBuiltInDictId" />
-      <div class="form-group">
-        <label class="form-label" for="dictDisplayModeSelect">QT 화면 표시 방식</label>
-        <select id="dictDisplayModeSelect" class="form-select">
-          <option value="together">📌 오늘의 자동 사전과 함께 표시 (사전 목록에도 추가)</option>
-          <option value="replace">🔄 오늘의 자동 사전 대신 이 용어만 표시 (대체)</option>
-        </select>
-      </div>
-      <div class="form-grid-2">
-        <div class="form-group">
-          <label class="form-label" for="dictDateInput">표시 날짜 (KST)</label>
-          <input id="dictDateInput" class="form-input" placeholder="2026.11.25" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="dictCatInput">분류</label>
-          <select id="dictCatInput" class="form-select">
-            <option value="신학·용어">신학·용어</option>
-            <option value="인물">인물</option>
-            <option value="지명">지명</option>
-            <option value="예배·절기">예배·절기</option>
-            <option value="기타">기타</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="dictTermInput">용어 이름 (필수)</label>
-        <input id="dictTermInput" class="form-input" maxlength="30" placeholder="예: 아멘, 할렐루야, 유월절" />
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="dictRefInput">관련 성경 구절 (선택)</label>
-        <input id="dictRefInput" class="form-input" maxlength="40" placeholder="예: 시편 23:1, 요한복음 3:16" />
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="dictDefInput">용어 설명 (필수)</label>
-        <textarea id="dictDefInput" class="form-textarea" style="min-height:115px;" maxlength="600" placeholder="청년부원들이 이해하기 쉽게 용어 뜻을 작성해 주세요."></textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="dictSourceInput">출처 (외부 참고 시 작성 · 선택)</label>
-        <input id="dictSourceInput" class="form-input" maxlength="90" placeholder="예: 라이트 청년부 자체 정리 / 참고 자료명 (미입력 시 기본 출처 표시)" />
-        <div style="font-size:11px; color:#64748B; margin-top:4px; line-height:1.45;">※ 외부 사전·도서 원문을 그대로 복사하지 말고, 참고한 자료가 있으면 출처를 기재해 주세요.</div>
-      </div>
-      <button id="saveBibleDictBtn" class="btn-full btn-dark" type="button" onclick="handleSaveBibleDictItem()">📚 성경 사전 저장하기</button>
     </div>
   </div>
 
@@ -5027,34 +4427,6 @@
       <div style="display:flex; gap:8px;">
         <button id="saveAdminInquiryReplyBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveAdminInquiryReply()">💾 답변 저장 및 알림 전송</button>
         <button class="btn-outline" type="button" data-close="adminInquiryReplyModal">취소</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 관리자: 성경 본문 오타·오류 보정 (절 추가/수정) 모달 -->
-  <div id="bibleVerseEditModal" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-head">
-        <h3 id="bibleVerseEditModalTitle" class="modal-title">✏️ 성경 본문 오타 · 오류 수정</h3>
-        <button class="close-btn" data-close="bibleVerseEditModal">✕</button>
-      </div>
-      <input type="hidden" id="editBibleVerseMode" />
-      <input type="hidden" id="editBibleVerseOrigNum" />
-      <div id="editBibleVerseRefBox" class="info-box" style="margin-top:0; margin-bottom:12px;"></div>
-      <div class="form-group">
-        <label class="form-label" for="editBibleVerseNumInput">절 번호</label>
-        <input id="editBibleVerseNumInput" type="number" min="1" max="200" class="form-input" placeholder="예: 1" />
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="editBibleVerseTextInput">성경 본문 (개역한글판 오타·누락 보정)</label>
-        <textarea id="editBibleVerseTextInput" class="form-textarea" style="min-height:115px;" maxlength="1200" placeholder="오타나 누락된 본문을 정확하게 입력해 주세요."></textarea>
-        <div style="font-size:11px; color:#64748B; margin-top:4px; line-height:1.45;">
-          ※ 저작권 보호를 위해 개역개정·새번역 등 타 번역본을 무단 복사하지 말고, 개역한글판 원문의 오타·누락 보정 용도로만 사용해 주세요.
-        </div>
-      </div>
-      <div style="display:flex; gap:8px;">
-        <button id="saveBibleVerseEditBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveBibleVerseEdit()">💾 보정 본문 저장</button>
-        <button class="btn-outline" type="button" data-close="bibleVerseEditModal">취소</button>
       </div>
     </div>
   </div>
@@ -5305,12 +4677,12 @@
     const authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 25;
-    const APP_CLIENT_BUILD = 159;
+    const CURRENT_SCHEMA_VERSION = 26;
+    const APP_CLIENT_BUILD = 160;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
-    // 매일 자정(KST) 자동 변경되는 일일 큐티 성경말씀 풀 (60편)
+    // 매일 자정(KST) 자동 변경되는 일일 오늘의 말씀(QT) 풀 (60편)
     const DAILY_QT_POOL = [
       { title: '여호와는 나의 목자시니', passage: '시편 23:1-3', scripture: '1 여호와는 나의 목자시니 내가 부족함이 없으리로다\n2 그가 나를 푸른 초장에 누이시며 쉴만한 물 가으로 인도하시는도다\n3 내 영혼을 소생시키시고 자기 이름을 위하여 의의 길로 인도하시는도다', guide: '오늘 하루 나를 인도하시는 주님의 손길을 묵상하며, 감사한 제목 한 가지를 댓글로 나눠보세요.' },
       { title: '마음을 강하게 하고 담대히 하라', passage: '여호수아 1:9', scripture: '내가 네게 명한 것이 아니냐 마음을 강하게 하고 담대히 하라 두려워 말며 놀라지 말라 네가 어디로 가든지 네 하나님 여호와가 너와 함께 하느니라 하시니라', guide: '요즘 마음속에 두려움이나 걱정이 되는 일이 있다면 주님께 맡기는 한 줄 기도를 남겨보세요.' },
@@ -5449,26 +4821,22 @@
     };
     const KEY_CELEB_DATE_NOTIFIED = 'right_youth_celeb_date_notified_v1';
     const KEY_NEWCOMER_NOTIFIED = 'right_youth_newcomer_notified_v1';
-    const KEY_BIBLE_POS = 'right_youth_bible_pos_v103';
-    const KEY_BIBLE_CACHE = 'right_youth_bible_cache_v103';
-    const KEY_BIBLE_MARKS = 'right_youth_bible_marks_v103';
-    const KEY_BIBLE_MEMOS = 'right_youth_bible_memos_v107';
-    const KEY_BIBLE_FONT = 'right_youth_bible_font_v103';
-
-    const BIBLE_BOOKMARK_COLORS = [
-      { id: 'yellow', label: '노랑', bg: '#FEF9C3', border: '#FACC15', dot: '#EAB308', text: '#854D0E' },
-      { id: 'pink', label: '분홍', bg: '#FCE7F3', border: '#F472B6', dot: '#EC4899', text: '#9D174D' },
-      { id: 'blue', label: '하늘', bg: '#DBEAFE', border: '#60A5FA', dot: '#3B82F6', text: '#1E40AF' },
-      { id: 'green', label: '초록', bg: '#DCFCE7', border: '#4ADE80', dot: '#22C55E', text: '#166534' },
-      { id: 'purple', label: '보라', bg: '#F3E8FF', border: '#C084FC', dot: '#A855F7', text: '#6B21A8' },
-      { id: 'orange', label: '주황', bg: '#FFEDD5', border: '#FB923C', dot: '#F97316', text: '#9A3412' }
-    ];
+    // 기존 기기에 남아 있던 성경 탭 · 책갈피 · 메모 · 캐시 기록 즉시 영구 폐기
+    (function purgeLegacyBibleStorage() {
+      const legacyKeys = [
+        'right_youth_bible_pos_v103',
+        'right_youth_bible_cache_v103',
+        'right_youth_bible_marks_v103',
+        'right_youth_bible_memos_v107',
+        'right_youth_bible_font_v103'
+      ];
+      legacyKeys.forEach(k => { try { localStorage.removeItem(k); } catch {} });
+    })();
 
     // 중앙 탭 레지스트리: 여기에 새 탭을 추가하면 실제 메뉴와 [✏️ 메뉴·이름] 편집 화면에 자동 반영됩니다.
     const BOTTOM_TAB_REGISTRY = [
       { key: 'home', defaultIcon: '🏠', defaultLabel: '홈', roleHint: '메인 홈' },
       { key: 'qt', defaultIcon: '✨', defaultLabel: 'QT', roleHint: '오늘의 말씀' },
-      { key: 'bible', defaultIcon: '📖', defaultLabel: '성경', roleHint: '성경' },
       { key: 'more', defaultIcon: '🌐', defaultLabel: '바로가기', roleHint: '사이트 바로가기' },
       { key: 'settings', defaultIcon: '⚙️', defaultLabel: '설정', roleHint: '이용자 설정' },
       { key: 'manage', defaultIcon: '🛠️', defaultLabel: '관리', roleHint: '관리자 전용' }
@@ -5489,12 +4857,8 @@
     ];
     const DEFAULT_SETTINGS_ITEM_ORDER = SETTINGS_ITEM_REGISTRY.map(t => t.key);
     const UI_TEXT_REGISTRY = [
-      { key: 'dailyDictTitle', defaultVal: '📚 오늘의 성경 사전', hint: 'QT 화면 내 오늘의 성경 사전 카드 제목', max: 28 },
-      { key: 'bibleDictModalTitle', defaultVal: '📚 성경 용어 사전', hint: '성경 사전 검색 창 상단 제목', max: 28 },
-      { key: 'bibleDictBtnLabel', defaultVal: '📚 사전', hint: '성경 화면 우측 상단 사전 버튼', max: 12 },
       { key: 'qtHeroSub', defaultVal: '매일 00:00(한국시간) 새 말씀 자동 변경 · 하트와 댓글로 나눠보세요', hint: 'QT 화면 상단 안내 문구', max: 70 },
       { key: 'qtAdminPostBadge', defaultVal: '✍️ 관리자 작성 글', hint: 'QT 관리자 직접 작성 글 배지', max: 20 },
-      { key: 'bibleHeroSub', defaultVal: '개역한글 성경 본문 · 절 터치 시 복사/책갈피/메모', hint: '성경 화면 상단 안내 문구', max: 60 },
       { key: 'bylawsHeroTitle', defaultVal: '구미제일감리교회 라이트 청년부 회칙', hint: '회칙 화면 상단 제목', max: 36 },
       { key: 'bylawsHeroDates', defaultVal: '2014.03.23 제정 · 2023.10.29 개정 · 2026.11.22 최종개정', hint: '회칙 화면 제정·개정일 문구', max: 60 },
       { key: 'guideHeroTitle', defaultVal: '라이트 청년부 앱 가이드', hint: '이용자 가이드 화면 상단 제목', max: 32 },
@@ -5509,8 +4873,6 @@
       { key: 'settingsGroup3', defaultVal: '앱 이용 · 보안', hint: '설정 3번 카테고리 제목', max: 20 }
     ];
     const DEFAULT_UI_TEXTS = Object.fromEntries(UI_TEXT_REGISTRY.map(x => [x.key, x.defaultVal]));
-    const DEFAULT_DICT_SOURCE_LABEL = '라이트 청년부 자체 정리 (성경 인용: 「성경전서 개역한글판」 · 대한성서공회)';
-    const DEFAULT_QT_SECTION_ORDER = ['dict', 'qt'];
 
     const MANAGE_SUBTAB_REGISTRY = [
       { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', permCheck: p => !!(p.canEditLayout || p.canManageNotices) },
@@ -5609,75 +4971,6 @@
       newcomerTitle: '🎉 새신자 {이름}님을 환영합니다!',
       newcomerDesc: '라이트 청년부의 새 가족이 되신 것을 진심으로 축복합니다. 만나면 반갑게 인사해 주세요! 😊'
     };
-
-    const BIBLE_BOOKS = [
-      { id: 1, t: 'OT', name: '창세기', abbr: '창', ch: 50 },
-      { id: 2, t: 'OT', name: '출애굽기', abbr: '출', ch: 40 },
-      { id: 3, t: 'OT', name: '레위기', abbr: '레', ch: 27 },
-      { id: 4, t: 'OT', name: '민수기', abbr: '민', ch: 36 },
-      { id: 5, t: 'OT', name: '신명기', abbr: '신', ch: 34 },
-      { id: 6, t: 'OT', name: '여호수아', abbr: '수', ch: 24 },
-      { id: 7, t: 'OT', name: '사사기', abbr: '삿', ch: 21 },
-      { id: 8, t: 'OT', name: '룻기', abbr: '룻', ch: 4 },
-      { id: 9, t: 'OT', name: '사무엘상', abbr: '삼상', ch: 31 },
-      { id: 10, t: 'OT', name: '사무엘하', abbr: '삼하', ch: 24 },
-      { id: 11, t: 'OT', name: '열왕기상', abbr: '왕상', ch: 22 },
-      { id: 12, t: 'OT', name: '열왕기하', abbr: '왕하', ch: 25 },
-      { id: 13, t: 'OT', name: '역대상', abbr: '대상', ch: 29 },
-      { id: 14, t: 'OT', name: '역대하', abbr: '대하', ch: 36 },
-      { id: 15, t: 'OT', name: '에스라', abbr: '스', ch: 10 },
-      { id: 16, t: 'OT', name: '느헤미야', abbr: '느', ch: 13 },
-      { id: 17, t: 'OT', name: '에스더', abbr: '에', ch: 10 },
-      { id: 18, t: 'OT', name: '욥기', abbr: '욥', ch: 42 },
-      { id: 19, t: 'OT', name: '시편', abbr: '시', ch: 150 },
-      { id: 20, t: 'OT', name: '잠언', abbr: '잠', ch: 31 },
-      { id: 21, t: 'OT', name: '전도서', abbr: '전', ch: 12 },
-      { id: 22, t: 'OT', name: '아가', abbr: '아', ch: 8 },
-      { id: 23, t: 'OT', name: '이사야', abbr: '사', ch: 66 },
-      { id: 24, t: 'OT', name: '예레미야', abbr: '렘', ch: 52 },
-      { id: 25, t: 'OT', name: '예레미야애가', abbr: '애', ch: 5 },
-      { id: 26, t: 'OT', name: '에스겔', abbr: '겔', ch: 48 },
-      { id: 27, t: 'OT', name: '다니엘', abbr: '단', ch: 12 },
-      { id: 28, t: 'OT', name: '호세아', abbr: '호', ch: 14 },
-      { id: 29, t: 'OT', name: '요엘', abbr: '욜', ch: 3 },
-      { id: 30, t: 'OT', name: '아모스', abbr: '암', ch: 9 },
-      { id: 31, t: 'OT', name: '오바댜', abbr: '옵', ch: 1 },
-      { id: 32, t: 'OT', name: '요나', abbr: '욘', ch: 4 },
-      { id: 33, t: 'OT', name: '미가', abbr: '미', ch: 7 },
-      { id: 34, t: 'OT', name: '나훔', abbr: '나', ch: 3 },
-      { id: 35, t: 'OT', name: '하박국', abbr: '합', ch: 3 },
-      { id: 36, t: 'OT', name: '스바냐', abbr: '습', ch: 3 },
-      { id: 37, t: 'OT', name: '학개', abbr: '학', ch: 2 },
-      { id: 38, t: 'OT', name: '스가랴', abbr: '슥', ch: 14 },
-      { id: 39, t: 'OT', name: '말라기', abbr: '말', ch: 4 },
-      { id: 40, t: 'NT', name: '마태복음', abbr: '마', ch: 28 },
-      { id: 41, t: 'NT', name: '마가복음', abbr: '막', ch: 16 },
-      { id: 42, t: 'NT', name: '누가복음', abbr: '눅', ch: 24 },
-      { id: 43, t: 'NT', name: '요한복음', abbr: '요', ch: 21 },
-      { id: 44, t: 'NT', name: '사도행전', abbr: '행', ch: 28 },
-      { id: 45, t: 'NT', name: '로마서', abbr: '롬', ch: 16 },
-      { id: 46, t: 'NT', name: '고린도전서', abbr: '고전', ch: 16 },
-      { id: 47, t: 'NT', name: '고린도후서', abbr: '고후', ch: 13 },
-      { id: 48, t: 'NT', name: '갈라디아서', abbr: '갈', ch: 6 },
-      { id: 49, t: 'NT', name: '에베소서', abbr: '엡', ch: 6 },
-      { id: 50, t: 'NT', name: '빌립보서', abbr: '빌', ch: 4 },
-      { id: 51, t: 'NT', name: '골로새서', abbr: '골', ch: 4 },
-      { id: 52, t: 'NT', name: '데살로니가전서', abbr: '살전', ch: 5 },
-      { id: 53, t: 'NT', name: '데살로니가후서', abbr: '살후', ch: 3 },
-      { id: 54, t: 'NT', name: '디모데전서', abbr: '딤전', ch: 6 },
-      { id: 55, t: 'NT', name: '디모데후서', abbr: '딤후', ch: 4 },
-      { id: 56, t: 'NT', name: '디도서', abbr: '딛', ch: 3 },
-      { id: 57, t: 'NT', name: '빌레몬서', abbr: '몬', ch: 1 },
-      { id: 58, t: 'NT', name: '히브리서', abbr: '히', ch: 13 },
-      { id: 59, t: 'NT', name: '야고보서', abbr: '약', ch: 5 },
-      { id: 60, t: 'NT', name: '베드로전서', abbr: '벧전', ch: 5 },
-      { id: 61, t: 'NT', name: '베드로후서', abbr: '벧후', ch: 3 },
-      { id: 62, t: 'NT', name: '요한일서', abbr: '요일', ch: 5 },
-      { id: 63, t: 'NT', name: '요한이서', abbr: '요이', ch: 1 },
-      { id: 64, t: 'NT', name: '요한삼서', abbr: '요삼', ch: 1 },
-      { id: 65, t: 'NT', name: '유다서', abbr: '유', ch: 1 },
-      { id: 66, t: 'NT', name: '요한계시록', abbr: '계', ch: 22 }
-    ];
 
     const QT_REACTION_DEFS = [
       { key: 'heart', emoji: '❤️', label: '좋아요', cls: 'active-heart' },
@@ -6311,7 +5604,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=159" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=160" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6335,8 +5628,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=159', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=159', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=160', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=160', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -6641,15 +5934,9 @@
     let knownQtIds = new Set();
     let currentQtDetailId = null;
     let hiddenAutoQtDate = '';
-    let bibleDictCustomItems = [];
-    let hiddenBuiltInDictIds = [];
-    let hiddenAutoDictDate = '';
-    let qtSectionOrder = [...DEFAULT_QT_SECTION_ORDER];
-    let bibleVerseEdits = {};
     let customTermsArticles = null;
     let customBylawsArticles = null;
     let termsSearchQuery = '';
-    let bibleDictCatFilter = '전체';
     let settingsFontOpen = false;
     let inquiries = [];
     let myInquiries = [];
@@ -6678,26 +5965,7 @@
     let videoCatFilter = '전체';
     let lastVideoInspectResult = null;
     let lastVideoSubmitTs = 0;
-    let bibleBookmarkColorFilter = 'all';
     let editingCommentId = null;
-
-    // 성경 읽기 상태
-    function loadSavedBiblePos() {
-      try {
-        const p = JSON.parse(localStorage.getItem(KEY_BIBLE_POS) || '{}');
-        const b = BIBLE_BOOKS.find(x => x.id === Number(p.bookId)) || BIBLE_BOOKS[0];
-        const ch = Math.max(1, Math.min(b.ch, Number(p.chapter || 1)));
-        return { bookId: b.id, chapter: ch };
-      } catch {
-        return { bookId: 1, chapter: 1 };
-      }
-    }
-    let biblePos = loadSavedBiblePos();
-    let bibleFontSize = Math.max(13, Math.min(22, Number(localStorage.getItem(KEY_BIBLE_FONT) || 15)));
-    let bibleSelectedVerse = null;
-    let bibleCurrentVerses = [];
-    let bibleLoadedKey = '';
-    let bibleTestamentFilter = 'all';
 
     let unsubMyMember = null;
     let memberProfileRetryTimer = null;
@@ -6914,18 +6182,6 @@
       return DEFAULT_UI_TEXTS[key] || '';
     }
 
-    function getValidQtSectionOrder(raw) {
-      const src = Array.isArray(raw) ? raw : qtSectionOrder;
-      const valid = [];
-      (Array.isArray(src) ? src : []).forEach(k => {
-        if ((k === 'dict' || k === 'qt') && !valid.includes(k)) valid.push(k);
-      });
-      DEFAULT_QT_SECTION_ORDER.forEach(k => {
-        if (!valid.includes(k)) valid.push(k);
-      });
-      return valid;
-    }
-
     function getQuickSheetIcon(overrideIcons = null) {
       const moreIcn = getEffectiveTabIcon('more', overrideIcons);
       if (moreIcn && moreIcn !== '☰') return moreIcn;
@@ -6962,14 +6218,6 @@
       const previewBarTxt = document.getElementById('previewMemberBarText');
       if (previewBarTxt) previewBarTxt.textContent = `👁️ 일반 회원 시점 미리보기 중 (관리자 전용 칸·${lbl('manage')} 숨김)`;
 
-      const bibleTitle = document.getElementById('bibleViewTitle');
-      if (bibleTitle) bibleTitle.textContent = `${icn('bible')} ${lbl('bible')}`;
-      const bibleSub = document.getElementById('bibleViewSub');
-      if (bibleSub) bibleSub.textContent = ut('bibleHeroSub');
-      const bibleDictBtn = document.getElementById('bibleDictOpenBtn');
-      if (bibleDictBtn) bibleDictBtn.textContent = ut('bibleDictBtnLabel');
-      const bibleDictModalTitle = document.getElementById('bibleDictModalTitle');
-      if (bibleDictModalTitle) bibleDictModalTitle.textContent = ut('bibleDictModalTitle');
 
       const qtTitle = document.getElementById('qtViewTitle');
       if (qtTitle) qtTitle.textContent = `${icn('qt')} ${lbl('qt')}`;
@@ -7004,21 +6252,6 @@
 
       const saveQlBtn = document.getElementById('saveQuickLinkBtn');
       if (saveQlBtn) saveQlBtn.textContent = `${lbl('manageQuickLinks')} 저장`;
-
-      const bpModalTitle = document.getElementById('biblePickerModalTitle');
-      if (bpModalTitle) bpModalTitle.textContent = `${icn('bible')} ${lbl('bible')} 이동`;
-
-      const bmModalTitle = document.getElementById('bibleBookmarksModalTitle');
-      if (bmModalTitle) bmModalTitle.textContent = `⭐ 저장한 ${lbl('bible')} 책갈피`;
-
-      const memoModalTitle = document.getElementById('bibleMemoModalTitle');
-      if (memoModalTitle) memoModalTitle.textContent = `📝 ${lbl('bible')} 메모장`;
-
-      const bibleSearchInp = document.getElementById('bibleQuickSearchInput');
-      if (bibleSearchInp) bibleSearchInp.placeholder = fitSearchPlaceholder(`${lbl('bible')} 검색`, ['시편 23:1', '요3:16'], 17.5);
-
-      const bibleBookSearchInp = document.getElementById('bibleBookSearchInput');
-      if (bibleBookSearchInp) bibleBookSearchInp.placeholder = `${lbl('bible')} 이름 검색 (예: 시편, 요한)`;
 
       const bylawSearchInp = document.getElementById('bylawSearchInput');
       if (bylawSearchInp) bylawSearchInp.placeholder = fitSearchPlaceholder(`${lbl('bylaws')} 검색`, ['제5조', '임기'], 17.5);
@@ -7509,6 +6742,26 @@
             }, { merge: true });
           } catch (v24Err) {
             console.warn('v10.55 tabOrder migration error:', v24Err);
+          }
+        }
+
+        // 10) v10.60 (schemaVersion 26): 성경 탭 및 성경 관련 서버 잔여 필드 영구 폐기
+        if ((appSnap.data().schemaVersion || 0) < 26) {
+          try {
+            await db.collection('config').doc('layout').set({
+              bibleVerseEdits: FieldValue.delete(),
+              bibleDictItems: FieldValue.delete(),
+              hiddenBuiltInDictIds: FieldValue.delete(),
+              hiddenAutoDictDate: FieldValue.delete(),
+              qtSectionOrder: FieldValue.delete()
+            }, { merge: true });
+            const lblSnap26 = await db.collection('config').doc('labels').get();
+            if (lblSnap26.exists && Array.isArray(lblSnap26.data().tabOrder)) {
+              const cleanedTabOrder = lblSnap26.data().tabOrder.filter(k => k !== 'bible');
+              await db.collection('config').doc('labels').set({ tabOrder: cleanedTabOrder }, { merge: true });
+            }
+          } catch (v26Err) {
+            console.warn('v10.60 Bible cleanup error:', v26Err);
           }
         }
 
@@ -8356,11 +7609,6 @@
               celebrationMsgs = structuredClone(DEFAULT_CELEBRATION_MSGS);
             }
             hiddenAutoQtDate = normalizeDotDate(d.hiddenAutoQtDate || '');
-            bibleDictCustomItems = Array.isArray(d.bibleDictItems) ? d.bibleDictItems : [];
-            hiddenBuiltInDictIds = Array.isArray(d.hiddenBuiltInDictIds) ? d.hiddenBuiltInDictIds.map(String) : [];
-            hiddenAutoDictDate = normalizeDotDate(d.hiddenAutoDictDate || '');
-            qtSectionOrder = getValidQtSectionOrder(d.qtSectionOrder);
-            bibleVerseEdits = (d.bibleVerseEdits && typeof d.bibleVerseEdits === 'object') ? d.bibleVerseEdits : {};
             customTermsArticles = Array.isArray(d.customTerms) ? d.customTerms : null;
             customBylawsArticles = Array.isArray(d.customBylaws) ? d.customBylaws : null;
             hiddenDefaultYtChannelIds = Array.isArray(d.hiddenDefaultYtChannelIds) ? d.hiddenDefaultYtChannelIds.map(String) : [];
@@ -9457,6 +8705,7 @@
 
       const perms = user.role.perms;
       const canManage = hasAnyManagePerm(perms);
+      if (currentMainTab === 'bible') currentMainTab = 'home';
       if (currentMainTab === 'manage' && !canManage) currentMainTab = 'home';
 
       const isManageMode = currentMainTab === 'manage';
@@ -9528,7 +8777,6 @@
       }).join('');
 
       document.getElementById('viewHome').classList.toggle('hidden', currentMainTab !== 'home');
-      document.getElementById('viewBible').classList.toggle('hidden', currentMainTab !== 'bible');
       document.getElementById('viewQt').classList.toggle('hidden', currentMainTab !== 'qt');
       document.getElementById('viewBylaws').classList.toggle('hidden', currentMainTab !== 'bylaws');
       document.getElementById('viewGuide').classList.toggle('hidden', currentMainTab !== 'guide');
@@ -9541,7 +8789,6 @@
       syncAllDynamicLabelsUI();
 
       if (currentMainTab === 'home') renderHomeView(user);
-      else if (currentMainTab === 'bible') renderBibleView();
       else if (currentMainTab === 'qt') renderQtView();
       else if (currentMainTab === 'bylaws') renderBylawsView();
       else if (currentMainTab === 'guide') renderUserGuideView();
@@ -9696,8 +8943,6 @@
     // ==================== 10-2. 이용자용 사용방법 설명서 (관리자 변경 명칭·이모지 실시간 자동 연동) ====================
     function getUserGuideSections() {
       const hLbl = escapeHtml(getTabLabel('home'));
-      const bLbl = escapeHtml(getTabLabel('bible'));
-      const bIcn = escapeHtml(getTabIcon('bible'));
       const qLbl = escapeHtml(getTabLabel('qt'));
       const qIcn = escapeHtml(getTabIcon('qt'));
       const byLbl = escapeHtml(getTabLabel('bylaws'));
@@ -9750,20 +8995,6 @@
           tip: '출석 시간이 지났거나 깜빡하고 버튼을 못 누른 경우에는 관리자에게 말씀하시면 출석부에 수동으로 반영해 드립니다.'
         },
         {
-          id: 'ug_bible',
-          icon: getTabIcon('bible'),
-          title: `${getTabLabel('bible')} 읽기 · 다중 색상 책갈피 · 개인 메모장`,
-          sub: '66권 빠른 검색, 6색 형광펜 책갈피, 말씀 연결 메모',
-          keywords: `${getTabLabel('bible')} 성경 개역한글 검색 장 이동 글자 크기 책갈피 색상 형광펜 메모 메모장 프라이버시`,
-          steps: [
-            `<b>${bLbl} 이동 & 빠른 검색:</b> <b>[${bIcn} ${bLbl}]</b> 탭 상단 <b>[창세기 1장 ▾]</b> 버튼으로 66권·장을 고르거나, 검색창에 <b>시편 23:1</b>, <b>요3:16</b>처럼 입력하고 엔터를 누르면 해당 구절로 즉시 이동합니다.`,
-            '<b>글자 크기 조절:</b> 상단 <b>[가-] / [가+]</b> 버튼으로 읽기 편한 글자 크기를 저장해 둘 수 있습니다.',
-            `<b>절 터치 기능 (책갈피 · 복사 · 메모):</b> 원하는 ${bLbl} 절을 터치하면 <b>6가지 색상 책갈피</b>(노랑·분홍·하늘·초록·보라·주황), <b>말씀 복사</b>, <b>이 절에 메모 쓰기</b> 버튼이 나타납니다.`,
-            `<b>⭐ 책갈피 & 📝 메모장 모아보기:</b> 상단 버튼에서 색상별로 책갈피를 모아보거나, 저장한 메모의 <b>[말씀 바로가기]</b>를 눌러 해당 ${bLbl} 구절로 즉시 점프할 수 있습니다.`
-          ],
-          tip: `${getTabLabel('bible')} 책갈피·메모·검색 기록은 오직 본인 기기에만 저장되며, 관리자를 포함한 다른 사람에게 공개되거나 보안 로그에 남지 않습니다.`
-        },
-        {
           id: 'ug_qt',
           icon: getTabIcon('qt'),
           title: `${getTabLabel('qt')} · 공감 · 묵상 댓글`,
@@ -9797,7 +9028,7 @@
           keywords: `내 계정 ${getTabLabel('settings')} 글자 크기 이름 변경 신청 생일 변경 승인 거절 비밀번호 변경 초기화 분실 탈퇴 삭제`,
           steps: [
             `<b>이름 변경 신청:</b> 하단 <b>[${stIcn} ${stLbl}] → 👤 내 계정 관리 → [✏️ 내 이름 변경 신청]</b>에 새 성명(2~10글자)을 입력해 신청합니다. 관리자가 승인하면 즉시 새 이름으로 변경되며(다음 로그인부터 새 이름으로 로그인), 거절 시 기존 이름이 유지됩니다.`,
-            `<b>전체 글자 크기 조절:</b> 하단 <b>[${stIcn} ${stLbl}] → 🔤 전체 글자 크기</b>에서 보통·크게·아주 크게를 선택하면 앱 전체 글자가 보기 편하게 커집니다. (${bLbl} 본문 글자는 ${bLbl} 화면의 가-/가+로 따로 조절 가능)`, 
+            `<b>전체 글자 크기 조절:</b> 하단 <b>[${stIcn} ${stLbl}] → 🔤 전체 글자 크기</b>에서 보통·크게·아주 크게를 선택하면 앱 전체 글자가 보기 편하게 커집니다.`, 
             '<b>생일 변경 신청:</b> <b>[🎂 내 생일 변경 신청]</b>에서 생년월일 8자리 입력 또는 달력 선택 후 신청합니다. 관리자 승인 후 반영되며, 대기 중에는 언제든 취소할 수 있습니다.',
             '<b>비밀번호 변경:</b> 하단 <b>[비밀번호 변경]</b> 탭에서 현재 비밀번호와 새 비밀번호(6자리 이상)를 입력해 직접 변경할 수 있습니다. <b>(비밀번호 변경은 보안상 로그에 남지 않습니다.)</b>',
             '<b>비밀번호를 잊어버렸을 때:</b> 관리자에게 비밀번호 초기화를 요청해 <b>8자리 초기화 코드(24시간 유효)</b>를 받은 뒤, 로그인 화면 하단의 <b>[🔑 새 비밀번호 설정]</b>에서 재설정하면 바로 로그인됩니다.'
@@ -9824,11 +9055,10 @@
       const clearBtn = document.getElementById('userGuideSearchClear');
       if (clearBtn) clearBtn.classList.toggle('hidden', !q);
 
-      const bLbl = getTabLabel('bible');
       const qLbl = getTabLabel('qt');
       const searchInp = document.getElementById('userGuideSearchInput');
       if (searchInp) {
-        searchInp.placeholder = fitSearchPlaceholder('기능 검색', ['출석', bLbl, qLbl, '알림'], 17.5);
+        searchInp.placeholder = fitSearchPlaceholder('기능 검색', ['출석', qLbl, '알림'], 17.5);
       }
 
       const tagsEl = document.getElementById('userGuideQuickTags');
@@ -9836,7 +9066,6 @@
         const quickTagList = [
           { q: '설치', label: '#앱설치' },
           { q: '출석', label: '#출석체크' },
-          { q: bLbl, label: `#${bLbl}·메모` },
           { q: qLbl, label: `#${qLbl}` },
           { q: '이름', label: '#이름·생일변경' },
           { q: 'QR', label: '#초대QR' },
@@ -9938,7 +9167,6 @@
     function getAdminGuideSections() {
       const mngLbl = escapeHtml(getTabLabel('manage'));
       const hLbl = escapeHtml(getTabLabel('home'));
-      const bLbl = escapeHtml(getTabLabel('bible'));
       const qLbl = escapeHtml(getTabLabel('qt'));
       const byLbl = escapeHtml(getTabLabel('bylaws'));
       const moreLbl = escapeHtml(getTabLabel('more'));
@@ -10088,7 +9316,7 @@
             `<b>초대 QR 관리 ([${qrIcn} ${qrLbl}]):</b> 초대 링크가 외부에 유출되었을 때 <b>[🔄 새 QR 즉시 재발급]</b>을 누르면 기존 오늘 QR이 즉시 폐기되고 새 QR이 발급됩니다.`,
             `<b>통합 보안 감사 로그 ([${logIcn} ${logLbl}]):</b> 악의적 글 게시·임의 변경·장난을 방지하기 위해 <b>관리자의 모든 추가/수정/삭제/설정 변경</b>과 <b>이용자의 댓글·이름/생일 변경 신청·가입/탈퇴·출석 체크</b>가 날짜·시각(초 단위 KST)과 함께 기록됩니다.`,
             '<b>위변조·삭제 불가:</b> 보안상 최고 관리자도 앱에서 로그를 수정하거나 삭제할 수 없으며, 상단 필터(전체/관리자/이용자), 분류 선택, 검색창으로 빠르게 추적할 수 있습니다.',
-            `<b>프라이버시 미기록 범위:</b> 이용자 비밀번호 변경, ${bLbl} 메모·책갈피·검색, 외부 사이트 이동, 공지·${byLbl} 단순 조회는 기록되지 않습니다.`
+            `<b>프라이버시 미기록 범위:</b> 이용자 비밀번호 변경, 전체 글자 크기·알림 설정, 외부 사이트 이동, 공지·${byLbl} 단순 조회는 기록되지 않습니다.`
           ],
           tip: `[${getTabIcon('manageLogs')} ${getTabLabel('manageLogs')}] 탭 상단의 [📊 시트 동기화]를 누르면 아직 시트에 반영되지 않은 미전송 로그가 각 전용 탭으로 일괄 저장됩니다.`
         },
@@ -10104,7 +9332,7 @@
           targetLabel: `${getTabIcon('manageDiagnostics')} ${getTabLabel('manageDiagnostics')} 탭 열기`,
           steps: [
             `<b>${lblLbl} 편집 ([${lblIcn} ${lblLbl}]):</b> 하단 탭과 <b>${mngLbl}</b> 서브탭의 이모지, 이름, 표시 순서를 자유롭게 바꿀 수 있습니다. 저장 시 모든 회원 앱과 사용 설명서의 명칭까지 즉시 자동 반영됩니다.`,
-            `<b>전체 기능 점검 ([${diagIcn} ${diagLbl}]):</b> <b>[🚀 전체 6개 항목 한 번에 점검하기]</b>로 Firebase, 구글 시트 8개 탭, 초대 QR, ${bLbl} API, 알림, 설정 무결성을 한 번에 진단합니다.`,
+            `<b>전체 기능 점검 ([${diagIcn} ${diagLbl}]):</b> <b>[🚀 전체 5개 항목 한 번에 점검하기]</b>로 Firebase, 구글 시트 8개 탭, 초대 QR, 알림, 설정 무결성을 한 번에 진단합니다.`,
             `<b>일반 회원 시점 미리보기:</b> <b>[👁️ 일반 회원 화면 미리보기]</b>를 누르면 관리자 전용 칸과 <b>${mngLbl}</b>가 숨겨진 실제 일반 회원 화면을 안전하게 확인해 볼 수 있습니다.`,
             '<b>정기 서버 점검 모드:</b> 앱 업데이트나 대규모 정비 시 <b>[즉시 서버 점검 모드 켜기]</b> 또는 <b>[⏰ 예약 정기 점검 시간]</b>을 켜면 일반 회원에게는 점검 안내 화면만 표시되고 최고 관리자는 정상 작업할 수 있습니다.'
           ],
@@ -10943,10 +10171,8 @@
           <button class="btn-admin" onclick="openNewQtModal()">+ 말씀·글 추가</button>
         </div>
         <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-          하단 <b>${escapeHtml(getTabIcon('qt'))} ${escapeHtml(getTabLabel('qt'))}</b> 메뉴에 표시되는 매일 자동 말씀, 관리자 작성 글, 성경 사전 및 표시 순서를 관리합니다.
+          하단 <b>${escapeHtml(getTabIcon('qt'))} ${escapeHtml(getTabLabel('qt'))}</b> 메뉴에 표시되는 매일 자동 말씀과 관리자 작성 글을 관리합니다.
         </div>
-
-        ${buildQtSectionOrderCardHtml()}
 
         <div class="card" style="border-color:${isSuppressed ? '#CBD5E1' : '#C7D2FE'}; background:${isSuppressed ? '#F8FAFC' : '#F5F7FF'}; ${isSuppressed ? 'opacity:0.82;' : ''}">
           <div class="card-top">
@@ -11004,8 +10230,6 @@
         ${qtPosts.length >= 4 ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('qt_custom_list', ${qtPosts.length <= 5 ? 'true' : 'false'})">▲ 관리자 작성 글 목록 접기</button>` : ''}
         </div>
 
-        <div class="manage-divider"></div>
-        ${buildManageBibleDictSectionHtml()}
       `;
     }
 
@@ -13523,971 +12747,6 @@
     };
 
 
-    // ==================== 14. 성경 읽기(66권) · 책갈피 ====================
-    function getBibleBook(bookId) {
-      return BIBLE_BOOKS.find(b => b.id === Number(bookId)) || BIBLE_BOOKS[0];
-    }
-
-    function saveBiblePos() {
-      localStorage.setItem(KEY_BIBLE_POS, JSON.stringify(biblePos));
-    }
-
-    function loadBibleCache() {
-      try { return JSON.parse(localStorage.getItem(KEY_BIBLE_CACHE) || '{}'); }
-      catch { return {}; }
-    }
-
-    function saveBibleCacheEntry(key, verses) {
-      try {
-        const cache = loadBibleCache();
-        cache[key] = { ts: Date.now(), verses };
-        const keys = Object.keys(cache);
-        if (keys.length > 25) {
-          keys.sort((a, b) => (cache[a].ts || 0) - (cache[b].ts || 0));
-          keys.slice(0, keys.length - 25).forEach(k => delete cache[k]);
-        }
-        localStorage.setItem(KEY_BIBLE_CACHE, JSON.stringify(cache));
-      } catch {}
-    }
-
-    function loadBibleMarks() {
-      try { return JSON.parse(localStorage.getItem(KEY_BIBLE_MARKS) || '[]'); }
-      catch { return []; }
-    }
-
-    function saveBibleMarks(list) {
-      localStorage.setItem(KEY_BIBLE_MARKS, JSON.stringify(list));
-    }
-
-    function stripHtmlTags(str) {
-      const raw = String(str || '');
-      try {
-        const doc = new DOMParser().parseFromString(raw, 'text/html');
-        return String((doc && doc.body && doc.body.textContent) || '').replace(/\s+/g, ' ').trim();
-      } catch {
-        return raw.replace(/[<>]/g, '').replace(/\s+/g, ' ').trim();
-      }
-    }
-
-    async function fetchBibleChapter(bookId, chapter) {
-      const key = `${bookId}:${chapter}`;
-      const cache = loadBibleCache();
-      if (cache[key] && Array.isArray(cache[key].verses) && cache[key].verses.length > 0) {
-        return cache[key].verses;
-      }
-
-      // 1차: GetBible v2 공용 무료 API (개역한글)
-      try {
-        const res = await fetch(`https://api.getbible.net/v2/korean/${bookId}/${chapter}.json`);
-        if (res.ok) {
-          const data = await res.json();
-          const list = Array.isArray(data.verses)
-            ? data.verses.map(v => ({ verse: Number(v.verse), text: stripHtmlTags(v.text) })).filter(v => v.text)
-            : [];
-          if (list.length > 0) {
-            saveBibleCacheEntry(key, list);
-            return list;
-          }
-        }
-      } catch {}
-
-      // 2차: Bolls.life 무료 API (개역한글 KRV) 백업
-      try {
-        const res2 = await fetch(`https://bolls.life/get-text/KRV/${bookId}/${chapter}/`);
-        if (res2.ok) {
-          const arr = await res2.json();
-          const list2 = Array.isArray(arr)
-            ? arr.map(v => ({ verse: Number(v.verse), text: stripHtmlTags(v.text) })).filter(v => v.text)
-            : [];
-          if (list2.length > 0) {
-            saveBibleCacheEntry(key, list2);
-            return list2;
-          }
-        }
-      } catch {}
-
-      throw new Error('성경 본문을 불러오지 못했습니다.');
-    }
-
-    function scrollToSelectedBibleVerse(flash = true) {
-      setTimeout(() => {
-        const selEl = document.querySelector('#bibleContentArea .bible-verse-row.selected');
-        if (selEl) {
-          selEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          if (flash) {
-            selEl.classList.remove('jump-flash');
-            void selEl.offsetWidth;
-            selEl.classList.add('jump-flash');
-          }
-        } else {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      }, 90);
-    }
-
-    async function renderBibleView(forceReload = false, targetVerse = null) {
-      const book = getBibleBook(biblePos.bookId);
-      const chapter = Math.max(1, Math.min(book.ch, Number(biblePos.chapter || 1)));
-      biblePos = { bookId: book.id, chapter };
-      saveBiblePos();
-
-      const hasTargetVerse = targetVerse !== null && targetVerse !== undefined && Number(targetVerse) > 0;
-
-      document.getElementById('bibleCurrentRef').textContent = `${book.name} ${chapter}장`;
-      const prevBtn = document.getElementById('biblePrevBtn');
-      const nextBtn = document.getElementById('bibleNextBtn');
-      if (prevBtn) prevBtn.disabled = (book.id === 1 && chapter === 1);
-      if (nextBtn) nextBtn.disabled = (book.id === 66 && chapter === book.ch);
-
-      const key = `${book.id}:${chapter}`;
-      if (!forceReload && bibleLoadedKey === key && bibleCurrentVerses.length > 0) {
-        if (hasTargetVerse) bibleSelectedVerse = Number(targetVerse);
-        renderBibleVersesHtml();
-        if (hasTargetVerse) scrollToSelectedBibleVerse(true);
-        return;
-      }
-
-      bibleSelectedVerse = hasTargetVerse ? Number(targetVerse) : null;
-      const area = document.getElementById('bibleContentArea');
-      area.innerHTML = `<div style="text-align:center; padding:32px 12px; color:#64748B; font-size:13.5px;">📖 <b>${escapeHtml(book.name)} ${chapter}장</b> 말씀을 불러오는 중...</div>`;
-
-      try {
-        const verses = await fetchBibleChapter(book.id, chapter);
-        bibleCurrentVerses = verses;
-        bibleLoadedKey = key;
-        if (hasTargetVerse) bibleSelectedVerse = Number(targetVerse);
-        renderBibleVersesHtml();
-        if (hasTargetVerse) scrollToSelectedBibleVerse(true);
-      } catch {
-        area.innerHTML = `
-          <div style="text-align:center; padding:26px 12px; color:#64748B;">
-            <div style="font-size:24px; margin-bottom:8px;">📡</div>
-            <div style="font-size:14px; font-weight:700; color:#334155; margin-bottom:6px;">성경 본문을 불러오지 못했습니다.</div>
-            <div style="font-size:12.5px; line-height:1.5; margin-bottom:14px;">네트워크 상태를 확인한 뒤 다시 시도해 주세요.</div>
-            <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
-              <button class="btn-sm primary" type="button" onclick="retryLoadBible()">다시 불러오기</button>
-            </div>
-          </div>
-        `;
-      }
-    }
-
-    window.retryLoadBible = () => renderBibleView(true);
-
-    function getBookmarkColorObj(colorId) {
-      return BIBLE_BOOKMARK_COLORS.find(c => c.id === colorId) || BIBLE_BOOKMARK_COLORS[0];
-    }
-
-    function loadBibleMemos() {
-      try {
-        const list = JSON.parse(localStorage.getItem(KEY_BIBLE_MEMOS) || '[]');
-        return Array.isArray(list) ? list : [];
-      } catch { return []; }
-    }
-
-    function saveBibleMemos(list) {
-      localStorage.setItem(KEY_BIBLE_MEMOS, JSON.stringify(list));
-    }
-
-    function getChapterVerseEditBucket(bookId, chapter) {
-      const k = `${bookId}:${chapter}`;
-      const b = (bibleVerseEdits && bibleVerseEdits[k]) ? bibleVerseEdits[k] : {};
-      return {
-        overrides: (b.overrides && typeof b.overrides === 'object') ? b.overrides : {},
-        added: (b.added && typeof b.added === 'object') ? b.added : {},
-        deleted: Array.isArray(b.deleted) ? b.deleted.map(Number) : []
-      };
-    }
-
-    function getEffectiveChapterVerses(bookId, chapter, rawVerses) {
-      const bucket = getChapterVerseEditBucket(bookId, chapter);
-      const delSet = new Set(bucket.deleted);
-      const vMap = new Map();
-      (Array.isArray(rawVerses) ? rawVerses : []).forEach(v => {
-        const vn = Number(v.verse);
-        if (delSet.has(vn)) return;
-        const ov = bucket.overrides[String(vn)];
-        vMap.set(vn, {
-          verse: vn,
-          text: ov !== undefined ? String(ov) : String(v.text || ''),
-          isEdited: ov !== undefined,
-          isAdded: false,
-          origText: String(v.text || '')
-        });
-      });
-      Object.entries(bucket.added).forEach(([kStr, txt]) => {
-        const vn = Number(kStr);
-        if (!vn || delSet.has(vn)) return;
-        vMap.set(vn, {
-          verse: vn,
-          text: String(txt || ''),
-          isEdited: false,
-          isAdded: true,
-          origText: ''
-        });
-      });
-      return Array.from(vMap.values()).sort((a, b) => a.verse - b.verse);
-    }
-
-    function renderBibleVersesHtml() {
-      const book = getBibleBook(biblePos.bookId);
-      const chapter = biblePos.chapter;
-      const marks = loadBibleMarks();
-      const memos = loadBibleMemos();
-      const user = getCurrentUser();
-      const canWriteQt = hasUserPerm(user, 'canManageQt');
-      const bucket = getChapterVerseEditBucket(book.id, chapter);
-      const effectiveVerses = getEffectiveChapterVerses(book.id, chapter, bibleCurrentVerses);
-
-      const area = document.getElementById('bibleContentArea');
-      area.innerHTML = `
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap; padding:0 4px 10px; margin-bottom:6px; border-bottom:1px solid #F1F5F9;">
-          <strong style="font-size:15px; color:#0F172A;">${escapeHtml(book.name)} ${chapter}장</strong>
-          <div style="display:flex; align-items:center; gap:6px;">
-            <span style="font-size:11.5px; color:#64748B; font-weight:600;">총 ${effectiveVerses.length}절</span>
-            ${canWriteQt ? `<button class="btn-sm primary" type="button" style="padding:4px 8px; font-size:11px;" onclick="openAddBibleVerseModal()">+ 절 추가</button>` : ''}
-          </div>
-        </div>
-        ${(canWriteQt && bucket.deleted.length > 0) ? `
-          <div class="info-box warn" style="margin-top:0; margin-bottom:9px; padding:8px 10px; display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
-            <span>🗑️ 숨김(삭제)된 절: ${bucket.deleted.sort((a, b) => a - b).map(n => `${n}절`).join(', ')}</span>
-            <button class="btn-sm approve" type="button" style="padding:4px 8px; font-size:11px;" onclick="restoreDeletedBibleVersesInChapter()">🔄 삭제 절 복원</button>
-          </div>
-        ` : ''}
-        ${effectiveVerses.map(v => {
-          const isSelected = bibleSelectedVerse === v.verse;
-          const markObj = marks.find(m => m.bookId === book.id && m.chapter === chapter && m.verse === v.verse);
-          const markColor = markObj ? getBookmarkColorObj(markObj.color) : null;
-          const hasMemo = memos.some(mm => Number(mm.bookId) === book.id && Number(mm.chapter) === chapter && Number(mm.verse) === v.verse);
-          const rowStyle = markColor
-            ? `background:${markColor.bg}; border-left:3.5px solid ${markColor.dot};`
-            : '';
-          return `
-            <div class="bible-verse-row ${isSelected ? 'selected' : ''} ${markObj ? 'bookmarked' : ''}" style="${rowStyle}" onclick="selectBibleVerse(${v.verse})">
-              <span class="bible-vnum" style="${markColor ? `color:${markColor.text};` : ''}">${v.verse}</span>
-              <span class="bible-vtext" style="font-size:${bibleFontSize}px;">${escapeHtml(v.text)}${hasMemo ? '<span class="bible-memo-badge" title="메모 있음">📝</span>' : ''}${(canWriteQt && (v.isEdited || v.isAdded)) ? `<span class="tag slate" style="margin-left:5px; font-size:9.5px; padding:1px 5px;">${v.isAdded ? '추가' : '보정'}</span>` : ''}</span>
-            </div>
-            ${isSelected ? `
-              <div class="bible-verse-actions">
-                <div class="bible-mark-palette">
-                  <span style="font-size:11.5px; font-weight:800; color:#334155;">⭐ 책갈피 색:</span>
-                  ${BIBLE_BOOKMARK_COLORS.map(c => {
-                    const isCur = !!(markColor && markColor.id === c.id);
-                    return `<button class="bible-mark-dot ${isCur ? 'active' : ''}" type="button" style="background:${c.dot};" title="${escapeHtml(c.label)} 책갈피" onclick="setBibleBookmarkColor(${v.verse}, '${c.id}')">${isCur ? '✓' : ''}</button>`;
-                  }).join('')}
-                  ${markObj ? `<button class="btn-sm danger" type="button" style="padding:3px 8px; font-size:11px; margin-left:auto;" onclick="removeBibleBookmarkByVerse(${v.verse})">해제</button>` : ''}
-                </div>
-                <button class="btn-sm primary" type="button" onclick="copyBibleVerse(${v.verse})">📋 말씀 복사</button>
-                <button class="btn-sm" type="button" onclick="openBibleMemoForVerse(${v.verse})">${hasMemo ? '📝 이 절 메모 보기' : '📝 이 절 메모'}</button>
-                ${canWriteQt ? `<button class="btn-sm" type="button" onclick="createQtFromBibleVerse(${v.verse})">${escapeHtml(getTabIcon('qt'))} ${escapeHtml(getTabLabel('qt'))}에 올리기</button>` : ''}
-                ${canWriteQt ? `<button class="btn-sm" type="button" onclick="openEditBibleVerseModal(${v.verse})">✏️ 오타 수정</button>` : ''}
-                ${(canWriteQt && v.isEdited) ? `<button class="btn-sm approve" type="button" onclick="restoreSingleBibleVerse(${v.verse})">🔄 원문 복원</button>` : ''}
-                ${canWriteQt ? `<button class="btn-sm danger" type="button" onclick="deleteBibleVerseByAdmin(${v.verse})">🗑️ 절 삭제</button>` : ''}
-              </div>
-            ` : ''}
-          `;
-        }).join('')}
-      `;
-    }
-
-    window.selectBibleVerse = (vNum) => {
-      bibleSelectedVerse = bibleSelectedVerse === vNum ? null : vNum;
-      renderBibleVersesHtml();
-    };
-
-    window.copyBibleVerse = async (vNum) => {
-      const book = getBibleBook(biblePos.bookId);
-      const v = getEffectiveChapterVerses(book.id, biblePos.chapter, bibleCurrentVerses).find(x => x.verse === vNum);
-      if (!v) return;
-      const text = `${book.name} ${biblePos.chapter}:${v.verse}\n"${v.text}"`;
-      try {
-        await navigator.clipboard.writeText(text);
-        showToast(`${book.name} ${biblePos.chapter}:${v.verse} 복사 완료!`);
-      } catch {
-        showToast('복사를 지원하지 않는 브라우저입니다.');
-      }
-    };
-
-    window.setBibleBookmarkColor = (vNum, colorId) => {
-      const book = getBibleBook(biblePos.bookId);
-      const v = getEffectiveChapterVerses(book.id, biblePos.chapter, bibleCurrentVerses).find(x => x.verse === vNum);
-      if (!v) return;
-      const cObj = getBookmarkColorObj(colorId);
-      let marks = loadBibleMarks();
-      const idx = marks.findIndex(m => m.bookId === book.id && m.chapter === biblePos.chapter && m.verse === vNum);
-      if (idx >= 0) {
-        if ((marks[idx].color || 'yellow') === cObj.id) {
-          marks.splice(idx, 1);
-          showToast('책갈피에서 해제했습니다.');
-        } else {
-          marks[idx].color = cObj.id;
-          marks[idx].savedAt = formatToday();
-          showToast(`[${cObj.label}] 색으로 책갈피를 변경했습니다!`);
-        }
-      } else {
-        marks.unshift({
-          bookId: book.id,
-          bookName: book.name,
-          chapter: biblePos.chapter,
-          verse: vNum,
-          text: v.text,
-          color: cObj.id,
-          savedAt: formatToday()
-        });
-        showToast(`[${cObj.label}] 책갈피에 저장했습니다!`);
-      }
-      saveBibleMarks(marks);
-      renderBibleVersesHtml();
-    };
-
-    window.removeBibleBookmarkByVerse = (vNum) => {
-      const book = getBibleBook(biblePos.bookId);
-      let marks = loadBibleMarks();
-      const idx = marks.findIndex(m => m.bookId === book.id && m.chapter === biblePos.chapter && m.verse === vNum);
-      if (idx >= 0) {
-        marks.splice(idx, 1);
-        saveBibleMarks(marks);
-        renderBibleVersesHtml();
-        showToast('책갈피에서 해제했습니다.');
-      }
-    };
-
-    window.createQtFromBibleVerse = (vNum) => {
-      const book = getBibleBook(biblePos.bookId);
-      const v = getEffectiveChapterVerses(book.id, biblePos.chapter, bibleCurrentVerses).find(x => x.verse === vNum);
-      if (!v) return;
-      openNewQtModal({
-        passage: `${book.name} ${biblePos.chapter}:${v.verse}`,
-        scripture: `${v.verse} ${v.text}`
-      });
-    };
-
-    window.adjustBibleFont = (delta) => {
-      bibleFontSize = Math.max(13, Math.min(22, bibleFontSize + delta));
-      localStorage.setItem(KEY_BIBLE_FONT, String(bibleFontSize));
-      if (bibleCurrentVerses.length > 0) renderBibleVersesHtml();
-      showToast(`글자 크기 ${bibleFontSize}px`);
-    };
-
-    window.moveBibleChapter = (dir) => {
-      const book = getBibleBook(biblePos.bookId);
-      let nextBookId = book.id;
-      let nextCh = biblePos.chapter + dir;
-      if (nextCh < 1) {
-        if (book.id <= 1) return;
-        const prevBook = getBibleBook(book.id - 1);
-        nextBookId = prevBook.id;
-        nextCh = prevBook.ch;
-      } else if (nextCh > book.ch) {
-        if (book.id >= 66) return;
-        nextBookId = book.id + 1;
-        nextCh = 1;
-      }
-      biblePos = { bookId: nextBookId, chapter: nextCh };
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      renderBibleView();
-    };
-
-    window.openBiblePickerModal = (tab = 'book') => {
-      document.getElementById('bibleBookSearchInput').value = '';
-      switchBiblePickerTab(tab);
-      document.getElementById('biblePickerModal').classList.add('open');
-    };
-
-    window.switchBiblePickerTab = (tab) => {
-      document.getElementById('bpPanelBook').classList.toggle('hidden', tab !== 'book');
-      document.getElementById('bpPanelChapter').classList.toggle('hidden', tab !== 'chapter');
-      document.getElementById('bpTabBook').classList.toggle('active', tab === 'book');
-      document.getElementById('bpTabChapter').classList.toggle('active', tab === 'chapter');
-      if (tab === 'book') renderBibleBookGrid();
-      else renderBibleChapterGrid();
-    };
-
-    window.setBibleTestamentFilter = (tf) => {
-      bibleTestamentFilter = tf;
-      document.getElementById('bpTestAll').classList.toggle('active', tf === 'all');
-      document.getElementById('bpTestOT').classList.toggle('active', tf === 'OT');
-      document.getElementById('bpTestNT').classList.toggle('active', tf === 'NT');
-      renderBibleBookGrid();
-    };
-
-    window.renderBibleBookGrid = () => {
-      const q = (document.getElementById('bibleBookSearchInput').value || '').trim().toLowerCase();
-      const list = BIBLE_BOOKS.filter(b => {
-        if (bibleTestamentFilter !== 'all' && b.t !== bibleTestamentFilter) return false;
-        if (!q) return true;
-        return b.name.toLowerCase().includes(q) || b.abbr.toLowerCase().includes(q);
-      });
-      document.getElementById('bibleBookGrid').innerHTML = list.length === 0
-        ? '<div style="grid-column:1/-1; text-align:center; color:#64748B; padding:18px; font-size:13px;">검색 결과가 없습니다.</div>'
-        : list.map(b => `
-            <button class="bible-book-btn ${b.id === biblePos.bookId ? 'active' : ''}" type="button" onclick="pickBibleBook(${b.id})">
-              ${escapeHtml(b.name)}
-            </button>
-          `).join('');
-    };
-
-    window.pickBibleBook = (bookId) => {
-      biblePos = { bookId, chapter: 1 };
-      switchBiblePickerTab('chapter');
-    };
-
-    function renderBibleChapterGrid() {
-      const book = getBibleBook(biblePos.bookId);
-      document.getElementById('bpSelectedBookTitle').textContent = `📖 ${book.name} (총 ${book.ch}장)`;
-      let htmlStr = '';
-      for (let c = 1; c <= book.ch; c++) {
-        htmlStr += `<button class="bible-chap-btn ${c === biblePos.chapter ? 'active' : ''}" type="button" onclick="pickBibleChapter(${c})">${c}</button>`;
-      }
-      document.getElementById('bibleChapterGrid').innerHTML = htmlStr;
-    }
-
-    window.pickBibleChapter = (ch) => {
-      biblePos.chapter = ch;
-      document.getElementById('biblePickerModal').classList.remove('open');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      renderBibleView();
-    };
-
-    window.setBibleBookmarkColorFilter = (colorId) => {
-      bibleBookmarkColorFilter = colorId;
-      renderBibleBookmarksModalList();
-    };
-
-    function renderBibleBookmarksModalList() {
-      const marks = loadBibleMarks();
-      const filterEl = document.getElementById('bibleBookmarkColorFilters');
-      if (filterEl) {
-        filterEl.innerHTML = [
-          `<button class="filter-chip ${bibleBookmarkColorFilter === 'all' ? 'active' : ''}" type="button" onclick="setBibleBookmarkColorFilter('all')">전체 (${marks.length})</button>`,
-          ...BIBLE_BOOKMARK_COLORS.map(c => {
-            const cnt = marks.filter(m => (m.color || 'yellow') === c.id).length;
-            return `
-              <button class="filter-chip ${bibleBookmarkColorFilter === c.id ? 'active' : ''}" type="button" onclick="setBibleBookmarkColorFilter('${c.id}')" style="display:inline-flex; align-items:center; gap:5px;">
-                <span style="width:10px; height:10px; border-radius:50%; background:${c.dot}; display:inline-block;"></span>
-                <span>${escapeHtml(c.label)}${cnt > 0 ? ` (${cnt})` : ''}</span>
-              </button>
-            `;
-          })
-        ].join('');
-      }
-
-      const filtered = marks
-        .map((m, origIdx) => ({ ...m, origIdx }))
-        .filter(m => bibleBookmarkColorFilter === 'all' || (m.color || 'yellow') === bibleBookmarkColorFilter);
-
-      const el = document.getElementById('bibleBookmarksList');
-      if (marks.length === 0) {
-        el.innerHTML = '<div style="text-align:center; padding:24px 8px; color:#64748B; font-size:13px;">저장된 책갈피가 없습니다.<br>성경 구절을 터치해 원하는 색으로 책갈피를 저장해 보세요.</div>';
-      } else if (filtered.length === 0) {
-        el.innerHTML = '<div style="text-align:center; padding:24px 8px; color:#64748B; font-size:13px;">해당 색상의 책갈피가 없습니다.</div>';
-      } else {
-        el.innerHTML = filtered.map(m => {
-          const cObj = getBookmarkColorObj(m.color);
-          return `
-            <div class="card" style="padding:12px; background:${cObj.bg}; border-color:${cObj.border}; border-left:4px solid ${cObj.dot};">
-              <div class="card-top">
-                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                  <strong style="font-size:13.5px; color:${cObj.text};">${escapeHtml(m.bookName)} ${m.chapter}:${m.verse}</strong>
-                  <span style="font-size:10.5px; font-weight:800; padding:2px 7px; border-radius:999px; background:rgba(255,255,255,0.72); color:${cObj.text};">${escapeHtml(cObj.label)}</span>
-                </div>
-                <span class="card-date">${escapeHtml(m.savedAt || '')}</span>
-              </div>
-              <div style="font-size:13px; color:#1E293B; line-height:1.55; margin-bottom:10px;">${escapeHtml(m.text)}</div>
-              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
-                <div style="display:flex; align-items:center; gap:5px;">
-                  ${BIBLE_BOOKMARK_COLORS.map(c => `
-                    <button class="bible-mark-dot-sm ${c.id === cObj.id ? 'active' : ''}" type="button" style="background:${c.dot};" title="${escapeHtml(c.label)}으로 변경" onclick="changeSavedBookmarkColor(${m.origIdx}, '${c.id}')"></button>
-                  `).join('')}
-                </div>
-                <div style="display:flex; gap:6px;">
-                  <button class="btn-sm primary" type="button" onclick="jumpToBibleBookmark(${m.bookId}, ${m.chapter}, ${m.verse})">말씀 이동</button>
-                  <button class="btn-sm danger" type="button" onclick="removeBibleBookmark(${m.origIdx})">삭제</button>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('');
-      }
-    }
-
-    window.openBibleBookmarksModal = () => {
-      bibleBookmarkColorFilter = 'all';
-      renderBibleBookmarksModalList();
-      document.getElementById('bibleBookmarksModal').classList.add('open');
-    };
-
-    window.changeSavedBookmarkColor = (idx, colorId) => {
-      const marks = loadBibleMarks();
-      if (!marks[idx]) return;
-      marks[idx].color = colorId;
-      saveBibleMarks(marks);
-      renderBibleBookmarksModalList();
-      if (bibleCurrentVerses.length > 0) renderBibleVersesHtml();
-      showToast(`[${getBookmarkColorObj(colorId).label}] 색으로 변경했습니다.`);
-    };
-
-    window.jumpToBibleBookmark = async (bookId, chapter, verse) => {
-      biblePos = { bookId: Number(bookId), chapter: Number(chapter || 1) };
-      document.getElementById('bibleBookmarksModal').classList.remove('open');
-      if (currentMainTab !== 'bible') {
-        currentMainTab = 'bible';
-        applyScreen();
-      }
-      await renderBibleView(false, verse ? Number(verse) : null);
-    };
-
-    window.removeBibleBookmark = (idx) => {
-      const marks = loadBibleMarks();
-      marks.splice(idx, 1);
-      saveBibleMarks(marks);
-      renderBibleBookmarksModalList();
-      if (bibleCurrentVerses.length > 0) renderBibleVersesHtml();
-    };
-
-    // 성경 메모장 (말씀 자동 연결 · 구절 인식 · 바로가기 · 검색 · 수정 · 삭제)
-    function formatBibleRefLabel(bookId, chapter, verse) {
-      if (!bookId || !chapter) return '';
-      const b = getBibleBook(bookId);
-      return verse ? `${b.name} ${chapter}:${verse}` : `${b.name} ${chapter}장`;
-    }
-
-    function extractBibleRefFromText(raw) {
-      const text = String(raw || '').trim();
-      if (!text) return null;
-      const sortedBooks = [...BIBLE_BOOKS].sort((a, b) => Math.max(b.name.length, b.abbr.length) - Math.max(a.name.length, a.abbr.length));
-      for (const b of sortedBooks) {
-        const names = [b.name, b.abbr].filter((v, i, arr) => arr.indexOf(v) === i).sort((a, c) => c.length - a.length);
-        for (const nm of names) {
-          const isShort = nm.length === 1;
-          const prefix = isShort ? '(?:^|[\\s\\[(/,·])' : '';
-          const esc = escapeRegExp(nm);
-          const re = new RegExp(`${prefix}${esc}\\s*(\\d{1,3})\\s*(?:(?:장\\s*(\\d{1,3})\\s*절?)|(?::\\s*(\\d{1,3})(?:\\s*[-~]\\s*\\d{1,3})?)|장)`);
-          const m = text.match(re);
-          if (m) {
-            const ch = Math.max(1, Math.min(b.ch, Number(m[1])));
-            const vs = Number(m[2] || m[3] || 0) || null;
-            return { bookId: b.id, chapter: ch, verse: vs };
-          }
-        }
-      }
-      return null;
-    }
-
-    function resolveMemoBibleRef(m) {
-      if (m && m.bookId && m.chapter) {
-        return { bookId: Number(m.bookId), chapter: Number(m.chapter), verse: m.verse ? Number(m.verse) : null };
-      }
-      return extractBibleRefFromText(m && m.title) || extractBibleRefFromText(m && m.body) || null;
-    }
-
-    function updateBibleMemoLinkDisplay() {
-      const disp = document.getElementById('bibleMemoLinkDisplay');
-      if (!disp) return;
-      const bookId = Number(document.getElementById('bibleMemoLinkBookId').value || 0);
-      const chapter = Number(document.getElementById('bibleMemoLinkChapter').value || 0);
-      const verse = Number(document.getElementById('bibleMemoLinkVerse').value || 0);
-      const label = formatBibleRefLabel(bookId, chapter, verse);
-      disp.textContent = label ? `📖 연결 말씀: ${label}` : '📖 연결 말씀: 없음';
-    }
-
-    window.linkCurrentBiblePosToMemo = () => {
-      const book = getBibleBook(biblePos.bookId);
-      const ch = biblePos.chapter;
-      const vs = bibleSelectedVerse ? Number(bibleSelectedVerse) : 0;
-      document.getElementById('bibleMemoLinkBookId').value = String(book.id);
-      document.getElementById('bibleMemoLinkChapter').value = String(ch);
-      document.getElementById('bibleMemoLinkVerse').value = vs ? String(vs) : '';
-      updateBibleMemoLinkDisplay();
-      showToast(`연결 말씀을 [${formatBibleRefLabel(book.id, ch, vs)}]로 맞췄습니다.`);
-    };
-
-    window.onBibleMemoTitleInput = () => {
-      const val = document.getElementById('bibleMemoTitleInput').value.trim();
-      const parsed = extractBibleRefFromText(val);
-      if (parsed) {
-        document.getElementById('bibleMemoLinkBookId').value = String(parsed.bookId);
-        document.getElementById('bibleMemoLinkChapter').value = String(parsed.chapter);
-        document.getElementById('bibleMemoLinkVerse').value = parsed.verse ? String(parsed.verse) : '';
-        updateBibleMemoLinkDisplay();
-      }
-    };
-
-    window.resetBibleMemoForm = () => {
-      const book = getBibleBook(biblePos.bookId);
-      const ch = biblePos.chapter;
-      const vs = bibleSelectedVerse ? Number(bibleSelectedVerse) : 0;
-      document.getElementById('editBibleMemoId').value = '';
-      document.getElementById('bibleMemoLinkBookId').value = String(book.id);
-      document.getElementById('bibleMemoLinkChapter').value = String(ch);
-      document.getElementById('bibleMemoLinkVerse').value = vs ? String(vs) : '';
-      document.getElementById('bibleMemoTitleInput').value = '';
-      document.getElementById('bibleMemoBodyInput').value = '';
-      document.getElementById('saveBibleMemoBtn').textContent = '💾 메모 저장';
-      document.getElementById('cancelEditBibleMemoBtn').classList.add('hidden');
-      updateBibleMemoLinkDisplay();
-    };
-
-    window.openBibleMemoModal = () => {
-      const banner = document.getElementById('bibleMemoSavedBanner');
-      if (banner) { banner.classList.add('hidden'); banner.innerHTML = ''; }
-      resetBibleMemoForm();
-      document.getElementById('bibleMemoSearchInput').value = '';
-      renderBibleMemoList();
-      document.getElementById('bibleMemoModal').classList.add('open');
-    };
-
-    window.openBibleMemoForVerse = (vNum) => {
-      const banner = document.getElementById('bibleMemoSavedBanner');
-      if (banner) { banner.classList.add('hidden'); banner.innerHTML = ''; }
-      const book = getBibleBook(biblePos.bookId);
-      const memos = loadBibleMemos();
-      const existing = memos.find(mm => Number(mm.bookId) === book.id && Number(mm.chapter) === biblePos.chapter && Number(mm.verse) === Number(vNum));
-      document.getElementById('bibleMemoSearchInput').value = '';
-      if (existing) {
-        startEditBibleMemo(existing.id);
-      } else {
-        resetBibleMemoForm();
-        document.getElementById('bibleMemoLinkBookId').value = String(book.id);
-        document.getElementById('bibleMemoLinkChapter').value = String(biblePos.chapter);
-        document.getElementById('bibleMemoLinkVerse').value = String(vNum);
-        document.getElementById('bibleMemoTitleInput').value = `${book.name} ${biblePos.chapter}:${vNum}`;
-        updateBibleMemoLinkDisplay();
-      }
-      renderBibleMemoList();
-      document.getElementById('bibleMemoModal').classList.add('open');
-      setTimeout(() => document.getElementById('bibleMemoBodyInput').focus(), 60);
-    };
-
-    function showMemoSavedJumpBanner(ref, isEdit) {
-      const banner = document.getElementById('bibleMemoSavedBanner');
-      if (!banner) return;
-      if (!ref || !ref.bookId || !ref.chapter) {
-        banner.classList.add('hidden');
-        return;
-      }
-      const refLabel = formatBibleRefLabel(ref.bookId, ref.chapter, ref.verse);
-      banner.innerHTML = `
-        <span>✅ 메모가 ${isEdit ? '수정' : '저장'}되었습니다!</span>
-        <button class="btn-sm approve" type="button" onclick="jumpToBibleMemoRef(${ref.bookId}, ${ref.chapter}, ${ref.verse || 0})">📖 ${escapeHtml(refLabel)} 바로가기</button>
-      `;
-      banner.classList.remove('hidden');
-    }
-
-    window.handleSaveBibleMemo = () => {
-      const editId = document.getElementById('editBibleMemoId').value;
-      const title = document.getElementById('bibleMemoTitleInput').value.trim();
-      const body = document.getElementById('bibleMemoBodyInput').value.trim();
-      let bookId = Number(document.getElementById('bibleMemoLinkBookId').value || 0);
-      let chapter = Number(document.getElementById('bibleMemoLinkChapter').value || 0);
-      let verse = Number(document.getElementById('bibleMemoLinkVerse').value || 0);
-
-      if (!body) return showToast('메모 내용을 입력해 주세요.');
-
-      // 제목이나 내용에 성경 구절이 적혀 있으면 우선 연결, 없으면 현재 읽고 있는 성경 위치 자동 연결
-      const parsedFromInput = extractBibleRefFromText(title) || extractBibleRefFromText(body);
-      if (parsedFromInput) {
-        bookId = parsedFromInput.bookId;
-        chapter = parsedFromInput.chapter;
-        verse = parsedFromInput.verse || 0;
-      } else if (!bookId || !chapter) {
-        bookId = biblePos.bookId;
-        chapter = biblePos.chapter;
-        verse = bibleSelectedVerse ? Number(bibleSelectedVerse) : 0;
-      }
-
-      let verseText = '';
-      if (bookId === biblePos.bookId && chapter === biblePos.chapter && verse) {
-        const foundV = bibleCurrentVerses.find(x => x.verse === verse);
-        if (foundV) verseText = foundV.text;
-      }
-
-      const defaultTitle = formatBibleRefLabel(bookId, chapter, verse) || '성경 메모';
-      const memos = loadBibleMemos();
-      const nowTs = Date.now();
-      const nowLabel = `${formatToday()} ${String(new Date().getHours()).padStart(2, '0')}:${String(new Date().getMinutes()).padStart(2, '0')}`;
-
-      if (editId) {
-        const target = memos.find(x => String(x.id) === String(editId));
-        if (target) {
-          target.title = title || defaultTitle;
-          target.body = body;
-          target.bookId = bookId || null;
-          target.chapter = chapter || null;
-          target.verse = verse || null;
-          if (verseText) target.verseText = verseText;
-          target.updatedAt = nowLabel;
-          target.updatedTs = nowTs;
-        }
-        showToast('메모가 수정되었습니다!');
-      } else {
-        memos.unshift({
-          id: 'memo_' + nowTs,
-          title: title || defaultTitle,
-          body,
-          bookId: bookId || null,
-          chapter: chapter || null,
-          verse: verse || null,
-          verseText: verseText || '',
-          updatedAt: nowLabel,
-          updatedTs: nowTs
-        });
-        showToast('메모가 저장되었습니다!');
-      }
-
-      saveBibleMemos(memos);
-      resetBibleMemoForm();
-      showMemoSavedJumpBanner({ bookId, chapter, verse }, !!editId);
-      renderBibleMemoList();
-      if (bibleCurrentVerses.length > 0) renderBibleVersesHtml();
-    };
-
-    window.startEditBibleMemo = (id) => {
-      const memos = loadBibleMemos();
-      const m = memos.find(x => String(x.id) === String(id));
-      if (!m) return;
-      const ref = resolveMemoBibleRef(m);
-      document.getElementById('editBibleMemoId').value = m.id;
-      document.getElementById('bibleMemoLinkBookId').value = ref ? String(ref.bookId) : String(biblePos.bookId);
-      document.getElementById('bibleMemoLinkChapter').value = ref ? String(ref.chapter) : String(biblePos.chapter);
-      document.getElementById('bibleMemoLinkVerse').value = (ref && ref.verse) ? String(ref.verse) : '';
-      document.getElementById('bibleMemoTitleInput').value = m.title || '';
-      document.getElementById('bibleMemoBodyInput').value = m.body || '';
-      document.getElementById('saveBibleMemoBtn').textContent = '✏️ 메모 수정 저장';
-      document.getElementById('cancelEditBibleMemoBtn').classList.remove('hidden');
-      updateBibleMemoLinkDisplay();
-      const modalBody = document.querySelector('#bibleMemoModal .modal');
-      if (modalBody) modalBody.scrollTo({ top: 0, behavior: 'smooth' });
-      document.getElementById('bibleMemoBodyInput').focus();
-    };
-
-    window.copyBibleMemo = async (id) => {
-      const m = loadBibleMemos().find(x => String(x.id) === String(id));
-      if (!m) return;
-      const text = `[${m.title}]
-${m.body}`;
-      try {
-        await navigator.clipboard.writeText(text);
-        showToast('메모가 복사되었습니다!');
-      } catch {
-        showToast('복사를 지원하지 않는 브라우저입니다.');
-      }
-    };
-
-    window.deleteBibleMemo = (id) => {
-      if (!confirm('이 메모를 삭제할까요?')) return;
-      const memos = loadBibleMemos().filter(x => String(x.id) !== String(id));
-      saveBibleMemos(memos);
-      if (document.getElementById('editBibleMemoId').value === String(id)) {
-        resetBibleMemoForm();
-      }
-      renderBibleMemoList();
-      if (bibleCurrentVerses.length > 0) renderBibleVersesHtml();
-      showToast('메모가 삭제되었습니다.');
-    };
-
-    window.jumpToBibleMemoRef = async (bookId, chapter, verse) => {
-      biblePos = { bookId: Number(bookId), chapter: Number(chapter || 1) };
-      document.getElementById('bibleMemoModal').classList.remove('open');
-      if (currentMainTab !== 'bible') {
-        currentMainTab = 'bible';
-        applyScreen();
-      }
-      await renderBibleView(false, verse ? Number(verse) : null);
-      const label = formatBibleRefLabel(bookId, chapter, verse);
-      if (label) showToast(`📖 ${label} 말씀으로 이동했습니다.`);
-    };
-
-    window.renderBibleMemoList = () => {
-      const memos = loadBibleMemos();
-      const q = (document.getElementById('bibleMemoSearchInput').value || '').trim().toLowerCase();
-      const filtered = q
-        ? memos.filter(m => `${m.title} ${m.body} ${m.verseText || ''}`.toLowerCase().includes(q))
-        : memos;
-
-      const el = document.getElementById('bibleMemoList');
-      if (memos.length === 0) {
-        el.innerHTML = '<div style="text-align:center; padding:20px 8px; color:#64748B; font-size:13px;">저장된 메모가 없습니다.<br>위 입력창에 원하는 글을 적고 저장해 보세요.</div>';
-        return;
-      }
-      if (filtered.length === 0) {
-        el.innerHTML = '<div style="text-align:center; padding:18px 8px; color:#64748B; font-size:13px;">검색 결과가 없습니다.</div>';
-        return;
-      }
-
-      el.innerHTML = `
-        <div style="font-size:12px; font-weight:800; color:#64748B; margin-bottom:8px;">저장된 메모 (${filtered.length}개)</div>
-        ${filtered.map(m => {
-          const ref = resolveMemoBibleRef(m);
-          const refLabel = ref ? formatBibleRefLabel(ref.bookId, ref.chapter, ref.verse) : '';
-          return `
-            <div class="bible-memo-card">
-              <div class="card-top" style="margin-bottom:4px;">
-                <strong style="font-size:14px; color:#0F172A;">📝 ${escapeHtml(m.title || `${getTabLabel('bible')} 메모`)}</strong>
-                <span class="card-date">${escapeHtml(m.updatedAt || '')}</span>
-              </div>
-              ${refLabel ? `<div class="bible-memo-ref-pill">📖 ${escapeHtml(refLabel)}</div>` : ''}
-              ${m.verseText ? `<div class="bible-memo-verse-quote">"${escapeHtml(m.verseText)}"</div>` : ''}
-              <div class="bible-memo-body">${escapeHtml(m.body)}</div>
-              <div style="display:flex; gap:6px; justify-content:flex-end; flex-wrap:wrap;">
-                ${ref ? `<button class="btn-sm primary" type="button" onclick="jumpToBibleMemoRef(${ref.bookId}, ${ref.chapter}, ${ref.verse || 0})">📖 말씀 바로가기</button>` : ''}
-                <button class="btn-sm" type="button" onclick="copyBibleMemo('${escapeJsAttr(m.id)}')">복사</button>
-                <button class="btn-sm" type="button" onclick="startEditBibleMemo('${escapeJsAttr(m.id)}')">수정</button>
-                <button class="btn-sm danger" type="button" onclick="deleteBibleMemo('${escapeJsAttr(m.id)}')">삭제</button>
-              </div>
-            </div>
-          `;
-        }).join('')}
-      `;
-    };
-
-    // 성경 빠른 검색 (책이름+장:절 바로 이동 + 책 필터 + 현재 장 & 주요 말씀 검색)
-    function parseBibleRefQuery(raw) {
-      const q = String(raw || '').trim();
-      if (!q) return null;
-      const sortedBooks = [...BIBLE_BOOKS].sort((a, b) => Math.max(b.name.length, b.abbr.length) - Math.max(a.name.length, a.abbr.length));
-      for (const b of sortedBooks) {
-        const candidates = [b.name, b.abbr].sort((a, c) => c.length - a.length);
-        for (const cand of candidates) {
-          if (q.startsWith(cand)) {
-            const rest = q.slice(cand.length).trim();
-            if (!rest) return { book: b, chapter: 1, verse: null, exactRef: false };
-            const m = rest.match(/^(\d{1,3})\s*(?:장|:|\s)\s*(\d{1,3})?\s*절?$/);
-            if (m) {
-              const ch = Math.max(1, Math.min(b.ch, Number(m[1])));
-              const vs = m[2] ? Math.max(1, Number(m[2])) : null;
-              return { book: b, chapter: ch, verse: vs, exactRef: true };
-            }
-            const mOnlyCh = rest.match(/^(\d{1,3})장?$/);
-            if (mOnlyCh) {
-              const ch = Math.max(1, Math.min(b.ch, Number(mOnlyCh[1])));
-              return { book: b, chapter: ch, verse: null, exactRef: true };
-            }
-          }
-        }
-      }
-      return null;
-    }
-
-    window.onBibleQuickSearchInput = (val) => {
-      const q = String(val || '').trim();
-      const clearBtn = document.getElementById('bibleQuickSearchClear');
-      const box = document.getElementById('bibleQuickSearchResults');
-      clearBtn.classList.toggle('hidden', !q);
-      if (!q) {
-        box.classList.add('hidden');
-        box.innerHTML = '';
-        return;
-      }
-
-      const parts = [];
-      // 1) 구절 바로 이동 매칭 (예: 시편 23:1, 요3:16, 창 1장)
-      const parsed = parseBibleRefQuery(q);
-      if (parsed && parsed.exactRef) {
-        const label = `${parsed.book.name} ${parsed.chapter}장${parsed.verse ? ' ' + parsed.verse + '절' : ''}`;
-        parts.push(`
-          <button class="bible-quick-jump-btn" type="button" onclick="jumpToBibleRef(${parsed.book.id}, ${parsed.chapter}, ${parsed.verse || 0})">
-            <span>📖 ${escapeHtml(label)} 바로 이동</span>
-            <span>이동 ▸</span>
-          </button>
-        `);
-      }
-
-      // 2) 성경 권 이름 빠른 선택 (최대 8권)
-      const qLower = q.toLowerCase().replace(/\s+/g, '');
-      const matchedBooks = BIBLE_BOOKS.filter(b =>
-        b.name.toLowerCase().includes(qLower) || b.abbr.toLowerCase().includes(qLower)
-      ).slice(0, 8);
-      if (matchedBooks.length > 0) {
-        parts.push(`
-          <div style="font-size:11.5px; font-weight:700; color:#64748B; margin-bottom:5px;">성경 권 바로 이동</div>
-          <div class="bible-quick-chips">
-            ${matchedBooks.map(b => `
-              <button class="bible-quick-chip" type="button" onclick="jumpToBibleRef(${b.id}, 1, 0)">${escapeHtml(b.name)} (${b.ch}장)</button>
-            `).join('')}
-          </div>
-        `);
-      }
-
-      // 3) 현재 펼쳐진 장 본문 내 키워드 검색
-      const curBook = getBibleBook(biblePos.bookId);
-      const curHits = bibleCurrentVerses.filter(v => v.text.toLowerCase().includes(q.toLowerCase())).slice(0, 5);
-      if (curHits.length > 0) {
-        parts.push(`
-          <div style="font-size:11.5px; font-weight:700; color:#64748B; margin:6px 0 4px;">현재 장(${escapeHtml(curBook.name)} ${biblePos.chapter}장) 내 검색</div>
-          ${curHits.map(v => `
-            <div class="bible-quick-verse-hit" onclick="focusBibleVerseInCurrent(${v.verse})">
-              <strong style="color:#1E40AF;">${v.verse}절</strong> ${highlightText(v.text, q)}
-            </div>
-          `).join('')}
-        `);
-      }
-
-      // 4) 대표 말씀(60편) 키워드 검색
-      const poolHits = DAILY_QT_POOL.filter(item =>
-        `${item.title} ${item.passage} ${item.scripture}`.toLowerCase().includes(q.toLowerCase())
-      ).slice(0, 4);
-      if (poolHits.length > 0) {
-        parts.push(`
-          <div style="font-size:11.5px; font-weight:700; color:#64748B; margin:6px 0 4px;">주요 성경 말씀 검색</div>
-          ${poolHits.map(item => {
-            const ref = parseBibleRefQuery(item.passage.split('-')[0]);
-            const clickAttr = ref ? `onclick="jumpToBibleRef(${ref.book.id}, ${ref.chapter}, ${ref.verse || 0})"` : '';
-            return `
-              <div class="bible-quick-verse-hit" ${clickAttr}>
-                <strong style="color:#4F46E5;">${escapeHtml(item.passage)}</strong> · ${highlightText(item.title, q)}
-              </div>
-            `;
-          }).join('')}
-        `);
-      }
-
-      if (parts.length === 0) {
-        parts.push(`<div style="text-align:center; padding:8px 4px; font-size:12.5px; color:#64748B;">일치하는 성경이나 구절이 없습니다.<br>예: <b>시편 23:1</b>, <b>요 3:16</b>, <b>창세기</b>처럼 입력해 보세요.</div>`);
-      }
-
-      box.innerHTML = parts.join('');
-      box.classList.remove('hidden');
-    };
-
-    window.executeBibleQuickJump = () => {
-      const q = (document.getElementById('bibleQuickSearchInput').value || '').trim();
-      if (!q) return;
-      const parsed = parseBibleRefQuery(q);
-      if (parsed) {
-        jumpToBibleRef(parsed.book.id, parsed.chapter, parsed.verse || 0);
-        return;
-      }
-      const firstBook = BIBLE_BOOKS.find(b => b.name.includes(q) || b.abbr === q);
-      if (firstBook) jumpToBibleRef(firstBook.id, 1, 0);
-    };
-
-    window.clearBibleQuickSearch = () => {
-      const input = document.getElementById('bibleQuickSearchInput');
-      if (input) { input.value = ''; input.focus(); }
-      document.getElementById('bibleQuickSearchClear').classList.add('hidden');
-      document.getElementById('bibleQuickSearchResults').classList.add('hidden');
-      document.getElementById('bibleQuickSearchResults').innerHTML = '';
-    };
-
-    window.jumpToBibleRef = async (bookId, chapter, verse) => {
-      biblePos = { bookId: Number(bookId), chapter: Number(chapter || 1) };
-      document.getElementById('bibleQuickSearchInput').value = '';
-      document.getElementById('bibleQuickSearchClear').classList.add('hidden');
-      document.getElementById('bibleQuickSearchResults').classList.add('hidden');
-      await renderBibleView(false, verse ? Number(verse) : null);
-    };
-
-    window.focusBibleVerseInCurrent = (vNum) => {
-      bibleSelectedVerse = Number(vNum);
-      document.getElementById('bibleQuickSearchResults').classList.add('hidden');
-      renderBibleVersesHtml();
-      setTimeout(() => {
-        const selEl = document.querySelector('#bibleContentArea .bible-verse-row.selected');
-        if (selEl) selEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 60);
-    };
-
     // ==================== 15. 큐티(QT) · 인스타/카톡 좋아요·하트 · 댓글 ====================
     function formatShortTime(ts) {
       if (!ts) return '';
@@ -14665,9 +12924,7 @@ ${m.body}`;
         : [autoToday, ...mappedCustom];
 
       const container = document.getElementById('qtListContainer');
-      const dailyDictHtml = buildDailyBibleDictCardHtml(canManageQt);
-      const krvFooterHtml = '<div class="copyright-footnote">📖 성경 본문 출처: <b>「성경전서 개역한글판」(대한성서공회)</b> · 저작재산권 만료 원문</div>';
-      const secOrder = getValidQtSectionOrder();
+      const krvFooterHtml = '<div class="copyright-footnote">📖 말씀 본문 출처: <b>「성경전서 개역한글판」(대한성서공회)</b> · 저작재산권 만료 원문</div>';
       const qtCardsHtml = combined.length === 0 ? `
         <div class="card" style="text-align:center; padding:34px 18px; color:#64748B;">
           <div style="font-size:28px; margin-bottom:8px;">${escapeHtml(getTabIcon('qt'))}</div>
@@ -14737,8 +12994,7 @@ ${m.body}`;
           </div>
         `;
       }).join('');
-      const sectionHtmlMap = { dict: dailyDictHtml, qt: qtCardsHtml };
-      container.innerHTML = secOrder.map(k => sectionHtmlMap[k] || '').join('') + krvFooterHtml;
+      container.innerHTML = qtCardsHtml + krvFooterHtml;
     }
 
     window.toggleQtReaction = async (postId, key) => {
@@ -15383,7 +13639,7 @@ ${m.body}`;
 
         ${buildManageAccordionBar({
           key: 'labels_ui_texts',
-          titleHtml: '🏷️ 화면 세부 제목 · 안내 문구 설정 (성경 사전·QT·회칙·가이드·설정)',
+          titleHtml: '🏷️ 화면 세부 제목 · 안내 문구 설정 (QT·회칙·가이드·설정)',
           badgeHtml: `<span class="tag slate">${UI_TEXT_REGISTRY.length}개</span>`,
           defaultOpen: false,
           marginTop: '10px'
@@ -15391,7 +13647,7 @@ ${m.body}`;
         <div data-acc-body="labels_ui_texts" class="${isManageSectionOpen('labels_ui_texts', false) ? '' : 'hidden'}">
           <div class="card">
             <div style="font-size:12px; color:#64748B; line-height:1.5; margin-bottom:10px;">
-              오늘의 성경 사전 제목, 성경·QT·회칙·가이드 상단 안내 문구, 설정 카테고리 제목 등을 자유롭게 수정할 수 있습니다. (비워두면 기본값 사용)
+              QT·회칙·가이드·영상 상단 안내 문구, 설정 카테고리 제목 등을 자유롭게 수정할 수 있습니다. (비워두면 기본값 사용)
             </div>
             ${UI_TEXT_REGISTRY.map(u => {
               const curVal = draftUiTexts[u.key] !== undefined ? draftUiTexts[u.key] : getUiText(u.key);
@@ -17739,7 +15995,7 @@ ${m.body}`;
         const catDisp = adminLogFilterCategory === '오늘의 말씀' ? getTabLabel('qt')
           : (adminLogFilterCategory === '바로가기' ? getQuickSheetLabel()
             : (adminLogFilterCategory === '예배·출석' ? getTabLabel('manageWorship')
-              : (adminLogFilterCategory === '문의' ? getTabLabel('setInquiry') : (adminLogFilterCategory === '성경' ? getTabLabel('bible') : adminLogFilterCategory))));
+              : (adminLogFilterCategory === '문의' ? getTabLabel('setInquiry') : adminLogFilterCategory)));
         const catLbl = adminLogFilterCategory !== 'all' ? `[${catDisp}] ` : '';
         summaryEl.textContent = q
           ? `'${adminLogSearchQuery.trim()}' 검색 결과 ${filtered.length}건 (전체 ${allLogs.length}건)`
@@ -17834,7 +16090,7 @@ ${m.body}`;
       const memberCnt = allLogs.filter(l => l && l.actorType === 'member').length;
       const unsyncedCount = allLogs.filter(l => l && l.sheetSynced !== true).length;
       const hasSheet = !!getAdminSheetUrl();
-      const cats = ['all', '공지·배너', '오늘의 말씀', '성경', '영상', '댓글', '회원·생일', '역할·메뉴', '예배·출석', '바로가기', '약관·회칙', '문의', '보안·설정'];
+      const cats = ['all', '공지·배너', '오늘의 말씀', '영상', '댓글', '회원·생일', '역할·메뉴', '예배·출석', '바로가기', '약관·회칙', '문의', '보안·설정'];
 
       const logsListOpen = isManageSectionOpen('logs_list', true);
       el.innerHTML = `
@@ -17849,7 +16105,7 @@ ${m.body}`;
           🔐 <b>통합 보안 감사 로그 (위변조·삭제 불가)</b><br>
           • <b>관리자:</b> 모든 추가·수정·삭제·승인·설정 변경 자동 기록<br>
           • <b>이용자:</b> 댓글 작성/수정/삭제, 유튜브 영상 추천/수정/삭제, 문의 사항 작성/수정/삭제, 이름·생일 변경 신청/취소, 가입·탈퇴, 출석 체크만 기록<br>
-          • <b>미기록(프라이버시 보호):</b> 이용자 비밀번호 변경, ${escapeHtml(getTabLabel('bible'))} 메모·책갈피·검색, ${escapeHtml(getQuickSheetLabel())} 이동, 공지·소식 단순 조회
+          • <b>미기록(프라이버시 보호):</b> 이용자 비밀번호 변경, 전체 글자 크기·알림 설정, ${escapeHtml(getQuickSheetLabel())} 이동, 공지·소식 단순 조회
         </div>
 
         ${hasSheet ? `
@@ -17878,7 +16134,7 @@ ${m.body}`;
                 : (c === '오늘의 말씀' ? getTabLabel('qt')
                   : (c === '바로가기' ? getQuickSheetLabel()
                     : (c === '예배·출석' ? getTabLabel('manageWorship')
-                      : (c === '문의' ? getTabLabel('setInquiry') : (c === '성경' ? getTabLabel('bible') : c)))));
+                      : (c === '문의' ? getTabLabel('setInquiry') : c))));
               return `<option value="${escapeHtml(c)}" ${adminLogFilterCategory === c ? 'selected' : ''}>${escapeHtml(disp)}</option>`;
             }).join('')}
           </select>
@@ -18994,9 +17250,8 @@ ${m.body}`;
       { id: 'firebase', title: '1. Firebase 서버 연결 · 관리자 인증', desc: 'DB 연결, 최고 관리자 인증 상태, 스키마 버전을 점검합니다.' },
       { id: 'sheet', title: '2. 구글 시트 8개 세부 탭 연동 상태', desc: 'Apps Script 웹 앱 URL 연결 및 8개 세부 탭(출석부·명단·분리 로그) 배포 여부를 점검합니다.' },
       { id: 'qr', title: '3. 오늘의 초대 QR 유효성 · 생성 점검', desc: '한국시간 오늘 날짜 토큰 존재 여부와 QR 이미지 생성을 점검합니다.' },
-      { id: 'bible', title: '4. 성경 본문 불러오기 API 점검', desc: '개역한글 성경 본문(창세기 1장) 실시간 로딩을 점검합니다.' },
-      { id: 'notif', title: '5. 알림 설정 · 앱 내 팝업 점검', desc: '기기 알림 권한 상태와 앱 내 상단 팝업 알림 작동을 점검합니다.' },
-      { id: 'config', title: '6. 핵심 설정 데이터 무결성 점검', desc: '역할, 메인 배치, 바로가기, 메뉴 이름, 출석 일정, 관리자 명단을 점검합니다.' }
+      { id: 'notif', title: '4. 알림 설정 · 앱 내 팝업 점검', desc: '기기 알림 권한 상태와 앱 내 상단 팝업 알림 작동을 점검합니다.' },
+      { id: 'config', title: '5. 핵심 설정 데이터 무결성 점검', desc: '역할, 메인 배치, 바로가기, 메뉴 이름, 출석 일정, 관리자 명단을 점검합니다.' }
     ];
 
     function renderManageDiagnostics(el, user) {
@@ -19118,7 +17373,7 @@ ${m.body}`;
             전체 일괄 점검으로 앱 상태를 한 번에 확인하고, 문제가 발견된 항목은 아래 <b>개별 테스트</b> 버튼으로 원인을 바로 재확인할 수 있습니다.
           </div>
           <button id="runAllDiagBtn" class="btn-full btn-amber" type="button" style="padding:12px; font-size:14px;" ${diagRunningAll ? 'disabled' : ''} onclick="runAllDiagnostics()">
-            ${diagRunningAll ? '⏳ 전체 기능 일괄 점검 중...' : '🚀 전체 일괄 점검 실행 (6개 항목)'}
+            ${diagRunningAll ? '⏳ 전체 기능 일괄 점검 중...' : '🚀 전체 일괄 점검 실행 (5개 항목)'}
           </button>
         </div>
 
@@ -19352,17 +17607,6 @@ ${m.body}`;
           } else {
             const grid = generateQrMatrix(getCurrentInviteUrl());
             setDiagResult(id, 'ok', `오늘(${todayDot}) 초대 QR 정상 · 토큰 길이 ${inviteQrDoc.token.length}자 · QR 매트릭스 ${grid.length}×${grid.length} 생성 완료`);
-          }
-        } else if (id === 'bible') {
-          const verses = await fetchBibleChapter(1, 1);
-          if (Array.isArray(verses) && verses.length >= 30) {
-            setDiagResult(id, 'ok', `성경 본문 API 정상 · 창세기 1장 총 ${verses.length}절 불러오기 성공`);
-          } else {
-            setDiagResult(id, 'warn', '성경 본문이 일부만 불러와졌습니다.', {
-              reason: '외부 성경 API 서버 응답이 지연되거나 일시적으로 끊겨 창세기 1장 전체(31절)를 다 받지 못했습니다.',
-              solution: '와이파이/모바일 데이터 연결을 확인한 뒤 잠시 후 다시 테스트해 주세요. (한 번 불러온 장은 기기에 캐시되어 오프라인에서도 열립니다.)',
-              actions: [{ label: '🔄 다시 테스트', type: 'retest_diag', param: 'bible', primary: true }]
-            });
           }
         } else if (id === 'notif') {
           const perm = getNotifPermissionState();
@@ -20819,7 +19063,6 @@ ${m.body}`;
       const isPreview = !!user.isPreviewMember;
       const showUpdate = hasPendingAppUpdate();
       const notifOn = !!notifPrefs.enabled;
-      const bLbl = getTabLabel('bible');
       const fontLabelMap = { normal: '보통', large: '크게', xlarge: '아주 크게' };
       const unreadMyReplyCnt = getUnreadInquiryReplyCount();
 
@@ -20927,7 +19170,7 @@ ${m.body}`;
                 <span class="settings-row-icon">${escapeHtml(ic)}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title">${escapeHtml(lb)}</div>
-                  <div class="settings-row-sub">출석·말씀·성경·알림 등 앱 사용 방법 안내</div>
+                  <div class="settings-row-sub">출석·말씀·영상·알림 등 앱 사용 방법 안내</div>
                 </span>
               </span>
               <span class="settings-row-right">▸</span>
@@ -21137,8 +19380,7 @@ ${m.body}`;
       if (tabKey === 'qt') {
         const lastSeen = Number(seen.qt || 0);
         const newQts = (qtPosts || []).filter(q => Number(q.createdTs || 0) > lastSeen).length;
-        const newDicts = (bibleDictCustomItems || []).filter(d => Number(d.createdTs || 0) > lastSeen).length;
-        return newQts + newDicts;
+        return newQts;
       }
       if (tabKey === 'settings') {
         let cnt = 0;
@@ -21148,641 +19390,6 @@ ${m.body}`;
       }
       return 0;
     }
-
-    // ==================== 25. 자체 성경 용어 사전 (저작권 안전 · 기본 60개 + 관리자 추가/수정/삭제) ====================
-    const DEFAULT_BIBLE_DICTIONARY = [
-      { id: 'bd_01', cat: '신학·용어', term: '아멘 (Amen)', ref: '고린도후서 1:20', def: '히브리어로 "진실로 그러합니다", "그대로 이루어지기를 바랍니다"라는 뜻입니다. 말씀이나 기도에 마음으로 동의하고 믿음으로 화답할 때 사용합니다.' },
-      { id: 'bd_02', cat: '신학·용어', term: '할렐루야 (Hallelujah)', ref: '시편 150:1', def: '"여호와를 찬양하라"는 뜻의 히브리어 감탄사입니다. 하나님을 높이고 감사하며 기쁨으로 찬양할 때 쓰는 대표적인 찬송 표현입니다.' },
-      { id: 'bd_03', cat: '신학·용어', term: '은혜 (Grace)', ref: '에베소서 2:8', def: '받을 자격이 없는 사람에게 하나님께서 값없이 베풀어 주시는 호의와 사랑, 그리고 구원의 선물을 의미합니다.' },
-      { id: 'bd_04', cat: '신학·용어', term: '언약 (Covenant)', ref: '창세기 17:7', def: '하나님께서 사람과 맺으신 신실한 약속입니다. 구약의 옛 언약(율법)을 넘어 예수 그리스도의 십자가를 통해 새 언약이 완성되었습니다.' },
-      { id: 'bd_05', cat: '신학·용어', term: '복음 (Gospel)', ref: '로마서 1:16', def: '"기쁜 소식"이라는 뜻으로, 예수 그리스도께서 죄인을 구원하시기 위해 십자가에서 죽으시고 부활하셨다는 구원의 소식을 말합니다.' },
-      { id: 'bd_06', cat: '신학·용어', term: '샬롬 (Shalom)', ref: '요한복음 14:27', def: '단순히 다툼이 없는 상태를 넘어, 하나님과의 바른 관계 속에서 누리는 온전한 평안·화목·충만함을 뜻하는 히브리어 인사입니다.' },
-      { id: 'bd_07', cat: '신학·용어', term: '회개 (Repentance)', ref: '마태복음 4:17', def: '죄를 뉘우치는 감정에서 그치지 않고, 하나님께 등 돌렸던 삶의 방향을 돌이켜 주님께로 돌아오는 결단과 변화를 뜻합니다.' },
-      { id: 'bd_08', cat: '신학·용어', term: '구속 (Redemption)', ref: '이사야 43:1', def: '값을 치르고 종이나 포로 된 사람을 사서 자유롭게 해방시킨다는 뜻으로, 예수님께서 십자가의 보혈로 우리를 죄에서 건져내신 사역을 가리킵니다.' },
-      { id: 'bd_09', cat: '신학·용어', term: '칭의 (Justification)', ref: '로마서 3:24', def: '죄인인 우리가 행위가 아니라 예수 그리스도를 믿음으로 말미암아 하나님 앞에서 "의롭다"고 인정받는 은혜를 말합니다.' },
-      { id: 'bd_10', cat: '신학·용어', term: '성화 (Sanctification)', ref: '데살로니가전서 4:3', def: '구원받은 성도가 성령의 도우심으로 날마다 죄를 멀리하고 예수 그리스도의 성품을 닮아 거룩하게 변화되어 가는 과정입니다.' },
-      { id: 'bd_11', cat: '신학·용어', term: '거룩 (Holiness)', ref: '레위기 19:2', def: '"구별되다", "따로 떼어놓다"라는 뜻입니다. 하나님의 성품을 가리키며, 성도가 세상의 죄와 구별되어 하나님께 속한 삶을 사는 것을 의미합니다.' },
-      { id: 'bd_12', cat: '신학·용어', term: '임마누엘 (Immanuel)', ref: '마태복음 1:23', def: '"하나님이 우리와 함께 계시다"는 뜻의 히브리어입니다. 예수 그리스도께서 인간의 몸으로 오셔서 우리와 영원히 동행하심을 보여줍니다.' },
-      { id: 'bd_13', cat: '신학·용어', term: '메시야 / 그리스도', ref: '마태복음 16:16', def: '둘 다 "기름 부음을 받은 자"라는 뜻입니다(히브리어 메시야, 헬라어 그리스도). 구약에서 예언된 구원자이신 예수님을 가리키는 칭호입니다.' },
-      { id: 'bd_14', cat: '신학·용어', term: '보혜사 (Paraclete)', ref: '요한복음 14:16', def: '"곁에 불려와 돕는 분", "위로자", "변호자"라는 뜻의 헬라어입니다. 예수님께서 제자들과 성도들을 돕고 인도하시기 위해 보내신 성령님을 가리킵니다.' },
-      { id: 'bd_15', cat: '신학·용어', term: '아가페 (Agape)', ref: '고린도전서 13:4', def: '조건이나 대가를 바라지 않고 상대의 유익을 위해 아낌없이 내어주는 하나님의 무조건적이고 희생적인 사랑을 뜻하는 헬라어입니다.' },
-      { id: 'bd_16', cat: '신학·용어', term: '코이노니아 (Koinonia)', ref: '사도행전 2:42', def: '그리스도 안에서 성도들이 서로 마음을 나누고 삶을 함께 세워 가는 깊은 영적 교제와 공동체적 사귐을 뜻합니다.' },
-      { id: 'bd_17', cat: '신학·용어', term: '긍휼 (Mercy)', ref: '시편 103:8', def: '연약하고 고통받는 이들을 불쌍히 여겨 실제로 도와주고 품어 주는 하나님의 깊고 따뜻한 사랑을 의미합니다.' },
-      { id: 'bd_18', cat: '신학·용어', term: '경외 (Fear of the Lord)', ref: '잠언 9:10', def: '무서워 피하는 공포가 아니라, 창조주 하나님의 위대하심과 거룩하심을 깊이 공경하고 존중하며 그 말씀 앞에 겸손히 서는 태도입니다.' },
-      { id: 'bd_19', cat: '신학·용어', term: '묵상 (Meditation)', ref: '시편 1:2', def: '하나님의 말씀을 작은 소리로 되뇌이며 깊이 생각하고, 오늘 내 삶에 어떻게 적용할지 기도하며 새기는 신앙 습관입니다.' },
-      { id: 'bd_20', cat: '신학·용어', term: '중보기도 (Intercession)', ref: '디모데전서 2:1', def: '자신이 아닌 다른 사람이나 공동체, 나라와 열방을 위해 하나님 앞에 나아가 대신 간구하는 사랑의 기도입니다.' },
-      { id: 'bd_21', cat: '신학·용어', term: '호산나 (Hosanna)', ref: '마태복음 21:9', def: '원래 "이제 구원하소서"라는 간구에서 유래해, 왕으로 오시는 메시아를 기쁨으로 환영하며 외치는 찬양의 표현으로 쓰였습니다.' },
-      { id: 'bd_22', cat: '신학·용어', term: '마라나타 (Maranatha)', ref: '고린도전서 16:22', def: '아람어로 "우리 주여 오시옵소서"라는 뜻입니다. 다시 오실 예수 그리스도의 재림을 사모하던 초대교회 성도들의 인사였습니다.' },
-      { id: 'bd_23', cat: '신학·용어', term: '셀라 (Selah)', ref: '시편 3:2', def: '시편에 자주 등장하는 음악·묵상 기호로, 잠시 멈추어 방금 읽거나 노래한 말씀의 뜻을 깊이 되새기라는 의미로 이해됩니다.' },
-      { id: 'bd_24', cat: '신학·용어', term: '여호와 이레', ref: '창세기 22:14', def: '"여호와께서 준비하신다"는 뜻입니다. 아브라함이 순종으로 나아갈 때 하나님께서 친히 제물을 예비해 주신 사건에서 유래했습니다.' },
-      { id: 'bd_25', cat: '신학·용어', term: '여호와 닛시', ref: '출애굽기 17:15', def: '"여호와는 나의 깃발"이라는 뜻입니다. 아말렉과의 전투에서 승리하게 하신 하나님을 기념하며 모세가 쌓은 제단의 이름입니다.' },
-      { id: 'bd_26', cat: '신학·용어', term: '여호와 라파', ref: '출애굽기 15:26', def: '"치료하시는 여호와"라는 뜻입니다. 육체의 질병뿐 아니라 상한 마음과 영혼까지 온전히 고치시는 하나님을 나타냅니다.' },
-      { id: 'bd_27', cat: '신학·용어', term: '에벤에셀 (Ebenezer)', ref: '사무엘상 7:12', def: '"도움의 돌"이라는 뜻으로, 사무엘이 "여호와께서 여기까지 우리를 도우셨다"고 고백하며 세운 기념비의 이름입니다.' },
-      { id: 'bd_28', cat: '신학·용어', term: '만나 (Manna)', ref: '출애굽기 16:15', def: '이스라엘 백성이 광야에서 40년간 매일 아침 하나님께로부터 공급받은 하늘 양식입니다. 날마다 주시는 일용할 은혜를 상징합니다.' },
-      { id: 'bd_29', cat: '신학·용어', term: '청지기 (Steward)', ref: '베드로전서 4:10', def: '주인의 재산과 일을 맡아 성실히 관리하는 사람입니다. 시간·재능·물질이 모두 하나님의 것임을 알고 충성되게 섬기는 성도의 정체성입니다.' },
-      { id: 'bd_30', cat: '신학·용어', term: '사도 (Apostle)', ref: '마태복음 10:2', def: '"보냄을 받은 자"라는 뜻의 헬라어입니다. 예수님께서 복음 전파와 교회 설립을 위해 직접 부르시고 파송하신 열두 제자와 바울 등을 가리킵니다.' },
-      { id: 'bd_31', cat: '신학·용어', term: '제자 (Disciple)', ref: '마태복음 28:19', def: '스승의 가르침을 배우고 그 삶과 발자취를 따르는 사람입니다. 그리스도인은 예수님의 말씀을 배우며 세상 속에서 실천하는 제자입니다.' },
-      { id: 'bd_32', cat: '신학·용어', term: '선지자 (Prophet)', ref: '예레미야 1:7', def: '하나님의 말씀을 직접 받아 백성에게 대언하던 사람입니다. 미래를 예고할 뿐 아니라 시대의 죄를 일깨우고 하나님께 돌아오도록 외쳤습니다.' },
-      { id: 'bd_33', cat: '신학·용어', term: '제사장 (Priest)', ref: '베드로전서 2:9', def: '구약에서 하나님과 백성 사이에 서서 제사를 드리고 축복하던 직분입니다. 신약에서는 예수님이 영원한 대제사장이시며 모든 성도가 왕 같은 제사장으로 부름받았습니다.' },
-      { id: 'bd_34', cat: '신학·용어', term: '바리새인 (Pharisee)', ref: '마태복음 23:2', def: '"구별된 자"라는 뜻으로 율법과 전통을 철저히 지키려 했던 유대교 종파입니다. 외식과 형식주의로 흘러 예수님의 책망을 받기도 했습니다.' },
-      { id: 'bd_35', cat: '신학·용어', term: '성막 (Tabernacle)', ref: '출애굽기 25:8', def: '이스라엘이 광야를 행진할 때 하나님께서 백성 가운데 거하시고 만나 주시던 이동식 성전입니다. 뜰·성소·지성소로 이루어져 있습니다.' },
-      { id: 'bd_36', cat: '신학·용어', term: '지성소 (Most Holy Place)', ref: '히브리서 10:19', def: '성막과 성전 가장 안쪽에 언약궤가 놓였던 가장 거룩한 공간입니다. 예수님의 십자가로 휘장이 찢어지며 성도 누구나 하나님께 담대히 나아가게 되었습니다.' },
-      { id: 'bd_37', cat: '신학·용어', term: '언약궤 (Ark of the Covenant)', ref: '출애굽기 25:10', def: '십계명 돌판 등이 보관되었던 나무와 금으로 만든 궤로, 하나님의 임재와 언약의 신실하심을 상징했습니다.' },
-      { id: 'bd_38', cat: '신학·용어', term: '속죄 (Atonement)', ref: '로마서 5:11', def: '죄의 대가를 대신 치러 죄를 덮고 하나님과 화목하게 만드는 일입니다. 예수 그리스도의 십자가 희생으로 단번에 영원한 속죄가 이루어졌습니다.' },
-      { id: 'bd_39', cat: '예배·절기', term: '안식일 (Sabbath)', ref: '창세기 2:3', def: '하나님께서 6일간 천지를 창조하시고 일곱째 날 쉬시며 복 주신 날입니다. 일을 멈추고 창조주 하나님을 기억하며 참된 쉼을 누리는 날입니다.' },
-      { id: 'bd_40', cat: '예배·절기', term: '유월절 (Passover)', ref: '출애굽기 12:13', def: '이스라엘이 애굽에서 구원받을 때 어린 양의 피를 문설주에 발라 죽음의 재앙이 넘어간 사건을 기념하는 절기입니다. 십자가의 어린 양 예수님을 예표합니다.' },
-      { id: 'bd_41', cat: '예배·절기', term: '오순절 (Pentecost)', ref: '사도행전 2:1-4', def: '유월절 후 50일째 되는 절기(칠칠절)로, 예수님 부활·승천 이후 성령님께서 제자들에게 강림하셔서 초대교회가 시작된 뜻깊은 날입니다.' },
-      { id: 'bd_42', cat: '예배·절기', term: '초막절 (Feast of Tabernacles)', ref: '레위기 23:42', def: '가을 추수를 감사하며 광야 시절 천막 생활 속에서 인도하신 하나님의 은혜를 기억하기 위해 초막을 짓고 지킨 기쁨의 절기입니다.' },
-      { id: 'bd_43', cat: '예배·절기', term: '세례 (Baptism)', ref: '로마서 6:4', def: '예수 그리스도를 구주로 믿고 죄에 대하여 죽고 주님과 함께 새 생명으로 다시 살아났음을 공식적으로 고백하는 거룩한 예식입니다.' },
-      { id: 'bd_44', cat: '예배·절기', term: '성찬 (Lord\'s Supper)', ref: '고린도전서 11:24', def: '예수님께서 십자가를 지시기 전날 밤 제정하신 예식으로, 떡과 잔을 나누며 주님의 몸과 피의 희생을 기념하고 다시 오심을 기다립니다.' },
-      { id: 'bd_45', cat: '예배·절기', term: '희년 (Jubilee)', ref: '레위기 25:10', def: '50년마다 돌아오는 해로, 빚을 탕감하고 종을 해방하며 잃어버린 땅을 원래 주인에게 돌려주어 하나님의 정의와 회복을 실천하던 해입니다.' },
-      { id: 'bd_46', cat: '예배·절기', term: '십일조 (Tithe)', ref: '말라기 3:10', def: '하나님께서 주신 소득의 십분의 일을 구별해 드림으로써 모든 물질의 주인이 하나님이심을 고백하고 감사하는 신앙 실천입니다.' },
-      { id: 'bd_47', cat: '인물', term: '아브라함 (Abraham)', ref: '창세기 12:1-2', def: '"열국의 아비"라는 뜻으로, 하나님의 부르심을 따라 본토를 떠나 믿음으로 순종한 이스라엘의 조상이자 "믿음의 조상"입니다.' },
-      { id: 'bd_48', cat: '인물', term: '모세 (Moses)', ref: '출애굽기 3:10', def: '"물에서 건져냄"이라는 뜻으로, 하나님의 부름을 받아 이스라엘 백성을 애굽에서 이끌어 내고 시내산에서 율법을 받은 지도자입니다.' },
-      { id: 'bd_49', cat: '인물', term: '다윗 (David)', ref: '사무엘상 13:14', def: '베들레헴의 목동에서 이스라엘의 왕이 된 인물로, 수많은 시편을 남겼으며 하나님 마음에 합한 사람으로 불렸습니다.' },
-      { id: 'bd_50', cat: '인물', term: '요셉 (Joseph)', ref: '창세기 50:20', def: '야곱의 아들로 형들에게 팔려 애굽의 노예와 죄수가 되었으나, 끝까지 하나님을 경외하여 총리가 되고 가족을 기근에서 구했습니다.' },
-      { id: 'bd_51', cat: '인물', term: '다니엘 (Daniel)', ref: '다니엘 6:10', def: '바벨론 포로 시절에도 뜻을 정해 신앙의 절개를 지켰으며, 사자 굴의 위협 앞에서도 하루 세 번 기도한 믿음의 청년이었습니다.' },
-      { id: 'bd_52', cat: '인물', term: '베드로 (Peter)', ref: '마태복음 16:18', def: '갈릴리 어부 출신으로 예수님의 수제자입니다. "반석"이라는 새 이름을 받았고, 성령 충만 후 초대교회의 기둥으로 복음을 전했습니다.' },
-      { id: 'bd_53', cat: '인물', term: '바울 (Paul)', ref: '사도행전 9:15', def: '교회를 핍박하던 사울이었으나 다메섹 도상에서 부활하신 예수님을 만난 뒤 이방인의 사도가 되어 수많은 교회와 신약 서신서를 남겼습니다.' },
-      { id: 'bd_54', cat: '인물', term: '디모데 (Timothy)', ref: '디모데전서 4:12', def: '바울의 믿음의 아들이자 젊은 동역자로, 에베소 교회를 목회하며 연소함을 업신여기지 못하게 하고 믿음의 본이 되라는 권면을 받았습니다.' },
-      { id: 'bd_55', cat: '지명', term: '예루살렘 (Jerusalem)', ref: '시편 122:6', def: '"평화의 터"라는 뜻을 지닌 이스라엘의 영적 중심지입니다. 솔로몬 성전이 세워졌고 예수님께서 십자가를 지시고 부활하신 곳입니다.' },
-      { id: 'bd_56', cat: '지명', term: '베들레헴 (Bethlehem)', ref: '미가 5:2', def: '"떡집"이라는 뜻의 유다 작은 마을로, 다윗 왕의 고향이자 생명의 떡으로 오신 예수 그리스도께서 탄생하신 곳입니다.' },
-      { id: 'bd_57', cat: '지명', term: '갈릴리 (Galilee)', ref: '마태복음 4:18', def: '이스라엘 북부 지역으로 예수님께서 공생애 대부분을 보내시며 제자들을 부르시고 가르치시며 많은 이적을 행하신 무대입니다.' },
-      { id: 'bd_58', cat: '지명', term: '겟세마네 (Gethsemane)', ref: '마태복음 26:36', def: '"기름 짜는 틀"이라는 뜻의 감람산 기슭 동산입니다. 예수님께서 잡히시기 전날 밤 "내 원대로 마옵시고 아버지의 원대로 하옵소서"라고 기도하신 곳입니다.' },
-      { id: 'bd_59', cat: '지명', term: '골고다 (Golgotha)', ref: '요한복음 19:17', def: '아람어로 "해골의 곳"(라틴어 갈보리)이라는 뜻으로, 예루살렘 성 밖에서 예수님께서 인류의 죄를 대신해 십자가에 못 박히신 언덕입니다.' },
-      { id: 'bd_60', cat: '지명', term: '시내산 (Mount Sinai)', ref: '출애굽기 19:20', def: '출애굽한 이스라엘 백성이 하나님과 언약을 맺고 모세를 통해 십계명과 율법을 받은 거룩한 산(호렙산)입니다.' }
-    ];
-
-    function buildQtSectionOrderCardHtml() {
-      const order = getValidQtSectionOrder();
-      const meta = {
-        dict: { label: getUiText('dailyDictTitle'), desc: '매일 자정(KST) 자동 변경되는 성경 용어 해설' },
-        qt: { label: `${getTabIcon('qt')} ${getTabLabel('qt')}`, desc: '매일 자동 말씀 + 관리자 작성 글 · 댓글/공감' }
-      };
-      return `
-        <div class="qt-order-card">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:9px;">
-            <strong style="font-size:13.5px; color:#0F172A;">🔀 ${escapeHtml(getTabLabel('qt'))} 화면 표시 순서 (위 → 아래)</strong>
-            <div style="display:flex; gap:5px; flex-wrap:wrap;">
-              <button class="btn-sm primary" type="button" onclick="swapQtSectionOrder()">↕️ 순서 바꾸기</button>
-              <button class="btn-sm" type="button" onclick="openUiTextsEditor()">✏️ 제목·문구 수정</button>
-            </div>
-          </div>
-          ${order.map((k, idx) => {
-            const m = meta[k] || { label: k, desc: '' };
-            return `
-              <div class="tab-order-row" style="margin-bottom:${idx === 0 ? '6px' : '0'}; background:#FFFFFF;">
-                <span class="tab-order-num">${idx + 1}</span>
-                <div style="flex:1; min-width:0;">
-                  <div style="font-size:13px; font-weight:800; color:#0F172A;">${escapeHtml(m.label)}</div>
-                  <div style="font-size:11px; color:#64748B; margin-top:1px;">${escapeHtml(m.desc)}</div>
-                </div>
-                <div class="order-btns">
-                  <button class="order-btn" type="button" onclick="swapQtSectionOrder()" ${idx === 0 ? 'disabled' : ''}>▲</button>
-                  <button class="order-btn" type="button" onclick="swapQtSectionOrder()" ${idx === 1 ? 'disabled' : ''}>▼</button>
-                </div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      `;
-    }
-
-    window.swapQtSectionOrder = async () => {
-      const cur = getValidQtSectionOrder();
-      const next = [cur[1], cur[0]];
-      try {
-        await db.collection('config').doc('layout').set({ qtSectionOrder: next }, { merge: true });
-        qtSectionOrder = next;
-        const nameMap = { dict: getUiText('dailyDictTitle'), qt: getTabLabel('qt') };
-        recordAuditLog({
-          actorType: 'admin',
-          category: '오늘의 말씀',
-          action: 'QT·성경 사전 표시 순서 변경',
-          target: `${getTabLabel('qt')} 화면`,
-          beforeVal: `${nameMap[cur[0]]} → ${nameMap[cur[1]]}`,
-          afterVal: `${nameMap[next[0]]} → ${nameMap[next[1]]}`
-        });
-        applyScreen();
-        showToast(`표시 순서를 [${nameMap[next[0]]} → ${nameMap[next[1]]}]로 변경했습니다!`);
-      } catch (err) {
-        handleDbError(err, '표시 순서 변경');
-      }
-    };
-
-    function getDictItemSourceLabel(item) {
-      if (!item) return DEFAULT_DICT_SOURCE_LABEL;
-      const customSrc = String(item.source || '').trim();
-      return customSrc || DEFAULT_DICT_SOURCE_LABEL;
-    }
-
-    function getActiveBuiltInDictPool() {
-      const hiddenSet = new Set((hiddenBuiltInDictIds || []).map(String));
-      const overrideMap = new Map();
-      (bibleDictCustomItems || []).forEach(c => {
-        if (c && c.overrideId) overrideMap.set(String(c.overrideId), c);
-      });
-      return DEFAULT_BIBLE_DICTIONARY
-        .filter(b => !hiddenSet.has(String(b.id)))
-        .map(b => {
-          const ov = overrideMap.get(String(b.id));
-          if (ov) {
-            return { ...ov, isCustom: true, overrideId: String(b.id) };
-          }
-          return { ...b, source: DEFAULT_DICT_SOURCE_LABEL, isCustom: false };
-        });
-    }
-
-    function getAllBibleDictEntries() {
-      const custom = Array.isArray(bibleDictCustomItems) ? bibleDictCustomItems : [];
-      const standaloneCustom = custom.filter(c => !c.overrideId).map(c => ({ ...c, isCustom: true }));
-      const builtInActive = getActiveBuiltInDictPool();
-      const seenTerms = new Set(standaloneCustom.map(c => String(c.term || '').trim()));
-      const filteredBuiltIn = builtInActive.filter(b => !seenTerms.has(String(b.term || '').trim()));
-      return [...standaloneCustom, ...filteredBuiltIn];
-    }
-
-    function getAutoDailyDictForToday() {
-      const { dot, y, m, d } = getKstDateParts();
-      const pool = getActiveBuiltInDictPool();
-      const srcPool = pool.length > 0 ? pool : DEFAULT_BIBLE_DICTIONARY;
-      const dayNumber = Math.floor(Date.UTC(Number(y), Number(m) - 1, Number(d)) / 86400000);
-      const idx = ((dayNumber % srcPool.length) + srcPool.length) % srcPool.length;
-      const item = srcPool[idx];
-      return { ...item, date: dot, isAuto: true };
-    }
-
-    function hasTodayReplaceDict() {
-      const todayDot = getKstDateParts().dot;
-      return (bibleDictCustomItems || []).some(d => d.displayMode === 'replace' && normalizeDotDate(d.date) === todayDot);
-    }
-
-    function isAutoTodayDictHiddenManually() {
-      return hiddenAutoDictDate === getKstDateParts().dot;
-    }
-
-    function buildDailyBibleDictCardHtml(canManage) {
-      const todayDot = getKstDateParts().dot;
-      const autoToday = getAutoDailyDictForToday();
-      const todayCustom = (bibleDictCustomItems || []).filter(d => !d.overrideId && normalizeDotDate(d.date) === todayDot);
-      const todayReplaces = todayCustom.filter(d => d.displayMode === 'replace');
-      const todayTogethers = todayCustom.filter(d => d.displayMode !== 'replace');
-      const suppressAuto = todayReplaces.length > 0 || isAutoTodayDictHiddenManually();
-
-      const displayList = suppressAuto
-        ? [...todayReplaces, ...todayTogethers]
-        : [autoToday, ...todayTogethers];
-
-      const dailyBadgeTitle = escapeHtml(getUiText('dailyDictTitle'));
-
-      if (displayList.length === 0) {
-        return canManage ? `
-          <div class="card" style="background:#F0FDF4; border-color:#BBF7D0; padding:12px 14px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
-            <span style="font-size:12.5px; color:#166534; font-weight:700;">${dailyBadgeTitle}이(가) 오늘 숨겨져 있습니다.</span>
-            <div style="display:flex; gap:6px;">
-              <button class="btn-sm approve" type="button" onclick="restoreAutoTodayDict()">🔄 복원</button>
-              <button class="btn-sm primary" type="button" onclick="openNewBibleDictModal()">+ 용어 추가</button>
-            </div>
-          </div>
-        ` : '';
-      }
-
-      return displayList.map(item => `
-        <div class="dict-daily-card">
-          <div class="card-top" style="margin-bottom:4px;">
-            <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-              <span class="tag green">${dailyBadgeTitle}</span>
-              <span class="tag slate">${escapeHtml(item.cat || '용어')}</span>
-              ${item.ref ? `<span class="qt-passage-pill">📖 ${escapeHtml(item.ref)}</span>` : ''}
-            </div>
-            <span class="card-date">${escapeHtml(item.date || todayDot)}</span>
-          </div>
-          <div class="dict-term-title">${escapeHtml(item.term)}</div>
-          <div class="dict-term-def">${escapeHtml(item.def)}</div>
-          <div class="source-meta-line">📌 출처: ${escapeHtml(getDictItemSourceLabel(item))}</div>
-          <div class="card-footer" style="margin-top:10px; padding-top:8px;">
-            <button class="btn-sm" type="button" onclick="openBibleDictModal()">📚 전체 사전 검색</button>
-            ${canManage ? (item.isAuto ? `
-              <div style="display:flex; gap:5px;">
-                <button class="btn-sm" type="button" onclick="openEditAutoTodayDictModal()">수정</button>
-                <button class="btn-sm danger" type="button" onclick="hideAutoTodayDict()">숨김</button>
-              </div>
-            ` : `
-              <div style="display:flex; gap:5px;">
-                <button class="btn-sm" type="button" onclick="openEditBibleDictModal('${escapeJsAttr(item.id)}')">수정</button>
-                <button class="btn-sm danger" type="button" onclick="deleteBibleDictItem('${escapeJsAttr(item.id)}')">삭제</button>
-              </div>
-            `) : ''}
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function buildManageBibleDictSectionHtml() {
-      const autoToday = getAutoDailyDictForToday();
-      const isReplaced = hasTodayReplaceDict();
-      const isHidden = isAutoTodayDictHiddenManually();
-      const customList = Array.isArray(bibleDictCustomItems) ? bibleDictCustomItems : [];
-      const hiddenBuiltIns = DEFAULT_BIBLE_DICTIONARY.filter(b => (hiddenBuiltInDictIds || []).includes(String(b.id)));
-      const dictListOpen = isManageSectionOpen('qt_dict_list', customList.length <= 5);
-      const dailyTitle = getUiText('dailyDictTitle');
-
-      return `
-        <div class="section-head">
-          <h2 class="section-title">${escapeHtml(dailyTitle)} 관리 (매일 자동 + 직접 관리)</h2>
-          <button class="btn-admin" type="button" onclick="openNewBibleDictModal()">+ 용어 추가</button>
-        </div>
-        <div class="info-box" style="margin-top:0; margin-bottom:10px;">
-          매일 00:00(KST)마다 자체 성경 용어 사전 중 1개가 <b>${escapeHtml(getTabLabel('qt'))}</b> 화면에 자동 표시됩니다.<br>
-          <b>[📚 전체 사전 보기]</b>를 열면 기본 60개 용어도 개별로 수정·삭제할 수 있습니다.
-        </div>
-
-        <div class="card" style="border-color:${(isReplaced || isHidden) ? '#CBD5E1' : '#86EFAC'}; background:${(isReplaced || isHidden) ? '#F8FAFC' : '#F0FDF4'};">
-          <div class="card-top">
-            <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-              <strong style="font-size:14px; color:#065F46;">${escapeHtml(autoToday.term)}</strong>
-              <span class="tag ${isReplaced ? 'warm' : (isHidden ? 'slate' : 'green')}">${isReplaced ? '관리자 용어로 대체됨' : (isHidden ? '오늘 숨김됨' : '오늘 자동 표시중')}</span>
-            </div>
-            <span class="card-date">${escapeHtml(autoToday.date)}</span>
-          </div>
-          <p class="card-body" style="margin-bottom:6px;">${escapeHtml(autoToday.def)}</p>
-          <div class="source-meta-line" style="margin-bottom:9px;">📌 출처: ${escapeHtml(getDictItemSourceLabel(autoToday))}</div>
-          <div class="qt-manage-actions">
-            <button class="btn-sm primary" type="button" onclick="openBibleDictModal()">📚 전체 사전 관리</button>
-            <button class="btn-sm" type="button" onclick="openEditAutoTodayDictModal()">✏️ 수정(대체)</button>
-            ${isHidden
-              ? '<button class="btn-sm approve" type="button" onclick="restoreAutoTodayDict()">🔄 복원</button>'
-              : '<button class="btn-sm danger" type="button" onclick="hideAutoTodayDict()">삭제(숨김)</button>'}
-          </div>
-        </div>
-
-        ${hiddenBuiltIns.length > 0 ? `
-          <div class="card" style="background:#FFFBEB; border-color:#FDE68A; margin-bottom:10px;">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:6px;">
-              <strong style="font-size:13px; color:#92400E;">🗑️ 삭제(숨김)된 기본 사전 용어 (${hiddenBuiltIns.length}개)</strong>
-              <button class="btn-sm approve" type="button" onclick="restoreAllHiddenBuiltInDicts()">🔄 전체 복원</button>
-            </div>
-            <div style="display:flex; gap:5px; flex-wrap:wrap;">
-              ${hiddenBuiltIns.map(b => `
-                <button class="btn-sm" type="button" onclick="restoreBuiltInDictItem('${escapeJsAttr(b.id)}')">🔄 ${escapeHtml(b.term)}</button>
-              `).join('')}
-            </div>
-          </div>
-        ` : ''}
-
-        ${buildManageAccordionBar({
-          key: 'qt_dict_list',
-          titleHtml: '✍️ 관리자 등록 · 수정 사전 용어 목록',
-          badgeHtml: `<span class="tag slate">${customList.length}개</span>`,
-          defaultOpen: customList.length <= 5,
-          marginTop: '10px'
-        })}
-        <div data-acc-body="qt_dict_list" class="${dictListOpen ? '' : 'hidden'}">
-          ${customList.length === 0
-            ? '<div class="card" style="text-align:center; color:#64748B; font-size:13px;">관리자가 직접 추가·수정한 사전 용어가 없습니다.<br>(기본 60개 용어는 성경 사전 및 매일 자동 사전에 표시됩니다.)</div>'
-            : customList.map(d => `
-                <div class="card">
-                  <div class="card-top">
-                    <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                      <strong style="font-size:14px; color:#065F46;">${escapeHtml(d.term)}</strong>
-                      <span class="tag slate">${escapeHtml(d.cat || '용어')}</span>
-                      ${d.overrideId
-                        ? '<span class="tag">✏️ 기본 용어 수정본</span>'
-                        : `<span class="tag ${d.displayMode === 'replace' ? 'warm' : 'green'}">${d.displayMode === 'replace' ? '🔄 대체' : '📌 함께'}</span>`}
-                    </div>
-                    <span class="card-date">${escapeHtml(d.date || '')}</span>
-                  </div>
-                  ${d.ref ? `<div style="margin-bottom:5px;"><span class="qt-passage-pill">📖 ${escapeHtml(d.ref)}</span></div>` : ''}
-                  <p class="card-body">${escapeHtml(d.def)}</p>
-                  <div class="source-meta-line">📌 출처: ${escapeHtml(getDictItemSourceLabel(d))}</div>
-                  <div class="card-footer">
-                    <span style="font-size:11px; color:#64748B;">작성: ${escapeHtml(d.author || '관리자')}</span>
-                    <div style="display:flex; gap:6px;">
-                      <button class="btn-sm" type="button" onclick="openEditBibleDictModal('${escapeJsAttr(d.id)}')">수정</button>
-                      <button class="btn-sm danger" type="button" onclick="deleteBibleDictItem('${escapeJsAttr(d.id)}')">${d.overrideId ? '기본 복원' : '삭제'}</button>
-                    </div>
-                  </div>
-                </div>
-              `).join('')}
-        </div>
-      `;
-    }
-
-    window.openBibleDictModal = () => {
-      bibleDictCatFilter = '전체';
-      const titleEl = document.getElementById('bibleDictModalTitle');
-      if (titleEl) titleEl.textContent = getUiText('bibleDictModalTitle');
-      const u = getCurrentUser();
-      const canManage = hasUserPerm(u, 'canManageQt');
-      const addBtn = document.getElementById('bibleDictModalAddBtn');
-      if (addBtn) addBtn.classList.toggle('hidden', !canManage);
-      const inp = document.getElementById('bibleDictSearchInput');
-      if (inp) inp.value = '';
-      renderBibleDictModalList();
-      document.getElementById('bibleDictModal').classList.add('open');
-    };
-
-    window.setBibleDictCatFilter = (cat) => {
-      bibleDictCatFilter = cat;
-      renderBibleDictModalList();
-    };
-
-    window.renderBibleDictModalList = () => {
-      const u = getCurrentUser();
-      const canManage = hasUserPerm(u, 'canManageQt');
-      const all = getAllBibleDictEntries();
-      const cats = ['전체', '신학·용어', '인물', '지명', '예배·절기', '기타'];
-      const chipsEl = document.getElementById('bibleDictCatChips');
-      if (chipsEl) {
-        chipsEl.innerHTML = cats.map(c => `
-          <button class="filter-chip ${bibleDictCatFilter === c ? 'active' : ''}" type="button" onclick="setBibleDictCatFilter('${escapeJsAttr(c)}')">${escapeHtml(c)}</button>
-        `).join('');
-      }
-      const q = String((document.getElementById('bibleDictSearchInput') || {}).value || '').trim().toLowerCase();
-      const filtered = all.filter(item => {
-        if (bibleDictCatFilter !== '전체' && (item.cat || '기타') !== bibleDictCatFilter) return false;
-        if (!q) return true;
-        const hay = `${item.term || ''} ${item.def || ''} ${item.ref || ''} ${item.cat || ''} ${item.source || ''}`.toLowerCase();
-        return hay.includes(q);
-      });
-      const sumEl = document.getElementById('bibleDictModalSummary');
-      if (sumEl) sumEl.textContent = q ? `'${q}' 검색 결과 ${filtered.length}개 용어` : `총 ${filtered.length}개 성경 용어`;
-
-      const listEl = document.getElementById('bibleDictModalList');
-      if (!listEl) return;
-      if (filtered.length === 0) {
-        listEl.innerHTML = '<div style="text-align:center; padding:24px 10px; color:#64748B; font-size:13px;">일치하는 성경 용어가 없습니다.</div>';
-        return;
-      }
-      listEl.innerHTML = filtered.map(item => `
-        <div class="dict-modal-item">
-          <div class="card-top" style="margin-bottom:4px;">
-            <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-              <strong style="font-size:14.5px; color:#065F46;">${escapeHtml(item.term)}</strong>
-              <span class="tag slate">${escapeHtml(item.cat || '용어')}</span>
-              ${item.isCustom ? `<span class="tag green">${item.overrideId ? '관리자 수정' : '관리자 등록'}</span>` : ''}
-            </div>
-            ${item.ref ? `<span class="qt-passage-pill">📖 ${escapeHtml(item.ref)}</span>` : ''}
-          </div>
-          <div style="font-size:13px; color:#334155; line-height:1.58; white-space:pre-line;">${escapeHtml(item.def)}</div>
-          <div class="source-meta-line">📌 출처: ${escapeHtml(getDictItemSourceLabel(item))}</div>
-          ${canManage ? `
-            <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:8px; padding-top:7px; border-top:1px solid #F1F5F9;">
-              ${item.isCustom
-                ? `<button class="btn-sm" type="button" onclick="openEditBibleDictModal('${escapeJsAttr(item.id)}')">✏️ 수정</button>
-                   <button class="btn-sm danger" type="button" onclick="deleteBibleDictItem('${escapeJsAttr(item.id)}')">${item.overrideId ? '기본 복원' : '삭제'}</button>`
-                : `<button class="btn-sm" type="button" onclick="openEditBuiltInDictModal('${escapeJsAttr(item.id)}')">✏️ 수정</button>
-                   <button class="btn-sm danger" type="button" onclick="deleteBuiltInDictItem('${escapeJsAttr(item.id)}')">삭제</button>`}
-            </div>
-          ` : ''}
-        </div>
-      `).join('');
-    };
-
-    window.openNewBibleDictModal = (prefill = null) => {
-      document.getElementById('bibleDictFormModalTitle').textContent = '📚 새 성경 사전 용어 등록';
-      document.getElementById('editBibleDictId').value = '';
-      const ovEl = document.getElementById('overrideBuiltInDictId');
-      if (ovEl) ovEl.value = (prefill && prefill.overrideId) || '';
-      document.getElementById('dictDisplayModeSelect').value = (prefill && prefill.displayMode === 'replace') ? 'replace' : 'together';
-      document.getElementById('dictDateInput').value = getKstDateParts().dot;
-      document.getElementById('dictCatInput').value = (prefill && prefill.cat) || '신학·용어';
-      document.getElementById('dictTermInput').value = (prefill && prefill.term) || '';
-      document.getElementById('dictRefInput').value = (prefill && prefill.ref) || '';
-      document.getElementById('dictDefInput').value = (prefill && prefill.def) || '';
-      const srcEl = document.getElementById('dictSourceInput');
-      if (srcEl) srcEl.value = (prefill && prefill.source) || '';
-      document.getElementById('bibleDictFormModal').classList.add('open');
-    };
-
-    window.openEditBuiltInDictModal = (builtInId) => {
-      const item = DEFAULT_BIBLE_DICTIONARY.find(x => String(x.id) === String(builtInId));
-      if (!item) return;
-      openNewBibleDictModal({
-        overrideId: item.id,
-        cat: item.cat,
-        term: item.term,
-        ref: item.ref,
-        def: item.def,
-        source: DEFAULT_DICT_SOURCE_LABEL,
-        displayMode: 'together'
-      });
-      document.getElementById('bibleDictFormModalTitle').textContent = '✏️ 기본 성경 사전 용어 수정';
-    };
-
-    window.openEditAutoTodayDictModal = () => {
-      const autoToday = getAutoDailyDictForToday();
-      openNewBibleDictModal({
-        cat: autoToday.cat,
-        term: autoToday.term,
-        ref: autoToday.ref,
-        def: autoToday.def,
-        source: getDictItemSourceLabel(autoToday),
-        displayMode: 'replace'
-      });
-      document.getElementById('bibleDictFormModalTitle').textContent = `✏️ ${getUiText('dailyDictTitle')} 수정 (대체 등록)`;
-    };
-
-    window.openEditBibleDictModal = (id) => {
-      const item = (bibleDictCustomItems || []).find(x => String(x.id) === String(id));
-      if (!item) return;
-      document.getElementById('bibleDictFormModalTitle').textContent = '📚 성경 사전 용어 수정';
-      document.getElementById('editBibleDictId').value = item.id;
-      const ovEl = document.getElementById('overrideBuiltInDictId');
-      if (ovEl) ovEl.value = item.overrideId || '';
-      document.getElementById('dictDisplayModeSelect').value = item.displayMode === 'replace' ? 'replace' : 'together';
-      document.getElementById('dictDateInput').value = item.date || getKstDateParts().dot;
-      document.getElementById('dictCatInput').value = item.cat || '신학·용어';
-      document.getElementById('dictTermInput').value = item.term || '';
-      document.getElementById('dictRefInput').value = item.ref || '';
-      document.getElementById('dictDefInput').value = item.def || '';
-      const srcEl = document.getElementById('dictSourceInput');
-      if (srcEl) srcEl.value = item.source || '';
-      document.getElementById('bibleDictFormModal').classList.add('open');
-    };
-
-    window.handleSaveBibleDictItem = async () => {
-      const editId = document.getElementById('editBibleDictId').value;
-      const overrideId = ((document.getElementById('overrideBuiltInDictId') || {}).value || '').trim();
-      const displayMode = document.getElementById('dictDisplayModeSelect').value === 'replace' ? 'replace' : 'together';
-      const date = normalizeDotDate(document.getElementById('dictDateInput').value.trim()) || getKstDateParts().dot;
-      const cat = document.getElementById('dictCatInput').value || '신학·용어';
-      const term = document.getElementById('dictTermInput').value.trim();
-      const ref = document.getElementById('dictRefInput').value.trim();
-      const def = document.getElementById('dictDefInput').value.trim();
-      const source = ((document.getElementById('dictSourceInput') || {}).value || '').trim();
-
-      if (!term) return showToast('용어 이름을 입력해 주세요.');
-      if (!def) return showToast('용어 설명을 입력해 주세요.');
-      if (!enforceInputSecurity(`${term}\n${ref}\n${def}\n${source}`, '성경 사전', true)) return;
-
-      const btn = document.getElementById('saveBibleDictBtn');
-      if (btn) btn.disabled = true;
-      try {
-        const next = structuredClone(bibleDictCustomItems || []);
-        if (editId) {
-          const target = next.find(x => String(x.id) === String(editId));
-          if (target) {
-            target.displayMode = displayMode;
-            target.date = date;
-            target.cat = cat;
-            target.term = term;
-            target.ref = ref;
-            target.def = def;
-            target.source = source;
-            target.updatedTs = Date.now();
-          }
-        } else {
-          const existingOv = overrideId ? next.find(x => String(x.overrideId || '') === overrideId) : null;
-          if (existingOv) {
-            existingOv.cat = cat;
-            existingOv.term = term;
-            existingOv.ref = ref;
-            existingOv.def = def;
-            existingOv.source = source;
-            existingOv.updatedTs = Date.now();
-          } else {
-            next.unshift({
-              id: 'bdict_' + Date.now(),
-              overrideId: overrideId || '',
-              displayMode,
-              date,
-              cat,
-              term,
-              ref,
-              def,
-              source,
-              author: currentAdminName || '관리자',
-              createdTs: Date.now()
-            });
-          }
-        }
-        await db.collection('config').doc('layout').set({ bibleDictItems: next }, { merge: true });
-        bibleDictCustomItems = next;
-        recordAuditLog({
-          actorType: 'admin',
-          category: '오늘의 말씀',
-          action: (editId || overrideId) ? '성경 사전 수정' : '성경 사전 추가',
-          target: term,
-          detail: `${cat}${source ? ` · 출처: ${source}` : ''} · ${def}`
-        });
-        document.getElementById('bibleDictFormModal').classList.remove('open');
-        if (document.getElementById('bibleDictModal').classList.contains('open')) {
-          renderBibleDictModalList();
-        }
-        showToast((editId || overrideId) ? '성경 사전 용어가 수정되었습니다!' : '새 성경 사전 용어가 등록되었습니다!');
-      } catch (err) {
-        handleDbError(err, '성경 사전 저장');
-      } finally {
-        if (btn) btn.disabled = false;
-      }
-    };
-
-    window.deleteBibleDictItem = async (id) => {
-      const target = (bibleDictCustomItems || []).find(x => String(x.id) === String(id));
-      if (!target) return;
-      const msg = target.overrideId
-        ? `[${target.term}] 수정본을 삭제하고 기본 사전 내용으로 복원할까요?`
-        : `[${target.term}] 용어를 삭제할까요?`;
-      if (!confirm(msg)) return;
-      try {
-        const next = (bibleDictCustomItems || []).filter(x => String(x.id) !== String(id));
-        await db.collection('config').doc('layout').set({ bibleDictItems: next }, { merge: true });
-        bibleDictCustomItems = next;
-        recordAuditLog({
-          actorType: 'admin',
-          category: '오늘의 말씀',
-          action: target.overrideId ? '성경 사전 기본 복원' : '성경 사전 삭제',
-          target: target.term,
-          detail: target.def || ''
-        });
-        if (document.getElementById('bibleDictModal').classList.contains('open')) {
-          renderBibleDictModalList();
-        }
-        showToast(target.overrideId ? '기본 사전 내용으로 복원했습니다.' : '성경 사전 용어가 삭제되었습니다.');
-      } catch (err) {
-        handleDbError(err, '성경 사전 삭제');
-      }
-    };
-
-    window.deleteBuiltInDictItem = async (builtInId) => {
-      const item = DEFAULT_BIBLE_DICTIONARY.find(x => String(x.id) === String(builtInId));
-      if (!item || !confirm(`[${item.term}] 기본 사전 용어를 삭제(숨김)할까요?\n(QT 관리에서 언제든 다시 복원할 수 있습니다.)`)) return;
-      try {
-        const nextHidden = Array.from(new Set([...(hiddenBuiltInDictIds || []), String(builtInId)]));
-        await db.collection('config').doc('layout').set({ hiddenBuiltInDictIds: nextHidden }, { merge: true });
-        hiddenBuiltInDictIds = nextHidden;
-        recordAuditLog({
-          actorType: 'admin',
-          category: '오늘의 말씀',
-          action: '기본 성경 사전 용어 삭제(숨김)',
-          target: item.term,
-          detail: item.def || ''
-        });
-        if (document.getElementById('bibleDictModal').classList.contains('open')) {
-          renderBibleDictModalList();
-        }
-        showToast(`[${item.term}] 용어를 사전에서 삭제했습니다.`);
-      } catch (err) {
-        handleDbError(err, '기본 사전 삭제');
-      }
-    };
-
-    window.restoreBuiltInDictItem = async (builtInId) => {
-      const item = DEFAULT_BIBLE_DICTIONARY.find(x => String(x.id) === String(builtInId));
-      try {
-        const nextHidden = (hiddenBuiltInDictIds || []).filter(id => String(id) !== String(builtInId));
-        await db.collection('config').doc('layout').set({ hiddenBuiltInDictIds: nextHidden }, { merge: true });
-        hiddenBuiltInDictIds = nextHidden;
-        recordAuditLog({
-          actorType: 'admin',
-          category: '오늘의 말씀',
-          action: '기본 성경 사전 용어 복원',
-          target: item ? item.term : String(builtInId)
-        });
-        showToast(`[${item ? item.term : '용어'}]가 복원되었습니다!`);
-      } catch (err) {
-        handleDbError(err, '기본 사전 복원');
-      }
-    };
-
-    window.restoreAllHiddenBuiltInDicts = async () => {
-      if (!confirm('삭제(숨김)된 기본 성경 사전 용어를 모두 복원할까요?')) return;
-      try {
-        await db.collection('config').doc('layout').set({ hiddenBuiltInDictIds: [] }, { merge: true });
-        hiddenBuiltInDictIds = [];
-        recordAuditLog({
-          actorType: 'admin',
-          category: '오늘의 말씀',
-          action: '기본 성경 사전 전체 복원',
-          target: '성경 용어 사전'
-        });
-        showToast('삭제된 기본 사전 용어를 모두 복원했습니다!');
-      } catch (err) {
-        handleDbError(err, '기본 사전 전체 복원');
-      }
-    };
-
-    window.hideAutoTodayDict = async () => {
-      if (!confirm('오늘 자동 표시된 성경 사전을 숨길까요?\n(언제든 복원할 수 있으며, 내일 00:00에는 새 자동 용어가 올라옵니다.)')) return;
-      try {
-        await db.collection('config').doc('layout').set({ hiddenAutoDictDate: getKstDateParts().dot }, { merge: true });
-        recordAuditLog({ actorType: 'admin', category: '오늘의 말씀', action: '오늘 자동 성경 사전 숨김', target: getKstDateParts().dot });
-        showToast('오늘의 자동 성경 사전을 숨겼습니다.');
-      } catch (err) {
-        handleDbError(err, '자동 성경 사전 숨김');
-      }
-    };
-
-    window.restoreAutoTodayDict = async () => {
-      try {
-        await db.collection('config').doc('layout').set({ hiddenAutoDictDate: '' }, { merge: true });
-        recordAuditLog({ actorType: 'admin', category: '오늘의 말씀', action: '오늘 자동 성경 사전 복원', target: getKstDateParts().dot });
-        showToast('오늘의 자동 성경 사전을 복원했습니다!');
-      } catch (err) {
-        handleDbError(err, '자동 성경 사전 복원');
-      }
-    };
 
     // ==================== 26. 이용자 문의 사항 & 관리자 [💬 문의 관리] ====================
     function isInquiryResolved(q) {
@@ -22629,177 +20236,8 @@ service cloud.firestore {
     }
 
 
-    // ==================== 27. 성경 오타 보정 · 이용약관(회칙 기반) · 회칙 관리자 CRUD ====================
-    // --- (A) 성경 본문 오타·오류 관리자 추가/수정/삭제/복원 ---
-    window.openAddBibleVerseModal = () => {
-      const book = getBibleBook(biblePos.bookId);
-      const chapter = biblePos.chapter;
-      const effective = getEffectiveChapterVerses(book.id, chapter, bibleCurrentVerses);
-      const nextNum = effective.length > 0 ? (Math.max(...effective.map(v => v.verse)) + 1) : 1;
-      document.getElementById('bibleVerseEditModalTitle').textContent = '➕ 성경 누락 절 추가';
-      document.getElementById('editBibleVerseMode').value = 'add';
-      document.getElementById('editBibleVerseOrigNum').value = '';
-      document.getElementById('editBibleVerseRefBox').innerHTML = `📖 대상 위치: <b>${escapeHtml(book.name)} ${chapter}장</b> (개역한글판 누락 절 보완)`;
-      const numInp = document.getElementById('editBibleVerseNumInput');
-      numInp.value = String(nextNum);
-      numInp.disabled = false;
-      document.getElementById('editBibleVerseTextInput').value = '';
-      document.getElementById('bibleVerseEditModal').classList.add('open');
-    };
-
-    window.openEditBibleVerseModal = (vNum) => {
-      const book = getBibleBook(biblePos.bookId);
-      const chapter = biblePos.chapter;
-      const effective = getEffectiveChapterVerses(book.id, chapter, bibleCurrentVerses);
-      const v = effective.find(x => x.verse === Number(vNum));
-      if (!v) return;
-      document.getElementById('bibleVerseEditModalTitle').textContent = '✏️ 성경 본문 오타 · 오류 수정';
-      document.getElementById('editBibleVerseMode').value = v.isAdded ? 'edit_added' : 'edit';
-      document.getElementById('editBibleVerseOrigNum').value = String(v.verse);
-      document.getElementById('editBibleVerseRefBox').innerHTML = `📖 수정 대상: <b>${escapeHtml(book.name)} ${chapter}장 ${v.verse}절</b>`;
-      const numInp = document.getElementById('editBibleVerseNumInput');
-      numInp.value = String(v.verse);
-      numInp.disabled = true;
-      document.getElementById('editBibleVerseTextInput').value = v.text || '';
-      document.getElementById('bibleVerseEditModal').classList.add('open');
-    };
-
-    window.handleSaveBibleVerseEdit = async () => {
-      const book = getBibleBook(biblePos.bookId);
-      const chapter = biblePos.chapter;
-      const mode = document.getElementById('editBibleVerseMode').value || 'edit';
-      const vNum = Math.floor(Number(document.getElementById('editBibleVerseNumInput').value || 0));
-      const text = document.getElementById('editBibleVerseTextInput').value.trim();
-      if (!vNum || vNum < 1 || vNum > 200) return showToast('올바른 절 번호(1~200)를 입력해 주세요.');
-      if (!text) return showToast('성경 본문 내용을 입력해 주세요.');
-      if (!enforceInputSecurity(text, `${book.name} ${chapter}:${vNum}`, true)) return;
-
-      const key = `${book.id}:${chapter}`;
-      const nextEdits = structuredClone(bibleVerseEdits || {});
-      const curBucket = getChapterVerseEditBucket(book.id, chapter);
-      const prevEffective = getEffectiveChapterVerses(book.id, chapter, bibleCurrentVerses).find(x => x.verse === vNum);
-
-      if (mode === 'add' || mode === 'edit_added') {
-        curBucket.added[String(vNum)] = text;
-        curBucket.deleted = curBucket.deleted.filter(n => n !== vNum);
-      } else {
-        curBucket.overrides[String(vNum)] = text;
-      }
-      nextEdits[key] = curBucket;
-
-      const btn = document.getElementById('saveBibleVerseEditBtn');
-      if (btn) btn.disabled = true;
-      try {
-        await db.collection('config').doc('layout').set({ bibleVerseEdits: nextEdits }, { merge: true });
-        bibleVerseEdits = nextEdits;
-        recordAuditLog({
-          actorType: 'admin',
-          category: '성경',
-          action: mode === 'add' ? '성경 절 추가' : '성경 오타·본문 수정',
-          target: `${book.name} ${chapter}:${vNum}`,
-          beforeVal: prevEffective ? prevEffective.text : '',
-          afterVal: text
-        });
-        document.getElementById('bibleVerseEditModal').classList.remove('open');
-        renderBibleVersesHtml();
-        showToast(mode === 'add' ? `${book.name} ${chapter}:${vNum} 절이 추가되었습니다.` : `${book.name} ${chapter}:${vNum} 오타가 수정되었습니다.`);
-      } catch (err) {
-        handleDbError(err, '성경 본문 저장');
-      } finally {
-        if (btn) btn.disabled = false;
-      }
-    };
-
-    window.restoreSingleBibleVerse = async (vNum) => {
-      const book = getBibleBook(biblePos.bookId);
-      const chapter = biblePos.chapter;
-      if (!confirm(`${book.name} ${chapter}:${vNum} 절을 개역한글판 원문으로 복원할까요?`)) return;
-      const key = `${book.id}:${chapter}`;
-      const nextEdits = structuredClone(bibleVerseEdits || {});
-      const curBucket = getChapterVerseEditBucket(book.id, chapter);
-      const prevTxt = curBucket.overrides[String(vNum)] || '';
-      delete curBucket.overrides[String(vNum)];
-      nextEdits[key] = curBucket;
-      try {
-        await db.collection('config').doc('layout').set({ bibleVerseEdits: nextEdits }, { merge: true });
-        bibleVerseEdits = nextEdits;
-        recordAuditLog({
-          actorType: 'admin',
-          category: '성경',
-          action: '성경 절 원문 복원',
-          target: `${book.name} ${chapter}:${vNum}`,
-          beforeVal: prevTxt
-        });
-        renderBibleVersesHtml();
-        showToast(`${book.name} ${chapter}:${vNum} 원문이 복원되었습니다.`);
-      } catch (err) {
-        handleDbError(err, '성경 원문 복원');
-      }
-    };
-
-    window.deleteBibleVerseByAdmin = async (vNum) => {
-      const book = getBibleBook(biblePos.bookId);
-      const chapter = biblePos.chapter;
-      const effective = getEffectiveChapterVerses(book.id, chapter, bibleCurrentVerses);
-      const v = effective.find(x => x.verse === Number(vNum));
-      if (!v) return;
-      if (!confirm(`${book.name} ${chapter}:${vNum} 절을 화면에서 삭제(숨김)할까요?`)) return;
-      const key = `${book.id}:${chapter}`;
-      const nextEdits = structuredClone(bibleVerseEdits || {});
-      const curBucket = getChapterVerseEditBucket(book.id, chapter);
-      if (v.isAdded) {
-        delete curBucket.added[String(vNum)];
-      } else {
-        delete curBucket.overrides[String(vNum)];
-        if (!curBucket.deleted.includes(Number(vNum))) curBucket.deleted.push(Number(vNum));
-      }
-      nextEdits[key] = curBucket;
-      try {
-        await db.collection('config').doc('layout').set({ bibleVerseEdits: nextEdits }, { merge: true });
-        bibleVerseEdits = nextEdits;
-        bibleSelectedVerse = null;
-        recordAuditLog({
-          actorType: 'admin',
-          category: '성경',
-          action: '성경 절 삭제',
-          target: `${book.name} ${chapter}:${vNum}`,
-          detail: v.text || ''
-        });
-        renderBibleVersesHtml();
-        showToast(`${book.name} ${chapter}:${vNum} 절이 삭제되었습니다.`);
-      } catch (err) {
-        handleDbError(err, '성경 절 삭제');
-      }
-    };
-
-    window.restoreDeletedBibleVersesInChapter = async () => {
-      const book = getBibleBook(biblePos.bookId);
-      const chapter = biblePos.chapter;
-      const key = `${book.id}:${chapter}`;
-      const nextEdits = structuredClone(bibleVerseEdits || {});
-      const curBucket = getChapterVerseEditBucket(book.id, chapter);
-      const cnt = curBucket.deleted.length;
-      if (cnt === 0) return;
-      curBucket.deleted = [];
-      nextEdits[key] = curBucket;
-      try {
-        await db.collection('config').doc('layout').set({ bibleVerseEdits: nextEdits }, { merge: true });
-        bibleVerseEdits = nextEdits;
-        recordAuditLog({
-          actorType: 'admin',
-          category: '성경',
-          action: '삭제된 성경 절 복원',
-          target: `${book.name} ${chapter}장`,
-          detail: `${cnt}개 절 복원`
-        });
-        renderBibleVersesHtml();
-        showToast(`${book.name} ${chapter}장의 삭제된 ${cnt}개 절을 복원했습니다.`);
-      } catch (err) {
-        handleDbError(err, '성경 절 복원');
-      }
-    };
-
-    // --- (B) 라이트 청년부 앱 이용약관 (회칙 제1장~제7장 참고 기본 8개 조항 + 관리자 추가/수정/삭제/순서변경) ---
+    // ==================== 27. 이용약관(회칙 기반) · 회칙 관리자 CRUD ====================
+    // --- (A) 라이트 청년부 앱 이용약관 (회칙 제1장~제7장 참고 기본 8개 조항 + 관리자 추가/수정/삭제/순서변경) ---
     const DEFAULT_TERMS_ARTICLES = [
       {
         id: 'tos_1',
@@ -22814,12 +20252,12 @@ service cloud.firestore {
       {
         id: 'tos_3',
         title: '제3조 (회원의 권리와 의무)',
-        body: '① 승인된 회원은 앱에서 공지·소식 열람, 예배·행사 출석 체크, 성경 읽기·사전·메모·책갈피, QT 공감·묵상 댓글, 회칙 열람, 문의 사항 등록 등의 기능을 이용할 수 있습니다.\n② 회원은 회칙 제6조에 따라 예배와 교육에 성실히 참여하고 교회 질서와 회칙을 준수하며, 앱 내 댓글과 소통 공간에서 공동체의 덕을 세우는 언어와 태도를 지켜야 합니다.\n③ 타인의 계정을 도용하거나, 악성 코드·피싱 링크 삽입, 도배 행위 등 앱의 정상적인 운영을 방해하는 행위는 금지됩니다.'
+        body: '① 승인된 회원은 앱에서 공지·소식 열람, 예배·행사 출석 체크, QT 공감·묵상 댓글, 설교·찬양 영상 시청 및 추천, 회칙 열람, 문의 사항 등록 등의 기능을 이용할 수 있습니다.\n② 회원은 회칙 제6조에 따라 예배와 교육에 성실히 참여하고 교회 질서와 회칙을 준수하며, 앱 내 댓글과 소통 공간에서 공동체의 덕을 세우는 언어와 태도를 지켜야 합니다.\n③ 타인의 계정을 도용하거나, 악성 코드·피싱 링크 삽입, 도배 행위 등 앱의 정상적인 운영을 방해하는 행위는 금지됩니다.'
       },
       {
         id: 'tos_4',
         title: '제4조 (개인정보 최소 수집 및 프라이버시 보호)',
-        body: '① 본 앱은 개인정보 피해 가능성을 최소화하기 위해 전화번호·집주소·주민등록번호·이메일을 수집하지 않으며, 공동체 운영에 꼭 필요한 [성명]과 [생년월일]만 수집합니다.\n② 로그인 비밀번호는 암호화되어 저장되며 관리자를 포함한 누구도 열람할 수 없습니다.\n③ 회원의 성경 개인 메모, 6색 책갈피, 성경 검색 기록, 글자 크기 및 알림 설정은 오직 본인 기기에만 저장되며 관리자에게 공개되거나 로그에 기록되지 않습니다.\n④ 회칙 제18조 제3항의 정신에 따라 개인의 신앙생활 및 상담과 관련된 비밀사항은 철저히 보호합니다.'
+        body: '① 본 앱은 개인정보 피해 가능성을 최소화하기 위해 전화번호·집주소·주민등록번호·이메일을 수집하지 않으며, 공동체 운영에 꼭 필요한 [성명]과 [생년월일]만 수집합니다.\n② 로그인 비밀번호는 암호화되어 저장되며 관리자를 포함한 누구도 열람할 수 없습니다.\n③ 회원의 글자 크기 및 알림 설정은 오직 본인 기기에만 저장되며 관리자에게 공개되거나 로그에 기록되지 않습니다.\n④ 회칙 제18조 제3항의 정신에 따라 개인의 신앙생활 및 상담과 관련된 비밀사항은 철저히 보호합니다.'
       },
       {
         id: 'tos_5',
@@ -22834,7 +20272,7 @@ service cloud.firestore {
       {
         id: 'tos_7',
         title: '제7조 (저작권 및 출처 준수)',
-        body: '① 앱에 제공되는 성경 본문 및 매일 자동 말씀은 저작재산권 보호기간이 만료된 「성경전서 개역한글판」(대한성서공회) 원문을 사용하며, 성경 용어 사전은 라이트 청년부가 자체 정리한 해설을 제공합니다.\n② 관리자 및 회원은 외부 저작물(유료 번역본·도서·기사 등)을 무단 복제하여 게시해서는 안 되며, 허용된 범위 내 인용 시 반드시 출처를 표기하여야 합니다.'
+        body: '① 앱에 제공되는 매일 자동 말씀은 저작재산권 보호기간이 만료된 「성경전서 개역한글판」(대한성서공회) 원문을 사용합니다.\n② 관리자 및 회원은 외부 저작물(유료 번역본·도서·기사 등)을 무단 복제하여 게시해서는 안 되며, 허용된 범위 내 인용 시 반드시 출처를 표기하여야 합니다.'
       },
       {
         id: 'tos_8',
