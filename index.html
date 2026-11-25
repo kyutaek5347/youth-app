@@ -2,19 +2,19 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://right-youth-app.firebaseapp.com https://api.getbible.net https://bolls.life https://www.youtube.com https://noembed.com https://script.google.com https://script.googleusercontent.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://right-youth-app.firebaseapp.com https://api.getbible.net https://bolls.life https://www.youtube.com https://noembed.com https://script.google.com https://script.googleusercontent.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=158b" />
+  <link rel="manifest" href="./manifest.json?v=159" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=158b" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=158b" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=159" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=159" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3529,6 +3529,24 @@
       margin-bottom: 4px;
     }
     .video-inspect-step:last-child { margin-bottom: 0; }
+    .video-player-frame-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000000;
+      border-radius: 13px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.22);
+    }
+    .video-player-iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -3553,7 +3571,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=158b" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=159" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5105,6 +5123,24 @@
     </div>
   </div>
 
+  <!-- 설교 · 찬양 앱 내 유튜브 재생 모달 -->
+  <div id="videoPlayerModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head" style="margin-bottom:10px;">
+        <div id="videoPlayerBadges" style="display:flex; align-items:center; gap:5px; flex-wrap:wrap; min-width:0;"></div>
+        <button class="close-btn" type="button" onclick="closeVideoPlayerModal()">✕</button>
+      </div>
+      <div id="videoPlayerFrameWrap" class="video-player-frame-wrap"></div>
+      <div id="videoPlayerTitle" style="font-size:15.5px; font-weight:800; color:#0F172A; line-height:1.38; margin-bottom:4px;"></div>
+      <div id="videoPlayerMeta" style="font-size:12px; color:#64748B; margin-bottom:8px;"></div>
+      <div id="videoPlayerNote" class="qt-scripture-box hidden" style="margin:6px 0 10px; font-size:13px; border-left-color:#DC2626;"></div>
+      <div style="display:flex; gap:8px; margin-top:10px;">
+        <a id="videoPlayerExternalLink" class="btn-outline" href="#" target="_blank" rel="noopener noreferrer" style="flex:1; text-align:center; text-decoration:none; padding:10px 12px;">▶ 유튜브에서 열기 ↗</a>
+        <button class="btn-dark" type="button" style="border:none; border-radius:10px; padding:10px 18px; font-size:13px; font-weight:800; cursor:pointer;" onclick="closeVideoPlayerModal()">닫기</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 설교 · 찬양 유튜브 영상 추천 / 수정 모달 (등록 전 자동 4단계 검사 필수) -->
   <div id="videoSubmitModal" class="modal-backdrop">
     <div class="modal">
@@ -5270,7 +5306,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 25;
-    const APP_CLIENT_BUILD = 158;
+    const APP_CLIENT_BUILD = 159;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -5388,7 +5424,7 @@
     const DEFAULT_SECURITY_CONFIG = {
       blockMaliciousInput: true,
       blockSuspiciousLinks: true,
-      confirmExternalLinks: true,
+      confirmExternalLinks: false,
       detectCloneDomain: true,
       alertAdminOnSecurityEvent: true,
       commentCooldownSec: 5,
@@ -6275,7 +6311,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=158b" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=159" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6299,8 +6335,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=158b', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=158b', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=159', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=159', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -8341,7 +8377,11 @@
               videoSettings = structuredClone(DEFAULT_VIDEO_SETTINGS);
             }
             if (d.securityConfig && typeof d.securityConfig === 'object') {
-              securityConfig = { ...DEFAULT_SECURITY_CONFIG, ...d.securityConfig };
+              securityConfig = {
+                ...DEFAULT_SECURITY_CONFIG,
+                ...d.securityConfig,
+                confirmExternalLinks: d.securityConfig.confirmExternalLinksV59 ? !!d.securityConfig.confirmExternalLinks : false
+              };
             } else {
               securityConfig = structuredClone(DEFAULT_SECURITY_CONFIG);
             }
@@ -12895,6 +12935,10 @@
     document.querySelectorAll('.modal-backdrop').forEach(bg => {
       bg.addEventListener('click', e => {
         if (e.target === bg) {
+          if (bg.id === 'videoPlayerModal') {
+            closeVideoPlayerModal();
+            return;
+          }
           bg.classList.remove('open');
           if (bg.id === 'quickLinksSheet') syncMoreTabActiveState();
         }
@@ -15614,7 +15658,9 @@ ${m.body}`;
         const textCls = theme.darkText ? 'dark-text' : '';
 
         if (safeUrl) {
-          if (securityConfig.confirmExternalLinks) {
+          const linkRisk = analyzeUrlRisk(safeUrl);
+          const needGuardModal = (linkRisk.riskLevel !== 'safe') || (securityConfig && securityConfig.confirmExternalLinks === true);
+          if (needGuardModal) {
             return `
               <button class="quick-link-btn ${textCls}" type="button" style="background:${theme.css};"
                       onclick="closeQuickLinksSheet(); openExternalLinkSafely('${escapeJsAttr(safeUrl)}', '${escapeJsAttr(ql.label)}')">
@@ -19980,7 +20026,7 @@ ${m.body}`;
         return;
       }
 
-      if (securityConfig && securityConfig.confirmExternalLinks === false && risk.riskLevel === 'safe') {
+      if (!(securityConfig && securityConfig.confirmExternalLinks === true) && risk.riskLevel === 'safe') {
         window.open(safeUrl, '_blank', 'noopener,noreferrer');
         return;
       }
@@ -20175,10 +20221,10 @@ ${m.body}`;
             <div class="setting-row">
               <div>
                 <div class="setting-title" style="font-size:13.5px;">🔗 외부 사이트 이동 전 도메인 확인창</div>
-                <div class="setting-sub" style="font-size:11.5px;">바로가기 등 외부 링크 클릭 시 실제 이동할 도메인과 암호화 여부를 먼저 보여줍니다.</div>
+                <div class="setting-sub" style="font-size:11.5px;">끄면 안전한 HTTPS 사이트는 바로 이동합니다. (위험·피싱 링크는 꺼도 항상 차단)</div>
               </div>
               <label class="switch">
-                <input type="checkbox" id="cfgSecConfirmExt" ${cfg.confirmExternalLinks !== false ? 'checked' : ''} />
+                <input type="checkbox" id="cfgSecConfirmExt" ${cfg.confirmExternalLinks === true ? 'checked' : ''} />
                 <span class="slider"></span>
               </label>
             </div>
@@ -20564,6 +20610,7 @@ ${m.body}`;
         blockMaliciousInput: !!(document.getElementById('cfgSecBlockXss') && document.getElementById('cfgSecBlockXss').checked),
         blockSuspiciousLinks: !!(document.getElementById('cfgSecBlockLinks') && document.getElementById('cfgSecBlockLinks').checked),
         confirmExternalLinks: !!(document.getElementById('cfgSecConfirmExt') && document.getElementById('cfgSecConfirmExt').checked),
+        confirmExternalLinksV59: true,
         detectCloneDomain: !!(document.getElementById('cfgSecDetectClone') && document.getElementById('cfgSecDetectClone').checked),
         alertAdminOnSecurityEvent: !!(document.getElementById('cfgSecAdminAlert') ? document.getElementById('cfgSecAdminAlert').checked : (securityConfig.alertAdminOnSecurityEvent !== false)),
         commentCooldownSec: Math.max(0, Math.min(60, Number((document.getElementById('cfgSecCommentCooldown') || {}).value || 5))),
@@ -23478,7 +23525,7 @@ service cloud.firestore {
             ? `<div class="card" style="text-align:center; color:#64748B; font-size:12.5px; padding:18px 12px;">아직 등록된 설교·찬양 영상이 없습니다.${canSubmit ? '<br>오른쪽 위 <b>[+ 추천]</b> 버튼으로 공식 채널 영상을 올려 보세요!' : ''}</div>`
             : latest.map(v => `
                 <div class="card" style="padding:11px 12px; margin-bottom:9px;">
-                  <div class="video-compact-row" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}')">
+                  <div class="video-compact-row" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">
                     <img class="video-compact-thumb" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="썸네일" loading="lazy" />
                     <div style="min-width:0; flex:1;">
                       <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap; margin-bottom:3px;">
@@ -23495,12 +23542,67 @@ service cloud.firestore {
       `;
     }
 
-    window.openYouTubeVideoSafely = (videoId, title = '유튜브 영상') => {
-      if (!/^[A-Za-z0-9_-]{11}$/.test(String(videoId || ''))) {
+    window.openYouTubeVideoSafely = (videoId, title = '유튜브 영상', docId = '') => {
+      const cleanId = String(videoId || '').trim();
+      if (!/^[A-Za-z0-9_-]{11}$/.test(cleanId)) {
         return showToast('유효하지 않은 영상 주소입니다.');
       }
-      const safeUrl = `https://www.youtube.com/watch?v=${videoId}`;
-      openExternalLinkSafely(safeUrl, `유튜브 · ${title}`);
+      const allVids = [...(videoItems || []), ...(myVideoItems || [])];
+      const rec = allVids.find(x => (docId && String(x.id) === String(docId)) || String(x.videoId) === cleanId) || null;
+
+      const safeWatchUrl = `https://www.youtube.com/watch?v=${cleanId}`;
+      const safeEmbedUrl = `https://www.youtube-nocookie.com/embed/${cleanId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+
+      const badgesEl = document.getElementById('videoPlayerBadges');
+      if (badgesEl) {
+        const catTag = `<span class="tag slate">${escapeHtml((rec && rec.category) || '설교·찬양')}</span>`;
+        const verTag = rec
+          ? (rec.officialVerified
+              ? '<span class="tag green">✅ 공식 채널</span>'
+              : (rec.status === 'pending' ? '<span class="tag warm">⏳ 검토 대기</span>' : '<span class="tag">🛡️ 관리자 검증</span>'))
+          : '<span class="tag">🎬 유튜브 영상</span>';
+        badgesEl.innerHTML = catTag + verTag;
+      }
+
+      const titleEl = document.getElementById('videoPlayerTitle');
+      if (titleEl) titleEl.textContent = (rec && rec.title) ? rec.title : (title || '유튜브 영상');
+
+      const metaEl = document.getElementById('videoPlayerMeta');
+      if (metaEl) {
+        const parts = [];
+        if (rec && rec.channelName) parts.push(`📺 ${rec.channelName}`);
+        if (rec && rec.authorName) parts.push(`추천: ${rec.authorName}`);
+        if (rec && rec.createdAt) parts.push(String(rec.createdAt).slice(0, 10));
+        metaEl.textContent = parts.join(' · ') || '라이트 청년부 설교 · 찬양 영상';
+      }
+
+      const noteEl = document.getElementById('videoPlayerNote');
+      if (noteEl) {
+        if (rec && rec.note) {
+          noteEl.textContent = rec.note;
+          noteEl.classList.remove('hidden');
+        } else {
+          noteEl.textContent = '';
+          noteEl.classList.add('hidden');
+        }
+      }
+
+      const extLinkEl = document.getElementById('videoPlayerExternalLink');
+      if (extLinkEl) extLinkEl.href = safeWatchUrl;
+
+      const wrapEl = document.getElementById('videoPlayerFrameWrap');
+      if (wrapEl) {
+        wrapEl.innerHTML = `<iframe class="video-player-iframe" src="${safeEmbedUrl}" title="${escapeHtml((rec && rec.title) || title || '유튜브 영상')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+      }
+
+      document.getElementById('videoPlayerModal').classList.add('open');
+    };
+
+    window.closeVideoPlayerModal = () => {
+      const modal = document.getElementById('videoPlayerModal');
+      if (modal) modal.classList.remove('open');
+      const wrapEl = document.getElementById('videoPlayerFrameWrap');
+      if (wrapEl) wrapEl.innerHTML = '';
     };
 
     function renderVideosView() {
@@ -23546,10 +23648,10 @@ service cloud.firestore {
             const canEdit = user.isSuperAdmin || isMine;
             return `
               <div class="video-card">
-                <div class="video-thumb-wrap" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}')">
+                <div class="video-thumb-wrap" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">
                   <img class="video-thumb-img" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="${escapeHtml(v.title || '영상')}" loading="lazy" />
                   <div class="video-play-overlay">
-                    <span class="video-play-pill">▶ 유튜브에서 보기</span>
+                    <span class="video-play-pill">▶ 바로 재생</span>
                   </div>
                 </div>
                 <div class="video-card-body">
@@ -23568,7 +23670,7 @@ service cloud.firestore {
                   </div>
                   ${v.note ? `<div class="qt-scripture-box" style="margin:6px 0 0; font-size:13px; border-left-color:#DC2626;">${escapeHtml(v.note)}</div>` : ''}
                   <div class="card-footer" style="margin-top:10px; padding-top:8px;">
-                    <button class="btn-sm primary" type="button" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}')">▶ 영상 시청</button>
+                    <button class="btn-sm primary" type="button" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">▶ 앱에서 재생</button>
                     ${canEdit ? `
                       <div style="display:flex; gap:5px;">
                         <button class="btn-sm" type="button" onclick="openEditVideoModal('${escapeJsAttr(v.id)}')">수정</button>
@@ -24075,7 +24177,7 @@ service cloud.firestore {
                 ${v.note ? `<div style="font-size:12.5px; color:#334155; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:9px; padding:8px 10px; margin-bottom:8px; white-space:pre-line;">${escapeHtml(v.note)}</div>` : ''}
                 ${v.inspectSummary ? `<div class="video-inspect-box ${v.hasRiskWarning ? 'warn' : ''}" style="margin-bottom:8px; font-size:11.5px; white-space:pre-line;">${escapeHtml(v.inspectSummary)}</div>` : ''}
                 <div style="display:flex; gap:5px; flex-wrap:wrap; margin-bottom:8px;">
-                  <button class="btn-sm" type="button" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '영상')}')">▶ 영상 직접 확인 ↗</button>
+                  <button class="btn-sm" type="button" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '영상')}', '${escapeJsAttr(v.id)}')">▶ 앱에서 영상 재생</button>
                   ${v.channelUrl ? `<button class="btn-sm" type="button" onclick="openExternalLinkSafely('${escapeJsAttr(v.channelUrl)}', '${escapeJsAttr(v.channelName || '유튜브 채널')}')">📺 채널 확인 ↗</button>` : ''}
                 </div>
                 <div class="card-footer" style="margin-top:4px; padding-top:8px;">
