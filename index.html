@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=164" />
+  <link rel="manifest" href="./manifest.json?v=165" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=164" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=164" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=165" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=165" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -983,43 +983,7 @@
     }
 
 
-    /* ==================== v10.13 생일 축하 배너 & 회원가입 역할 선택 ==================== */
-    .birthday-banner {
-      background: linear-gradient(135deg, #F59E0B 0%, #EC4899 55%, #8B5CF6 100%);
-      color: #FFFFFF;
-      border-radius: 20px;
-      padding: 18px 18px 19px;
-      box-shadow: 0 10px 24px rgba(236, 72, 153, 0.28);
-      border: 1px solid rgba(255, 255, 255, 0.24);
-      position: relative;
-      overflow: hidden;
-    }
-    .birthday-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: rgba(255, 255, 255, 0.24);
-      color: #FFFFFF;
-      font-size: 11.5px;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 999px;
-      margin-bottom: 9px;
-    }
-    .birthday-title {
-      font-size: 18px;
-      font-weight: 900;
-      margin: 0 0 6px;
-      line-height: 1.35;
-      letter-spacing: -0.2px;
-    }
-    .birthday-desc {
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.92);
-      margin: 0;
-      line-height: 1.5;
-      white-space: pre-line;
-    }
+    /* ==================== v10.13 회원가입 역할 선택 ==================== */
     .signup-role-chips {
       display: flex;
       flex-wrap: wrap;
@@ -1089,9 +1053,6 @@
       margin-bottom: 12px;
       font-size: 12.5px;
       line-height: 1.48;
-    }
-    .celeb-preview-box.bday {
-      background: linear-gradient(135deg, #F59E0B 0%, #EC4899 55%, #8B5CF6 100%);
     }
     .celeb-preview-box.newcomer {
       background: linear-gradient(135deg, #EC4899 0%, #9333EA 58%, #4F46E5 100%);
@@ -1484,7 +1445,7 @@
 
     /* 모든 텍스트·카드·폼 요소 넘침 및 한글 어절 끊김 방지 */
     .hero-title, .hero-desc, .card-title, .card-body, .section-title,
-    .birthday-title, .birthday-desc, .newcomer-auto-title, .newcomer-auto-desc,
+    .newcomer-auto-title, .newcomer-auto-desc,
     .attendance-home-title, .attendance-home-desc, .bylaw-hero-title, .bylaw-hero-dates,
     .bylaw-article-title, .bylaw-article-body, .video-note-box,
     .info-box, .status-desc, .status-meta, .setting-title, .setting-sub,
@@ -1498,7 +1459,7 @@
 
     /* 버튼·배지 줄바꿈 깨짐 방지 */
     .exit-btn, .btn-admin, .btn-sm, .tag, .hero-badge,
-    .birthday-badge, .newcomer-auto-badge, .attendance-live-badge, .role-pill,
+    .newcomer-auto-badge, .attendance-live-badge, .role-pill,
     .filter-chip, .sub-tab-btn, .quick-tag {
       white-space: nowrap;
       flex-shrink: 0;
@@ -1734,17 +1695,17 @@
       .home-block { margin-bottom: 13px; }
 
       .hero-banner, .newcomer-card, .leader-card, .custom-banner-card,
-      .birthday-banner, .newcomer-auto-banner, .attendance-home-card,
+      .newcomer-auto-banner, .attendance-home-card,
       .bylaw-hero, .sermon-hero, .ccm-hero, .video-hero {
         padding: 15px 14px;
         border-radius: 16px;
       }
-      .hero-title, .birthday-title, .newcomer-auto-title, .attendance-home-title,
+      .hero-title, .newcomer-auto-title, .attendance-home-title,
       .bylaw-hero-title {
         font-size: 16px;
         line-height: 1.38;
       }
-      .hero-desc, .birthday-desc, .newcomer-auto-desc, .attendance-home-desc {
+      .hero-desc, .newcomer-auto-desc, .attendance-home-desc {
         font-size: 13px;
         line-height: 1.54;
       }
@@ -1836,14 +1797,14 @@
         padding: 20px 22px calc(92px + var(--safe-bottom));
       }
       .hero-banner, .newcomer-card, .leader-card, .custom-banner-card,
-      .birthday-banner, .newcomer-auto-banner, .attendance-home-card,
+      .newcomer-auto-banner, .attendance-home-card,
       .bylaw-hero, .sermon-hero, .ccm-hero, .video-hero {
         padding: 20px 22px;
       }
-      .hero-title, .birthday-title, .newcomer-auto-title, .attendance-home-title {
+      .hero-title, .newcomer-auto-title, .attendance-home-title {
         font-size: 19px;
       }
-      .hero-desc, .birthday-desc, .newcomer-auto-desc, .attendance-home-desc {
+      .hero-desc, .newcomer-auto-desc, .attendance-home-desc {
         font-size: 14px;
         line-height: 1.56;
       }
@@ -1937,7 +1898,7 @@
       gap: 6px;
     }
 
-    /* 생일·새신자 축하 멘트 관리 카드 */
+    /* 새신자 환영 멘트 관리 카드 */
     .celeb-manage-card {
       background: #FFFBEB;
       border: 1px dashed #F59E0B;
@@ -2718,11 +2679,9 @@
       --fs-xl: 21.5px;
     }
     html[data-font-scale="large"] .hero-title,
-    html[data-font-scale="large"] .birthday-title,
     html[data-font-scale="large"] .newcomer-auto-title,
     html[data-font-scale="large"] .attendance-home-title { font-size: 20px; }
     html[data-font-scale="large"] .hero-desc,
-    html[data-font-scale="large"] .birthday-desc,
     html[data-font-scale="large"] .newcomer-auto-desc,
     html[data-font-scale="large"] .attendance-home-desc,
     html[data-font-scale="large"] .bylaw-article-body,
@@ -2745,11 +2704,9 @@
       --fs-xl: 23.5px;
     }
     html[data-font-scale="xlarge"] .hero-title,
-    html[data-font-scale="xlarge"] .birthday-title,
     html[data-font-scale="xlarge"] .newcomer-auto-title,
     html[data-font-scale="xlarge"] .attendance-home-title { font-size: 22px; }
     html[data-font-scale="xlarge"] .hero-desc,
-    html[data-font-scale="xlarge"] .birthday-desc,
     html[data-font-scale="xlarge"] .newcomer-auto-desc,
     html[data-font-scale="xlarge"] .attendance-home-desc,
     html[data-font-scale="xlarge"] .bylaw-article-body,
@@ -3000,7 +2957,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=164" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=165" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3502,7 +3459,7 @@
         <div class="setting-row">
           <div>
             <div id="notifHomeTitle" class="setting-title">📢 메인 화면 새 소식 알림</div>
-            <div id="notifHomeSub" class="setting-sub">메인 화면에 새 공지·광고·배너, 생일·새신자 소식이 올라올 때</div>
+            <div id="notifHomeSub" class="setting-sub">메인 화면에 새 공지·광고·배너, 새신자 소식이 올라올 때</div>
           </div>
           <label class="switch">
             <input type="checkbox" id="notifHomeToggle" onchange="toggleNotifOption('homeNews', this.checked)" />
@@ -3905,34 +3862,20 @@
   </div>
 
 
-  <!-- 관리자: 생일자 · 새신자 축하 멘트 편집 모달 -->
+  <!-- 관리자: 새신자 환영 멘트 편집 모달 -->
   <div id="celebrationMsgsModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">🎉 생일 · 새신자 축하 멘트 설정</h3>
+        <h3 class="modal-title">💐 새신자 환영 멘트 설정</h3>
         <button class="close-btn" data-close="celebrationMsgsModal">✕</button>
       </div>
       <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-        멘트 안에 <b>{이름}</b>을 넣으면 생일자나 새신자 이름이 자동으로 채워집니다.<br>
+        멘트 안에 <b>{이름}</b>을 넣으면 새신자 이름이 자동으로 채워집니다.<br>
         저장하면 <b>메인 화면 배너</b>와 <b>알림 문구</b>에 모두 즉시 반영됩니다.
       </div>
 
       <div class="celeb-section-head" style="margin-top:4px;">
-        <span>🎂 생일자 축하 멘트</span>
-        <button class="btn-sm" type="button" style="padding:3px 8px; font-size:11px;" onclick="insertNamePlaceholder('celebBdayTitleInput')">+ {이름} 넣기</button>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="celebBdayTitleInput">생일 축하 제목</label>
-        <input id="celebBdayTitleInput" class="form-input" maxlength="60" placeholder="🎂 {이름}님의 생일을 축하합니다!" oninput="updateCelebrationPreview()" />
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="celebBdayDescInput">생일 축하 내용</label>
-        <textarea id="celebBdayDescInput" class="form-textarea" style="min-height:74px;" maxlength="200" placeholder="오늘은 라이트 청년부 지체의 생일입니다. 따뜻한 축하와 축복의 마음을 전해 주세요! 💐" oninput="updateCelebrationPreview()"></textarea>
-      </div>
-      <div id="celebBdayPreview" class="celeb-preview-box bday"></div>
-
-      <div class="celeb-section-head">
-        <span>💐 새신자 축하(환영) 멘트</span>
+        <span>💐 새신자 환영 멘트</span>
         <button class="btn-sm" type="button" style="padding:3px 8px; font-size:11px;" onclick="insertNamePlaceholder('celebNewcomerTitleInput')">+ {이름} 넣기</button>
       </div>
       <div class="form-group">
@@ -3947,7 +3890,7 @@
 
       <div style="display:flex; gap:8px; margin-top:10px;">
         <button class="btn-outline" type="button" onclick="resetCelebrationMsgsDefaults()">기본값 복원</button>
-        <button id="saveCelebrationMsgsBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveCelebrationMsgs()">축하 멘트 저장하기</button>
+        <button id="saveCelebrationMsgsBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveCelebrationMsgs()">환영 멘트 저장하기</button>
       </div>
     </div>
   </div>
@@ -4454,7 +4397,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 28;
-    const APP_CLIENT_BUILD = 164;
+    const APP_CLIENT_BUILD = 165;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -4531,7 +4474,6 @@
       specialEvents: [],
       sessionNames: {}
     };
-    const KEY_CELEB_DATE_NOTIFIED = 'right_youth_celeb_date_notified_v1';
     const KEY_NEWCOMER_NOTIFIED = 'right_youth_newcomer_notified_v1';
     // 기존 기기에 남아 있던 성경·QT 잔여 로컬 기록 즉시 영구 폐기
     (function purgeLegacyFeatureStorage() {
@@ -4540,7 +4482,9 @@
         'right_youth_bible_cache_v103',
         'right_youth_bible_marks_v103',
         'right_youth_bible_memos_v107',
-        'right_youth_bible_font_v103'
+        'right_youth_bible_font_v103',
+        'right_youth_bday_notified_v1',
+        'right_youth_celeb_date_notified_v1'
       ];
       legacyKeys.forEach(k => { try { localStorage.removeItem(k); } catch {} });
       try {
@@ -4692,8 +4636,6 @@
     ];
 
     const DEFAULT_CELEBRATION_MSGS = {
-      birthdayTitle: '🎂 {이름}님의 생일을 축하합니다!',
-      birthdayDesc: '오늘은 라이트 청년부 지체의 생일입니다. 따뜻한 축하와 축복의 마음을 전해 주세요! 💐',
       newcomerTitle: '🎉 새신자 {이름}님을 환영합니다!',
       newcomerDesc: '라이트 청년부의 새 가족이 되신 것을 진심으로 축복합니다. 만나면 반갑게 인사해 주세요! 😊'
     };
@@ -5320,7 +5262,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=164" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=165" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5344,8 +5286,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=164', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=164', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=165', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=165', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5385,7 +5327,7 @@
       const nhSub = document.getElementById('notifHomeSub');
       const homeLbl = getTabLabel('home');
       if (nhTitle) nhTitle.textContent = `📢 ${homeLbl} 새 소식 알림`;
-      if (nhSub) nhSub.textContent = `${homeLbl} 화면에 새 공지·광고·배너, 생일·새신자 소식이 올라올 때`;
+      if (nhSub) nhSub.textContent = `${homeLbl} 화면에 새 공지·광고·배너, 새신자 소식이 올라올 때`;
 
       document.getElementById('notifMasterToggle').checked = notifPrefs.enabled;
       document.getElementById('notifHomeToggle').checked = notifPrefs.homeNews;
@@ -7326,11 +7268,6 @@
       unsubCore.push(
         db.collection('birthdays').onSnapshot(snap => {
           birthdayList = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }));
-          checkAndNotifyTodayBirthdays();
-          if (currentMainTab === 'home') {
-            const u = getCurrentUser();
-            if (u) renderHomeView(u);
-          }
         }, () => {})
       );
 
@@ -7700,7 +7637,6 @@
         localStorage.removeItem(KEY_MEMBER_CACHE);
         localStorage.removeItem(KEY_ADMIN_NAME);
         localStorage.removeItem('right_youth_bday_notified_v1');
-        localStorage.removeItem(KEY_CELEB_DATE_NOTIFIED);
         localStorage.removeItem(KEY_NEWCOMER_NOTIFIED);
         localStorage.setItem(KEY_SESSION_EPOCH, SESSION_EPOCH);
         sessionEpochResetDone = true;
@@ -9185,54 +9121,11 @@
       renderAdminGuideListOnly();
     }
 
-    // ==================== 11. 메인 홈 화면 렌더링 (+ 오늘의 생일 자동 안내 · 알림) ====================
-    function getTodayBirthdays() {
-      const { m, d } = getKstDateParts();
-      const todayMd = `${m}-${d}`;
-      const seenNames = new Set();
-      const result = [];
-      birthdayList.forEach(item => {
-        const name = String(item.name || '').trim();
-        if (item.md === todayMd && name && !seenNames.has(name)) {
-          seenNames.add(name);
-          result.push({ uid: item.uid || item.id, name, md: item.md });
-        }
-      });
-      return result.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
-    }
-
-    function checkAndNotifyTodayBirthdays() {
-      const user = getCurrentUser();
-      if (!user) return;
-      const todayBdays = getTodayBirthdays();
-      if (todayBdays.length === 0) return;
-
-      const todayStamp = String(getKstDateParts().compact || '');
-      try {
-        localStorage.removeItem('right_youth_bday_notified_v1');
-        if (localStorage.getItem(KEY_CELEB_DATE_NOTIFIED) === todayStamp) return;
-      } catch {}
-
-      if (notifPrefs.enabled && notifPrefs.homeNews) {
-        try { localStorage.setItem(KEY_CELEB_DATE_NOTIFIED, todayStamp); } catch {}
-        const namesText = todayBdays.map(b => b.name).join(', ');
-        const msgTitle = renderCelebrationText(getCelebrationMsg('birthdayTitle'), namesText);
-        const msgBody = renderCelebrationText(getCelebrationMsg('birthdayDesc'), namesText).replace(/\s*\n\s*/g, ' ');
-        dispatchAppNotification({
-          type: 'notice',
-          icon: '🎂',
-          title: msgTitle,
-          body: msgBody,
-          onClick: () => { switchMainTab('home'); }
-        });
-      }
-    }
-
+    // ==================== 11. 메인 홈 화면 렌더링 ====================
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
         handleKstDayRolloverCheck();
         checkAndPromoteDueScheduledItems();
-        checkAndNotifyTodayBirthdays();
         checkAndNotifyNewcomers();
         const u = getCurrentUser();
         if (u) {
@@ -9382,28 +9275,6 @@
       return String(template || '').replace(/\{이름\}/g, namesText);
     }
 
-    function buildBirthdayBannerHtml(user) {
-      const todayBdays = getTodayBirthdays();
-      if (todayBdays.length === 0) return '';
-      const { m, d } = getKstDateParts();
-      const namesText = todayBdays.map(b => b.name).join(', ');
-      const titleText = renderCelebrationText(getCelebrationMsg('birthdayTitle'), namesText);
-      const descText = renderCelebrationText(getCelebrationMsg('birthdayDesc'), namesText);
-      const adminEditBtn = (user && user.isSuperAdmin)
-        ? `<button class="banner-quick-edit-btn" type="button" onclick="openCelebrationMsgsModal()">✏️ 멘트 수정</button>`
-        : '';
-      return `
-        <div class="home-block">
-          <div class="birthday-banner">
-            ${adminEditBtn}
-            <span class="birthday-badge">🎉 오늘의 생일 · ${Number(m)}월 ${Number(d)}일</span>
-            <h2 class="birthday-title">${escapeHtml(titleText)}</h2>
-            <p class="birthday-desc">${escapeHtml(descText)}</p>
-          </div>
-        </div>
-      `;
-    }
-
     function buildNewcomerAutoBannerHtml(user) {
       const valid = newcomerList.filter(item => item && String(item.name || '').trim());
       if (valid.length === 0) return '';
@@ -9444,12 +9315,11 @@
       }
 
       const attendanceHtml = buildAttendanceHomeCardHtml(user);
-      const birthdayHtml = buildBirthdayBannerHtml(user);
       const newcomerHtml = buildNewcomerAutoBannerHtml(user);
       const homeVideosHtml = buildHomeVideosSectionHtml(user);
 
       if (homeContentPermError && !homeBlocksLoaded) {
-        container.innerHTML = attendanceHtml + birthdayHtml + newcomerHtml + `
+        container.innerHTML = attendanceHtml + newcomerHtml + `
           <div class="card" style="text-align:center; padding:30px 18px; border-color:#FECACA; background:#FEF2F2;">
             <div style="font-size:26px; margin-bottom:8px;">🔒</div>
             <div style="font-size:14.5px; font-weight:800; color:#991B1B; margin-bottom:6px;">메인 소식을 불러올 권한이 필요합니다</div>
@@ -9463,7 +9333,7 @@
       }
 
       if (!homeBlocksLoaded || !homeNoticesLoaded) {
-        container.innerHTML = attendanceHtml + birthdayHtml + newcomerHtml + `
+        container.innerHTML = attendanceHtml + newcomerHtml + `
           <div class="card" style="text-align:center; padding:38px 20px; color:#64748B;">
             <div class="spinner" style="margin:0 auto 12px; border-color:#E2E8F0; border-top-color:#111827;"></div>
             <div style="font-size:13.5px; font-weight:700; color:#334155;">메인 화면을 불러오는 중입니다...</div>
@@ -9475,7 +9345,7 @@
       const visibleNotices = notices.filter(canSeeItemOnHome);
       const visibleBlocks = blocks.filter(canSeeItemOnHome);
 
-      if (!attendanceHtml && !birthdayHtml && !newcomerHtml && !homeVideosHtml && visibleBlocks.length === 0) {
+      if (!attendanceHtml && !newcomerHtml && !homeVideosHtml && visibleBlocks.length === 0) {
         container.innerHTML = `
           <div class="card" style="text-align:center; padding:42px 20px; color:#64748B;">
             <div style="font-size:30px; margin-bottom:10px;">✨</div>
@@ -9486,7 +9356,7 @@
         return;
       }
 
-      container.innerHTML = attendanceHtml + birthdayHtml + newcomerHtml + visibleBlocks.map(b => {
+      container.innerHTML = attendanceHtml + newcomerHtml + visibleBlocks.map(b => {
 
         if (b.type === 'hero_notice') {
           const pinned = visibleNotices.find(n => n.pinned) || visibleNotices[0];
@@ -9649,7 +9519,7 @@
       applyScreen();
     };
 
-    // (A) 화면·공지 관리 (메인 배너·칸 배치 + 생일·새신자 멘트 + 공지·광고 목록)
+    // (A) 화면·공지 관리 (메인 배너·칸 배치 + 새신자 환영 멘트 + 공지·광고 목록)
     function renderManageContent(el, user) {
       const canLayout = hasUserPerm(user, 'canEditLayout');
       const canNotices = hasUserPerm(user, 'canManageNotices');
@@ -9678,12 +9548,11 @@
         ${canLayout ? `
           <div class="card celeb-manage-card">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
-              <div style="font-size:13.5px; font-weight:800; color:#0F172A;">🎉 생일·새신자 축하 멘트</div>
+              <div style="font-size:13.5px; font-weight:800; color:#0F172A;">💐 새신자 환영 멘트</div>
               <button class="btn-sm primary" type="button" style="padding:6px 10px;" onclick="openCelebrationMsgsModal()">✏️ 멘트 수정</button>
             </div>
             <div style="font-size:12px; color:#475569; line-height:1.5; word-break:keep-all;">
-              <div>${escapeHtml(getCelebrationMsg('birthdayTitle'))}</div>
-              <div style="margin-top:2px;">${escapeHtml(getCelebrationMsg('newcomerTitle'))}</div>
+              <div>${escapeHtml(getCelebrationMsg('newcomerTitle'))}</div>
             </div>
           </div>
         ` : ''}
@@ -12392,7 +12261,6 @@
         updateSignupQrGateUI();
         const u = getCurrentUser();
         if (u) {
-          checkAndNotifyTodayBirthdays();
           if (document.getElementById('inviteQrModal').classList.contains('open')) {
             ensureTodayInviteQrExists().then(() => renderInviteQrModalCanvas()).catch(() => {});
           }
@@ -13152,10 +13020,8 @@
       });
     };
 
-    // ==================== 18. 생일자 · 새신자 축하 멘트 관리자 편집 ====================
+    // ==================== 18. 새신자 환영 멘트 관리자 편집 ====================
     window.openCelebrationMsgsModal = () => {
-      document.getElementById('celebBdayTitleInput').value = getCelebrationMsg('birthdayTitle');
-      document.getElementById('celebBdayDescInput').value = getCelebrationMsg('birthdayDesc');
       document.getElementById('celebNewcomerTitleInput').value = getCelebrationMsg('newcomerTitle');
       document.getElementById('celebNewcomerDescInput').value = getCelebrationMsg('newcomerDesc');
       updateCelebrationPreview();
@@ -13177,16 +13043,9 @@
 
     window.updateCelebrationPreview = () => {
       const sampleName = '홍길동';
-      const bTitle = document.getElementById('celebBdayTitleInput').value.trim() || DEFAULT_CELEBRATION_MSGS.birthdayTitle;
-      const bDesc = document.getElementById('celebBdayDescInput').value.trim() || DEFAULT_CELEBRATION_MSGS.birthdayDesc;
       const nTitle = document.getElementById('celebNewcomerTitleInput').value.trim() || DEFAULT_CELEBRATION_MSGS.newcomerTitle;
       const nDesc = document.getElementById('celebNewcomerDescInput').value.trim() || DEFAULT_CELEBRATION_MSGS.newcomerDesc;
 
-      document.getElementById('celebBdayPreview').innerHTML = `
-        <div style="font-size:10.5px; opacity:0.85; font-weight:700; margin-bottom:4px;">미리보기 (예시: ${sampleName})</div>
-        <div style="font-size:14.5px; font-weight:900; margin-bottom:3px;">${escapeHtml(renderCelebrationText(bTitle, sampleName))}</div>
-        <div style="font-size:12px; opacity:0.93; white-space:pre-line;">${escapeHtml(renderCelebrationText(bDesc, sampleName))}</div>
-      `;
       document.getElementById('celebNewcomerPreview').innerHTML = `
         <div style="font-size:10.5px; opacity:0.85; font-weight:700; margin-bottom:4px;">미리보기 (예시: ${sampleName})</div>
         <div style="font-size:14.5px; font-weight:900; margin-bottom:3px;">${escapeHtml(renderCelebrationText(nTitle, sampleName))}</div>
@@ -13195,18 +13054,14 @@
     };
 
     window.resetCelebrationMsgsDefaults = () => {
-      document.getElementById('celebBdayTitleInput').value = DEFAULT_CELEBRATION_MSGS.birthdayTitle;
-      document.getElementById('celebBdayDescInput').value = DEFAULT_CELEBRATION_MSGS.birthdayDesc;
       document.getElementById('celebNewcomerTitleInput').value = DEFAULT_CELEBRATION_MSGS.newcomerTitle;
       document.getElementById('celebNewcomerDescInput').value = DEFAULT_CELEBRATION_MSGS.newcomerDesc;
       updateCelebrationPreview();
-      showToast('기본 축하 멘트로 복원했습니다. 저장 버튼을 눌러 반영하세요.');
+      showToast('기본 새신자 환영 멘트로 복원했습니다. 저장 버튼을 눌러 반영하세요.');
     };
 
     window.handleSaveCelebrationMsgs = async () => {
       const next = {
-        birthdayTitle: document.getElementById('celebBdayTitleInput').value.trim() || DEFAULT_CELEBRATION_MSGS.birthdayTitle,
-        birthdayDesc: document.getElementById('celebBdayDescInput').value.trim() || DEFAULT_CELEBRATION_MSGS.birthdayDesc,
         newcomerTitle: document.getElementById('celebNewcomerTitleInput').value.trim() || DEFAULT_CELEBRATION_MSGS.newcomerTitle,
         newcomerDesc: document.getElementById('celebNewcomerDescInput').value.trim() || DEFAULT_CELEBRATION_MSGS.newcomerDesc
       };
@@ -13217,14 +13072,14 @@
         recordAuditLog({
           actorType: 'admin',
           category: '공지·배너',
-          action: '생일·새신자 축하 멘트 수정',
-          target: '축하 멘트',
-          detail: `생일: ${next.birthdayTitle} / 새신자: ${next.newcomerTitle}`
+          action: '새신자 환영 멘트 수정',
+          target: '새신자 환영 멘트',
+          detail: next.newcomerTitle
         });
         document.getElementById('celebrationMsgsModal').classList.remove('open');
-        showToast('생일 · 새신자 축하 멘트가 저장되었습니다!');
+        showToast('새신자 환영 멘트가 저장되었습니다!');
       } catch (err) {
-        handleDbError(err, '축하 멘트 저장');
+        handleDbError(err, '새신자 환영 멘트 저장');
       } finally {
         btn.disabled = false;
       }
@@ -16437,9 +16292,9 @@
             <div style="font-size:11px; color:#64748B; margin-top:2px;">유효 QR vs 만료 차단 화면 확인</div>
           </button>
           <button class="diag-sim-btn" type="button" onclick="openDiagSimCelebration()">
-            <div style="font-size:18px; margin-bottom:4px;">🎉</div>
-            <div style="font-size:13px; font-weight:800;">생일·새신자 배너 체험</div>
-            <div style="font-size:11px; color:#64748B; margin-top:2px;">축하 배너·팝업 알림 미리보기</div>
+            <div style="font-size:18px; margin-bottom:4px;">💐</div>
+            <div style="font-size:13px; font-weight:800;">새신자 배너 체험</div>
+            <div style="font-size:11px; color:#64748B; margin-top:2px;">환영 배너·팝업 알림 미리보기</div>
           </button>
         </div>
 
@@ -16773,45 +16628,29 @@
 
     window.openDiagSimCelebration = () => {
       const sample = '홍길동';
-      const bTitle = renderCelebrationText(getCelebrationMsg('birthdayTitle'), sample);
-      const bDesc = renderCelebrationText(getCelebrationMsg('birthdayDesc'), sample);
       const nTitle = renderCelebrationText(getCelebrationMsg('newcomerTitle'), sample);
       const nDesc = renderCelebrationText(getCelebrationMsg('newcomerDesc'), sample);
-      document.getElementById('diagSimModalTitle').textContent = '🎉 생일 · 새신자 자동 배너 체험';
+      document.getElementById('diagSimModalTitle').textContent = '💐 새신자 자동 환영 배너 체험';
       document.getElementById('diagSimModalBody').innerHTML = `
-        <div class="birthday-banner" style="margin-bottom:10px;">
-          <span class="birthday-badge">🎉 오늘의 생일 · 미리보기</span>
-          <h2 class="birthday-title">${escapeHtml(bTitle)}</h2>
-          <p class="birthday-desc">${escapeHtml(bDesc)}</p>
-        </div>
         <div class="newcomer-auto-banner" style="margin-bottom:12px;">
           <span class="newcomer-auto-badge">💐 새신자 환영 · 미리보기</span>
           <h2 class="newcomer-auto-title">${escapeHtml(nTitle)}</h2>
           <p class="newcomer-auto-desc">${escapeHtml(nDesc)}</p>
         </div>
         <div style="display:flex; flex-direction:column; gap:8px;">
-          <button class="btn-full btn-dark" type="button" style="padding:11px; font-size:13.5px;" onclick="previewDiagCelebrationNotif('birthday')">🎂 생일 축하 팝업 알림 띄워보기</button>
           <button class="btn-full btn-blue" type="button" style="padding:11px; font-size:13.5px;" onclick="previewDiagCelebrationNotif('newcomer')">💐 새신자 환영 팝업 알림 띄워보기</button>
         </div>
       `;
       document.getElementById('diagSimModal').classList.add('open');
     };
 
-    window.previewDiagCelebrationNotif = (kind = 'birthday') => {
+    window.previewDiagCelebrationNotif = (kind = 'newcomer') => {
       const sample = '홍길동';
-      if (kind === 'newcomer') {
-        const nTitle = renderCelebrationText(getCelebrationMsg('newcomerTitle'), sample);
-        const nDesc = renderCelebrationText(getCelebrationMsg('newcomerDesc'), sample).replace(/\s*\n\s*/g, ' ');
-        showInAppNotif('💐', nTitle, nDesc, () => {});
-        sendDeviceNotification(nTitle, nDesc).catch(() => {});
-        showToast('새신자 환영 팝업 알림 미리보기를 띄웠습니다!');
-      } else {
-        const bTitle = renderCelebrationText(getCelebrationMsg('birthdayTitle'), sample);
-        const bDesc = renderCelebrationText(getCelebrationMsg('birthdayDesc'), sample).replace(/\s*\n\s*/g, ' ');
-        showInAppNotif('🎂', bTitle, bDesc, () => {});
-        sendDeviceNotification(bTitle, bDesc).catch(() => {});
-        showToast('생일 축하 팝업 알림 미리보기를 띄웠습니다!');
-      }
+      const nTitle = renderCelebrationText(getCelebrationMsg('newcomerTitle'), sample);
+      const nDesc = renderCelebrationText(getCelebrationMsg('newcomerDesc'), sample).replace(/\s*\n\s*/g, ' ');
+      showInAppNotif('💐', nTitle, nDesc, () => {});
+      sendDeviceNotification(nTitle, nDesc).catch(() => {});
+      showToast('새신자 환영 팝업 알림 미리보기를 띄웠습니다!');
     };
 
     window.runSheetLiveWriteTest = async () => {
