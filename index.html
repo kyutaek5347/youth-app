@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=155" />
+  <link rel="manifest" href="./manifest.json?v=156b" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=155" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=155" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=156b" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=156b" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3305,6 +3305,116 @@
     html[data-font-scale="xlarge"] .setting-sub,
     html[data-font-scale="xlarge"] .guide-card-sub,
     html[data-font-scale="xlarge"] .diag-msg { font-size: 15px; }
+
+    /* ==================== v10.56 하단 탭바 확대 · 성경 사전 · 문의 사항 · 접이식 글자 크기 ==================== */
+    .main {
+      padding-bottom: calc(102px + var(--safe-bottom)) !important;
+    }
+    .tabbar {
+      padding: 8px 4px calc(10px + var(--safe-bottom));
+    }
+    .tab-btn {
+      min-height: 54px;
+      padding: 6px 2px;
+      gap: 4px;
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+    .tab-icon {
+      font-size: 22px;
+      height: 25px;
+    }
+    .tab-badge {
+      top: 2px;
+      right: calc(50% - 21px);
+      min-width: 18px;
+      height: 18px;
+      font-size: 10.5px;
+      padding: 0 5px;
+      box-shadow: 0 2px 6px rgba(239, 68, 68, 0.35);
+    }
+    @media (max-width: 440px) {
+      .tabbar { padding: 7px 3px calc(9px + var(--safe-bottom)); }
+      .tab-btn { min-height: 52px; padding: 5px 1px; gap: 3px; font-size: 11px; letter-spacing: -0.35px; }
+      .tab-icon { font-size: 21px; height: 24px; }
+      .tab-badge { top: 2px; right: calc(50% - 19px); min-width: 17px; height: 17px; font-size: 10px; }
+    }
+    @media (max-width: 360px) {
+      .tab-btn { min-height: 49px; font-size: 10px; letter-spacing: -0.45px; }
+      .tab-icon { font-size: 19.5px; height: 22px; }
+    }
+    @media (min-width: 600px) {
+      .tabbar { padding: 9px 10px calc(11px + var(--safe-bottom)); }
+      .tab-btn { min-height: 58px; padding: 7px 4px; gap: 5px; font-size: 12.5px; }
+      .tab-icon { font-size: 23px; height: 26px; }
+    }
+    .toast {
+      bottom: calc(98px + var(--safe-bottom));
+    }
+
+    /* 접이식 전체 글자 크기 영역 */
+    .settings-font-body {
+      padding: 0 15px 14px;
+      background: #F8FAFC;
+      border-bottom: 1px solid #F1F5F9;
+    }
+
+    /* 성경 용어 사전 카드 (QT 탭 내 오늘의 성경 사전) */
+    .dict-daily-card {
+      background: linear-gradient(180deg, #F0FDF4 0%, #FFFFFF 45%);
+      border: 1.5px solid #86EFAC;
+      border-radius: 17px;
+      padding: 15px 15px 14px;
+      margin-bottom: 13px;
+      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.08);
+    }
+    .dict-term-title {
+      font-size: 16.5px;
+      font-weight: 900;
+      color: #065F46;
+      margin: 4px 0 6px;
+      line-height: 1.35;
+    }
+    .dict-term-def {
+      font-size: var(--fs-base);
+      color: #1E293B;
+      line-height: 1.65;
+      white-space: pre-line;
+      word-break: keep-all;
+    }
+    .dict-modal-item {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-left: 3.5px solid #16A34A;
+      border-radius: 13px;
+      padding: 12px 13px;
+      margin-bottom: 9px;
+    }
+
+    /* 문의 사항 답변 박스 */
+    .inquiry-reply-box {
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-left: 3.5px solid #2563EB;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-top: 9px;
+      font-size: 12.5px;
+      color: #1E3A8A;
+      line-height: 1.55;
+      white-space: pre-line;
+    }
+    .copyright-footnote {
+      text-align: center;
+      font-size: 11.5px;
+      color: #64748B;
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 9px 12px;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
   </style>
 </head>
 <body>
@@ -3329,7 +3439,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=155" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=156b" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3501,6 +3611,7 @@
                 <div class="hero-top-sub">개역한글 성경 본문 · 절 터치 시 복사/책갈피/메모</div>
               </div>
               <div class="hero-top-actions">
+                <button class="bible-mini-btn" type="button" onclick="openBibleDictModal()">📚 사전</button>
                 <button class="bible-mini-btn" type="button" onclick="openBibleMemoModal()">📝 메모</button>
                 <button class="bible-mini-btn" type="button" onclick="openBibleBookmarksModal()">⭐ 책갈피</button>
               </div>
@@ -3538,9 +3649,8 @@
             <button class="btn-outline" type="button" style="flex:1; padding:9px;" onclick="moveBibleChapter(1)">다음 장 ▶</button>
           </div>
 
-          <div class="info-box" style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
-            <span>개역개정 번역으로 대조해 보고 싶으신가요?</span>
-            <button type="button" class="btn-sm primary" onclick="openExternalLinkSafely('https://www.bskorea.or.kr/bible/korbibReadpage.php', '대한성서공회 성경')">대한성서공회 열기 ↗</button>
+          <div class="copyright-footnote">
+            📖 본문 출처: <b>「성경전서 개역한글판」(대한성서공회)</b> · 저작재산권 보호기간 만료 원문 사용
           </div>
         </section>
 
@@ -3961,6 +4071,17 @@
           </label>
         </div>
 
+        <div class="setting-row hidden" id="notifInquiryReplyRow">
+          <div>
+            <div class="setting-title">💬 내 문의 답변 알림</div>
+            <div class="setting-sub">내가 보낸 문의 사항에 관리자가 답변을 남겼을 때</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notifInquiryReplyToggle" onchange="toggleNotifOption('inquiryReply', this.checked)" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
         <div class="setting-row hidden" id="notifMemberRow">
           <div>
             <div class="setting-title">👤 신규 회원가입 신청 알림</div>
@@ -3968,6 +4089,17 @@
           </div>
           <label class="switch">
             <input type="checkbox" id="notifMemberToggle" onchange="toggleNotifOption('memberPending', this.checked)" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row hidden" id="notifInquiryNewRow">
+          <div>
+            <div class="setting-title">💬 새 문의 사항 접수 알림</div>
+            <div class="setting-sub">이용자가 불편·개선·의견 문의를 새로 등록했을 때 (관리자 전용)</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notifInquiryNewToggle" onchange="toggleNotifOption('inquiryNew', this.checked)" />
             <span class="slider"></span>
           </label>
         </div>
@@ -4539,9 +4671,140 @@
       </div>
       <div class="info-box warn" style="margin-top:0; margin-bottom:14px;">
         <b>3. 공동체 게시판 기록 범위</b><br>
-        건전한 공동체 운영을 위해 묵상 댓글 작성·수정·삭제, 가입·탈퇴, 이름·생일 변경 신청, 예배 출석 체크 내역만 관리 기록에 남습니다.
+        건전한 공동체 운영을 위해 묵상 댓글 작성·수정·삭제, 문의 사항 작성·수정·삭제, 가입·탈퇴, 이름·생일 변경 신청, 예배 출석 체크 내역만 관리 기록에 남습니다.
       </div>
       <button class="btn-full btn-dark" type="button" style="padding:11px;" data-close="privacyGuideModal">확인</button>
+    </div>
+  </div>
+
+  <!-- 성경 용어 사전 검색 모달 (자체 해설 · 저작권 안전) -->
+  <div id="bibleDictModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 class="modal-title">📚 성경 용어 사전</h3>
+        <button class="close-btn" data-close="bibleDictModal">✕</button>
+      </div>
+      <div class="search-box" style="margin-bottom:8px;">
+        <span class="search-icon">🔍</span>
+        <input id="bibleDictSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13.5px;" type="search" placeholder="용어·인물·지명 검색 (예: 은혜, 언약, 갈릴리)" oninput="renderBibleDictModalList()" />
+      </div>
+      <div id="bibleDictCatChips" class="filter-row" style="margin-bottom:10px;"></div>
+      <div id="bibleDictModalSummary" style="font-size:12px; color:#64748B; font-weight:700; margin-bottom:8px;"></div>
+      <div id="bibleDictModalList" style="max-height:52vh; overflow-y:auto;"></div>
+      <div class="copyright-footnote" style="margin-top:10px;">
+        📚 라이트 청년부 자체 정리 성경 용어 해설 (성경 인용: 「성경전서 개역한글판」 · 대한성서공회)
+      </div>
+    </div>
+  </div>
+
+  <!-- 관리자: 성경 사전 용어 추가/수정 모달 -->
+  <div id="bibleDictFormModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="bibleDictFormModalTitle" class="modal-title">📚 새 성경 사전 용어 등록</h3>
+        <button class="close-btn" data-close="bibleDictFormModal">✕</button>
+      </div>
+      <input type="hidden" id="editBibleDictId" />
+      <div class="form-group">
+        <label class="form-label" for="dictDisplayModeSelect">QT 화면 표시 방식</label>
+        <select id="dictDisplayModeSelect" class="form-select">
+          <option value="together">📌 오늘의 자동 사전과 함께 표시 (사전 목록에도 추가)</option>
+          <option value="replace">🔄 오늘의 자동 사전 대신 이 용어만 표시 (대체)</option>
+        </select>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label" for="dictDateInput">표시 날짜 (KST)</label>
+          <input id="dictDateInput" class="form-input" placeholder="2026.11.25" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="dictCatInput">분류</label>
+          <select id="dictCatInput" class="form-select">
+            <option value="신학·용어">신학·용어</option>
+            <option value="인물">인물</option>
+            <option value="지명">지명</option>
+            <option value="예배·절기">예배·절기</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="dictTermInput">용어 이름 (필수)</label>
+        <input id="dictTermInput" class="form-input" maxlength="30" placeholder="예: 아멘, 할렐루야, 유월절" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="dictRefInput">관련 성경 구절 (선택)</label>
+        <input id="dictRefInput" class="form-input" maxlength="40" placeholder="예: 시편 23:1, 요한복음 3:16" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="dictDefInput">용어 설명 (필수)</label>
+        <textarea id="dictDefInput" class="form-textarea" style="min-height:115px;" maxlength="600" placeholder="청년부원들이 이해하기 쉽게 용어 뜻을 작성해 주세요."></textarea>
+      </div>
+      <button id="saveBibleDictBtn" class="btn-full btn-dark" type="button" onclick="handleSaveBibleDictItem()">📚 성경 사전 저장하기</button>
+    </div>
+  </div>
+
+  <!-- 이용자: 문의 사항 작성 및 내 문의 내역 모달 -->
+  <div id="inquiryModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="inquiryModalTitle" class="modal-title">💬 문의 사항</h3>
+        <button class="close-btn" data-close="inquiryModal">✕</button>
+      </div>
+      <input type="hidden" id="editInquiryId" />
+      <div class="info-box" style="margin-top:0; margin-bottom:12px;">
+        앱 사용 중 불편한 점, 개선 사항, 추가되었으면 하는 기능이나 의견을 남겨 주시면 관리자가 확인 후 답변해 드립니다.<br>
+        <span style="color:#64748B;">※ 보안을 위해 전화번호·주소 등 민감한 개인정보는 적지 말아 주세요. 작성·수정·삭제 내역은 관리 로그에 기록됩니다.</span>
+      </div>
+      <div id="inquiryEditBanner" class="info-box warn hidden" style="margin-top:0; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+        <span>✏️ 기존 문의 사항을 수정하는 중입니다.</span>
+        <button class="btn-sm" type="button" onclick="cancelEditUserInquiry()">수정 취소</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="inquiryCategorySelect">문의 분류</label>
+        <select id="inquiryCategorySelect" class="form-select">
+          <option value="불편한 점">불편한 점</option>
+          <option value="개선 사항">개선 사항</option>
+          <option value="기능 추가 요청">기능 추가 요청</option>
+          <option value="기타 의견">기타 의견</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="inquiryTitleInput">제목</label>
+        <input id="inquiryTitleInput" class="form-input" maxlength="45" placeholder="문의 제목을 간단히 입력해 주세요" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="inquiryBodyInput">내용</label>
+        <textarea id="inquiryBodyInput" class="form-textarea" style="min-height:105px;" maxlength="1000" placeholder="불편했던 화면이나 원하시는 개선 사항을 자유롭게 적어 주세요."></textarea>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button id="submitInquiryBtn" class="btn-full btn-blue" type="button" style="flex:1;" onclick="handleSubmitUserInquiry()">📨 관리자에게 문의 보내기</button>
+        <button id="cancelEditInquiryBtn" class="btn-outline hidden" type="button" onclick="cancelEditUserInquiry()">취소</button>
+      </div>
+
+      <div class="manage-divider" style="margin:16px 0 12px;"></div>
+      <div style="font-size:13.5px; font-weight:800; color:#0F172A; margin-bottom:8px;">📋 내가 보낸 문의 내역</div>
+      <div id="myInquiriesListArea"></div>
+    </div>
+  </div>
+
+  <!-- 관리자: 문의 사항 답변 작성 모달 -->
+  <div id="adminInquiryReplyModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 class="modal-title">✍️ 문의 답변 작성</h3>
+        <button class="close-btn" data-close="adminInquiryReplyModal">✕</button>
+      </div>
+      <input type="hidden" id="replyInquiryId" />
+      <div id="replyInquirySummary" class="info-box" style="margin-top:0; margin-bottom:12px;"></div>
+      <div class="form-group">
+        <label class="form-label" for="adminInquiryReplyInput">관리자 답변 내용</label>
+        <textarea id="adminInquiryReplyInput" class="form-textarea" style="min-height:110px;" maxlength="1000" placeholder="이용자에게 전달할 답변을 입력해 주세요."></textarea>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button id="saveAdminInquiryReplyBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveAdminInquiryReply()">💾 답변 저장 및 알림 전송</button>
+        <button class="btn-outline" type="button" data-close="adminInquiryReplyModal">취소</button>
+      </div>
     </div>
   </div>
 
@@ -4607,72 +4870,73 @@
     const authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 24;
-    const APP_CLIENT_BUILD = 155;
+    const CURRENT_SCHEMA_VERSION = 25;
+    const APP_CLIENT_BUILD = 156;
+    const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
     // 매일 자정(KST) 자동 변경되는 일일 큐티 성경말씀 풀 (60편)
     const DAILY_QT_POOL = [
-      { title: '여호와는 나의 목자시니', passage: '시편 23:1-3', scripture: '1 여호와는 나의 목자시니 내게 부족함이 없으리로다\n2 그가 나를 푸른 풀밭에 누이시며 쉴 만한 물 가로 인도하시는도다\n3 내 영혼을 소생시키시고 자기 이름을 위하여 의의 길로 인도하시는도다', guide: '오늘 하루 나를 인도하시는 주님의 손길을 묵상하며, 감사한 제목 한 가지를 댓글로 나눠보세요.' },
-      { title: '강하고 담대하라', passage: '여호수아 1:9', scripture: '내가 네게 명령한 것이 아니냐 강하고 담대하라 두려워하지 말며 놀라지 말라 네가 어디로 가든지 네 하나님 여호와가 너와 함께 하느니라 하시니라', guide: '요즘 마음속에 두려움이나 걱정이 되는 일이 있다면 주님께 맡기는 한 줄 기도를 남겨보세요.' },
+      { title: '여호와는 나의 목자시니', passage: '시편 23:1-3', scripture: '1 여호와는 나의 목자시니 내가 부족함이 없으리로다\n2 그가 나를 푸른 초장에 누이시며 쉴만한 물 가으로 인도하시는도다\n3 내 영혼을 소생시키시고 자기 이름을 위하여 의의 길로 인도하시는도다', guide: '오늘 하루 나를 인도하시는 주님의 손길을 묵상하며, 감사한 제목 한 가지를 댓글로 나눠보세요.' },
+      { title: '마음을 강하게 하고 담대히 하라', passage: '여호수아 1:9', scripture: '내가 네게 명한 것이 아니냐 마음을 강하게 하고 담대히 하라 두려워 말며 놀라지 말라 네가 어디로 가든지 네 하나님 여호와가 너와 함께 하느니라 하시니라', guide: '요즘 마음속에 두려움이나 걱정이 되는 일이 있다면 주님께 맡기는 한 줄 기도를 남겨보세요.' },
       { title: '내게 능력 주시는 자 안에서', passage: '빌립보서 4:13', scripture: '내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라', guide: '내 힘이 아닌 주님의 능력으로 감당하고 싶은 오늘의 일은 무엇인가요?' },
-      { title: '아무 것도 염려하지 말고', passage: '빌립보서 4:6-7', scripture: '6 아무 것도 염려하지 말고 다만 모든 일에 기도와 간구로, 너희 구할 것을 감사함으로 하나님께 아뢰라\n7 그리하면 모든 지각에 뛰어난 하나님의 평강이 그리스도 예수 안에서 너희 마음과 생각을 지키시리라', guide: '염려를 기도로 바꾸어 올려드릴 때 주시는 평안을 구하며 오늘의 기도제목을 나눠보세요.' },
-      { title: '너희를 향한 나의 생각', passage: '예레미야 29:11', scripture: '여호와의 말씀이니라 너희를 향한 나의 생각을 내가 아나니 평안이요 재앙이 아니니라 너희에게 미래와 희망을 주는 것이니라', guide: '미래에 대한 불안감 대신 하나님이 예비하신 소망을 기대하며 한마디 고백을 적어보세요.' },
-      { title: '먼저 그의 나라와 그의 의를', passage: '마태복음 6:33', scripture: '그런즉 너희는 먼저 그의 나라와 그의 의를 구하라 그리하면 이 모든 것을 너희에게 더하시리라', guide: '오늘 내가 가장 먼저 우선순위에 두고 싶은 하나님과의 약속은 무엇인가요?' },
-      { title: '수고하고 무거운 짐 진 자들아', passage: '마태복음 11:28', scripture: '수고하고 무거운 짐 진 자들아 다 내게로 오라 내가 너희를 쉬게 하리라', guide: '최근 지치고 무거웠던 마음의 짐을 주님 앞에 내려놓고 쉼을 누리는 시간을 가져보세요.' },
-      { title: '하나님이 세상을 이처럼 사랑하사', passage: '요한복음 3:16', scripture: '하나님이 세상을 이처럼 사랑하사 독생자를 주셨으니 이는 그를 믿는 자마다 멸망하지 않고 영생을 얻게 하려 하심이라', guide: '나를 향한 하나님의 변함없는 사랑을 기억하며 오늘 주변 사람에게 전하고 싶은 따뜻한 말은?' },
-      { title: '항상 기뻐하라 쉬지 말고 기도하라', passage: '데살로니가전서 5:16-18', scripture: '16 항상 기뻐하라\n17 쉬지 말고 기도하라\n18 범사에 감사하라 이것이 그리스도 예수 안에서 너희를 향하신 하나님의 뜻이니라', guide: '오늘 하루 일상 속에서 발견한 작은 감사 3가지를 댓글로 함께 나눠보세요.' },
+      { title: '아무것도 염려하지 말고', passage: '빌립보서 4:6-7', scripture: '6 아무것도 염려하지 말고 오직 모든 일에 기도와 간구로, 너희 구할 것을 감사함으로 하나님께 아뢰라\n7 그리하면 모든 지각에 뛰어난 하나님의 평강이 그리스도 예수 안에서 너희 마음과 생각을 지키시리라', guide: '염려를 기도로 바꾸어 올려드릴 때 주시는 평안을 구하며 오늘의 기도제목을 나눠보세요.' },
+      { title: '너희를 향한 나의 생각', passage: '예레미야 29:11', scripture: '나 여호와가 말하노라 너희를 향한 나의 생각은 내가 아나니 재앙이 아니라 곧 평안이요 너희 장래에 소망을 주려하는 생각이라', guide: '미래에 대한 불안감 대신 하나님이 예비하신 소망을 기대하며 한마디 고백을 적어보세요.' },
+      { title: '먼저 그의 나라와 그의 의를 구하라', passage: '마태복음 6:33', scripture: '너희는 먼저 그의 나라와 그의 의를 구하라 그리하면 이 모든 것을 너희에게 더하시리라', guide: '오늘 내가 가장 먼저 우선순위에 두고 싶은 하나님과의 약속은 무엇인가요?' },
+      { title: '수고하고 무거운 짐진 자들아', passage: '마태복음 11:28', scripture: '수고하고 무거운 짐진 자들아 다 내게로 오라 내가 너희를 쉬게 하리라', guide: '최근 지치고 무거웠던 마음의 짐을 주님 앞에 내려놓고 쉼을 누리는 시간을 가져보세요.' },
+      { title: '하나님이 세상을 이처럼 사랑하사', passage: '요한복음 3:16', scripture: '하나님이 세상을 이처럼 사랑하사 독생자를 주셨으니 이는 저를 믿는 자마다 멸망치 않고 영생을 얻게 하려 하심이니라', guide: '나를 향한 하나님의 변함없는 사랑을 기억하며 오늘 주변 사람에게 전하고 싶은 따뜻한 말은?' },
+      { title: '항상 기뻐하라 쉬지 말고 기도하라', passage: '데살로니가전서 5:16-18', scripture: '16 항상 기뻐하라\n17 쉬지 말고 기도하라\n18 범사에 감사하라 이는 그리스도 예수 안에서 너희를 향하신 하나님의 뜻이니라', guide: '오늘 하루 일상 속에서 발견한 작은 감사 3가지를 댓글로 함께 나눠보세요.' },
       { title: '주의 말씀은 내 발에 등이요', passage: '시편 119:105', scripture: '주의 말씀은 내 발에 등이요 내 길에 빛이니이다', guide: '인생의 갈림길에서 말씀의 빛을 따라 걸어가고 싶은 영역이 있다면 나눠보세요.' },
-      { title: '오직 여호와를 앙망하는 자는', passage: '이사야 40:31', scripture: '오직 여호와를 앙망하는 자는 새 힘을 얻으리니 독수리가 날개치며 올라감 같을 것이요 달음박질하여도 곤비하지 아니하겠고 걸어가도 피곤하지 아니하리로다', guide: '새 힘이 필요한 오늘, 주님을 바라보며 서로를 응원하는 댓글을 남겨보세요.' },
-      { title: '두려워하지 말라 내가 너와 함께 함이라', passage: '이사야 41:10', scripture: '두려워하지 말라 내가 너와 함께 함이라 놀라지 말라 나는 네 하나님이 됨이라 내가 너를 굳세게 하리라 참으로 너를 도와 주리라 참으로 나의 의로운 오른손으로 너를 붙들리라', guide: '주님의 오른손이 나를 붙들고 계심을 믿으며 오늘 담대히 나아가고 싶은 일을 적어보세요.' },
-      { title: '마음을 다하여 여호와를 신뢰하라', passage: '잠언 3:5-6', scripture: '5 너는 마음을 다하여 여호와를 신뢰하고 네 명철을 의지하지 말라\n6 너는 범사에 그를 인정하라 그리하면 네 길을 지도하시리라', guide: '내 생각보다 하나님의 인도하심을 신뢰하기로 결단할 부분은 무엇인가요?' },
-      { title: '무릇 지킬 만한 것보다 네 마음을 지키라', passage: '잠언 4:23', scripture: '모든 지킬 만한 것 중에 더욱 네 마음을 지키라 생명의 근원이 이에서 남이니라', guide: '오늘 내 마음을 빼앗기지 않고 주님께 집중하기 위해 실천할 작은 습관은?' },
-      { title: '사랑은 오래 참고 온유하며', passage: '고린도전서 13:4-7', scripture: '4 사랑은 오래 참고 사랑은 온유하며 시기하지 아니하며 사랑은 자랑하지 아니하며 교만하지 아니하며\n5 무례히 행하지 아니하며 자기의 유익을 구하지 아니하며 성내지 아니하며 악한 것을 생각하지 아니하며\n7 모든 것을 참으며 모든 것을 믿으며 모든 것을 바라며 모든 것을 견디느니라', guide: '오늘 내가 사랑으로 품고 오래 참아주고 싶은 사람은 누구인가요?' },
-      { title: '모든 것이 합력하여 선을 이루느니라', passage: '로마서 8:28', scripture: '우리가 알거니와 하나님을 사랑하는 자 곧 그의 뜻대로 부르심을 입은 자들에게는 모든 것이 합력하여 선을 이루느니라', guide: '지금은 이해되지 않지만 결국 선으로 바꾸실 하나님을 신뢰하는 고백을 나눠보세요.' },
+      { title: '오직 여호와를 앙망하는 자는', passage: '이사야 40:31', scripture: '오직 여호와를 앙망하는 자는 새 힘을 얻으리니 독수리의 날개치며 올라감 같을 것이요 달음박질하여도 곤비치 아니하겠고 걸어가도 피곤치 아니하리로다', guide: '새 힘이 필요한 오늘, 주님을 바라보며 서로를 응원하는 댓글을 남겨보세요.' },
+      { title: '두려워 말라 내가 너와 함께 함이니라', passage: '이사야 41:10', scripture: '두려워 말라 내가 너와 함께 함이니라 놀라지 말라 나는 네 하나님이 됨이니라 내가 너를 굳세게 하리라 참으로 너를 도와 주리라 참으로 나의 의로운 오른손으로 너를 붙들리라', guide: '주님의 오른손이 나를 붙들고 계심을 믿으며 오늘 담대히 나아가고 싶은 일을 적어보세요.' },
+      { title: '마음을 다하여 여호와를 의뢰하라', passage: '잠언 3:5-6', scripture: '5 너는 마음을 다하여 여호와를 의뢰하고 네 명철을 의지하지 말라\n6 너는 범사에 그를 인정하라 그리하면 네 길을 지도하시리라', guide: '내 생각보다 하나님의 인도하심을 신뢰하기로 결단할 부분은 무엇인가요?' },
+      { title: '무릇 지킬만한 것보다 더욱 네 마음을 지키라', passage: '잠언 4:23', scripture: '무릇 지킬만한 것보다 더욱 네 마음을 지키라 생명의 근원이 이에서 남이니라', guide: '오늘 내 마음을 빼앗기지 않고 주님께 집중하기 위해 실천할 작은 습관은?' },
+      { title: '사랑은 오래 참고 온유하며', passage: '고린도전서 13:4-7', scripture: '4 사랑은 오래 참고 사랑은 온유하며 투기하는 자가 되지 아니하며 사랑은 자랑하지 아니하며 교만하지 아니하며\n5 무례히 행치 아니하며 자기의 유익을 구치 아니하며 성내지 아니하며 악한 것을 생각지 아니하며\n7 모든 것을 참으며 모든 것을 믿으며 모든 것을 바라며 모든 것을 견디느니라', guide: '오늘 내가 사랑으로 품고 오래 참아주고 싶은 사람은 누구인가요?' },
+      { title: '모든 것이 합력하여 선을 이루느니라', passage: '로마서 8:28', scripture: '우리가 알거니와 하나님을 사랑하는 자 곧 그 뜻대로 부르심을 입은 자들에게는 모든 것이 합력하여 선을 이루느니라', guide: '지금은 이해되지 않지만 결국 선으로 바꾸실 하나님을 신뢰하는 고백을 나눠보세요.' },
       { title: '이 세대를 본받지 말고', passage: '로마서 12:2', scripture: '너희는 이 세대를 본받지 말고 오직 마음을 새롭게 함으로 변화를 받아 하나님의 선하시고 기뻐하시고 온전하신 뜻이 무엇인지 분별하도록 하라', guide: '세상의 기준보다 하나님의 기뻐하시는 뜻을 선택하고 싶은 오늘의 순간은?' },
-      { title: '내가 산을 향하여 눈을 들리라', passage: '시편 121:1-2', scripture: '1 내가 산을 향하여 눈을 들리라 나의 도움이 어디서 올까\n2 나의 도움은 천지를 지으신 여호와에게서로다', guide: '도움이 필요한 순간 가장 먼저 주님을 올려다보는 하루가 되기를 기도해요.' },
-      { title: '너희는 세상의 빛이라', passage: '마태복음 5:14-16', scripture: '14 너희는 세상의 빛이라 산 위에 있는 동네가 숨겨지지 못할 것이요\n16 이같이 너희 빛이 사람 앞에 비치게 하여 그들로 너희 착한 행실을 보고 하늘에 계신 너희 아버지께 영광을 돌리게 하라', guide: '라이트(RIGHT/LIGHT) 청년으로서 오늘 직장·학교·가정에서 비추고 싶은 작은 빛은 무엇인가요?' },
-      { title: '내가 곧 길이요 진리요 생명이니', passage: '요한복음 14:6', scripture: '예수께서 이르시되 내가 곧 길이요 진리요 생명이니 나로 말미암지 않고는 아버지께로 올 자가 없느니라', guide: '오늘도 유일한 길이 되시는 예수님과 동행하는 감사의 마음을 나눠보세요.' },
-      { title: '평안을 너희에게 끼치노니', passage: '요한복음 14:27', scripture: '평안을 너희에게 끼치노니 곧 나의 평안을 너희에게 주노라 내가 너희에게 주는 것은 세상이 주는 것과 같지 아니하니라 너희는 마음에 근심하지도 말고 두려워하지도 말라', guide: '세상이 줄 수 없는 주님의 평안이 오늘 누구의 마음에 흘러가길 기도하나요?' },
-      { title: '나는 포도나무요 너희는 가지라', passage: '요한복음 15:5', scripture: '나는 포도나무요 너희는 가지라 그가 내 안에, 내가 그 안에 거하면 사람이 열매를 많이 맺나니 나를 떠나서는 너희가 아무 것도 할 수 없음이라', guide: '오늘 주님께 딱 붙어 있기 위해 10분만 따로 드리고 싶은 기도·말씀 시간은 언제인가요?' },
-      { title: '그리스도 안에 있으면 새로운 피조물이라', passage: '고린도후서 5:17', scripture: '그런즉 누구든지 그리스도 안에 있으면 새로운 피조물이라 이전 것은 지나갔으니 보라 새 것이 되었도다', guide: '과거의 후회나 실수를 내려놓고 주님 안에서 새롭게 시작하고 싶은 다짐을 적어보세요.' },
-      { title: '성령의 열매', passage: '갈라디아서 5:22-23', scripture: '22 오직 성령의 열매는 사랑과 희락과 화평과 오래 참음과 자비와 양선과 충성과\n23 온유와 절제니 이같은 것을 금지할 법이 없느니라', guide: '아홉 가지 성령의 열매 중 오늘 내 삶에 가장 맺히길 바라는 열매는 무엇인가요?' },
-      { title: '선을 행하되 낙심하지 말지니', passage: '갈라디아서 6:9', scripture: '우리가 선을 행하되 낙심하지 말지니 포기하지 아니하면 때가 이르매 거두리라', guide: '포기하고 싶었던 일 가운데 끝까지 인내하며 이어가고 싶은 다짐을 나눠보세요.' },
-      { title: '우리는 그가 만드신 바라', passage: '에베소서 2:10', scripture: '우리는 그가 만드신 바라 그리스도 예수 안에서 선한 일을 위하여 지으심을 받은 자니 이 일은 하나님이 전에 예비하사 우리로 그 가운데서 행하게 하려 하심이니라', guide: '하나님의 걸작품으로 지음 받은 나 자신을 축복하고 격려하는 한마디를 남겨보세요.' },
+      { title: '내가 산을 향하여 눈을 들리라', passage: '시편 121:1-2', scripture: '1 내가 산을 향하여 눈을 들리라 나의 도움이 어디서 올꼬\n2 나의 도움이 천지를 지으신 여호와에게서로다', guide: '도움이 필요한 순간 가장 먼저 주님을 올려다보는 하루가 되기를 기도해요.' },
+      { title: '너희는 세상의 빛이라', passage: '마태복음 5:14-16', scripture: '14 너희는 세상의 빛이라 산 위에 있는 동네가 숨기우지 못할 것이요\n16 이같이 너희 빛을 사람 앞에 비취게 하여 저희로 너희 착한 행실을 보고 하늘에 계신 너희 아버지께 영광을 돌리게 하라', guide: '라이트(RIGHT/LIGHT) 청년으로서 오늘 직장·학교·가정에서 비추고 싶은 작은 빛은 무엇인가요?' },
+      { title: '내가 곧 길이요 진리요 생명이니', passage: '요한복음 14:6', scripture: '예수께서 가라사대 내가 곧 길이요 진리요 생명이니 나로 말미암지 않고는 아버지께로 올 자가 없느니라', guide: '오늘도 유일한 길이 되시는 예수님과 동행하는 감사의 마음을 나눠보세요.' },
+      { title: '평안을 너희에게 끼치노니', passage: '요한복음 14:27', scripture: '평안을 너희에게 끼치노니 곧 나의 평안을 너희에게 주노라 내가 너희에게 주는 것은 세상이 주는 것 같지 아니하니라 너희는 마음에 근심도 말고 두려워하지도 말라', guide: '세상이 줄 수 없는 주님의 평안이 오늘 누구의 마음에 흘러가길 기도하나요?' },
+      { title: '나는 포도나무요 너희는 가지니', passage: '요한복음 15:5', scripture: '나는 포도나무요 너희는 가지니 저가 내 안에, 내가 저 안에 있으면 이 사람은 과실을 많이 맺나니 나를 떠나서는 너희가 아무 것도 할 수 없음이라', guide: '오늘 주님께 딱 붙어 있기 위해 10분만 따로 드리고 싶은 기도·말씀 시간은 언제인가요?' },
+      { title: '그리스도 안에 있으면 새로운 피조물이라', passage: '고린도후서 5:17', scripture: '그런즉 누구든지 그리스도 안에 있으면 새로운 피조물이라 이전 것은 지나갔으니 보라 새것이 되었도다', guide: '과거의 후회나 실수를 내려놓고 주님 안에서 새롭게 시작하고 싶은 다짐을 적어보세요.' },
+      { title: '오직 성령의 열매는', passage: '갈라디아서 5:22-23', scripture: '22 오직 성령의 열매는 사랑과 희락과 화평과 오래 참음과 자비와 양선과 충성과\n23 온유와 절제니 이같은 것을 금지할 법이 없느니라', guide: '아홉 가지 성령의 열매 중 오늘 내 삶에 가장 맺히길 바라는 열매는 무엇인가요?' },
+      { title: '선을 행하되 낙심하지 말찌니', passage: '갈라디아서 6:9', scripture: '우리가 선을 행하되 낙심하지 말찌니 피곤하지 아니하면 때가 이르매 거두리라', guide: '포기하고 싶었던 일 가운데 끝까지 인내하며 이어가고 싶은 다짐을 나눠보세요.' },
+      { title: '우리는 그의 만드신 바라', passage: '에베소서 2:10', scripture: '우리는 그의 만드신 바라 그리스도 예수 안에서 선한 일을 위하여 지으심을 받은 자니 이 일은 하나님이 전에 예비하사 우리로 그 가운데서 행하게 하려 하심이니라', guide: '하나님의 걸작품으로 지음 받은 나 자신을 축복하고 격려하는 한마디를 남겨보세요.' },
       { title: '지혜가 부족하거든 구하라', passage: '야고보서 1:5', scripture: '너희 중에 누구든지 지혜가 부족하거든 모든 사람에게 후히 주시고 꾸짖지 아니하시는 하나님께 구하라 그리하면 주시리라', guide: '오늘 결정해야 하거나 지혜가 필요한 일을 주님께 아뢰어 보세요.' },
-      { title: '너희 염려를 다 주께 맡기라', passage: '베드로전서 5:7', scripture: '너희 염려를 다 주께 맡기라 이는 그가 너희를 돌보심이라', guide: '주님이 나를 세밀하게 돌보신다는 사실을 기억하며 오늘 마음속 걱정 하나를 맡겨보세요.' },
-      { title: '서로 사랑하자', passage: '요한일서 4:7', scripture: '사랑하는 자들아 우리가 서로 사랑하자 사랑은 하나님께 속한 것이니 사랑하는 자마다 하나님으로부터 나서 하나님을 알고', guide: '이번 주 청년부 공동체 안에서 먼저 안부를 묻고 싶은 지체가 있나요?' },
-      { title: '사람이 마음으로 자기의 길을 계획할지라도', passage: '잠언 16:9', scripture: '사람이 마음으로 자기의 길을 계획할지라도 그의 걸음을 인도하시는 이는 여호와시니라', guide: '오늘 세운 계획 위에 하나님의 선하신 인도하심을 구하는 기도를 나눠보세요.' },
-      { title: '여호와를 기뻐하라', passage: '시편 37:4-5', scripture: '4 또 여호와를 기뻐하라 그가 네 마음의 소원을 네게 이루어 주시리로다\n5 네 길을 여호와께 맡기라 그를 의지하면 그가 이루시고', guide: '요즘 하나님께 품고 있는 소원이나 비전이 있다면 함께 나눠보세요.' },
+      { title: '너희 염려를 다 주께 맡겨 버리라', passage: '베드로전서 5:7', scripture: '너희 염려를 다 주께 맡겨 버리라 이는 저가 너희를 권고하심이니라', guide: '주님이 나를 세밀하게 돌보신다는 사실을 기억하며 오늘 마음속 걱정 하나를 맡겨보세요.' },
+      { title: '사랑하는 자들아 우리가 서로 사랑하자', passage: '요한일서 4:7', scripture: '사랑하는 자들아 우리가 서로 사랑하자 사랑은 하나님께 속한 것이니 사랑하는 자마다 하나님께로 나서 하나님을 알고', guide: '이번 주 청년부 공동체 안에서 먼저 안부를 묻고 싶은 지체가 있나요?' },
+      { title: '사람이 마음으로 자기의 길을 계획할찌라도', passage: '잠언 16:9', scripture: '사람이 마음으로 자기의 길을 계획할찌라도 그 걸음을 인도하는 자는 여호와시니라', guide: '오늘 세운 계획 위에 하나님의 선하신 인도하심을 구하는 기도를 나눠보세요.' },
+      { title: '여호와를 기뻐하라', passage: '시편 37:4-5', scripture: '4 또 여호와를 기뻐하라 저가 네 마음의 소원을 이루어 주시리로다\n5 너의 길을 여호와께 맡기라 저를 의지하면 저가 이루시고', guide: '요즘 하나님께 품고 있는 소원이나 비전이 있다면 함께 나눠보세요.' },
       { title: '하나님은 우리의 피난처시요', passage: '시편 46:1', scripture: '하나님은 우리의 피난처시요 힘이시니 환난 중에 만날 큰 도움이시라', guide: '지칠 때 달려갈 피난처가 되시는 하나님께 감사의 고백을 올려드려 보세요.' },
-      { title: '여호와의 선하심을 맛보아 알지어다', passage: '시편 34:8', scripture: '너희는 여호와의 선하심을 맛보아 알지어다 그에게 피하는 자는 복이 있도다', guide: '최근 삶에서 경험한 하나님의 선하심이나 작은 은혜를 댓글로 나눠보세요.' },
+      { title: '여호와의 선하심을 맛보아 알찌어다', passage: '시편 34:8', scripture: '너희는 여호와의 선하심을 맛보아 알찌어다 그에게 피하는 자는 복이 있도다', guide: '최근 삶에서 경험한 하나님의 선하심이나 작은 은혜를 댓글로 나눠보세요.' },
       { title: '정직한 영을 새롭게 하소서', passage: '시편 51:10', scripture: '하나님이여 내 속에 정한 마음을 창조하시고 내 안에 정직한 영을 새롭게 하소서', guide: '오늘 하루 정직하고 깨끗한 마음으로 살아가기 위해 다짐할 한 가지는?' },
-      { title: '구하라 그리하면 너희에게 주실 것이요', passage: '마태복음 7:7', scripture: '구하라 그리하면 너희에게 주실 것이요 찾으라 그리하면 찾아낼 것이요 문을 두드리라 그리하면 너희에게 열릴 것이니', guide: '포기하지 않고 계속 두드리고 있는 기도제목이 있다면 서로 중보해요.' },
-      { title: '서로 짐을 지라', passage: '갈라디아서 6:2', scripture: '너희가 짐을 서로 지라 그리하여 그리스도의 법을 성취하라', guide: '오늘 누군가의 짐을 조금이나마 함께 져줄 수 있는 작은 섬김은 무엇일까요?' },
+      { title: '구하라 그러면 너희에게 주실 것이요', passage: '마태복음 7:7', scripture: '구하라 그러면 너희에게 주실 것이요 찾으라 그러면 찾을 것이요 문을 두드리라 그러면 너희에게 열릴 것이니', guide: '포기하지 않고 계속 두드리고 있는 기도제목이 있다면 서로 중보해요.' },
+      { title: '너희가 짐을 서로 지라', passage: '갈라디아서 6:2', scripture: '너희가 짐을 서로 지라 그리하여 그리스도의 법을 성취하라', guide: '오늘 누군가의 짐을 조금이나마 함께 져줄 수 있는 작은 섬김은 무엇일까요?' },
       { title: '무슨 일을 하든지 마음을 다하여', passage: '골로새서 3:23', scripture: '무슨 일을 하든지 마음을 다하여 주께 하듯 하고 사람에게 하듯 하지 말라', guide: '오늘 맡겨진 공부나 직장 업무를 주님께 드리듯 성실히 감당해 보아요.' },
-      { title: '너의 행사를 여호와께 맡기라', passage: '잠언 16:3', scripture: '너의 행사를 여호와께 맡기라 그리하면 네가 경영하는 것이 이루어지리라', guide: '오늘 시작하는 모든 일의 첫 단추를 기도로 맡겨드려 보세요.' },
-      { title: '여호와께서 너를 지키시리라', passage: '시편 121:7-8', scripture: '7 여호와께서 너를 지켜 모든 환난을 면하게 하시며 또 네 영혼을 지키시리로다\n8 여호와께서 너의 출입을 지금부터 영원까지 지키시리로다', guide: '오늘의 출입을 지켜주실 하나님을 신뢰하며 청년부 지체들을 축복해 주세요.' },
-      { title: '믿음은 바라는 것들의 실상이요', passage: '히브리서 11:1', scripture: '믿음은 바라는 것들의 실상이요 보이지 않는 것들의 증거니', guide: '눈에 보이지 않아도 믿음으로 선포하고 기대하는 하나님의 약속은 무엇인가요?' },
+      { title: '너의 행사를 여호와께 맡기라', passage: '잠언 16:3', scripture: '너의 행사를 여호와께 맡기라 그리하면 너의 경영하는 것이 이루리라', guide: '오늘 시작하는 모든 일의 첫 단추를 기도로 맡겨드려 보세요.' },
+      { title: '여호와께서 너를 지켜', passage: '시편 121:7-8', scripture: '7 여호와께서 너를 지켜 모든 환난을 면케 하시며 또 네 영혼을 지키시리로다\n8 여호와께서 너의 출입을 지금부터 영원까지 지키시리로다', guide: '오늘의 출입을 지켜주실 하나님을 신뢰하며 청년부 지체들을 축복해 주세요.' },
+      { title: '믿음은 바라는 것들의 실상이요', passage: '히브리서 11:1', scripture: '믿음은 바라는 것들의 실상이요 보지 못하는 것들의 증거니', guide: '눈에 보이지 않아도 믿음으로 선포하고 기대하는 하나님의 약속은 무엇인가요?' },
       { title: '예수 그리스도는 어제나 오늘이나', passage: '히브리서 13:8', scripture: '예수 그리스도는 어제나 오늘이나 영원토록 동일하시니라', guide: '변화무쌍한 일상 속에서 변함없으신 예수님을 의지하는 고백을 나눠보세요.' },
-      { title: '하나님이 우리에게 주신 것은', passage: '디모데후서 1:7', scripture: '하나님이 우리에게 주신 것은 두려워하는 마음이 아니요 오직 능력과 사랑과 절제하는 마음이니', guide: '능력·사랑·절제 중 오늘 내게 가장 필요한 마음을 구하며 기도해 보세요.' },
-      { title: '청년의 때에 너의 창조주를 기억하라', passage: '전도서 12:1', scripture: '너는 청년의 때에 너의 창조주를 기억하라 곧 곤고한 날이 이르기 전에, 나는 아무 낙이 없다고 할 해들이 가깝기 전에', guide: '가장 빛나는 청년의 시기를 하나님과 함께 어떻게 채워가고 싶나요?' },
-      { title: '네 연소함을 업신여기지 못하게 하고', passage: '디모데전서 4:12', scripture: '누구든지 네 연소함을 업신여기지 못하게 하고 오직 말과 행실과 사랑과 믿음과 정절에 있어서 믿는 자에게 본이 되어', guide: '말과 행실, 사랑과 믿음 가운데 오늘 내가 본이 되고 싶은 한 가지는?' },
-      { title: '너희가 내 안에 거하고', passage: '요한복음 15:7', scripture: '너희가 내 안에 거하고 내 말이 너희 안에 거하면 무엇이든지 원하는 대로 구하라 그리하면 이루리라', guide: '오늘 하루 마음에 꼭 품고 살아갈 한 구절을 되새겨 보세요.' },
-      { title: '누가 우리를 그리스도의 사랑에서 끊으리요', passage: '로마서 8:38-39', scripture: '38 내가 확신하노니 사망이나 생명이나 천사들이나 권세자들이나 현재 일이나 장래 일이나 능력이나\n39 높음이나 깊음이나 다른 어떤 피조물이라도 우리를 우리 주 그리스도 예수 안에 있는 하나님의 사랑에서 끊을 수 없으리라', guide: '어떤 상황에서도 끊어지지 않는 하나님의 사랑 안에서 오늘 위로받는 마음을 나눠보세요.' },
-      { title: '소망의 하나님이 모든 기쁨과 평강을', passage: '로마서 15:13', scripture: '소망의 하나님이 모든 기쁨과 평강을 믿음 안에서 너희에게 충만하게 하사 성령의 능력으로 소망이 넘치게 하시기를 원하노라', guide: '오늘 하루 기쁨과 평강이 넘치길 바라는 마음으로 서로에게 축복 댓글을 달아보세요.' },
+      { title: '하나님이 우리에게 주신 것은', passage: '디모데후서 1:7', scripture: '하나님이 우리에게 주신 것은 두려워하는 마음이 아니요 오직 능력과 사랑과 근신하는 마음이니', guide: '능력·사랑·근신(절제) 중 오늘 내게 가장 필요한 마음을 구하며 기도해 보세요.' },
+      { title: '너는 청년의 때 곧 곤고한 날이 이르기 전에', passage: '전도서 12:1', scripture: '너는 청년의 때 곧 곤고한 날이 이르기 전, 나는 아무 낙이 없다고 할 해가 가깝기 전에 너의 창조자를 기억하라', guide: '가장 빛나는 청년의 시기를 하나님과 함께 어떻게 채워가고 싶나요?' },
+      { title: '네 연소함을 업신여기지 못하게 하고', passage: '디모데전서 4:12', scripture: '누구든지 네 연소함을 업신여기지 못하게 하고 오직 말과 행실과 사랑과 믿음과 정절에 대하여 믿는 자에게 본이 되어', guide: '말과 행실, 사랑과 믿음 가운데 오늘 내가 본이 되고 싶은 한 가지는?' },
+      { title: '너희가 내 안에 거하고', passage: '요한복음 15:7', scripture: '너희가 내 안에 거하고 내 말이 너희 안에 거하면 무엇이든지 원하는대로 구하라 그리하면 이루리라', guide: '오늘 하루 마음에 꼭 품고 살아갈 한 구절을 되새겨 보세요.' },
+      { title: '그리스도 예수 안에 있는 하나님의 사랑에서', passage: '로마서 8:38-39', scripture: '38 내가 확신하노니 사망이나 생명이나 천사들이나 권세자들이나 현재 일이나 장래 일이나 능력이나\n39 높음이나 깊음이나 다른 아무 피조물이라도 우리를 우리 주 그리스도 예수 안에 있는 하나님의 사랑에서 끊을 수 없으리라', guide: '어떤 상황에서도 끊어지지 않는 하나님의 사랑 안에서 오늘 위로받는 마음을 나눠보세요.' },
+      { title: '소망의 하나님이 모든 기쁨과 평강을', passage: '로마서 15:13', scripture: '소망의 하나님이 모든 기쁨과 평강을 믿음 안에서 너희에게 충만케 하사 성령의 능력으로 소망이 넘치게 하시기를 원하노라', guide: '오늘 하루 기쁨과 평강이 넘치길 바라는 마음으로 서로에게 축복 댓글을 달아보세요.' },
       { title: '여호와는 나의 빛이요 나의 구원이시니', passage: '시편 27:1', scripture: '여호와는 나의 빛이요 나의 구원이시니 내가 누구를 두려워하리요 여호와는 내 생명의 능력이시니 내가 누구를 무서워하리요', guide: '빛과 구원이 되시는 주님을 의지하며 오늘 당당히 이겨내고 싶은 도전은?' },
-      { title: '주께서 심지가 견고한 자를 평강으로', passage: '이사야 26:3', scripture: '주께서 심지가 견고한 자를 평강하고 평강하도록 지키시리니 이는 그가 주를 신뢰함이니이다', guide: '흔들리지 않는 믿음으로 오늘 중심을 지키고 싶은 영역은 무엇인가요?' },
-      { title: '보라 내가 새 일을 행하리니', passage: '이사야 43:19', scripture: '보라 내가 새 일을 행하리니 이제 나타낼 것이라 너희가 그것을 알지 못하겠느냐 반드시 내가 광야에 길을 사막에 강을 내리니', guide: '막막해 보이는 광야 같은 상황 속에 새 길을 내실 하나님을 기대해 보아요.' },
+      { title: '주께서 심지가 견고한 자를 평강에 평강으로', passage: '이사야 26:3', scripture: '주께서 심지가 견고한 자를 평강에 평강으로 지키시리니 이는 그가 주를 의뢰함이니이다', guide: '흔들리지 않는 믿음으로 오늘 중심을 지키고 싶은 영역은 무엇인가요?' },
+      { title: '보라 내가 새 일을 행하리니', passage: '이사야 43:19', scripture: '보라 내가 새 일을 행하리니 이제 나타낼 것이라 너희가 그것을 알지 못하겠느냐 정녕히 내가 광야에 길과 사막에 강을 내리니', guide: '막막해 보이는 광야 같은 상황 속에 새 길을 내실 하나님을 기대해 보아요.' },
       { title: '여호와를 경외하는 것이 지혜의 근본이요', passage: '잠언 9:10', scripture: '여호와를 경외하는 것이 지혜의 근본이요 거룩하신 자를 아는 것이 명철이니라', guide: '오늘 하나님을 존중하고 경외하는 태도로 대하고 싶은 일은 무엇인가요?' },
-      { title: '마음의 즐거움은 양약이라도', passage: '잠언 17:22', scripture: '마음의 즐거움은 양약이라도 심령의 근심은 뼈를 마르게 하느니라', guide: '오늘 내 마음에 웃음과 즐거움을 주는 감사한 일 하나를 나눠보세요.' },
-      { title: '하나님은 사랑이시라', passage: '요한일서 4:16', scripture: '하나님이 우리를 사랑하시는 사랑을 우리가 알고 믿었노니 하나님은 사랑이시라 사랑 안에 거하는 자는 하나님 안에 거하고 하나님도 그의 안에 거하시느니라', guide: '사랑 자체이신 하나님 안에 머무는 따뜻한 하루가 되길 축복합니다.' },
+      { title: '마음의 즐거움은 양약이라도', passage: '잠언 17:22', scripture: '마음의 즐거움은 양약이라도 심령의 근심은 뼈로 마르게 하느니라', guide: '오늘 내 마음에 웃음과 즐거움을 주는 감사한 일 하나를 나눠보세요.' },
+      { title: '하나님은 사랑이시라', passage: '요한일서 4:16', scripture: '하나님이 우리를 사랑하시는 사랑을 우리가 알고 믿었노니 하나님은 사랑이시라 사랑 안에 거하는 자는 하나님 안에 거하고 하나님도 그 안에 거하시느니라', guide: '사랑 자체이신 하나님 안에 머무는 따뜻한 하루가 되길 축복합니다.' },
       { title: '너희 모든 일을 사랑으로 행하라', passage: '고린도전서 16:14', scripture: '너희 모든 일을 사랑으로 행하라', guide: '오늘 해야 할 일 중 특별히 사랑의 마음을 담아 행하고 싶은 일은?' },
-      { title: '내 은혜가 네게 족하도다', passage: '고린도후서 12:9', scripture: '나에게 이르시기를 내 은혜가 네게 족하도다 이는 내 능력이 약한 데서 온전하여짐이라 하신지라 그러므로 도리어 크게 기뻐함으로 나의 여러 약한 것들에 대하여 자랑하리니 이는 그리스도의 능력이 내게 머물게 하려 함이라', guide: '나의 연약함마저 사용하시는 하나님의 은혜를 묵상해 보세요.' },
+      { title: '내 은혜가 네게 족하도다', passage: '고린도후서 12:9', scripture: '내게 이르시기를 내 은혜가 네게 족하도다 이는 내 능력이 약한데서 온전하여짐이라 하신지라 이러므로 도리어 크게 기뻐함으로 나의 여러 약한 것들에 대하여 자랑하리니 이는 그리스도의 능력으로 내게 머물게 하려 함이라', guide: '나의 연약함마저 사용하시는 하나님의 은혜를 묵상해 보세요.' },
       { title: '오직 성령이 너희에게 임하시면', passage: '사도행전 1:8', scripture: '오직 성령이 너희에게 임하시면 너희가 권능을 받고 예루살렘과 온 유대와 사마리아와 땅 끝까지 이르러 내 증인이 되리라 하시니라', guide: '내가 살아가는 삶의 자리에서 작은 증인으로 살아갈 방법을 생각해 보세요.' },
-      { title: '서로 친절하게 하며 불쌍히 여기며', passage: '에베소서 4:32', scripture: '서로 친절하게 하며 불쌍히 여기며 서로 용서하기를 하나님이 그리스도 안에서 너희를 용서하심과 같이 하라', guide: '오늘 만나는 사람들에게 건네고 싶은 친절한 말 한마디는 무엇인가요?' },
-      { title: '그의 평강이 너희 마음을 주장하게 하라', passage: '골로새서 3:15', scripture: '그리스도의 평강이 너희 마음을 주장하게 하라 너희는 평강을 위하여 한 몸으로 부르심을 받았나니 너희는 또한 감사하는 자가 되라', guide: '감사가 넘치는 라이트 청년부 공동체를 위해 짧은 축복 기도를 남겨보세요.' },
-      { title: '여호와는 네게 복을 주시고 너를 지키시기를', passage: '민수기 6:24-26', scripture: '24 여호와는 네게 복을 주시고 너를 지키시기를 원하며\n25 여호와는 그의 얼굴을 네게 비추사 은혜 베푸시기를 원하며\n26 여호와는 그 얼굴을 네게로 향하여 드사 평강 주시기를 원하노라', guide: '오늘 이 축복의 말씀을 떠올리며 가장 먼저 생각나는 지체의 이름을 마음속으로 축복해 보세요.' },
-      { title: '내가 너를 지명하여 불렀나니 너는 내 것이라', passage: '이사야 43:1', scripture: '야곱아 너를 창조하신 여호와께서 지금 말씀하시느니라 이스라엘아 너를 지으신 이가 말씀하시느니라 너는 두려워하지 말라 내가 너를 구속하였고 내가 너를 지명하여 불렀나니 너는 내 것이라', guide: '내 이름을 아시고 "너는 내 것이라" 말씀하시는 주님의 음성을 묵상하며 아멘으로 화답해 보세요.' }
+      { title: '서로 인자하게 하며 불쌍히 여기며', passage: '에베소서 4:32', scripture: '서로 인자하게 하며 불쌍히 여기며 서로 용서하기를 하나님이 그리스도 안에서 너희를 용서하심과 같이 하라', guide: '오늘 만나는 사람들에게 건네고 싶은 친절한 말 한마디는 무엇인가요?' },
+      { title: '그리스도의 평강이 너희 마음을 주장하게 하라', passage: '골로새서 3:15', scripture: '그리스도의 평강이 너희 마음을 주장하게 하라 평강을 위하여 너희가 한 몸으로 부르심을 받았나니 또한 너희는 감사하는 자가 되라', guide: '감사가 넘치는 라이트 청년부 공동체를 위해 짧은 축복 기도를 남겨보세요.' },
+      { title: '여호와는 네게 복을 주시고 너를 지키시기를', passage: '민수기 6:24-26', scripture: '24 여호와는 네게 복을 주시고 너를 지키시기를 원하며\n25 여호와는 그 얼굴로 네게 비취사 은혜 베푸시기를 원하며\n26 여호와는 그 얼굴을 네게로 향하여 드사 평강 주시기를 원하노라', guide: '오늘 이 축복의 말씀을 떠올리며 가장 먼저 생각나는 지체의 이름을 마음속으로 축복해 보세요.' },
+      { title: '내가 너를 지명하여 불렀나니 너는 내 것이라', passage: '이사야 43:1', scripture: '야곱아 너를 창조하신 여호와께서 이제 말씀하시느니라 이스라엘아 너를 조성하신 자가 이제 말씀하시느니라 너는 두려워 말라 내가 너를 구속하였고 내가 너를 지명하여 불렀나니 너는 내 것이라', guide: '내 이름을 아시고 "너는 내 것이라" 말씀하시는 주님의 음성을 묵상하며 아멘으로 화답해 보세요.' }
     ];
     const KEY_NOTIF_PREFS = 'right_youth_notif_prefs_v103';
     const KEY_MEMBER_CACHE = 'right_youth_member_cache_v1';
@@ -4742,9 +5006,18 @@
       { key: 'manage', defaultIcon: '🛠️', defaultLabel: '관리', roleHint: '관리자 전용' }
     ];
     const SETTINGS_ITEM_REGISTRY = [
-      { key: 'bylaws', defaultIcon: '📜', defaultLabel: '회칙', roleHint: '설정 안 · 청년부 회칙' },
-      { key: 'guide', defaultIcon: '📘', defaultLabel: '가이드', roleHint: '설정 안 · 앱 사용 설명서' }
+      { key: 'setAccount', group: '내 정보 · 화면', defaultIcon: '👤', defaultLabel: '내 계정 관리', roleHint: '설정 · 내 정보/비밀번호' },
+      { key: 'setNotif', group: '내 정보 · 화면', defaultIcon: '🔔', defaultLabel: '알림 설정', roleHint: '설정 · 알림 켜기/끄기' },
+      { key: 'setFont', group: '내 정보 · 화면', defaultIcon: '🔤', defaultLabel: '전체 글자 크기', roleHint: '설정 · 글자 크기 조절' },
+      { key: 'setQr', group: '청년부 안내 · 소통', defaultIcon: '📲', defaultLabel: '오늘의 초대 QR', roleHint: '설정 · 초대 QR 공유' },
+      { key: 'bylaws', group: '청년부 안내 · 소통', defaultIcon: '📜', defaultLabel: '회칙', roleHint: '설정 · 청년부 회칙' },
+      { key: 'guide', group: '청년부 안내 · 소통', defaultIcon: '📘', defaultLabel: '가이드', roleHint: '설정 · 앱 사용 설명서' },
+      { key: 'setInquiry', group: '청년부 안내 · 소통', defaultIcon: '💬', defaultLabel: '문의 사항', roleHint: '설정 · 불편/개선/의견 전달' },
+      { key: 'setInstall', group: '앱 이용 · 보안', defaultIcon: '📱', defaultLabel: '앱 설치 방법', roleHint: '설정 · 홈 화면 추가 안내' },
+      { key: 'setPrivacy', group: '앱 이용 · 보안', defaultIcon: '🔒', defaultLabel: '개인정보 · 보안 안내', roleHint: '설정 · 프라이버시 보호 안내' },
+      { key: 'setLogout', group: '앱 이용 · 보안', defaultIcon: '🚪', defaultLabel: '로그아웃', roleHint: '설정 · 계정 로그아웃' }
     ];
+    const DEFAULT_SETTINGS_ITEM_ORDER = SETTINGS_ITEM_REGISTRY.map(t => t.key);
     const MANAGE_SUBTAB_REGISTRY = [
       { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', permCheck: p => !!(p.canEditLayout || p.canManageNotices) },
       { id: 'quicklinks', labelKey: 'manageQuickLinks', defaultIcon: '🔗', defaultLabel: '사이트 바로가기 관리', permCheck: p => !!p.canEditLayout },
@@ -4752,6 +5025,7 @@
       { id: 'worship', labelKey: 'manageWorship', defaultIcon: '⛪', defaultLabel: '예배 관리', permCheck: p => !!p.canManageMembers },
       { id: 'qr', labelKey: 'manageQr', defaultIcon: '📲', defaultLabel: 'QR 관리', permCheck: p => !!p.canManageMembers },
       { id: 'members', labelKey: 'manageMembers', defaultIcon: '👥', defaultLabel: '회원 승인', permCheck: p => !!p.canManageMembers },
+      { id: 'inquiries', labelKey: 'manageInquiries', defaultIcon: '💬', defaultLabel: '문의 관리', permCheck: p => !!p.canManageMembers },
       { id: 'roles', labelKey: 'manageRoles', defaultIcon: '🏷️', defaultLabel: '역할 설정', permCheck: p => !!p.canManageMembers },
       { id: 'admincode', labelKey: 'manageAdminCode', defaultIcon: '🔐', defaultLabel: '관리자 코드', permCheck: p => !!p.canManageMembers },
       { id: 'logs', labelKey: 'manageLogs', defaultIcon: '📋', defaultLabel: '로그', permCheck: p => !!p.canManageMembers },
@@ -4770,7 +5044,7 @@
       Object.fromEntries(MANAGE_SUBTAB_REGISTRY.map(t => [t.labelKey, t.defaultIcon]))
     );
     const DEFAULT_TAB_LABELS = Object.assign(
-      { tabOrder: DEFAULT_TAB_ORDER, manageSubTabOrder: DEFAULT_MANAGE_SUBTAB_ORDER, icons: DEFAULT_TAB_ICONS },
+      { tabOrder: DEFAULT_TAB_ORDER, manageSubTabOrder: DEFAULT_MANAGE_SUBTAB_ORDER, settingsItemOrder: DEFAULT_SETTINGS_ITEM_ORDER, icons: DEFAULT_TAB_ICONS },
       Object.fromEntries(BOTTOM_TAB_REGISTRY.map(t => [t.key, t.defaultLabel])),
       Object.fromEntries(SETTINGS_ITEM_REGISTRY.map(t => [t.key, t.defaultLabel])),
       Object.fromEntries(MANAGE_SUBTAB_REGISTRY.map(t => [t.labelKey, t.defaultLabel]))
@@ -5503,10 +5777,12 @@
           enabled: raw.enabled !== undefined ? !!raw.enabled : true,
           homeNews: raw.homeNews !== undefined ? !!raw.homeNews : legacyHome,
           newQt: raw.newQt !== undefined ? !!raw.newQt : true,
-          memberPending: raw.memberPending !== undefined ? !!raw.memberPending : true
+          memberPending: raw.memberPending !== undefined ? !!raw.memberPending : true,
+          inquiryNew: raw.inquiryNew !== undefined ? !!raw.inquiryNew : true,
+          inquiryReply: raw.inquiryReply !== undefined ? !!raw.inquiryReply : true
         };
       } catch {
-        return { enabled: true, homeNews: true, newQt: true, memberPending: true };
+        return { enabled: true, homeNews: true, newQt: true, memberPending: true, inquiryNew: true, inquiryReply: true };
       }
     }
 
@@ -5538,7 +5814,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=155" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=156b" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5562,8 +5838,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=155', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=155', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=156b', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=156b', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5587,6 +5863,8 @@
       if ((type === 'notice' || type === 'banner') && !notifPrefs.homeNews) return;
       if (type === 'qt' && !notifPrefs.newQt) return;
       if (type === 'member' && !notifPrefs.memberPending) return;
+      if (type === 'inquiry_new' && !notifPrefs.inquiryNew) return;
+      if (type === 'inquiry_reply' && !notifPrefs.inquiryReply) return;
 
       showInAppNotif(icon, title, body, onClick);
       sendDeviceNotification(title, body);
@@ -5611,12 +5889,22 @@
       document.getElementById('notifHomeToggle').checked = notifPrefs.homeNews;
       document.getElementById('notifQtToggle').checked = notifPrefs.newQt;
       document.getElementById('notifMemberToggle').checked = notifPrefs.memberPending;
+      const inqNewEl = document.getElementById('notifInquiryNewToggle');
+      const inqRepEl = document.getElementById('notifInquiryReplyToggle');
+      if (inqNewEl) inqNewEl.checked = notifPrefs.inquiryNew;
+      if (inqRepEl) inqRepEl.checked = notifPrefs.inquiryReply;
 
       document.getElementById('notifHomeToggle').disabled = !notifPrefs.enabled;
       document.getElementById('notifQtToggle').disabled = !notifPrefs.enabled;
       document.getElementById('notifMemberToggle').disabled = !notifPrefs.enabled;
+      if (inqNewEl) inqNewEl.disabled = !notifPrefs.enabled;
+      if (inqRepEl) inqRepEl.disabled = !notifPrefs.enabled;
       document.getElementById('notifDetailGroup').style.opacity = notifPrefs.enabled ? '1' : '0.48';
       document.getElementById('notifMemberRow').classList.toggle('hidden', !canManageMembers);
+      const inqNewRow = document.getElementById('notifInquiryNewRow');
+      const inqRepRow = document.getElementById('notifInquiryReplyRow');
+      if (inqNewRow) inqNewRow.classList.toggle('hidden', !canManageMembers);
+      if (inqRepRow) inqRepRow.classList.toggle('hidden', canManageMembers);
 
       const perm = getNotifPermissionState();
       const box = document.getElementById('notifPermissionBox');
@@ -5846,6 +6134,21 @@
     let knownQtIds = new Set();
     let currentQtDetailId = null;
     let hiddenAutoQtDate = '';
+    let bibleDictCustomItems = [];
+    let hiddenAutoDictDate = '';
+    let bibleDictCatFilter = '전체';
+    let settingsFontOpen = false;
+    let inquiries = [];
+    let myInquiries = [];
+    let unsubInquiriesAdmin = null;
+    let unsubMyInquiries = null;
+    let inquiriesFirstSnap = true;
+    let knownInquiryIds = new Set();
+    let myInquiriesFirstSnap = true;
+    let knownMyInquiryReplyMap = new Map();
+    let inquiriesPermError = false;
+    let adminInquiryFilter = 'all';
+    let lastInquirySubmitTs = 0;
     let bibleBookmarkColorFilter = 'all';
     let editingCommentId = null;
 
@@ -5943,6 +6246,15 @@
       if (unsubMyAttendance) { unsubMyAttendance(); unsubMyAttendance = null; }
       if (unsubMemberHistory) { unsubMemberHistory(); unsubMemberHistory = null; }
       if (unsubAuditLogs) { unsubAuditLogs(); unsubAuditLogs = null; }
+      if (unsubInquiriesAdmin) { unsubInquiriesAdmin(); unsubInquiriesAdmin = null; }
+      if (unsubMyInquiries) { unsubMyInquiries(); unsubMyInquiries = null; }
+      inquiries = [];
+      myInquiries = [];
+      inquiriesFirstSnap = true;
+      knownInquiryIds = new Set();
+      myInquiriesFirstSnap = true;
+      knownMyInquiryReplyMap = new Map();
+      inquiriesPermError = false;
       auditLogs = [];
       auditLogsFirstSnap = true;
       knownAuditLogIds = new Set();
@@ -6200,6 +6512,20 @@
       });
       DEFAULT_MANAGE_SUBTAB_ORDER.forEach(id => {
         if (!valid.includes(id)) valid.push(id);
+      });
+      return valid;
+    }
+
+    function getValidSettingsItemOrder(rawOrder) {
+      const src = Array.isArray(rawOrder)
+        ? rawOrder
+        : (tabLabels && Array.isArray(tabLabels.settingsItemOrder) ? tabLabels.settingsItemOrder : DEFAULT_SETTINGS_ITEM_ORDER);
+      const valid = [];
+      src.forEach(k => {
+        if (DEFAULT_SETTINGS_ITEM_ORDER.includes(k) && !valid.includes(k)) valid.push(k);
+      });
+      DEFAULT_SETTINGS_ITEM_ORDER.forEach(k => {
+        if (!valid.includes(k)) valid.push(k);
       });
       return valid;
     }
@@ -6838,6 +7164,51 @@
         auditLogsFirstSnap = true;
         knownAuditLogIds = new Set();
       }
+
+      if (needsAllMembers && !unsubInquiriesAdmin) {
+        inquiriesFirstSnap = true;
+        knownInquiryIds = new Set();
+        inquiriesPermError = false;
+        unsubInquiriesAdmin = db.collection('inquiries').onSnapshot(snap => {
+          const next = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
+            .sort((a, b) => Number(b.createdTs || 0) - Number(a.createdTs || 0));
+          inquiriesPermError = false;
+          if (inquiriesFirstSnap) {
+            next.forEach(q => knownInquiryIds.add(q.id));
+            inquiriesFirstSnap = false;
+          } else {
+            next.forEach(q => {
+              if (!knownInquiryIds.has(q.id)) {
+                knownInquiryIds.add(q.id);
+                dispatchAppNotification({
+                  type: 'inquiry_new',
+                  icon: '💬',
+                  title: `새 문의 사항 접수 [${q.category || '의견'}]`,
+                  body: `${q.authorName || '회원'}님: ${q.title || q.body || ''}`,
+                  onClick: () => {
+                    currentMainTab = 'manage';
+                    currentManageSubTab = 'inquiries';
+                    applyScreen();
+                  }
+                });
+              }
+            });
+          }
+          inquiries = next;
+          applyScreen();
+        }, err => {
+          if (err && err.code === 'permission-denied') {
+            inquiriesPermError = true;
+            if (currentMainTab === 'manage' && currentManageSubTab === 'inquiries') applyScreen();
+          }
+        });
+      } else if (!needsAllMembers && unsubInquiriesAdmin) {
+        unsubInquiriesAdmin();
+        unsubInquiriesAdmin = null;
+        inquiries = [];
+        inquiriesFirstSnap = true;
+        knownInquiryIds = new Set();
+      }
     }
 
     function clearScopedContentSubscriptions() {
@@ -7182,6 +7553,44 @@
       );
 
       if (fbUser && (fbUser.email || '').toLowerCase() !== ADMIN_EMAIL) {
+        myInquiriesFirstSnap = true;
+        knownMyInquiryReplyMap = new Map();
+        unsubMyInquiries = db.collection('inquiries')
+          .where('uid', '==', fbUser.uid)
+          .onSnapshot(snap => {
+            const next = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
+              .sort((a, b) => Number(b.createdTs || 0) - Number(a.createdTs || 0));
+            if (myInquiriesFirstSnap) {
+              next.forEach(q => knownMyInquiryReplyMap.set(q.id, Number(q.replyTs || 0)));
+              myInquiriesFirstSnap = false;
+            } else {
+              next.forEach(q => {
+                const prevTs = knownMyInquiryReplyMap.get(q.id) || 0;
+                const curTs = Number(q.replyTs || 0);
+                if (curTs > prevTs && q.reply) {
+                  knownMyInquiryReplyMap.set(q.id, curTs);
+                  dispatchAppNotification({
+                    type: 'inquiry_reply',
+                    icon: '💬',
+                    title: '문의 사항에 관리자 답변이 등록되었습니다',
+                    body: `[${q.title || '내 문의'}] ${q.reply}`,
+                    onClick: () => {
+                      switchMainTab('settings');
+                      openInquiryModal();
+                    }
+                  });
+                }
+              });
+            }
+            myInquiries = next;
+            if (document.getElementById('inquiryModal').classList.contains('open')) {
+              renderMyInquiriesList();
+            }
+            applyScreen();
+          }, () => {});
+      }
+
+      if (fbUser && (fbUser.email || '').toLowerCase() !== ADMIN_EMAIL) {
         unsubMyAttendance = db.collection('attendance')
           .where('uid', '==', fbUser.uid)
           .onSnapshot(snap => {
@@ -7247,6 +7656,8 @@
               celebrationMsgs = structuredClone(DEFAULT_CELEBRATION_MSGS);
             }
             hiddenAutoQtDate = normalizeDotDate(d.hiddenAutoQtDate || '');
+            bibleDictCustomItems = Array.isArray(d.bibleDictItems) ? d.bibleDictItems : [];
+            hiddenAutoDictDate = normalizeDotDate(d.hiddenAutoDictDate || '');
             if (d.securityConfig && typeof d.securityConfig === 'object') {
               securityConfig = { ...DEFAULT_SECURITY_CONFIG, ...d.securityConfig };
             } else {
@@ -8329,8 +8740,17 @@
       badge.style.background = user.role.color;
       document.getElementById('headerSubText').textContent = `${user.name}님`;
 
-      const pendingCount = members.filter(m => m.status === 'pending').length + members.filter(m => m.status === 'approved' && m.pendingName).length + members.filter(m => m.status === 'approved' && m.pendingBirthday).length + (adminRegistry.items || []).filter(a => a.status === 'pending').length;
-      const hasUpdateDot = hasPendingAppUpdate();
+      // 현재 보고 있는 탭은 자동 읽음 처리
+      if (currentMainTab === 'home' && homeNoticesLoaded && homeBlocksLoaded) markTabAsSeen('home');
+      if (currentMainTab === 'qt') markTabAsSeen('qt');
+
+      const unreadInqCount = inquiries.filter(q => q.status === 'new').length;
+      const pendingCount = members.filter(m => m.status === 'pending').length
+        + members.filter(m => m.status === 'approved' && m.pendingName).length
+        + members.filter(m => m.status === 'approved' && m.pendingBirthday).length
+        + (adminRegistry.items || []).filter(a => a.status === 'pending').length
+        + unreadInqCount;
+
       const tabbar = document.getElementById('appTabbar');
       tabbar.className = `tabbar ${isManageMode ? 'dark' : 'light'}`;
       const orderedTabs = getValidTabOrder().filter(k => k !== 'manage' || canManage);
@@ -8341,7 +8761,7 @@
         if (key === 'more') {
           const moreIconHtml = iconVal === '☰'
             ? `<span class="tab-icon tab-icon-bars">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
                   <line x1="4" y1="6.5" x2="20" y2="6.5"></line>
                   <line x1="4" y1="12" x2="20" y2="12"></line>
                   <line x1="4" y1="17.5" x2="20" y2="17.5"></line>
@@ -8355,9 +8775,14 @@
             </button>
           `;
         }
-        const badgeHtml = (key === 'manage' && perms.canManageMembers && pendingCount > 0)
-          ? `<span class="tab-badge">${pendingCount}</span>`
-          : (key === 'settings' && hasUpdateDot ? '<span class="tab-update-dot" title="업데이트 있음"></span>' : '');
+        let badgeCnt = 0;
+        if (key === 'manage' && perms.canManageMembers) badgeCnt = pendingCount;
+        else if (key === 'home' && currentMainTab !== 'home') badgeCnt = getUnreadCountForTab('home', user);
+        else if (key === 'qt' && currentMainTab !== 'qt') badgeCnt = getUnreadCountForTab('qt', user);
+        else if (key === 'settings') badgeCnt = getUnreadCountForTab('settings', user);
+
+        const badgeDisp = badgeCnt > 99 ? '99+' : String(badgeCnt);
+        const badgeHtml = badgeCnt > 0 ? `<span class="tab-badge">${badgeDisp}</span>` : '';
         return `
           <button class="tab-btn ${!isMoreOpen && activeVisualTab === key ? 'active' : ''}" onclick="switchMainTab('${key}')">
             <span class="tab-icon">${escapeHtml(iconVal)}</span>
@@ -8392,6 +8817,7 @@
       if (currentMainTab === 'manage' && tab !== 'manage') {
         draftTabInitialized = false;
       }
+      if (tab === 'home' || tab === 'qt') markTabAsSeen(tab);
       currentMainTab = tab;
       applyScreen();
     };
@@ -8801,7 +9227,7 @@
             `<b>신규 관리자 자동 등록 잠금 활용:</b> 평상시에는 <b>[${memIcn} ${memLbl}] → 🔒 신규 관리자 자동 등록 잠금</b>을 켜 두는 것을 권장합니다. 잠금이 켜진 상태에서 새 관리자가 로그인하면 기존 관리자의 승인 대기 목록에 뜨며, <b>[✅ 관리자 입장 승인]</b>을 눌러야 입장됩니다.`,
             `<b>퇴임·이전 관리자 해제:</b> 인수인계가 끝나면 <b>[${memIcn} ${memLbl}] → 🔐 관리자 명단</b>에서 퇴임하는 관리자의 <b>[관리자 해제]</b> 버튼을 누릅니다. 해제된 관리자는 즉시 자동 로그아웃되며, 추후 재입장 시도 시 기존 관리자의 승인이 필요합니다.`,
             `<b>관리자 코드 변경 (인수인계 마감):</b> <b>[${codeIcn} ${codeLbl}]</b> 탭에서 새 6자리 이상 코드로 변경(🎲 자동 생성 지원)하면 Firebase 로그인 비밀번호와 공유 코드가 동시에 바뀝니다.`,
-            `<b>내 관리자 이름 변경:</b> 하단 <b>[${escapeHtml(getTabIcon('settings'))} ${escapeHtml(getTabLabel('settings'))}] → ✏️ 내 관리자 이름 변경</b>을 눌러 본인 이름을 변경할 수 있습니다. (보안을 위해 <b>[${logIcn} ${logLbl}]</b>와 구글 시트 <b>[이름 변경 로그]</b> 탭에 자동 기록)`
+            `<b>내 관리자 이름 변경:</b> <b>[${memIcn} ${memLbl}] → 🔐 관리자 명단 → ✏️ 내 관리자 이름 설정</b>에서 본인 이름을 변경할 수 있습니다. (보안을 위해 <b>[${logIcn} ${logLbl}]</b>와 구글 시트 <b>[이름 변경 로그]</b> 탭에 자동 기록)`
           ],
           tip: '최소 1명의 활성 관리자는 항상 유지되어야 하므로, 새 관리자를 먼저 등록·승인한 뒤 이전 관리자를 해제해 주세요.',
           warn: true
@@ -9523,6 +9949,7 @@
       else if (currentManageSubTab === 'worship') renderManageWorship(content, user);
       else if (currentManageSubTab === 'qr') renderManageQr(content, user);
       else if (currentManageSubTab === 'members') renderManageMembers(content);
+      else if (currentManageSubTab === 'inquiries') renderManageInquiries(content, user);
       else if (currentManageSubTab === 'roles') renderManageRoles(content, user);
       else if (currentManageSubTab === 'admincode') renderManageAdminCode(content, user);
       else if (currentManageSubTab === 'logs') renderManageLogs(content, user);
@@ -9806,6 +10233,9 @@
             }).join('')}
         ${qtPosts.length >= 4 ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('qt_custom_list', ${qtPosts.length <= 5 ? 'true' : 'false'})">▲ 관리자 작성 글 목록 접기</button>` : ''}
         </div>
+
+        <div class="manage-divider"></div>
+        ${buildManageBibleDictSectionHtml()}
       `;
     }
 
@@ -10559,6 +10989,16 @@
           defaultOpen: adminsDefaultOpen
         })}
         <div data-acc-body="members_admins" class="${adminsOpen ? '' : 'hidden'}">
+          <div class="card" style="background:#FFFBEB; border-color:#FDE68A; margin-bottom:10px; padding:12px 13px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+              <div style="min-width:0; flex:1;">
+                <div style="font-size:13.5px; font-weight:800; color:#92400E;">✏️ 내 관리자 이름 설정</div>
+                <div style="font-size:11.5px; color:#78350F; margin-top:2px;">현재 표시 이름: <b>${escapeHtml(currentAdminName || '관리자')}</b> · 변경 시 보안 로그에 기록됩니다.</div>
+              </div>
+              <button class="btn-sm primary" type="button" onclick="openAdminRenameModal()">내 이름 변경</button>
+            </div>
+          </div>
+
           <div class="card" style="background:#F8FAFC; margin-bottom:10px;">
             <div class="setting-row" style="padding:2px 0;">
               <div>
@@ -12405,7 +12845,6 @@
             <div style="font-size:12.5px; line-height:1.5; margin-bottom:14px;">네트워크 상태를 확인한 뒤 다시 시도해 주세요.</div>
             <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
               <button class="btn-sm primary" type="button" onclick="retryLoadBible()">다시 불러오기</button>
-              <a href="https://www.bskorea.or.kr/bible/korbibReadpage.php" target="_blank" rel="noopener noreferrer" class="btn-sm" style="text-decoration:none;">대한성서공회에서 보기 ↗</a>
             </div>
           </div>
         `;
@@ -13351,8 +13790,10 @@ ${m.body}`;
         : [autoToday, ...mappedCustom];
 
       const container = document.getElementById('qtListContainer');
+      const dailyDictHtml = buildDailyBibleDictCardHtml(canManageQt);
+      const krvFooterHtml = '<div class="copyright-footnote">📖 성경 본문 출처: <b>「성경전서 개역한글판」(대한성서공회)</b> · 저작재산권 만료 원문</div>';
       if (combined.length === 0) {
-        container.innerHTML = `
+        container.innerHTML = dailyDictHtml + `
           <div class="card" style="text-align:center; padding:34px 18px; color:#64748B;">
             <div style="font-size:28px; margin-bottom:8px;">${escapeHtml(getTabIcon('qt'))}</div>
             <div style="font-size:14.5px; font-weight:800; color:#1E293B; margin-bottom:5px;">오늘 표시된 말씀이 없습니다.</div>
@@ -13367,7 +13808,7 @@ ${m.body}`;
         `;
         return;
       }
-      container.innerHTML = combined.map((post) => {
+      container.innerHTML = dailyDictHtml + combined.map((post) => {
         const cmts = qtComments.filter(c => c.postId === post.id);
         const previewCmts = cmts.slice(-2);
         const verseText = post.scripture || post.guide || post.title || '';
@@ -13418,7 +13859,7 @@ ${m.body}`;
             </div>
           </div>
         `;
-      }).join('');
+      }).join('') + krvFooterHtml;
     }
 
     window.toggleQtReaction = async (postId, key) => {
@@ -13805,6 +14246,7 @@ ${m.body}`;
     // ==================== 16. 전용 [✏️ 메뉴·이름] 탭 (중앙 레지스트리 자동 연동 · 이모지/이름/순서 편집) ====================
     let draftTabOrder = [...DEFAULT_TAB_ORDER];
     let draftManageSubTabOrder = [...DEFAULT_MANAGE_SUBTAB_ORDER];
+    let draftSettingsItemOrder = [...DEFAULT_SETTINGS_ITEM_ORDER];
     let draftTabNames = {};
     let draftTabIcons = {};
     let draftTabInitialized = false;
@@ -13813,6 +14255,7 @@ ${m.body}`;
       if (draftTabInitialized && !force) return;
       draftTabOrder = getValidTabOrder();
       draftManageSubTabOrder = getValidManageSubTabOrder();
+      draftSettingsItemOrder = getValidSettingsItemOrder();
       draftTabNames = {};
       draftTabIcons = {};
       BOTTOM_TAB_REGISTRY.forEach(t => {
@@ -13968,27 +14411,34 @@ ${m.body}`;
 
         ${buildManageAccordionBar({
           key: 'labels_settings_items',
-          titleHtml: `${escapeHtml(getTabIcon('settings'))} ${escapeHtml(getTabLabel('settings'))} 안 메뉴 (회칙 · 가이드)`,
-          badgeHtml: `<span class="tag slate">${SETTINGS_ITEM_REGISTRY.length}개</span>`,
+          titleHtml: `${escapeHtml(getTabIcon('settings'))} ${escapeHtml(getTabLabel('settings'))} 안 메뉴 순서 · 명칭 (위 → 아래 순)`,
+          badgeHtml: `<span class="tag slate">${draftSettingsItemOrder.length}개</span>`,
           defaultOpen: false,
           marginTop: '10px'
         })}
         <div data-acc-body="labels_settings_items" class="${isManageSectionOpen('labels_settings_items', false) ? '' : 'hidden'}">
         <div class="card">
-          ${SETTINGS_ITEM_REGISTRY.map(t => {
+          ${draftSettingsItemOrder.map((sKey, idx) => {
+            const t = SETTINGS_ITEM_REGISTRY.find(x => x.key === sKey);
+            if (!t) return '';
             const curName = draftTabNames[t.key] !== undefined ? draftTabNames[t.key] : getTabLabel(t.key);
             const curIcon = draftTabIcons[t.key] !== undefined ? draftTabIcons[t.key] : getTabIcon(t.key);
             return `
               <div class="tab-order-row">
+                <span class="tab-order-num">${idx + 1}</span>
                 <input class="emoji-input" maxlength="4" data-tab-icon-key="${t.key}" value="${escapeHtml(curIcon)}" title="이모지 변경"
                        oninput="onDraftTabIconInput('${t.key}', this.value)" />
                 <div style="flex:1; min-width:0;">
-                  <input class="form-input" style="padding:7px 10px; font-size:13.5px;" maxlength="10"
+                  <input class="form-input" style="padding:7px 10px; font-size:13.5px;" maxlength="16"
                          data-tab-name-key="${t.key}"
                          value="${escapeHtml(curName)}"
                          placeholder="${escapeHtml(t.defaultLabel)}"
                          oninput="onDraftTabNameInput('${t.key}', this.value)" />
                   <div style="font-size:10.5px; color:#64748B; margin-top:2px; padding-left:2px;">기본: ${escapeHtml(t.defaultIcon)} ${escapeHtml(t.roleHint)}</div>
+                </div>
+                <div class="order-btns">
+                  <button class="order-btn" type="button" onclick="moveDraftSettingsItemOrder(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                  <button class="order-btn" type="button" onclick="moveDraftSettingsItemOrder(${idx}, 1)" ${idx === draftSettingsItemOrder.length - 1 ? 'disabled' : ''}>▼</button>
                 </div>
               </div>
             `;
@@ -14092,6 +14542,17 @@ ${m.body}`;
       }
     };
 
+    window.moveDraftSettingsItemOrder = (idx, dir) => {
+      syncDraftFromDomInputs();
+      const t = idx + dir;
+      if (t < 0 || t >= draftSettingsItemOrder.length) return;
+      [draftSettingsItemOrder[idx], draftSettingsItemOrder[t]] = [draftSettingsItemOrder[t], draftSettingsItemOrder[idx]];
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'labels') {
+        renderManageLabels(document.getElementById('manageContent'), u);
+      }
+    };
+
     window.openTabLabelsModal = () => {
       draftTabInitialized = false;
       currentMainTab = 'manage';
@@ -14102,6 +14563,7 @@ ${m.body}`;
     window.resetTabLabelsDefaults = () => {
       draftTabOrder = [...DEFAULT_TAB_ORDER];
       draftManageSubTabOrder = [...DEFAULT_MANAGE_SUBTAB_ORDER];
+      draftSettingsItemOrder = [...DEFAULT_SETTINGS_ITEM_ORDER];
       draftTabNames = {};
       draftTabIcons = {};
       BOTTOM_TAB_REGISTRY.forEach(t => {
@@ -14130,6 +14592,7 @@ ${m.body}`;
       const next = {
         tabOrder: getValidTabOrder(draftTabOrder),
         manageSubTabOrder: getValidManageSubTabOrder(draftManageSubTabOrder),
+        settingsItemOrder: getValidSettingsItemOrder(draftSettingsItemOrder),
         icons: {}
       };
       BOTTOM_TAB_REGISTRY.forEach(t => {
@@ -16322,7 +16785,8 @@ ${m.body}`;
         const whoLbl = adminLogFilterType === 'admin' ? '관리자 ' : (adminLogFilterType === 'member' ? '이용자 ' : '');
         const catDisp = adminLogFilterCategory === '오늘의 말씀' ? getTabLabel('qt')
           : (adminLogFilterCategory === '바로가기' ? getQuickSheetLabel()
-            : (adminLogFilterCategory === '예배·출석' ? getTabLabel('manageWorship') : adminLogFilterCategory));
+            : (adminLogFilterCategory === '예배·출석' ? getTabLabel('manageWorship')
+              : (adminLogFilterCategory === '문의' ? getTabLabel('setInquiry') : adminLogFilterCategory)));
         const catLbl = adminLogFilterCategory !== 'all' ? `[${catDisp}] ` : '';
         summaryEl.textContent = q
           ? `'${adminLogSearchQuery.trim()}' 검색 결과 ${filtered.length}건 (전체 ${allLogs.length}건)`
@@ -16417,7 +16881,7 @@ ${m.body}`;
       const memberCnt = allLogs.filter(l => l && l.actorType === 'member').length;
       const unsyncedCount = allLogs.filter(l => l && l.sheetSynced !== true).length;
       const hasSheet = !!getAdminSheetUrl();
-      const cats = ['all', '공지·배너', '오늘의 말씀', '댓글', '회원·생일', '역할·메뉴', '예배·출석', '바로가기', '보안·설정'];
+      const cats = ['all', '공지·배너', '오늘의 말씀', '댓글', '회원·생일', '역할·메뉴', '예배·출석', '바로가기', '문의', '보안·설정'];
 
       const logsListOpen = isManageSectionOpen('logs_list', true);
       el.innerHTML = `
@@ -16431,7 +16895,7 @@ ${m.body}`;
         <div class="info-box" style="margin-top:0; margin-bottom:12px;">
           🔐 <b>통합 보안 감사 로그 (위변조·삭제 불가)</b><br>
           • <b>관리자:</b> 모든 추가·수정·삭제·승인·설정 변경 자동 기록<br>
-          • <b>이용자:</b> 댓글 작성/수정/삭제, 이름·생일 변경 신청/취소, 가입·탈퇴, 출석 체크만 기록<br>
+          • <b>이용자:</b> 댓글 작성/수정/삭제, 문의 사항 작성/수정/삭제, 이름·생일 변경 신청/취소, 가입·탈퇴, 출석 체크만 기록<br>
           • <b>미기록(프라이버시 보호):</b> 이용자 비밀번호 변경, ${escapeHtml(getTabLabel('bible'))} 메모·책갈피·검색, ${escapeHtml(getQuickSheetLabel())} 이동, 공지·소식 단순 조회
         </div>
 
@@ -16460,7 +16924,8 @@ ${m.body}`;
               const disp = c === 'all' ? '전체 분류'
                 : (c === '오늘의 말씀' ? getTabLabel('qt')
                   : (c === '바로가기' ? getQuickSheetLabel()
-                    : (c === '예배·출석' ? getTabLabel('manageWorship') : c)));
+                    : (c === '예배·출석' ? getTabLabel('manageWorship')
+                      : (c === '문의' ? getTabLabel('setInquiry') : c))));
               return `<option value="${escapeHtml(c)}" ${adminLogFilterCategory === c ? 'selected' : ''}>${escapeHtml(disp)}</option>`;
             }).join('')}
           </select>
@@ -19333,6 +19798,12 @@ ${m.body}`;
       document.getElementById('privacyGuideModal').classList.add('open');
     };
 
+    window.toggleSettingsFontAccordion = () => {
+      settingsFontOpen = !settingsFontOpen;
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'settings') renderSettingsView(u);
+    };
+
     function renderSettingsView(user) {
       const el = document.getElementById('viewSettings');
       if (!el || !user) return;
@@ -19341,16 +19812,201 @@ ${m.body}`;
       const isPreview = !!user.isPreviewMember;
       const showUpdate = hasPendingAppUpdate();
       const notifOn = !!notifPrefs.enabled;
-      const byIcn = getTabIcon('bylaws');
-      const byLbl = getTabLabel('bylaws');
-      const gIcn = getTabIcon('guide');
-      const gLbl = getTabLabel('guide');
       const bLbl = getTabLabel('bible');
+      const fontLabelMap = { normal: '보통', large: '크게', xlarge: '아주 크게' };
+      const unreadMyReplyCnt = getUnreadInquiryReplyCount();
 
       const todayDot = getKstDateParts().dot;
       const todayAtt = !isAdmin && !isPreview
         ? myAttendanceRecords.find(r => String(r.date || '') === todayDot)
         : null;
+
+      // 관리자가 [메뉴·이름]에서 설정한 순서·이모지·명칭대로 항목 생성 (관리자 전용 기능 미포함)
+      const orderedKeys = getValidSettingsItemOrder();
+      const visibleItems = [];
+
+      orderedKeys.forEach(key => {
+        if (key === 'setAccount' && (isAdmin || isPreview)) return;
+        const reg = SETTINGS_ITEM_REGISTRY.find(x => x.key === key);
+        if (!reg) return;
+        const ic = getTabIcon(key);
+        const lb = getTabLabel(key);
+        let rowHtml = '';
+
+        if (key === 'setAccount') {
+          rowHtml = `
+            <button class="settings-row-btn" type="button" onclick="openAccountModal()">
+              <span class="settings-row-left">
+                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span style="min-width:0;">
+                  <div class="settings-row-title">${escapeHtml(lb)}</div>
+                  <div class="settings-row-sub">이름·생일 변경 신청, 출석 기록, 비밀번호 변경·탈퇴</div>
+                </span>
+              </span>
+              <span class="settings-row-right">▸</span>
+            </button>
+          `;
+        } else if (key === 'setNotif') {
+          rowHtml = `
+            <button class="settings-row-btn" type="button" onclick="openNotifModal()">
+              <span class="settings-row-left">
+                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span style="min-width:0;">
+                  <div class="settings-row-title">${escapeHtml(lb)}</div>
+                  <div class="settings-row-sub">새 공지·말씀·문의 알림 및 기기 알림 권한</div>
+                </span>
+              </span>
+              <span class="settings-row-right">
+                <span class="tag ${notifOn ? 'green' : 'slate'}">${notifOn ? '켜짐' : '꺼짐'}</span>
+                <span>▸</span>
+              </span>
+            </button>
+          `;
+        } else if (key === 'setFont') {
+          rowHtml = `
+            <button class="settings-row-btn" type="button" onclick="toggleSettingsFontAccordion()">
+              <span class="settings-row-left">
+                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span style="min-width:0;">
+                  <div class="settings-row-title">${escapeHtml(lb)}</div>
+                  <div class="settings-row-sub">내 기기 화면 글자 크기 조절 (${escapeHtml(bLbl)} 본문은 ${escapeHtml(bLbl)}에서 별도 조절)</div>
+                </span>
+              </span>
+              <span class="settings-row-right">
+                <span class="tag slate">${escapeHtml(fontLabelMap[appFontScale] || '보통')}</span>
+                <span>${settingsFontOpen ? '▲' : '▼'}</span>
+              </span>
+            </button>
+            ${settingsFontOpen ? `
+              <div class="settings-font-body">
+                <div class="font-scale-seg" style="margin-top:8px;">
+                  <button class="font-scale-btn ${appFontScale === 'normal' ? 'active' : ''}" type="button" onclick="setAppFontScale('normal')">보통</button>
+                  <button class="font-scale-btn ${appFontScale === 'large' ? 'active' : ''}" type="button" onclick="setAppFontScale('large')">크게</button>
+                  <button class="font-scale-btn ${appFontScale === 'xlarge' ? 'active' : ''}" type="button" onclick="setAppFontScale('xlarge')">아주 크게</button>
+                </div>
+              </div>
+            ` : ''}
+          `;
+        } else if (key === 'setQr') {
+          rowHtml = `
+            <button class="settings-row-btn" type="button" onclick="openInviteQrModal()">
+              <span class="settings-row-left">
+                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span style="min-width:0;">
+                  <div class="settings-row-title">${escapeHtml(lb)}</div>
+                  <div class="settings-row-sub">새 지체 초대 QR 보기 · 이미지 공유 · 링크 복사</div>
+                </span>
+              </span>
+              <span class="settings-row-right">▸</span>
+            </button>
+          `;
+        } else if (key === 'bylaws') {
+          rowHtml = `
+            <button class="settings-row-btn" type="button" onclick="openFromSettingsTab('bylaws')">
+              <span class="settings-row-left">
+                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span style="min-width:0;">
+                  <div class="settings-row-title">${escapeHtml(lb)}</div>
+                  <div class="settings-row-sub">라이트 청년부 회칙 전문 검색 및 복사</div>
+                </span>
+              </span>
+              <span class="settings-row-right">▸</span>
+            </button>
+          `;
+        } else if (key === 'guide') {
+          rowHtml = `
+            <button class="settings-row-btn" type="button" onclick="openFromSettingsTab('guide')">
+              <span class="settings-row-left">
+                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span style="min-width:0;">
+                  <div class="settings-row-title">${escapeHtml(lb)}</div>
+                  <div class="settings-row-sub">출석·말씀·성경·알림 등 앱 사용 방법 안내</div>
+                </span>
+              </span>
+              <span class="settings-row-right">▸</span>
+            </button>
+          `;
+        } else if (key === 'setInquiry') {
+          rowHtml = `
+            <button class="settings-row-btn" type="button" onclick="openInquiryModal()">
+              <span class="settings-row-left">
+                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span style="min-width:0;">
+                  <div class="settings-row-title">${escapeHtml(lb)}</div>
+                  <div class="settings-row-sub">불편한 점 · 개선 사항 · 기능 요청 · 의견 보내기</div>
+                </span>
+              </span>
+              <span class="settings-row-right">
+                ${unreadMyReplyCnt > 0 ? `<span class="tag red">답변 ${unreadMyReplyCnt}</span>` : ''}
+                <span>▸</span>
+              </span>
+            </button>
+          `;
+        } else if (key === 'setInstall') {
+          rowHtml = `
+            <button class="settings-row-btn" type="button" onclick="openAppInstallGuideModal()">
+              <span class="settings-row-left">
+                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span style="min-width:0;">
+                  <div class="settings-row-title">${escapeHtml(lb)}</div>
+                  <div class="settings-row-sub">아이폰·안드로이드 스마트폰에 앱처럼 설치하기</div>
+                </span>
+              </span>
+              <span class="settings-row-right">▸</span>
+            </button>
+          `;
+        } else if (key === 'setPrivacy') {
+          rowHtml = `
+            <button class="settings-row-btn" type="button" onclick="openPrivacyGuideModal()">
+              <span class="settings-row-left">
+                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span style="min-width:0;">
+                  <div class="settings-row-title">${escapeHtml(lb)}</div>
+                  <div class="settings-row-sub">개인 메모·책갈피 보호 및 보안 방어 안내</div>
+                </span>
+              </span>
+              <span class="settings-row-right">▸</span>
+            </button>
+          `;
+        } else if (key === 'setLogout') {
+          rowHtml = `
+            <button class="settings-row-btn" type="button" onclick="confirmLogoutFromSettings()">
+              <span class="settings-row-left">
+                <span class="settings-row-icon danger">${escapeHtml(ic)}</span>
+                <span style="min-width:0;">
+                  <div class="settings-row-title danger">${escapeHtml(lb)}</div>
+                  <div class="settings-row-sub">현재 계정에서 안전하게 로그아웃합니다</div>
+                </span>
+              </span>
+              <span class="settings-row-right" style="color:#EF4444;">▸</span>
+            </button>
+          `;
+        }
+
+        if (rowHtml) visibleItems.push({ group: reg.group, html: rowHtml });
+      });
+
+      const isDefaultOrder = JSON.stringify(orderedKeys) === JSON.stringify(DEFAULT_SETTINGS_ITEM_ORDER);
+      let groupedHtml = '';
+      if (isDefaultOrder) {
+        let curGroup = '';
+        let buf = [];
+        const flush = () => {
+          if (buf.length === 0) return;
+          groupedHtml += `<div class="settings-group-label">${escapeHtml(curGroup)}</div><div class="settings-group-card">${buf.join('')}</div>`;
+          buf = [];
+        };
+        visibleItems.forEach(it => {
+          if (it.group !== curGroup) {
+            flush();
+            curGroup = it.group;
+          }
+          buf.push(it.html);
+        });
+        flush();
+      } else {
+        groupedHtml = `<div class="settings-group-label">이용자 개인 설정</div><div class="settings-group-card">${visibleItems.map(x => x.html).join('')}</div>`;
+      }
 
       el.innerHTML = `
         <!-- 프로필 요약 카드 -->
@@ -19364,7 +20020,7 @@ ${m.body}`;
             <div style="font-size:12px; color:#CBD5E1; margin-top:4px; line-height:1.4;">
               ${todayAtt
                 ? `✅ 오늘 ${escapeHtml(todayAtt.label || '예배')} 출석 완료 (${escapeHtml(todayAtt.time || '')})`
-                : (isAdmin ? '구미제일감리교회 라이트 청년부 · 이용자 공용 설정' : '구미제일감리교회 라이트 청년부')}
+                : '이용자 개인 설정 · 변경 내용은 내 기기에만 적용됩니다.'}
             </div>
           </div>
         </div>
@@ -19383,153 +20039,1182 @@ ${m.body}`;
           </div>
         ` : ''}
 
-        <!-- 카테고리 1: 내 정보 · 화면 설정 -->
-        <div class="settings-group-label">내 정보 · 화면</div>
-        <div class="settings-group-card">
-          ${(!isAdmin && !isPreview) ? `
-            <button class="settings-row-btn" type="button" onclick="openAccountModal()">
-              <span class="settings-row-left">
-                <span class="settings-row-icon">👤</span>
-                <span style="min-width:0;">
-                  <div class="settings-row-title">내 계정 관리</div>
-                  <div class="settings-row-sub">이름·생일 변경 신청, 출석 기록, 비밀번호 변경·탈퇴</div>
-                </span>
-              </span>
-              <span class="settings-row-right">▸</span>
-            </button>
-          ` : ''}
-          ${isAdmin ? `
-            <button class="settings-row-btn" type="button" onclick="openAdminRenameModal()">
-              <span class="settings-row-left">
-                <span class="settings-row-icon">✏️</span>
-                <span style="min-width:0;">
-                  <div class="settings-row-title">내 관리자 이름 변경</div>
-                  <div class="settings-row-sub">현재 표시 이름: ${escapeHtml(user.name)}</div>
-                </span>
-              </span>
-              <span class="settings-row-right">▸</span>
-            </button>
-          ` : ''}
-          <button class="settings-row-btn" type="button" onclick="openNotifModal()">
-            <span class="settings-row-left">
-              <span class="settings-row-icon">🔔</span>
-              <span style="min-width:0;">
-                <div class="settings-row-title">알림 설정</div>
-                <div class="settings-row-sub">새 공지·말씀 알림 및 기기 알림 권한</div>
-              </span>
-            </span>
-            <span class="settings-row-right">
-              <span class="tag ${notifOn ? 'green' : 'slate'}">${notifOn ? '켜짐' : '꺼짐'}</span>
-              <span>▸</span>
-            </span>
-          </button>
-          <div class="settings-row-static">
-            <div class="settings-row-left">
-              <span class="settings-row-icon">🔤</span>
-              <div style="min-width:0; flex:1;">
-                <div class="settings-row-title">전체 글자 크기</div>
-                <div class="settings-row-sub">앱 전체 글자를 보기 편하게 조절합니다 (${escapeHtml(bLbl)} 본문은 ${escapeHtml(bLbl)}에서 별도 조절)</div>
-              </div>
-            </div>
-            <div class="font-scale-seg">
-              <button class="font-scale-btn ${appFontScale === 'normal' ? 'active' : ''}" type="button" onclick="setAppFontScale('normal')">보통</button>
-              <button class="font-scale-btn ${appFontScale === 'large' ? 'active' : ''}" type="button" onclick="setAppFontScale('large')">크게</button>
-              <button class="font-scale-btn ${appFontScale === 'xlarge' ? 'active' : ''}" type="button" onclick="setAppFontScale('xlarge')">아주 크게</button>
+        ${groupedHtml}
+      `;
+    }
+
+    // ==================== 24. 하단 탭 안 읽은 배지 (1, 2...) 추적 엔진 ====================
+    function loadTabSeenTs() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(KEY_TAB_SEEN_TS) || '{}');
+        if (!raw || typeof raw !== 'object' || !raw.initialized) {
+          const now = Date.now();
+          const init = { initialized: true, home: now, qt: now, inquiryReply: now };
+          localStorage.setItem(KEY_TAB_SEEN_TS, JSON.stringify(init));
+          return init;
+        }
+        return raw;
+      } catch {
+        const now = Date.now();
+        return { initialized: true, home: now, qt: now, inquiryReply: now };
+      }
+    }
+
+    function markTabAsSeen(key) {
+      try {
+        const seen = loadTabSeenTs();
+        seen[key] = Date.now();
+        localStorage.setItem(KEY_TAB_SEEN_TS, JSON.stringify(seen));
+      } catch {}
+    }
+
+    function getUnreadInquiryReplyCount() {
+      const seen = loadTabSeenTs();
+      const lastSeen = Number(seen.inquiryReply || 0);
+      return (myInquiries || []).filter(q => q && q.reply && Number(q.replyTs || 0) > lastSeen).length;
+    }
+
+    function getUnreadCountForTab(tabKey, user) {
+      if (!user) return 0;
+      const seen = loadTabSeenTs();
+      if (tabKey === 'home') {
+        const lastSeen = Number(seen.home || 0);
+        const newNotices = (notices || []).filter(n => {
+          if (!canUserSeeTarget(user, n) || getPublishState(n) !== 'live') return false;
+          const ts = Number(n.alertTs || n.updatedTs || n.id || 0);
+          return ts > lastSeen;
+        }).length;
+        const newBlocks = (blocks || []).filter(b => {
+          if (!canUserSeeTarget(user, b) || getPublishState(b) !== 'live') return false;
+          return Number(b.alertTs || 0) > lastSeen;
+        }).length;
+        return newNotices + newBlocks;
+      }
+      if (tabKey === 'qt') {
+        const lastSeen = Number(seen.qt || 0);
+        const newQts = (qtPosts || []).filter(q => Number(q.createdTs || 0) > lastSeen).length;
+        const newDicts = (bibleDictCustomItems || []).filter(d => Number(d.createdTs || 0) > lastSeen).length;
+        return newQts + newDicts;
+      }
+      if (tabKey === 'settings') {
+        let cnt = 0;
+        if (hasPendingAppUpdate()) cnt += 1;
+        cnt += getUnreadInquiryReplyCount();
+        return cnt;
+      }
+      return 0;
+    }
+
+    // ==================== 25. 자체 성경 용어 사전 (저작권 안전 · 기본 60개 + 관리자 추가/수정/삭제) ====================
+    const DEFAULT_BIBLE_DICTIONARY = [
+      { id: 'bd_01', cat: '신학·용어', term: '아멘 (Amen)', ref: '고린도후서 1:20', def: '히브리어로 "진실로 그러합니다", "그대로 이루어지기를 바랍니다"라는 뜻입니다. 말씀이나 기도에 마음으로 동의하고 믿음으로 화답할 때 사용합니다.' },
+      { id: 'bd_02', cat: '신학·용어', term: '할렐루야 (Hallelujah)', ref: '시편 150:1', def: '"여호와를 찬양하라"는 뜻의 히브리어 감탄사입니다. 하나님을 높이고 감사하며 기쁨으로 찬양할 때 쓰는 대표적인 찬송 표현입니다.' },
+      { id: 'bd_03', cat: '신학·용어', term: '은혜 (Grace)', ref: '에베소서 2:8', def: '받을 자격이 없는 사람에게 하나님께서 값없이 베풀어 주시는 호의와 사랑, 그리고 구원의 선물을 의미합니다.' },
+      { id: 'bd_04', cat: '신학·용어', term: '언약 (Covenant)', ref: '창세기 17:7', def: '하나님께서 사람과 맺으신 신실한 약속입니다. 구약의 옛 언약(율법)을 넘어 예수 그리스도의 십자가를 통해 새 언약이 완성되었습니다.' },
+      { id: 'bd_05', cat: '신학·용어', term: '복음 (Gospel)', ref: '로마서 1:16', def: '"기쁜 소식"이라는 뜻으로, 예수 그리스도께서 죄인을 구원하시기 위해 십자가에서 죽으시고 부활하셨다는 구원의 소식을 말합니다.' },
+      { id: 'bd_06', cat: '신학·용어', term: '샬롬 (Shalom)', ref: '요한복음 14:27', def: '단순히 다툼이 없는 상태를 넘어, 하나님과의 바른 관계 속에서 누리는 온전한 평안·화목·충만함을 뜻하는 히브리어 인사입니다.' },
+      { id: 'bd_07', cat: '신학·용어', term: '회개 (Repentance)', ref: '마태복음 4:17', def: '죄를 뉘우치는 감정에서 그치지 않고, 하나님께 등 돌렸던 삶의 방향을 돌이켜 주님께로 돌아오는 결단과 변화를 뜻합니다.' },
+      { id: 'bd_08', cat: '신학·용어', term: '구속 (Redemption)', ref: '이사야 43:1', def: '값을 치르고 종이나 포로 된 사람을 사서 자유롭게 해방시킨다는 뜻으로, 예수님께서 십자가의 보혈로 우리를 죄에서 건져내신 사역을 가리킵니다.' },
+      { id: 'bd_09', cat: '신학·용어', term: '칭의 (Justification)', ref: '로마서 3:24', def: '죄인인 우리가 행위가 아니라 예수 그리스도를 믿음으로 말미암아 하나님 앞에서 "의롭다"고 인정받는 은혜를 말합니다.' },
+      { id: 'bd_10', cat: '신학·용어', term: '성화 (Sanctification)', ref: '데살로니가전서 4:3', def: '구원받은 성도가 성령의 도우심으로 날마다 죄를 멀리하고 예수 그리스도의 성품을 닮아 거룩하게 변화되어 가는 과정입니다.' },
+      { id: 'bd_11', cat: '신학·용어', term: '거룩 (Holiness)', ref: '레위기 19:2', def: '"구별되다", "따로 떼어놓다"라는 뜻입니다. 하나님의 성품을 가리키며, 성도가 세상의 죄와 구별되어 하나님께 속한 삶을 사는 것을 의미합니다.' },
+      { id: 'bd_12', cat: '신학·용어', term: '임마누엘 (Immanuel)', ref: '마태복음 1:23', def: '"하나님이 우리와 함께 계시다"는 뜻의 히브리어입니다. 예수 그리스도께서 인간의 몸으로 오셔서 우리와 영원히 동행하심을 보여줍니다.' },
+      { id: 'bd_13', cat: '신학·용어', term: '메시야 / 그리스도', ref: '마태복음 16:16', def: '둘 다 "기름 부음을 받은 자"라는 뜻입니다(히브리어 메시야, 헬라어 그리스도). 구약에서 예언된 구원자이신 예수님을 가리키는 칭호입니다.' },
+      { id: 'bd_14', cat: '신학·용어', term: '보혜사 (Paraclete)', ref: '요한복음 14:16', def: '"곁에 불려와 돕는 분", "위로자", "변호자"라는 뜻의 헬라어입니다. 예수님께서 제자들과 성도들을 돕고 인도하시기 위해 보내신 성령님을 가리킵니다.' },
+      { id: 'bd_15', cat: '신학·용어', term: '아가페 (Agape)', ref: '고린도전서 13:4', def: '조건이나 대가를 바라지 않고 상대의 유익을 위해 아낌없이 내어주는 하나님의 무조건적이고 희생적인 사랑을 뜻하는 헬라어입니다.' },
+      { id: 'bd_16', cat: '신학·용어', term: '코이노니아 (Koinonia)', ref: '사도행전 2:42', def: '그리스도 안에서 성도들이 서로 마음을 나누고 삶을 함께 세워 가는 깊은 영적 교제와 공동체적 사귐을 뜻합니다.' },
+      { id: 'bd_17', cat: '신학·용어', term: '긍휼 (Mercy)', ref: '시편 103:8', def: '연약하고 고통받는 이들을 불쌍히 여겨 실제로 도와주고 품어 주는 하나님의 깊고 따뜻한 사랑을 의미합니다.' },
+      { id: 'bd_18', cat: '신학·용어', term: '경외 (Fear of the Lord)', ref: '잠언 9:10', def: '무서워 피하는 공포가 아니라, 창조주 하나님의 위대하심과 거룩하심을 깊이 공경하고 존중하며 그 말씀 앞에 겸손히 서는 태도입니다.' },
+      { id: 'bd_19', cat: '신학·용어', term: '묵상 (Meditation)', ref: '시편 1:2', def: '하나님의 말씀을 작은 소리로 되뇌이며 깊이 생각하고, 오늘 내 삶에 어떻게 적용할지 기도하며 새기는 신앙 습관입니다.' },
+      { id: 'bd_20', cat: '신학·용어', term: '중보기도 (Intercession)', ref: '디모데전서 2:1', def: '자신이 아닌 다른 사람이나 공동체, 나라와 열방을 위해 하나님 앞에 나아가 대신 간구하는 사랑의 기도입니다.' },
+      { id: 'bd_21', cat: '신학·용어', term: '호산나 (Hosanna)', ref: '마태복음 21:9', def: '원래 "이제 구원하소서"라는 간구에서 유래해, 왕으로 오시는 메시아를 기쁨으로 환영하며 외치는 찬양의 표현으로 쓰였습니다.' },
+      { id: 'bd_22', cat: '신학·용어', term: '마라나타 (Maranatha)', ref: '고린도전서 16:22', def: '아람어로 "우리 주여 오시옵소서"라는 뜻입니다. 다시 오실 예수 그리스도의 재림을 사모하던 초대교회 성도들의 인사였습니다.' },
+      { id: 'bd_23', cat: '신학·용어', term: '셀라 (Selah)', ref: '시편 3:2', def: '시편에 자주 등장하는 음악·묵상 기호로, 잠시 멈추어 방금 읽거나 노래한 말씀의 뜻을 깊이 되새기라는 의미로 이해됩니다.' },
+      { id: 'bd_24', cat: '신학·용어', term: '여호와 이레', ref: '창세기 22:14', def: '"여호와께서 준비하신다"는 뜻입니다. 아브라함이 순종으로 나아갈 때 하나님께서 친히 제물을 예비해 주신 사건에서 유래했습니다.' },
+      { id: 'bd_25', cat: '신학·용어', term: '여호와 닛시', ref: '출애굽기 17:15', def: '"여호와는 나의 깃발"이라는 뜻입니다. 아말렉과의 전투에서 승리하게 하신 하나님을 기념하며 모세가 쌓은 제단의 이름입니다.' },
+      { id: 'bd_26', cat: '신학·용어', term: '여호와 라파', ref: '출애굽기 15:26', def: '"치료하시는 여호와"라는 뜻입니다. 육체의 질병뿐 아니라 상한 마음과 영혼까지 온전히 고치시는 하나님을 나타냅니다.' },
+      { id: 'bd_27', cat: '신학·용어', term: '에벤에셀 (Ebenezer)', ref: '사무엘상 7:12', def: '"도움의 돌"이라는 뜻으로, 사무엘이 "여호와께서 여기까지 우리를 도우셨다"고 고백하며 세운 기념비의 이름입니다.' },
+      { id: 'bd_28', cat: '신학·용어', term: '만나 (Manna)', ref: '출애굽기 16:15', def: '이스라엘 백성이 광야에서 40년간 매일 아침 하나님께로부터 공급받은 하늘 양식입니다. 날마다 주시는 일용할 은혜를 상징합니다.' },
+      { id: 'bd_29', cat: '신학·용어', term: '청지기 (Steward)', ref: '베드로전서 4:10', def: '주인의 재산과 일을 맡아 성실히 관리하는 사람입니다. 시간·재능·물질이 모두 하나님의 것임을 알고 충성되게 섬기는 성도의 정체성입니다.' },
+      { id: 'bd_30', cat: '신학·용어', term: '사도 (Apostle)', ref: '마태복음 10:2', def: '"보냄을 받은 자"라는 뜻의 헬라어입니다. 예수님께서 복음 전파와 교회 설립을 위해 직접 부르시고 파송하신 열두 제자와 바울 등을 가리킵니다.' },
+      { id: 'bd_31', cat: '신학·용어', term: '제자 (Disciple)', ref: '마태복음 28:19', def: '스승의 가르침을 배우고 그 삶과 발자취를 따르는 사람입니다. 그리스도인은 예수님의 말씀을 배우며 세상 속에서 실천하는 제자입니다.' },
+      { id: 'bd_32', cat: '신학·용어', term: '선지자 (Prophet)', ref: '예레미야 1:7', def: '하나님의 말씀을 직접 받아 백성에게 대언하던 사람입니다. 미래를 예고할 뿐 아니라 시대의 죄를 일깨우고 하나님께 돌아오도록 외쳤습니다.' },
+      { id: 'bd_33', cat: '신학·용어', term: '제사장 (Priest)', ref: '베드로전서 2:9', def: '구약에서 하나님과 백성 사이에 서서 제사를 드리고 축복하던 직분입니다. 신약에서는 예수님이 영원한 대제사장이시며 모든 성도가 왕 같은 제사장으로 부름받았습니다.' },
+      { id: 'bd_34', cat: '신학·용어', term: '바리새인 (Pharisee)', ref: '마태복음 23:2', def: '"구별된 자"라는 뜻으로 율법과 전통을 철저히 지키려 했던 유대교 종파입니다. 외식과 형식주의로 흘러 예수님의 책망을 받기도 했습니다.' },
+      { id: 'bd_35', cat: '신학·용어', term: '성막 (Tabernacle)', ref: '출애굽기 25:8', def: '이스라엘이 광야를 행진할 때 하나님께서 백성 가운데 거하시고 만나 주시던 이동식 성전입니다. 뜰·성소·지성소로 이루어져 있습니다.' },
+      { id: 'bd_36', cat: '신학·용어', term: '지성소 (Most Holy Place)', ref: '히브리서 10:19', def: '성막과 성전 가장 안쪽에 언약궤가 놓였던 가장 거룩한 공간입니다. 예수님의 십자가로 휘장이 찢어지며 성도 누구나 하나님께 담대히 나아가게 되었습니다.' },
+      { id: 'bd_37', cat: '신학·용어', term: '언약궤 (Ark of the Covenant)', ref: '출애굽기 25:10', def: '십계명 돌판 등이 보관되었던 나무와 금으로 만든 궤로, 하나님의 임재와 언약의 신실하심을 상징했습니다.' },
+      { id: 'bd_38', cat: '신학·용어', term: '속죄 (Atonement)', ref: '로마서 5:11', def: '죄의 대가를 대신 치러 죄를 덮고 하나님과 화목하게 만드는 일입니다. 예수 그리스도의 십자가 희생으로 단번에 영원한 속죄가 이루어졌습니다.' },
+      { id: 'bd_39', cat: '예배·절기', term: '안식일 (Sabbath)', ref: '창세기 2:3', def: '하나님께서 6일간 천지를 창조하시고 일곱째 날 쉬시며 복 주신 날입니다. 일을 멈추고 창조주 하나님을 기억하며 참된 쉼을 누리는 날입니다.' },
+      { id: 'bd_40', cat: '예배·절기', term: '유월절 (Passover)', ref: '출애굽기 12:13', def: '이스라엘이 애굽에서 구원받을 때 어린 양의 피를 문설주에 발라 죽음의 재앙이 넘어간 사건을 기념하는 절기입니다. 십자가의 어린 양 예수님을 예표합니다.' },
+      { id: 'bd_41', cat: '예배·절기', term: '오순절 (Pentecost)', ref: '사도행전 2:1-4', def: '유월절 후 50일째 되는 절기(칠칠절)로, 예수님 부활·승천 이후 성령님께서 제자들에게 강림하셔서 초대교회가 시작된 뜻깊은 날입니다.' },
+      { id: 'bd_42', cat: '예배·절기', term: '초막절 (Feast of Tabernacles)', ref: '레위기 23:42', def: '가을 추수를 감사하며 광야 시절 천막 생활 속에서 인도하신 하나님의 은혜를 기억하기 위해 초막을 짓고 지킨 기쁨의 절기입니다.' },
+      { id: 'bd_43', cat: '예배·절기', term: '세례 (Baptism)', ref: '로마서 6:4', def: '예수 그리스도를 구주로 믿고 죄에 대하여 죽고 주님과 함께 새 생명으로 다시 살아났음을 공식적으로 고백하는 거룩한 예식입니다.' },
+      { id: 'bd_44', cat: '예배·절기', term: '성찬 (Lord\'s Supper)', ref: '고린도전서 11:24', def: '예수님께서 십자가를 지시기 전날 밤 제정하신 예식으로, 떡과 잔을 나누며 주님의 몸과 피의 희생을 기념하고 다시 오심을 기다립니다.' },
+      { id: 'bd_45', cat: '예배·절기', term: '희년 (Jubilee)', ref: '레위기 25:10', def: '50년마다 돌아오는 해로, 빚을 탕감하고 종을 해방하며 잃어버린 땅을 원래 주인에게 돌려주어 하나님의 정의와 회복을 실천하던 해입니다.' },
+      { id: 'bd_46', cat: '예배·절기', term: '십일조 (Tithe)', ref: '말라기 3:10', def: '하나님께서 주신 소득의 십분의 일을 구별해 드림으로써 모든 물질의 주인이 하나님이심을 고백하고 감사하는 신앙 실천입니다.' },
+      { id: 'bd_47', cat: '인물', term: '아브라함 (Abraham)', ref: '창세기 12:1-2', def: '"열국의 아비"라는 뜻으로, 하나님의 부르심을 따라 본토를 떠나 믿음으로 순종한 이스라엘의 조상이자 "믿음의 조상"입니다.' },
+      { id: 'bd_48', cat: '인물', term: '모세 (Moses)', ref: '출애굽기 3:10', def: '"물에서 건져냄"이라는 뜻으로, 하나님의 부름을 받아 이스라엘 백성을 애굽에서 이끌어 내고 시내산에서 율법을 받은 지도자입니다.' },
+      { id: 'bd_49', cat: '인물', term: '다윗 (David)', ref: '사무엘상 13:14', def: '베들레헴의 목동에서 이스라엘의 왕이 된 인물로, 수많은 시편을 남겼으며 하나님 마음에 합한 사람으로 불렸습니다.' },
+      { id: 'bd_50', cat: '인물', term: '요셉 (Joseph)', ref: '창세기 50:20', def: '야곱의 아들로 형들에게 팔려 애굽의 노예와 죄수가 되었으나, 끝까지 하나님을 경외하여 총리가 되고 가족을 기근에서 구했습니다.' },
+      { id: 'bd_51', cat: '인물', term: '다니엘 (Daniel)', ref: '다니엘 6:10', def: '바벨론 포로 시절에도 뜻을 정해 신앙의 절개를 지켰으며, 사자 굴의 위협 앞에서도 하루 세 번 기도한 믿음의 청년이었습니다.' },
+      { id: 'bd_52', cat: '인물', term: '베드로 (Peter)', ref: '마태복음 16:18', def: '갈릴리 어부 출신으로 예수님의 수제자입니다. "반석"이라는 새 이름을 받았고, 성령 충만 후 초대교회의 기둥으로 복음을 전했습니다.' },
+      { id: 'bd_53', cat: '인물', term: '바울 (Paul)', ref: '사도행전 9:15', def: '교회를 핍박하던 사울이었으나 다메섹 도상에서 부활하신 예수님을 만난 뒤 이방인의 사도가 되어 수많은 교회와 신약 서신서를 남겼습니다.' },
+      { id: 'bd_54', cat: '인물', term: '디모데 (Timothy)', ref: '디모데전서 4:12', def: '바울의 믿음의 아들이자 젊은 동역자로, 에베소 교회를 목회하며 연소함을 업신여기지 못하게 하고 믿음의 본이 되라는 권면을 받았습니다.' },
+      { id: 'bd_55', cat: '지명', term: '예루살렘 (Jerusalem)', ref: '시편 122:6', def: '"평화의 터"라는 뜻을 지닌 이스라엘의 영적 중심지입니다. 솔로몬 성전이 세워졌고 예수님께서 십자가를 지시고 부활하신 곳입니다.' },
+      { id: 'bd_56', cat: '지명', term: '베들레헴 (Bethlehem)', ref: '미가 5:2', def: '"떡집"이라는 뜻의 유다 작은 마을로, 다윗 왕의 고향이자 생명의 떡으로 오신 예수 그리스도께서 탄생하신 곳입니다.' },
+      { id: 'bd_57', cat: '지명', term: '갈릴리 (Galilee)', ref: '마태복음 4:18', def: '이스라엘 북부 지역으로 예수님께서 공생애 대부분을 보내시며 제자들을 부르시고 가르치시며 많은 이적을 행하신 무대입니다.' },
+      { id: 'bd_58', cat: '지명', term: '겟세마네 (Gethsemane)', ref: '마태복음 26:36', def: '"기름 짜는 틀"이라는 뜻의 감람산 기슭 동산입니다. 예수님께서 잡히시기 전날 밤 "내 원대로 마옵시고 아버지의 원대로 하옵소서"라고 기도하신 곳입니다.' },
+      { id: 'bd_59', cat: '지명', term: '골고다 (Golgotha)', ref: '요한복음 19:17', def: '아람어로 "해골의 곳"(라틴어 갈보리)이라는 뜻으로, 예루살렘 성 밖에서 예수님께서 인류의 죄를 대신해 십자가에 못 박히신 언덕입니다.' },
+      { id: 'bd_60', cat: '지명', term: '시내산 (Mount Sinai)', ref: '출애굽기 19:20', def: '출애굽한 이스라엘 백성이 하나님과 언약을 맺고 모세를 통해 십계명과 율법을 받은 거룩한 산(호렙산)입니다.' }
+    ];
+
+    function getAllBibleDictEntries() {
+      const custom = Array.isArray(bibleDictCustomItems) ? bibleDictCustomItems : [];
+      const customTerms = new Set(custom.map(c => String(c.term || '').trim()));
+      const base = DEFAULT_BIBLE_DICTIONARY.filter(d => !customTerms.has(d.term));
+      return [...custom.map(c => ({ ...c, isCustom: true })), ...base.map(b => ({ ...b, isCustom: false }))];
+    }
+
+    function getAutoDailyDictForToday() {
+      const { dot, y, m, d } = getKstDateParts();
+      const dayNumber = Math.floor(Date.UTC(Number(y), Number(m) - 1, Number(d)) / 86400000);
+      const idx = ((dayNumber % DEFAULT_BIBLE_DICTIONARY.length) + DEFAULT_BIBLE_DICTIONARY.length) % DEFAULT_BIBLE_DICTIONARY.length;
+      const item = DEFAULT_BIBLE_DICTIONARY[idx];
+      return { ...item, date: dot, isAuto: true };
+    }
+
+    function hasTodayReplaceDict() {
+      const todayDot = getKstDateParts().dot;
+      return (bibleDictCustomItems || []).some(d => d.displayMode === 'replace' && normalizeDotDate(d.date) === todayDot);
+    }
+
+    function isAutoTodayDictHiddenManually() {
+      return hiddenAutoDictDate === getKstDateParts().dot;
+    }
+
+    function buildDailyBibleDictCardHtml(canManage) {
+      const todayDot = getKstDateParts().dot;
+      const autoToday = getAutoDailyDictForToday();
+      const todayCustom = (bibleDictCustomItems || []).filter(d => normalizeDotDate(d.date) === todayDot);
+      const todayReplaces = todayCustom.filter(d => d.displayMode === 'replace');
+      const todayTogethers = todayCustom.filter(d => d.displayMode !== 'replace');
+      const suppressAuto = todayReplaces.length > 0 || isAutoTodayDictHiddenManually();
+
+      const displayList = suppressAuto
+        ? [...todayReplaces, ...todayTogethers]
+        : [autoToday, ...todayTogethers];
+
+      if (displayList.length === 0) {
+        return canManage ? `
+          <div class="card" style="background:#F0FDF4; border-color:#BBF7D0; padding:12px 14px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+            <span style="font-size:12.5px; color:#166534; font-weight:700;">📚 오늘의 자동 성경 사전이 숨겨져 있습니다.</span>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-sm approve" type="button" onclick="restoreAutoTodayDict()">🔄 복원</button>
+              <button class="btn-sm primary" type="button" onclick="openNewBibleDictModal()">+ 용어 추가</button>
             </div>
           </div>
-          <button class="settings-row-btn" type="button" onclick="openBibleBookmarksModal()">
-            <span class="settings-row-left">
-              <span class="settings-row-icon">⭐</span>
-              <span style="min-width:0;">
-                <div class="settings-row-title">${escapeHtml(bLbl)} 책갈피</div>
-                <div class="settings-row-sub">내가 저장한 색상별 말씀 책갈피 모아보기</div>
-              </span>
-            </span>
-            <span class="settings-row-right">▸</span>
-          </button>
-          <button class="settings-row-btn" type="button" onclick="openBibleMemoModal()">
-            <span class="settings-row-left">
-              <span class="settings-row-icon">📝</span>
-              <span style="min-width:0;">
-                <div class="settings-row-title">${escapeHtml(bLbl)} 메모장</div>
-                <div class="settings-row-sub">내 기기에만 안전하게 저장된 개인 묵상 메모</div>
-              </span>
-            </span>
-            <span class="settings-row-right">▸</span>
-          </button>
+        ` : '';
+      }
+
+      return displayList.map(item => `
+        <div class="dict-daily-card">
+          <div class="card-top" style="margin-bottom:4px;">
+            <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+              <span class="tag green">📚 오늘의 성경 사전</span>
+              <span class="tag slate">${escapeHtml(item.cat || '용어')}</span>
+              ${item.ref ? `<span class="qt-passage-pill">📖 ${escapeHtml(item.ref)}</span>` : ''}
+            </div>
+            <span class="card-date">${escapeHtml(item.date || todayDot)}</span>
+          </div>
+          <div class="dict-term-title">${escapeHtml(item.term)}</div>
+          <div class="dict-term-def">${escapeHtml(item.def)}</div>
+          <div class="card-footer" style="margin-top:10px; padding-top:8px;">
+            <button class="btn-sm" type="button" onclick="openBibleDictModal()">📚 전체 사전 검색</button>
+            ${canManage ? (item.isAuto ? `
+              <div style="display:flex; gap:5px;">
+                <button class="btn-sm" type="button" onclick="openEditAutoTodayDictModal()">수정</button>
+                <button class="btn-sm danger" type="button" onclick="hideAutoTodayDict()">숨김</button>
+              </div>
+            ` : `
+              <div style="display:flex; gap:5px;">
+                <button class="btn-sm" type="button" onclick="openEditBibleDictModal('${escapeJsAttr(item.id)}')">수정</button>
+                <button class="btn-sm danger" type="button" onclick="deleteBibleDictItem('${escapeJsAttr(item.id)}')">삭제</button>
+              </div>
+            `) : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function buildManageBibleDictSectionHtml() {
+      const autoToday = getAutoDailyDictForToday();
+      const isReplaced = hasTodayReplaceDict();
+      const isHidden = isAutoTodayDictHiddenManually();
+      const customList = Array.isArray(bibleDictCustomItems) ? bibleDictCustomItems : [];
+      const dictListOpen = isManageSectionOpen('qt_dict_list', customList.length <= 5);
+
+      return `
+        <div class="section-head">
+          <h2 class="section-title">📚 성경 사전 관리 (매일 자동 + 직접 관리)</h2>
+          <button class="btn-admin" type="button" onclick="openNewBibleDictModal()">+ 용어 추가</button>
+        </div>
+        <div class="info-box" style="margin-top:0; margin-bottom:10px;">
+          매일 00:00(KST)마다 자체 성경 용어 사전(기본 60개) 중 1개가 <b>${escapeHtml(getTabLabel('qt'))}</b> 화면에 자동 표시됩니다. 관리자가 용어를 직접 추가·수정·대체·삭제할 수 있습니다.
         </div>
 
-        <!-- 카테고리 2: 청년부 안내 · 초대 -->
-        <div class="settings-group-label">청년부 안내 · 공유</div>
-        <div class="settings-group-card">
-          <button class="settings-row-btn" type="button" onclick="openInviteQrModal()">
-            <span class="settings-row-left">
-              <span class="settings-row-icon">📲</span>
-              <span style="min-width:0;">
-                <div class="settings-row-title">오늘의 초대 QR</div>
-                <div class="settings-row-sub">새 지체 초대 QR 보기 · 이미지 공유 · 링크 복사</div>
-              </span>
-            </span>
-            <span class="settings-row-right">▸</span>
-          </button>
-          <button class="settings-row-btn" type="button" onclick="openFromSettingsTab('bylaws')">
-            <span class="settings-row-left">
-              <span class="settings-row-icon">${escapeHtml(byIcn)}</span>
-              <span style="min-width:0;">
-                <div class="settings-row-title">${escapeHtml(byLbl)}</div>
-                <div class="settings-row-sub">라이트 청년부 회칙 전문 검색 및 복사</div>
-              </span>
-            </span>
-            <span class="settings-row-right">▸</span>
-          </button>
-          <button class="settings-row-btn" type="button" onclick="openFromSettingsTab('guide')">
-            <span class="settings-row-left">
-              <span class="settings-row-icon">${escapeHtml(gIcn)}</span>
-              <span style="min-width:0;">
-                <div class="settings-row-title">${escapeHtml(gLbl)}</div>
-                <div class="settings-row-sub">출석·말씀·성경·알림 등 앱 사용 방법 안내</div>
-              </span>
-            </span>
-            <span class="settings-row-right">▸</span>
-          </button>
+        <div class="card" style="border-color:${(isReplaced || isHidden) ? '#CBD5E1' : '#86EFAC'}; background:${(isReplaced || isHidden) ? '#F8FAFC' : '#F0FDF4'};">
+          <div class="card-top">
+            <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+              <strong style="font-size:14px; color:#065F46;">${escapeHtml(autoToday.term)}</strong>
+              <span class="tag ${isReplaced ? 'warm' : (isHidden ? 'slate' : 'green')}">${isReplaced ? '관리자 용어로 대체됨' : (isHidden ? '오늘 숨김됨' : '오늘 자동 표시중')}</span>
+            </div>
+            <span class="card-date">${escapeHtml(autoToday.date)}</span>
+          </div>
+          <p class="card-body" style="margin-bottom:9px;">${escapeHtml(autoToday.def)}</p>
+          <div class="qt-manage-actions">
+            <button class="btn-sm primary" type="button" onclick="openBibleDictModal()">📚 전체 사전 보기</button>
+            <button class="btn-sm" type="button" onclick="openEditAutoTodayDictModal()">✏️ 수정(대체)</button>
+            ${isHidden
+              ? '<button class="btn-sm approve" type="button" onclick="restoreAutoTodayDict()">🔄 복원</button>'
+              : '<button class="btn-sm danger" type="button" onclick="hideAutoTodayDict()">삭제(숨김)</button>'}
+          </div>
         </div>
 
-        <!-- 카테고리 3: 앱 이용 · 보안 -->
-        <div class="settings-group-label">앱 이용 · 보안</div>
-        <div class="settings-group-card">
-          <button class="settings-row-btn" type="button" onclick="openAppInstallGuideModal()">
-            <span class="settings-row-left">
-              <span class="settings-row-icon">📱</span>
-              <span style="min-width:0;">
-                <div class="settings-row-title">앱 설치 방법 (홈 화면에 추가)</div>
-                <div class="settings-row-sub">아이폰·안드로이드 스마트폰에 앱처럼 설치하기</div>
-              </span>
-            </span>
-            <span class="settings-row-right">▸</span>
-          </button>
-          <button class="settings-row-btn" type="button" onclick="openPrivacyGuideModal()">
-            <span class="settings-row-left">
-              <span class="settings-row-icon">🔒</span>
-              <span style="min-width:0;">
-                <div class="settings-row-title">개인정보 · 보안 안내</div>
-                <div class="settings-row-sub">개인 메모·책갈피 보호 및 보안 방어 안내</div>
-              </span>
-            </span>
-            <span class="settings-row-right">▸</span>
-          </button>
-          <button class="settings-row-btn" type="button" onclick="confirmLogoutFromSettings()">
-            <span class="settings-row-left">
-              <span class="settings-row-icon danger">🚪</span>
-              <span style="min-width:0;">
-                <div class="settings-row-title danger">로그아웃</div>
-                <div class="settings-row-sub">현재 계정에서 안전하게 로그아웃합니다</div>
-              </span>
-            </span>
-            <span class="settings-row-right" style="color:#EF4444;">▸</span>
-          </button>
+        ${buildManageAccordionBar({
+          key: 'qt_dict_list',
+          titleHtml: '✍️ 관리자 등록 성경 사전 목록',
+          badgeHtml: `<span class="tag slate">${customList.length}개</span>`,
+          defaultOpen: customList.length <= 5,
+          marginTop: '10px'
+        })}
+        <div data-acc-body="qt_dict_list" class="${dictListOpen ? '' : 'hidden'}">
+          ${customList.length === 0
+            ? '<div class="card" style="text-align:center; color:#64748B; font-size:13px;">관리자가 직접 추가한 사전 용어가 없습니다.<br>(기본 60개 용어는 성경 사전 및 매일 자동 사전에 표시됩니다.)</div>'
+            : customList.map(d => `
+                <div class="card">
+                  <div class="card-top">
+                    <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+                      <strong style="font-size:14px; color:#065F46;">${escapeHtml(d.term)}</strong>
+                      <span class="tag slate">${escapeHtml(d.cat || '용어')}</span>
+                      <span class="tag ${d.displayMode === 'replace' ? 'warm' : 'green'}">${d.displayMode === 'replace' ? '🔄 대체' : '📌 함께'}</span>
+                    </div>
+                    <span class="card-date">${escapeHtml(d.date || '')}</span>
+                  </div>
+                  ${d.ref ? `<div style="margin-bottom:5px;"><span class="qt-passage-pill">📖 ${escapeHtml(d.ref)}</span></div>` : ''}
+                  <p class="card-body">${escapeHtml(d.def)}</p>
+                  <div class="card-footer">
+                    <span style="font-size:11px; color:#64748B;">작성: ${escapeHtml(d.author || '관리자')}</span>
+                    <div style="display:flex; gap:6px;">
+                      <button class="btn-sm" type="button" onclick="openEditBibleDictModal('${escapeJsAttr(d.id)}')">수정</button>
+                      <button class="btn-sm danger" type="button" onclick="deleteBibleDictItem('${escapeJsAttr(d.id)}')">삭제</button>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
         </div>
       `;
     }
+
+    window.openBibleDictModal = () => {
+      bibleDictCatFilter = '전체';
+      const inp = document.getElementById('bibleDictSearchInput');
+      if (inp) inp.value = '';
+      renderBibleDictModalList();
+      document.getElementById('bibleDictModal').classList.add('open');
+    };
+
+    window.setBibleDictCatFilter = (cat) => {
+      bibleDictCatFilter = cat;
+      renderBibleDictModalList();
+    };
+
+    window.renderBibleDictModalList = () => {
+      const all = getAllBibleDictEntries();
+      const cats = ['전체', '신학·용어', '인물', '지명', '예배·절기', '기타'];
+      const chipsEl = document.getElementById('bibleDictCatChips');
+      if (chipsEl) {
+        chipsEl.innerHTML = cats.map(c => `
+          <button class="filter-chip ${bibleDictCatFilter === c ? 'active' : ''}" type="button" onclick="setBibleDictCatFilter('${escapeJsAttr(c)}')">${escapeHtml(c)}</button>
+        `).join('');
+      }
+      const q = String((document.getElementById('bibleDictSearchInput') || {}).value || '').trim().toLowerCase();
+      const filtered = all.filter(item => {
+        if (bibleDictCatFilter !== '전체' && (item.cat || '기타') !== bibleDictCatFilter) return false;
+        if (!q) return true;
+        const hay = `${item.term || ''} ${item.def || ''} ${item.ref || ''} ${item.cat || ''}`.toLowerCase();
+        return hay.includes(q);
+      });
+      const sumEl = document.getElementById('bibleDictModalSummary');
+      if (sumEl) sumEl.textContent = q ? `'${q}' 검색 결과 ${filtered.length}개 용어` : `총 ${filtered.length}개 성경 용어`;
+
+      const listEl = document.getElementById('bibleDictModalList');
+      if (!listEl) return;
+      if (filtered.length === 0) {
+        listEl.innerHTML = '<div style="text-align:center; padding:24px 10px; color:#64748B; font-size:13px;">일치하는 성경 용어가 없습니다.</div>';
+        return;
+      }
+      listEl.innerHTML = filtered.map(item => `
+        <div class="dict-modal-item">
+          <div class="card-top" style="margin-bottom:4px;">
+            <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+              <strong style="font-size:14.5px; color:#065F46;">${escapeHtml(item.term)}</strong>
+              <span class="tag slate">${escapeHtml(item.cat || '용어')}</span>
+              ${item.isCustom ? '<span class="tag green">관리자 등록</span>' : ''}
+            </div>
+            ${item.ref ? `<span class="qt-passage-pill">📖 ${escapeHtml(item.ref)}</span>` : ''}
+          </div>
+          <div style="font-size:13px; color:#334155; line-height:1.58; white-space:pre-line;">${escapeHtml(item.def)}</div>
+        </div>
+      `).join('');
+    };
+
+    window.openNewBibleDictModal = (prefill = null) => {
+      document.getElementById('bibleDictFormModalTitle').textContent = '📚 새 성경 사전 용어 등록';
+      document.getElementById('editBibleDictId').value = '';
+      document.getElementById('dictDisplayModeSelect').value = (prefill && prefill.displayMode === 'replace') ? 'replace' : 'together';
+      document.getElementById('dictDateInput').value = getKstDateParts().dot;
+      document.getElementById('dictCatInput').value = (prefill && prefill.cat) || '신학·용어';
+      document.getElementById('dictTermInput').value = (prefill && prefill.term) || '';
+      document.getElementById('dictRefInput').value = (prefill && prefill.ref) || '';
+      document.getElementById('dictDefInput').value = (prefill && prefill.def) || '';
+      document.getElementById('bibleDictFormModal').classList.add('open');
+    };
+
+    window.openEditAutoTodayDictModal = () => {
+      const autoToday = getAutoDailyDictForToday();
+      openNewBibleDictModal({
+        cat: autoToday.cat,
+        term: autoToday.term,
+        ref: autoToday.ref,
+        def: autoToday.def,
+        displayMode: 'replace'
+      });
+      document.getElementById('bibleDictFormModalTitle').textContent = '📚 오늘의 성경 사전 수정 (대체 등록)';
+    };
+
+    window.openEditBibleDictModal = (id) => {
+      const item = (bibleDictCustomItems || []).find(x => String(x.id) === String(id));
+      if (!item) return;
+      document.getElementById('bibleDictFormModalTitle').textContent = '📚 성경 사전 용어 수정';
+      document.getElementById('editBibleDictId').value = item.id;
+      document.getElementById('dictDisplayModeSelect').value = item.displayMode === 'replace' ? 'replace' : 'together';
+      document.getElementById('dictDateInput').value = item.date || getKstDateParts().dot;
+      document.getElementById('dictCatInput').value = item.cat || '신학·용어';
+      document.getElementById('dictTermInput').value = item.term || '';
+      document.getElementById('dictRefInput').value = item.ref || '';
+      document.getElementById('dictDefInput').value = item.def || '';
+      document.getElementById('bibleDictFormModal').classList.add('open');
+    };
+
+    window.handleSaveBibleDictItem = async () => {
+      const editId = document.getElementById('editBibleDictId').value;
+      const displayMode = document.getElementById('dictDisplayModeSelect').value === 'replace' ? 'replace' : 'together';
+      const date = normalizeDotDate(document.getElementById('dictDateInput').value.trim()) || getKstDateParts().dot;
+      const cat = document.getElementById('dictCatInput').value || '신학·용어';
+      const term = document.getElementById('dictTermInput').value.trim();
+      const ref = document.getElementById('dictRefInput').value.trim();
+      const def = document.getElementById('dictDefInput').value.trim();
+
+      if (!term) return showToast('용어 이름을 입력해 주세요.');
+      if (!def) return showToast('용어 설명을 입력해 주세요.');
+      if (!enforceInputSecurity(`${term}\n${ref}\n${def}`, '성경 사전', true)) return;
+
+      const btn = document.getElementById('saveBibleDictBtn');
+      if (btn) btn.disabled = true;
+      try {
+        const next = structuredClone(bibleDictCustomItems || []);
+        if (editId) {
+          const target = next.find(x => String(x.id) === String(editId));
+          if (target) {
+            target.displayMode = displayMode;
+            target.date = date;
+            target.cat = cat;
+            target.term = term;
+            target.ref = ref;
+            target.def = def;
+            target.updatedTs = Date.now();
+          }
+        } else {
+          next.unshift({
+            id: 'bdict_' + Date.now(),
+            displayMode,
+            date,
+            cat,
+            term,
+            ref,
+            def,
+            author: currentAdminName || '관리자',
+            createdTs: Date.now()
+          });
+        }
+        await db.collection('config').doc('layout').set({ bibleDictItems: next }, { merge: true });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '오늘의 말씀',
+          action: editId ? '성경 사전 수정' : '성경 사전 추가',
+          target: term,
+          detail: `${cat} · ${def}`
+        });
+        document.getElementById('bibleDictFormModal').classList.remove('open');
+        showToast(editId ? '성경 사전 용어가 수정되었습니다!' : '새 성경 사전 용어가 등록되었습니다!');
+      } catch (err) {
+        handleDbError(err, '성경 사전 저장');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    };
+
+    window.deleteBibleDictItem = async (id) => {
+      const target = (bibleDictCustomItems || []).find(x => String(x.id) === String(id));
+      if (!target || !confirm(`[${target.term}] 용어를 삭제할까요?`)) return;
+      try {
+        const next = (bibleDictCustomItems || []).filter(x => String(x.id) !== String(id));
+        await db.collection('config').doc('layout').set({ bibleDictItems: next }, { merge: true });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '오늘의 말씀',
+          action: '성경 사전 삭제',
+          target: target.term,
+          detail: target.def || ''
+        });
+        showToast('성경 사전 용어가 삭제되었습니다.');
+      } catch (err) {
+        handleDbError(err, '성경 사전 삭제');
+      }
+    };
+
+    window.hideAutoTodayDict = async () => {
+      if (!confirm('오늘 자동 표시된 성경 사전을 숨길까요?\n(언제든 복원할 수 있으며, 내일 00:00에는 새 자동 용어가 올라옵니다.)')) return;
+      try {
+        await db.collection('config').doc('layout').set({ hiddenAutoDictDate: getKstDateParts().dot }, { merge: true });
+        recordAuditLog({ actorType: 'admin', category: '오늘의 말씀', action: '오늘 자동 성경 사전 숨김', target: getKstDateParts().dot });
+        showToast('오늘의 자동 성경 사전을 숨겼습니다.');
+      } catch (err) {
+        handleDbError(err, '자동 성경 사전 숨김');
+      }
+    };
+
+    window.restoreAutoTodayDict = async () => {
+      try {
+        await db.collection('config').doc('layout').set({ hiddenAutoDictDate: '' }, { merge: true });
+        recordAuditLog({ actorType: 'admin', category: '오늘의 말씀', action: '오늘 자동 성경 사전 복원', target: getKstDateParts().dot });
+        showToast('오늘의 자동 성경 사전을 복원했습니다!');
+      } catch (err) {
+        handleDbError(err, '자동 성경 사전 복원');
+      }
+    };
+
+    // ==================== 26. 이용자 문의 사항 & 관리자 [💬 문의 관리] ====================
+    function isInquiryResolved(q) {
+      if (!q) return false;
+      return q.status === 'resolved' || q.status === 'replied';
+    }
+
+    window.goToAdminInquiriesFromModal = () => {
+      document.getElementById('inquiryModal').classList.remove('open');
+      currentMainTab = 'manage';
+      currentManageSubTab = 'inquiries';
+      applyScreen();
+    };
+
+    function resetUserInquiryForm() {
+      const editEl = document.getElementById('editInquiryId');
+      if (editEl) editEl.value = '';
+      const catEl = document.getElementById('inquiryCategorySelect');
+      if (catEl) catEl.value = '불편한 점';
+      const titleEl = document.getElementById('inquiryTitleInput');
+      if (titleEl) titleEl.value = '';
+      const bodyEl = document.getElementById('inquiryBodyInput');
+      if (bodyEl) bodyEl.value = '';
+      const banner = document.getElementById('inquiryEditBanner');
+      if (banner) banner.classList.add('hidden');
+      const cancelBtn = document.getElementById('cancelEditInquiryBtn');
+      if (cancelBtn) cancelBtn.classList.add('hidden');
+      const submitBtn = document.getElementById('submitInquiryBtn');
+      if (submitBtn) submitBtn.textContent = '📨 관리자에게 문의 보내기';
+    }
+
+    window.cancelEditUserInquiry = () => {
+      resetUserInquiryForm();
+    };
+
+    window.openInquiryModal = () => {
+      const titleEl = document.getElementById('inquiryModalTitle');
+      if (titleEl) titleEl.textContent = `${getTabIcon('setInquiry')} ${getTabLabel('setInquiry')}`;
+      resetUserInquiryForm();
+      markTabAsSeen('inquiryReply');
+      renderMyInquiriesList();
+      document.getElementById('inquiryModal').classList.add('open');
+      applyScreen();
+    };
+
+    window.startEditUserInquiry = (id) => {
+      const q = (myInquiries || []).find(x => String(x.id) === String(id));
+      if (!q) return;
+      document.getElementById('editInquiryId').value = q.id;
+      const catSel = document.getElementById('inquiryCategorySelect');
+      if (catSel) catSel.value = q.category || '기타 의견';
+      document.getElementById('inquiryTitleInput').value = q.title || '';
+      document.getElementById('inquiryBodyInput').value = q.body || '';
+      const banner = document.getElementById('inquiryEditBanner');
+      if (banner) banner.classList.remove('hidden');
+      const cancelBtn = document.getElementById('cancelEditInquiryBtn');
+      if (cancelBtn) cancelBtn.classList.remove('hidden');
+      const submitBtn = document.getElementById('submitInquiryBtn');
+      if (submitBtn) submitBtn.textContent = '💾 문의 사항 수정 저장';
+      const modalBody = document.querySelector('#inquiryModal .modal');
+      if (modalBody) modalBody.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => {
+        const ti = document.getElementById('inquiryTitleInput');
+        if (ti) ti.focus();
+      }, 80);
+    };
+
+    window.deleteMyInquiry = async (id) => {
+      const user = getCurrentUser();
+      const q = (myInquiries || []).find(x => String(x.id) === String(id));
+      if (!q || !user) return;
+      const resolved = isInquiryResolved(q);
+      if (!confirm(`[${q.title || '문의'}] 문의 사항을 삭제할까요?${resolved ? '\n(해결 완료된 문의와 답변도 함께 삭제됩니다.)' : ''}`)) return;
+      try {
+        await db.collection('inquiries').doc(String(id)).delete();
+        if (document.getElementById('editInquiryId').value === String(id)) {
+          resetUserInquiryForm();
+        }
+        recordAuditLog({
+          actorType: user.isSuperAdmin ? 'admin' : 'member',
+          actorName: user.name,
+          category: '문의',
+          action: '문의 사항 삭제',
+          target: `[${q.category || '의견'}] ${q.title || ''}`,
+          detail: `작성자: ${user.name} · 접수: ${q.createdAt || '-'} · 상태: ${resolved ? '해결됨' : '미해결'} · 내용: ${q.body || ''}`
+        });
+        showToast('문의 사항이 삭제되었습니다.');
+      } catch (err) {
+        if (err && err.code === 'permission-denied') {
+          showToast('삭제 권한이 필요합니다. 관리자에게 최신 Firestore 전체 규칙 게시를 요청해 주세요.');
+        } else {
+          handleDbError(err, '문의 사항 삭제');
+        }
+      }
+    };
+
+    function renderMyInquiriesList() {
+      const el = document.getElementById('myInquiriesListArea');
+      if (!el) return;
+      const u = getCurrentUser();
+      if (u && u.isSuperAdmin) {
+        el.innerHTML = `
+          <div class="info-box" style="margin-top:0;">
+            관리자 계정입니다. 접수된 전체 문의 사항은 <b>[${escapeHtml(getTabIcon('manageInquiries'))} ${escapeHtml(getTabLabel('manageInquiries'))}]</b> 탭에서 확인·답변·해결 처리하실 수 있습니다.
+            <div style="margin-top:8px;">
+              <button class="btn-sm primary" type="button" onclick="goToAdminInquiriesFromModal()">관리자 문의 관리로 이동</button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+      if (!myInquiries || myInquiries.length === 0) {
+        el.innerHTML = '<div style="text-align:center; padding:18px 8px; color:#64748B; font-size:12.5px;">아직 보낸 문의 내역이 없습니다.</div>';
+        return;
+      }
+      el.innerHTML = myInquiries.map(q => {
+        const resolved = isInquiryResolved(q);
+        const stTag = resolved
+          ? '<span class="tag green">✅ 해결됨</span>'
+          : (q.status === 'read' ? '<span class="tag">👀 확인됨 · 미해결</span>' : '<span class="tag warm">⏳ 접수됨 · 미해결</span>');
+        return `
+          <div class="card" style="margin-bottom:9px;">
+            <div class="card-top">
+              <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+                <span class="tag slate">${escapeHtml(q.category || '의견')}</span>
+                ${stTag}
+                ${q.edited ? '<span class="tag slate" style="font-size:10px;">수정됨</span>' : ''}
+              </div>
+              <span class="card-date">${escapeHtml(q.createdAt || '')}</span>
+            </div>
+            <div style="font-size:14px; font-weight:800; color:#0F172A; margin-bottom:4px;">${escapeHtml(q.title || '')}</div>
+            <div style="font-size:13px; color:#334155; line-height:1.55; white-space:pre-line;">${escapeHtml(q.body || '')}</div>
+            ${q.edited && q.updatedAt ? `<div style="font-size:11px; color:#64748B; margin-top:5px;">✏️ 최종 수정: ${escapeHtml(q.updatedAt)}</div>` : ''}
+            ${q.reply ? `
+              <div class="inquiry-reply-box">
+                <div style="font-weight:800; margin-bottom:3px;">💬 관리자 답변 (${escapeHtml(q.replyBy || '관리자')} · ${escapeHtml(q.replyAt || '')})</div>
+                <div>${escapeHtml(q.reply)}</div>
+              </div>
+            ` : (resolved ? `
+              <div class="inquiry-reply-box">
+                <div style="font-weight:800;">✅ 관리자가 해결 완료로 처리했습니다 (${escapeHtml(q.resolvedBy || '관리자')} · ${escapeHtml(q.resolvedAt || '')})</div>
+              </div>
+            ` : '')}
+            <div class="card-footer" style="margin-top:9px; padding-top:8px; justify-content:flex-end;">
+              <div style="display:flex; gap:6px;">
+                <button class="btn-sm" type="button" onclick="startEditUserInquiry('${escapeJsAttr(q.id)}')">✏️ 수정</button>
+                <button class="btn-sm danger" type="button" onclick="deleteMyInquiry('${escapeJsAttr(q.id)}')">삭제</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.handleSubmitUserInquiry = async () => {
+      const user = getCurrentUser();
+      if (!user || !fbUser) return;
+      const editId = (document.getElementById('editInquiryId') || {}).value || '';
+      const category = document.getElementById('inquiryCategorySelect').value || '기타 의견';
+      const title = document.getElementById('inquiryTitleInput').value.trim();
+      const body = document.getElementById('inquiryBodyInput').value.trim();
+
+      if (!title) return showToast('문의 제목을 입력해 주세요.');
+      if (!body) return showToast('문의 내용을 입력해 주세요.');
+      if (body.length > 1000) return showToast('문의 내용은 1000자 이내로 입력해 주세요.');
+
+      if (!editId && !user.isSuperAdmin && lastInquirySubmitTs > 0 && (Date.now() - lastInquirySubmitTs) < 10000) {
+        const rem = Math.max(1, Math.ceil((10000 - (Date.now() - lastInquirySubmitTs)) / 1000));
+        return showToast(`🛡️ 도배 방지를 위해 ${rem}초 후 다시 문의를 보낼 수 있습니다.`);
+      }
+      if (!enforceInputSecurity(`${title}\n${body}`, '문의 사항', !!user.isSuperAdmin)) return;
+
+      const btn = document.getElementById('submitInquiryBtn');
+      if (btn) btn.disabled = true;
+      try {
+        const nowInfo = getKstNowInfo();
+        const nowFull = nowInfo.dateTimeFull;
+        if (editId) {
+          const prev = (myInquiries || []).find(x => String(x.id) === String(editId));
+          await db.collection('inquiries').doc(String(editId)).update({
+            category,
+            title,
+            body,
+            edited: true,
+            updatedAt: nowFull,
+            updatedTs: Date.now()
+          });
+          recordAuditLog({
+            actorType: user.isSuperAdmin ? 'admin' : 'member',
+            actorName: user.name,
+            category: '문의',
+            action: '문의 사항 수정',
+            target: `[${category}] ${title}`,
+            beforeVal: prev ? `[${prev.category || '의견'}] ${prev.title || ''} / ${prev.body || ''}` : '',
+            afterVal: `[${category}] ${title} / ${body}`,
+            detail: prev && isInquiryResolved(prev) ? '해결된 문의 수정' : '미해결 문의 수정'
+          });
+          resetUserInquiryForm();
+          showToast('✏️ 문의 사항이 수정되었습니다!');
+        } else {
+          const id = 'inq_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+          await db.collection('inquiries').doc(id).set({
+            id,
+            uid: fbUser.uid,
+            authorName: user.name,
+            roleName: user.role.name,
+            category,
+            title,
+            body,
+            status: 'new',
+            createdAt: nowFull,
+            createdTs: Date.now(),
+            edited: false,
+            updatedAt: '',
+            updatedTs: 0,
+            reply: '',
+            replyBy: '',
+            replyAt: '',
+            replyTs: 0,
+            resolvedBy: '',
+            resolvedAt: ''
+          });
+          lastInquirySubmitTs = Date.now();
+          recordAuditLog({
+            actorType: user.isSuperAdmin ? 'admin' : 'member',
+            actorName: user.name,
+            category: '문의',
+            action: '문의 사항 등록',
+            target: `[${category}] ${title}`,
+            detail: `작성자: ${user.name} (${user.role.name}) · 접수: ${nowFull} · 내용: ${body}`
+          });
+          resetUserInquiryForm();
+          showToast('📨 문의 사항이 관리자에게 전달되었습니다!');
+        }
+      } catch (err) {
+        if (err && err.code === 'permission-denied') {
+          showToast('문의 저장 권한이 필요합니다. 관리자에게 최신 Firestore 전체 규칙 게시를 요청해 주세요.');
+        } else {
+          handleDbError(err, editId ? '문의 사항 수정' : '문의 사항 등록');
+        }
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    };
+
+    window.setAdminInquiryFilter = (f) => {
+      adminInquiryFilter = f;
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'inquiries') {
+        renderManageInquiries(document.getElementById('manageContent'), u);
+      }
+    };
+
+    window.copyInquiriesFirestoreRule = async () => {
+      const fullRules = `rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.email == 'admin@right-youth.app';
+    }
+
+    function hasMemberDoc() {
+      return isSignedIn() && exists(/databases/$(database)/documents/members/$(request.auth.uid));
+    }
+
+    function myMember() {
+      return get(/databases/$(database)/documents/members/$(request.auth.uid)).data;
+    }
+
+    function isApprovedMember() {
+      return isAdmin() || (hasMemberDoc() && myMember().status == 'approved');
+    }
+
+    function myRoleId() {
+      return isAdmin() ? 'super_admin' : (hasMemberDoc() ? myMember().roleId : '');
+    }
+
+    function hasValidResetKey(key) {
+      return key is string
+        && key.size() > 0
+        && exists(/databases/$(database)/documents/passwordResets/$(key))
+        && get(/databases/$(database)/documents/passwordResets/$(key)).data.used == false
+        && (
+          !(get(/databases/$(database)/documents/passwordResets/$(key)).data.keys().hasAny(['expiresAt']))
+          || get(/databases/$(database)/documents/passwordResets/$(key)).data.expiresAt == null
+          || get(/databases/$(database)/documents/passwordResets/$(key)).data.expiresAt > request.time.toMillis()
+        );
+    }
+
+    // 1. 공용/관리자 설정 문서 (민감 문서는 최고 관리자 전용 격리)
+    match /config/roles {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /config/inviteQr {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /config/adminSecret {
+      allow read, write: if isAdmin();
+    }
+    match /config/sheetSecret {
+      allow read, write: if isAdmin();
+    }
+    match /config/adminRegistry {
+      allow read, write: if isAdmin();
+    }
+    match /config/{docId} {
+      allow read: if docId in ['app', 'layout', 'labels', 'quickLinks', 'attendance', 'maintenance'] && isApprovedMember();
+      allow write: if isAdmin();
+    }
+
+    // 2. 공지 · 배너 (공개/역할별 vs 임시저장·예약·관리자전용 서버 분리)
+    match /notices/{docId} {
+      allow read: if isAdmin() || (
+        isApprovedMember()
+        && resource.data.visibleTo is list
+        && ('__all__' in resource.data.visibleTo || myRoleId() in resource.data.visibleTo)
+      );
+      allow write: if isAdmin();
+    }
+    match /adminNotices/{docId} {
+      allow read, write: if isAdmin();
+    }
+    match /homeBlocks/{docId} {
+      allow read: if isAdmin() || (
+        isApprovedMember()
+        && resource.data.visibleTo is list
+        && ('__all__' in resource.data.visibleTo || myRoleId() in resource.data.visibleTo)
+      );
+      allow write: if isAdmin();
+    }
+    match /adminBlocks/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    // 3. 로그인 인덱스 & 비밀번호 초기화 (1회용 · 24시간 만료)
+    match /authIndex/{hex} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow write: if isAdmin() || (
+        isSignedIn()
+        && request.resource.data.resetKey is string
+        && hasValidResetKey(request.resource.data.resetKey)
+      );
+    }
+    match /passwordResets/{resetKey} {
+      allow get: if isAdmin() || (
+        resource.data.used == false
+        && (
+          !(resource.data.keys().hasAny(['expiresAt']))
+          || resource.data.expiresAt == null
+          || resource.data.expiresAt > request.time.toMillis()
+        )
+      );
+      allow list, create, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        isSignedIn()
+        && resource.data.used == false
+        && (
+          !(resource.data.keys().hasAny(['expiresAt']))
+          || resource.data.expiresAt == null
+          || resource.data.expiresAt > request.time.toMillis()
+        )
+        && request.resource.data.used == true
+        && request.resource.data.newUid == request.auth.uid
+      );
+    }
+
+    // 4. 회원 · 생일 · 새신자 · 재가입 이력
+    match /members/{uid} {
+      allow read: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+      allow create: if isAdmin() || (
+        isSignedIn()
+        && request.auth.uid == uid
+        && (
+          (request.resource.data.status == 'pending' && request.resource.data.roleId == 'role_youth')
+          || (request.resource.data.resetKey is string && hasValidResetKey(request.resource.data.resetKey))
+        )
+      );
+      allow update: if isAdmin() || (
+        isSignedIn()
+        && request.auth.uid == uid
+        && (
+          (
+            resource.data.status == 'rejected'
+            && request.resource.data.status == 'pending'
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'createdAt', 'createdTs'])
+          )
+          || (
+            resource.data.status == 'approved'
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+              'pendingName', 'pendingNameAt', 'pendingNameTs',
+              'pendingBirthday', 'pendingBirthdayAt', 'pendingBirthdayTs'
+            ])
+          )
+        )
+      );
+      allow delete: if isAdmin() || (
+        isSignedIn()
+        && (
+          request.auth.uid == uid
+          || (
+            resource.data.status == 'reset_pending'
+            && resource.data.resetKey is string
+            && exists(/databases/$(database)/documents/passwordResets/$(resource.data.resetKey))
+            && get(/databases/$(database)/documents/passwordResets/$(resource.data.resetKey)).data.newUid == request.auth.uid
+          )
+        )
+      );
+    }
+    match /birthdays/{uid} {
+      allow read: if isApprovedMember();
+      allow create, update: if isAdmin() || (isApprovedMember() && request.auth.uid == uid);
+      allow delete: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+    }
+    match /newcomers/{uid} {
+      allow read: if isApprovedMember();
+      allow create, update: if isAdmin() || (isApprovedMember() && request.auth.uid == uid);
+      allow delete: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+    }
+    match /memberHistory/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    // 5. 예배 · 행사 출석 체크
+    match /attendance/{docId} {
+      allow read: if isAdmin() || (isApprovedMember() && resource.data.uid == request.auth.uid);
+      allow create: if isAdmin() || (
+        isApprovedMember()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.source == 'self'
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    // 6. QT(오늘의 말씀) · 공감 · 댓글
+    match /qtPosts/{docId} {
+      allow read: if isApprovedMember();
+      allow write: if isAdmin();
+    }
+    match /qtReactions/{docId} {
+      allow read: if isApprovedMember();
+      allow create, update: if isAdmin() || (isApprovedMember() && request.resource.data.uid == request.auth.uid);
+      allow delete: if isAdmin() || (isApprovedMember() && resource.data.uid == request.auth.uid);
+    }
+    match /qtComments/{docId} {
+      allow read: if isApprovedMember();
+      allow create: if isAdmin() || (isApprovedMember() && request.resource.data.uid == request.auth.uid);
+      allow update: if isAdmin() || (
+        isApprovedMember()
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['body', 'edited', 'updatedTs'])
+      );
+      allow delete: if isAdmin() || (isApprovedMember() && resource.data.uid == request.auth.uid);
+    }
+    match /qtCommentLikes/{docId} {
+      allow read: if isApprovedMember();
+      allow create: if isAdmin() || (isApprovedMember() && request.resource.data.uid == request.auth.uid);
+      allow delete: if isAdmin() || (isApprovedMember() && resource.data.uid == request.auth.uid);
+      allow update: if false;
+    }
+
+    // 7. 이용자 문의 사항 (작성자 본인: 추가·조회·수정·삭제 / 관리자: 전체 조회·답변·해결 처리 및 해결된 문의만 삭제)
+    match /inquiries/{docId} {
+      allow create: if isApprovedMember() && request.resource.data.uid == request.auth.uid;
+      allow read: if isAdmin() || (isApprovedMember() && resource.data.uid == request.auth.uid);
+      allow update: if isAdmin() || (
+        isApprovedMember()
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'category', 'title', 'body', 'edited', 'updatedAt', 'updatedTs'
+        ])
+      );
+      allow delete: if (isApprovedMember() && resource.data.uid == request.auth.uid) || (
+        isAdmin() && resource.data.status in ['replied', 'resolved']
+      );
+    }
+
+    // 8. 통합 보안 감사 로그 (삭제·위변조 영구 금지 · 관리자 시트 동기화 표시만 허용)
+    match /auditLogs/{docId} {
+      allow read: if isAdmin();
+      allow create: if isSignedIn() && request.resource.data.actorUid == request.auth.uid;
+      allow update: if isAdmin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['sheetSynced']);
+      allow delete: if false;
+    }
+
+    // 그 외 미지정 경로 전면 차단
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+`;
+      try {
+        await navigator.clipboard.writeText(fullRules);
+        showToast('Firebase Firestore 전체 보안 규칙이 복사되었습니다!');
+      } catch {
+        showToast('복사를 지원하지 않는 브라우저입니다.');
+      }
+    };
+
+    function renderManageInquiries(el, user) {
+      const unresolvedCnt = inquiries.filter(q => !isInquiryResolved(q)).length;
+      const resolvedCnt = inquiries.filter(q => isInquiryResolved(q)).length;
+      const filtered = inquiries.filter(q => {
+        if (adminInquiryFilter === 'unresolved') return !isInquiryResolved(q);
+        if (adminInquiryFilter === 'resolved') return isInquiryResolved(q);
+        return true;
+      });
+
+      el.innerHTML = `
+        <div class="section-head">
+          <h2 class="section-title">${escapeHtml(getTabIcon('manageInquiries'))} ${escapeHtml(getTabLabel('manageInquiries'))}</h2>
+          <span class="tag ${unresolvedCnt > 0 ? 'red' : 'green'}">${unresolvedCnt > 0 ? `미해결 ${unresolvedCnt}건` : '모두 해결됨'}</span>
+        </div>
+        <div class="info-box" style="margin-top:0; margin-bottom:12px;">
+          이용자가 <b>${escapeHtml(getTabIcon('settings'))} ${escapeHtml(getTabLabel('settings'))} → ${escapeHtml(getTabLabel('setInquiry'))}</b>에서 보낸 문의를 누가·언제 작성했는지 확인하고 답변·해결 처리할 수 있습니다.<br>
+          • 모든 등록·수정·답변·해결·삭제 내역은 <b>[${escapeHtml(getTabIcon('manageLogs'))} ${escapeHtml(getTabLabel('manageLogs'))}]</b>에 자동 기록됩니다.<br>
+          • 실수 방지를 위해 관리자는 <b>해결 완료된 문의 사항만 삭제</b>할 수 있습니다.
+        </div>
+
+        ${inquiriesPermError ? `
+          <div class="card" style="border-color:#FCA5A5; background:#FEF2F2; margin-bottom:12px;">
+            <div style="font-size:13.5px; font-weight:800; color:#991B1B; margin-bottom:5px;">🔐 Firestore 전체 보안 규칙 게시 필요</div>
+            <div style="font-size:12px; color:#7F1D1D; line-height:1.55; margin-bottom:9px;">
+              아래 버튼으로 최신 Firestore 전체 규칙을 복사해 Firebase Console → Firestore Database → 규칙에 붙여넣고 <b>게시</b>해 주세요.
+            </div>
+            <button class="btn-sm primary" type="button" onclick="copyInquiriesFirestoreRule()">📋 Firestore 전체 규칙 복사</button>
+          </div>
+        ` : ''}
+
+        <div class="filter-row" style="margin-bottom:10px;">
+          <button class="filter-chip ${adminInquiryFilter === 'all' ? 'active' : ''}" type="button" onclick="setAdminInquiryFilter('all')">전체 (${inquiries.length})</button>
+          <button class="filter-chip ${adminInquiryFilter === 'unresolved' ? 'active' : ''}" type="button" onclick="setAdminInquiryFilter('unresolved')">🔴 미해결 (${unresolvedCnt})</button>
+          <button class="filter-chip ${adminInquiryFilter === 'resolved' ? 'active' : ''}" type="button" onclick="setAdminInquiryFilter('resolved')">✅ 해결됨 (${resolvedCnt})</button>
+        </div>
+
+        ${filtered.length === 0
+          ? '<div class="card" style="text-align:center; color:#64748B; font-size:13px; padding:26px 12px;">표시할 문의 사항이 없습니다.</div>'
+          : filtered.map(q => {
+              const isNew = q.status === 'new';
+              const resolved = isInquiryResolved(q);
+              return `
+                <div class="card ${!resolved ? 'highlight-pending' : ''}">
+                  <div class="card-top">
+                    <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+                      <span class="tag slate">${escapeHtml(q.category || '의견')}</span>
+                      ${resolved ? '<span class="tag green">✅ 해결됨</span>' : (isNew ? '<span class="tag red">🆕 미확인 · 미해결</span>' : '<span class="tag warm">👀 확인됨 · 미해결</span>')}
+                      ${q.edited ? '<span class="tag slate" style="font-size:10px;">수정됨</span>' : ''}
+                    </div>
+                  </div>
+                  <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:8px 10px; margin-bottom:8px; font-size:12px; color:#334155; line-height:1.55;">
+                    <div>👤 <b>작성자:</b> ${escapeHtml(q.authorName || '회원')} <span style="color:#64748B;">(${escapeHtml(q.roleName || '청년')})</span></div>
+                    <div>🕒 <b>접수 일시:</b> ${escapeHtml(q.createdAt || '-')}</div>
+                    ${q.edited && q.updatedAt ? `<div>✏️ <b>수정 일시:</b> ${escapeHtml(q.updatedAt)}</div>` : ''}
+                  </div>
+                  <div style="font-size:14.5px; font-weight:800; color:#0F172A; margin-bottom:5px;">${escapeHtml(q.title || '')}</div>
+                  <div class="card-body">${escapeHtml(q.body || '')}</div>
+                  ${q.reply ? `
+                    <div class="inquiry-reply-box">
+                      <div style="font-weight:800; margin-bottom:3px;">💬 관리자 답변 (${escapeHtml(q.replyBy || '관리자')} · ${escapeHtml(q.replyAt || '')})</div>
+                      <div>${escapeHtml(q.reply)}</div>
+                    </div>
+                  ` : (resolved ? `
+                    <div class="inquiry-reply-box">
+                      <div style="font-weight:800;">✅ 해결 완료 처리됨 (${escapeHtml(q.resolvedBy || '관리자')} · ${escapeHtml(q.resolvedAt || '')})</div>
+                    </div>
+                  ` : '')}
+                  <div class="card-footer">
+                    <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                      ${isNew ? `<button class="btn-sm" type="button" onclick="markInquiryRead('${escapeJsAttr(q.id)}')">👀 읽음</button>` : ''}
+                      <button class="btn-sm primary" type="button" onclick="openAdminInquiryReplyModal('${escapeJsAttr(q.id)}')">✍️ ${q.reply ? '답변 수정' : '답변 달기'}</button>
+                      ${!resolved
+                        ? `<button class="btn-sm approve" type="button" onclick="toggleInquiryResolvedByAdmin('${escapeJsAttr(q.id)}', true)">✅ 해결 완료</button>`
+                        : `<button class="btn-sm" type="button" onclick="toggleInquiryResolvedByAdmin('${escapeJsAttr(q.id)}', false)">↩️ 미해결로</button>`}
+                    </div>
+                    ${resolved
+                      ? `<button class="btn-sm danger" type="button" onclick="deleteInquiryByAdmin('${escapeJsAttr(q.id)}')">삭제</button>`
+                      : `<button class="btn-sm" type="button" disabled title="해결 완료된 문의만 삭제할 수 있습니다">해결 후 삭제</button>`}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+      `;
+    }
+
+    window.markInquiryRead = async (id) => {
+      const q = inquiries.find(x => String(x.id) === String(id));
+      try {
+        const nowFull = getKstNowInfo().dateTimeFull;
+        await db.collection('inquiries').doc(String(id)).update({ status: 'read', readAt: nowFull });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '문의',
+          action: '문의 읽음 확인',
+          target: q ? `${q.authorName || '회원'} · ${q.title || ''}` : String(id),
+          detail: q ? `접수 일시: ${q.createdAt || '-'}` : ''
+        });
+        showToast('문의를 확인 처리했습니다.');
+      } catch (err) {
+        handleDbError(err, '문의 확인');
+      }
+    };
+
+    window.toggleInquiryResolvedByAdmin = async (id, resolveNow) => {
+      const q = inquiries.find(x => String(x.id) === String(id));
+      if (!q) return;
+      try {
+        const nowFull = getKstNowInfo().dateTimeFull;
+        const nextStatus = resolveNow ? (q.reply ? 'replied' : 'resolved') : 'read';
+        await db.collection('inquiries').doc(String(id)).update({
+          status: nextStatus,
+          resolvedBy: resolveNow ? (currentAdminName || '관리자') : '',
+          resolvedAt: resolveNow ? nowFull : ''
+        });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '문의',
+          action: resolveNow ? '문의 해결 완료 처리' : '문의 미해결 전환',
+          target: `${q.authorName || '회원'} · ${q.title || ''}`,
+          detail: `접수 일시: ${q.createdAt || '-'}`
+        });
+        showToast(resolveNow ? '✅ 문의를 해결 완료로 처리했습니다. (이제 삭제 가능)' : '문의를 미해결 상태로 되돌렸습니다.');
+      } catch (err) {
+        handleDbError(err, '문의 상태 변경');
+      }
+    };
+
+    window.openAdminInquiryReplyModal = (id) => {
+      const q = inquiries.find(x => String(x.id) === String(id));
+      if (!q) return;
+      document.getElementById('replyInquiryId').value = q.id;
+      document.getElementById('replyInquirySummary').innerHTML = `
+        <b>[${escapeHtml(q.category || '의견')}] ${escapeHtml(q.title || '')}</b><br>
+        <span style="color:#64748B;">👤 작성자: ${escapeHtml(q.authorName || '회원')} (${escapeHtml(q.roleName || '청년')})</span><br>
+        <span style="color:#64748B;">🕒 접수 일시: ${escapeHtml(q.createdAt || '-')}</span>
+        <div style="margin-top:6px; white-space:pre-line;">${escapeHtml(q.body || '')}</div>
+      `;
+      document.getElementById('adminInquiryReplyInput').value = q.reply || '';
+      document.getElementById('adminInquiryReplyModal').classList.add('open');
+    };
+
+    window.handleSaveAdminInquiryReply = async () => {
+      const id = document.getElementById('replyInquiryId').value;
+      const reply = document.getElementById('adminInquiryReplyInput').value.trim();
+      if (!id) return;
+      if (!reply) return showToast('답변 내용을 입력해 주세요.');
+      if (!enforceInputSecurity(reply, '문의 답변', true)) return;
+
+      const btn = document.getElementById('saveAdminInquiryReplyBtn');
+      if (btn) btn.disabled = true;
+      try {
+        const q = inquiries.find(x => String(x.id) === String(id));
+        const hadReply = !!(q && q.reply);
+        const nowFull = getKstNowInfo().dateTimeFull;
+        await db.collection('inquiries').doc(String(id)).update({
+          status: 'replied',
+          reply,
+          replyBy: currentAdminName || '관리자',
+          replyAt: nowFull,
+          replyTs: Date.now(),
+          resolvedBy: currentAdminName || '관리자',
+          resolvedAt: nowFull
+        });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '문의',
+          action: hadReply ? '문의 답변 수정' : '문의 답변 등록',
+          target: q ? `${q.authorName || '회원'} · ${q.title || ''}` : id,
+          beforeVal: hadReply ? (q.reply || '') : '',
+          afterVal: reply,
+          detail: q ? `접수 일시: ${q.createdAt || '-'}` : ''
+        });
+        document.getElementById('adminInquiryReplyModal').classList.remove('open');
+        showToast('💬 답변이 저장되고 해결 완료 처리되었습니다!');
+      } catch (err) {
+        handleDbError(err, '문의 답변 저장');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    };
+
+    window.deleteInquiryByAdmin = async (id) => {
+      const q = inquiries.find(x => String(x.id) === String(id));
+      if (!q) return;
+      if (!isInquiryResolved(q)) {
+        return showToast('해결 완료된 문의 사항만 삭제할 수 있습니다.');
+      }
+      if (!confirm(`해결된 문의 [${q.title || '문의'}]를 삭제할까요?\n(삭제 기록은 보안 로그에 영구 보존됩니다.)`)) return;
+      try {
+        await db.collection('inquiries').doc(String(id)).delete();
+        recordAuditLog({
+          actorType: 'admin',
+          category: '문의',
+          action: '해결된 문의 삭제',
+          target: `${q.authorName || '회원'} · ${q.title || ''}`,
+          detail: `접수: ${q.createdAt || '-'} · 내용: ${q.body || ''}${q.reply ? ` · 답변: ${q.reply}` : ''}`
+        });
+        showToast('해결된 문의 사항이 삭제되었습니다.');
+      } catch (err) {
+        handleDbError(err, '문의 삭제');
+      }
+    };
 
     // ==================== 관리자 전용 보안 문제 실시간 알림 엔진 ====================
     function isSecurityThreatAuditEntry(entry) {
