@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=176" />
+  <link rel="manifest" href="./manifest.json?v=177" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=176" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=176" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=177" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=177" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2978,6 +2978,51 @@
         font-size: 10.5px;
       }
     }
+    .signup-qr-ok-badge.grace {
+      background: #FEF3C7;
+      color: #92400E;
+      border-color: #FCD34D;
+    }
+    .qr-mode-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin: 8px 0 10px;
+    }
+    .qr-mode-btn {
+      border: 1.5px solid var(--border);
+      background: #F8FAFC;
+      color: #334155;
+      border-radius: 10px;
+      padding: 8px 6px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      line-height: 1.3;
+      font-family: inherit;
+      transition: all 0.14s ease;
+    }
+    .qr-mode-btn small {
+      display: block;
+      font-size: 10.5px;
+      font-weight: 600;
+      opacity: 0.78;
+      margin-top: 2px;
+    }
+    .qr-mode-btn.active {
+      background: #111827;
+      border-color: #111827;
+      color: #FDE68A;
+    }
+    .qr-meta-pill.expired {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+    .qr-meta-pill.live {
+      background: #DCFCE7;
+      color: #166534;
+    }
   </style>
 </head>
 <body>
@@ -3002,7 +3047,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=176" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=177" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3065,7 +3110,7 @@
         <!-- 회원가입 (당일 유효 초대 QR 인증 필수) -->
         <div id="panelSignup" class="hidden">
           <div id="signupQrLockBox" class="signup-qr-lock-box hidden">
-            <div style="font-size:30px; margin-bottom:8px;">🔒</div>
+            <div id="signupQrLockIcon" style="font-size:30px; margin-bottom:8px;">🔒</div>
             <div id="signupQrLockTitle" style="font-size:15.5px; font-weight:800; margin-bottom:6px;">초대 QR 코드가 필요합니다</div>
             <div id="signupQrLockDesc" style="font-size:12.5px; line-height:1.55; color:#7F1D1D;">
               신규 회원가입은 청년부원 또는 관리자가 공유한 <b>오늘의 초대 QR 코드</b>를 스캔해 접속해야 신청할 수 있습니다.
@@ -3920,17 +3965,19 @@
         <canvas id="inviteQrCanvas" width="320" height="380"></canvas>
         <div id="inviteQrValidMeta" class="qr-meta-pill">⏳ QR 준비 중...</div>
       </div>
-      <div class="info-box" style="margin-top:0; margin-bottom:12px;">
+      <div id="inviteQrModalInfoBox" class="info-box" style="margin-top:0; margin-bottom:12px;">
         • 처음 가입을 원하는 가입자에게 이 QR을 스캔하도록 안내해 주세요.<br>
-        • <b>한국시간 00:00</b>이 지나면 자동으로 새 QR로 바뀌며, 지난 QR로는 가입할 수 없습니다.<br>
+        • <b>한국시간 00:00</b>이 지나면 자동으로 새 QR로 바뀌며, 이전 QR로는 가입할 수 없습니다.<br>
         • 기존 가입 완료 회원은 QR 없이 평소처럼 바로 로그인합니다.
       </div>
       <div style="display:flex; gap:8px; margin-bottom:8px;">
-        <button class="btn-full btn-blue" type="button" style="flex:1; padding:12px; font-size:13.5px;" onclick="shareInviteQrImage()">📤 이미지 공유 (카톡 등)</button>
-        <button class="btn-outline" type="button" style="padding:12px; white-space:nowrap;" onclick="downloadInviteQrImage()">💾 저장</button>
+        <button id="shareInviteQrBtn" class="btn-full btn-blue" type="button" style="flex:1; padding:12px; font-size:13.5px;" onclick="shareInviteQrImage()">📤 이미지 공유 (카톡 등)</button>
+        <button id="downloadInviteQrBtn" class="btn-outline" type="button" style="padding:12px; white-space:nowrap;" onclick="downloadInviteQrImage()">💾 저장</button>
       </div>
-      <button class="btn-outline" type="button" style="width:100%; padding:11px; margin-bottom:8px;" onclick="copyInviteQrLink()">🔗 초대 링크 복사</button>
+      <button id="copyInviteQrBtn" class="btn-outline" type="button" style="width:100%; padding:11px; margin-bottom:8px;" onclick="copyInviteQrLink()">🔗 초대 링크 복사</button>
       <div id="inviteQrAdminZone" class="hidden" style="margin-top:10px; padding-top:10px; border-top:1px dashed #CBD5E1;">
+        <div style="font-size:12px; font-weight:800; color:#334155; margin-bottom:4px;">⏱️ 초대 QR 자동 갱신 주기 (관리자 설정)</div>
+        <div id="inviteQrModalModeBtns" class="qr-mode-grid"></div>
         <button id="regenInviteQrBtn" class="btn-full btn-amber" type="button" style="padding:12px; font-size:13.5px;" onclick="regenerateInviteQrByAdmin()">🔄 새 QR 즉시 재발급 (기존 QR 즉시 폐기)</button>
       </div>
     </div>
@@ -4431,7 +4478,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 29;
-    const APP_CLIENT_BUILD = 176;
+    const APP_CLIENT_BUILD = 177;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -5278,7 +5325,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=176" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=177" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5302,8 +5349,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=176', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=176', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=177', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=177', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5487,6 +5534,10 @@
     let publicInviteSubscribed = false;
     let inviteQrDoc = null;
     let capturedInviteToken = '';
+    let capturedInviteFromUrl = false;
+    let inviteQrTickerId = null;
+    let isAutoRotatingInviteQr = false;
+    let lastNotifiedInvalidInviteKey = '';
     let maintenanceConfig = structuredClone(DEFAULT_MAINTENANCE_CONFIG);
     let maintCheckTimer = null;
     let attendanceConfig = structuredClone(DEFAULT_ATTENDANCE_CONFIG);
@@ -7743,38 +7794,163 @@
         const inv = (params.get('invite') || '').trim();
         if (inv) {
           capturedInviteToken = inv;
+          capturedInviteFromUrl = true;
           sessionStorage.setItem(KEY_INVITE_TOKEN, inv);
         } else {
           capturedInviteToken = (sessionStorage.getItem(KEY_INVITE_TOKEN) || '').trim();
+          capturedInviteFromUrl = false;
         }
       } catch {
         capturedInviteToken = '';
+        capturedInviteFromUrl = false;
       }
     }
     captureInviteTokenFromUrl();
 
-    function isCurrentInviteValid() {
-      if (!capturedInviteToken || !inviteQrDoc) return false;
+    function getInviteRefreshMinutes(doc = inviteQrDoc) {
+      const m = Number(doc && doc.refreshMinutes ? doc.refreshMinutes : 0);
+      return (m === 5 || m === 10) ? m : 0;
+    }
+
+    function getInviteGraceMinutes(refreshMin) {
+      if (refreshMin === 5) return 3;
+      if (refreshMin === 10) return 5;
+      return 0;
+    }
+
+    function getKstTodayEndTs() {
+      const now = getKstDateParts();
+      const [y, m, d] = now.dot.split('.').map(Number);
+      return Date.UTC(y, m - 1, d, 23, 59, 59, 999) - 9 * 60 * 60 * 1000;
+    }
+
+    function formatCountdownMmSs(ms) {
+      const totalSec = Math.max(0, Math.ceil(Number(ms || 0) / 1000));
+      const min = Math.floor(totalSec / 60);
+      const sec = totalSec % 60;
+      return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+    }
+
+    function getActiveQrExpiryTs(doc = inviteQrDoc) {
+      if (!doc || !doc.token) return 0;
+      const modeMin = getInviteRefreshMinutes(doc);
+      if (modeMin > 0) {
+        if (Number(doc.expiresAtTs || 0) > 0) return Number(doc.expiresAtTs);
+        const baseTs = Number(doc.issuedTs || doc.updatedTs || 0);
+        return baseTs > 0 ? baseTs + modeMin * 60 * 1000 : 0;
+      }
+      return getKstTodayEndTs();
+    }
+
+    function isActiveQrDocCurrent(doc = inviteQrDoc, nowTs = Date.now()) {
+      if (!doc || !doc.token) return false;
       const todayDot = getKstDateParts().dot;
-      return String(inviteQrDoc.date || '') === todayDot && String(inviteQrDoc.token || '') === capturedInviteToken;
+      if (String(doc.date || '') !== todayDot) return false;
+      const modeMin = getInviteRefreshMinutes(doc);
+      if (modeMin > 0) {
+        const expTs = getActiveQrExpiryTs(doc);
+        return expTs > nowTs;
+      }
+      return true;
+    }
+
+    function getInviteTokenStatus(nowTs = Date.now()) {
+      if (!capturedInviteToken) {
+        return { valid: false, status: 'missing', remainMs: 0, graceRemainMs: 0 };
+      }
+      if (!inviteQrDoc || !inviteQrDoc.token) {
+        return { valid: false, status: 'expired', remainMs: 0, graceRemainMs: 0 };
+      }
+      const modeMin = getInviteRefreshMinutes(inviteQrDoc);
+      const activeCurrent = isActiveQrDocCurrent(inviteQrDoc, nowTs);
+      const activeExpTs = getActiveQrExpiryTs(inviteQrDoc);
+
+      if (String(inviteQrDoc.token) === capturedInviteToken) {
+        if (activeCurrent) {
+          return {
+            valid: true,
+            status: 'valid',
+            modeMin,
+            remainMs: Math.max(0, activeExpTs - nowTs),
+            graceRemainMs: 0
+          };
+        }
+        return { valid: false, status: 'expired', modeMin, remainMs: 0, graceRemainMs: 0 };
+      }
+
+      if (
+        inviteQrDoc.prevToken &&
+        String(inviteQrDoc.prevToken) === capturedInviteToken &&
+        Number(inviteQrDoc.prevGraceUntilTs || 0) > nowTs
+      ) {
+        return {
+          valid: true,
+          status: 'grace',
+          modeMin,
+          remainMs: 0,
+          graceRemainMs: Math.max(0, Number(inviteQrDoc.prevGraceUntilTs) - nowTs)
+        };
+      }
+
+      return { valid: false, status: 'changed', modeMin, remainMs: 0, graceRemainMs: 0 };
+    }
+
+    function isCurrentInviteValid() {
+      return getInviteTokenStatus().valid;
     }
 
     function updateSignupQrGateUI() {
       const lockBox = document.getElementById('signupQrLockBox');
       const formBody = document.getElementById('signupFormBody');
       if (!lockBox || !formBody) return;
-      const valid = isCurrentInviteValid();
+      const st = getInviteTokenStatus();
+      const valid = st.valid;
+      const wasFormVisible = !formBody.classList.contains('hidden');
       lockBox.classList.toggle('hidden', valid);
       formBody.classList.toggle('hidden', !valid);
-      if (!valid) {
-        const titleEl = document.getElementById('signupQrLockTitle');
-        const descEl = document.getElementById('signupQrLockDesc');
-        if (capturedInviteToken) {
-          titleEl.textContent = '만료되었거나 폐기된 초대 QR입니다';
-          descEl.innerHTML = '초대 QR은 <b>한국시간 당일 자정(00:00)</b>까지만 유효하며, 관리자가 재발급하면 이전 QR은 즉시 만료됩니다.<br>오늘 새로 공유된 초대 QR을 스캔해 주세요.';
-        } else {
-          titleEl.textContent = '초대 QR 코드가 필요합니다';
-          descEl.innerHTML = '신규 회원가입은 청년부원 또는 관리자가 공유한 <b>오늘의 초대 QR 코드</b>를 스캔해 접속해야 신청할 수 있습니다.';
+
+      if (valid) {
+        const okBadge = document.getElementById('signupQrOkBadge');
+        if (okBadge) {
+          if (st.status === 'grace') {
+            okBadge.className = 'signup-qr-ok-badge grace';
+            okBadge.innerHTML = `⏳ 초대 QR이 새로 변경되었습니다 · 직전 QR 유예 시간(<b>${formatCountdownMmSs(st.graceRemainMs)}</b> 남음) 안에 가입을 완료해 주세요. 시간이 지나면 새 QR을 스캔해야 합니다.`;
+          } else if (st.modeMin > 0) {
+            const gMin = getInviteGraceMinutes(st.modeMin);
+            okBadge.className = 'signup-qr-ok-badge';
+            okBadge.innerHTML = `✅ 현장 초대 QR 인증 완료 · 남은 시간 <b>${formatCountdownMmSs(st.remainMs)}</b> (갱신 시 직전 QR ${gMin}분 유예)`;
+          } else {
+            okBadge.className = 'signup-qr-ok-badge';
+            okBadge.textContent = '✅ 오늘의 초대 QR 인증 완료 · 회원가입 가능';
+          }
+        }
+        return;
+      }
+
+      const iconEl = document.getElementById('signupQrLockIcon');
+      const titleEl = document.getElementById('signupQrLockTitle');
+      const descEl = document.getElementById('signupQrLockDesc');
+      if (st.status === 'changed') {
+        if (iconEl) iconEl.textContent = '🔄';
+        titleEl.textContent = '초대 QR이 변경되었습니다 · 새 QR을 사용해 주세요';
+        descEl.innerHTML = '사용하신 <b>이전 초대 QR은 변경(갱신)되어 더 이상 사용할 수 없습니다.</b><br>관리자나 청년부원이 새로 띄워 준 <b>최신 초대 QR 코드</b>를 다시 스캔해 접속해 주세요.';
+      } else if (st.status === 'expired') {
+        if (iconEl) iconEl.textContent = '⏱️';
+        titleEl.textContent = '초대 QR 유효시간이 만료되었습니다 · 새 QR을 사용해 주세요';
+        descEl.innerHTML = '사용하신 <b>초대 QR의 유효시간이 지나 만료</b>되었습니다.<br>새로 변경된 <b>최신 초대 QR 코드</b>를 다시 스캔해 접속해 주세요.';
+      } else {
+        if (iconEl) iconEl.textContent = '🔒';
+        titleEl.textContent = '초대 QR 코드가 필요합니다';
+        descEl.innerHTML = '신규 회원가입은 청년부원 또는 관리자가 공유한 <b>유효한 초대 QR 코드</b>를 스캔해 접속해야 신청할 수 있습니다.';
+      }
+
+      if (capturedInviteToken && (st.status === 'changed' || st.status === 'expired')) {
+        const sig = `${capturedInviteToken}:${st.status}:${inviteQrDoc ? (inviteQrDoc.token || '') : ''}`;
+        if ((wasFormVisible || capturedInviteFromUrl) && lastNotifiedInvalidInviteKey !== sig) {
+          lastNotifiedInvalidInviteKey = sig;
+          showToast(st.status === 'changed'
+            ? '🔄 초대 QR이 변경되었습니다. 새로운 초대 QR을 스캔해 주세요.'
+            : '⏱️ 초대 QR 유효시간이 만료되었습니다. 새로운 초대 QR을 스캔해 주세요.');
         }
       }
     }
@@ -7785,8 +7961,10 @@
       db.collection('config').doc('inviteQr').onSnapshot(doc => {
         inviteQrDoc = doc.exists ? doc.data() : null;
         updateSignupQrGateUI();
-        if (!fbUser && isCurrentInviteValid() && !document.getElementById('loginScreen').classList.contains('hidden')) {
-          if (document.getElementById('panelSignup').classList.contains('hidden') && document.getElementById('panelStatus').classList.contains('hidden')) {
+        const st = getInviteTokenStatus();
+        if (!fbUser && !document.getElementById('loginScreen').classList.contains('hidden')) {
+          const shouldShowSignup = st.valid || (capturedInviteFromUrl && (st.status === 'changed' || st.status === 'expired'));
+          if (shouldShowSignup && document.getElementById('panelSignup').classList.contains('hidden') && document.getElementById('panelStatus').classList.contains('hidden')) {
             switchAuthTab('signup');
           }
         }
@@ -8078,9 +8256,16 @@
       const pw = document.getElementById('signupPwInput').value.trim();
       const pw2 = document.getElementById('signupPwConfirmInput').value.trim();
 
-      if (!isCurrentInviteValid()) {
+      const invSt = getInviteTokenStatus();
+      if (!invSt.valid) {
         updateSignupQrGateUI();
-        return showError('signupError', '유효한 오늘의 초대 QR 코드로 접속해야 회원가입할 수 있습니다.');
+        if (invSt.status === 'changed') {
+          return showError('signupError', '초대 QR이 변경되어 이전 QR은 사용할 수 없습니다. 새로운 초대 QR을 다시 스캔해 주세요.');
+        }
+        if (invSt.status === 'expired') {
+          return showError('signupError', '초대 QR 유효시간이 만료되었습니다. 새로 변경된 초대 QR을 다시 스캔해 주세요.');
+        }
+        return showError('signupError', '유효한 초대 QR 코드로 접속해야 회원가입할 수 있습니다.');
       }
       if (name.length < 2 || name.length > 10) {
         return showError('signupError', '본인 성명을 2~10글자 이내로 입력해 주세요.');
@@ -8774,7 +8959,7 @@
             `<b>실시간 자동 입장:</b> 가입 신청 후 관리자가 승인하면 별도로 새로고침하지 않아도 자동으로 <b>${hLbl}</b> 화면에 입장됩니다.`,
             `<b>친구 초대하기:</b> 하단 <b>[${stIcn} ${stLbl}] → 오늘의 초대 QR</b>을 누르면 <b>카카오톡 이미지 공유</b>, <b>이미지 저장</b>, <b>초대 링크 복사</b>로 바로 전달할 수 있습니다.`
           ],
-          tip: '초대 QR은 보안을 위해 매일 한국시간 자정(00:00)마다 자동으로 새 QR로 바뀌며, 지난 QR로는 가입할 수 없습니다. 이미 가입된 회원은 QR 없이 평소처럼 바로 로그인합니다.'
+          tip: '초대 QR은 보안 설정(오늘 하루 또는 현장 5분·10분 주기)에 따라 새 QR로 자동 변경됩니다. 이전 QR을 사용하면 새 QR로 다시 스캔하도록 안내되며, 이미 가입된 회원은 QR 없이 평소처럼 로그인합니다.'
         },
         {
           id: 'ug_home_att',
@@ -9101,7 +9286,7 @@
           targetTab: 'logs',
           targetLabel: `${getTabIcon('manageLogs')} ${getTabLabel('manageLogs')} 탭 열기`,
           steps: [
-            `<b>초대 QR 관리 ([${qrIcn} ${qrLbl}]):</b> 초대 링크가 외부에 유출되었을 때 <b>[🔄 새 QR 즉시 재발급]</b>을 누르면 기존 오늘 QR이 즉시 폐기되고 새 QR이 발급됩니다.`,
+            `<b>초대 QR 관리 ([${qrIcn} ${qrLbl}]):</b> 평소에는 <b>오늘 하루(00:00 갱신)</b>로 두고, 주일 현장 가입을 받을 때는 <b>5분 · 10분 자동 갱신 모드</b>(직전 QR 3~5분 유예 + 화면 복귀 시 즉시 갱신)로 전환할 수 있습니다. 외부 유출 시 <b>[🔄 새 QR 즉시 재발급]</b>을 누르면 유예 없이 즉시 폐기됩니다.`,
             `<b>통합 보안 감사 로그 ([${logIcn} ${logLbl}]):</b> 악의적 글 게시·임의 변경·장난을 방지하기 위해 <b>관리자의 모든 추가/수정/삭제/설정 변경</b>과 <b>이용자의 영상 추천·문의·이름 변경 신청·가입/탈퇴·출석 체크</b>가 날짜·시각(초 단위 KST)과 함께 기록됩니다.`,
             '<b>위변조·삭제 불가:</b> 보안상 최고 관리자도 앱에서 로그를 수정하거나 삭제할 수 없으며, 상단 필터(전체/관리자/이용자), 분류 선택, 검색창으로 빠르게 추적할 수 있습니다.',
             `<b>프라이버시 미기록 범위:</b> 이용자 비밀번호 변경, 전체 글자 크기·알림 설정, 외부 사이트 이동, 공지·${byLbl} 단순 조회는 기록되지 않습니다.`
@@ -13232,7 +13417,7 @@
       return bestGrid;
     }
 
-    function drawBrandedQrOnCanvas(canvas, url, dateDot) {
+    function drawBrandedQrOnCanvas(canvas, url, dateDot, validityLabel = '') {
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
       const W = 540, H = 640;
@@ -13277,53 +13462,245 @@
       // Footer text
       ctx.fillStyle = '#1E293B';
       ctx.font = '800 20px -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif';
-      ctx.fillText(`유효기간: ${dateDot} 23:59까지`, W / 2, 578);
+      ctx.fillText(validityLabel || `유효기간: ${dateDot} 23:59까지`, W / 2, 578);
       ctx.fillStyle = '#64748B';
       ctx.font = '600 15px -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif';
       ctx.fillText('카메라로 스캔하면 회원가입 화면으로 바로 이동합니다', W / 2, 608);
     }
 
-    async function ensureTodayInviteQrExists() {
+    function buildInviteQrDocPayload({ refreshMinutes, keepPrevGrace = false, updatedBy = '' }) {
+      const nowTs = Date.now();
       const todayDot = getKstDateParts().dot;
-      if (inviteQrDoc && String(inviteQrDoc.date || '') === todayDot && inviteQrDoc.token) {
+      const modeMin = (refreshMinutes === 5 || refreshMinutes === 10) ? refreshMinutes : 0;
+      const graceMin = getInviteGraceMinutes(modeMin);
+      const expiresAtTs = modeMin > 0 ? (nowTs + modeMin * 60 * 1000) : getKstTodayEndTs();
+      const prevTok = (keepPrevGrace && inviteQrDoc && inviteQrDoc.token && String(inviteQrDoc.date || '') === todayDot)
+        ? String(inviteQrDoc.token)
+        : '';
+      const prevGraceUntilTs = (prevTok && graceMin > 0)
+        ? (nowTs + graceMin * 60 * 1000)
+        : 0;
+      return {
+        date: todayDot,
+        token: generateInviteToken(),
+        refreshMinutes: modeMin,
+        issuedTs: nowTs,
+        expiresAtTs,
+        prevToken: prevGraceUntilTs > nowTs ? prevTok : '',
+        prevGraceUntilTs: prevGraceUntilTs > nowTs ? prevGraceUntilTs : 0,
+        updatedAt: formatKstDateTime(),
+        updatedTs: nowTs,
+        updatedBy: updatedBy || currentAdminName || '관리자'
+      };
+    }
+
+    async function ensureTodayInviteQrExists(keepPrevGrace = true) {
+      if (isActiveQrDocCurrent(inviteQrDoc)) {
         return inviteQrDoc;
       }
       const user = getCurrentUser();
       if (!user) return inviteQrDoc;
-      const nextDoc = {
-        date: todayDot,
-        token: generateInviteToken(),
-        updatedAt: formatKstDateTime(),
-        updatedTs: Date.now(),
-        updatedBy: user.isSuperAdmin ? (currentAdminName || '관리자') : '자동 갱신'
-      };
+      if (!user.isSuperAdmin) {
+        const snap = await db.collection('config').doc('inviteQr').get().catch(() => null);
+        if (snap && snap.exists) inviteQrDoc = snap.data();
+        return inviteQrDoc;
+      }
+      if (isAutoRotatingInviteQr) return inviteQrDoc;
+      isAutoRotatingInviteQr = true;
       try {
+        const modeMin = getInviteRefreshMinutes(inviteQrDoc);
+        const nextDoc = buildInviteQrDocPayload({
+          refreshMinutes: modeMin,
+          keepPrevGrace: keepPrevGrace && modeMin > 0,
+          updatedBy: currentAdminName ? `${currentAdminName} (자동 갱신)` : '자동 갱신'
+        });
         await db.collection('config').doc('inviteQr').set(nextDoc);
         inviteQrDoc = nextDoc;
       } catch (err) {
-        console.warn('Auto-create today QR error:', err);
+        console.warn('Auto-create/rotate invite QR error:', err);
         const snap = await db.collection('config').doc('inviteQr').get().catch(() => null);
         if (snap && snap.exists) inviteQrDoc = snap.data();
+      } finally {
+        isAutoRotatingInviteQr = false;
       }
       return inviteQrDoc;
     }
 
-    function renderInviteQrModalCanvas() {
+    function getInviteQrValidityFooterText(doc = inviteQrDoc) {
+      const todayDot = getKstDateParts().dot;
+      const modeMin = getInviteRefreshMinutes(doc);
+      if (modeMin > 0) {
+        const expParts = tsToKstParts(getActiveQrExpiryTs(doc));
+        return `현장 QR (${modeMin}분 주기 · ${expParts ? expParts.hhmm : ''}까지 유효)`;
+      }
+      return `유효기간: ${todayDot} 23:59까지`;
+    }
+
+    function buildQrModeButtonsHtml(activeModeMin) {
+      const opts = [
+        { min: 0, title: '📅 오늘 하루', sub: '00:00 갱신 (기본)' },
+        { min: 10, title: '⏱️ 10분마다', sub: '직전 5분 유예' },
+        { min: 5, title: '⚡ 5분마다', sub: '직전 3분 유예' }
+      ];
+      return opts.map(o => `
+        <button class="qr-mode-btn ${activeModeMin === o.min ? 'active' : ''}" type="button" onclick="setInviteQrRefreshMode(${o.min})">
+          ${o.title}<small>${o.sub}</small>
+        </button>
+      `).join('');
+    }
+
+    window.setInviteQrRefreshMode = async (minutes) => {
       const user = getCurrentUser();
-      const adminZone = document.getElementById('inviteQrAdminZone');
-      if (adminZone) adminZone.classList.toggle('hidden', !(user && user.isSuperAdmin));
+      if (!user || !user.isSuperAdmin) return showToast('관리자만 QR 갱신 주기를 변경할 수 있습니다.');
+      const nextMin = (minutes === 5 || minutes === 10) ? minutes : 0;
+      const curMin = getInviteRefreshMinutes(inviteQrDoc);
+      if (nextMin === curMin && isActiveQrDocCurrent(inviteQrDoc)) {
+        return showToast(nextMin === 0 ? '이미 [오늘 하루] 모드입니다.' : `이미 [${nextMin}분 자동 갱신] 모드입니다.`);
+      }
+      const modeLabel = nextMin === 0 ? '오늘 하루 (00:00 자동 갱신)' : `${nextMin}분마다 자동 갱신 (직전 QR ${getInviteGraceMinutes(nextMin)}분 유예)`;
+      try {
+        const nextDoc = buildInviteQrDocPayload({
+          refreshMinutes: nextMin,
+          keepPrevGrace: nextMin > 0,
+          updatedBy: currentAdminName || '관리자'
+        });
+        await db.collection('config').doc('inviteQr').set(nextDoc);
+        inviteQrDoc = nextDoc;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '초대 QR 갱신 주기 변경',
+          target: modeLabel,
+          detail: `이전 주기: ${curMin === 0 ? '오늘 하루' : `${curMin}분`} → ${nextMin === 0 ? '오늘 하루' : `${nextMin}분`}`
+        });
+        if (document.getElementById('inviteQrModal').classList.contains('open')) {
+          renderInviteQrModalCanvas();
+        }
+        if (currentMainTab === 'manage' && currentManageSubTab === 'qr') {
+          renderManageView(user);
+        }
+        showToast(`✅ 초대 QR이 [${modeLabel}] 모드로 변경되었습니다!`);
+      } catch (err) {
+        handleDbError(err, 'QR 갱신 주기 변경');
+      }
+    };
+
+    function updateInviteQrLiveMetaOnly() {
+      const todayDot = getKstDateParts().dot;
+      const modeMin = getInviteRefreshMinutes(inviteQrDoc);
+      const isCurrent = isActiveQrDocCurrent(inviteQrDoc);
+      const expTs = getActiveQrExpiryTs(inviteQrDoc);
+      const remainMs = Math.max(0, expTs - Date.now());
+      const graceRemainMs = (inviteQrDoc && inviteQrDoc.prevToken && Number(inviteQrDoc.prevGraceUntilTs || 0) > Date.now())
+        ? Number(inviteQrDoc.prevGraceUntilTs) - Date.now()
+        : 0;
 
       const metaEl = document.getElementById('inviteQrValidMeta');
+      if (metaEl && document.getElementById('inviteQrModal').classList.contains('open')) {
+        if (!inviteQrDoc || !inviteQrDoc.token) {
+          metaEl.className = 'qr-meta-pill';
+          metaEl.textContent = '⏳ 초대 QR을 준비하고 있습니다...';
+        } else if (!isCurrent) {
+          metaEl.className = 'qr-meta-pill expired';
+          metaEl.textContent = modeMin > 0
+            ? `⏱️ ${modeMin}분 유효시간 만료 · 관리자 화면에서 새 QR 발급 필요`
+            : '⏱️ 오늘의 QR 갱신 대기 중 · 관리자가 앱을 열면 자동 생성됩니다';
+        } else if (modeMin > 0) {
+          metaEl.className = 'qr-meta-pill live';
+          metaEl.textContent = `⏱️ ${modeMin}분 현장 모드 · 남은 시간 ${formatCountdownMmSs(remainMs)}${graceRemainMs > 0 ? ` (직전 QR 유예 ${formatCountdownMmSs(graceRemainMs)})` : ''}`;
+        } else {
+          metaEl.className = 'qr-meta-pill';
+          metaEl.textContent = `⏰ ${todayDot} 23:59까지 유효 (발급: ${inviteQrDoc.updatedBy || '자동'})`;
+        }
+      }
+
+      const mngRemainEl = document.getElementById('manageQrRemainPill');
+      if (mngRemainEl) {
+        if (!inviteQrDoc || !inviteQrDoc.token || !isCurrent) {
+          mngRemainEl.className = 'tag warm';
+          mngRemainEl.textContent = '갱신 대기';
+        } else if (modeMin > 0) {
+          mngRemainEl.className = 'tag green';
+          mngRemainEl.textContent = `⏱️ ${formatCountdownMmSs(remainMs)} 남음`;
+        } else {
+          mngRemainEl.className = 'tag green';
+          mngRemainEl.textContent = `${todayDot} 활성`;
+        }
+      }
+
+      const mngGraceLine = document.getElementById('manageQrGraceLine');
+      if (mngGraceLine) {
+        if (graceRemainMs > 0) {
+          mngGraceLine.classList.remove('hidden');
+          mngGraceLine.innerHTML = `⏳ <b>직전 QR 유예 중:</b> 방금 변경된 이전 QR도 <b>${formatCountdownMmSs(graceRemainMs)}</b> 동안 가입 완료 가능`;
+        } else {
+          mngGraceLine.classList.add('hidden');
+        }
+      }
+    }
+
+    function renderInviteQrModalCanvas() {
+      const user = getCurrentUser();
+      const isAdmin = !!(user && user.isSuperAdmin);
+      const adminZone = document.getElementById('inviteQrAdminZone');
+      if (adminZone) adminZone.classList.toggle('hidden', !isAdmin);
+
+      const modeMin = getInviteRefreshMinutes(inviteQrDoc);
+      const modeBtnsEl = document.getElementById('inviteQrModalModeBtns');
+      if (modeBtnsEl && isAdmin) {
+        modeBtnsEl.innerHTML = buildQrModeButtonsHtml(modeMin);
+      }
+
+      const infoBox = document.getElementById('inviteQrModalInfoBox');
+      if (infoBox) {
+        if (modeMin > 0) {
+          const gMin = getInviteGraceMinutes(modeMin);
+          infoBox.innerHTML = `
+            • 현재 <b>현장 보안 모드(${modeMin}분마다 자동 갱신)</b>가 켜져 있습니다.<br>
+            • QR이 바뀌더라도 방금 찍고 입력 중인 분을 위해 <b>직전 QR이 ${gMin}분간 유예</b>되며, 유예가 끝나면 <b>새 QR로 다시 스캔</b>하도록 안내됩니다.<br>
+            • 화면을 껐다 켜거나 다른 앱에서 돌아오면 자동으로 최신 QR로 즉시 갱신됩니다.
+          `;
+        } else {
+          infoBox.innerHTML = `
+            • 처음 가입을 원하는 가입자에게 이 QR을 스캔하도록 안내해 주세요.<br>
+            • <b>한국시간 00:00</b>이 지나거나 관리자가 재발급하면 새 QR로 바뀌며, 이전 QR로는 가입할 수 없습니다.<br>
+            • 기존 가입 완료 회원은 QR 없이 평소처럼 바로 로그인합니다.
+          `;
+        }
+      }
+
       const canvas = document.getElementById('inviteQrCanvas');
       const todayDot = getKstDateParts().dot;
-      if (!inviteQrDoc || !inviteQrDoc.token || String(inviteQrDoc.date) !== todayDot) {
-        if (metaEl) metaEl.textContent = '⏳ 오늘의 초대 QR을 생성하고 있습니다...';
-        return;
+      const isCurrent = isActiveQrDocCurrent(inviteQrDoc);
+
+      const shareBtn = document.getElementById('shareInviteQrBtn');
+      const dlBtn = document.getElementById('downloadInviteQrBtn');
+      const cpBtn = document.getElementById('copyInviteQrBtn');
+      [shareBtn, dlBtn, cpBtn].forEach(b => { if (b) b.disabled = !isCurrent; });
+
+      if (inviteQrDoc && inviteQrDoc.token && isCurrent) {
+        drawBrandedQrOnCanvas(canvas, getCurrentInviteUrl(), todayDot, getInviteQrValidityFooterText(inviteQrDoc));
+      } else if (canvas) {
+        const ctx = canvas.getContext('2d');
+        canvas.width = 520;
+        canvas.height = 640;
+        ctx.fillStyle = '#F8FAFC';
+        ctx.fillRect(0, 0, 520, 640);
+        ctx.fillStyle = '#0B0F19';
+        ctx.fillRect(0, 0, 520, 94);
+        ctx.fillStyle = '#FDE68A';
+        ctx.font = '800 22px -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('라이트 청년부 · 초대 QR', 260, 54);
+        ctx.fillStyle = '#991B1B';
+        ctx.font = '800 22px -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif';
+        ctx.fillText(isAdmin ? '새 초대 QR을 생성하는 중...' : '초대 QR이 만료되었습니다', 260, 315);
+        ctx.fillStyle = '#64748B';
+        ctx.font = '600 16px -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif';
+        ctx.fillText(isAdmin ? '잠시만 기다려 주세요' : '관리자가 최신 QR을 갱신하면 바로 표시됩니다', 260, 355);
       }
-      drawBrandedQrOnCanvas(canvas, getCurrentInviteUrl(), todayDot);
-      if (metaEl) {
-        metaEl.textContent = `⏰ ${todayDot} 23:59까지 유효 (발급: ${inviteQrDoc.updatedBy || '자동'})`;
-      }
+
+      updateInviteQrLiveMetaOnly();
     }
 
     window.openInviteQrModal = async () => {
@@ -13331,24 +13708,23 @@
       if (!user) return;
       document.getElementById('inviteQrModal').classList.add('open');
       renderInviteQrModalCanvas();
-      await ensureTodayInviteQrExists();
+      await ensureTodayInviteQrExists(true);
       renderInviteQrModalCanvas();
     };
 
     window.regenerateInviteQrByAdmin = async () => {
       const user = getCurrentUser();
       if (!user || !user.isSuperAdmin) return showToast('관리자만 QR을 재발급할 수 있습니다.');
-      if (!confirm('새 초대 QR을 즉시 재발급할까요?\n이전에 공유한 오늘의 QR 코드는 즉시 사용 불가 처리됩니다.')) return;
+      if (!confirm('새 초대 QR을 즉시 재발급할까요?\n이전 QR은 유예 시간 없이 그 즉시 폐기되어 사용할 수 없게 됩니다.')) return;
       const btn = document.getElementById('regenInviteQrBtn');
       if (btn) btn.disabled = true;
       try {
-        const nextDoc = {
-          date: getKstDateParts().dot,
-          token: generateInviteToken(),
-          updatedAt: formatKstDateTime(),
-          updatedTs: Date.now(),
+        const modeMin = getInviteRefreshMinutes(inviteQrDoc);
+        const nextDoc = buildInviteQrDocPayload({
+          refreshMinutes: modeMin,
+          keepPrevGrace: false,
           updatedBy: currentAdminName || '관리자'
-        };
+        });
         await db.collection('config').doc('inviteQr').set(nextDoc);
         inviteQrDoc = nextDoc;
         recordAuditLog({
@@ -13356,10 +13732,11 @@
           category: '보안·설정',
           action: '초대 QR 즉시 재발급',
           target: nextDoc.date,
-          detail: '기존 당일 초대 QR 즉시 폐기'
+          detail: `기존 초대 QR 유예 없이 즉시 폐기 (${modeMin === 0 ? '오늘 하루' : `${modeMin}분 주기`})`
         });
         renderInviteQrModalCanvas();
-        showToast('새 초대 QR이 즉시 재발급되었습니다! 기존 QR은 폐기되었습니다.');
+        if (currentMainTab === 'manage' && currentManageSubTab === 'qr') renderManageView(user);
+        showToast('새 초대 QR이 즉시 재발급되었습니다! 이전 QR은 즉시 폐기되었습니다.');
       } catch (err) {
         handleDbError(err, 'QR 재발급');
       } finally {
@@ -13368,21 +13745,30 @@
     };
 
     window.copyInviteQrLink = async () => {
-      await ensureTodayInviteQrExists();
+      await ensureTodayInviteQrExists(true);
+      if (!isActiveQrDocCurrent(inviteQrDoc)) {
+        return showToast('현재 QR이 만료되었습니다. 관리자가 최신 QR을 발급한 뒤 복사해 주세요.');
+      }
       const url = getCurrentInviteUrl();
-      const todayDot = getKstDateParts().dot;
-      const text = `[라이트 청년부] 회원가입 초대 링크 (${todayDot} 자정까지 유효)\n${url}`;
+      const modeMin = getInviteRefreshMinutes(inviteQrDoc);
+      const validText = modeMin > 0
+        ? `${modeMin}분 현장 QR · 남은 시간 ${formatCountdownMmSs(getActiveQrExpiryTs(inviteQrDoc) - Date.now())}`
+        : `${getKstDateParts().dot} 자정까지 유효`;
+      const text = `[라이트 청년부] 회원가입 초대 링크 (${validText})\n${url}`;
       try {
         await navigator.clipboard.writeText(text);
-        showToast('오늘의 초대 링크가 복사되었습니다!');
+        showToast('초대 링크가 복사되었습니다!');
       } catch {
         showToast('복사를 지원하지 않는 브라우저입니다.');
       }
     };
 
     window.downloadInviteQrImage = async () => {
-      await ensureTodayInviteQrExists();
+      await ensureTodayInviteQrExists(true);
       renderInviteQrModalCanvas();
+      if (!isActiveQrDocCurrent(inviteQrDoc)) {
+        return showToast('현재 QR이 만료되었습니다. 관리자가 최신 QR을 발급한 뒤 저장해 주세요.');
+      }
       const canvas = document.getElementById('inviteQrCanvas');
       if (!canvas) return;
       const link = document.createElement('a');
@@ -13393,12 +13779,16 @@
     };
 
     window.shareInviteQrImage = async () => {
-      await ensureTodayInviteQrExists();
+      await ensureTodayInviteQrExists(true);
       renderInviteQrModalCanvas();
+      if (!isActiveQrDocCurrent(inviteQrDoc)) {
+        return showToast('현재 QR이 만료되었습니다. 관리자가 최신 QR을 발급한 뒤 공유해 주세요.');
+      }
       const canvas = document.getElementById('inviteQrCanvas');
-      const todayDot = getKstDateParts().dot;
+      const modeMin = getInviteRefreshMinutes(inviteQrDoc);
+      const validText = modeMin > 0 ? `${modeMin}분간 유효` : `${getKstDateParts().dot} 23:59까지 유효`;
       const url = getCurrentInviteUrl();
-      const shareText = `[라이트 청년부] 신규 회원가입 초대 (${todayDot} 23:59까지 유효)\n아래 QR을 스캔하거나 링크로 접속해 가입해 주세요!`;
+      const shareText = `[라이트 청년부] 신규 회원가입 초대 (${validText})\n아래 QR을 스캔하거나 링크로 접속해 가입해 주세요!`;
 
       try {
         if (navigator.share && canvas && canvas.toBlob) {
@@ -13428,6 +13818,75 @@
       await copyInviteQrLink();
       await downloadInviteQrImage();
     };
+
+    // --- 초대 QR 실시간 카운트다운 · 자동 갱신 · 백그라운드 복귀 즉시 갱신 ---
+    async function refreshInviteQrOnActiveResume(fromVisibility = false) {
+      const user = getCurrentUser();
+      const qrModalOpen = document.getElementById('inviteQrModal').classList.contains('open');
+      const inManageQrTab = !!(user && user.isSuperAdmin && currentMainTab === 'manage' && currentManageSubTab === 'qr');
+
+      if (!fbUser) {
+        updateSignupQrGateUI();
+        return;
+      }
+
+      if (user && user.isSuperAdmin && (qrModalOpen || inManageQrTab)) {
+        if (!isActiveQrDocCurrent(inviteQrDoc)) {
+          const prevTok = inviteQrDoc ? inviteQrDoc.token : '';
+          await ensureTodayInviteQrExists(true);
+          if (inviteQrDoc && inviteQrDoc.token !== prevTok) {
+            const m = getInviteRefreshMinutes(inviteQrDoc);
+            showToast(fromVisibility
+              ? '🔄 화면 복귀 감지 · 최신 초대 QR로 즉시 갱신되었습니다.'
+              : `🔄 ${m > 0 ? `${m}분 주기가 지나` : '날짜가 바뀌어'} 새 초대 QR로 자동 갱신되었습니다.`);
+          }
+          if (qrModalOpen) renderInviteQrModalCanvas();
+          if (inManageQrTab) renderManageView(user);
+        } else {
+          updateInviteQrLiveMetaOnly();
+        }
+      } else if (qrModalOpen) {
+        if (!isActiveQrDocCurrent(inviteQrDoc)) {
+          renderInviteQrModalCanvas();
+        } else {
+          updateInviteQrLiveMetaOnly();
+        }
+      }
+    }
+
+    function startInviteQrTicker() {
+      if (inviteQrTickerId) return;
+      inviteQrTickerId = setInterval(() => {
+        if (document.visibilityState !== 'visible') return;
+        const user = getCurrentUser();
+        const qrModalOpen = document.getElementById('inviteQrModal').classList.contains('open');
+        const inManageQrTab = !!(user && user.isSuperAdmin && currentMainTab === 'manage' && currentManageSubTab === 'qr');
+
+        if (!fbUser && !document.getElementById('loginScreen').classList.contains('hidden')) {
+          if (capturedInviteToken) updateSignupQrGateUI();
+        }
+        if (qrModalOpen || inManageQrTab) {
+          if (user && user.isSuperAdmin && !isActiveQrDocCurrent(inviteQrDoc)) {
+            refreshInviteQrOnActiveResume(false);
+          } else {
+            updateInviteQrLiveMetaOnly();
+            if (!user?.isSuperAdmin && qrModalOpen && !isActiveQrDocCurrent(inviteQrDoc)) {
+              renderInviteQrModalCanvas();
+            }
+          }
+        }
+      }, 1000);
+    }
+    startInviteQrTicker();
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        refreshInviteQrOnActiveResume(true);
+      }
+    });
+    window.addEventListener('focus', () => {
+      refreshInviteQrOnActiveResume(true);
+    });
 
     function getAdminSheetUrl() {
       return String(adminSheetUrl || '').trim();
@@ -14771,33 +15230,59 @@
     function renderManageQr(el, user) {
       const todayInfo = getKstNowInfo();
       const todayLabel = `${todayInfo.dot} (${DAY_SHORT_KO[todayInfo.dow]})`;
-      const qrReady = !!(inviteQrDoc && String(inviteQrDoc.date) === todayInfo.dot && inviteQrDoc.token);
+      const modeMin = getInviteRefreshMinutes(inviteQrDoc);
+      const graceMin = getInviteGraceMinutes(modeMin);
+      const qrReady = isActiveQrDocCurrent(inviteQrDoc);
+      const remainMs = qrReady ? Math.max(0, getActiveQrExpiryTs(inviteQrDoc) - Date.now()) : 0;
+      const graceRemainMs = (inviteQrDoc && inviteQrDoc.prevToken && Number(inviteQrDoc.prevGraceUntilTs || 0) > Date.now())
+        ? Number(inviteQrDoc.prevGraceUntilTs) - Date.now()
+        : 0;
+
+      if (!qrReady && user && user.isSuperAdmin && !isAutoRotatingInviteQr) {
+        ensureTodayInviteQrExists(true).then(() => {
+          if (currentMainTab === 'manage' && currentManageSubTab === 'qr') {
+            renderManageView(user);
+          }
+        });
+      }
 
       el.innerHTML = `
         ${buildManageSectionHead({
           key: 'qr_main',
-          defaultTitle: `${getTabIcon('manageQr')} ${getTabLabel('manageQr')} (매일 00:00 자동 갱신)`,
-          rightHtml: `<span class="tag ${qrReady ? 'green' : 'warm'}">${qrReady ? `${todayInfo.dot} 활성` : '생성 대기'}</span>`
+          defaultTitle: `${getTabIcon('manageQr')} ${getTabLabel('manageQr')}`,
+          rightHtml: `<span id="manageQrRemainPill" class="tag ${qrReady ? 'green' : 'warm'}">${qrReady ? (modeMin > 0 ? `⏱️ ${formatCountdownMmSs(remainMs)} 남음` : `${todayInfo.dot} 활성`) : '갱신 대기'}</span>`
         })}
+
         <div class="card">
-          <div style="font-size:13px; color:#334155; line-height:1.6; margin-bottom:12px;">
-            <div>📅 <b>유효 날짜:</b> ${escapeHtml(todayLabel)} (한국시간 23:59까지)</div>
+          <div style="font-size:13px; font-weight:800; color:#0F172A; margin-bottom:4px;">⏱️ 초대 QR 자동 갱신 주기 선택</div>
+          <div style="font-size:11.5px; color:#64748B; line-height:1.5; margin-bottom:6px;">
+            • <b>오늘 하루 (기본):</b> 카톡 링크·이미지 공유에 적합 (매일 00:00 갱신)<br>
+            • <b>5분 · 10분 현장 모드:</b> 주일 현장에서 화면을 띄워 가입 받을 때 권장 (자동 갱신 시 <b>직전 QR 3~5분 유예</b> + 화면 복귀 시 즉시 갱신)
+          </div>
+          <div class="qr-mode-grid">
+            ${buildQrModeButtonsHtml(modeMin)}
+          </div>
+          <div style="font-size:13px; color:#334155; line-height:1.65; margin:10px 0 12px; padding-top:10px; border-top:1px solid #F1F5F9;">
+            <div>📅 <b>현재 모드:</b> ${modeMin > 0 ? `<b style="color:#15803D;">현장 ${modeMin}분 자동 갱신</b> (직전 QR ${graceMin}분 유예)` : `<b>오늘 하루</b> (${escapeHtml(todayLabel)} 23:59까지)`}</div>
             ${inviteQrDoc && inviteQrDoc.updatedAt ? `<div>🔄 <b>최근 발급:</b> ${escapeHtml(inviteQrDoc.updatedAt)}${inviteQrDoc.updatedBy ? ` (${escapeHtml(inviteQrDoc.updatedBy)})` : ''}</div>` : ''}
+            <div id="manageQrGraceLine" class="${graceRemainMs > 0 ? '' : 'hidden'}" style="color:#B45309; font-size:12px; margin-top:2px;">
+              ${graceRemainMs > 0 ? `⏳ <b>직전 QR 유예 중:</b> 방금 변경된 이전 QR도 <b>${formatCountdownMmSs(graceRemainMs)}</b> 동안 가입 완료 가능` : ''}
+            </div>
           </div>
           <div style="display:flex; gap:6px; flex-wrap:wrap;">
             <button class="btn-sm primary" type="button" style="flex:1; padding:10px;" onclick="openInviteQrModal()">📲 QR 보기 · 공유</button>
             <button class="btn-sm" type="button" style="padding:10px 12px;" onclick="copyInviteQrLink()">🔗 링크 복사</button>
-            <button class="btn-sm warn" type="button" style="width:100%; padding:10px; margin-top:2px;" onclick="regenerateInviteQrByAdmin()">🔄 새 QR 즉시 재발급 (기존 QR 즉시 폐기)</button>
+            <button class="btn-sm warn" type="button" style="width:100%; padding:10px; margin-top:2px;" onclick="regenerateInviteQrByAdmin()">🔄 새 QR 즉시 재발급 (기존 QR 유예 없이 즉시 폐기)</button>
           </div>
         </div>
 
         <div class="card" style="background:#F8FAFC;">
-          <div style="font-size:13.5px; font-weight:800; color:#0F172A; margin-bottom:7px;">ℹ️ 초대 QR 운영 안내</div>
+          <div style="font-size:13.5px; font-weight:800; color:#0F172A; margin-bottom:7px;">ℹ️ 초대 QR 보안 운영 안내</div>
           <div style="font-size:12px; color:#475569; line-height:1.65;">
-            • 신규 회원가입은 <b>오늘 유효한 초대 QR 코드</b>를 스캔해 접속해야만 신청할 수 있습니다.<br>
-            • 한국시간 <b>자정(00:00)</b>이 지나면 자동으로 새 QR이 생성되며 어제 QR은 만료됩니다.<br>
-            • 외부 유출이 의심될 때 <b>즉시 재발급</b>을 누르면 이전 QR은 그 즉시 사용 불가 처리됩니다.<br>
-            • 이미 가입·승인된 기존 회원은 QR 없이 평소처럼 성명·비밀번호로 로그인합니다.
+            • <b>이전 QR 접속 시 자동 안내:</b> 이미 변경·만료된 이전 QR을 스캔하면 <b>"초대 QR이 변경되었습니다 · 새 QR을 사용해 주세요"</b> 안내 화면이 표시됩니다.<br>
+            • <b>직전 QR 유예 시간:</b> 5분·10분 모드에서 자동 갱신 직전에 QR을 찍고 입력 중이던 지체는 <b>유예 시간(3~5분)</b> 안에 끊김 없이 가입을 마칠 수 있습니다.<br>
+            • <b>화면 복귀 시 즉시 갱신:</b> 휴대폰 화면을 껐다 켜거나 다른 앱에서 돌아오면 만료된 QR이 남지 않도록 즉시 최신 QR로 갱신됩니다.<br>
+            • <b>긴급 폐기:</b> 외부 유출이 의심될 때 <b>[🔄 새 QR 즉시 재발급]</b>을 누르면 유예 시간 없이 이전 QR이 그 즉시 차단됩니다.
           </div>
         </div>
       `;
@@ -16242,15 +16727,17 @@
         } else if (id === 'qr') {
           await ensureTodayInviteQrExists();
           const todayDot = getKstDateParts().dot;
-          if (!inviteQrDoc || String(inviteQrDoc.date) !== todayDot || !inviteQrDoc.token) {
-            setDiagResult(id, 'err', '오늘 날짜의 초대 QR 토큰이 생성되지 않았습니다.', {
-              reason: 'Firestore config/inviteQr 문서에 오늘(한국시간) 토큰을 기록하지 못했습니다. Firestore 보안 규칙 또는 네트워크 오류일 수 있습니다.',
+          if (!isActiveQrDocCurrent(inviteQrDoc)) {
+            setDiagResult(id, 'err', '현재 유효한 초대 QR 토큰이 생성되지 않았습니다.', {
+              reason: 'Firestore config/inviteQr 문서에 유효한 토큰을 기록하지 못했습니다. Firestore 보안 규칙 또는 네트워크 오류일 수 있습니다.',
               solution: `[${qrLbl}] 탭에서 [🔄 새 QR 즉시 재발급]을 눌러 보시고, 계속 오류가 나면 Firebase Console의 Firestore 보안 규칙 게시 상태를 확인해 주세요.`,
               actions: [{ label: `${getTabIcon('manageQr')} ${qrLbl} 열기`, type: 'subtab', param: 'qr', primary: true }]
             });
           } else {
             const grid = generateQrMatrix(getCurrentInviteUrl());
-            setDiagResult(id, 'ok', `오늘(${todayDot}) 초대 QR 정상 · 토큰 길이 ${inviteQrDoc.token.length}자 · QR 매트릭스 ${grid.length}×${grid.length} 생성 완료`);
+            const qm = getInviteRefreshMinutes(inviteQrDoc);
+            const modeDesc = qm > 0 ? `현장 ${qm}분 자동 갱신(직전 ${getInviteGraceMinutes(qm)}분 유예)` : '오늘 하루(00:00 갱신)';
+            setDiagResult(id, 'ok', `초대 QR 정상 (${modeDesc}) · 토큰 ${inviteQrDoc.token.length}자 · QR 매트릭스 ${grid.length}×${grid.length} 생성 완료`);
           }
         } else if (id === 'notif') {
           const perm = getNotifPermissionState();
@@ -16386,27 +16873,33 @@
     };
 
     window.openDiagSimQrGate = (mode = 'valid') => {
-      document.getElementById('diagSimModalTitle').textContent = '📲 초대 QR 가입/만료 화면 체험';
-      const isValid = mode === 'valid';
+      document.getElementById('diagSimModalTitle').textContent = '📲 초대 QR 가입/변경·만료 화면 체험';
+      const curMode = ['valid', 'grace', 'changed'].includes(mode) ? mode : 'valid';
       document.getElementById('diagSimModalBody').innerHTML = `
-        <div class="modal-tabs-2">
-          <button class="modal-tab-btn ${isValid ? 'active' : ''}" type="button" onclick="openDiagSimQrGate('valid')">✅ 유효한 오늘 QR</button>
-          <button class="modal-tab-btn ${!isValid ? 'active' : ''}" type="button" onclick="openDiagSimQrGate('expired')">🔒 QR 없음 / 만료됨</button>
+        <div class="auth-tabs" style="margin-bottom:14px;">
+          <button class="auth-tab-btn ${curMode === 'valid' ? 'active' : ''}" style="font-size:12px; padding:9px 4px;" type="button" onclick="openDiagSimQrGate('valid')">✅ 유효 QR</button>
+          <button class="auth-tab-btn ${curMode === 'grace' ? 'active' : ''}" style="font-size:12px; padding:9px 4px;" type="button" onclick="openDiagSimQrGate('grace')">⏳ 직전 유예</button>
+          <button class="auth-tab-btn ${curMode === 'changed' ? 'active' : ''}" style="font-size:12px; padding:9px 4px;" type="button" onclick="openDiagSimQrGate('changed')">🔄 변경·만료</button>
         </div>
-        ${isValid ? `
-          <div class="signup-qr-ok-badge">✅ 오늘의 초대 QR 인증 완료 · 회원가입 가능</div>
+        ${curMode === 'valid' ? `
+          <div class="signup-qr-ok-badge">✅ 현장 초대 QR 인증 완료 · 남은 시간 04:42 (갱신 시 직전 QR 3분 유예)</div>
           <div class="info-box" style="margin-top:0;">
-            오늘 유효한 초대 QR을 스캔해 접속하면 <b>회원가입 탭이 자동으로 열리고</b>, 성명·역할·비밀번호를 입력해 가입을 신청할 수 있습니다.
+            유효한 초대 QR을 스캔해 접속하면 <b>회원가입 탭이 자동으로 열리고</b>, 성명·역할·비밀번호를 입력해 가입을 신청할 수 있습니다.
+          </div>
+        ` : (curMode === 'grace' ? `
+          <div class="signup-qr-ok-badge grace">⏳ 초대 QR이 새로 변경되었습니다 · 직전 QR 유예 시간(<b>02:35</b> 남음) 안에 가입을 완료해 주세요. 시간이 지나면 새 QR을 스캔해야 합니다.</div>
+          <div class="info-box" style="margin-top:0;">
+            5분·10분 모드에서 방금 QR이 갱신되었더라도, 직전 QR로 입력 중이던 가입자가 튕기지 않도록 <b>유예 시간(3~5분)</b> 동안 가입을 마칠 수 있게 안내합니다.
           </div>
         ` : `
           <div class="signup-qr-lock-box">
-            <div style="font-size:28px; margin-bottom:6px;">🔒</div>
-            <div style="font-size:15px; font-weight:800; margin-bottom:5px;">만료되었거나 폐기된 초대 QR입니다</div>
+            <div style="font-size:28px; margin-bottom:6px;">🔄</div>
+            <div style="font-size:15px; font-weight:800; margin-bottom:5px;">초대 QR이 변경되었습니다 · 새 QR을 사용해 주세요</div>
             <div style="font-size:12px; line-height:1.5; color:#7F1D1D;">
-              초대 QR은 <b>한국시간 당일 자정(00:00)</b>까지만 유효하며, 관리자가 재발급하면 이전 QR은 즉시 만료됩니다.<br>오늘 새로 공유된 초대 QR을 스캔해 주세요.
+              사용하신 <b>이전 초대 QR은 변경(갱신)되어 더 이상 사용할 수 없습니다.</b><br>관리자나 청년부원이 새로 띄워 준 <b>최신 초대 QR 코드</b>를 다시 스캔해 접속해 주세요.
             </div>
           </div>
-        `}
+        `)}
       `;
       document.getElementById('diagSimModal').classList.add('open');
     };
@@ -17345,7 +17838,7 @@
           const actions = [];
           const todayDot = getKstDateParts().dot;
 
-          if (!inviteQrDoc || String(inviteQrDoc.date) !== todayDot || !inviteQrDoc.token) {
+          if (!isActiveQrDocCurrent(inviteQrDoc)) {
             issues.push('오늘 날짜 초대 QR 토큰 미생성 상태');
             reasons.push('한국시간 오늘 날짜의 초대 QR 토큰이 없어 신규 회원이 초대 QR로 가입할 수 없는 상태입니다.');
             solutions.push(`[${qrLbl}] 탭에서 오늘의 초대 QR을 확인하거나 재발급해 주세요.`);
