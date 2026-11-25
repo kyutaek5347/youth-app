@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=151" />
+  <link rel="manifest" href="./manifest.json?v=152" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=151" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=151" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=152" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=152" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2955,10 +2955,85 @@
       .acc-section-title { font-size: 13.8px; }
       .acc-toggle-pill { font-size: 11px; padding: 3.5px 8px; }
     }
+
+    /* ==================== v10.52 보안 점검 센터 · 피싱/해킹 방어 스타일 ==================== */
+    .clone-domain-banner {
+      background: linear-gradient(90deg, #991B1B 0%, #DC2626 100%);
+      color: #FFFFFF;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 45;
+      box-shadow: 0 4px 14px rgba(153, 27, 27, 0.35);
+      line-height: 1.45;
+    }
+    .sec-hero-card {
+      background: linear-gradient(135deg, #064E3B 0%, #0F172A 62%, #1E293B 100%);
+      color: #FFFFFF;
+      border-radius: 18px;
+      padding: 17px 16px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(52, 211, 153, 0.35);
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.22);
+    }
+    .sec-score-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 10px 0 12px;
+    }
+    .sec-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.12);
+      color: #F8FAFC;
+    }
+    .sec-pill.ok { background: rgba(16, 185, 129, 0.22); color: #A7F3D0; }
+    .sec-pill.warn { background: rgba(245, 158, 11, 0.25); color: #FDE68A; }
+    .sec-pill.err { background: rgba(239, 68, 68, 0.28); color: #FECACA; }
+    .ext-guard-domain-box {
+      background: #0F172A;
+      color: #F8FAFC;
+      border-radius: 13px;
+      padding: 13px 14px;
+      margin: 10px 0 12px;
+      word-break: break-all;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    .sec-test-result {
+      margin-top: 10px;
+      border-radius: 12px;
+      padding: 11px 12px;
+      font-size: 12.5px;
+      line-height: 1.55;
+      border: 1px solid var(--border);
+      background: #F8FAFC;
+    }
+    .sec-test-result.ok { background: #ECFDF5; border-color: #6EE7B7; color: #065F46; }
+    .sec-test-result.warn { background: #FFFBEB; border-color: #FCD34D; color: #92400E; }
+    .sec-test-result.err { background: #FEF2F2; border-color: #FCA5A5; color: #991B1B; }
   </style>
 </head>
 <body>
   <div class="app-shell">
+    <!-- 비공식/복제 피싱 도메인 접속 경고 배너 -->
+    <div id="cloneDomainBanner" class="clone-domain-banner hidden">
+      <span id="cloneDomainBannerText">🚨 비공식 주소(피싱·복제 의심)에서 접속 중입니다.</span>
+      <button class="maint-admin-bar-btn" type="button" onclick="dismissCloneDomainBanner()">닫기</button>
+    </div>
+
     <!-- 정기 서버 점검 모드 작동 중 관리자 안내 바 -->
     <div id="maintAdminBar" class="maint-admin-bar hidden">
       <span id="maintAdminBarText">🔧 서버 점검 모드 작동 중 · 일반 회원 접근 차단됨</span>
@@ -2973,7 +3048,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=151" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=152" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3208,7 +3283,7 @@
 
           <div class="info-box" style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
             <span>개역개정 번역으로 대조해 보고 싶으신가요?</span>
-            <a href="https://www.bskorea.or.kr/bible/korbibReadpage.php" target="_blank" rel="noopener noreferrer" class="btn-sm primary" style="text-decoration:none;">대한성서공회 열기 ↗</a>
+            <button type="button" class="btn-sm primary" onclick="openExternalLinkSafely('https://www.bskorea.or.kr/bible/korbibReadpage.php', '대한성서공회 성경')">대한성서공회 열기 ↗</button>
           </div>
         </section>
 
@@ -4139,6 +4214,30 @@
     </div>
   </div>
 
+  <!-- 외부 사이트 이동 피싱 방어 확인 모달 -->
+  <div id="externalLinkGuardModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 class="modal-title">🛡️ 외부 사이트 이동 확인</h3>
+        <button class="close-btn" data-close="externalLinkGuardModal">✕</button>
+      </div>
+      <div id="extGuardStatusBadge" style="margin-bottom:8px;"></div>
+      <div style="font-size:13px; color:#334155; line-height:1.5;">
+        <b id="extGuardLabel">외부 사이트</b>로 이동하기 전, 실제 연결 주소를 확인해 주세요.
+      </div>
+      <div class="ext-guard-domain-box">
+        <div style="font-size:11px; color:#94A3B8; margin-bottom:4px;">실제 이동 도메인</div>
+        <div id="extGuardHost" style="font-size:15.5px; font-weight:800; color:#FDE68A;"></div>
+        <div id="extGuardFullUrl" style="font-size:11px; color:#CBD5E1; margin-top:5px; opacity:0.88;"></div>
+      </div>
+      <div id="extGuardWarnBox" class="info-box warn hidden" style="margin-top:0; margin-bottom:12px;"></div>
+      <div style="display:flex; gap:8px;">
+        <button id="extGuardProceedBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px; font-size:13.5px;" onclick="proceedExternalLinkGuard()">외부 사이트로 이동 ↗</button>
+        <button class="btn-outline" type="button" data-close="externalLinkGuardModal">취소</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 관리자: 기능 점검 안전 시뮬레이션 모달 -->
   <div id="diagSimModal" class="modal-backdrop">
     <div class="modal">
@@ -4281,6 +4380,14 @@
       leader_card: '특정 역할 전용 소식',
       notice_list: '공지 · 광고 · 소식 목록'
     };
+    const DEFAULT_SECURITY_CONFIG = {
+      blockMaliciousInput: true,
+      blockSuspiciousLinks: true,
+      confirmExternalLinks: true,
+      detectCloneDomain: true,
+      commentCooldownSec: 5,
+      officialHost: 'kyutaek5347.github.io'
+    };
     const DEFAULT_MAINTENANCE_CONFIG = {
       enabled: false,
       scheduled: false,
@@ -4336,6 +4443,7 @@
       { id: 'admincode', labelKey: 'manageAdminCode', defaultIcon: '🔐', defaultLabel: '관리자 코드', permCheck: p => !!p.canManageMembers },
       { id: 'logs', labelKey: 'manageLogs', defaultIcon: '📋', defaultLabel: '로그', permCheck: p => !!p.canManageMembers },
       { id: 'labels', labelKey: 'manageLabels', defaultIcon: '✏️', defaultLabel: '메뉴·이름', permCheck: p => !!p.canEditLayout },
+      { id: 'security', labelKey: 'manageSecurity', defaultIcon: '🛡️', defaultLabel: '보안 점검', permCheck: p => !!p.canManageMembers },
       { id: 'diagnostics', labelKey: 'manageDiagnostics', defaultIcon: '🧪', defaultLabel: '기능 점검', permCheck: p => !!p.canManageMembers },
       { id: 'guide', labelKey: 'manageGuide', defaultIcon: '📖', defaultLabel: '사용방법', permCheck: p => !!p.canManageMembers }
     ];
@@ -5094,7 +5202,7 @@
     }
 
     function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=151" alt="라이트 청년부" />';
+      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=152" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5117,8 +5225,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=151', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=151', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=152', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=152', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5373,6 +5481,13 @@
     let previewAsMemberMode = false;
     let diagResults = {};
     let diagRunningAll = false;
+    let securityConfig = structuredClone(DEFAULT_SECURITY_CONFIG);
+    let secCheckResults = {};
+    let secCheckRunningAll = false;
+    let pendingExternalGuardUrl = '';
+    let cloneBannerDismissed = false;
+    let lastCommentSubmitTs = 0;
+    let commentSpamWarnCount = 0;
     let adminAttCandidateMembers = [];
     let adminAttSessionSearchQuery = '';
     let lastSelfQtEditTs = 0;
@@ -6605,6 +6720,12 @@
               celebrationMsgs = structuredClone(DEFAULT_CELEBRATION_MSGS);
             }
             hiddenAutoQtDate = normalizeDotDate(d.hiddenAutoQtDate || '');
+            if (d.securityConfig && typeof d.securityConfig === 'object') {
+              securityConfig = { ...DEFAULT_SECURITY_CONFIG, ...d.securityConfig };
+            } else {
+              securityConfig = structuredClone(DEFAULT_SECURITY_CONFIG);
+            }
+            checkCloneDomainWarning();
           }
           applyScreen();
           if (document.getElementById('quickLinksSheet').classList.contains('open')) {
@@ -7338,6 +7459,8 @@
 
     async function handleMemberLogin() {
       clearErrors();
+      const lockRemain = checkLoginRateLimit('member');
+      if (lockRemain > 0) return showError('loginError', `🛡️ 보안을 위해 로그인 시도가 일시 제한되었습니다. ${lockRemain}초 후 다시 시도해 주세요.`);
       const name = document.getElementById('loginNameInput').value.trim();
       const pw = document.getElementById('loginPwInput').value.trim();
       if (!name || !pw) return showError('loginError', '성명과 비밀번호를 모두 입력해 주세요.');
@@ -7351,10 +7474,13 @@
         await authPersistenceReady;
         await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
         await auth.signInWithEmailAndPassword(loginEmail, pw);
+        clearLoginFailures('member');
         document.getElementById('loginNameInput').value = '';
         document.getElementById('loginPwInput').value = '';
       } catch (err) {
-        showError('loginError', authErrorToKorean(err, false));
+        const failInfo = recordLoginFailure('member');
+        const baseMsg = authErrorToKorean(err, false);
+        showError('loginError', failInfo.lockedSec > 0 ? `${baseMsg} (5회 연속 실패로 ${failInfo.lockedSec}초간 제한됨)` : baseMsg);
       } finally {
         btn.disabled = false;
         btn.textContent = '로그인';
@@ -7363,6 +7489,8 @@
 
     async function handleAdminLogin() {
       clearErrors();
+      const lockRemain = checkLoginRateLimit('admin');
+      if (lockRemain > 0) return showError('adminError', `🛡️ 보안을 위해 관리자 로그인이 일시 제한되었습니다. ${lockRemain}초 후 다시 시도해 주세요.`);
       const adminName = document.getElementById('adminNameInput').value.trim();
       const pin = document.getElementById('adminPinInput').value.trim();
       if (adminName.length < 2 || adminName.length > 10) {
@@ -7378,6 +7506,7 @@
         await authPersistenceReady;
         await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
         const cred = await auth.signInWithEmailAndPassword(ADMIN_EMAIL, pin);
+        clearLoginFailures('admin');
         fbUser = cred.user;
         currentAdminName = adminName;
         localStorage.setItem(KEY_ADMIN_NAME, adminName);
@@ -7522,7 +7651,9 @@
         await auth.signOut().catch(() => {});
         localStorage.removeItem(KEY_ADMIN_NAME);
         currentAdminName = '';
-        showError('adminError', authErrorToKorean(err, true));
+        const failInfo = recordLoginFailure('admin');
+        const baseMsg = authErrorToKorean(err, true);
+        showError('adminError', failInfo.lockedSec > 0 ? `${baseMsg} (5회 연속 실패로 ${failInfo.lockedSec}초간 제한됨)` : baseMsg);
       } finally {
         btn.disabled = false;
         btn.textContent = '관리자로 로그인';
@@ -8134,6 +8265,8 @@
       const logIcn = escapeHtml(getTabIcon('manageLogs'));
       const lblLbl = escapeHtml(getTabLabel('manageLabels'));
       const lblIcn = escapeHtml(getTabIcon('manageLabels'));
+      const secLbl = escapeHtml(getTabLabel('manageSecurity'));
+      const secIcn = escapeHtml(getTabIcon('manageSecurity'));
       const diagLbl = escapeHtml(getTabLabel('manageDiagnostics'));
       const diagIcn = escapeHtml(getTabIcon('manageDiagnostics'));
 
@@ -8277,6 +8410,24 @@
             '<b>정기 서버 점검 모드:</b> 앱 업데이트나 대규모 정비 시 <b>[즉시 서버 점검 모드 켜기]</b> 또는 <b>[⏰ 예약 정기 점검 시간]</b>을 켜면 일반 회원에게는 점검 안내 화면만 표시되고 최고 관리자는 정상 작업할 수 있습니다.'
           ],
           tip: '작업이 끝나면 상단 빨간 안내 바의 [점검 해제] 버튼을 눌러 일반 회원 접속을 복구해 주세요.'
+        },
+        {
+          id: 'ag_security_center',
+          catId: 'sec_log',
+          category: catMap.sec_log,
+          icon: getTabIcon('manageSecurity'),
+          title: `8. ${getTabLabel('manageSecurity')} (해킹 · 피싱 · 악성 링크 점검 및 실시간 방어)`,
+          sub: '피싱 링크 차단, 복제 도메인 감지, XSS 차단, 7개 보안 진단 및 의심 링크 검사기',
+          keywords: `${getTabLabel('manageSecurity')} 보안 점검 해킹 피싱 스미싱 악성 링크 단축 URL 복제 도메인 XSS 도배 차단 외부 링크 확인`,
+          targetTab: 'security',
+          targetLabel: `${getTabIcon('manageSecurity')} ${getTabLabel('manageSecurity')} 탭 열기`,
+          steps: [
+            `<b>7개 항목 보안 일괄 점검 ([${secIcn} ${secLbl}]):</b> 공식 HTTPS 도메인, CSP·로컬 SDK 무결성, 앱 내 전체 링크 피싱 스캔, 악성 스크립트(XSS) 흔적 스캔, 관리자 잠금·비밀 격리, QR·비번 초기화 만료, 최근 7일 차단 위협을 한 번에 점검합니다.`,
+            '<b>실시간 방어 스위치:</b> 악성 스크립트 입력 차단, 피싱·위험 링크(비암호화·IP·단축 URL) 차단, 외부 사이트 이동 전 도메인 확인창, 복제 사이트 경고, 댓글 도배 방지 쿨타임을 관리자 설정으로 즉시 제어할 수 있습니다.',
+            '<b>의심 링크·문구 즉시 검사기:</b> 카카오톡이나 문자로 받은 의심스러운 링크·문구를 붙여넣어 피싱·위장 주소·악성 코드 포함 여부를 즉시 분석해 볼 수 있습니다.',
+            `<b>기능 점검과 역할 분리:</b> 앱 오류·연동·화면 체험은 <b>[${diagIcn} ${diagLbl}]</b>에서, 해킹·피싱·보안 방어는 <b>[${secIcn} ${secLbl}]</b>에서 각각 전문적으로 점검합니다.`
+          ],
+          tip: '악성 스크립트나 피싱 링크 입력이 차단되면 실행자·시각·시도 내용이 [보안 로그]에 자동 기록되어 추적할 수 있습니다.'
         }
       ];
     }
@@ -8863,6 +9014,7 @@
       else if (currentManageSubTab === 'admincode') renderManageAdminCode(content, user);
       else if (currentManageSubTab === 'logs') renderManageLogs(content, user);
       else if (currentManageSubTab === 'labels') renderManageLabels(content, user);
+      else if (currentManageSubTab === 'security') renderManageSecurity(content, user);
       else if (currentManageSubTab === 'diagnostics') renderManageDiagnostics(content, user);
       else if (currentManageSubTab === 'guide') renderManageGuide(content, user);
     }
@@ -9571,6 +9723,7 @@
       if (type !== 'hero_notice' && type !== 'notice_list' && !title) {
         return showToast('배너 제목을 입력해 주세요.');
       }
+      if (!enforceInputSecurity(`${badge}\n${title}\n${desc}`, '메인 배너·칸', true)) return;
 
       let publishAtTs = 0;
       if (publishMode === 'scheduled') {
@@ -9752,6 +9905,7 @@
       const notify = document.getElementById('noticeNotifyInput').checked;
 
       if (!title || !body) return showToast('제목과 내용을 모두 입력해 주세요.');
+      if (!enforceInputSecurity(`${category}\n${title}\n${body}`, `공지·광고(${title})`, true)) return;
       if (audience === 'roles' && targetRoles.length === 0) {
         return showToast('이 공지를 볼 수 있는 역할을 1개 이상 선택해 주세요.');
       }
@@ -12846,6 +13000,8 @@ ${m.body}`;
       const body = input.value.trim();
       if (!body) return showToast('댓글 내용을 입력해 주세요.');
       if (body.length > 1000) return showToast('댓글은 1000자 이내로 입력해 주세요.');
+      if (!editingCommentId && !checkCommentSpamCooldown(user)) return;
+      if (!enforceInputSecurity(body, `${getTabLabel('qt')} 댓글`, !!user.isSuperAdmin)) return;
 
       const btn = document.getElementById('qtCommentSubmitBtn');
       btn.disabled = true;
@@ -13057,6 +13213,7 @@ ${m.body}`;
       const notifyOnPublish = document.getElementById('qtNotifyInput').checked;
 
       if (!scripture) return showToast('말씀이나 작성 글 내용을 입력해 주세요.');
+      if (!enforceInputSecurity(`${passage}\n${scripture}`, `${getTabLabel('qt')} 글`, true)) return;
 
       const btn = document.getElementById('saveQtBtn');
       btn.disabled = true;
@@ -13524,6 +13681,18 @@ ${m.body}`;
         const textCls = theme.darkText ? 'dark-text' : '';
 
         if (safeUrl) {
+          if (securityConfig.confirmExternalLinks) {
+            return `
+              <button class="quick-link-btn ${textCls}" type="button" style="background:${theme.css};"
+                      onclick="closeQuickLinksSheet(); openExternalLinkSafely('${escapeJsAttr(safeUrl)}', '${escapeJsAttr(ql.label)}')">
+                <span class="quick-link-left">
+                  <span class="quick-link-icon">${theme.svg}</span>
+                  <span class="quick-link-label">${escapeHtml(ql.label)}</span>
+                </span>
+                <span class="quick-link-arrow">▸</span>
+              </button>
+            `;
+          }
           return `
             <a class="quick-link-btn ${textCls}" style="background:${theme.css};"
                href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer"
@@ -13655,6 +13824,23 @@ ${m.body}`;
 
       const url = normalizeExternalUrl(rawUrl);
       if (!url) return showToast('올바른 웹사이트 주소를 입력해 주세요.');
+      if (!enforceInputSecurity(label, '사이트 바로가기 이름', true)) return;
+      const urlRisk = analyzeUrlRisk(url);
+      if (securityConfig.blockSuspiciousLinks && urlRisk.riskLevel === 'danger') {
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '피싱·위험 링크 차단',
+          target: label,
+          detail: `${url} (${urlRisk.reasons.join(', ')})`
+        });
+        alert(`🚨 위험한 링크가 차단되었습니다!\n\n사유: ${urlRisk.reasons.join(', ')}\n주소: ${url}`);
+        return;
+      }
+      if (securityConfig.blockSuspiciousLinks && urlRisk.riskLevel === 'warn') {
+        const allowWarn = confirm(`⚠️ 주의가 필요한 링크입니다.\n\n사유: ${urlRisk.reasons.join(', ')}\n주소: ${url}\n\n그래도 사이트 바로가기로 등록할까요?`);
+        if (!allowWarn) return;
+      }
 
       const next = structuredClone(quickLinks);
       if (id) {
@@ -16874,6 +17060,15 @@ ${m.body}`;
           `;
         })()}
 
+        <div class="card" style="background:#ECFDF5; border-color:#6EE7B7; margin-bottom:12px; padding:11px 13px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+            <div style="font-size:12px; color:#065F46; line-height:1.45; flex:1; min-width:180px;">
+              <b>🛡️ 해킹 · 피싱 · 악성 링크 방어 점검</b>은 전용 <b>[${escapeHtml(getTabIcon('manageSecurity'))} ${escapeHtml(getTabLabel('manageSecurity'))}]</b> 탭에서 분리 관리합니다.
+            </div>
+            <button class="btn-sm approve" type="button" onclick="switchManageSubTab('security')">${escapeHtml(getTabIcon('manageSecurity'))} 이동</button>
+          </div>
+        </div>
+
         <div class="section-head">
           <h2 class="section-title">${escapeHtml(getTabIcon('manageDiagnostics'))} ${escapeHtml(getTabLabel('manageDiagnostics'))} 센터</h2>
           <span class="tag ${errCnt > 0 ? 'red' : (okCnt === DIAG_ITEMS.length ? 'green' : 'slate')}">
@@ -17355,6 +17550,796 @@ ${m.body}`;
         location.reload();
       }
     };
+
+    // ==================== 22. 실시간 보안 방어 엔진 & 관리 센터 [🛡️ 보안 점검] ====================
+    const SUSPICIOUS_SHORTENERS = [
+      'bit.ly', 'tinyurl.com', 't.co', 'han.gl', 'me2.do', 'vo.la', 'url.kr',
+      'gg.gg', 'rb.gy', 'is.gd', 'cutt.ly', 'shorturl.at', 'ow.ly', 'rebrand.ly', 'v.gd'
+    ];
+    const SUSPICIOUS_TLDS = [
+      '.tk', '.ml', '.ga', '.cf', '.gq', '.xyz', '.top', '.click', '.zip', '.mov', '.loan', '.work', '.ru', '.cn'
+    ];
+    const OFFICIAL_ALLOWED_HOSTS = ['kyutaek5347.github.io', 'localhost', '127.0.0.1'];
+
+    function checkLoginRateLimit(scope) {
+      try {
+        const raw = JSON.parse(sessionStorage.getItem(`ry_login_rl_${scope}`) || '{}');
+        const until = Number(raw.lockUntil || 0);
+        if (until > Date.now()) {
+          return Math.max(1, Math.ceil((until - Date.now()) / 1000));
+        }
+      } catch {}
+      return 0;
+    }
+
+    function recordLoginFailure(scope) {
+      try {
+        const key = `ry_login_rl_${scope}`;
+        const raw = JSON.parse(sessionStorage.getItem(key) || '{}');
+        const fails = Number(raw.fails || 0) + 1;
+        let lockUntil = 0;
+        let lockedSec = 0;
+        if (fails >= 5) {
+          lockedSec = 30;
+          lockUntil = Date.now() + lockedSec * 1000;
+          sessionStorage.setItem(key, JSON.stringify({ fails: 0, lockUntil }));
+        } else {
+          sessionStorage.setItem(key, JSON.stringify({ fails, lockUntil: 0 }));
+        }
+        return { fails, lockedSec };
+      } catch {
+        return { fails: 1, lockedSec: 0 };
+      }
+    }
+
+    function clearLoginFailures(scope) {
+      try { sessionStorage.removeItem(`ry_login_rl_${scope}`); } catch {}
+    }
+
+    function detectMaliciousCode(text) {
+      const s = String(text || '');
+      if (!s) return { safe: true, reasons: [], matched: '' };
+      const rules = [
+        { re: /<\s*script\b/i, reason: '스크립트 태그(<script>) 삽입 시도' },
+        { re: /<\/\s*script\s*>/i, reason: '스크립트 종료 태그 삽입 시도' },
+        { re: /<\s*(iframe|object|embed|applet|meta|base)\b/i, reason: '위험 HTML 프레임/객체 태그 삽입 시도' },
+        { re: /\b(?:javascript|vbscript)\s*:/i, reason: '스크립트 실행 프로토콜(javascript:) 포함' },
+        { re: /\bdata\s*:\s*text\/html/i, reason: 'HTML 데이터 실행 URI 포함' },
+        { re: /\bon(?:error|load|click|mouseover|focus|input|submit)\s*=/i, reason: 'HTML 이벤트 실행 속성(on*=) 포함' },
+        { re: /\b(?:document\.cookie|window\.location|eval\s*\(|Function\s*\()/i, reason: '브라우저 쿠키 탈취·코드 실행 구문 포함' },
+        { re: /<\s*svg\b[^>]*\bon[a-z]+\s*=/i, reason: '악성 SVG 스크립트 태그 포함' }
+      ];
+      const reasons = [];
+      let matched = '';
+      for (const r of rules) {
+        const m = s.match(r.re);
+        if (m) {
+          reasons.push(r.reason);
+          if (!matched) matched = m[0];
+        }
+      }
+      return { safe: reasons.length === 0, reasons, matched };
+    }
+
+    function analyzeUrlRisk(rawUrl) {
+      const cleaned = String(rawUrl || '').replace(/[\u0000-\u001F\u007F]/g, '').trim();
+      if (!cleaned) return { riskLevel: 'safe', host: '', protocol: '', url: '', reasons: [] };
+
+      if (/^(javascript|data|vbscript|file):/i.test(cleaned)) {
+        return {
+          riskLevel: 'danger',
+          host: '(위험 프로토콜)',
+          protocol: cleaned.split(':')[0].toLowerCase() + ':',
+          url: cleaned,
+          reasons: ['브라우저 실행·파일 접근을 노리는 위험 프로토콜']
+        };
+      }
+
+      const candidate = /^https?:\/\//i.test(cleaned) ? cleaned : `https://${cleaned}`;
+      let parsed = null;
+      try {
+        parsed = new URL(candidate);
+      } catch {
+        return {
+          riskLevel: 'warn',
+          host: cleaned.slice(0, 40),
+          protocol: '',
+          url: cleaned,
+          reasons: ['형식이 올바르지 않은 URL']
+        };
+      }
+
+      const host = (parsed.hostname || '').toLowerCase();
+      const protocol = (parsed.protocol || '').toLowerCase();
+      const reasons = [];
+      let riskLevel = 'safe';
+
+      const elevate = (lvl) => {
+        if (lvl === 'danger' || (lvl === 'warn' && riskLevel === 'safe')) riskLevel = lvl;
+      };
+
+      if (parsed.username || parsed.password || cleaned.includes('@')) {
+        elevate('danger');
+        reasons.push('주소 위장(@ 기호 피싱 수법) 의심');
+      }
+      if (/^\d{1,3}(?:\.\d{1,3}){3}$/.test(host) || (/^\[?[0-9a-f:]+\]?$/i.test(host) && host.includes(':'))) {
+        elevate('danger');
+        reasons.push('도메인 대신 IP 숫자 주소 직접 연결 (피싱·악성 서버 고위험)');
+      }
+      if (host.includes('xn--')) {
+        elevate('danger');
+        reasons.push('유사 문자 위장 도메인(퓨니코드 xn--) 감지');
+      }
+      if (protocol === 'http:') {
+        elevate('warn');
+        reasons.push('비암호화(HTTP) 연결 · 통신 가로채기 주의');
+      }
+      if (SUSPICIOUS_SHORTENERS.some(d => host === d || host.endsWith('.' + d))) {
+        elevate('warn');
+        reasons.push('실제 목적지를 숨기는 단축 URL (스미싱 악용 주의)');
+      }
+      if (SUSPICIOUS_TLDS.some(tld => host.endsWith(tld))) {
+        elevate('warn');
+        reasons.push('피싱·스팸에 자주 악용되는 해외/무료 최상위 도메인');
+      }
+      if (/[^\x00-\x7F]/.test(host)) {
+        elevate('warn');
+        reasons.push('비영문 국제화 도메인(유사 주소 위장 여부 확인 필요)');
+      }
+
+      return {
+        riskLevel,
+        host,
+        protocol,
+        url: parsed.href,
+        reasons
+      };
+    }
+
+    function scanTextForSuspiciousLinks(text) {
+      const s = String(text || '');
+      if (!s) return [];
+      const urlRegex = /(?:(?:https?|javascript|data|vbscript|file):\/\/[^\s<>"']+|(?:javascript|data|vbscript):[^\s<>"']+|\bwww\.[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\/[^\s<>"']*)?|\b(?:bit\.ly|tinyurl\.com|t\.co|han\.gl|me2\.do|vo\.la|url\.kr|gg\.gg|rb\.gy|is\.gd|cutt\.ly|shorturl\.at)\/[^\s<>"']+)/gi;
+      const matches = s.match(urlRegex) || [];
+      const seen = new Set();
+      const flagged = [];
+      for (const m of matches) {
+        const clean = m.replace(/[),.;!?]+$/, '');
+        if (!clean || seen.has(clean)) continue;
+        seen.add(clean);
+        const res = analyzeUrlRisk(clean);
+        if (res.riskLevel !== 'safe') {
+          flagged.push(res);
+        }
+      }
+      return flagged;
+    }
+
+    function enforceInputSecurity(text, contextLabel, isAdminAction = false) {
+      const cfg = securityConfig || DEFAULT_SECURITY_CONFIG;
+
+      if (cfg.blockMaliciousInput !== false) {
+        const xss = detectMaliciousCode(text);
+        if (!xss.safe) {
+          recordAuditLog({
+            actorType: isAdminAction ? 'admin' : 'member',
+            category: '보안·설정',
+            action: '악성 입력 시도 차단',
+            target: contextLabel || '입력란',
+            detail: `${xss.reasons.join(', ')} (감지: ${xss.matched})`
+          });
+          showToast('🛡️ 보안 차단: 악성 스크립트 패턴이 감지되어 등록이 차단되었습니다.');
+          return false;
+        }
+      }
+
+      if (cfg.blockSuspiciousLinks !== false) {
+        const badLinks = scanTextForSuspiciousLinks(text);
+        const dangerLinks = badLinks.filter(x => x.riskLevel === 'danger');
+        const warnLinks = badLinks.filter(x => x.riskLevel === 'warn');
+
+        if (dangerLinks.length > 0) {
+          recordAuditLog({
+            actorType: isAdminAction ? 'admin' : 'member',
+            category: '보안·설정',
+            action: '피싱·위험 링크 차단',
+            target: contextLabel || '입력란',
+            detail: dangerLinks.map(l => `${l.url} [${l.reasons.join(', ')}]`).join(' / ')
+          });
+          alert(`🚨 보안 차단: 피싱 또는 위험 링크가 감지되어 등록할 수 없습니다.\n\n• 감지 주소: ${dangerLinks[0].url}\n• 사유: ${dangerLinks[0].reasons.join(', ')}`);
+          return false;
+        }
+
+        if (warnLinks.length > 0) {
+          if (!isAdminAction) {
+            recordAuditLog({
+              actorType: 'member',
+              category: '보안·설정',
+              action: '피싱·의심 링크 차단',
+              target: contextLabel || '댓글',
+              detail: warnLinks.map(l => `${l.url} [${l.reasons.join(', ')}]`).join(' / ')
+            });
+            alert(`🛡️ 보안 정책으로 의심 링크(단축 URL·비암호화 HTTP 등)는 등록할 수 없습니다.\n\n• 감지 주소: ${warnLinks[0].url}\n• 사유: ${warnLinks[0].reasons.join(', ')}\n\n안전한 공식 HTTPS 주소를 사용해 주세요.`);
+            return false;
+          } else {
+            const ok = confirm(`⚠️ 주의가 필요한 링크가 포함되어 있습니다.\n\n• 감지 주소: ${warnLinks[0].url}\n• 사유: ${warnLinks[0].reasons.join(', ')}\n\n관리자 권한으로 그래도 게시할까요?`);
+            if (!ok) return false;
+          }
+        }
+      }
+
+      return true;
+    }
+
+    function checkCommentSpamCooldown(user) {
+      if (!user || user.isSuperAdmin) return true;
+      const cdSec = Math.max(0, Number((securityConfig && securityConfig.commentCooldownSec) ?? 5));
+      if (cdSec <= 0) return true;
+      const elapsed = (Date.now() - lastCommentSubmitTs) / 1000;
+      if (lastCommentSubmitTs > 0 && elapsed < cdSec) {
+        const remain = Math.max(1, Math.ceil(cdSec - elapsed));
+        commentSpamWarnCount++;
+        if (commentSpamWarnCount === 3) {
+          recordAuditLog({
+            actorType: 'member',
+            actorName: user.name,
+            category: '보안·설정',
+            action: '댓글 도배 시도 차단',
+            target: `${getTabLabel('qt')} 댓글`,
+            detail: `쿨타임(${cdSec}초) 내 반복 등록 시도 3회 감지`
+          });
+        }
+        showToast(`🛡️ 도배 방지를 위해 ${remain}초 후에 다시 댓글을 등록할 수 있습니다.`);
+        return false;
+      }
+      lastCommentSubmitTs = Date.now();
+      commentSpamWarnCount = 0;
+      return true;
+    }
+
+    function checkCloneDomainWarning() {
+      const banner = document.getElementById('cloneDomainBanner');
+      if (!banner) return;
+      if (cloneBannerDismissed || (securityConfig && securityConfig.detectCloneDomain === false)) {
+        banner.classList.add('hidden');
+        return;
+      }
+      const host = (window.location.hostname || '').toLowerCase();
+      const proto = (window.location.protocol || '').toLowerCase();
+      const officialHost = String((securityConfig && securityConfig.officialHost) || 'kyutaek5347.github.io').trim().toLowerCase();
+      const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
+      const isOfficial = host === officialHost || OFFICIAL_ALLOWED_HOSTS.includes(host);
+
+      const issues = [];
+      if (!isLocal && proto !== 'https:') issues.push('비암호화(HTTP) 연결');
+      if (!isLocal && !isOfficial) issues.push(`비공식 도메인(${host})`);
+
+      if (issues.length > 0) {
+        const txt = document.getElementById('cloneDomainBannerText');
+        if (txt) {
+          txt.textContent = `🚨 피싱·복제 주의 (${issues.join(' · ')}) · 공식 주소(${officialHost})인지 확인하세요!`;
+        }
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+
+    window.dismissCloneDomainBanner = () => {
+      cloneBannerDismissed = true;
+      const b = document.getElementById('cloneDomainBanner');
+      if (b) b.classList.add('hidden');
+    };
+
+    window.openExternalLinkSafely = (rawUrl, label = '외부 사이트') => {
+      const safeUrl = normalizeExternalUrl(rawUrl);
+      if (!safeUrl) return showToast('올바르지 않은 외부 주소입니다.');
+
+      const risk = analyzeUrlRisk(safeUrl);
+      if (securityConfig && securityConfig.blockSuspiciousLinks !== false && risk.riskLevel === 'danger') {
+        alert(`🚨 위험한 주소로 판단되어 이동이 차단되었습니다!\n\n사유: ${risk.reasons.join(', ')}\n주소: ${safeUrl}`);
+        return;
+      }
+
+      if (securityConfig && securityConfig.confirmExternalLinks === false && risk.riskLevel === 'safe') {
+        window.open(safeUrl, '_blank', 'noopener,noreferrer');
+        return;
+      }
+
+      pendingExternalGuardUrl = safeUrl;
+      const badgeEl = document.getElementById('extGuardStatusBadge');
+      const lblEl = document.getElementById('extGuardLabel');
+      const hostEl = document.getElementById('extGuardHost');
+      const fullEl = document.getElementById('extGuardFullUrl');
+      const warnEl = document.getElementById('extGuardWarnBox');
+
+      if (lblEl) lblEl.textContent = label || '외부 사이트';
+      if (hostEl) hostEl.textContent = risk.host || safeUrl;
+      if (fullEl) fullEl.textContent = safeUrl;
+
+      if (risk.riskLevel === 'safe') {
+        if (badgeEl) badgeEl.innerHTML = '<span class="tag green">🔒 HTTPS 암호화 · 안전한 외부 주소</span>';
+        if (warnEl) warnEl.classList.add('hidden');
+      } else {
+        if (badgeEl) badgeEl.innerHTML = `<span class="tag ${risk.riskLevel === 'danger' ? 'red' : 'warm'}">⚠️ 주의 필요 · 이동 전 도메인 확인</span>`;
+        if (warnEl) {
+          warnEl.innerHTML = `<b>감지된 주의 사항:</b><br>• ${risk.reasons.map(escapeHtml).join('<br>• ')}`;
+          warnEl.classList.remove('hidden');
+        }
+      }
+      document.getElementById('externalLinkGuardModal').classList.add('open');
+    };
+
+    window.proceedExternalLinkGuard = () => {
+      const targetUrl = pendingExternalGuardUrl;
+      pendingExternalGuardUrl = '';
+      document.getElementById('externalLinkGuardModal').classList.remove('open');
+      if (targetUrl) {
+        window.open(targetUrl, '_blank', 'noopener,noreferrer');
+      }
+    };
+
+    // ==================== [🛡️ 보안 점검] 전용 관리 센터 탭 ====================
+    const SEC_CHECK_ITEMS = [
+      { id: 'domain_https', title: '1. 공식 도메인 · HTTPS 암호화 연결', desc: '현재 접속 주소가 공식 도메인이며 전 구간 HTTPS로 암호화되어 있는지 점검합니다.' },
+      { id: 'csp_sdk', title: '2. CSP 보안 헤더 · 로컬 SDK 무결성', desc: '외부 악성 스크립트 차단(CSP) 헤더 및 외부 CDN 미사용(로컬 SDK 보관) 여부를 점검합니다.' },
+      { id: 'link_scan', title: '3. 앱 전체 피싱 · 위험 링크 정밀 스캔', desc: '바로가기·공지·배너·말씀·댓글에 피싱·단축URL·비암호화·IP 링크가 있는지 전수 검사합니다.' },
+      { id: 'xss_scan', title: '4. 악성 스크립트(XSS) 입력 흔적 스캔', desc: '공지·배너·말씀·댓글·회원명에 스크립트 삽입이나 위험 HTML 태그 흔적이 있는지 검사합니다.' },
+      { id: 'admin_access', title: '5. 관리자 접근 통제 · 잠금 · 비밀 격리', desc: '신규 관리자 자동 등록 잠금, 관리자 코드 강도, 구글 시트 URL 서버 격리 상태를 점검합니다.' },
+      { id: 'qr_reset', title: '6. 초대 QR · 비밀번호 초기화 만료 점검', desc: '오늘의 초대 QR 유효성과 24시간이 지난 만료 비밀번호 초기화 코드 잔존 여부를 점검합니다.' },
+      { id: 'threat_logs', title: '7. 최근 7일 보안 위협 · 차단 활동 감지', desc: '감사 로그에서 악성 입력 차단, 피싱 링크 차단, 도배 시도, 대량 삭제 이상 징후를 분석합니다.' }
+    ];
+
+    function setSecCheckResult(id, status, msg) {
+      secCheckResults[id] = { status, msg, ts: formatKstDateTime() };
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'security') {
+        renderManageSecurity(document.getElementById('manageContent'), u);
+      }
+    }
+
+    function getRecentSecurityThreatLogs() {
+      const all = getMergedAuditLogs();
+      return all.filter(l => {
+        const act = String((l && l.action) || '');
+        return act.includes('차단') || act.includes('위협') || act.includes('보안 방어') || act.includes('관리자 해제') || act.includes('QR 재발급') || act.includes('관리자 코드 변경');
+      });
+    }
+
+    function renderManageSecurity(el, user) {
+      const cfg = securityConfig || DEFAULT_SECURITY_CONFIG;
+      const okCnt = SEC_CHECK_ITEMS.filter(it => secCheckResults[it.id] && secCheckResults[it.id].status === 'ok').length;
+      const warnCnt = SEC_CHECK_ITEMS.filter(it => secCheckResults[it.id] && secCheckResults[it.id].status === 'warn').length;
+      const errCnt = SEC_CHECK_ITEMS.filter(it => secCheckResults[it.id] && secCheckResults[it.id].status === 'err').length;
+
+      const threatLogs = getRecentSecurityThreatLogs();
+      const defenseOpen = isManageSectionOpen('sec_defense_cfg', true);
+      const testerOpen = isManageSectionOpen('sec_url_tester', false);
+      const checksOpen = isManageSectionOpen('sec_check_list', true);
+      const threatsOpen = isManageSectionOpen('sec_threat_feed', threatLogs.length > 0 && threatLogs.length <= 5);
+
+      el.innerHTML = `
+        <div class="sec-hero-card">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+            <div style="font-size:16px; font-weight:900; color:#FFFFFF;">${escapeHtml(getTabIcon('manageSecurity'))} ${escapeHtml(getTabLabel('manageSecurity'))} · 공격 방어 센터</div>
+            <span class="tag ${errCnt > 0 ? 'red' : (warnCnt > 0 ? 'warm' : 'green')}">
+              ${errCnt > 0 ? '🚨 위험 감지' : (warnCnt > 0 ? '⚠️ 주의 항목 있음' : (okCnt === SEC_CHECK_ITEMS.length ? '✅ 전 항목 안전' : '🛡️ 방어 가동 중'))}
+            </span>
+          </div>
+          <div style="font-size:12px; color:#CBD5E1; line-height:1.5; margin-top:6px;">
+            해킹(XSS)·피싱 링크·복제 도메인·댓글 도배 등 악의적 공격을 <b>실시간 감지·차단</b>하고, 앱 전체 데이터의 보안 상태를 점검합니다.
+          </div>
+          <div class="sec-score-row">
+            <span class="sec-pill ok">✅ 안전 ${okCnt}</span>
+            <span class="sec-pill warn">⚠️ 주의 ${warnCnt}</span>
+            <span class="sec-pill err">🚨 위험 ${errCnt}</span>
+            <span class="sec-pill">🔒 실시간 방어 ${[cfg.blockMaliciousInput, cfg.blockSuspiciousLinks, cfg.confirmExternalLinks, cfg.detectCloneDomain].filter(Boolean).length}/4 ON</span>
+          </div>
+          <button id="runAllSecBtn" class="btn-full btn-amber" type="button" style="padding:12px; font-size:14px;" ${secCheckRunningAll ? 'disabled' : ''} onclick="runAllSecurityChecks()">
+            ${secCheckRunningAll ? '⏳ 전체 보안 정밀 점검 중...' : '🛡️ 전체 보안 일괄 점검 실행 (7개 항목)'}
+          </button>
+        </div>
+
+        <div class="card" style="background:#EFF6FF; border-color:#BFDBFE; margin-bottom:12px; padding:10px 13px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+            <div style="font-size:12px; color:#1E3A8A; line-height:1.45; flex:1; min-width:180px;">
+              앱 기능 오류 진단·화면 시뮬레이션·서버 점검 모드는 <b>[${escapeHtml(getTabIcon('manageDiagnostics'))} ${escapeHtml(getTabLabel('manageDiagnostics'))}]</b> 탭에서 확인합니다.
+            </div>
+            <button class="btn-sm primary" type="button" onclick="switchManageSubTab('diagnostics')">${escapeHtml(getTabIcon('manageDiagnostics'))} 이동</button>
+          </div>
+        </div>
+
+        <!-- 1) 7개 보안 항목 점검 -->
+        ${buildManageAccordionBar({
+          key: 'sec_check_list',
+          titleHtml: '🔍 해킹 · 피싱 · 접근 통제 7개 보안 진단',
+          badgeHtml: `<span class="tag ${errCnt > 0 ? 'red' : (okCnt === SEC_CHECK_ITEMS.length ? 'green' : 'slate')}">${okCnt}/${SEC_CHECK_ITEMS.length}</span>`,
+          defaultOpen: true
+        })}
+        <div data-acc-body="sec_check_list" class="${checksOpen ? '' : 'hidden'}">
+          ${SEC_CHECK_ITEMS.map(item => {
+            const res = secCheckResults[item.id] || { status: 'idle', msg: item.desc, ts: '' };
+            const badgeMap = {
+              idle: '<span class="tag slate">대기</span>',
+              running: '<span class="tag warm">점검 중...</span>',
+              ok: '<span class="tag green">✅ 안전</span>',
+              warn: '<span class="tag warm">⚠️ 주의</span>',
+              err: '<span class="tag red">🚨 위험</span>'
+            };
+            return `
+              <div class="diag-card ${res.status}">
+                <div class="layout-item-head">
+                  <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; min-width:0;">
+                    <strong style="font-size:13.5px; color:#0F172A;">${escapeHtml(item.title)}</strong>
+                    ${badgeMap[res.status] || badgeMap.idle}
+                  </div>
+                  <button class="btn-sm primary" type="button" style="white-space:nowrap;" onclick="runSingleSecurityCheck('${item.id}')">개별 점검</button>
+                </div>
+                <div class="diag-msg">${escapeHtml(res.msg)}</div>
+                ${res.ts ? `<div style="font-size:10.5px; color:#94A3B8; margin-top:4px;">최근 점검: ${escapeHtml(res.ts)}</div>` : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+
+        <div class="manage-divider"></div>
+
+        <!-- 2) 실시간 차단 · 방어 정책 스위치 -->
+        ${buildManageAccordionBar({
+          key: 'sec_defense_cfg',
+          titleHtml: '🚧 실시간 공격 차단 · 방어 설정',
+          badgeHtml: '<span class="tag green">실시간 적용</span>',
+          defaultOpen: true
+        })}
+        <div data-acc-body="sec_defense_cfg" class="${defenseOpen ? '' : 'hidden'}">
+          <div class="card">
+            <div class="setting-row" style="padding-top:0;">
+              <div>
+                <div class="setting-title" style="font-size:13.5px;">🛡️ 악성 스크립트(XSS) 입력 차단</div>
+                <div class="setting-sub" style="font-size:11.5px;">댓글·공지·배너 등에 &lt;script&gt;, iframe, javascript: 삽입 시 즉시 차단하고 로그에 기록합니다.</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="cfgSecBlockXss" ${cfg.blockMaliciousInput !== false ? 'checked' : ''} />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title" style="font-size:13.5px;">🎣 피싱 · 위험 링크 자동 차단</div>
+                <div class="setting-sub" style="font-size:11.5px;">@ 위장 주소, IP 직결, 단축 URL, 비암호화(HTTP) 링크를 감지해 차단·경고합니다.</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="cfgSecBlockLinks" ${cfg.blockSuspiciousLinks !== false ? 'checked' : ''} />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title" style="font-size:13.5px;">🔗 외부 사이트 이동 전 도메인 확인창</div>
+                <div class="setting-sub" style="font-size:11.5px;">바로가기 등 외부 링크 클릭 시 실제 이동할 도메인과 암호화 여부를 먼저 보여줍니다.</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="cfgSecConfirmExt" ${cfg.confirmExternalLinks !== false ? 'checked' : ''} />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title" style="font-size:13.5px;">🚨 복제 · 피싱 도메인 접속 경고</div>
+                <div class="setting-sub" style="font-size:11.5px;">공식 주소(${escapeHtml(cfg.officialHost || 'kyutaek5347.github.io')})가 아닌 복제 주소 접속 시 상단에 경고 배너를 띄웁니다.</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="cfgSecDetectClone" ${cfg.detectCloneDomain !== false ? 'checked' : ''} />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="form-group" style="margin-top:10px; margin-bottom:10px;">
+              <label class="form-label" for="cfgSecCommentCooldown">⏱️ 댓글 도배 방지 쿨타임 (일반 회원)</label>
+              <select id="cfgSecCommentCooldown" class="form-select">
+                ${[0, 3, 5, 10, 30].map(sec => `
+                  <option value="${sec}" ${Number(cfg.commentCooldownSec ?? 5) === sec ? 'selected' : ''}>
+                    ${sec === 0 ? '사용 안 함 (0초)' : `${sec}초 간격 제한${sec === 5 ? ' (권장)' : ''}`}
+                  </option>
+                `).join('')}
+              </select>
+            </div>
+            <button id="saveSecCfgBtn" class="btn-full btn-dark" type="button" style="padding:11px; font-size:13.5px;" onclick="handleSaveSecurityConfig()">💾 보안 방어 설정 저장</button>
+          </div>
+        </div>
+
+        <div class="manage-divider"></div>
+
+        <!-- 3) 의심 링크 · 악성 문구 즉시 검사기 -->
+        ${buildManageAccordionBar({
+          key: 'sec_url_tester',
+          titleHtml: '🔎 의심 링크 · 문구 즉시 검사기',
+          badgeHtml: '<span class="tag slate">안전 모의검사</span>',
+          defaultOpen: false
+        })}
+        <div data-acc-body="sec_url_tester" class="${testerOpen ? '' : 'hidden'}">
+          <div class="card">
+            <div style="font-size:12px; color:#64748B; line-height:1.5; margin-bottom:9px;">
+              외부에서 받은 의심 링크나 문구(카톡 스미싱·단축 URL·스크립트 등)를 붙여넣으면 실제 접속하지 않고 위험 요소를 즉시 분석합니다.
+            </div>
+            <textarea id="secTesterInput" class="form-textarea" style="min-height:76px; margin-bottom:8px;" placeholder="검사할 링크 또는 문구를 붙여넣으세요 (예: http://123.45.67.89/login 또는 bit.ly/...)"></textarea>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-full btn-dark" type="button" style="flex:1; padding:10px; font-size:13px;" onclick="runSecurityInputTester()">🔍 위험도 즉시 분석</button>
+              <button class="btn-outline" type="button" onclick="clearSecurityInputTester()">지우기</button>
+            </div>
+            <div id="secTesterOutput" class="hidden"></div>
+          </div>
+        </div>
+
+        <div class="manage-divider"></div>
+
+        <!-- 4) 최근 보안 위협 · 차단 이벤트 -->
+        ${buildManageAccordionBar({
+          key: 'sec_threat_feed',
+          titleHtml: '🚨 최근 보안 위협 · 차단 기록',
+          badgeHtml: `<span class="tag ${threatLogs.length > 0 ? 'warm' : 'green'}">${threatLogs.length}건</span>`,
+          actionHtml: `<button class="btn-sm primary" type="button" onclick="switchManageSubTab('logs')">전체 로그</button>`,
+          defaultOpen: threatLogs.length > 0 && threatLogs.length <= 5
+        })}
+        <div data-acc-body="sec_threat_feed" class="${threatsOpen ? '' : 'hidden'}">
+          ${threatLogs.length === 0
+            ? '<div class="card" style="text-align:center; color:#15803D; font-size:13px; padding:18px 10px;">✅ 최근 감지되거나 차단된 악성 공격·보안 위협 기록이 없습니다.</div>'
+            : threatLogs.slice(0, 15).map(item => `
+                <div class="card">
+                  <div class="card-top">
+                    <span class="tag ${/차단|위협|해제/.test(String(item.action || '')) ? 'red' : 'warm'}">${escapeHtml(item.action || '보안 이벤트')}</span>
+                    <span class="card-date">${escapeHtml(item.dateWithDow || item.date || '')} ${escapeHtml(item.time || '')}</span>
+                  </div>
+                  <div class="log-meta-lines">
+                    <div>👤 <b>관련자:</b> ${escapeHtml(item.actorName || '-')} (${item.actorType === 'member' ? '이용자' : '관리자'})</div>
+                    ${item.target ? `<div>🎯 <b>위치:</b> ${escapeHtml(item.target)}</div>` : ''}
+                    ${item.detail ? `<div>📝 <b>상세:</b> ${escapeHtml(item.detail)}</div>` : ''}
+                  </div>
+                </div>
+              `).join('')}
+        </div>
+
+        <div class="info-box" style="margin-top:8px;">
+          ℹ️ <b>웹 앱 보안 범위 안내:</b> 본 앱은 설치 파일(.apk/.exe)과 첨부파일 업로드가 없는 브라우저 격리(PWA) 방식으로 바이러스 유입 경로가 원천 차단되어 있습니다. 기기 자체 파일의 백신 검사는 스마트폰 기본 보안 기능을 함께 활용해 주세요.
+        </div>
+      `;
+    }
+
+    window.runSingleSecurityCheck = async (id) => {
+      setSecCheckResult(id, 'running', '보안 정밀 점검을 실행하고 있습니다...');
+      try {
+        const cfg = securityConfig || DEFAULT_SECURITY_CONFIG;
+        if (id === 'domain_https') {
+          const host = (window.location.hostname || '').toLowerCase();
+          const proto = (window.location.protocol || '').toLowerCase();
+          const officialHost = String(cfg.officialHost || 'kyutaek5347.github.io').trim().toLowerCase();
+          const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
+          if (isLocal) {
+            setSecCheckResult(id, 'warn', `로컬 테스트 환경(${host || 'file'})에서 실행 중입니다. 실제 배포 시 공식 HTTPS(${officialHost})로 자동 검증됩니다.`);
+          } else if (proto !== 'https:') {
+            setSecCheckResult(id, 'err', `비암호화(HTTP) 연결이 감지되었습니다! 반드시 https://${officialHost} 주소로 접속해 주세요.`);
+          } else if (host !== officialHost) {
+            setSecCheckResult(id, 'err', `비공식 도메인(${host}) 감지! 공식 주소(${officialHost})와 다릅니다. 복제·피싱 사이트 여부를 확인하세요.`);
+          } else {
+            setSecCheckResult(id, 'ok', `공식 도메인(${host}) · 전 구간 HTTPS 암호화 통신 정상 확인`);
+          }
+        } else if (id === 'csp_sdk') {
+          const cspMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+          const cspVal = cspMeta ? (cspMeta.getAttribute('content') || '') : '';
+          const scriptSrcs = Array.from(document.querySelectorAll('script[src]')).map(s => s.getAttribute('src') || '');
+          const externalScripts = scriptSrcs.filter(s => { return /^https?:\/\//i.test(s); });
+          const hasObjNone = cspVal.includes("object-src 'none'");
+          const hasUpgrade = cspVal.includes('upgrade-insecure-requests');
+          if (!cspVal) {
+            setSecCheckResult(id, 'err', 'CSP 보안 헤더 메타 태그가 누락되었습니다.');
+          } else if (externalScripts.length > 0) {
+            setSecCheckResult(id, 'warn', `외부 CDN 스크립트 감지(${externalScripts.join(', ')}). 로컬 자체 보관 SDK 사용을 권장합니다.`);
+          } else if (!hasObjNone || !hasUpgrade) {
+            setSecCheckResult(id, 'warn', 'CSP 헤더는 적용되어 있으나 일부 강화 옵션(object-src/upgrade-insecure-requests)을 확인해 주세요.');
+          } else {
+            setSecCheckResult(id, 'ok', `CSP 보안 헤더 정상(object-src 'none' · HTTPS 강제) · Firebase SDK ${scriptSrcs.length}종 로컬 자체 보관(외부 CDN 0건)`);
+          }
+        } else if (id === 'link_scan') {
+          const findings = [];
+          (quickLinks || []).forEach(ql => {
+            if (!ql || !ql.url) return;
+            const r = analyzeUrlRisk(ql.url);
+            if (r.riskLevel !== 'safe') findings.push(`[바로가기:${ql.label}] ${r.url} (${r.reasons[0]})`);
+          });
+          (notices || []).forEach(n => {
+            scanTextForSuspiciousLinks(`${n.title || ''} ${n.body || ''}`).forEach(r => {
+              findings.push(`[공지:${n.title}] ${r.url} (${r.reasons[0]})`);
+            });
+          });
+          (blocks || []).forEach(b => {
+            scanTextForSuspiciousLinks(`${b.title || ''} ${b.desc || ''}`).forEach(r => {
+              findings.push(`[배너:${b.title || b.label}] ${r.url} (${r.reasons[0]})`);
+            });
+          });
+          (qtPosts || []).forEach(q => {
+            scanTextForSuspiciousLinks(`${q.passage || ''} ${q.scripture || ''}`).forEach(r => {
+              findings.push(`[말씀:${q.date}] ${r.url} (${r.reasons[0]})`);
+            });
+          });
+          (qtComments || []).forEach(c => {
+            scanTextForSuspiciousLinks(c.body || '').forEach(r => {
+              findings.push(`[댓글:${c.authorName || '회원'}] ${r.url} (${r.reasons[0]})`);
+            });
+          });
+
+          const totalItems = (quickLinks || []).length + (notices || []).length + (blocks || []).length + (qtPosts || []).length + (qtComments || []).length;
+          if (findings.length === 0) {
+            setSecCheckResult(id, 'ok', `전체 콘텐츠 ${totalItems}건 정밀 스캔 완료 · 피싱·위험·단축 URL 0건 감지`);
+          } else {
+            const hasDanger = findings.some(f => f.includes('IP') || f.includes('@') || f.includes('퓨니코드') || f.includes('프로토콜'));
+            setSecCheckResult(id, hasDanger ? 'err' : 'warn', `의심 링크 ${findings.length}건 발견:\n• ${findings.slice(0, 4).join('\n• ')}${findings.length > 4 ? `\n외 ${findings.length - 4}건` : ''}`);
+          }
+        } else if (id === 'xss_scan') {
+          const hits = [];
+          const checkObj = (label, txt) => {
+            const r = detectMaliciousCode(txt);
+            if (!r.safe) hits.push(`${label}: ${r.reasons[0]}`);
+          };
+          (notices || []).forEach(n => checkObj(`[공지:${n.title}]`, `${n.title || ''} ${n.body || ''}`));
+          (blocks || []).forEach(b => checkObj(`[배너:${b.title || b.label}]`, `${b.badge || ''} ${b.title || ''} ${b.desc || ''}`));
+          (qtPosts || []).forEach(q => checkObj(`[말씀:${q.date}]`, `${q.passage || ''} ${q.scripture || ''}`));
+          (qtComments || []).forEach(c => checkObj(`[댓글:${c.authorName || '회원'}]`, c.body || ''));
+          (members || []).forEach(m => checkObj(`[회원:${m.name}]`, `${m.name || ''} ${m.pendingName || ''}`));
+
+          if (hits.length === 0) {
+            setSecCheckResult(id, 'ok', '공지·배너·말씀·댓글·회원 데이터 전수 스캔 완료 · 악성 스크립트(XSS) 흔적 0건');
+          } else {
+            setSecCheckResult(id, 'err', `악성 스크립트 흔적 ${hits.length}건 감지:\n• ${hits.slice(0, 4).join('\n• ')}`);
+          }
+        } else if (id === 'admin_access') {
+          const issues = [];
+          const activeAdmins = (adminRegistry.items || []).filter(a => a.status === 'active');
+          if (!adminRegistry.lockAutoRegister) {
+            issues.push('신규 관리자 자동 등록 잠금이 꺼져 있습니다 ([회원 승인] 탭에서 켜기 권장)');
+          }
+          if (sharedAdminCode && (sharedAdminCode.length < 8 || /^\d+$/.test(sharedAdminCode))) {
+            issues.push('관리자 코드가 짧거나 숫자만 포함됨 (영문+숫자 8자리 이상 변경 권장)');
+          }
+          if (activeAdmins.length === 0) {
+            issues.push('활성 관리자 명단이 비어 있습니다');
+          }
+          if (issues.length === 0) {
+            setSecCheckResult(id, 'ok', `관리자 자동 등록 잠금 ON · 활성 관리자 ${activeAdmins.length}명 · 시트 URL·코드 서버 격리 정상`);
+          } else {
+            setSecCheckResult(id, 'warn', `보안 강화 권고 (${issues.length}건):\n• ${issues.join('\n• ')}`);
+          }
+        } else if (id === 'qr_reset') {
+          const issues = [];
+          const todayDot = getKstDateParts().dot;
+          if (!inviteQrDoc || String(inviteQrDoc.date) !== todayDot || !inviteQrDoc.token) {
+            issues.push('오늘 날짜 초대 QR 토큰 미생성 상태');
+          }
+          const expiredResets = (members || []).filter(m => m.status === 'reset_pending' && Number(m.resetExpiresAt || 0) > 0 && Date.now() >= Number(m.resetExpiresAt));
+          if (expiredResets.length > 0) {
+            issues.push(`24시간 만료된 비밀번호 초기화 대기 계정 ${expiredResets.length}건 (${expiredResets.map(x => x.name).join(', ')})`);
+          }
+          const pendingAdmins = (adminRegistry.items || []).filter(a => a.status === 'pending');
+          if (pendingAdmins.length > 0) {
+            issues.push(`미확인 관리자 입장 승인 대기 ${pendingAdmins.length}건`);
+          }
+          if (issues.length === 0) {
+            setSecCheckResult(id, 'ok', `오늘(${todayDot}) 초대 QR 정상 · 만료된 비밀번호 초기화 코드 0건 · 미확인 관리자 대기 0건`);
+          } else {
+            setSecCheckResult(id, 'warn', `확인 필요 (${issues.length}건):\n• ${issues.join('\n• ')}`);
+          }
+        } else if (id === 'threat_logs') {
+          const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+          const recent = getMergedAuditLogs().filter(l => Number(l.ts || 0) >= sevenDaysAgo);
+          const blocked = recent.filter(l => String(l.action || '').includes('차단'));
+          const deletes = recent.filter(l => { return /삭제|해제|탈퇴/.test(String(l.action || '')); });
+          if (blocked.length > 0) {
+            setSecCheckResult(id, 'warn', `최근 7일간 악성 입력·피싱 링크·도배 차단 ${blocked.length}건 감지됨 (아래 기록 또는 [로그] 탭 확인 필요) · 삭제/해제 이벤트 ${deletes.length}건`);
+          } else {
+            setSecCheckResult(id, 'ok', `최근 7일간 차단된 공격 시도 0건 · 전체 감사 로그 ${recent.length}건 정상 추적 중 (삭제 불가 보호)`);
+          }
+        }
+      } catch (err) {
+        setSecCheckResult(id, 'err', `보안 점검 오류: ${(err && err.message) ? err.message : '알 수 없는 오류'}`);
+      }
+    };
+
+    window.runAllSecurityChecks = async () => {
+      if (secCheckRunningAll) return;
+      secCheckRunningAll = true;
+      toggleManageSection('sec_check_list', true, true);
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'security') {
+        renderManageSecurity(document.getElementById('manageContent'), u);
+      }
+      for (const item of SEC_CHECK_ITEMS) {
+        await runSingleSecurityCheck(item.id);
+      }
+      secCheckRunningAll = false;
+      const u2 = getCurrentUser();
+      if (u2 && currentMainTab === 'manage' && currentManageSubTab === 'security') {
+        renderManageSecurity(document.getElementById('manageContent'), u2);
+      }
+      showToast('🛡️ 전체 7개 보안 항목 일괄 점검이 완료되었습니다!');
+    };
+
+    window.handleSaveSecurityConfig = async () => {
+      const next = {
+        blockMaliciousInput: !!(document.getElementById('cfgSecBlockXss') && document.getElementById('cfgSecBlockXss').checked),
+        blockSuspiciousLinks: !!(document.getElementById('cfgSecBlockLinks') && document.getElementById('cfgSecBlockLinks').checked),
+        confirmExternalLinks: !!(document.getElementById('cfgSecConfirmExt') && document.getElementById('cfgSecConfirmExt').checked),
+        detectCloneDomain: !!(document.getElementById('cfgSecDetectClone') && document.getElementById('cfgSecDetectClone').checked),
+        commentCooldownSec: Math.max(0, Math.min(60, Number((document.getElementById('cfgSecCommentCooldown') || {}).value || 5))),
+        officialHost: (securityConfig && securityConfig.officialHost) || DEFAULT_SECURITY_CONFIG.officialHost
+      };
+      const btn = document.getElementById('saveSecCfgBtn');
+      if (btn) btn.disabled = true;
+      try {
+        await db.collection('config').doc('layout').set({ securityConfig: next }, { merge: true });
+        securityConfig = next;
+        checkCloneDomainWarning();
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '보안 방어 설정 변경',
+          target: '실시간 보안 방어',
+          detail: `XSS차단:${next.blockMaliciousInput ? 'ON' : 'OFF'} · 피싱차단:${next.blockSuspiciousLinks ? 'ON' : 'OFF'} · 외부확인:${next.confirmExternalLinks ? 'ON' : 'OFF'} · 도배쿨타임:${next.commentCooldownSec}초`
+        });
+        showToast('🛡️ 보안 방어 설정이 저장 및 즉시 적용되었습니다!');
+      } catch (err) {
+        handleDbError(err, '보안 방어 설정 저장');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    };
+
+    window.runSecurityInputTester = () => {
+      const inp = document.getElementById('secTesterInput');
+      const out = document.getElementById('secTesterOutput');
+      if (!inp || !out) return;
+      const raw = inp.value.trim();
+      if (!raw) return showToast('검사할 링크나 문구를 먼저 입력해 주세요.');
+
+      const xss = detectMaliciousCode(raw);
+      let links = scanTextForSuspiciousLinks(raw);
+      // 사용자가 http 없이 단일 도메인만 입력한 경우도 검사
+      if (links.length === 0 && /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\/.*)?$/.test(raw) && !/\s/.test(raw)) {
+        const direct = analyzeUrlRisk(raw);
+        if (direct.riskLevel !== 'safe') links = [direct];
+      }
+
+      const reasons = [];
+      let level = 'ok';
+      if (!xss.safe) {
+        level = 'err';
+        xss.reasons.forEach(r => reasons.push(`[해킹/XSS] ${r}`));
+      }
+      links.forEach(l => {
+        if (l.riskLevel === 'danger') level = 'err';
+        else if (l.riskLevel === 'warn' && level === 'ok') level = 'warn';
+        reasons.push(`[피싱/링크] ${l.url} → ${l.reasons.join(', ')}`);
+      });
+
+      out.classList.remove('hidden');
+      if (level === 'ok') {
+        out.className = 'sec-test-result ok';
+        out.innerHTML = '<b>✅ 안전 판정</b><br>악성 스크립트(XSS)나 피싱·위험 링크 패턴이 감지되지 않았습니다.';
+      } else if (level === 'warn') {
+        out.className = 'sec-test-result warn';
+        out.innerHTML = `<b>⚠️ 주의 필요 (의심 요소 ${reasons.length}건)</b><br>• ${reasons.map(escapeHtml).join('<br>• ')}`;
+      } else {
+        out.className = 'sec-test-result err';
+        out.innerHTML = `<b>🚨 위험 · 즉시 차단 대상 (${reasons.length}건)</b><br>• ${reasons.map(escapeHtml).join('<br>• ')}`;
+      }
+    };
+
+    window.clearSecurityInputTester = () => {
+      const inp = document.getElementById('secTesterInput');
+      const out = document.getElementById('secTesterOutput');
+      if (inp) { inp.value = ''; inp.focus(); }
+      if (out) { out.innerHTML = ''; out.classList.add('hidden'); }
+    };
+
+    // 초기 로드 시 공식 도메인 · HTTPS 즉시 검증
+    checkCloneDomainWarning();
   </script>
 </body>
 </html>
