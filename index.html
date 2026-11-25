@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=154" />
+  <link rel="manifest" href="./manifest.json?v=155" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=154" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=154" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=155" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=155" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3068,6 +3068,243 @@
       padding-top: 8px;
       border-top: 1px dashed rgba(15, 23, 42, 0.14);
     }
+
+    /* ==================== v10.55 이용자 설정 화면 · 전체 글자 크기 · 관리자 보안 알림 스타일 ==================== */
+    .inapp-notif.sec-alert {
+      background: linear-gradient(135deg, #7F1D1D 0%, #991B1B 60%, #450A0A 100%);
+      border-color: #FCA5A5;
+      box-shadow: 0 14px 32px rgba(127, 29, 29, 0.45);
+    }
+    .inapp-notif.sec-alert .inapp-notif-title {
+      color: #FECACA;
+    }
+    .settings-profile-card {
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: #FFFFFF;
+      border-radius: 18px;
+      padding: 16px 17px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
+    }
+    .settings-profile-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: #000;
+      border: 1.5px solid rgba(255, 255, 255, 0.22);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .settings-update-card {
+      background: linear-gradient(135deg, #1D4ED8 0%, #2563EB 60%, #3B82F6 100%);
+      color: #FFFFFF;
+      border-radius: 17px;
+      padding: 15px 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.26);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+    }
+    .settings-group-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: #64748B;
+      margin: 14px 4px 7px;
+      letter-spacing: -0.15px;
+    }
+    .settings-group-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    }
+    .settings-row-btn {
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 13.5px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+      color: var(--text);
+      border-bottom: 1px solid #F1F5F9;
+      transition: background 0.14s ease;
+    }
+    .settings-row-btn:last-child { border-bottom: none; }
+    .settings-row-btn:active { background: #F8FAFC; }
+    .settings-row-static {
+      padding: 13.5px 15px;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .settings-row-static:last-child { border-bottom: none; }
+    .settings-row-left {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+      flex: 1;
+    }
+    .settings-row-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: #F1F5F9;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+    .settings-row-icon.danger {
+      background: #FEF2F2;
+      color: #DC2626;
+    }
+    .settings-row-title {
+      font-size: var(--fs-base);
+      font-weight: 700;
+      color: #0F172A;
+      line-height: 1.35;
+    }
+    .settings-row-title.danger {
+      color: #DC2626;
+    }
+    .settings-row-sub {
+      font-size: var(--fs-xs);
+      color: #64748B;
+      margin-top: 2px;
+      line-height: 1.38;
+    }
+    .settings-row-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      color: #94A3B8;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .font-scale-seg {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 9px;
+    }
+    .font-scale-btn {
+      border: 1.5px solid var(--border);
+      background: #F8FAFC;
+      color: #334155;
+      border-radius: 10px;
+      padding: 8px 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: center;
+      transition: all 0.14s ease;
+    }
+    .font-scale-btn.active {
+      background: #111827;
+      border-color: #111827;
+      color: #FDE68A;
+    }
+    .subview-back-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .subview-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      color: #0F172A;
+      border-radius: 10px;
+      padding: 7px 12px;
+      font-size: 12.5px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+    }
+    .subview-back-btn:active { background: #F1F5F9; }
+    .tab-update-dot {
+      position: absolute;
+      top: 3px;
+      right: calc(50% - 17px);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #EF4444;
+      border: 1.5px solid #FFFFFF;
+    }
+    .tabbar.dark .tab-update-dot { border-color: var(--admin-bg); }
+
+    /* 전체 글자 크기 확대 (성경 본문 글자 크기는 성경 탭 가-/가+에서 독립 조절) */
+    html[data-font-scale="large"] {
+      --fs-xs: 13px;
+      --fs-sm: 14px;
+      --fs-base: 16px;
+      --fs-md: 17.5px;
+      --fs-lg: 19.5px;
+      --fs-xl: 21.5px;
+    }
+    html[data-font-scale="large"] .hero-title,
+    html[data-font-scale="large"] .birthday-title,
+    html[data-font-scale="large"] .newcomer-auto-title,
+    html[data-font-scale="large"] .attendance-home-title { font-size: 20px; }
+    html[data-font-scale="large"] .hero-desc,
+    html[data-font-scale="large"] .birthday-desc,
+    html[data-font-scale="large"] .newcomer-auto-desc,
+    html[data-font-scale="large"] .attendance-home-desc,
+    html[data-font-scale="large"] .bylaw-article-body,
+    html[data-font-scale="large"] .qt-scripture-box,
+    html[data-font-scale="large"] .qt-comment-body,
+    html[data-font-scale="large"] .guide-card-body { font-size: 15.5px; line-height: 1.66; }
+    html[data-font-scale="large"] .bylaw-article-title,
+    html[data-font-scale="large"] .guide-card-title,
+    html[data-font-scale="large"] .setting-title { font-size: 16px; }
+    html[data-font-scale="large"] .info-box,
+    html[data-font-scale="large"] .setting-sub,
+    html[data-font-scale="large"] .guide-card-sub,
+    html[data-font-scale="large"] .diag-msg { font-size: 13.5px; }
+
+    html[data-font-scale="xlarge"] {
+      --fs-xs: 14.5px;
+      --fs-sm: 15.5px;
+      --fs-base: 18px;
+      --fs-md: 19.5px;
+      --fs-lg: 21.5px;
+      --fs-xl: 23.5px;
+    }
+    html[data-font-scale="xlarge"] .hero-title,
+    html[data-font-scale="xlarge"] .birthday-title,
+    html[data-font-scale="xlarge"] .newcomer-auto-title,
+    html[data-font-scale="xlarge"] .attendance-home-title { font-size: 22px; }
+    html[data-font-scale="xlarge"] .hero-desc,
+    html[data-font-scale="xlarge"] .birthday-desc,
+    html[data-font-scale="xlarge"] .newcomer-auto-desc,
+    html[data-font-scale="xlarge"] .attendance-home-desc,
+    html[data-font-scale="xlarge"] .bylaw-article-body,
+    html[data-font-scale="xlarge"] .qt-scripture-box,
+    html[data-font-scale="xlarge"] .qt-comment-body,
+    html[data-font-scale="xlarge"] .guide-card-body { font-size: 17.5px; line-height: 1.7; }
+    html[data-font-scale="xlarge"] .bylaw-article-title,
+    html[data-font-scale="xlarge"] .guide-card-title,
+    html[data-font-scale="xlarge"] .setting-title { font-size: 18px; }
+    html[data-font-scale="xlarge"] .info-box,
+    html[data-font-scale="xlarge"] .setting-sub,
+    html[data-font-scale="xlarge"] .guide-card-sub,
+    html[data-font-scale="xlarge"] .diag-msg { font-size: 15px; }
   </style>
 </head>
 <body>
@@ -3092,7 +3329,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=154" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=155" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3249,30 +3486,6 @@
             </div>
           </div>
         </div>
-        <div class="header-actions">
-          <button id="headerQrBtn" class="icon-btn light" type="button" title="오늘의 초대 QR 공유" onclick="openInviteQrModal()">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="7" height="7" rx="1"></rect>
-              <rect x="14" y="3" width="7" height="7" rx="1"></rect>
-              <rect x="3" y="14" width="7" height="7" rx="1"></rect>
-              <rect x="14" y="14" width="3" height="3" fill="currentColor" stroke="none"></rect>
-              <rect x="18" y="14" width="3" height="3" fill="currentColor" stroke="none"></rect>
-              <rect x="14" y="18" width="3" height="3" fill="currentColor" stroke="none"></rect>
-              <rect x="18" y="18" width="3" height="3" fill="currentColor" stroke="none"></rect>
-            </svg>
-          </button>
-          <button id="headerAccountBtn" class="icon-btn light hidden" type="button" title="내 비밀번호·계정" onclick="openAccountModal()">
-            <span>👤</span>
-          </button>
-          <button id="headerAdminRenameBtn" class="icon-btn light hidden" type="button" title="내 관리자 이름 변경" onclick="openAdminRenameModal()">
-            <span>✏️</span>
-          </button>
-          <button id="headerNotifBtn" class="icon-btn light" type="button" title="알림 설정" onclick="openNotifModal()">
-            <span>🔔</span>
-            <span id="headerNotifDot" class="notif-dot hidden"></span>
-          </button>
-          <button id="headerLogoutBtn" class="exit-btn light" onclick="logout()">로그아웃</button>
-        </div>
       </header>
 
       <main id="appMain" class="main">
@@ -3346,8 +3559,11 @@
           <div id="qtListContainer"></div>
         </section>
 
-        <!-- (4) 청년부 회칙 화면 (검색창 고정, 결과만 부분 렌더링하여 한글 입력 유지) -->
+        <!-- (4) 청년부 회칙 화면 (설정 안에서 진입 · 검색창 고정) -->
         <section id="viewBylaws" class="hidden">
+          <div class="subview-back-bar">
+            <button id="bylawsBackToSettingsBtn" class="subview-back-btn" type="button" onclick="switchMainTab('settings')">← 설정으로 돌아가기</button>
+          </div>
           <div class="bylaw-hero">
             <div id="bylawViewTitle" class="bylaw-hero-title">📜 구미제일감리교회 라이트 청년부 회칙</div>
             <div class="bylaw-hero-dates">
@@ -3377,8 +3593,11 @@
           <div id="bylawsResults"></div>
         </section>
 
-        <!-- (5) 이용자 사용방법 설명서 화면 -->
+        <!-- (5) 이용자 사용방법 설명서 화면 (설정 안에서 진입) -->
         <section id="viewGuide" class="hidden">
+          <div class="subview-back-bar">
+            <button id="guideBackToSettingsBtn" class="subview-back-btn" type="button" onclick="switchMainTab('settings')">← 설정으로 돌아가기</button>
+          </div>
           <div class="guide-hero-user">
             <div id="userGuideViewTitle" class="bylaw-hero-title">📘 라이트 청년부 앱 사용방법</div>
             <div class="bylaw-hero-dates">
@@ -3398,7 +3617,10 @@
           <div id="userGuideResults"></div>
         </section>
 
-        <!-- (3) 관리 센터 -->
+        <!-- (6) 이용자 설정 화면 (카테고리 리스트 · 관리자 메뉴 미포함) -->
+        <section id="viewSettings" class="hidden"></section>
+
+        <!-- (7) 관리 센터 (관리자 전용) -->
         <section id="viewManage" class="hidden">
           <div id="manageSubTabs" class="sub-tabs"></div>
           <div id="manageContent"></div>
@@ -4282,6 +4504,47 @@
     </div>
   </div>
 
+  <!-- 이용자: 앱 설치 방법 안내 모달 -->
+  <div id="appInstallGuideModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 class="modal-title">📱 앱 설치 방법 (홈 화면에 추가)</h3>
+        <button class="close-btn" data-close="appInstallGuideModal">✕</button>
+      </div>
+      <div id="appInstallModalBody"></div>
+      <div style="margin-top:12px;">
+        <button class="btn-outline" type="button" style="width:100%; padding:11px;" data-close="appInstallGuideModal">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 이용자: 개인정보 · 보안 안내 모달 -->
+  <div id="privacyGuideModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 class="modal-title">🔒 개인정보 · 보안 안내</h3>
+        <button class="close-btn" data-close="privacyGuideModal">✕</button>
+      </div>
+      <div class="info-box" style="margin-top:0; margin-bottom:10px;">
+        <b>1. 내 기기에서만 보관 (관리자 열람 불가 · 미기록)</b><br>
+        • 성경 개인 메모, 6색 책갈피, 성경 검색 기록<br>
+        • 글자 크기 설정, 알림 수신 설정<br>
+        • 비밀번호 변경 내역 및 공지·회칙·바로가기 단순 열람
+      </div>
+      <div class="info-box" style="margin-top:0; margin-bottom:10px;">
+        <b>2. 공동체 보호를 위한 자동 보안 방어</b><br>
+        • 전 구간 HTTPS 암호화 통신 및 외부 스크립트 차단(CSP) 적용<br>
+        • 악성 스크립트·피싱 링크 자동 차단 및 외부 이동 전 주소 확인<br>
+        • 설치 파일(.apk/.exe) 없는 웹 앱 구조로 기기 파일 접근 원천 차단
+      </div>
+      <div class="info-box warn" style="margin-top:0; margin-bottom:14px;">
+        <b>3. 공동체 게시판 기록 범위</b><br>
+        건전한 공동체 운영을 위해 묵상 댓글 작성·수정·삭제, 가입·탈퇴, 이름·생일 변경 신청, 예배 출석 체크 내역만 관리 기록에 남습니다.
+      </div>
+      <button class="btn-full btn-dark" type="button" style="padding:11px;" data-close="privacyGuideModal">확인</button>
+    </div>
+  </div>
+
   <!-- 관리자: 기능 점검 안전 시뮬레이션 모달 -->
   <div id="diagSimModal" class="modal-backdrop">
     <div class="modal">
@@ -4344,7 +4607,9 @@
     const authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 23;
+    const CURRENT_SCHEMA_VERSION = 24;
+    const APP_CLIENT_BUILD = 155;
+    const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
     // 매일 자정(KST) 자동 변경되는 일일 큐티 성경말씀 풀 (60편)
     const DAILY_QT_POOL = [
@@ -4429,6 +4694,7 @@
       blockSuspiciousLinks: true,
       confirmExternalLinks: true,
       detectCloneDomain: true,
+      alertAdminOnSecurityEvent: true,
       commentCooldownSec: 5,
       officialHost: 'kyutaek5347.github.io'
     };
@@ -4468,13 +4734,16 @@
 
     // 중앙 탭 레지스트리: 여기에 새 탭을 추가하면 실제 메뉴와 [✏️ 메뉴·이름] 편집 화면에 자동 반영됩니다.
     const BOTTOM_TAB_REGISTRY = [
-      { key: 'home', defaultIcon: '🏠', defaultLabel: '메인 홈', roleHint: '메인 홈' },
+      { key: 'home', defaultIcon: '🏠', defaultLabel: '홈', roleHint: '메인 홈' },
+      { key: 'qt', defaultIcon: '✨', defaultLabel: 'QT', roleHint: '오늘의 말씀' },
       { key: 'bible', defaultIcon: '📖', defaultLabel: '성경', roleHint: '성경' },
-      { key: 'qt', defaultIcon: '✨', defaultLabel: '오늘의 말씀', roleHint: '오늘의 말씀' },
-      { key: 'bylaws', defaultIcon: '📜', defaultLabel: '회칙', roleHint: '회칙' },
-      { key: 'guide', defaultIcon: '📘', defaultLabel: '사용방법', roleHint: '이용자 사용 설명서' },
-      { key: 'more', defaultIcon: '☰', defaultLabel: '더보기', roleHint: '더보기 (사이트 바로가기)' },
-      { key: 'manage', defaultIcon: '🛠️', defaultLabel: '관리 센터', roleHint: '관리자 전용' }
+      { key: 'more', defaultIcon: '🌐', defaultLabel: '바로가기', roleHint: '사이트 바로가기' },
+      { key: 'settings', defaultIcon: '⚙️', defaultLabel: '설정', roleHint: '이용자 설정' },
+      { key: 'manage', defaultIcon: '🛠️', defaultLabel: '관리', roleHint: '관리자 전용' }
+    ];
+    const SETTINGS_ITEM_REGISTRY = [
+      { key: 'bylaws', defaultIcon: '📜', defaultLabel: '회칙', roleHint: '설정 안 · 청년부 회칙' },
+      { key: 'guide', defaultIcon: '📘', defaultLabel: '가이드', roleHint: '설정 안 · 앱 사용 설명서' }
     ];
     const MANAGE_SUBTAB_REGISTRY = [
       { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', permCheck: p => !!(p.canEditLayout || p.canManageNotices) },
@@ -4497,11 +4766,13 @@
     const DEFAULT_TAB_ICONS = Object.assign(
       {},
       Object.fromEntries(BOTTOM_TAB_REGISTRY.map(t => [t.key, t.defaultIcon])),
+      Object.fromEntries(SETTINGS_ITEM_REGISTRY.map(t => [t.key, t.defaultIcon])),
       Object.fromEntries(MANAGE_SUBTAB_REGISTRY.map(t => [t.labelKey, t.defaultIcon]))
     );
     const DEFAULT_TAB_LABELS = Object.assign(
       { tabOrder: DEFAULT_TAB_ORDER, manageSubTabOrder: DEFAULT_MANAGE_SUBTAB_ORDER, icons: DEFAULT_TAB_ICONS },
       Object.fromEntries(BOTTOM_TAB_REGISTRY.map(t => [t.key, t.defaultLabel])),
+      Object.fromEntries(SETTINGS_ITEM_REGISTRY.map(t => [t.key, t.defaultLabel])),
       Object.fromEntries(MANAGE_SUBTAB_REGISTRY.map(t => [t.labelKey, t.defaultLabel]))
     );
 
@@ -4663,7 +4934,22 @@
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then((reg) => {
           swRegistration = reg;
-          reg.update();
+          if (reg.waiting && navigator.serviceWorker.controller) {
+            swHasWaitingUpdate = true;
+            if (typeof notifyPendingAppUpdateIfNeeded === 'function') notifyPendingAppUpdateIfNeeded();
+          }
+          reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            if (!newWorker) return;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                swHasWaitingUpdate = true;
+                if (typeof notifyPendingAppUpdateIfNeeded === 'function') notifyPendingAppUpdateIfNeeded();
+                if (typeof applyScreen === 'function' && getCurrentUser()) applyScreen();
+              }
+            });
+          });
+          reg.update().catch(() => {});
         }).catch(() => {});
       });
     }
@@ -5233,6 +5519,10 @@
     function saveNotifPrefs() {
       localStorage.setItem(KEY_NOTIF_PREFS, JSON.stringify(notifPrefs));
       updateHeaderNotifDot();
+      if (currentMainTab === 'settings') {
+        const u = getCurrentUser();
+        if (u) renderSettingsView(u);
+      }
     }
 
     function updateHeaderNotifDot() {
@@ -5245,15 +5535,18 @@
       return Notification.permission; // 'default' | 'granted' | 'denied'
     }
 
-    function showInAppNotif(icon, title, body, onClickAction) {
-      document.getElementById('inAppNotifIcon').innerHTML = '<img src="./icon-192.png?v=154" alt="라이트 청년부" />';
+    function showInAppNotif(icon, title, body, onClickAction, variant = '') {
+      document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
+        ? '<span style="font-size:21px;">🚨</span>'
+        : '<img src="./icon-192.png?v=155" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
       const el = document.getElementById('inAppNotif');
+      el.classList.toggle('sec-alert', variant === 'sec-alert');
       el.classList.add('show');
       if (inAppNotifTimer) clearTimeout(inAppNotifTimer);
-      inAppNotifTimer = setTimeout(() => hideInAppNotif(), 4800);
+      inAppNotifTimer = setTimeout(() => hideInAppNotif(), variant === 'sec-alert' ? 6500 : 4800);
     }
 
     window.hideInAppNotif = () => {
@@ -5269,8 +5562,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=154', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=154', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=155', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=155', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5532,6 +5825,20 @@
     let cloneBannerDismissed = false;
     let lastCommentSubmitTs = 0;
     let commentSpamWarnCount = 0;
+    let auditLogsFirstSnap = true;
+    let knownAuditLogIds = new Set();
+    let silentSecWatchDone = false;
+    let cloneDomainLoggedOnce = false;
+    let serverLatestBuild = 0;
+    let swHasWaitingUpdate = false;
+    let updateNotifDispatched = false;
+    let appFontScale = (function() {
+      try {
+        const s = localStorage.getItem(KEY_APP_FONT_SCALE) || 'normal';
+        return ['normal', 'large', 'xlarge'].includes(s) ? s : 'normal';
+      } catch { return 'normal'; }
+    })();
+    document.documentElement.setAttribute('data-font-scale', appFontScale);
     let adminAttCandidateMembers = [];
     let adminAttSessionSearchQuery = '';
     let lastSelfQtEditTs = 0;
@@ -5637,6 +5944,9 @@
       if (unsubMemberHistory) { unsubMemberHistory(); unsubMemberHistory = null; }
       if (unsubAuditLogs) { unsubAuditLogs(); unsubAuditLogs = null; }
       auditLogs = [];
+      auditLogsFirstSnap = true;
+      knownAuditLogIds = new Set();
+      silentSecWatchDone = false;
       isSyncingUnsyncedAuditLogs = false;
       attendanceRecords = [];
       myAttendanceRecords = [];
@@ -5834,6 +6144,12 @@
 
       const labelsHead = document.getElementById('labelsPageHeading');
       if (labelsHead) labelsHead.textContent = formatManageLabelsHeading(overrideNames, overrideIcons);
+
+      const stLbl = lbl('settings');
+      const bBack = document.getElementById('bylawsBackToSettingsBtn');
+      if (bBack) bBack.textContent = `← ${stLbl}으로 돌아가기`;
+      const gBack = document.getElementById('guideBackToSettingsBtn');
+      if (gBack) gBack.textContent = `← ${stLbl}으로 돌아가기`;
     }
 
     function fitSearchPlaceholder(prefix, examples, maxWeight = 18) {
@@ -5863,7 +6179,13 @@
         if (DEFAULT_TAB_ORDER.includes(k) && !valid.includes(k)) valid.push(k);
       });
       DEFAULT_TAB_ORDER.forEach(k => {
-        if (!valid.includes(k)) valid.push(k);
+        if (!valid.includes(k)) {
+          if (k === 'settings' && valid.includes('manage')) {
+            valid.splice(valid.indexOf('manage'), 0, 'settings');
+          } else {
+            valid.push(k);
+          }
+        }
       });
       return valid;
     }
@@ -5998,12 +6320,12 @@
       const appSnap = await appRef.get();
       if (!appSnap.exists) {
         const batch = db.batch();
-        batch.set(appRef, { initialized: true, schemaVersion: CURRENT_SCHEMA_VERSION, createdAt: formatToday() });
+        batch.set(appRef, { initialized: true, schemaVersion: CURRENT_SCHEMA_VERSION, latestBuild: APP_CLIENT_BUILD, createdAt: formatToday() });
         batch.set(db.collection('config').doc('roles'), {
           items: DEFAULT_ROLES,
           metaById: buildRolesMetaByIdMap(DEFAULT_ROLES)
         });
-        batch.set(db.collection('config').doc('layout'), { blocksSeparatedV21: true });
+        batch.set(db.collection('config').doc('layout'), { blocksSeparatedV21: true, latestBuild: APP_CLIENT_BUILD });
         DEFAULT_BLOCKS.forEach((b, idx) => {
           const norm = normalizeAudiencePayload(b);
           const docData = {
@@ -6257,11 +6579,33 @@
           }
         }
 
+        // 9) v10.55 (schemaVersion 24): 하단 5개 탭(홈·QT·성경·바로가기·설정 + 관리자 전용 관리) 정렬 이관 (기존 사용자 지정 이름·이모지 보존)
+        if ((appSnap.data().schemaVersion || 0) < 24) {
+          try {
+            await db.collection('config').doc('labels').set({
+              tabOrder: ['home', 'qt', 'bible', 'more', 'settings', 'manage']
+            }, { merge: true });
+          } catch (v24Err) {
+            console.warn('v10.55 tabOrder migration error:', v24Err);
+          }
+        }
+
         await appRef.set({
           initialized: true,
           schemaVersion: CURRENT_SCHEMA_VERSION,
+          latestBuild: APP_CLIENT_BUILD,
           adminPin: FieldValue.delete()
         }, { merge: true });
+        await db.collection('config').doc('layout').set({
+          latestBuild: APP_CLIENT_BUILD
+        }, { merge: true }).catch(() => {});
+      } else {
+        // 관리자가 최신 버전으로 접속할 때마다 서버 최신 빌드 번호 갱신 (구버전 이용자에게만 업데이트 안내)
+        const curServerBuild = Number((appSnap.data() && appSnap.data().latestBuild) || 0);
+        if (APP_CLIENT_BUILD > curServerBuild) {
+          await appRef.set({ latestBuild: APP_CLIENT_BUILD }, { merge: true }).catch(() => {});
+          await db.collection('config').doc('layout').set({ latestBuild: APP_CLIENT_BUILD }, { merge: true }).catch(() => {});
+        }
       }
     }
 
@@ -6449,13 +6793,41 @@
       }
 
       if (needsAllMembers && !unsubAuditLogs) {
+        auditLogsFirstSnap = true;
+        knownAuditLogIds = new Set();
         unsubAuditLogs = db.collection('auditLogs').onSnapshot(snap => {
-          auditLogs = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
+          const nextLogs = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
             .sort((a, b) => Number(b.ts || 0) - Number(a.ts || 0));
+
+          if (auditLogsFirstSnap) {
+            nextLogs.forEach(l => knownAuditLogIds.add(l.id));
+            auditLogsFirstSnap = false;
+            auditLogs = nextLogs;
+            setTimeout(() => runSilentAdminSecurityWatch(), 1400);
+          } else {
+            const newThreatEvents = [];
+            nextLogs.forEach(l => {
+              if (!knownAuditLogIds.has(l.id)) {
+                knownAuditLogIds.add(l.id);
+                if (isSecurityThreatAuditEntry(l)) {
+                  newThreatEvents.push(l);
+                }
+              }
+            });
+            auditLogs = nextLogs;
+            if (newThreatEvents.length > 0) {
+              const latest = newThreatEvents[0];
+              dispatchAdminSecurityAlert(
+                `🚨 보안 위협 감지 · ${latest.action || '악성 행동 차단'}`,
+                `${latest.actorName || '이용자'} · ${latest.target || '앱'} (${latest.detail || '보안 점검 탭에서 확인하세요'})`
+              );
+            }
+          }
+
           if (adminSheetUrl) {
             syncUnsyncedAuditLogsToSheet().catch(() => {});
           }
-          if (currentMainTab === 'manage' && currentManageSubTab === 'logs') {
+          if (currentMainTab === 'manage' && (currentManageSubTab === 'logs' || currentManageSubTab === 'security')) {
             applyScreen();
           }
         }, () => {});
@@ -6463,6 +6835,8 @@
         unsubAuditLogs();
         unsubAuditLogs = null;
         auditLogs = [];
+        auditLogsFirstSnap = true;
+        knownAuditLogIds = new Set();
       }
     }
 
@@ -6877,6 +7251,10 @@
               securityConfig = { ...DEFAULT_SECURITY_CONFIG, ...d.securityConfig };
             } else {
               securityConfig = structuredClone(DEFAULT_SECURITY_CONFIG);
+            }
+            if (typeof d.latestBuild === 'number' && d.latestBuild > serverLatestBuild) {
+              serverLatestBuild = d.latestBuild;
+              notifyPendingAppUpdateIfNeeded();
             }
             checkCloneDomainWarning();
           }
@@ -7945,17 +8323,6 @@
 
       const header = document.getElementById('appHeader');
       header.className = `header ${isManageMode ? 'dark' : 'light'}`;
-      const qrBtn = document.getElementById('headerQrBtn');
-      if (qrBtn) qrBtn.className = `icon-btn ${isManageMode ? 'dark' : 'light'}`;
-      const accBtn = document.getElementById('headerAccountBtn');
-      accBtn.className = `icon-btn ${isManageMode ? 'dark' : 'light'}${(user.isSuperAdmin || user.isPreviewMember) ? ' hidden' : ''}`;
-      const admRenameBtn = document.getElementById('headerAdminRenameBtn');
-      if (admRenameBtn) {
-        admRenameBtn.className = `icon-btn ${isManageMode ? 'dark' : 'light'}${user.isSuperAdmin ? '' : ' hidden'}`;
-      }
-      document.getElementById('headerNotifBtn').className = `icon-btn ${isManageMode ? 'dark' : 'light'}`;
-      document.getElementById('headerLogoutBtn').className = `exit-btn ${isManageMode ? 'dark' : 'light'}`;
-      updateHeaderNotifDot();
 
       const badge = document.getElementById('headerRoleBadge');
       badge.textContent = user.role.name;
@@ -7963,10 +8330,12 @@
       document.getElementById('headerSubText').textContent = `${user.name}님`;
 
       const pendingCount = members.filter(m => m.status === 'pending').length + members.filter(m => m.status === 'approved' && m.pendingName).length + members.filter(m => m.status === 'approved' && m.pendingBirthday).length + (adminRegistry.items || []).filter(a => a.status === 'pending').length;
+      const hasUpdateDot = hasPendingAppUpdate();
       const tabbar = document.getElementById('appTabbar');
       tabbar.className = `tabbar ${isManageMode ? 'dark' : 'light'}`;
       const orderedTabs = getValidTabOrder().filter(k => k !== 'manage' || canManage);
       const isMoreOpen = document.getElementById('quickLinksSheet').classList.contains('open');
+      const activeVisualTab = (currentMainTab === 'bylaws' || currentMainTab === 'guide') ? 'settings' : currentMainTab;
       tabbar.innerHTML = orderedTabs.map(key => {
         const iconVal = getTabIcon(key);
         if (key === 'more') {
@@ -7988,9 +8357,9 @@
         }
         const badgeHtml = (key === 'manage' && perms.canManageMembers && pendingCount > 0)
           ? `<span class="tab-badge">${pendingCount}</span>`
-          : '';
+          : (key === 'settings' && hasUpdateDot ? '<span class="tab-update-dot" title="업데이트 있음"></span>' : '');
         return `
-          <button class="tab-btn ${!isMoreOpen && currentMainTab === key ? 'active' : ''}" onclick="switchMainTab('${key}')">
+          <button class="tab-btn ${!isMoreOpen && activeVisualTab === key ? 'active' : ''}" onclick="switchMainTab('${key}')">
             <span class="tab-icon">${escapeHtml(iconVal)}</span>
             <span>${escapeHtml(getTabLabel(key))}</span>
             ${badgeHtml}
@@ -8003,6 +8372,7 @@
       document.getElementById('viewQt').classList.toggle('hidden', currentMainTab !== 'qt');
       document.getElementById('viewBylaws').classList.toggle('hidden', currentMainTab !== 'bylaws');
       document.getElementById('viewGuide').classList.toggle('hidden', currentMainTab !== 'guide');
+      document.getElementById('viewSettings').classList.toggle('hidden', currentMainTab !== 'settings');
       document.getElementById('viewManage').classList.toggle('hidden', currentMainTab !== 'manage');
 
       // 동적 칸 이모지 + 이름 전체 UI 통합 동기화
@@ -8013,6 +8383,7 @@
       else if (currentMainTab === 'qt') renderQtView();
       else if (currentMainTab === 'bylaws') renderBylawsView();
       else if (currentMainTab === 'guide') renderUserGuideView();
+      else if (currentMainTab === 'settings') renderSettingsView(user);
       else if (currentMainTab === 'manage') renderManageView(user);
     }
 
@@ -8147,6 +8518,8 @@
       const byIcn = escapeHtml(getTabIcon('bylaws'));
       const mLbl = escapeHtml(getTabLabel('more'));
       const mIcn = escapeHtml(getTabIcon('more'));
+      const stLbl = escapeHtml(getTabLabel('settings'));
+      const stIcn = escapeHtml(getTabIcon('settings'));
 
       return [
         {
@@ -8159,7 +8532,7 @@
             '<b>아이폰 · 아이패드 (Safari):</b> 하단 또는 상단의 <b>공유(□↑)</b> 버튼을 누른 뒤 <b>[홈 화면에 추가]</b>를 선택하면 앱 아이콘이 생성됩니다.',
             '<b>안드로이드 (Chrome / 삼성 인터넷):</b> 상단 설치 배너의 <b>[앱 설치]</b> 버튼 또는 브라우저 메뉴(⋮) → <b>[앱 설치 / 홈 화면에 추가]</b>를 누릅니다.',
             '<b>카카오톡 안에서 열었을 때:</b> 카톡 내장 브라우저에서는 설치나 알림이 제한되므로, 우측 하단 <b>⋮ → 다른 브라우저로 열기</b>를 눌러 Safari나 Chrome으로 열어 주세요.',
-            '<b>로그인 유지:</b> 한 번 로그인하면 앱을 껐다 켜도 로그인 상태가 유지됩니다. (공용 기기에서는 상단 <b>로그아웃</b> 버튼을 눌러 주세요.)'
+            `<b>로그인 유지:</b> 한 번 로그인하면 앱을 껐다 켜도 로그인 상태가 유지됩니다. (공용 기기에서는 하단 <b>[${stIcn} ${stLbl}] → 로그아웃</b>을 눌러 주세요.)`
           ],
           tip: '홈 화면에 추가해 앱으로 실행하면 전체 화면으로 깔끔하게 보이고, 실시간 알림 기능도 더 안정적으로 작동합니다.'
         },
@@ -8172,7 +8545,7 @@
           steps: [
             '<b>신규 회원가입:</b> 기존 회원이나 관리자가 공유한 <b>오늘의 초대 QR 코드</b>를 스캔해 접속하면 회원가입 탭이 열립니다. 본인 성명, 생년월일(8자리 직접 입력 또는 달력 선택), 역할, 비밀번호(6자리 이상)를 입력해 신청합니다.',
             `<b>실시간 자동 입장:</b> 가입 신청 후 관리자가 승인하면 별도로 새로고침하지 않아도 자동으로 <b>${hLbl}</b> 화면에 입장됩니다.`,
-            '<b>친구 초대하기:</b> 앱 우측 상단의 <b>QR 아이콘</b>을 누르면 오늘의 초대 QR을 <b>카카오톡 이미지 공유</b>, <b>이미지 저장</b>, <b>초대 링크 복사</b>로 바로 전달할 수 있습니다.'
+            `<b>친구 초대하기:</b> 하단 <b>[${stIcn} ${stLbl}] → 오늘의 초대 QR</b>을 누르면 <b>카카오톡 이미지 공유</b>, <b>이미지 저장</b>, <b>초대 링크 복사</b>로 바로 전달할 수 있습니다.`
           ],
           tip: '초대 QR은 보안을 위해 매일 한국시간 자정(00:00)마다 자동으로 새 QR로 바뀌며, 지난 QR로는 가입할 수 없습니다. 이미 가입된 회원은 QR 없이 평소처럼 바로 로그인합니다.'
         },
@@ -8186,7 +8559,7 @@
             `<b>공지 · 광고 · 소식 확인:</b> <b>${hLbl}</b> 상단 고정 배너와 하단 공지 목록에서 청년부 소식을 확인합니다. 구분 칩(전체/공지/광고/소식/행사 등)으로 필터링할 수 있으며, 카드를 누르면 전체 본문이 열립니다.`,
             `<b>오늘의 생일 · 새신자 환영 배너:</b> 생일인 지체나 새로 온 새신자가 있으면 <b>${hLbl}</b> 상단에 축하 배너가 자동으로 표시됩니다.`,
             `<b>예배 · 특별 행사 출석 체크:</b> 설정된 주일 예배 시간(기본 일요일 14:00~15:30) 또는 특별 행사 시간에만 <b>${hLbl}</b> 맨 위에 <b>초록색 출석 카드</b>가 자동으로 나타납니다.`,
-            '<b>1인 1회 출석 확인:</b> <b>[출석하기]</b> 버튼을 누르면 즉시 출석이 기록되고 카드가 자동으로 숨겨집니다. 출석 완료 여부와 최근 출석 기록은 우측 상단 <b>👤 내 계정</b>에서 언제든 확인할 수 있습니다.'
+            `<b>1인 1회 출석 확인:</b> <b>[출석하기]</b> 버튼을 누르면 즉시 출석이 기록되고 카드가 자동으로 숨겨집니다. 출석 완료 여부와 최근 출석 기록은 하단 <b>[${stIcn} ${stLbl}] → 👤 내 계정 관리</b>에서 언제든 확인할 수 있습니다.`
           ],
           tip: '출석 시간이 지났거나 깜빡하고 버튼을 못 누른 경우에는 관리자에게 말씀하시면 출석부에 수동으로 반영해 드립니다.'
         },
@@ -8225,7 +8598,7 @@
           sub: `${getTabLabel('bylaws')} 키워드 검색·복사와 인스타/유튜브/교회 홈페이지 연결`,
           keywords: `${getTabLabel('bylaws')} 회칙 검색 조항 복사 ${getTabLabel('more')} 더보기 사이트 바로가기 인스타그램 유튜브 교회 홈페이지`,
           steps: [
-            `<b>${byLbl} 검색:</b> <b>[${byIcn} ${byLbl}]</b> 탭에서 <b>제5조</b>, <b>선거권</b>, <b>임기</b> 등 원하는 키워드나 추천 해시태그(#)를 눌러 해당 조항을 바로 찾을 수 있습니다. 각 조항 우측 <b>[복사]</b> 버튼으로 본문 복사도 가능합니다.`,
+            `<b>${byLbl} 검색:</b> 하단 <b>[${stIcn} ${stLbl}] → [${byIcn} ${byLbl}]</b>에서 <b>제5조</b>, <b>선거권</b>, <b>임기</b> 등 원하는 키워드나 추천 해시태그(#)를 눌러 해당 조항을 바로 찾을 수 있습니다. 각 조항 우측 <b>[복사]</b> 버튼으로 본문 복사도 가능합니다.`,
             `<b>${mIcn} ${mLbl}:</b> 하단 <b>[${mIcn} ${mLbl}]</b> 탭을 누르면 청년부 인스타그램, 유튜브 채널, 교회 홈페이지 등 등록된 외부 사이트로 한 번에 이동할 수 있습니다.`
           ],
           tip: `${getTabLabel('bylaws')} 열람, 공지 확인, ${getTabLabel('more')} 이동은 개인 활동으로 보안 로그에 남지 않습니다.`
@@ -8234,10 +8607,11 @@
           id: 'ug_account',
           icon: '👤',
           title: '내 계정 관리 (이름·생일 변경 신청 / 비밀번호 / 탈퇴)',
-          sub: '상단 👤 버튼에서 내 정보 변경 및 비밀번호 분실 대처법',
-          keywords: '내 계정 이름 변경 신청 생일 변경 승인 거절 비밀번호 변경 초기화 분실 탈퇴 삭제',
+          sub: `하단 ${getTabLabel('settings')}에서 내 정보 변경 · 글자 크기 · 비밀번호 관리`,
+          keywords: `내 계정 ${getTabLabel('settings')} 글자 크기 이름 변경 신청 생일 변경 승인 거절 비밀번호 변경 초기화 분실 탈퇴 삭제`,
           steps: [
-            '<b>이름 변경 신청:</b> 우측 상단 <b>👤 버튼</b> → <b>[✏️ 내 이름 변경 신청]</b>에 새 성명(2~10글자)을 입력해 신청합니다. 관리자가 승인하면 즉시 새 이름으로 변경되며(다음 로그인부터 새 이름으로 로그인), 거절 시 기존 이름이 유지됩니다.',
+            `<b>이름 변경 신청:</b> 하단 <b>[${stIcn} ${stLbl}] → 👤 내 계정 관리 → [✏️ 내 이름 변경 신청]</b>에 새 성명(2~10글자)을 입력해 신청합니다. 관리자가 승인하면 즉시 새 이름으로 변경되며(다음 로그인부터 새 이름으로 로그인), 거절 시 기존 이름이 유지됩니다.`,
+            `<b>전체 글자 크기 조절:</b> 하단 <b>[${stIcn} ${stLbl}] → 🔤 전체 글자 크기</b>에서 보통·크게·아주 크게를 선택하면 앱 전체 글자가 보기 편하게 커집니다. (${bLbl} 본문 글자는 ${bLbl} 화면의 가-/가+로 따로 조절 가능)`, 
             '<b>생일 변경 신청:</b> <b>[🎂 내 생일 변경 신청]</b>에서 생년월일 8자리 입력 또는 달력 선택 후 신청합니다. 관리자 승인 후 반영되며, 대기 중에는 언제든 취소할 수 있습니다.',
             '<b>비밀번호 변경:</b> 하단 <b>[비밀번호 변경]</b> 탭에서 현재 비밀번호와 새 비밀번호(6자리 이상)를 입력해 직접 변경할 수 있습니다. <b>(비밀번호 변경은 보안상 로그에 남지 않습니다.)</b>',
             '<b>비밀번호를 잊어버렸을 때:</b> 관리자에게 비밀번호 초기화를 요청해 <b>8자리 초기화 코드(24시간 유효)</b>를 받은 뒤, 로그인 화면 하단의 <b>[🔑 새 비밀번호 설정]</b>에서 재설정하면 바로 로그인됩니다.'
@@ -8251,7 +8625,7 @@
           sub: '새 공지·말씀·승인 결과를 알림으로 받아보기',
           keywords: `알림 설정 팝업 기기알림 테스트알림 ${getTabLabel('home')} ${getTabLabel('qt')}`,
           steps: [
-            `우측 상단 <b>🔔 버튼</b>을 눌러 전체 알림과 항목별 알림(<b>${hLbl} 새 소식</b> / <b>${qLbl}</b>)을 자유롭게 켜고 끌 수 있습니다.`,
+            `하단 <b>[${stIcn} ${stLbl}] → 🔔 알림 설정</b>을 눌러 전체 알림과 항목별 알림(<b>${hLbl} 새 소식</b> / <b>${qLbl}</b>)을 자유롭게 켜고 끌 수 있습니다.`,
             '<b>[기기 알림 허용하기]</b>를 눌러 권한을 허용하면 스마트폰 상단 알림으로도 소식을 받을 수 있으며, <b>[🔔 테스트 알림]</b>으로 정상 작동 여부를 바로 확인할 수 있습니다.'
           ],
           tip: '아이폰에서는 반드시 Safari → 공유 → [홈 화면에 추가]로 설치한 앱에서 열어야 기기 알림 허용 버튼이 활성화됩니다.'
@@ -8427,7 +8801,7 @@
             `<b>신규 관리자 자동 등록 잠금 활용:</b> 평상시에는 <b>[${memIcn} ${memLbl}] → 🔒 신규 관리자 자동 등록 잠금</b>을 켜 두는 것을 권장합니다. 잠금이 켜진 상태에서 새 관리자가 로그인하면 기존 관리자의 승인 대기 목록에 뜨며, <b>[✅ 관리자 입장 승인]</b>을 눌러야 입장됩니다.`,
             `<b>퇴임·이전 관리자 해제:</b> 인수인계가 끝나면 <b>[${memIcn} ${memLbl}] → 🔐 관리자 명단</b>에서 퇴임하는 관리자의 <b>[관리자 해제]</b> 버튼을 누릅니다. 해제된 관리자는 즉시 자동 로그아웃되며, 추후 재입장 시도 시 기존 관리자의 승인이 필요합니다.`,
             `<b>관리자 코드 변경 (인수인계 마감):</b> <b>[${codeIcn} ${codeLbl}]</b> 탭에서 새 6자리 이상 코드로 변경(🎲 자동 생성 지원)하면 Firebase 로그인 비밀번호와 공유 코드가 동시에 바뀝니다.`,
-            `<b>내 관리자 이름 변경:</b> 앱 우측 상단 <b>🔔 알림 버튼 바로 왼쪽의 ✏️ 버튼</b>을 눌러 본인 이름을 변경할 수 있습니다. (보안을 위해 <b>[${logIcn} ${logLbl}]</b>와 구글 시트 <b>[이름 변경 로그]</b> 탭에 자동 기록)`
+            `<b>내 관리자 이름 변경:</b> 하단 <b>[${escapeHtml(getTabIcon('settings'))} ${escapeHtml(getTabLabel('settings'))}] → ✏️ 내 관리자 이름 변경</b>을 눌러 본인 이름을 변경할 수 있습니다. (보안을 위해 <b>[${logIcn} ${logLbl}]</b>와 구글 시트 <b>[이름 변경 로그]</b> 탭에 자동 기록)`
           ],
           tip: '최소 1명의 활성 관리자는 항상 유지되어야 하므로, 새 관리자를 먼저 등록·승인한 뒤 이전 관리자를 해제해 주세요.',
           warn: true
@@ -8562,7 +8936,7 @@
           targetLabel: `${getTabIcon('manageSecurity')} ${getTabLabel('manageSecurity')} 탭 열기`,
           steps: [
             `<b>7개 항목 보안 일괄 점검 ([${secIcn} ${secLbl}]):</b> 공식 HTTPS 도메인, CSP·로컬 SDK 무결성, 앱 내 전체 링크 피싱 스캔, 악성 스크립트(XSS) 흔적 스캔, 관리자 잠금·비밀 격리, QR·비번 초기화 만료, 최근 7일 차단 위협을 한 번에 점검합니다.`,
-            '<b>실시간 방어 스위치:</b> 악성 스크립트 입력 차단, 피싱·위험 링크(비암호화·IP·단축 URL) 차단, 외부 사이트 이동 전 도메인 확인창, 복제 사이트 경고, 댓글 도배 방지 쿨타임을 관리자 설정으로 즉시 제어할 수 있습니다.',
+            '<b>실시간 방어 스위치 & 관리자 전용 보안 알림:</b> 악성 스크립트·피싱 링크 차단, 외부 사이트 이동 전 도메인 확인창, 복제 사이트 경고, 댓글 도배 방지 쿨타임과 <b>🚨 보안 문제 발생 시 관리자 실시간 알림</b>을 켜고 끌 수 있습니다. (보안 알림은 최고 관리자에게만 표시)',
             '<b>의심 링크·문구 즉시 검사기:</b> 카카오톡이나 문자로 받은 의심스러운 링크·문구를 붙여넣어 피싱·위장 주소·악성 코드 포함 여부를 즉시 분석해 볼 수 있습니다.',
             `<b>기능 점검과 역할 분리:</b> 앱 오류·연동·화면 체험은 <b>[${diagIcn} ${diagLbl}]</b>에서, 해킹·피싱·보안 방어는 <b>[${secIcn} ${secLbl}]</b>에서 각각 전문적으로 점검합니다.`
           ],
@@ -13445,6 +13819,10 @@ ${m.body}`;
         draftTabNames[t.key] = getTabLabel(t.key);
         draftTabIcons[t.key] = getTabIcon(t.key);
       });
+      SETTINGS_ITEM_REGISTRY.forEach(t => {
+        draftTabNames[t.key] = getTabLabel(t.key);
+        draftTabIcons[t.key] = getTabIcon(t.key);
+      });
       MANAGE_SUBTAB_REGISTRY.forEach(t => {
         draftTabNames[t.labelKey] = getTabLabel(t.labelKey);
         draftTabIcons[t.labelKey] = getTabIcon(t.labelKey);
@@ -13589,6 +13967,36 @@ ${m.body}`;
         </div>
 
         ${buildManageAccordionBar({
+          key: 'labels_settings_items',
+          titleHtml: `${escapeHtml(getTabIcon('settings'))} ${escapeHtml(getTabLabel('settings'))} 안 메뉴 (회칙 · 가이드)`,
+          badgeHtml: `<span class="tag slate">${SETTINGS_ITEM_REGISTRY.length}개</span>`,
+          defaultOpen: false,
+          marginTop: '10px'
+        })}
+        <div data-acc-body="labels_settings_items" class="${isManageSectionOpen('labels_settings_items', false) ? '' : 'hidden'}">
+        <div class="card">
+          ${SETTINGS_ITEM_REGISTRY.map(t => {
+            const curName = draftTabNames[t.key] !== undefined ? draftTabNames[t.key] : getTabLabel(t.key);
+            const curIcon = draftTabIcons[t.key] !== undefined ? draftTabIcons[t.key] : getTabIcon(t.key);
+            return `
+              <div class="tab-order-row">
+                <input class="emoji-input" maxlength="4" data-tab-icon-key="${t.key}" value="${escapeHtml(curIcon)}" title="이모지 변경"
+                       oninput="onDraftTabIconInput('${t.key}', this.value)" />
+                <div style="flex:1; min-width:0;">
+                  <input class="form-input" style="padding:7px 10px; font-size:13.5px;" maxlength="10"
+                         data-tab-name-key="${t.key}"
+                         value="${escapeHtml(curName)}"
+                         placeholder="${escapeHtml(t.defaultLabel)}"
+                         oninput="onDraftTabNameInput('${t.key}', this.value)" />
+                  <div style="font-size:10.5px; color:#64748B; margin-top:2px; padding-left:2px;">기본: ${escapeHtml(t.defaultIcon)} ${escapeHtml(t.roleHint)}</div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+        </div>
+
+        ${buildManageAccordionBar({
           key: 'labels_manage',
           titleHtml: `<span id="manageSubTabCardHeading">${escapeHtml(curManageIcon)} ${escapeHtml(curManageName)} 상단 탭 (왼쪽 → 오른쪽 순)</span>`,
           badgeHtml: `<span class="tag slate">${draftManageSubTabOrder.length}개</span>`,
@@ -13700,6 +14108,10 @@ ${m.body}`;
         draftTabNames[t.key] = t.defaultLabel;
         draftTabIcons[t.key] = t.defaultIcon;
       });
+      SETTINGS_ITEM_REGISTRY.forEach(t => {
+        draftTabNames[t.key] = t.defaultLabel;
+        draftTabIcons[t.key] = t.defaultIcon;
+      });
       MANAGE_SUBTAB_REGISTRY.forEach(t => {
         draftTabNames[t.labelKey] = t.defaultLabel;
         draftTabIcons[t.labelKey] = t.defaultIcon;
@@ -13721,6 +14133,10 @@ ${m.body}`;
         icons: {}
       };
       BOTTOM_TAB_REGISTRY.forEach(t => {
+        next[t.key] = String(draftTabNames[t.key] ?? '').trim() || t.defaultLabel;
+        next.icons[t.key] = String(draftTabIcons[t.key] ?? '').trim() || t.defaultIcon;
+      });
+      SETTINGS_ITEM_REGISTRY.forEach(t => {
         next[t.key] = String(draftTabNames[t.key] ?? '').trim() || t.defaultLabel;
         next.icons[t.key] = String(draftTabIcons[t.key] ?? '').trim() || t.defaultIcon;
       });
@@ -13785,7 +14201,8 @@ ${m.body}`;
         // Restore active state on current main tab button
         document.querySelectorAll('#appTabbar .tab-btn').forEach(btn => {
           const oc = btn.getAttribute('onclick') || '';
-          if (oc.includes(`'${currentMainTab}'`)) btn.classList.add('active');
+          const visTab = (currentMainTab === 'bylaws' || currentMainTab === 'guide') ? 'settings' : currentMainTab;
+          if (oc.includes(`'${visTab}'`)) btn.classList.add('active');
         });
       } else if (sheetOpen) {
         document.querySelectorAll('#appTabbar .tab-btn').forEach(btn => {
@@ -18118,6 +18535,16 @@ ${m.body}`;
           txt.textContent = `🚨 피싱·복제 주의 (${issues.join(' · ')}) · 공식 주소(${officialHost})인지 확인하세요!`;
         }
         banner.classList.remove('hidden');
+        if (!cloneDomainLoggedOnce && fbUser) {
+          cloneDomainLoggedOnce = true;
+          recordAuditLog({
+            actorType: (fbUser.email || '').toLowerCase() === ADMIN_EMAIL ? 'admin' : 'member',
+            category: '보안·설정',
+            action: '비공식 도메인 접속 감지',
+            target: host || '알 수 없음',
+            detail: `${issues.join(' · ')} (${window.location.href})`
+          });
+        }
       } else {
         banner.classList.add('hidden');
       }
@@ -18239,6 +18666,7 @@ ${m.body}`;
             <span class="sec-pill warn">⚠️ 주의 ${warnCnt}</span>
             <span class="sec-pill err">🚨 위험 ${errCnt}</span>
             <span class="sec-pill">🔒 실시간 방어 ${[cfg.blockMaliciousInput, cfg.blockSuspiciousLinks, cfg.confirmExternalLinks, cfg.detectCloneDomain].filter(Boolean).length}/4 ON</span>
+            <span class="sec-pill ${cfg.alertAdminOnSecurityEvent !== false ? 'ok' : ''}">🚨 관리자 알림 ${cfg.alertAdminOnSecurityEvent !== false ? 'ON' : 'OFF'}</span>
           </div>
           <button id="runAllSecBtn" class="btn-full btn-amber" type="button" style="padding:12px; font-size:14px;" ${secCheckRunningAll ? 'disabled' : ''} onclick="runAllSecurityChecks()">
             ${secCheckRunningAll ? '⏳ 전체 보안 정밀 점검 중...' : '🛡️ 전체 보안 일괄 점검 실행 (7개 항목)'}
@@ -18299,7 +18727,18 @@ ${m.body}`;
         })}
         <div data-acc-body="sec_defense_cfg" class="${defenseOpen ? '' : 'hidden'}">
           <div class="card">
-            <div class="setting-row" style="padding-top:0;">
+            <div class="setting-row" style="padding-top:0; background:#FEF2F2; margin:-15px -15px 10px; padding:13px 15px; border-bottom:1px solid #FECACA; border-radius:15px 15px 0 0;">
+              <div>
+                <div class="setting-title" style="font-size:13.5px; color:#991B1B;">🚨 보안 문제 발생 시 관리자 실시간 알림</div>
+                <div class="setting-sub" style="font-size:11.5px; color:#7F1D1D;">악성 입력·피싱 링크 차단, 도배 감지, 보안 위험 발견 시 <b>최고 관리자에게만</b> 즉시 알림을 보냅니다.</div>
+                <button class="btn-sm danger" type="button" style="margin-top:7px; padding:4px 9px; font-size:11px;" onclick="sendTestAdminSecurityAlert()">🔔 관리자 보안 알림 테스트</button>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="cfgSecAdminAlert" ${cfg.alertAdminOnSecurityEvent !== false ? 'checked' : ''} onchange="handleToggleAdminSecurityAlert(this.checked)" />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="setting-row" style="padding-top:2px;">
               <div>
                 <div class="setting-title" style="font-size:13.5px;">🛡️ 악성 스크립트(XSS) 입력 차단</div>
                 <div class="setting-sub" style="font-size:11.5px;">댓글·공지·배너 등에 &lt;script&gt;, iframe, javascript: 삽입 시 즉시 차단하고 로그에 기록합니다.</div>
@@ -18685,6 +19124,13 @@ ${m.body}`;
       if (u2 && currentMainTab === 'manage' && currentManageSubTab === 'security') {
         renderManageSecurity(document.getElementById('manageContent'), u2);
       }
+      const errItems = SEC_CHECK_ITEMS.filter(it => secCheckResults[it.id] && secCheckResults[it.id].status === 'err');
+      if (errItems.length > 0) {
+        dispatchAdminSecurityAlert(
+          `🚨 보안 점검 위험 ${errItems.length}건 발견`,
+          `${errItems.map(it => it.title).join(', ')} 항목을 확인하고 조치해 주세요.`
+        );
+      }
       showToast('🛡️ 전체 7개 보안 항목 일괄 점검이 완료되었습니다!');
     };
 
@@ -18694,6 +19140,7 @@ ${m.body}`;
         blockSuspiciousLinks: !!(document.getElementById('cfgSecBlockLinks') && document.getElementById('cfgSecBlockLinks').checked),
         confirmExternalLinks: !!(document.getElementById('cfgSecConfirmExt') && document.getElementById('cfgSecConfirmExt').checked),
         detectCloneDomain: !!(document.getElementById('cfgSecDetectClone') && document.getElementById('cfgSecDetectClone').checked),
+        alertAdminOnSecurityEvent: !!(document.getElementById('cfgSecAdminAlert') ? document.getElementById('cfgSecAdminAlert').checked : (securityConfig.alertAdminOnSecurityEvent !== false)),
         commentCooldownSec: Math.max(0, Math.min(60, Number((document.getElementById('cfgSecCommentCooldown') || {}).value || 5))),
         officialHost: (securityConfig && securityConfig.officialHost) || DEFAULT_SECURITY_CONFIG.officialHost
       };
@@ -18764,6 +19211,430 @@ ${m.body}`;
       if (inp) { inp.value = ''; inp.focus(); }
       if (out) { out.innerHTML = ''; out.classList.add('hidden'); }
     };
+
+
+    // ==================== 23. 이용자 설정 화면 · 전체 글자 크기 · 스마트 업데이트 · 관리자 보안 알림 ====================
+    window.setAppFontScale = (scale) => {
+      const valid = ['normal', 'large', 'xlarge'].includes(scale) ? scale : 'normal';
+      appFontScale = valid;
+      document.documentElement.setAttribute('data-font-scale', valid);
+      try { localStorage.setItem(KEY_APP_FONT_SCALE, valid); } catch {}
+      const labelMap = { normal: '보통', large: '크게', xlarge: '아주 크게' };
+      showToast(`전체 글자 크기를 [${labelMap[valid]}]로 변경했습니다.`);
+      if (currentMainTab === 'settings') {
+        const u = getCurrentUser();
+        if (u) renderSettingsView(u);
+      }
+    };
+
+    function hasPendingAppUpdate() {
+      return (serverLatestBuild > APP_CLIENT_BUILD) || !!swHasWaitingUpdate;
+    }
+
+    function notifyPendingAppUpdateIfNeeded() {
+      if (!hasPendingAppUpdate() || updateNotifDispatched) return;
+      const u = getCurrentUser();
+      if (!u) return;
+      updateNotifDispatched = true;
+      showInAppNotif(
+        '🔄',
+        '새 업데이트가 준비되었습니다',
+        `${getTabLabel('settings')}에서 업데이트 버튼을 눌러 최신 화면으로 반영해 주세요.`,
+        () => { switchMainTab('settings'); }
+      );
+      if (currentMainTab === 'settings') {
+        renderSettingsView(u);
+      } else {
+        applyScreen();
+      }
+    }
+
+    window.applyPendingAppUpdate = async () => {
+      showToast('최신 버전으로 업데이트하고 있습니다...');
+      try {
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          for (const reg of regs) {
+            try { await reg.update(); } catch {}
+            if (reg.waiting) {
+              try { reg.waiting.postMessage({ type: 'SKIP_WAITING' }); } catch {}
+            }
+          }
+        }
+        if (window.caches && typeof caches.keys === 'function') {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k).catch(() => {})));
+        }
+      } catch {}
+      setTimeout(() => {
+        window.location.reload();
+      }, 280);
+    };
+
+    window.openFromSettingsTab = (tabKey) => {
+      currentMainTab = tabKey;
+      applyScreen();
+      try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch {}
+    };
+
+    window.confirmLogoutFromSettings = () => {
+      if (!confirm('로그아웃하시겠습니까?')) return;
+      logout();
+    };
+
+    window.openAppInstallGuideModal = () => {
+      const bodyEl = document.getElementById('appInstallModalBody');
+      if (!bodyEl) return;
+      const canDirectInstall = !!deferredPrompt && !isStandalone;
+      bodyEl.innerHTML = `
+        ${isStandalone ? `
+          <div class="att-history-box" style="margin-bottom:12px;">
+            ✅ <b>이미 앱으로 설치되어 실행 중입니다!</b><br>
+            홈 화면 아이콘으로 편리하게 이용하고 계십니다.
+          </div>
+        ` : ''}
+        ${canDirectInstall ? `
+          <button class="btn-full btn-blue" type="button" style="margin-bottom:12px; padding:12px;" onclick="triggerInstallFromModal()">📲 지금 바로 앱 설치하기</button>
+        ` : ''}
+        <div class="info-box" style="margin-top:0; margin-bottom:9px;">
+          <b>🍎 아이폰 · 아이패드 (Safari)</b><br>
+          1) 사파리(Safari) 브라우저로 앱 주소를 엽니다.<br>
+          2) 화면 아래(또는 위) <b>공유 버튼(□↑)</b>을 누릅니다.<br>
+          3) <b>[홈 화면에 추가]</b> → <b>[추가]</b>를 누르면 바탕화면에 앱 아이콘이 생깁니다.
+        </div>
+        <div class="info-box" style="margin-top:0; margin-bottom:9px;">
+          <b>🤖 안드로이드 (Chrome / 삼성 인터넷)</b><br>
+          1) 크롬 또는 삼성 인터넷에서 앱 주소를 엽니다.<br>
+          2) 우측 상단(또는 하단) <b>메뉴(⋮ 또는 ☰)</b>를 누릅니다.<br>
+          3) <b>[앱 설치]</b> 또는 <b>[홈 화면에 추가]</b>를 선택해 설치합니다.
+        </div>
+        <div class="info-box warn" style="margin-top:0;">
+          <b>💬 카카오톡 안에서 링크를 눌렀을 때</b><br>
+          카카오톡 화면 안에서는 설치가 되지 않습니다. 우측 하단 <b>⋮ → 다른 브라우저로 열기</b>를 눌러 Safari나 Chrome으로 연 뒤 설치해 주세요.
+        </div>
+      `;
+      document.getElementById('appInstallGuideModal').classList.add('open');
+    };
+
+    window.triggerInstallFromModal = async () => {
+      if (!deferredPrompt) return showToast('브라우저 메뉴에서 [홈 화면에 추가]를 선택해 주세요.');
+      try {
+        deferredPrompt.prompt();
+        const res = await deferredPrompt.userChoice;
+        if (res && res.outcome === 'accepted') {
+          showToast('앱 설치가 시작되었습니다!');
+          document.getElementById('appInstallGuideModal').classList.remove('open');
+        }
+      } catch {}
+      deferredPrompt = null;
+    };
+
+    window.openPrivacyGuideModal = () => {
+      document.getElementById('privacyGuideModal').classList.add('open');
+    };
+
+    function renderSettingsView(user) {
+      const el = document.getElementById('viewSettings');
+      if (!el || !user) return;
+
+      const isAdmin = !!user.isSuperAdmin;
+      const isPreview = !!user.isPreviewMember;
+      const showUpdate = hasPendingAppUpdate();
+      const notifOn = !!notifPrefs.enabled;
+      const byIcn = getTabIcon('bylaws');
+      const byLbl = getTabLabel('bylaws');
+      const gIcn = getTabIcon('guide');
+      const gLbl = getTabLabel('guide');
+      const bLbl = getTabLabel('bible');
+
+      const todayDot = getKstDateParts().dot;
+      const todayAtt = !isAdmin && !isPreview
+        ? myAttendanceRecords.find(r => String(r.date || '') === todayDot)
+        : null;
+
+      el.innerHTML = `
+        <!-- 프로필 요약 카드 -->
+        <div class="settings-profile-card">
+          <img src="./icon-192.png" alt="프로필" class="settings-profile-avatar" />
+          <div style="min-width:0; flex:1;">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <strong style="font-size:16.5px; color:#FFFFFF;">${escapeHtml(user.name)}님</strong>
+              <span class="role-pill" style="background:${sanitizeHexColor(user.role.color, '#475569')};">${escapeHtml(user.role.name)}</span>
+            </div>
+            <div style="font-size:12px; color:#CBD5E1; margin-top:4px; line-height:1.4;">
+              ${todayAtt
+                ? `✅ 오늘 ${escapeHtml(todayAtt.label || '예배')} 출석 완료 (${escapeHtml(todayAtt.time || '')})`
+                : (isAdmin ? '구미제일감리교회 라이트 청년부 · 이용자 공용 설정' : '구미제일감리교회 라이트 청년부')}
+            </div>
+          </div>
+        </div>
+
+        <!-- 미업데이트 시에만 표시되는 업데이트 알림 카드 (버전명 미표시) -->
+        ${showUpdate ? `
+          <div class="settings-update-card">
+            <div style="display:flex; align-items:center; gap:7px; margin-bottom:5px;">
+              <span style="font-size:18px;">🔄</span>
+              <strong style="font-size:15px;">새 업데이트가 있습니다</strong>
+            </div>
+            <div style="font-size:12.5px; color:rgba(255,255,255,0.92); line-height:1.5; margin-bottom:11px;">
+              새로운 기능과 보안 개선 사항이 반영되었습니다. 아래 버튼을 눌러 최신 화면으로 업데이트해 주세요.
+            </div>
+            <button class="btn-full" type="button" style="background:#FFFFFF; color:#1D4ED8; padding:11px; font-size:13.5px;" onclick="applyPendingAppUpdate()">🔄 지금 업데이트하기</button>
+          </div>
+        ` : ''}
+
+        <!-- 카테고리 1: 내 정보 · 화면 설정 -->
+        <div class="settings-group-label">내 정보 · 화면</div>
+        <div class="settings-group-card">
+          ${(!isAdmin && !isPreview) ? `
+            <button class="settings-row-btn" type="button" onclick="openAccountModal()">
+              <span class="settings-row-left">
+                <span class="settings-row-icon">👤</span>
+                <span style="min-width:0;">
+                  <div class="settings-row-title">내 계정 관리</div>
+                  <div class="settings-row-sub">이름·생일 변경 신청, 출석 기록, 비밀번호 변경·탈퇴</div>
+                </span>
+              </span>
+              <span class="settings-row-right">▸</span>
+            </button>
+          ` : ''}
+          ${isAdmin ? `
+            <button class="settings-row-btn" type="button" onclick="openAdminRenameModal()">
+              <span class="settings-row-left">
+                <span class="settings-row-icon">✏️</span>
+                <span style="min-width:0;">
+                  <div class="settings-row-title">내 관리자 이름 변경</div>
+                  <div class="settings-row-sub">현재 표시 이름: ${escapeHtml(user.name)}</div>
+                </span>
+              </span>
+              <span class="settings-row-right">▸</span>
+            </button>
+          ` : ''}
+          <button class="settings-row-btn" type="button" onclick="openNotifModal()">
+            <span class="settings-row-left">
+              <span class="settings-row-icon">🔔</span>
+              <span style="min-width:0;">
+                <div class="settings-row-title">알림 설정</div>
+                <div class="settings-row-sub">새 공지·말씀 알림 및 기기 알림 권한</div>
+              </span>
+            </span>
+            <span class="settings-row-right">
+              <span class="tag ${notifOn ? 'green' : 'slate'}">${notifOn ? '켜짐' : '꺼짐'}</span>
+              <span>▸</span>
+            </span>
+          </button>
+          <div class="settings-row-static">
+            <div class="settings-row-left">
+              <span class="settings-row-icon">🔤</span>
+              <div style="min-width:0; flex:1;">
+                <div class="settings-row-title">전체 글자 크기</div>
+                <div class="settings-row-sub">앱 전체 글자를 보기 편하게 조절합니다 (${escapeHtml(bLbl)} 본문은 ${escapeHtml(bLbl)}에서 별도 조절)</div>
+              </div>
+            </div>
+            <div class="font-scale-seg">
+              <button class="font-scale-btn ${appFontScale === 'normal' ? 'active' : ''}" type="button" onclick="setAppFontScale('normal')">보통</button>
+              <button class="font-scale-btn ${appFontScale === 'large' ? 'active' : ''}" type="button" onclick="setAppFontScale('large')">크게</button>
+              <button class="font-scale-btn ${appFontScale === 'xlarge' ? 'active' : ''}" type="button" onclick="setAppFontScale('xlarge')">아주 크게</button>
+            </div>
+          </div>
+          <button class="settings-row-btn" type="button" onclick="openBibleBookmarksModal()">
+            <span class="settings-row-left">
+              <span class="settings-row-icon">⭐</span>
+              <span style="min-width:0;">
+                <div class="settings-row-title">${escapeHtml(bLbl)} 책갈피</div>
+                <div class="settings-row-sub">내가 저장한 색상별 말씀 책갈피 모아보기</div>
+              </span>
+            </span>
+            <span class="settings-row-right">▸</span>
+          </button>
+          <button class="settings-row-btn" type="button" onclick="openBibleMemoModal()">
+            <span class="settings-row-left">
+              <span class="settings-row-icon">📝</span>
+              <span style="min-width:0;">
+                <div class="settings-row-title">${escapeHtml(bLbl)} 메모장</div>
+                <div class="settings-row-sub">내 기기에만 안전하게 저장된 개인 묵상 메모</div>
+              </span>
+            </span>
+            <span class="settings-row-right">▸</span>
+          </button>
+        </div>
+
+        <!-- 카테고리 2: 청년부 안내 · 초대 -->
+        <div class="settings-group-label">청년부 안내 · 공유</div>
+        <div class="settings-group-card">
+          <button class="settings-row-btn" type="button" onclick="openInviteQrModal()">
+            <span class="settings-row-left">
+              <span class="settings-row-icon">📲</span>
+              <span style="min-width:0;">
+                <div class="settings-row-title">오늘의 초대 QR</div>
+                <div class="settings-row-sub">새 지체 초대 QR 보기 · 이미지 공유 · 링크 복사</div>
+              </span>
+            </span>
+            <span class="settings-row-right">▸</span>
+          </button>
+          <button class="settings-row-btn" type="button" onclick="openFromSettingsTab('bylaws')">
+            <span class="settings-row-left">
+              <span class="settings-row-icon">${escapeHtml(byIcn)}</span>
+              <span style="min-width:0;">
+                <div class="settings-row-title">${escapeHtml(byLbl)}</div>
+                <div class="settings-row-sub">라이트 청년부 회칙 전문 검색 및 복사</div>
+              </span>
+            </span>
+            <span class="settings-row-right">▸</span>
+          </button>
+          <button class="settings-row-btn" type="button" onclick="openFromSettingsTab('guide')">
+            <span class="settings-row-left">
+              <span class="settings-row-icon">${escapeHtml(gIcn)}</span>
+              <span style="min-width:0;">
+                <div class="settings-row-title">${escapeHtml(gLbl)}</div>
+                <div class="settings-row-sub">출석·말씀·성경·알림 등 앱 사용 방법 안내</div>
+              </span>
+            </span>
+            <span class="settings-row-right">▸</span>
+          </button>
+        </div>
+
+        <!-- 카테고리 3: 앱 이용 · 보안 -->
+        <div class="settings-group-label">앱 이용 · 보안</div>
+        <div class="settings-group-card">
+          <button class="settings-row-btn" type="button" onclick="openAppInstallGuideModal()">
+            <span class="settings-row-left">
+              <span class="settings-row-icon">📱</span>
+              <span style="min-width:0;">
+                <div class="settings-row-title">앱 설치 방법 (홈 화면에 추가)</div>
+                <div class="settings-row-sub">아이폰·안드로이드 스마트폰에 앱처럼 설치하기</div>
+              </span>
+            </span>
+            <span class="settings-row-right">▸</span>
+          </button>
+          <button class="settings-row-btn" type="button" onclick="openPrivacyGuideModal()">
+            <span class="settings-row-left">
+              <span class="settings-row-icon">🔒</span>
+              <span style="min-width:0;">
+                <div class="settings-row-title">개인정보 · 보안 안내</div>
+                <div class="settings-row-sub">개인 메모·책갈피 보호 및 보안 방어 안내</div>
+              </span>
+            </span>
+            <span class="settings-row-right">▸</span>
+          </button>
+          <button class="settings-row-btn" type="button" onclick="confirmLogoutFromSettings()">
+            <span class="settings-row-left">
+              <span class="settings-row-icon danger">🚪</span>
+              <span style="min-width:0;">
+                <div class="settings-row-title danger">로그아웃</div>
+                <div class="settings-row-sub">현재 계정에서 안전하게 로그아웃합니다</div>
+              </span>
+            </span>
+            <span class="settings-row-right" style="color:#EF4444;">▸</span>
+          </button>
+        </div>
+      `;
+    }
+
+    // ==================== 관리자 전용 보안 문제 실시간 알림 엔진 ====================
+    function isSecurityThreatAuditEntry(entry) {
+      if (!entry) return false;
+      const act = String(entry.action || '');
+      return /차단|위협|비공식 도메인|보안 경고|공격/.test(act);
+    }
+
+    function dispatchAdminSecurityAlert(title, body, forceTest = false) {
+      const u = getCurrentUser();
+      // 1차적으로 최고 관리자에게만 표시 (일반 회원 및 일반 회원 미리보기 모드에서는 절대 표시 안 됨)
+      if (!u || !u.isSuperAdmin) return false;
+      const cfg = securityConfig || DEFAULT_SECURITY_CONFIG;
+      if (!forceTest && cfg.alertAdminOnSecurityEvent === false) return false;
+
+      showInAppNotif(
+        '🚨',
+        title,
+        body,
+        () => {
+          currentMainTab = 'manage';
+          currentManageSubTab = 'security';
+          applyScreen();
+        },
+        'sec-alert'
+      );
+      sendDeviceNotification(title, body);
+      return true;
+    }
+
+    window.handleToggleAdminSecurityAlert = async (checked) => {
+      const next = {
+        ...DEFAULT_SECURITY_CONFIG,
+        ...(securityConfig || {}),
+        alertAdminOnSecurityEvent: !!checked
+      };
+      try {
+        await db.collection('config').doc('layout').set({ securityConfig: next }, { merge: true });
+        securityConfig = next;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '관리자 보안 알림 설정 변경',
+          target: '보안 문제 관리자 알림',
+          detail: checked ? 'ON (보안 문제 시 관리자에게 즉시 알림)' : 'OFF (관리자 보안 알림 끄기)'
+        });
+        showToast(checked ? '🚨 관리자 보안 알림이 켜졌습니다.' : '관리자 보안 알림이 꺼졌습니다.');
+        const u = getCurrentUser();
+        if (u && currentMainTab === 'manage' && currentManageSubTab === 'security') {
+          renderManageSecurity(document.getElementById('manageContent'), u);
+        }
+      } catch (err) {
+        handleDbError(err, '보안 알림 설정 변경');
+      }
+    };
+
+    window.sendTestAdminSecurityAlert = () => {
+      const sent = dispatchAdminSecurityAlert(
+        '🚨 [테스트] 관리자 보안 경고 알림',
+        '보안 문제 감지 시 최고 관리자에게만 이처럼 즉시 알림이 전송됩니다. (누르면 보안 점검으로 이동)',
+        true
+      );
+      if (sent) {
+        showToast('관리자 전용 보안 테스트 알림을 보냈습니다.');
+      }
+    };
+
+    function runSilentAdminSecurityWatch() {
+      if (silentSecWatchDone) return;
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      silentSecWatchDone = true;
+      const cfg = securityConfig || DEFAULT_SECURITY_CONFIG;
+      if (cfg.alertAdminOnSecurityEvent === false) return;
+
+      const alerts = [];
+      const host = (window.location.hostname || '').toLowerCase();
+      const proto = (window.location.protocol || '').toLowerCase();
+      const officialHost = String(cfg.officialHost || 'kyutaek5347.github.io').trim().toLowerCase();
+      const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
+      if (!isLocal && (proto !== 'https:' || host !== officialHost)) {
+        alerts.push('비공식·비암호화 접속 감지');
+      }
+
+      // 최근 24시간 내 차단된 공격 시도 확인
+      const dayAgo = Date.now() - 24 * 60 * 60 * 1000;
+      const recentBlocked = (auditLogs || []).filter(l => Number(l.ts || 0) >= dayAgo && isSecurityThreatAuditEntry(l));
+      if (recentBlocked.length > 0) {
+        alerts.push(`최근 24시간 보안 위협·차단 ${recentBlocked.length}건`);
+      }
+
+      // 저장된 콘텐츠 내 XSS 흔적 빠른 검사
+      const hasXss = (notices || []).some(n => !detectMaliciousCode(`${n.title || ''} ${n.body || ''}`).safe)
+        || (qtComments || []).some(c => !detectMaliciousCode(c.body || '').safe);
+      if (hasXss) {
+        alerts.push('게시물·댓글 내 악성 스크립트 흔적 발견');
+      }
+
+      if (alerts.length > 0) {
+        dispatchAdminSecurityAlert(
+          '🚨 보안 이상 징후 감지 (관리자 전용)',
+          `${alerts.join(' · ')} — 눌러서 [${getTabLabel('manageSecurity')}]에서 확인하세요.`
+        );
+      }
+    }
 
     // 초기 로드 시 공식 도메인 · HTTPS 즉시 검증
     checkCloneDomainWarning();

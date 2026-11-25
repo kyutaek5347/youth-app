@@ -1,4 +1,4 @@
-const CACHE_NAME = 'right-youth-app-v10.54';
+const CACHE_NAME = 'right-youth-app-v10.55';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -67,4 +67,10 @@ self.addEventListener('notificationclick', (event) => {
       if (clients.openWindow) return clients.openWindow('./');
     })
   );
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
