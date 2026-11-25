@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=165" />
+  <link rel="manifest" href="./manifest.json?v=166" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=165" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=165" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=166" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=166" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2957,7 +2957,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=165" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=166" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3032,12 +3032,6 @@
             <label class="login-field-label" for="signupNameInput">아이디 (본인 성명)</label>
             <div class="login-input-wrap">
               <input id="signupNameInput" class="login-input blue-focus" placeholder="본인 성명을 입력하세요" />
-            </div>
-            <label class="login-field-label" for="signupBirthInput">생년월일 (필수 · 직접 입력 또는 달력 선택)</label>
-            <div class="login-input-wrap combo-input-row">
-              <input id="signupBirthInput" type="text" inputmode="numeric" maxlength="10" autocomplete="bday" class="login-input blue-focus" style="flex:1;" placeholder="예: 1998.01.16 (숫자 8자리)" oninput="formatBirthdayTyping(this)" />
-              <button class="combo-picker-btn" type="button" title="달력에서 선택" onclick="openNativePicker('signupBirthDatePicker', 'signupBirthInput', 'date')">📅</button>
-              <input id="signupBirthDatePicker" type="date" class="hidden-native-picker" min="1940-01-01" onchange="syncPickerToText('signupBirthDatePicker', 'signupBirthInput', 'date')" />
             </div>
             <label class="login-field-label" for="signupRoleSelect">역할 선택 (필수 · 검색 입력 또는 목록 선택)</label>
             <div class="login-input-wrap">
@@ -3345,7 +3339,6 @@
       <div id="accountSummaryBox" class="status-meta" style="margin-bottom:10px;"></div>
       <div id="accountAttendanceBox" class="att-history-box"></div>
       <div id="accountRenameBox" class="form-group" style="background:#F8FAFC; border:1px solid var(--border); border-radius:12px; padding:11px 12px; margin-bottom:12px;"></div>
-      <div id="accountBirthBox" class="form-group" style="background:#F8FAFC; border:1px solid var(--border); border-radius:12px; padding:11px 12px; margin-bottom:14px;"></div>
       <div class="modal-tabs-2">
         <button id="accTabPw" class="modal-tab-btn active" type="button" onclick="switchAccountTab('pw')">비밀번호 변경</button>
         <button id="accTabDelete" class="modal-tab-btn" type="button" onclick="switchAccountTab('delete')">계정 삭제</button>
@@ -4397,7 +4390,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 28;
-    const APP_CLIENT_BUILD = 165;
+    const APP_CLIENT_BUILD = 166;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -5262,7 +5255,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=165" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=166" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5286,8 +5279,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=165', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=165', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=166', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=166', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -7439,9 +7432,6 @@
         const prevName = myMemberDoc ? myMemberDoc.name : null;
         const prevPendingName = myMemberDoc ? myMemberDoc.pendingName : null;
         const prevResultTs = (myMemberDoc && myMemberDoc.lastRenameResult) ? Number(myMemberDoc.lastRenameResult.ts || 0) : 0;
-        const prevBday = myMemberDoc ? (myMemberDoc.birthday || '') : '';
-        const prevPendingBday = myMemberDoc ? (myMemberDoc.pendingBirthday || '') : '';
-        const prevBdayResTs = (myMemberDoc && myMemberDoc.lastBirthdayResult) ? Number(myMemberDoc.lastBirthdayResult.ts || 0) : 0;
         myMemberDoc = { ...doc.data(), id: String(doc.id) };
 
         if (myMemberDoc.status === 'approved') {
@@ -7469,29 +7459,6 @@
               body: `요청하신 [${curRes.requestedName || prevPendingName}] 변경이 거절되어 기존 이름(${myMemberDoc.name})이 유지됩니다.`,
               onClick: () => { openAccountModal(); }
             });
-          }
-          const curBdayRes = myMemberDoc.lastBirthdayResult || null;
-          const curBdayResTs = curBdayRes ? Number(curBdayRes.ts || 0) : 0;
-          if (prevPendingBday && !myMemberDoc.pendingBirthday && curBdayRes && curBdayResTs > prevBdayResTs) {
-            if (curBdayRes.status === 'approved') {
-              showToast(`✅ 생일 변경이 승인되었습니다! (${formatBirthdayDisplay(myMemberDoc.birthday)})`);
-              dispatchAppNotification({
-                type: 'notice',
-                icon: '🎂',
-                title: '생일 변경 승인 완료',
-                body: `${formatBirthdayDisplay(prevBday)} → ${formatBirthdayDisplay(myMemberDoc.birthday)}`,
-                onClick: () => { openAccountModal(); }
-              });
-            } else if (curBdayRes.status === 'rejected') {
-              showToast(`❌ 생일 변경 신청이 거절되어 기존 생일(${formatBirthdayDisplay(myMemberDoc.birthday)})이 유지됩니다.`);
-              dispatchAppNotification({
-                type: 'notice',
-                icon: 'ℹ️',
-                title: '생일 변경 신청 거절 안내',
-                body: `요청하신 생일(${formatBirthdayDisplay(curBdayRes.requestedBirthday || prevPendingBday)}) 변경이 거절되어 기존 생일이 유지됩니다.`,
-                onClick: () => { openAccountModal(); }
-              });
-            }
           }
           subscribeCoreData();
           if (prevRoleId && prevRoleId !== myMemberDoc.roleId) {
@@ -7888,7 +7855,6 @@
         : (member.status === 'reset_pending' ? '비밀번호 초기화 대기' : '보류/거절');
       meta.innerHTML = `
         <div><b>아이디 (성명):</b> ${escapeHtml(member.name)}</div>
-        ${member.birthday ? `<div><b>생년월일:</b> ${escapeHtml(formatBirthdayDisplay(member.birthday))}</div>` : ''}
         ${member.requestedRole ? `<div><b>신청 역할:</b> ${escapeHtml(member.requestedRole)}</div>` : ''}
         <div><b>신청일:</b> ${escapeHtml(member.createdAt)}</div>
         <div><b>현재 상태:</b> ${statusLabel}</div>
@@ -7902,7 +7868,6 @@
     async function handleSignup() {
       clearErrors();
       const name = document.getElementById('signupNameInput').value.trim();
-      const birthday = normalizeBirthdayInput(document.getElementById('signupBirthInput').value);
       const selectedRoleId = (document.getElementById('signupRoleSelect').value || '').trim();
       const selectedRoleObj = roles.find(r => String(r.id) === selectedRoleId);
       const pw = document.getElementById('signupPwInput').value.trim();
@@ -7914,9 +7879,6 @@
       }
       if (name.length < 2 || name.length > 10) {
         return showError('signupError', '본인 성명을 2~10글자 이내로 입력해 주세요.');
-      }
-      if (!isValidBirthdayStr(birthday)) {
-        return showError('signupError', '생년월일 8자리(예: 1998.01.16)를 올바르게 입력해 주세요.');
       }
       if (!selectedRoleObj) {
         return showError('signupError', '역할 선택 칸에서 본인의 역할을 선택해 주세요.');
@@ -7955,7 +7917,6 @@
         const newMember = {
           id: uid,
           name,
-          birthday,
           requestedRoleId: selectedRoleObj.id,
           requestedRole: selectedRoleObj.name,
           status: 'pending',
@@ -7976,11 +7937,10 @@
           category: '회원·생일',
           action: '회원가입 신청',
           target: name,
-          detail: `신청 역할: ${selectedRoleObj.name} · 생일: ${formatBirthdayDisplay(birthday)}`
+          detail: `신청 역할: ${selectedRoleObj.name}`
         });
 
         document.getElementById('signupNameInput').value = '';
-        document.getElementById('signupBirthInput').value = '';
         document.getElementById('signupRoleSelect').value = '';
         document.getElementById('signupPwInput').value = '';
         document.getElementById('signupPwConfirmInput').value = '';
@@ -11854,76 +11814,14 @@
       `;
     }
 
-    function renderAccountBirthBox() {
-      const box = document.getElementById('accountBirthBox');
-      const user = getCurrentUser();
-      if (!box || !user || user.isSuperAdmin || !myMemberDoc) return;
-      const curBday = isValidBirthdayStr(myMemberDoc.birthday) ? myMemberDoc.birthday : '';
-      const pendingBday = isValidBirthdayStr(myMemberDoc.pendingBirthday) ? myMemberDoc.pendingBirthday : '';
-      const lastRes = myMemberDoc.lastBirthdayResult || null;
-
-      if (pendingBday) {
-        box.innerHTML = `
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:6px; flex-wrap:wrap;">
-            <span style="font-size:12.5px; font-weight:800; color:#92400E;">⏳ 생일 변경 승인 대기 중</span>
-            <span class="tag warm" style="font-size:10.5px;">관리자 확인 대기</span>
-          </div>
-          <div class="log-rename-diff" style="background:#FFF; margin:6px 0 8px;">
-            <span class="log-name-old">${escapeHtml(formatBirthdayDisplay(curBday))}</span>
-            <span class="log-name-arrow">→</span>
-            <span class="log-name-new">${escapeHtml(formatBirthdayDisplay(pendingBday))}</span>
-          </div>
-          <div style="font-size:11.5px; color:#64748B; line-height:1.45; margin-bottom:8px;">
-            신청 일시: ${escapeHtml(myMemberDoc.pendingBirthdayAt || '-')}<br>
-            관리자가 승인하면 생일이 변경되며, 거절 시 기존 생일(${escapeHtml(formatBirthdayDisplay(curBday))})이 유지됩니다.
-          </div>
-          <button id="cancelMyBirthBtn" class="btn-sm danger" type="button" style="width:100%; padding:8px;" onclick="cancelMyBirthdayChangeRequest()">신청 취소하기</button>
-        `;
-        return;
-      }
-
-      let resHtml = '';
-      if (lastRes && lastRes.status === 'rejected') {
-        resHtml = `
-          <div style="background:#FEF2F2; border:1px solid #FECACA; color:#991B1B; border-radius:9px; padding:8px 10px; font-size:11.5px; line-height:1.45; margin-bottom:8px;">
-            ❌ 이전 생일 변경 신청(<b>${escapeHtml(formatBirthdayDisplay(lastRes.requestedBirthday || ''))}</b>)이 거절되어 기존 생일(<b>${escapeHtml(formatBirthdayDisplay(curBday))}</b>)이 유지되었습니다.${lastRes.at ? ` (${escapeHtml(lastRes.at)})` : ''}
-          </div>
-        `;
-      } else if (lastRes && lastRes.status === 'approved') {
-        resHtml = `
-          <div style="background:#ECFDF5; border:1px solid #A7F3D0; color:#065F46; border-radius:9px; padding:8px 10px; font-size:11.5px; line-height:1.45; margin-bottom:8px;">
-            ✅ 생일이 <b>${escapeHtml(formatBirthdayDisplay(lastRes.oldBirthday || ''))} → ${escapeHtml(formatBirthdayDisplay(lastRes.newBirthday || curBday))}</b>(으)로 변경되었습니다.
-          </div>
-        `;
-      }
-
-      box.innerHTML = `
-        <label class="form-label" for="accBirthInput" style="margin-bottom:6px;">🎂 내 생일 변경 신청 (관리자 승인 필요)</label>
-        ${resHtml}
-        <div class="combo-input-row">
-          <input id="accBirthInput" type="text" inputmode="numeric" maxlength="10" autocomplete="bday" class="form-input" style="flex:1; background:#fff;" value="${escapeHtml(curBday ? formatBirthdayDisplay(curBday) : '')}" placeholder="예: 1998.01.16 (숫자 8자리)" oninput="formatBirthdayTyping(this)" />
-          <button class="combo-picker-btn" type="button" title="달력에서 선택" onclick="openNativePicker('accBirthDatePicker', 'accBirthInput', 'date')">📅</button>
-          <input id="accBirthDatePicker" type="date" class="hidden-native-picker" min="1940-01-01" onchange="syncPickerToText('accBirthDatePicker', 'accBirthInput', 'date')" />
-          <button id="saveAccBirthBtn" class="btn-sm primary" type="button" style="padding:10px 12px; white-space:nowrap;" onclick="handleSaveMyBirthday()">변경 신청</button>
-        </div>
-        <div id="accBirthError" class="login-error" style="margin-top:7px; margin-bottom:0;"></div>
-        <div style="font-size:11px; color:#64748B; margin-top:6px; line-height:1.45;">
-          관리자 승인 후 생일이 변경되며, 거절 시 기존 생일이 유지됩니다. (보안 로그 기록)
-        </div>
-      `;
-    }
-
     function refreshAccountModalContent() {
       const user = getCurrentUser();
       if (!user || user.isSuperAdmin) return;
-      const curBday = (myMemberDoc && isValidBirthdayStr(myMemberDoc.birthday)) ? myMemberDoc.birthday : '';
       document.getElementById('accountSummaryBox').innerHTML = `
         <div><b>아이디 (성명):</b> ${escapeHtml(user.name)}</div>
         <div><b>역할:</b> ${escapeHtml(user.role.name)}</div>
-        <div><b>생년월일:</b> ${escapeHtml(formatBirthdayDisplay(curBday))}</div>
       `;
       renderAccountRenameBox();
-      renderAccountBirthBox();
       renderAccountAttendanceBox();
     }
 
@@ -12030,102 +11928,6 @@
         handleDbError(err, '이름 변경 신청 취소');
       } finally {
         const b = document.getElementById('cancelMyRenameBtn');
-        if (b) b.disabled = false;
-      }
-    };
-
-    window.handleSaveMyBirthday = async () => {
-      const user = getCurrentUser();
-      if (!user || user.isSuperAdmin || !fbUser || !myMemberDoc) return;
-      const errEl = document.getElementById('accBirthError');
-      if (errEl) errEl.classList.remove('show');
-      const inp = document.getElementById('accBirthInput');
-      const birthday = normalizeBirthdayInput(inp ? inp.value : '');
-      if (!isValidBirthdayStr(birthday)) {
-        if (errEl) { errEl.textContent = '생년월일 8자리(예: 1998.01.16)를 올바르게 입력해 주세요.'; errEl.classList.add('show'); }
-        return;
-      }
-      const curBday = isValidBirthdayStr(myMemberDoc.birthday) ? myMemberDoc.birthday : '';
-      if (birthday === curBday) {
-        if (errEl) { errEl.textContent = '현재 등록된 생일과 동일합니다. 다른 날짜를 입력해 주세요.'; errEl.classList.add('show'); }
-        return;
-      }
-      if (!confirm(`[${formatBirthdayDisplay(curBday)}] → [${formatBirthdayDisplay(birthday)}](으)로 생일 변경을 신청할까요?\n관리자 승인 후 적용됩니다.`)) return;
-
-      const btn = document.getElementById('saveAccBirthBtn');
-      if (btn) { btn.disabled = true; btn.textContent = '신청중...'; }
-      try {
-        const nowInfo = getKstNowInfo();
-        const nowTs = Date.now();
-        await db.collection('members').doc(fbUser.uid).update({
-          pendingBirthday: birthday,
-          pendingBirthdayAt: nowInfo.dateTimeFull,
-          pendingBirthdayTs: nowTs
-        });
-        myMemberDoc.pendingBirthday = birthday;
-        myMemberDoc.pendingBirthdayAt = nowInfo.dateTimeFull;
-        myMemberDoc.pendingBirthdayTs = nowTs;
-        recordAuditLog({
-          actorType: 'member',
-          actorName: user.name,
-          category: '회원·생일',
-          action: '생일 변경 신청',
-          target: user.name,
-          beforeVal: formatBirthdayDisplay(curBday),
-          afterVal: formatBirthdayDisplay(birthday),
-          detail: '관리자 승인 대기'
-        });
-        renderAccountBirthBox();
-        showToast(`생일 변경 신청(${formatBirthdayDisplay(birthday)})이 접수되었습니다! 관리자 승인을 기다려 주세요.`);
-      } catch (err) {
-        console.error('Member birthday request error:', err);
-        if (err && err.code === 'permission-denied') {
-          if (errEl) {
-            errEl.textContent = 'Firestore 보안 규칙 업데이트가 필요합니다. 관리자에게 최신 규칙 게시를 요청해 주세요.';
-            errEl.classList.add('show');
-          }
-          showToast('Firestore 보안 규칙 업데이트가 필요합니다.');
-        } else {
-          handleDbError(err, '생일 변경 신청');
-        }
-      } finally {
-        const b = document.getElementById('saveAccBirthBtn');
-        if (b) { b.disabled = false; b.textContent = '변경 신청'; }
-      }
-    };
-
-    window.cancelMyBirthdayChangeRequest = async () => {
-      const user = getCurrentUser();
-      if (!user || user.isSuperAdmin || !fbUser || !myMemberDoc || !myMemberDoc.pendingBirthday) return;
-      if (!confirm('대기 중인 생일 변경 신청을 취소할까요?')) return;
-      const btn = document.getElementById('cancelMyBirthBtn');
-      if (btn) btn.disabled = true;
-      try {
-        const canceledBday = myMemberDoc.pendingBirthday;
-        await db.collection('members').doc(fbUser.uid).update({
-          pendingBirthday: FieldValue.delete(),
-          pendingBirthdayAt: FieldValue.delete(),
-          pendingBirthdayTs: FieldValue.delete()
-        });
-        delete myMemberDoc.pendingBirthday;
-        delete myMemberDoc.pendingBirthdayAt;
-        delete myMemberDoc.pendingBirthdayTs;
-        recordAuditLog({
-          actorType: 'member',
-          actorName: user.name,
-          category: '회원·생일',
-          action: '생일 변경 신청 취소',
-          target: user.name,
-          beforeVal: formatBirthdayDisplay(canceledBday),
-          afterVal: formatBirthdayDisplay(myMemberDoc.birthday),
-          detail: '본인 취소'
-        });
-        renderAccountBirthBox();
-        showToast('생일 변경 신청을 취소했습니다.');
-      } catch (err) {
-        handleDbError(err, '생일 변경 신청 취소');
-      } finally {
-        const b = document.getElementById('cancelMyBirthBtn');
         if (b) b.disabled = false;
       }
     };
@@ -16611,7 +16413,7 @@
         ${isValid ? `
           <div class="signup-qr-ok-badge">✅ 오늘의 초대 QR 인증 완료 · 회원가입 가능</div>
           <div class="info-box" style="margin-top:0;">
-            오늘 유효한 초대 QR을 스캔해 접속하면 <b>회원가입 탭이 자동으로 열리고</b>, 성명·생년월일(직접 입력/달력)·역할·비밀번호를 입력해 가입을 신청할 수 있습니다.
+            오늘 유효한 초대 QR을 스캔해 접속하면 <b>회원가입 탭이 자동으로 열리고</b>, 성명·역할·비밀번호를 입력해 가입을 신청할 수 있습니다.
           </div>
         ` : `
           <div class="signup-qr-lock-box">
@@ -17879,7 +17681,7 @@
                 <span class="settings-row-icon">${escapeHtml(ic)}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title">${escapeHtml(lb)}</div>
-                  <div class="settings-row-sub">이름·생일 변경 신청, 출석 기록, 비밀번호 변경·탈퇴</div>
+                  <div class="settings-row-sub">이름 변경 신청, 출석 기록, 비밀번호 변경·탈퇴</div>
                 </span>
               </span>
               <span class="settings-row-right">▸</span>
