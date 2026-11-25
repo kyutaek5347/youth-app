@@ -2,19 +2,19 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://right-youth-app.firebaseapp.com https://www.youtube.com https://noembed.com https://script.google.com https://script.googleusercontent.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://right-youth-app.firebaseapp.com https://www.youtube.com https://noembed.com https://api.allorigins.win https://api.codetabs.com https://api.rss2json.com https://script.google.com https://script.googleusercontent.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=161" />
+  <link rel="manifest" href="./manifest.json?v=162" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=161" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=161" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=162" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=162" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2984,7 +2984,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=161" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=162" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4266,8 +4266,8 @@
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label" for="videoTitleInput">영상 제목 (자동 입력 · 수정 가능)</label>
-          <input id="videoTitleInput" class="form-input" maxlength="80" placeholder="자동 검사 시 유튜브 제목이 채워집니다" />
+          <label class="form-label" id="videoTitleLabel" for="videoTitleInput">영상 제목 (자동 생성)</label>
+          <input id="videoTitleInput" class="form-input" maxlength="80" placeholder="자동 검사 시 유튜브 원본 제목이 자동 입력됩니다" />
         </div>
       </div>
 
@@ -4302,29 +4302,29 @@
       </div>
       <input type="hidden" id="editOfficialChannelId" />
       <div class="info-box" style="margin-top:0; margin-bottom:11px;">
-        • 유튜브 <b>채널 주소</b>(<code>youtube.com/channel/UC...</code> 또는 <code>youtube.com/@...</code>)나 <b>해당 채널의 영상 링크</b>를 입력하고 <b>[🔍 채널 확인]</b>을 누르면 자동으로 정보를 검증합니다.<br>
+        • 유튜브 <b>채널 주소</b>(<code>youtube.com/@...</code> · <code>youtube.com/channel/UC...</code>)나 <b>해당 채널의 영상 링크</b>를 입력하고 <b>[🔍 자동검사]</b>를 누르면 <b>공식 채널 이름 · 채널 고유 ID(UC...) · 채널 핸들 URL(/@...)</b>이 자동으로 생성됩니다.<br>
         • 등록된 공식 채널 영상도 게시 전 보안·실존·위험 문구 검사를 똑같이 거친 뒤 자동 게시됩니다.
       </div>
       <div class="form-group">
-        <label class="form-label" for="offChUrlInput">채널 주소 또는 해당 채널의 영상 링크 (필수)</label>
+        <label class="form-label" for="offChUrlInput">유튜브 채널 링크 또는 해당 채널 영상 링크 (필수)</label>
         <div style="display:flex; gap:6px;">
-          <input id="offChUrlInput" type="url" class="form-input" style="flex:1;" placeholder="https://youtube.com/channel/UC... 또는 영상 링크" />
-          <button id="verifyOffChBtn" class="btn-sm primary" type="button" style="white-space:nowrap; padding:0 11px;" onclick="handleVerifyOfficialChannelInput()">🔍 확인</button>
+          <input id="offChUrlInput" type="url" class="form-input" style="flex:1;" placeholder="https://youtube.com/@채널명 또는 /channel/UC..." oninput="onOffChUrlFieldChange()" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleVerifyOfficialChannelInput();}" />
+          <button id="verifyOffChBtn" class="btn-sm primary" type="button" style="white-space:nowrap; padding:0 11px;" onclick="handleVerifyOfficialChannelInput()">🔍 자동검사</button>
         </div>
       </div>
       <div id="offChVerifyStatus" class="hidden"></div>
       <div class="form-group">
-        <label class="form-label" for="offChNameInput">공식 채널 이름 (필수)</label>
-        <input id="offChNameInput" class="form-input" maxlength="40" placeholder="예: 구미제일감리교회 유튜브" />
+        <label class="form-label" for="offChNameInput">공식 채널 이름 (자동 생성 · 필수)</label>
+        <input id="offChNameInput" class="form-input" maxlength="40" placeholder="자동검사 시 공식 채널 이름이 자동 입력됩니다" />
       </div>
       <div class="form-grid-2">
         <div class="form-group">
-          <label class="form-label" for="offChCidInput">채널 고유 ID (UC... · 선택)</label>
-          <input id="offChCidInput" class="form-input" maxlength="40" placeholder="예: UC73u0Ss6qFvj2PXWD2C37VA" />
+          <label class="form-label" for="offChCidInput">채널 고유 ID (UC... · 자동 생성)</label>
+          <input id="offChCidInput" class="form-input" maxlength="40" placeholder="자동검사 시 UC... ID 자동 입력" />
         </div>
         <div class="form-group">
-          <label class="form-label" for="offChHandleInput">채널 핸들 URL (/@... · 선택)</label>
-          <input id="offChHandleInput" class="form-input" maxlength="80" placeholder="예: https://www.youtube.com/@채널명" />
+          <label class="form-label" for="offChHandleInput">채널 핸들 URL (/@... · 자동 생성)</label>
+          <input id="offChHandleInput" class="form-input" maxlength="80" placeholder="자동검사 시 https://www.youtube.com/@... 자동 입력" />
         </div>
       </div>
       <div style="display:flex; gap:8px; margin-top:6px;">
@@ -4397,7 +4397,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 27;
-    const APP_CLIENT_BUILD = 161;
+    const APP_CLIENT_BUILD = 162;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -5259,7 +5259,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=161" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=162" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5283,8 +5283,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=161', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=161', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=162', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=162', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -19424,9 +19424,44 @@ service cloud.firestore {
       return out;
     }
 
+    async function fetchWithTimeout(url, options = {}, timeoutMs = 6500) {
+      if (typeof AbortController === 'undefined') {
+        return fetch(url, options);
+      }
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+      try {
+        return await fetch(url, { ...options, signal: ctrl.signal });
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function decodeHtmlAndJsonText(raw) {
+      let s = String(raw || '');
+      if (!s) return '';
+      s = s.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+           .replace(/\\\//g, '/')
+           .replace(/\\"/g, '"');
+      s = s.replace(/&amp;/g, '&')
+           .replace(/&lt;/g, '<')
+           .replace(/&gt;/g, '>')
+           .replace(/&quot;/g, '"')
+           .replace(/&#39;|&apos;/g, "'")
+           .replace(/&#x([0-9a-fA-F]+);/g, (_, h) => { try { return String.fromCodePoint(parseInt(h, 16)); } catch { return ''; } })
+           .replace(/&#(\d+);/g, (_, d) => { try { return String.fromCodePoint(parseInt(d, 10)); } catch { return ''; } });
+      return s.trim();
+    }
+
     function normalizeYouTubeChannelUrl(rawUrl) {
       const s = String(rawUrl || '').trim();
       if (!s) return '';
+      if (/^@[^\s/?&#]+$/.test(s)) {
+        try { return `https://www.youtube.com/${decodeURIComponent(s)}`; } catch { return `https://www.youtube.com/${s}`; }
+      }
+      if (/^UC[a-zA-Z0-9_-]{22}$/.test(s)) {
+        return `https://www.youtube.com/channel/${s}`;
+      }
       let parsed;
       try {
         parsed = new URL(/^https?:\/\//i.test(s) ? s : `https://${s}`);
@@ -19435,9 +19470,29 @@ service cloud.firestore {
       }
       const host = parsed.hostname.toLowerCase();
       if (!['youtube.com', 'www.youtube.com', 'm.youtube.com', 'music.youtube.com'].includes(host)) return '';
-      const path = parsed.pathname.replace(/\/+$/, '');
-      if (!path) return '';
-      return `https://www.youtube.com${path}`;
+      let path = parsed.pathname.replace(/\/+$/, '');
+      if (!path || path === '/') return '';
+      // 채널 하위 탭 경로(/videos, /featured, /shorts, /streams 등) 자동 제거
+      const segs = path.split('/').filter(Boolean);
+      if (segs.length === 0) return '';
+      const first = segs[0];
+      if (first.startsWith('@')) {
+        let h = first;
+        try { h = decodeURIComponent(first); } catch {}
+        return `https://www.youtube.com/${h}`;
+      }
+      if ((first === 'channel' || first === 'c' || first === 'user') && segs[1]) {
+        let second = segs[1];
+        try { second = decodeURIComponent(second); } catch {}
+        return `https://www.youtube.com/${first}/${second}`;
+      }
+      // 개별 영상/재생목록/검색 경로는 채널 주소가 아님
+      if (['watch', 'shorts', 'live', 'embed', 'playlist', 'results', 'feed', 'v'].includes(first.toLowerCase())) {
+        return '';
+      }
+      let decodedPath = path;
+      try { decodedPath = decodeURIComponent(path); } catch {}
+      return `https://www.youtube.com${decodedPath}`;
     }
 
     function extractChannelIdFromUrl(rawUrl) {
@@ -19445,6 +19500,344 @@ service cloud.firestore {
       if (/^UC[a-zA-Z0-9_-]{22}$/.test(s)) return s;
       const m = s.match(/\/channel\/(UC[a-zA-Z0-9_-]{22})/i);
       return m ? m[1] : '';
+    }
+
+    function extractHandleUrlFromText(rawUrl) {
+      const norm = normalizeYouTubeChannelUrl(rawUrl);
+      if (norm && /youtube\.com\/@[^/?&#]+/i.test(norm)) return norm;
+      const m = String(rawUrl || '').match(/youtube\.com\/(@[^"'\s<>/?&#\\]+)/i);
+      if (m) return normalizeYouTubeChannelUrl(`https://www.youtube.com/${m[1]}`);
+      return '';
+    }
+
+    function parseYouTubeChannelHtml(htmlText, fallbackUrl = '') {
+      const txt = String(htmlText || '');
+      let name = '';
+      let channelId = extractChannelIdFromUrl(fallbackUrl);
+      let handleUrl = extractHandleUrlFromText(fallbackUrl);
+      let videoTitle = '';
+
+      if (txt) {
+        // 1) 채널 고유 ID (UC..., 24자) 추출
+        const cidPatterns = [
+          /"externalId"\s*:\s*"(UC[A-Za-z0-9_-]{22})"/,
+          /<meta[^>]+itemprop=["']identifier["'][^>]+content=["'](UC[A-Za-z0-9_-]{22})["']/i,
+          /<link[^>]+rel=["']canonical["'][^>]+href=["']https?:\/\/www\.youtube\.com\/channel\/(UC[A-Za-z0-9_-]{22})["']/i,
+          /"channelMetadataRenderer"\s*:\s*\{[\s\S]{0,600}?"externalId"\s*:\s*"(UC[A-Za-z0-9_-]{22})"/,
+          /"channelId"\s*:\s*"(UC[A-Za-z0-9_-]{22})"/,
+          /"browseId"\s*:\s*"(UC[A-Za-z0-9_-]{22})"/
+        ];
+        for (const re of cidPatterns) {
+          const m = txt.match(re);
+          if (m && m[1]) { channelId = m[1]; break; }
+        }
+
+        // 2) 채널 핸들 URL (/@...) 추출
+        const handlePatterns = [
+          /"vanityChannelUrl"\s*:\s*"(https?:[^"]*youtube\.com[^"]*@[^"]+)"/i,
+          /"canonicalBaseUrl"\s*:\s*"(\\?\/@[^"]+)"/i,
+          /"ownerProfileUrl"\s*:\s*"(https?:[^"]*youtube\.com[^"]*@[^"]+)"/i,
+          /href=["'](https?:\/\/(?:www\.)?youtube\.com\/@[^"'\s<>/?&#]+)["']/i
+        ];
+        for (const re of handlePatterns) {
+          const m = txt.match(re);
+          if (m && m[1]) {
+            const decoded = decodeHtmlAndJsonText(m[1]);
+            const candidate = decoded.startsWith('/') ? `https://www.youtube.com${decoded}` : decoded;
+            const normH = extractHandleUrlFromText(candidate);
+            if (normH) { handleUrl = normH; break; }
+          }
+        }
+
+        // 3) 채널 공식 이름 추출 (채널 페이지 vs 영상 페이지 모두 지원)
+        const namePatterns = [
+          /"channelMetadataRenderer"\s*:\s*\{"title"\s*:\s*"([^"\\]*(?:\\.[^"\\]*)*)"/,
+          /"ownerChannelName"\s*:\s*"([^"\\]*(?:\\.[^"\\]*)*)"/,
+          /"author"\s*:\s*"([^"\\]*(?:\\.[^"\\]*)*)"/,
+          /<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i,
+          /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:title["']/i,
+          /<title>([^<]+)<\/title>/i
+        ];
+        const isWatchPage = /youtube\.com\/watch\?v=/i.test(fallbackUrl);
+        for (let idx = 0; idx < namePatterns.length; idx++) {
+          const m = txt.match(namePatterns[idx]);
+          if (m && m[1]) {
+            let val = decodeHtmlAndJsonText(m[1]).replace(/\s*-\s*YouTube\s*$/i, '').trim();
+            if (!val || /^youtube$/i.test(val)) continue;
+            // 영상 페이지의 og:title/<title>은 영상 제목이므로 videoTitle에 저장
+            if (isWatchPage && idx >= 3) {
+              if (!videoTitle) videoTitle = val;
+              continue;
+            }
+            if (!name) {
+              name = val;
+              if (!isWatchPage) break;
+            }
+          }
+        }
+        if (isWatchPage && !videoTitle) {
+          const ogm = txt.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i)
+            || txt.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:title["']/i);
+          if (ogm && ogm[1]) videoTitle = decodeHtmlAndJsonText(ogm[1]).replace(/\s*-\s*YouTube\s*$/i, '').trim();
+        }
+      }
+
+      return { name, channelId, handleUrl, videoTitle };
+    }
+
+    async function fetchYouTubeHtmlViaCorsFallback(targetUrl) {
+      const cleanTarget = String(targetUrl || '').trim();
+      if (!cleanTarget || !/^https:\/\/(?:www\.)?youtube\.com\//i.test(cleanTarget)) return '';
+      // (1) allorigins JSON 브리지
+      try {
+        const u1 = `https://api.allorigins.win/get?url=${encodeURIComponent(cleanTarget)}`;
+        const r1 = await fetchWithTimeout(u1, {}, 6500);
+        if (r1.ok) {
+          const j1 = await r1.json();
+          if (j1 && typeof j1.contents === 'string' && j1.contents.length > 500) {
+            return j1.contents;
+          }
+        }
+      } catch {}
+      // (2) codetabs 프록시 폴백
+      try {
+        const u2 = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(cleanTarget)}`;
+        const r2 = await fetchWithTimeout(u2, {}, 6500);
+        if (r2.ok) {
+          const t2 = await r2.text();
+          if (t2 && t2.length > 500) return t2;
+        }
+      } catch {}
+      return '';
+    }
+
+    async function fetchChannelViaRssAndOembed(channelId) {
+      const cid = String(channelId || '').trim();
+      if (!/^UC[A-Za-z0-9_-]{22}$/.test(cid)) return null;
+      let name = '';
+      let handleUrl = '';
+      let latestVideoUrl = '';
+      try {
+        const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${cid}`;
+        const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+        const resp = await fetchWithTimeout(apiUrl, {}, 6000);
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data && data.status === 'ok') {
+            if (data.feed && data.feed.title) name = decodeHtmlAndJsonText(data.feed.title);
+            if (Array.isArray(data.items) && data.items.length > 0 && data.items[0].link) {
+              latestVideoUrl = String(data.items[0].link).trim();
+            }
+          }
+        }
+      } catch {}
+
+      if (latestVideoUrl) {
+        const vMeta = await fetchYouTubeOembedQuick(latestVideoUrl);
+        if (vMeta) {
+          if (vMeta.channelName) name = vMeta.channelName;
+          const h = extractHandleUrlFromText(vMeta.channelUrl);
+          if (h) handleUrl = h;
+        }
+      }
+      return (name || handleUrl) ? { name, handleUrl } : null;
+    }
+
+    async function fetchYouTubeOembedQuick(watchUrl) {
+      try {
+        const r1 = await fetchWithTimeout(`https://www.youtube.com/oembed?url=${encodeURIComponent(watchUrl)}&format=json`, {}, 5000);
+        if (r1.ok) {
+          const d1 = await r1.json();
+          const aUrl = normalizeYouTubeChannelUrl(d1.author_url || '');
+          return {
+            title: decodeHtmlAndJsonText(d1.title || ''),
+            channelName: decodeHtmlAndJsonText(d1.author_name || ''),
+            channelUrl: aUrl,
+            channelId: extractChannelIdFromUrl(aUrl),
+            source: 'YouTube oEmbed 공식 조회'
+          };
+        }
+        if (r1.status === 401 || r1.status === 403 || r1.status === 404) {
+          return { notFound: true };
+        }
+      } catch {}
+      try {
+        const r2 = await fetchWithTimeout(`https://noembed.com/embed?url=${encodeURIComponent(watchUrl)}`, {}, 5000);
+        if (r2.ok) {
+          const d2 = await r2.json();
+          if (d2 && !d2.error && d2.title) {
+            const aUrl2 = normalizeYouTubeChannelUrl(d2.author_url || '');
+            return {
+              title: decodeHtmlAndJsonText(d2.title || ''),
+              channelName: decodeHtmlAndJsonText(d2.author_name || ''),
+              channelUrl: aUrl2,
+              channelId: extractChannelIdFromUrl(aUrl2),
+              source: 'oEmbed 정보 조회'
+            };
+          }
+          if (d2 && d2.error) return { notFound: true };
+        }
+      } catch {}
+      return null;
+    }
+
+    async function inspectYouTubeChannelAutomatic(rawInput) {
+      const steps = [];
+      const raw = String(rawInput || '').trim();
+      if (!raw) {
+        return { ok: false, error: '유튜브 채널 링크 또는 해당 채널의 영상 링크를 입력해 주세요.', steps };
+      }
+      if (/^(javascript|data|vbscript|file):/i.test(raw)) {
+        steps.push({ ok: false, text: '1단계 보안 검사 차단: 허용되지 않은 위험 프로토콜입니다.' });
+        return { ok: false, securityThreat: true, error: '허용되지 않은 위험 프로토콜입니다.', steps };
+      }
+      const risk = analyzeUrlRisk(raw);
+      if (risk.riskLevel === 'danger') {
+        steps.push({ ok: false, text: `1단계 보안 검사 차단: ${risk.reasons.join(', ')}` });
+        return { ok: false, securityThreat: true, error: `위험 주소 감지: ${risk.reasons.join(', ')}`, steps };
+      }
+      if (SUSPICIOUS_SHORTENERS.some(d => risk.host === d || risk.host.endsWith('.' + d))) {
+        steps.push({ ok: false, text: '1단계 보안 검사 차단: 단축 URL은 사용할 수 없습니다.' });
+        return { ok: false, securityThreat: true, error: '단축 URL은 사용할 수 없습니다. 유튜브 공식 주소를 입력해 주세요.', steps };
+      }
+
+      const vidParsed = parseSafeYouTubeVideoUrl(raw);
+      const normChUrl = vidParsed.ok ? '' : normalizeYouTubeChannelUrl(raw);
+      if (!vidParsed.ok && !normChUrl) {
+        steps.push({ ok: false, text: '1단계 형식 검사 실패: 유튜브 공식 채널 주소나 영상 링크가 아닙니다.' });
+        return { ok: false, error: '올바른 유튜브 공식 채널 주소(youtube.com/@... 또는 youtube.com/channel/UC...)나 영상 링크를 입력해 주세요.', steps };
+      }
+      steps.push({
+        ok: true,
+        text: vidParsed.ok
+          ? `1단계 보안·형식 통과: 유튜브 영상 링크(${vidParsed.videoId})에서 소속 채널 자동 추적`
+          : `1단계 보안·형식 통과: 공식 유튜브 채널 주소(${normChUrl})`
+      });
+
+      let name = '';
+      let channelId = extractChannelIdFromUrl(normChUrl || raw);
+      let handleUrl = extractHandleUrlFromText(normChUrl || raw);
+      let resolvedSource = '';
+
+      // (2-1) Apps Script 서버 정밀 조회 우선 시도 (연동된 경우)
+      const sheetUrl = getAdminSheetUrl();
+      if (sheetUrl) {
+        try {
+          const sRes = await postToGoogleSheet({
+            action: vidParsed.ok ? 'youtube_inspect' : 'youtube_channel_inspect',
+            url: vidParsed.ok ? vidParsed.cleanUrl : normChUrl,
+            videoId: vidParsed.ok ? vidParsed.videoId : '',
+            channelId
+          }, sheetUrl, true);
+          if (sRes && sRes.readable && sRes.data && sRes.data.ok) {
+            const info = sRes.data.channel || sRes.data.video || null;
+            if (info) {
+              if (info.name || info.channelName) name = decodeHtmlAndJsonText(info.name || info.channelName);
+              if (info.channelId && /^UC[A-Za-z0-9_-]{22}$/.test(String(info.channelId))) channelId = String(info.channelId);
+              const hCand = extractHandleUrlFromText(info.handleUrl || info.channelUrl || '');
+              if (hCand) handleUrl = hCand;
+              if (name && channelId && handleUrl) resolvedSource = sRes.data.source || 'Apps Script 서버 조회';
+            }
+          }
+        } catch {}
+      }
+
+      // (2-2) 영상 링크인 경우 oEmbed로 채널명 + 핸들/채널 URL 즉시 조회
+      let videoAuthorUrl = '';
+      if (vidParsed.ok && (!name || !handleUrl || !channelId)) {
+        const oe = await fetchYouTubeOembedQuick(vidParsed.cleanUrl);
+        if (oe && !oe.notFound) {
+          if (oe.channelName && !name) name = oe.channelName;
+          if (oe.channelId && !channelId) channelId = oe.channelId;
+          if (oe.channelUrl) {
+            videoAuthorUrl = oe.channelUrl;
+            const h = extractHandleUrlFromText(oe.channelUrl);
+            if (h && !handleUrl) handleUrl = h;
+          }
+          if (!resolvedSource) resolvedSource = oe.source || 'YouTube oEmbed';
+        }
+      }
+
+      // (2-3) 공식 유튜브 채널/영상 페이지 HTML에서 공식 채널명 + 고유 ID(UC...) + 핸들 URL(/@...) 자동 추출
+      if (!name || !channelId || !handleUrl) {
+        const htmlTarget = videoAuthorUrl || normChUrl || (channelId ? `https://www.youtube.com/channel/${channelId}` : '') || (vidParsed.ok ? vidParsed.cleanUrl : '');
+        if (htmlTarget) {
+          const pageHtml = await fetchYouTubeHtmlViaCorsFallback(htmlTarget);
+          if (pageHtml) {
+            const parsedHtml = parseYouTubeChannelHtml(pageHtml, htmlTarget);
+            if (parsedHtml.name && !name) name = parsedHtml.name;
+            if (parsedHtml.channelId && !channelId) channelId = parsedHtml.channelId;
+            if (parsedHtml.handleUrl && !handleUrl) handleUrl = parsedHtml.handleUrl;
+            if (!resolvedSource && (parsedHtml.name || parsedHtml.channelId || parsedHtml.handleUrl)) {
+              resolvedSource = '유튜브 채널 페이지 자동 추출';
+            }
+          }
+        }
+      }
+
+      // (2-4) 고유 ID(UC...)가 확보되었는데 이름이나 핸들이 비어 있으면 RSS + 최신 영상 oEmbed로 보완
+      if (channelId && (!name || !handleUrl)) {
+        const rssInfo = await fetchChannelViaRssAndOembed(channelId);
+        if (rssInfo) {
+          if (rssInfo.name && !name) name = rssInfo.name;
+          if (rssInfo.handleUrl && !handleUrl) handleUrl = rssInfo.handleUrl;
+          if (!resolvedSource) resolvedSource = '유튜브 RSS · oEmbed 자동 추출';
+        }
+      }
+
+      // (2-5) 기존 등록/기본 채널 정보로 누락 필드 보완
+      const existingMatch = matchOfficialYouTubeChannel({ channelId, channelUrl: handleUrl || normChUrl, channelName: name });
+      if (existingMatch && existingMatch.channel) {
+        if (!name && existingMatch.channel.name) name = existingMatch.channel.name;
+        if (!channelId && existingMatch.channel.channelId) channelId = existingMatch.channel.channelId;
+        if (!handleUrl && existingMatch.channel.handleUrl) handleUrl = existingMatch.channel.handleUrl;
+      }
+
+      // 3단계: 추출된 값 보안 스캔
+      const xss = detectMaliciousCode(`${name}
+${channelId}
+${handleUrl}`);
+      if (!xss.safe) {
+        steps.push({ ok: false, text: `3단계 보안 스캔 차단: ${xss.reasons.join(', ')}` });
+        return { ok: false, securityThreat: true, error: `위험 문자열 감지: ${xss.reasons.join(', ')}`, steps };
+      }
+
+      const canonicalUrl = channelId
+        ? `https://www.youtube.com/channel/${channelId}`
+        : (handleUrl || normChUrl || videoAuthorUrl);
+
+      const filledParts = [];
+      const missingParts = [];
+      if (name) filledParts.push(`채널명(${name})`); else missingParts.push('공식 채널 이름');
+      if (channelId) filledParts.push(`고유 ID(${channelId})`); else missingParts.push('채널 고유 ID');
+      if (handleUrl) filledParts.push(`핸들(${handleUrl.replace(/^https:\/\/www\.youtube\.com\//i, '')})`); else missingParts.push('채널 핸들 URL');
+
+      if (filledParts.length > 0) {
+        steps.push({
+          ok: missingParts.length === 0,
+          warn: missingParts.length > 0,
+          text: `2단계 채널 정보 자동 생성 (${resolvedSource || 'URL 분석'}): ${filledParts.join(' · ')}${missingParts.length > 0 ? ` (미확인: ${missingParts.join(', ')})` : ''}`
+        });
+      } else {
+        steps.push({
+          ok: false,
+          warn: true,
+          text: '2단계 자동 추출 제한: 네트워크/CORS 지연으로 채널 세부 정보를 모두 가져오지 못했습니다. 해당 채널의 영상 링크를 넣어 다시 시도하거나 빈 칸을 직접 입력해 주세요.'
+        });
+      }
+      steps.push({ ok: true, text: '3단계 보안 스캔 통과: 피싱·악성코드 흔적 0건' });
+
+      return {
+        ok: true,
+        name: name.slice(0, 40),
+        channelId,
+        handleUrl,
+        canonicalUrl,
+        allFilled: missingParts.length === 0,
+        missingParts,
+        source: resolvedSource || 'URL 분석',
+        steps
+      };
     }
 
     function parseSafeYouTubeVideoUrl(rawUrl) {
@@ -19634,6 +20027,26 @@ service cloud.firestore {
           } catch {}
         }
 
+        // (2-2.5) oEmbed 불가 시 유튜브 영상 페이지 HTML에서 원본 제목·채널명·고유 ID·핸들 자동 추출
+        if (!meta && !notFoundConfirmed) {
+          const vHtml = await fetchYouTubeHtmlViaCorsFallback(parsed.cleanUrl);
+          if (vHtml) {
+            const hp = parseYouTubeChannelHtml(vHtml, parsed.cleanUrl);
+            if (hp.videoTitle || hp.name || hp.channelId) {
+              meta = {
+                title: hp.videoTitle || '',
+                channelName: hp.name || '확인 필요 (관리자 검토)',
+                channelUrl: hp.handleUrl || (hp.channelId ? `https://www.youtube.com/channel/${hp.channelId}` : ''),
+                channelId: hp.channelId || '',
+                description: '',
+                embeddable: true,
+                privacyStatus: 'public'
+              };
+              inspectSource = '유튜브 페이지 원본 자동 추출';
+            }
+          }
+        }
+
         // (2-3) 네트워크/CORS로 oEmbed 모두 불가할 때 유튜브 공식 썸네일 실존 확인 폴백 (채널 미확인이므로 관리자 검토 대기 접수)
         if (!meta && !notFoundConfirmed) {
           const thumbExists = await new Promise((resolve) => {
@@ -19693,12 +20106,29 @@ service cloud.firestore {
         steps.push({ ok: true, text: '3단계 보안·저작권 문구 스캔 통과: XSS·피싱 링크·무단 업로드 의심 문구 0건' });
       }
 
-      // 4단계: 공식 채널 화이트리스트 대조
-      const chMatch = matchOfficialYouTubeChannel({
+      // (2-4) oEmbed가 /@핸들만 반환해 고유 ID(UC...)가 비어 있고 아직 정확 일치 미확인인 경우, 채널 페이지에서 고유 ID 자동 조회
+      let chMatch = matchOfficialYouTubeChannel({
         channelId: meta.channelId,
         channelUrl: meta.channelUrl,
         channelName: meta.channelName
       });
+      if (!chMatch.exact && !meta.channelId && meta.channelUrl) {
+        const chHtml = await fetchYouTubeHtmlViaCorsFallback(meta.channelUrl);
+        if (chHtml) {
+          const cp = parseYouTubeChannelHtml(chHtml, meta.channelUrl);
+          if (cp.channelId) {
+            meta.channelId = cp.channelId;
+            if (cp.handleUrl && !extractHandleUrlFromText(meta.channelUrl)) {
+              meta.channelUrl = cp.handleUrl;
+            }
+            chMatch = matchOfficialYouTubeChannel({
+              channelId: meta.channelId,
+              channelUrl: meta.channelUrl,
+              channelName: meta.channelName
+            });
+          }
+        }
+      }
 
       const autoApproveEligible = chMatch.exact && !riskScan.warn;
       if (chMatch.exact) {
@@ -19985,8 +20415,33 @@ service cloud.firestore {
       renderVideosView();
     };
 
+    function applyVideoTitleFieldLock(user) {
+      const isAdmin = !!(user && user.isSuperAdmin);
+      const titleLbl = document.getElementById('videoTitleLabel');
+      const titleInp = document.getElementById('videoTitleInput');
+      if (titleLbl) {
+        titleLbl.textContent = isAdmin
+          ? '영상 제목 (자동 생성 · 관리자 수정 가능)'
+          : '영상 제목 (자동 생성 · 수정 불가)';
+      }
+      if (titleInp) {
+        titleInp.readOnly = !isAdmin;
+        titleInp.style.background = isAdmin ? '#FFFFFF' : '#F1F5F9';
+        titleInp.style.color = isAdmin ? 'var(--text)' : '#475569';
+        titleInp.style.cursor = isAdmin ? 'text' : 'not-allowed';
+        titleInp.placeholder = isAdmin
+          ? '자동 검사 시 유튜브 원본 제목이 자동 입력됩니다'
+          : '유튜브 링크 자동 검사 시 원본 제목만 자동 생성됩니다';
+      }
+    }
+
     window.onVideoUrlFieldChange = () => {
       lastVideoInspectResult = null;
+      const user = getCurrentUser();
+      const titleInp = document.getElementById('videoTitleInput');
+      if (titleInp && (!user || !user.isSuperAdmin)) {
+        titleInp.value = '';
+      }
       const box = document.getElementById('videoInspectPreviewArea');
       if (box) { box.innerHTML = ''; box.classList.add('hidden'); }
       const autoAddRow = document.getElementById('videoAdminAutoAddChannelRow');
@@ -20007,6 +20462,7 @@ service cloud.firestore {
       document.getElementById('videoUrlInput').value = '';
       document.getElementById('videoCategorySelect').value = '설교';
       document.getElementById('videoTitleInput').value = '';
+      applyVideoTitleFieldLock(user);
       document.getElementById('videoNoteInput').value = '';
       document.getElementById('videoLegalConfirmCheck').checked = false;
       document.getElementById('videoAdminAutoAddChannelRow').classList.add('hidden');
@@ -20018,6 +20474,7 @@ service cloud.firestore {
     };
 
     window.openEditVideoModal = (id) => {
+      const user = getCurrentUser();
       const all = [...(videoItems || []), ...(myVideoItems || [])];
       const v = all.find(x => String(x.id) === String(id));
       if (!v) return;
@@ -20027,6 +20484,7 @@ service cloud.firestore {
       document.getElementById('videoUrlFieldGroup').classList.add('hidden');
       document.getElementById('videoCategorySelect').value = v.category || '설교';
       document.getElementById('videoTitleInput').value = v.title || '';
+      applyVideoTitleFieldLock(user);
       document.getElementById('videoNoteInput').value = v.note || '';
       document.getElementById('videoLegalConfirmCheck').checked = true;
       document.getElementById('videoAdminAutoAddChannelRow').classList.add('hidden');
@@ -20083,8 +20541,10 @@ service cloud.firestore {
     }
 
     window.handleInspectYouTubeInput = async () => {
+      const user = getCurrentUser();
+      const isAdmin = !!(user && user.isSuperAdmin);
       const rawUrl = document.getElementById('videoUrlInput').value.trim();
-      const titleVal = document.getElementById('videoTitleInput').value.trim();
+      const titleVal = isAdmin ? document.getElementById('videoTitleInput').value.trim() : '';
       const noteVal = document.getElementById('videoNoteInput').value.trim();
       if (!rawUrl) return showToast('먼저 유튜브 영상 링크를 붙여넣어 주세요.');
 
@@ -20096,8 +20556,13 @@ service cloud.firestore {
         renderVideoInspectPreview(res);
         if (res.ok) {
           const titleInp = document.getElementById('videoTitleInput');
-          if (titleInp && !titleInp.value.trim() && res.fetchedTitle) {
-            titleInp.value = res.fetchedTitle.slice(0, 80);
+          if (titleInp) {
+            if (!isAdmin) {
+              // 이용자는 유튜브 원본 제목으로만 자동 생성 (직접 입력 불가)
+              titleInp.value = (res.fetchedTitle || '').slice(0, 80);
+            } else if (!titleInp.value.trim() && res.fetchedTitle) {
+              titleInp.value = res.fetchedTitle.slice(0, 80);
+            }
           }
           if (res.autoApproveEligible) {
             showToast('✅ 4단계 자동 검사 완료! 공식 채널 영상으로 즉시 게시 가능합니다.');
@@ -20140,24 +20605,32 @@ service cloud.firestore {
       if (btn) btn.disabled = true;
       try {
         if (editId) {
-          if (!titleInputVal) return showToast('영상 제목을 입력해 주세요.');
-          const riskEdit = scanYouTubeVideoContentRisk({ title: titleInputVal, note });
+          const allExisting = [...(videoItems || []), ...(myVideoItems || [])];
+          const existingVid = allExisting.find(x => String(x.id) === String(editId));
+          const finalEditTitle = user.isSuperAdmin
+            ? titleInputVal
+            : ((existingVid && existingVid.title) ? String(existingVid.title).trim() : titleInputVal);
+          if (!finalEditTitle) return showToast('영상 제목을 확인할 수 없습니다.');
+          const riskEdit = scanYouTubeVideoContentRisk({ title: finalEditTitle, note });
           if (riskEdit.blocked) return showToast(`🚨 보안 차단: ${riskEdit.reasons.join(', ')}`);
           const nowFull = getKstNowInfo().dateTimeFull;
-          await db.collection('videos').doc(String(editId)).update({
+          const editPatch = {
             category,
-            title: titleInputVal,
             note,
             edited: true,
             updatedAt: nowFull,
             updatedTs: Date.now()
-          });
+          };
+          if (user.isSuperAdmin) {
+            editPatch.title = finalEditTitle;
+          }
+          await db.collection('videos').doc(String(editId)).update(editPatch);
           recordAuditLog({
             actorType: user.isSuperAdmin ? 'admin' : 'member',
             actorName: user.name,
             category: '영상',
             action: '유튜브 영상 수정',
-            target: `[${category}] ${titleInputVal}`,
+            target: `[${category}] ${finalEditTitle}`,
             detail: note
           });
           document.getElementById('videoSubmitModal').classList.remove('open');
@@ -20177,14 +20650,22 @@ service cloud.firestore {
         if (!rawUrl) return showToast('유튜브 영상 링크를 입력해 주세요.');
 
         // 공식 채널 포함 모든 영상은 등록 직전 4단계 자동 검사를 반드시 거침!
+        const effectiveTitleHint = user.isSuperAdmin ? titleInputVal : '';
         let res = (lastVideoInspectResult && lastVideoInspectResult.rawUrl === rawUrl)
           ? lastVideoInspectResult
-          : await inspectYouTubeVideoAutomatic(rawUrl, titleInputVal, note);
+          : await inspectYouTubeVideoAutomatic(rawUrl, effectiveTitleHint, note);
+
+        // 이용자가 올릴 때는 유튜브 원본 제목으로만 자동 생성 (직접 입력 불가)
+        if (res.ok && !user.isSuperAdmin) {
+          const titleInpEl = document.getElementById('videoTitleInput');
+          if (titleInpEl) titleInpEl.value = (res.fetchedTitle || '').slice(0, 80);
+        }
 
         // 제목/추천글이 검사 이후 수정된 경우 3단계 문구 스캔 재검증
         if (res.ok) {
+          const checkTitle = user.isSuperAdmin ? (titleInputVal || res.fetchedTitle) : (res.fetchedTitle || '');
           const finalRisk = scanYouTubeVideoContentRisk({
-            title: titleInputVal || res.fetchedTitle,
+            title: checkTitle,
             channelName: res.channelName,
             note
           });
@@ -20226,7 +20707,12 @@ service cloud.firestore {
           return showToast(`이미 ${dup.status === 'approved' ? '게시' : '검토 대기'} 중인 동일한 유튜브 영상입니다.`);
         }
 
-        const finalTitle = titleInputVal || res.fetchedTitle || '유튜브 영상';
+        if (!user.isSuperAdmin && !String(res.fetchedTitle || '').trim()) {
+          return showToast('유튜브 원본 제목을 자동으로 불러오지 못했습니다. 잠시 후 [🔍 자동 검사]를 다시 눌러 주세요.');
+        }
+        const finalTitle = user.isSuperAdmin
+          ? (titleInputVal || res.fetchedTitle || '유튜브 영상').slice(0, 80)
+          : String(res.fetchedTitle || '').trim().slice(0, 80);
         const nowFull = getKstNowInfo().dateTimeFull;
         const nowTs = Date.now();
         const isAutoApprove = !!res.autoApproveEligible;
@@ -20667,81 +21153,93 @@ service cloud.firestore {
       document.getElementById('officialChannelModal').classList.add('open');
     };
 
+    window.onOffChUrlFieldChange = () => {
+      const st = document.getElementById('offChVerifyStatus');
+      if (st) { st.innerHTML = ''; st.classList.add('hidden'); }
+    };
+
     window.handleVerifyOfficialChannelInput = async () => {
       const raw = document.getElementById('offChUrlInput').value.trim();
       const st = document.getElementById('offChVerifyStatus');
-      if (!raw) return showToast('채널 주소나 영상 링크를 입력해 주세요.');
+      if (!raw) return showToast('유튜브 채널 링크나 영상 링크를 입력해 주세요.');
 
       const btn = document.getElementById('verifyOffChBtn');
-      if (btn) { btn.disabled = true; btn.textContent = '확인중...'; }
+      if (btn) { btn.disabled = true; btn.textContent = '자동검사중...'; }
       try {
-        const vidParsed = parseSafeYouTubeVideoUrl(raw);
-        if (vidParsed.ok) {
-          const res = await inspectYouTubeVideoAutomatic(raw);
-          if (res.ok) {
-            if (res.channelName && !document.getElementById('offChNameInput').value.trim()) {
-              document.getElementById('offChNameInput').value = res.channelName;
-            }
-            if (res.channelId) document.getElementById('offChCidInput').value = res.channelId;
-            if (res.channelUrl) {
-              if (res.channelUrl.includes('/channel/')) {
-                document.getElementById('offChUrlInput').value = res.channelUrl;
-              } else {
-                document.getElementById('offChHandleInput').value = res.channelUrl;
-              }
-            }
-            if (st) {
-              st.className = 'video-inspect-box ok';
-              st.innerHTML = `✅ 영상에서 공식 채널 정보를 자동 확인했습니다!<br>• 채널명: <b>${escapeHtml(res.channelName || '-')}</b><br>• 주소: ${escapeHtml(res.channelUrl || '-')}`;
-              st.classList.remove('hidden');
-            }
-            return;
+        const res = await inspectYouTubeChannelAutomatic(raw);
+        if (!res.ok) {
+          if (res.securityThreat) {
+            recordAuditLog({
+              actorType: 'admin',
+              category: '영상',
+              action: '공식 채널 위험 링크 차단',
+              target: raw.slice(0, 80),
+              detail: res.error || ''
+            });
           }
+          if (st) {
+            st.className = 'video-inspect-box err';
+            st.innerHTML = (res.steps || []).map(s => `<div class="video-inspect-step"><span>${s.ok ? '✅' : '🚨'}</span><span>${escapeHtml(s.text)}</span></div>`).join('')
+              || `🚨 ${escapeHtml(res.error || '채널 검사 실패')}`;
+            st.classList.remove('hidden');
+          }
+          showToast(`🚨 ${res.error || '자동검사에 실패했습니다.'}`);
+          return;
         }
 
-        const risk = analyzeUrlRisk(raw);
-        if (risk.riskLevel === 'danger') {
-          if (st) {
-            st.className = 'video-inspect-box err';
-            st.textContent = `🚨 위험 주소 차단: ${risk.reasons.join(', ')}`;
-            st.classList.remove('hidden');
-          }
-          return;
-        }
-        const normUrl = normalizeYouTubeChannelUrl(raw);
-        if (!normUrl) {
-          if (st) {
-            st.className = 'video-inspect-box err';
-            st.textContent = '🚨 올바른 유튜브 공식 채널 주소(youtube.com/channel/UC... 또는 youtube.com/@...)를 입력해 주세요.';
-            st.classList.remove('hidden');
-          }
-          return;
-        }
-        const cid = extractChannelIdFromUrl(normUrl);
-        document.getElementById('offChUrlInput').value = normUrl;
-        if (cid) {
-          document.getElementById('offChCidInput').value = cid;
-        } else {
-          document.getElementById('offChHandleInput').value = normUrl;
-        }
+        // 자동검사로 추출된 공식 채널 이름 · 채널 고유 ID(UC...) · 채널 핸들 URL(/@...) 자동 채우기
+        if (res.canonicalUrl) document.getElementById('offChUrlInput').value = res.canonicalUrl;
+        if (res.name) document.getElementById('offChNameInput').value = res.name;
+        if (res.channelId) document.getElementById('offChCidInput').value = res.channelId;
+        if (res.handleUrl) document.getElementById('offChHandleInput').value = res.handleUrl;
+
         if (st) {
-          st.className = 'video-inspect-box ok';
-          st.innerHTML = `✅ 공식 유튜브 채널 주소 보안 검증 통과!<br>• 정규화 주소: <code>${escapeHtml(normUrl)}</code>${cid ? `<br>• 고유 ID: <code>${escapeHtml(cid)}</code>` : ''}`;
+          st.className = `video-inspect-box ${res.allFilled ? 'ok' : 'warn'}`;
+          const stepsHtml = (res.steps || []).map(s => `
+            <div class="video-inspect-step">
+              <span>${s.ok ? '✅' : (s.warn ? '⚠️' : '🚨')}</span>
+              <span>${escapeHtml(s.text)}</span>
+            </div>
+          `).join('');
+          const summaryHtml = `
+            <div style="margin-top:6px; padding-top:6px; border-top:1px dashed rgba(15,23,42,0.14); font-size:11.5px; line-height:1.55; word-break:break-all;">
+              • <b>공식 채널 이름:</b> ${escapeHtml(res.name || '미확인 (직접 입력 가능)')}<br>
+              • <b>채널 고유 ID:</b> <code>${escapeHtml(res.channelId || '미확인')}</code><br>
+              • <b>채널 핸들 URL:</b> ${escapeHtml(res.handleUrl || '미확인')}
+            </div>
+          `;
+          st.innerHTML = stepsHtml + summaryHtml;
           st.classList.remove('hidden');
         }
+        showToast(res.allFilled
+          ? `✅ 자동검사 완료! [${res.name}] 이름·고유 ID·핸들 URL이 모두 자동 생성되었습니다.`
+          : '⚠️ 자동검사 완료! 추출된 항목이 자동 입력되었습니다.');
+      } catch (err) {
+        console.error('Official channel auto-inspect error:', err);
+        showToast('채널 자동검사 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
       } finally {
-        if (btn) { btn.disabled = false; btn.textContent = '🔍 확인'; }
+        if (btn) { btn.disabled = false; btn.textContent = '🔍 자동검사'; }
       }
     };
 
     window.handleSaveOfficialChannel = async () => {
       const editId = document.getElementById('editOfficialChannelId').value;
-      const rawUrl = document.getElementById('offChUrlInput').value.trim();
-      const name = document.getElementById('offChNameInput').value.trim();
+      let rawUrl = document.getElementById('offChUrlInput').value.trim();
+      let name = document.getElementById('offChNameInput').value.trim();
       let channelId = document.getElementById('offChCidInput').value.trim();
       let handleUrl = normalizeYouTubeChannelUrl(document.getElementById('offChHandleInput').value.trim());
 
-      if (!name) return showToast('공식 채널 이름을 입력해 주세요.');
+      if (rawUrl && (!name || !channelId || !handleUrl)) {
+        const autoRes = await inspectYouTubeChannelAutomatic(rawUrl);
+        if (autoRes.ok) {
+          if (!name && autoRes.name) { name = autoRes.name; document.getElementById('offChNameInput').value = name; }
+          if (!channelId && autoRes.channelId) { channelId = autoRes.channelId; document.getElementById('offChCidInput').value = channelId; }
+          if (!handleUrl && autoRes.handleUrl) { handleUrl = autoRes.handleUrl; document.getElementById('offChHandleInput').value = handleUrl; }
+          if (autoRes.canonicalUrl) { rawUrl = autoRes.canonicalUrl; document.getElementById('offChUrlInput').value = rawUrl; }
+        }
+      }
+
+      if (!name) return showToast('공식 채널 이름을 확인하지 못했습니다. [🔍 자동검사]를 누르거나 채널 이름을 입력해 주세요.');
       if (!enforceInputSecurity(`${name}\n${rawUrl}\n${channelId}\n${handleUrl}`, '공식 유튜브 채널', true)) return;
 
       let cleanUrl = normalizeYouTubeChannelUrl(rawUrl);
