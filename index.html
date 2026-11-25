@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=174" />
+  <link rel="manifest" href="./manifest.json?v=175" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=174" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=174" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=175" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=175" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3002,7 +3002,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=174" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=175" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4431,7 +4431,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 29;
-    const APP_CLIENT_BUILD = 174;
+    const APP_CLIENT_BUILD = 175;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -5278,7 +5278,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=174" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=175" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5302,8 +5302,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=174', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=174', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=175', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=175', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -7559,7 +7559,7 @@
             tabLabels = structuredClone(DEFAULT_TAB_LABELS);
           }
           const activeEl = document.activeElement;
-          const isEditingLabels = !!(activeEl && (activeEl.hasAttribute('data-tab-name-key') || activeEl.hasAttribute('data-tab-icon-key') || activeEl.hasAttribute('data-ui-text-key')));
+          const isEditingLabels = !!(activeEl && (activeEl.hasAttribute('data-tab-name-key') || activeEl.hasAttribute('data-tab-icon-key')));
           if (!isEditingLabels) {
             draftTabInitialized = false;
             applyScreen();
@@ -12132,10 +12132,6 @@
         const k = inp.getAttribute('data-tab-icon-key');
         if (k) draftTabIcons[k] = inp.value;
       });
-      document.querySelectorAll('[data-ui-text-key]').forEach(inp => {
-        const k = inp.getAttribute('data-ui-text-key');
-        if (k) draftUiTexts[k] = inp.value;
-      });
     }
 
     function syncLiveTabPreview() {
@@ -12342,35 +12338,7 @@
         </div>
         </div>
 
-        ${buildManageAccordionBar({
-          key: 'labels_ui_texts',
-          titleHtml: '🏷️ 화면 세부 제목 · 안내 문구 설정 (회칙·가이드·영상·설정)',
-          badgeHtml: `<span class="tag slate">${UI_TEXT_REGISTRY.length}개</span>`,
-          defaultOpen: false,
-          marginTop: '10px'
-        })}
-        <div data-acc-body="labels_ui_texts" class="${isManageSectionOpen('labels_ui_texts', false) ? '' : 'hidden'}">
-          <div class="card">
-            <div style="font-size:12px; color:#64748B; line-height:1.5; margin-bottom:10px;">
-              회칙·가이드·영상 상단 안내 문구, 설정 카테고리 제목 등을 자유롭게 수정할 수 있습니다. (비워두면 기본값 사용)
-            </div>
-            ${UI_TEXT_REGISTRY.map(u => {
-              const curVal = draftUiTexts[u.key] !== undefined ? draftUiTexts[u.key] : getUiText(u.key);
-              return `
-                <div class="form-group" style="margin-bottom:10px;">
-                  <label class="form-label" style="font-size:12px; margin-bottom:4px;">${escapeHtml(u.hint)}</label>
-                  <input class="form-input" style="padding:8px 10px; font-size:13px;" maxlength="${u.max}"
-                         data-ui-text-key="${escapeHtml(u.key)}"
-                         value="${escapeHtml(curVal)}"
-                         placeholder="${escapeHtml(u.defaultVal)}"
-                         oninput="onDraftUiTextInput('${escapeJsAttr(u.key)}', this.value)" />
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
-
-        <button id="saveTabLabelsInlineBtn" class="btn-full btn-dark" type="button" style="margin-top:8px;" onclick="handleSaveTabLabels()">💾 전체 메뉴 · 세부 제목 · 순서 저장하기</button>
+        <button id="saveTabLabelsInlineBtn" class="btn-full btn-dark" type="button" style="margin-top:10px;" onclick="handleSaveTabLabels()">💾 전체 메뉴 · 이름 · 순서 저장하기</button>
       `;
     }
 
@@ -12378,23 +12346,6 @@
       const prevVal = String(draftTabNames[key] ?? '').trim();
       draftTabNames[key] = val;
       syncLiveTabPreview();
-    };
-
-    window.onDraftUiTextInput = (key, val) => {
-      draftUiTexts[key] = val;
-      syncLiveTabPreview();
-    };
-
-    window.openUiTextsEditor = () => {
-      draftTabInitialized = false;
-      manageSectionOpen.labels_ui_texts = true;
-      currentMainTab = 'manage';
-      currentManageSubTab = 'labels';
-      applyScreen();
-      setTimeout(() => {
-        const bar = document.querySelector('[data-acc-bar="labels_ui_texts"]');
-        if (bar) bar.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 120);
     };
 
     window.onDraftTabIconInput = (key, val) => {
