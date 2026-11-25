@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=172" />
+  <link rel="manifest" href="./manifest.json?v=173" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=172" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=172" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=173" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=173" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2957,7 +2957,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=172" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=173" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4365,7 +4365,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 29;
-    const APP_CLIENT_BUILD = 172;
+    const APP_CLIENT_BUILD = 173;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -5212,7 +5212,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=172" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=173" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5236,8 +5236,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=172', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=172', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=173', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=173', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -16778,9 +16778,6 @@
           <button id="runAllSecBtn" class="btn-full btn-amber" type="button" style="padding:12px; font-size:14px;" ${secCheckRunningAll ? 'disabled' : ''} onclick="runAllSecurityChecks()">
             ${secCheckRunningAll ? '⏳ 전체 보안 정밀 점검 중...' : '🛡️ 전체 보안 일괄 점검 실행 (7개 항목)'}
           </button>
-          <button class="btn-full" type="button" style="margin-top:8px; padding:10px; font-size:12.5px; background:rgba(255,255,255,0.12); color:#F8FAFC; border:1px solid rgba(255,255,255,0.22);" onclick="copyInquiriesFirestoreRule()">
-            📋 최신 Firestore 전체 보안 규칙 복사
-          </button>
         </div>
 
         <div class="card" style="background:#EFF6FF; border-color:#BFDBFE; margin-bottom:12px; padding:10px 13px;">
@@ -18031,278 +18028,6 @@
       }
     };
 
-    window.copyInquiriesFirestoreRule = async () => {
-      const fullRules = `rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-
-    function isSignedIn() {
-      return request.auth != null;
-    }
-
-    function isAdmin() {
-      return isSignedIn() && request.auth.token.email == 'admin@right-youth.app';
-    }
-
-    function hasMemberDoc() {
-      return isSignedIn() && exists(/databases/$(database)/documents/members/$(request.auth.uid));
-    }
-
-    function myMember() {
-      return get(/databases/$(database)/documents/members/$(request.auth.uid)).data;
-    }
-
-    function isApprovedMember() {
-      return isAdmin() || (hasMemberDoc() && myMember().status == 'approved');
-    }
-
-    function myRoleId() {
-      return isAdmin() ? 'super_admin' : (
-        hasMemberDoc() && ('roleId' in myMember()) ? myMember().roleId : 'role_youth'
-      );
-    }
-
-    function hasValidResetKey(key) {
-      return key is string
-        && key.size() > 0
-        && exists(/databases/$(database)/documents/passwordResets/$(key))
-        && get(/databases/$(database)/documents/passwordResets/$(key)).data.used == false
-        && (
-          !(get(/databases/$(database)/documents/passwordResets/$(key)).data.keys().hasAny(['expiresAt']))
-          || get(/databases/$(database)/documents/passwordResets/$(key)).data.expiresAt == null
-          || get(/databases/$(database)/documents/passwordResets/$(key)).data.expiresAt > request.time.toMillis()
-        );
-    }
-
-    // 1. 공용/관리자 설정 문서 (민감 문서는 최고 관리자 전용 격리)
-    match /config/roles {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    match /config/inviteQr {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    match /config/adminSecret {
-      allow read, write: if isAdmin();
-    }
-    match /config/sheetSecret {
-      allow read, write: if isAdmin();
-    }
-    match /config/adminRegistry {
-      allow read, write: if isAdmin();
-    }
-    match /config/{docId} {
-      allow read: if docId in ['app', 'layout', 'labels', 'quickLinks', 'attendance', 'maintenance'] && isApprovedMember();
-      allow write: if isAdmin();
-    }
-
-    // 2. 공지 · 배너 (공개/역할별 vs 임시저장·예약·관리자전용 서버 분리)
-    match /notices/{docId} {
-      allow read: if isAdmin() || (
-        isApprovedMember()
-        && ('__all__' in resource.data.visibleTo || myRoleId() in resource.data.visibleTo)
-      );
-      allow write: if isAdmin();
-    }
-    match /adminNotices/{docId} {
-      allow read, write: if isAdmin();
-    }
-    match /homeBlocks/{docId} {
-      allow read: if isAdmin() || (
-        isApprovedMember()
-        && ('__all__' in resource.data.visibleTo || myRoleId() in resource.data.visibleTo)
-      );
-      allow write: if isAdmin();
-    }
-    match /adminBlocks/{docId} {
-      allow read, write: if isAdmin();
-    }
-
-    // 3. 로그인 인덱스 & 비밀번호 초기화 (1회용 · 24시간 만료)
-    match /authIndex/{hex} {
-      allow get: if true;
-      allow list: if isAdmin();
-      allow write: if isAdmin() || (
-        isSignedIn()
-        && request.resource.data.resetKey is string
-        && hasValidResetKey(request.resource.data.resetKey)
-      );
-    }
-    match /passwordResets/{resetKey} {
-      allow get: if isAdmin() || (
-        resource.data.used == false
-        && (
-          !(resource.data.keys().hasAny(['expiresAt']))
-          || resource.data.expiresAt == null
-          || resource.data.expiresAt > request.time.toMillis()
-        )
-      );
-      allow list, create, delete: if isAdmin();
-      allow update: if isAdmin() || (
-        isSignedIn()
-        && resource.data.used == false
-        && (
-          !(resource.data.keys().hasAny(['expiresAt']))
-          || resource.data.expiresAt == null
-          || resource.data.expiresAt > request.time.toMillis()
-        )
-        && request.resource.data.used == true
-        && request.resource.data.newUid == request.auth.uid
-      );
-    }
-
-    // 4. 회원 · 새신자 · 재가입 이력
-    match /members/{uid} {
-      allow read: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
-      allow create: if isAdmin() || (
-        isSignedIn()
-        && request.auth.uid == uid
-        && (
-          (request.resource.data.status == 'pending' && request.resource.data.roleId == 'role_youth')
-          || (request.resource.data.resetKey is string && hasValidResetKey(request.resource.data.resetKey))
-        )
-      );
-      allow update: if isAdmin() || (
-        isSignedIn()
-        && request.auth.uid == uid
-        && (
-          (
-            resource.data.status == 'rejected'
-            && request.resource.data.status == 'pending'
-            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'createdAt', 'createdTs'])
-          )
-          || (
-            resource.data.status == 'approved'
-            && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-              'pendingName', 'pendingNameAt', 'pendingNameTs'
-            ])
-          )
-        )
-      );
-      allow delete: if isAdmin() || (
-        isSignedIn()
-        && (
-          request.auth.uid == uid
-          || (
-            resource.data.status == 'reset_pending'
-            && resource.data.resetKey is string
-            && exists(/databases/$(database)/documents/passwordResets/$(resource.data.resetKey))
-            && get(/databases/$(database)/documents/passwordResets/$(resource.data.resetKey)).data.newUid == request.auth.uid
-          )
-        )
-      );
-    }
-    match /newcomers/{uid} {
-      allow read: if isApprovedMember();
-      allow create, update: if isAdmin() || (isApprovedMember() && request.auth.uid == uid);
-      allow delete: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
-    }
-    match /memberHistory/{docId} {
-      allow read, write: if isAdmin();
-    }
-
-    // 5. 예배 · 행사 출석 체크
-    match /attendance/{docId} {
-      allow read: if isAdmin() || (isApprovedMember() && resource.data.uid == request.auth.uid);
-      allow create: if isAdmin() || (
-        isApprovedMember()
-        && request.resource.data.uid == request.auth.uid
-        && request.resource.data.source == 'self'
-      );
-      allow update, delete: if isAdmin();
-    }
-
-    // 6. 폐기된 컬렉션 전면 차단 (생일 · QT · 관리자 기존 잔여 데이터 삭제용 읽기·삭제만 허용)
-    match /birthdays/{uid} {
-      allow read, delete: if isAdmin();
-      allow create, update: if false;
-    }
-    match /qtPosts/{docId} {
-      allow read, delete: if isAdmin();
-      allow create, update: if false;
-    }
-    match /qtReactions/{docId} {
-      allow read, delete: if isAdmin();
-      allow create, update: if false;
-    }
-    match /qtComments/{docId} {
-      allow read, delete: if isAdmin();
-      allow create, update: if false;
-    }
-    match /qtCommentLikes/{docId} {
-      allow read, delete: if isAdmin();
-      allow create, update: if false;
-    }
-
-    // 7. 이용자 문의 사항 (작성자 본인: 추가·조회·수정·삭제 / 관리자: 전체 조회·답변·해결 처리 및 해결된 문의만 삭제)
-    match /inquiries/{docId} {
-      allow create: if isApprovedMember() && request.resource.data.uid == request.auth.uid;
-      allow read: if isAdmin() || (isApprovedMember() && resource.data.uid == request.auth.uid);
-      allow update: if isAdmin() || (
-        isApprovedMember()
-        && resource.data.uid == request.auth.uid
-        && request.resource.data.uid == request.auth.uid
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-          'category', 'title', 'body', 'edited', 'updatedAt', 'updatedTs'
-        ])
-      );
-      allow delete: if (isApprovedMember() && resource.data.uid == request.auth.uid) || (
-        isAdmin() && resource.data.status in ['replied', 'resolved']
-      );
-    }
-
-    // 8. 설교 · 찬양 유튜브 영상 (자동 보안·공식 채널 검증 · 승인 영상 공개 / 미등록 채널은 본인·관리자만 열람)
-    match /videos/{docId} {
-      allow read: if isAdmin() || (
-        isApprovedMember() && (resource.data.status == 'approved' || resource.data.uid == request.auth.uid)
-      );
-      allow create: if isAdmin() || (
-        isApprovedMember()
-        && request.resource.data.uid == request.auth.uid
-        && request.resource.data.videoId is string
-        && request.resource.data.videoId.size() == 11
-        && request.resource.data.url is string
-        && request.resource.data.url.matches('^https://www\\\\.youtube\\\\.com/watch\\\\?v=[A-Za-z0-9_-]{11}$')
-        && (
-          request.resource.data.status == 'pending'
-          || (request.resource.data.status == 'approved' && request.resource.data.officialVerified == true)
-        )
-      );
-      allow update: if isAdmin() || (
-        isApprovedMember()
-        && resource.data.uid == request.auth.uid
-        && request.resource.data.uid == request.auth.uid
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-          'category', 'title', 'note', 'edited', 'updatedAt', 'updatedTs'
-        ])
-      );
-      allow delete: if isAdmin() || (isApprovedMember() && resource.data.uid == request.auth.uid);
-    }
-
-    // 9. 통합 보안 감사 로그 (삭제·위변조 영구 금지 · 관리자 시트 동기화 표시만 허용)
-    match /auditLogs/{docId} {
-      allow read: if isAdmin();
-      allow create: if isSignedIn() && request.resource.data.actorUid == request.auth.uid;
-      allow update: if isAdmin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['sheetSynced']);
-      allow delete: if false;
-    }
-
-    // 그 외 미지정 경로 전면 차단
-    match /{document=**} {
-      allow read, write: if false;
-    }
-  }
-}
-`;
-      try {
-        await navigator.clipboard.writeText(fullRules);
-        showToast('Firebase Firestore 최신 전체 보안 규칙이 복사되었습니다!');
-      } catch {
-        showToast('복사를 지원하지 않는 브라우저입니다.');
-      }
-    };
-
     function renderManageInquiries(el, user) {
       const unresolvedCnt = inquiries.filter(q => !isInquiryResolved(q)).length;
       const resolvedCnt = inquiries.filter(q => isInquiryResolved(q)).length;
@@ -18326,10 +18051,9 @@ service cloud.firestore {
         ${inquiriesPermError ? `
           <div class="card" style="border-color:#FCA5A5; background:#FEF2F2; margin-bottom:12px;">
             <div style="font-size:13.5px; font-weight:800; color:#991B1B; margin-bottom:5px;">🔐 Firestore 전체 보안 규칙 게시 필요</div>
-            <div style="font-size:12px; color:#7F1D1D; line-height:1.55; margin-bottom:9px;">
-              아래 버튼으로 최신 Firestore 전체 규칙을 복사해 Firebase Console → Firestore Database → 규칙에 붙여넣고 <b>게시</b>해 주세요.
+            <div style="font-size:12px; color:#7F1D1D; line-height:1.55;">
+              별도 보관한 최신 Firestore 보안 규칙을 Firebase Console → Firestore Database → 규칙에 붙여넣고 <b>게시</b>해 주세요.
             </div>
-            <button class="btn-sm primary" type="button" onclick="copyInquiriesFirestoreRule()">📋 Firestore 전체 규칙 복사</button>
           </div>
         ` : ''}
 
@@ -20832,10 +20556,9 @@ ${handleUrl}`);
         ${videosPermError ? `
           <div class="card" style="border-color:#FCA5A5; background:#FEF2F2; margin-bottom:12px;">
             <div style="font-size:13.5px; font-weight:800; color:#991B1B; margin-bottom:5px;">🔐 Firestore 전체 보안 규칙 게시 필요</div>
-            <div style="font-size:12px; color:#7F1D1D; line-height:1.55; margin-bottom:9px;">
-              영상 기능(<code>videos</code> 컬렉션)을 사용하려면 아래 버튼으로 최신 전체 규칙을 복사해 Firebase Console → Firestore Database → 규칙에 덮어쓰고 <b>게시</b>해 주세요.
+            <div style="font-size:12px; color:#7F1D1D; line-height:1.55;">
+              영상 기능(<code>videos</code> 컬렉션)을 사용하려면 별도 보관한 최신 Firestore 보안 규칙을 Firebase Console → Firestore Database → 규칙에 덮어쓰고 <b>게시</b>해 주세요.
             </div>
-            <button class="btn-sm primary" type="button" onclick="copyInquiriesFirestoreRule()">📋 최신 Firestore 전체 규칙 복사</button>
           </div>
         ` : ''}
 
