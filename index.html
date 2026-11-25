@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=167" />
+  <link rel="manifest" href="./manifest.json?v=168" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=167" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=167" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=168" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=168" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2957,7 +2957,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=167" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=168" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4364,8 +4364,8 @@
     const authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 28;
-    const APP_CLIENT_BUILD = 167;
+    const CURRENT_SCHEMA_VERSION = 29;
+    const APP_CLIENT_BUILD = 168;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -5080,10 +5080,6 @@
       return dt.getUTCFullYear() === y && (dt.getUTCMonth() + 1) === m && dt.getUTCDate() === d;
     }
 
-    function birthdayToMd(str) {
-      return isValidBirthdayStr(str) ? String(str).trim().slice(5, 10) : '';
-    }
-
     function formatBirthdayDisplay(str) {
       if (!isValidBirthdayStr(str)) return '미등록';
       return String(str).trim().replace(/-/g, '.');
@@ -5230,7 +5226,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=167" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=168" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5254,8 +5250,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=167', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=167', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=168', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=168', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5433,9 +5429,7 @@
     let scheduledPromoteTimer = null;
     let isPromotingScheduled = false;
     let members = [];
-    let birthdayList = [];
     let newcomerList = [];
-    let adminBdaySyncedOnce = false;
     let adminNewcomerSyncedOnce = false;
     let publicRolesSubscribed = false;
     let publicInviteSubscribed = false;
@@ -5640,9 +5634,7 @@
       knownPendingRenameMap = new Map();
       knownNoticeAlertMap = new Map();
       lastSeenLayoutAlertTs = 0;
-      birthdayList = [];
       newcomerList = [];
-      adminBdaySyncedOnce = false;
       adminNewcomerSyncedOnce = false;
       if (unsubAdminRegistry) { unsubAdminRegistry(); unsubAdminRegistry = null; }
       if (unsubAttendanceAdmin) { unsubAttendanceAdmin(); unsubAttendanceAdmin = null; }
@@ -6210,7 +6202,7 @@
               const curV = Math.max(await getAuthVerForHex(hx), maxV);
               await db.collection('authIndex').doc(hx).set({ v: curV + 1, updatedAt: Date.now() }, { merge: true });
             }
-            const clearCollections = ['members', 'birthdays', 'newcomers', 'passwordResets', 'attendance', 'memberHistory'];
+            const clearCollections = ['members', 'newcomers', 'passwordResets', 'attendance', 'memberHistory'];
             for (const colName of clearCollections) {
               const snap = await db.collection(colName).get();
               const docs = snap.docs;
@@ -6435,6 +6427,105 @@
           }
         }
 
+        // 13) v10.68 (schemaVersion 29): 생년월일 서버 데이터(birthdays 컬렉션 · members/passwordResets/layout 잔여 필드) 영구 폐기
+        if ((appSnap.data().schemaVersion || 0) < 29) {
+          try {
+            let deletedBdayDocs = 0;
+            let cleanedMembers = 0;
+            let cleanedResets = 0;
+            let cleanedLayoutMsgs = false;
+
+            // (a) birthdays 컬렉션 전체 문서 일괄 삭제
+            try {
+              const bSnap = await db.collection('birthdays').get();
+              const bDocs = bSnap.docs;
+              for (let i = 0; i < bDocs.length; i += 400) {
+                const b = db.batch();
+                bDocs.slice(i, i + 400).forEach(d => b.delete(d.ref));
+                await b.commit();
+              }
+              deletedBdayDocs = bDocs.length;
+            } catch (bColErr) {
+              console.warn('v10.68 birthdays collection cleanup skipped:', bColErr);
+            }
+
+            // (b) members 컬렉션 모든 문서에서 생일 관련 필드 일괄 제거
+            try {
+              const mSnap = await db.collection('members').get();
+              const dirtyMembers = mSnap.docs.filter(d => {
+                const md = d.data() || {};
+                return Object.prototype.hasOwnProperty.call(md, 'birthday')
+                  || Object.prototype.hasOwnProperty.call(md, 'pendingBirthday')
+                  || Object.prototype.hasOwnProperty.call(md, 'pendingBirthdayAt')
+                  || Object.prototype.hasOwnProperty.call(md, 'pendingBirthdayTs')
+                  || Object.prototype.hasOwnProperty.call(md, 'lastBirthdayResult');
+              });
+              for (let i = 0; i < dirtyMembers.length; i += 400) {
+                const b = db.batch();
+                dirtyMembers.slice(i, i + 400).forEach(d => {
+                  b.update(d.ref, {
+                    birthday: FieldValue.delete(),
+                    pendingBirthday: FieldValue.delete(),
+                    pendingBirthdayAt: FieldValue.delete(),
+                    pendingBirthdayTs: FieldValue.delete(),
+                    lastBirthdayResult: FieldValue.delete()
+                  });
+                });
+                await b.commit();
+              }
+              cleanedMembers = dirtyMembers.length;
+            } catch (mErr) {
+              console.warn('v10.68 members birthday field cleanup skipped:', mErr);
+            }
+
+            // (c) passwordResets 컬렉션에서 birthday 필드 제거
+            try {
+              const rSnap = await db.collection('passwordResets').get();
+              const dirtyResets = rSnap.docs.filter(d => Object.prototype.hasOwnProperty.call(d.data() || {}, 'birthday'));
+              for (let i = 0; i < dirtyResets.length; i += 400) {
+                const b = db.batch();
+                dirtyResets.slice(i, i + 400).forEach(d => {
+                  b.update(d.ref, { birthday: FieldValue.delete() });
+                });
+                await b.commit();
+              }
+              cleanedResets = dirtyResets.length;
+            } catch (rErr) {
+              console.warn('v10.68 passwordResets birthday cleanup skipped:', rErr);
+            }
+
+            // (d) config/layout의 celebrationMsgs에서 birthdayTitle / birthdayDesc 영구 제거
+            try {
+              const lSnap29 = await db.collection('config').doc('layout').get();
+              if (lSnap29.exists && lSnap29.data().celebrationMsgs) {
+                const cm = lSnap29.data().celebrationMsgs;
+                if (Object.prototype.hasOwnProperty.call(cm, 'birthdayTitle') || Object.prototype.hasOwnProperty.call(cm, 'birthdayDesc')) {
+                  await db.collection('config').doc('layout').set({
+                    celebrationMsgs: {
+                      newcomerTitle: cm.newcomerTitle || DEFAULT_CELEBRATION_MSGS.newcomerTitle,
+                      newcomerDesc: cm.newcomerDesc || DEFAULT_CELEBRATION_MSGS.newcomerDesc
+                    }
+                  }, { merge: true });
+                  cleanedLayoutMsgs = true;
+                }
+              }
+            } catch (lErr) {
+              console.warn('v10.68 layout celebrationMsgs cleanup skipped:', lErr);
+            }
+
+            recordAuditLog({
+              actorType: 'admin',
+              category: '보안·설정',
+              action: '서버 개인정보 필드 일괄 폐기 (v10.68)',
+              target: 'Firestore v29 정리',
+              detail: `birthdays ${deletedBdayDocs}건 삭제 · members ${cleanedMembers}명 필드 삭제 · passwordResets ${cleanedResets}건 정리${cleanedLayoutMsgs ? ' · layout 축하멘트 정리' : ''}`
+            });
+            showToast(`✅ 서버 생년월일 데이터 정리 완료 (birthdays ${deletedBdayDocs}건 · 회원 ${cleanedMembers}명)`);
+          } catch (v29Err) {
+            console.warn('v10.68 birthday purge error:', v29Err);
+          }
+        }
+
         await appRef.set({
           initialized: true,
           schemaVersion: CURRENT_SCHEMA_VERSION,
@@ -6512,10 +6603,6 @@
           }
 
           members = nextMembers;
-          if (!adminBdaySyncedOnce) {
-            adminBdaySyncedOnce = true;
-            syncAdminBirthdaysCollection(nextMembers).catch(() => {});
-          }
           if (!adminNewcomerSyncedOnce) {
             adminNewcomerSyncedOnce = true;
             syncAdminNewcomersCollection(nextMembers).catch(() => {});
@@ -7206,12 +7293,6 @@
             }
           }, () => {});
       }
-
-      unsubCore.push(
-        db.collection('birthdays').onSnapshot(snap => {
-          birthdayList = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }));
-        }, () => {})
-      );
 
       unsubCore.push(
         db.collection('newcomers').onSnapshot(snap => {
@@ -9043,49 +9124,6 @@
       }
     });
 
-    async function syncAdminBirthdaysCollection(memberList) {
-      const user = getCurrentUser();
-      if (!user || !user.isSuperAdmin) return;
-      try {
-        const snap = await db.collection('birthdays').get();
-        const existingMap = new Map();
-        snap.docs.forEach(d => existingMap.set(String(d.id), d.data()));
-
-        const approvedWithBday = new Map();
-        memberList.forEach(m => {
-          if (m.status === 'approved' && isValidBirthdayStr(m.birthday)) {
-            approvedWithBday.set(String(m.id), {
-              uid: String(m.id),
-              name: m.name,
-              md: birthdayToMd(m.birthday)
-            });
-          }
-        });
-
-        const batch = db.batch();
-        let ops = 0;
-
-        approvedWithBday.forEach((val, uid) => {
-          const cur = existingMap.get(uid);
-          if (!cur || cur.name !== val.name || cur.md !== val.md) {
-            batch.set(db.collection('birthdays').doc(uid), { ...val, updatedAt: Date.now() });
-            ops++;
-          }
-        });
-
-        existingMap.forEach((_, uid) => {
-          if (!approvedWithBday.has(uid)) {
-            batch.delete(db.collection('birthdays').doc(uid));
-            ops++;
-          }
-        });
-
-        if (ops > 0) await batch.commit();
-      } catch (err) {
-        console.warn('Birthday sync skipped:', err);
-      }
-    }
-
     function checkAndNotifyNewcomers() {
       const user = getCurrentUser();
       if (!user) return;
@@ -10622,14 +10660,6 @@
       try {
         const batch = db.batch();
         batch.update(db.collection('members').doc(String(id)), { status: 'approved', roleId });
-        if (isValidBirthdayStr(m.birthday)) {
-          batch.set(db.collection('birthdays').doc(String(id)), {
-            uid: String(id),
-            name: m.name,
-            md: birthdayToMd(m.birthday),
-            updatedAt: Date.now()
-          });
-        }
         if (isNewcomerRoleId(roleId)) {
           batch.set(db.collection('newcomers').doc(String(id)), {
             uid: String(id),
@@ -10765,7 +10795,6 @@
       try {
         const batch = db.batch();
         batch.update(db.collection('members').doc(String(id)), { status: 'rejected' });
-        batch.delete(db.collection('birthdays').doc(String(id)));
         batch.delete(db.collection('newcomers').doc(String(id)));
         const rHex = nameToHex(m.name);
         batch.set(db.collection('memberHistory').doc(rHex), {
@@ -10816,7 +10845,6 @@
           name: m.name,
           nameHex,
           roleId: m.roleId || 'role_youth',
-          birthday: m.birthday || '',
           requestedRole: m.requestedRole || '',
           origStatus,
           createdAt: m.createdAt || formatToday(),
@@ -10913,7 +10941,6 @@
         const curVer = Math.max(await getAuthVerForHex(nameHex), Number(m.authVer || 0));
         const batch = db.batch();
         batch.delete(db.collection('members').doc(String(id)));
-        batch.delete(db.collection('birthdays').doc(String(id)));
         batch.delete(db.collection('newcomers').doc(String(id)));
         if (m.resetKey) {
           batch.delete(db.collection('passwordResets').doc(String(m.resetKey)));
@@ -11488,7 +11515,6 @@
         const newMember = {
           id: newUid,
           name: rData.name,
-          birthday: rData.birthday || '',
           requestedRole: rData.requestedRole || '',
           status: rData.origStatus || 'approved',
           roleId: rData.roleId || 'role_youth',
@@ -11514,17 +11540,9 @@
         });
         await batch.commit();
 
-        // 2단계: 기존 초기화 대기 회원 문서 정리 및 생일 정보 동기화
+        // 2단계: 기존 초기화 대기 회원 문서 정리
         if (rData.oldUid && String(rData.oldUid) !== String(newUid)) {
           await db.collection('members').doc(String(rData.oldUid)).delete().catch(() => {});
-        }
-        if (newMember.status === 'approved' && isValidBirthdayStr(newMember.birthday)) {
-          await db.collection('birthdays').doc(newUid).set({
-            uid: newUid,
-            name: newMember.name,
-            md: birthdayToMd(newMember.birthday),
-            updatedAt: Date.now()
-          }).catch(() => {});
         }
         if (newMember.status === 'approved' && isNewcomerRoleId(newMember.roleId)) {
           await db.collection('newcomers').doc(newUid).set({
@@ -11804,7 +11822,6 @@
           target: selfName,
           detail: '본인 직접 계정 삭제'
         });
-        await db.collection('birthdays').doc(uid).delete().catch(() => {});
         await db.collection('newcomers').doc(uid).delete().catch(() => {});
         await db.collection('members').doc(uid).delete();
         await auth.currentUser.delete();
@@ -14072,14 +14089,6 @@
             loginEmail: FieldValue.delete(),
             updatedAt: nowTs
           }, { merge: true });
-        }
-        if (isValidBirthdayStr(m.birthday)) {
-          batch.set(db.collection('birthdays').doc(String(m.id)), {
-            uid: String(m.id),
-            name: newName,
-            md: birthdayToMd(m.birthday),
-            updatedAt: nowTs
-          });
         }
         if (isNewcomerRoleId(m.roleId)) {
           batch.set(db.collection('newcomers').doc(String(m.id)), {
@@ -16686,6 +16695,9 @@
           <button id="runAllSecBtn" class="btn-full btn-amber" type="button" style="padding:12px; font-size:14px;" ${secCheckRunningAll ? 'disabled' : ''} onclick="runAllSecurityChecks()">
             ${secCheckRunningAll ? '⏳ 전체 보안 정밀 점검 중...' : '🛡️ 전체 보안 일괄 점검 실행 (7개 항목)'}
           </button>
+          <button class="btn-full" type="button" style="margin-top:8px; padding:10px; font-size:12.5px; background:rgba(255,255,255,0.12); color:#F8FAFC; border:1px solid rgba(255,255,255,0.22);" onclick="copyInquiriesFirestoreRule()">
+            📋 최신 Firestore 전체 보안 규칙 복사
+          </button>
         </div>
 
         <div class="card" style="background:#EFF6FF; border-color:#BFDBFE; margin-bottom:12px; padding:10px 13px;">
@@ -18057,7 +18069,7 @@ service cloud.firestore {
       );
     }
 
-    // 4. 회원 · 생일 · 새신자 · 재가입 이력
+    // 4. 회원 · 새신자 · 재가입 이력
     match /members/{uid} {
       allow read: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
       allow create: if isAdmin() || (
@@ -18080,8 +18092,7 @@ service cloud.firestore {
           || (
             resource.data.status == 'approved'
             && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-              'pendingName', 'pendingNameAt', 'pendingNameTs',
-              'pendingBirthday', 'pendingBirthdayAt', 'pendingBirthdayTs'
+              'pendingName', 'pendingNameAt', 'pendingNameTs'
             ])
           )
         )
@@ -18098,11 +18109,6 @@ service cloud.firestore {
           )
         )
       );
-    }
-    match /birthdays/{uid} {
-      allow read: if isApprovedMember();
-      allow create, update: if isAdmin() || (isApprovedMember() && request.auth.uid == uid);
-      allow delete: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
     }
     match /newcomers/{uid} {
       allow read: if isApprovedMember();
@@ -18124,7 +18130,11 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
-    // 6. 폐기된 QT 컬렉션 전면 차단 (관리자 기존 잔여 데이터 삭제용 읽기·삭제만 허용)
+    // 6. 폐기된 컬렉션 전면 차단 (생일 · QT · 관리자 기존 잔여 데이터 삭제용 읽기·삭제만 허용)
+    match /birthdays/{uid} {
+      allow read, delete: if isAdmin();
+      allow create, update: if false;
+    }
     match /qtPosts/{docId} {
       allow read, delete: if isAdmin();
       allow create, update: if false;
@@ -18204,7 +18214,7 @@ service cloud.firestore {
 `;
       try {
         await navigator.clipboard.writeText(fullRules);
-        showToast('Firebase Firestore 최신 전체 보안 규칙(영상 포함)이 복사되었습니다!');
+        showToast('Firebase Firestore 최신 전체 보안 규칙(생일 폐기 반영)이 복사되었습니다!');
       } catch {
         showToast('복사를 지원하지 않는 브라우저입니다.');
       }
