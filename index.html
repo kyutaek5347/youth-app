@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=160" />
+  <link rel="manifest" href="./manifest.json?v=160b" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=160" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=160" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=160b" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=160b" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3183,7 +3183,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=160" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=160b" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5604,7 +5604,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=160" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=160b" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5628,8 +5628,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=160', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=160', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=160b', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=160b', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -9101,7 +9101,7 @@
           <div class="card" style="text-align:center; padding:26px 16px; color:#64748B;">
             <div style="font-size:24px; margin-bottom:6px;">🔎</div>
             <div style="font-size:14px; font-weight:700; color:#334155;">일치하는 사용 안내가 없습니다.</div>
-            <div style="font-size:12.5px; margin-top:4px;">예: 출석, ${escapeHtml(bLbl)}, ${escapeHtml(qLbl)}, 메모, 이름, 생일, 비밀번호, QR 등으로 검색해 보세요.</div>
+            <div style="font-size:12.5px; margin-top:4px;">예: 출석, ${escapeHtml(qLbl)}, 영상, 이름, 생일, 비밀번호, QR, 알림 등으로 검색해 보세요.</div>
           </div>
         `;
         return;
@@ -19119,7 +19119,7 @@
                 <span class="settings-row-icon">${escapeHtml(ic)}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title">${escapeHtml(lb)}</div>
-                  <div class="settings-row-sub">내 기기 화면 글자 크기 조절 (${escapeHtml(bLbl)} 본문은 ${escapeHtml(bLbl)}에서 별도 조절)</div>
+                  <div class="settings-row-sub">내 기기 화면 글자 크기를 보통 · 크게 · 아주 크게로 조절합니다</div>
                 </span>
               </span>
               <span class="settings-row-right">

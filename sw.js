@@ -1,4 +1,4 @@
-const CACHE_NAME = 'right-youth-app-v10.60';
+const CACHE_NAME = 'right-youth-app-v10.60b';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
