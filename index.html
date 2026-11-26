@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=240" />
+  <link rel="manifest" href="./manifest.json?v=241" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=240" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=240" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=241" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=241" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4000,7 +4000,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=240" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=241" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5825,10 +5825,10 @@
     const authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 32;
-    const APP_CLIENT_BUILD = 240;
+    const CURRENT_SCHEMA_VERSION = 33;
+    const APP_CLIENT_BUILD = 241;
     const APP_BOOT_TS = Date.now();
-    const SHEET_SCHEMA_VERSION = 'v10.140-10tab-fast-split';
+    const SHEET_SCHEMA_VERSION = 'v10.141-10tab-fast-split';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
       { id: 'members', name: '회원 명단', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '성명·역할·가입일·상태·이전이름 (생일 열 폐기)' },
@@ -6832,7 +6832,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=240" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=241" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6856,8 +6856,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=240', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=240', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=241', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=241', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -24422,7 +24422,7 @@
       if (data.multiTab === true || data.supportsAttendanceSplit === true || data.supportsSchemaInspect === true || data.supportsBatchSync === true) return true;
       if (Number(data.tabCount || 0) >= 3) return true;
       if (String(data.message || '').includes('탭')) return true;
-      if (String(data.version || '').includes('v10.136') || String(data.version || '').includes('v10.137') || String(data.version || '').includes('v10.138') || String(data.version || '').includes('v10.139') || String(data.version || '').includes('v10.140')) return true;
+      if (String(data.version || '').includes('v10.136') || String(data.version || '').includes('v10.137') || String(data.version || '').includes('v10.138') || String(data.version || '').includes('v10.139') || String(data.version || '').includes('v10.140') || String(data.version || '').includes('v10.141')) return true;
       if (data.result && typeof data.result === 'object') return true;
       return false;
     }
@@ -24439,7 +24439,8 @@
         || String(data.version || '').includes('v10.137')
         || String(data.version || '').includes('v10.138')
         || String(data.version || '').includes('v10.139')
-        || String(data.version || '').includes('v10.140');
+        || String(data.version || '').includes('v10.140')
+        || String(data.version || '').includes('v10.141');
     }
 
     function isSheetResponseFastBatch(data) {
@@ -31975,8 +31976,6 @@ ${handleUrl}`);
           <div class="section-head">
             <h2 class="section-title">${escapeHtml(secIcon)} ${escapeHtml(secTitle)}</h2>
             <div style="display:flex; gap:5px; align-items:center; flex-wrap:wrap;">
-              <button class="btn-sm ${unreadSermonCnt > 0 ? 'has-badge' : ''}" type="button" onclick="switchMainTab('sermon')"><span>${escapeHtml(sIcn)} ${escapeHtml(sLbl)}</span>${buildSubTabBadgeHtml(unreadSermonCnt)}</button>
-              <button class="btn-sm ${unreadCcmCnt > 0 ? 'has-badge' : ''}" type="button" onclick="switchMainTab('ccm')"><span>${escapeHtml(cIcn)} ${escapeHtml(cLbl)}</span>${buildSubTabBadgeHtml(unreadCcmCnt)}</button>
               ${canSubmit ? `<button class="btn-sm primary" type="button" onclick="openVideoSubmitModal()">+ 추천</button>` : ''}
             </div>
           </div>
