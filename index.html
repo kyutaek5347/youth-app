@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=222" />
+  <link rel="manifest" href="./manifest.json?v=223" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=222" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=222" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=223" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=223" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -313,7 +313,7 @@
     .exit-btn.light { background: #F1F5F9; color: #334155; border: 1px solid var(--border); }
     .exit-btn.dark { background: #1E293B; color: #E2E8F0; border: 1px solid #334155; }
 
-    .main { flex: 1; padding: 16px 16px calc(88px + var(--safe-bottom)); }
+    .main { flex: 1; padding: 16px 16px calc(88px + var(--safe-bottom)); touch-action: pan-y; }
 
     .tabbar {
       position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
@@ -357,10 +357,21 @@
     .home-block { margin-bottom: 16px; }
 
     .hero-banner {
+      position: relative;
       color: #fff; border-radius: 18px; padding: 20px; cursor: pointer;
       box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
       border: 1px solid rgba(255, 255, 255, 0.14);
     }
+    @keyframes swipeSlideInRight {
+      from { opacity: 0.58; transform: translateX(34px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes swipeSlideInLeft {
+      from { opacity: 0.58; transform: translateX(-34px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .swipe-enter-right { animation: swipeSlideInRight 0.21s cubic-bezier(0.22, 1, 0.36, 1); }
+    .swipe-enter-left { animation: swipeSlideInLeft 0.21s cubic-bezier(0.22, 1, 0.36, 1); }
     .hero-badge {
       display: inline-block; background: rgba(245, 158, 11, 0.24); color: #FDE68A;
       font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; margin-bottom: 10px;
@@ -3715,7 +3726,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=222" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=223" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4562,11 +4573,11 @@
 
       <div id="blockContentFields">
         <div class="form-group" id="blockBadgeGroup">
-          <label class="form-label">배지 문구 (상단 작은 글씨)</label>
-          <input id="blockBadgeInput" class="form-input" placeholder="예: 📌 이번 주 안내 / ✨ 특별 광고" />
+          <label id="blockBadgeLabel" class="form-label" for="blockBadgeInput">배지 문구 (상단 작은 글씨)</label>
+          <input id="blockBadgeInput" class="form-input" maxlength="30" placeholder="예: 📌 중요 / ✨ 특별 광고" />
         </div>
-        <div class="form-group">
-          <label class="form-label">제목</label>
+        <div class="form-group" id="blockTitleGroup">
+          <label class="form-label" for="blockTitleInput">제목</label>
           <input id="blockTitleInput" class="form-input" placeholder="배너에 표시될 제목" />
         </div>
         <div class="form-group" id="blockDescGroup">
@@ -4742,28 +4753,32 @@
   </div>
 
 
-  <!-- 관리자: 새신자 환영 멘트 편집 모달 -->
+  <!-- 관리자: 새가족 환영 멘트 편집 모달 -->
   <div id="celebrationMsgsModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">💐 새신자 환영 멘트 설정</h3>
+        <h3 class="modal-title">💐 새가족 환영 멘트 설정</h3>
         <button class="close-btn" data-close="celebrationMsgsModal">✕</button>
       </div>
       <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-        멘트 안에 <b>{이름}</b>을 넣으면 새신자 이름이 자동으로 채워집니다.<br>
+        멘트 안에 <b>{이름}</b>을 넣으면 새가족 이름이 자동으로 채워집니다.<br>
         저장하면 <b>메인 화면 배너</b>와 <b>알림 문구</b>에 모두 즉시 반영됩니다.
       </div>
 
       <div class="celeb-section-head" style="margin-top:4px;">
-        <span>💐 새신자 환영 멘트</span>
+        <span>💐 새가족 환영 멘트</span>
         <button class="btn-sm" type="button" style="padding:3px 8px; font-size:11px;" onclick="insertNamePlaceholder('celebNewcomerTitleInput')">+ {이름} 넣기</button>
       </div>
       <div class="form-group">
-        <label class="form-label" for="celebNewcomerTitleInput">새신자 환영 제목</label>
-        <input id="celebNewcomerTitleInput" class="form-input" maxlength="60" placeholder="🎉 새신자 {이름}님을 환영합니다!" oninput="updateCelebrationPreview()" />
+        <label class="form-label" for="celebNewcomerBadgeInput">상단 배지 문구 (예: 💐 새가족 환영)</label>
+        <input id="celebNewcomerBadgeInput" class="form-input" maxlength="24" placeholder="💐 새가족 환영" oninput="updateCelebrationPreview()" />
       </div>
       <div class="form-group">
-        <label class="form-label" for="celebNewcomerDescInput">새신자 환영 내용</label>
+        <label class="form-label" for="celebNewcomerTitleInput">새가족 환영 제목</label>
+        <input id="celebNewcomerTitleInput" class="form-input" maxlength="60" placeholder="🎉 새가족 {이름}님을 환영합니다!" oninput="updateCelebrationPreview()" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="celebNewcomerDescInput">새가족 환영 내용</label>
         <textarea id="celebNewcomerDescInput" class="form-textarea" style="min-height:74px;" maxlength="200" placeholder="라이트 청년부의 새 가족이 되신 것을 진심으로 축복합니다. 만나면 반갑게 인사해 주세요! 😊" oninput="updateCelebrationPreview()"></textarea>
       </div>
       <div id="celebNewcomerPreview" class="celeb-preview-box newcomer"></div>
@@ -5471,8 +5486,8 @@
     const authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 222;
+    const CURRENT_SCHEMA_VERSION = 31;
+    const APP_CLIENT_BUILD = 223;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -5810,7 +5825,8 @@
     ];
 
     const DEFAULT_CELEBRATION_MSGS = {
-      newcomerTitle: '🎉 새신자 {이름}님을 환영합니다!',
+      newcomerBadge: '💐 새가족 환영',
+      newcomerTitle: '🎉 새가족 {이름}님을 환영합니다!',
       newcomerDesc: '라이트 청년부의 새 가족이 되신 것을 진심으로 축복합니다. 만나면 반갑게 인사해 주세요! 😊'
     };
 
@@ -6340,7 +6356,7 @@
     const DEFAULT_BLOCKS = [
       {
         id: 'blk_hero', type: 'hero_notice', label: '상단 메인 공지 배너',
-        badge: '📌 중요 공지', title: '고정 공지 자동 연동',
+        badge: '📌 중요', title: '고정 공지 자동 연동',
         desc: '화면·공지 관리에서 올린 공지·광고가 상단 배너에 자동으로 표시됩니다.', theme: 'dark', audience: 'all'
       },
       {
@@ -6460,7 +6476,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=222" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=223" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6484,8 +6500,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=222', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=222', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=223', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=223', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -8349,6 +8365,26 @@
             showToast(`✅ 서버 생년월일 데이터 정리 완료 (birthdays ${deletedBdayDocs}건 · 회원 ${cleanedMembers}명)`);
           } catch (v29Err) {
             console.warn('v10.68 birthday purge error:', v29Err);
+          }
+        }
+
+        // 14) v10.123 (schemaVersion 31): 상단 고정 공지 배너 기본 배지 '📌 중요 공지' -> '📌 중요' 자동 이관
+        if ((appSnap.data().schemaVersion || 0) < 31) {
+          try {
+            for (const colName of ['homeBlocks', 'adminBlocks']) {
+              const bSnap31 = await db.collection(colName).get();
+              const targets31 = bSnap31.docs.filter(d => {
+                const bd = d.data() || {};
+                return bd.type === 'hero_notice' && (!bd.badge || String(bd.badge).trim() === '📌 중요 공지') && !bd.badgeCustomized;
+              });
+              if (targets31.length > 0) {
+                const b31 = db.batch();
+                targets31.forEach(d => b31.update(d.ref, { badge: '📌 중요' }));
+                await b31.commit();
+              }
+            }
+          } catch (v31Err) {
+            console.warn('v10.123 hero_notice badge migration skipped:', v31Err);
           }
         }
 
@@ -10769,15 +10805,213 @@
       else if (currentMainTab === 'manage') renderManageView(user);
     }
 
-    window.switchMainTab = (tab) => {
+    const MAIN_VIEW_ID_MAP = {
+      home: 'viewHome',
+      sermon: 'viewSermon',
+      ccm: 'viewCcm',
+      bylaws: 'viewBylaws',
+      guide: 'viewGuide',
+      terms: 'viewTerms',
+      videos: 'viewVideos',
+      settings: 'viewSettings',
+      manage: 'viewManage'
+    };
+
+    function getActiveMainSectionEl() {
+      const id = MAIN_VIEW_ID_MAP[currentMainTab];
+      return id ? document.getElementById(id) : null;
+    }
+
+    function getSwipeableMainTabs(user) {
+      if (!user || !user.role) return [];
+      const canManage = hasAnyManagePerm(user.role.perms);
+      return getValidTabOrder().filter(k => k !== 'more' && (k !== 'manage' || canManage));
+    }
+
+    window.switchMainTab = (tab, swipeDir = '') => {
       if (currentMainTab === 'manage' && currentManageSubTab === 'sheet' && tab !== 'manage' && typeof finalizeViewedLinkedSheetNewTabs === 'function') finalizeViewedLinkedSheetNewTabs();
       document.getElementById('quickLinksSheet').classList.remove('open');
       if (currentMainTab === 'manage' && tab !== 'manage') {
         draftTabInitialized = false;
       }
+      const changed = currentMainTab !== tab;
       currentMainTab = tab;
       applyScreen();
+      if (changed && (swipeDir === 'next' || swipeDir === 'prev')) {
+        try { window.scrollTo({ top: 0, behavior: 'instant' }); } catch { window.scrollTo(0, 0); }
+        const nextEl = getActiveMainSectionEl();
+        if (nextEl) {
+          const animCls = swipeDir === 'next' ? 'swipe-enter-right' : 'swipe-enter-left';
+          nextEl.classList.remove('swipe-enter-right', 'swipe-enter-left');
+          void nextEl.offsetWidth;
+          nextEl.classList.add(animCls);
+          setTimeout(() => nextEl.classList.remove(animCls), 240);
+        }
+      }
     };
+
+    function initMainScreenSwipe() {
+      const mainEl = document.getElementById('appMain');
+      if (!mainEl || mainEl.dataset.swipeBound === '1') return;
+      mainEl.dataset.swipeBound = '1';
+
+      let tracking = false;
+      let locked = ''; // '' | 'h' | 'v'
+      let startX = 0;
+      let startY = 0;
+      let lastDx = 0;
+      let lastDy = 0;
+      let startTs = 0;
+      let activeEl = null;
+
+      function isInsideHorizontalScroller(target) {
+        let cur = target;
+        while (cur && cur !== mainEl && cur !== document.body) {
+          if (cur.nodeType === 1) {
+            if (cur.scrollWidth > cur.clientWidth + 4) {
+              const ox = window.getComputedStyle(cur).overflowX;
+              if (ox === 'auto' || ox === 'scroll') return true;
+            }
+          }
+          cur = cur.parentElement;
+        }
+        return false;
+      }
+
+      function getSwipeTargets(user) {
+        if (currentMainTab === 'bylaws' || currentMainTab === 'guide' || currentMainTab === 'terms') {
+          return { prevTab: 'settings', nextTab: null };
+        }
+        if (currentMainTab === 'videos') {
+          return { prevTab: 'home', nextTab: null };
+        }
+        const tabs = getSwipeableMainTabs(user);
+        const idx = tabs.indexOf(currentMainTab);
+        if (idx < 0) return { prevTab: null, nextTab: null };
+        return {
+          prevTab: idx > 0 ? tabs[idx - 1] : null,
+          nextTab: idx < tabs.length - 1 ? tabs[idx + 1] : null
+        };
+      }
+
+      function resetActiveTransform(smooth = false) {
+        const el = activeEl;
+        if (!el) return;
+        if (smooth) {
+          el.style.transition = 'transform 0.18s cubic-bezier(0.22, 1, 0.36, 1)';
+          el.style.transform = 'translateX(0px)';
+          setTimeout(() => {
+            el.style.transition = '';
+            el.style.transform = '';
+          }, 190);
+        } else {
+          el.style.transition = '';
+          el.style.transform = '';
+        }
+      }
+
+      mainEl.addEventListener('touchstart', (e) => {
+        tracking = false;
+        locked = '';
+        lastDx = 0;
+        lastDy = 0;
+        activeEl = null;
+
+        if (!e.touches || e.touches.length !== 1) return;
+        const user = getCurrentUser();
+        if (!user) return;
+        if (document.getElementById('mainApp').classList.contains('hidden')) return;
+        if (document.querySelector('.modal-backdrop.open')) return;
+
+        const t = e.touches[0];
+        if (t.clientX < 20 || t.clientX > window.innerWidth - 20) return;
+
+        const target = e.target;
+        if (target && target.closest && target.closest('input, textarea, select, option, iframe, .switch, [contenteditable="true"]')) return;
+        if (isInsideHorizontalScroller(target)) return;
+
+        activeEl = getActiveMainSectionEl();
+        if (!activeEl) return;
+
+        tracking = true;
+        startX = t.clientX;
+        startY = t.clientY;
+        startTs = Date.now();
+      }, { passive: true });
+
+      mainEl.addEventListener('touchmove', (e) => {
+        if (!tracking || !e.touches || e.touches.length !== 1) return;
+        const t = e.touches[0];
+        const dx = t.clientX - startX;
+        const dy = t.clientY - startY;
+        lastDx = dx;
+        lastDy = dy;
+
+        if (!locked) {
+          if (Math.hypot(dx, dy) < 12) return;
+          if (Math.abs(dx) > Math.abs(dy) * 1.35) {
+            locked = 'h';
+          } else {
+            locked = 'v';
+            tracking = false;
+            return;
+          }
+        }
+
+        if (locked === 'h' && activeEl) {
+          const user = getCurrentUser();
+          const { prevTab, nextTab } = getSwipeTargets(user);
+          const hasDirTarget = (dx < 0 && !!nextTab) || (dx > 0 && !!prevTab);
+          const offset = hasDirTarget
+            ? Math.max(-64, Math.min(64, dx * 0.3))
+            : Math.max(-16, Math.min(16, dx * 0.08));
+          activeEl.style.transition = 'none';
+          activeEl.style.transform = `translateX(${offset}px)`;
+        }
+      }, { passive: true });
+
+      const finishSwipe = (cancelled = false) => {
+        if (!tracking) return;
+        const wasHorizontal = locked === 'h';
+        const dx = lastDx;
+        const dy = lastDy;
+        const elapsed = Date.now() - startTs;
+        tracking = false;
+        locked = '';
+
+        if (!wasHorizontal || cancelled) {
+          resetActiveTransform(true);
+          activeEl = null;
+          return;
+        }
+
+        const user = getCurrentUser();
+        const { prevTab, nextTab } = getSwipeTargets(user);
+        const passedDist = Math.abs(dx) >= 56 || (Math.abs(dx) >= 34 && elapsed <= 260);
+        const horizontalDominant = Math.abs(dx) > Math.abs(dy) * 1.25;
+
+        if (passedDist && horizontalDominant) {
+          if (dx < 0 && nextTab) {
+            resetActiveTransform(false);
+            activeEl = null;
+            switchMainTab(nextTab, 'next');
+            return;
+          }
+          if (dx > 0 && prevTab) {
+            resetActiveTransform(false);
+            activeEl = null;
+            switchMainTab(prevTab, 'prev');
+            return;
+          }
+        }
+
+        resetActiveTransform(true);
+        activeEl = null;
+      };
+
+      mainEl.addEventListener('touchend', () => finishSwipe(false), { passive: true });
+      mainEl.addEventListener('touchcancel', () => finishSwipe(true), { passive: true });
+    }
 
     // ==================== 10. 회칙 검색 및 렌더링 ====================
     function highlightText(rawText, query) {
@@ -10953,11 +11187,11 @@
           id: 'ug_home_att',
           icon: getTabIcon('home'),
           title: `${getTabLabel('home')} 소식 확인 & 예배 출석 체크`,
-          sub: '공지·배너·새신자 환영 & 주일/행사 출석 방법',
+          sub: '공지·배너·새가족 환영 & 주일/행사 출석 방법',
           keywords: `${getTabLabel('home')} 메인 홈 공지 광고 소식 배너 새신자 출석 체크 주일예배 행사`,
           steps: [
             `<b>공지 · 광고 · 소식 확인:</b> <b>${hLbl}</b> 상단 고정 배너와 하단 공지 목록에서 청년부 소식을 확인합니다. 구분 칩(전체/공지/광고/소식/행사 등)으로 필터링할 수 있으며, 카드를 누르면 전체 본문이 열립니다.`,
-            `<b>새신자 환영 배너:</b> 새로 온 새신자가 있으면 <b>${hLbl}</b> 상단에 환영 배너가 자동으로 표시됩니다.`,
+            `<b>새가족 환영 배너:</b> 새로 온 새가족이 있으면 <b>${hLbl}</b> 상단에 환영 배너가 자동으로 표시됩니다.`,
             `<b>예배 · 특별 행사 출석 체크:</b> 설정된 주일 예배 시간(기본 일요일 14:00~15:30) 또는 특별 행사 시간에만 <b>${hLbl}</b> 맨 위에 <b>초록색 출석 카드</b>가 자동으로 나타납니다.`,
             `<b>1인 1회 출석 확인:</b> <b>[출석하기]</b> 버튼을 누르면 즉시 출석이 기록되고 카드가 자동으로 숨겨집니다. 출석 완료 여부와 최근 출석 기록은 하단 <b>[${stIcn} ${stLbl}] → 👤 내 계정 관리</b>에서 언제든 확인할 수 있습니다.`
           ],
@@ -11200,7 +11434,7 @@
             `<b>공지 상단 배너 고정:</b> 공지 작성 시 <b>[📌 상단 고정 공지 배너에도 함께 띄우기]</b>를 체크하거나 목록의 <b>[📌 배너 고정]</b>을 누르면 ${hLbl} 최상단 배너에 자동 연동됩니다.`,
             '<b>특정 역할에게만 보여주기 (서버 보안 분리):</b> 공개 대상에서 <b>[🎯 선택한 역할만 보기]</b>를 고르고 원하는 역할(예: 목사·부장·회장·팀장·셀장 등 중복 선택 가능)을 체크하면 해당 역할 회원에게만 표시됩니다.',
             '<b>임시저장 & 예약 게시:</b> <b>[📝 임시저장]</b>은 관리자만 볼 수 있고, <b>[⏰ 예약 게시]</b>는 지정한 한국시간(KST)이 지나면 자동으로 공개됩니다.',
-            '<b>새신자 환영 멘트 수정:</b> 상단 노란색 카드의 <b>[✏️ 멘트 수정]</b>에서 <b>{이름}</b> 변수를 넣어 새신자 자동 배너와 알림 문구를 자유롭게 바꿀 수 있습니다.'
+            '<b>새가족 환영 멘트 수정:</b> 상단 노란색 카드의 <b>[✏️ 멘트 수정]</b>에서 상단 배지와 <b>{이름}</b> 변수를 넣어 새가족 자동 배너와 알림 문구를 자유롭게 바꿀 수 있습니다.'
           ],
           tip: '예약 게시 항목은 보안상 관리자 전용 서버(adminNotices/adminBlocks)에 격리되어 있으며, 지정 시각 이후 관리자가 앱에 접속 중이거나 앱을 열 때 즉시 자동 공개됩니다.'
         },
@@ -11574,6 +11808,7 @@
       const valid = newcomerList.filter(item => item && String(item.name || '').trim());
       if (valid.length === 0) return '';
       const namesText = valid.map(item => String(item.name).trim()).join(', ');
+      const badgeText = getCelebrationMsg('newcomerBadge');
       const titleText = renderCelebrationText(getCelebrationMsg('newcomerTitle'), namesText);
       const descText = renderCelebrationText(getCelebrationMsg('newcomerDesc'), namesText);
       const adminEditBtn = (user && user.isSuperAdmin)
@@ -11583,7 +11818,7 @@
         <div class="home-block">
           <div class="newcomer-auto-banner">
             ${adminEditBtn}
-            <span class="newcomer-auto-badge">💐 새신자 환영 · ${valid.length}명</span>
+            <span class="newcomer-auto-badge">${escapeHtml(badgeText)} · ${valid.length}명</span>
             <h2 class="newcomer-auto-title">${escapeHtml(titleText)}</h2>
             <p class="newcomer-auto-desc">${escapeHtml(descText)}</p>
           </div>
@@ -11657,11 +11892,19 @@
           const pinned = visibleNotices.find(n => n.pinned) || visibleNotices[0];
           if (!pinned) return '';
           const pinnedNew = isNoticeUnread(pinned, user);
+          const rawHeroBadge = String(b.badge || '').trim();
+          const heroBadgeText = (!rawHeroBadge || (!b.badgeCustomized && rawHeroBadge === '📌 중요 공지'))
+            ? '📌 중요'
+            : rawHeroBadge;
+          const heroEditBtn = (user && user.isSuperAdmin)
+            ? `<button class="banner-quick-edit-btn" type="button" onclick="event.stopPropagation(); openEditBlockModal('${escapeJsAttr(b.id)}')">✏️ 배지 수정</button>`
+            : '';
           return `
             <div class="home-block">
               <div class="hero-banner ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)};" onclick="openDetail('${escapeJsAttr(pinned.id)}')">
-                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:9px;">
-                  <span class="hero-badge" style="margin-bottom:0;">${escapeHtml(b.badge || '📌 중요 공지')} · ${escapeHtml(pinned.category)}${pinned.audience && pinned.audience !== 'all' ? ' · 지정대상' : ''}</span>
+                ${heroEditBtn}
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:9px; ${heroEditBtn ? 'padding-right:82px;' : ''}">
+                  <span class="hero-badge" style="margin-bottom:0;">${escapeHtml(heroBadgeText)}${pinned.audience && pinned.audience !== 'all' ? ' · 지정대상' : ''}</span>
                   ${pinnedNew ? '<span class="new-badge">NEW</span>' : ''}
                 </div>
                 <h2 class="hero-title" style="margin-bottom:0;">${escapeHtml(pinned.title)}</h2>
@@ -12149,7 +12392,7 @@
         ${canLayout ? `
           <div class="card celeb-manage-card">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
-              <div style="font-size:13.5px; font-weight:800; color:#0F172A;">💐 새신자 환영 멘트</div>
+              <div style="font-size:13.5px; font-weight:800; color:#0F172A;">💐 새가족 환영 멘트</div>
               <button class="btn-sm primary" type="button" style="padding:6px 10px;" onclick="openCelebrationMsgsModal()">✏️ 멘트 수정</button>
             </div>
             <div style="font-size:12px; color:#475569; line-height:1.5; word-break:keep-all;">
@@ -12404,9 +12647,24 @@
     window.onBlockTypeChange = (isInitialLoad = false) => {
       const type = document.getElementById('blockTypeSelect').value;
       const isNoticeList = type === 'notice_list';
+      const isHeroNotice = type === 'hero_notice';
       document.getElementById('blockBadgeGroup').classList.toggle('hidden', isNoticeList);
-      document.getElementById('blockDescGroup').classList.toggle('hidden', isNoticeList);
+      const titleGroupEl = document.getElementById('blockTitleGroup');
+      if (titleGroupEl) titleGroupEl.classList.toggle('hidden', isHeroNotice);
+      document.getElementById('blockDescGroup').classList.toggle('hidden', isNoticeList || isHeroNotice);
       document.getElementById('blockColorGroup').classList.toggle('hidden', isNoticeList);
+      const badgeLblEl = document.getElementById('blockBadgeLabel');
+      const badgeInpEl = document.getElementById('blockBadgeInput');
+      if (badgeLblEl) {
+        badgeLblEl.textContent = isHeroNotice
+          ? '상단 배지 문구 (예: 📌 중요 · 자유 수정 가능)'
+          : '배지 문구 (상단 작은 글씨)';
+      }
+      if (badgeInpEl) {
+        badgeInpEl.placeholder = isHeroNotice
+          ? '예: 📌 중요 / 🔥 필독 / 📢 이번 주 안내'
+          : '예: 📌 이번 주 안내 / ✨ 특별 광고';
+      }
 
       if (!isInitialLoad) {
         if (type === 'leader_card') {
@@ -12958,7 +13216,11 @@
       document.getElementById('editBlockId').value = b.id;
       document.getElementById('blockTypeGroup').classList.remove('hidden');
       document.getElementById('blockTypeSelect').value = b.type || 'custom_ad';
-      document.getElementById('blockBadgeInput').value = b.badge || '';
+      const rawEditBadge = String(b.badge || '').trim();
+      const dispEditBadge = (b.type === 'hero_notice' && (!rawEditBadge || (!b.badgeCustomized && rawEditBadge === '📌 중요 공지')))
+        ? '📌 중요'
+        : rawEditBadge;
+      document.getElementById('blockBadgeInput').value = dispEditBadge;
       document.getElementById('blockTitleInput').value = b.title || '';
       document.getElementById('blockDescInput').value = b.desc || '';
 
@@ -13190,7 +13452,8 @@
         if (b) {
           b.type = type;
           b.label = autoLabel;
-          b.badge = badge;
+          b.badge = (type === 'hero_notice' && !badge) ? '📌 중요' : badge;
+          if (type === 'hero_notice') b.badgeCustomized = true;
           b.title = finalTitle;
           b.desc = desc;
           b.theme = selectedBlockTheme;
@@ -13205,7 +13468,8 @@
           id: targetBlockId,
           type,
           label: autoLabel,
-          badge,
+          badge: (type === 'hero_notice' && !badge) ? '📌 중요' : badge,
+          badgeCustomized: type === 'hero_notice',
           title: finalTitle,
           desc,
           theme: selectedBlockTheme,
@@ -16713,8 +16977,10 @@
       });
     };
 
-    // ==================== 18. 새신자 환영 멘트 관리자 편집 ====================
+    // ==================== 18. 새가족 환영 멘트 관리자 편집 ====================
     window.openCelebrationMsgsModal = () => {
+      const badgeEl = document.getElementById('celebNewcomerBadgeInput');
+      if (badgeEl) badgeEl.value = getCelebrationMsg('newcomerBadge');
       document.getElementById('celebNewcomerTitleInput').value = getCelebrationMsg('newcomerTitle');
       document.getElementById('celebNewcomerDescInput').value = getCelebrationMsg('newcomerDesc');
       updateCelebrationPreview();
@@ -16736,43 +17002,52 @@
 
     window.updateCelebrationPreview = () => {
       const sampleName = '홍길동';
+      const badgeEl = document.getElementById('celebNewcomerBadgeInput');
+      const nBadge = (badgeEl ? badgeEl.value.trim() : '') || DEFAULT_CELEBRATION_MSGS.newcomerBadge;
       const nTitle = document.getElementById('celebNewcomerTitleInput').value.trim() || DEFAULT_CELEBRATION_MSGS.newcomerTitle;
       const nDesc = document.getElementById('celebNewcomerDescInput').value.trim() || DEFAULT_CELEBRATION_MSGS.newcomerDesc;
 
       document.getElementById('celebNewcomerPreview').innerHTML = `
-        <div style="font-size:10.5px; opacity:0.85; font-weight:700; margin-bottom:4px;">미리보기 (예시: ${sampleName})</div>
+        <div style="font-size:10.5px; opacity:0.85; font-weight:700; margin-bottom:5px;">미리보기 (예시: ${sampleName})</div>
+        <span class="newcomer-auto-badge" style="margin-bottom:6px; font-size:11px;">${escapeHtml(nBadge)} · 1명</span>
         <div style="font-size:14.5px; font-weight:900; margin-bottom:3px;">${escapeHtml(renderCelebrationText(nTitle, sampleName))}</div>
         <div style="font-size:12px; opacity:0.93; white-space:pre-line;">${escapeHtml(renderCelebrationText(nDesc, sampleName))}</div>
       `;
     };
 
     window.resetCelebrationMsgsDefaults = () => {
+      const badgeEl = document.getElementById('celebNewcomerBadgeInput');
+      if (badgeEl) badgeEl.value = DEFAULT_CELEBRATION_MSGS.newcomerBadge;
       document.getElementById('celebNewcomerTitleInput').value = DEFAULT_CELEBRATION_MSGS.newcomerTitle;
       document.getElementById('celebNewcomerDescInput').value = DEFAULT_CELEBRATION_MSGS.newcomerDesc;
       updateCelebrationPreview();
-      showToast('기본 새신자 환영 멘트로 복원했습니다. 저장 버튼을 눌러 반영하세요.');
+      showToast('기본 새가족 환영 멘트로 복원했습니다. 저장 버튼을 눌러 반영하세요.');
     };
 
     window.handleSaveCelebrationMsgs = async () => {
+      const badgeEl = document.getElementById('celebNewcomerBadgeInput');
       const next = {
+        newcomerBadge: (badgeEl ? badgeEl.value.trim() : '') || DEFAULT_CELEBRATION_MSGS.newcomerBadge,
         newcomerTitle: document.getElementById('celebNewcomerTitleInput').value.trim() || DEFAULT_CELEBRATION_MSGS.newcomerTitle,
         newcomerDesc: document.getElementById('celebNewcomerDescInput').value.trim() || DEFAULT_CELEBRATION_MSGS.newcomerDesc
       };
+      if (!enforceInputSecurity(`${next.newcomerBadge}\n${next.newcomerTitle}\n${next.newcomerDesc}`, '새가족 환영 멘트', true)) return;
       const btn = document.getElementById('saveCelebrationMsgsBtn');
       btn.disabled = true;
       try {
         await db.collection('config').doc('layout').set({ celebrationMsgs: next }, { merge: true });
+        celebrationMsgs = { ...DEFAULT_CELEBRATION_MSGS, ...next };
         recordAuditLog({
           actorType: 'admin',
           category: '공지·배너',
-          action: '새신자 환영 멘트 수정',
-          target: '새신자 환영 멘트',
-          detail: next.newcomerTitle
+          action: '새가족 환영 멘트 수정',
+          target: '새가족 환영 멘트',
+          detail: `${next.newcomerBadge} | ${next.newcomerTitle}`
         });
         document.getElementById('celebrationMsgsModal').classList.remove('open');
-        showToast('새신자 환영 멘트가 저장되었습니다!');
+        showToast('새가족 환영 멘트가 저장되었습니다!');
       } catch (err) {
-        handleDbError(err, '새신자 환영 멘트 저장');
+        handleDbError(err, '새가족 환영 멘트 저장');
       } finally {
         btn.disabled = false;
       }
@@ -24756,15 +25031,15 @@
       const sample = '홍길동';
       const nTitle = renderCelebrationText(getCelebrationMsg('newcomerTitle'), sample);
       const nDesc = renderCelebrationText(getCelebrationMsg('newcomerDesc'), sample);
-      document.getElementById('diagSimModalTitle').textContent = '💐 새신자 자동 환영 배너 체험';
+      document.getElementById('diagSimModalTitle').textContent = '💐 새가족 자동 환영 배너 체험';
       document.getElementById('diagSimModalBody').innerHTML = `
         <div class="newcomer-auto-banner" style="margin-bottom:12px;">
-          <span class="newcomer-auto-badge">💐 새신자 환영 · 미리보기</span>
+          <span class="newcomer-auto-badge">${escapeHtml(getCelebrationMsg('newcomerBadge'))} · 미리보기</span>
           <h2 class="newcomer-auto-title">${escapeHtml(nTitle)}</h2>
           <p class="newcomer-auto-desc">${escapeHtml(nDesc)}</p>
         </div>
         <div style="display:flex; flex-direction:column; gap:8px;">
-          <button class="btn-full btn-blue" type="button" style="padding:11px; font-size:13.5px;" onclick="previewDiagCelebrationNotif('newcomer')">💐 새신자 환영 팝업 알림 띄워보기</button>
+          <button class="btn-full btn-blue" type="button" style="padding:11px; font-size:13.5px;" onclick="previewDiagCelebrationNotif('newcomer')">💐 새가족 환영 팝업 알림 띄워보기</button>
         </div>
       `;
       document.getElementById('diagSimModal').classList.add('open');
@@ -24776,7 +25051,7 @@
       const nDesc = renderCelebrationText(getCelebrationMsg('newcomerDesc'), sample).replace(/\s*\n\s*/g, ' ');
       showInAppNotif('💐', nTitle, nDesc, () => {});
       sendDeviceNotification(nTitle, nDesc).catch(() => {});
-      showToast('새신자 환영 팝업 알림 미리보기를 띄웠습니다!');
+      showToast('새가족 환영 팝업 알림 미리보기를 띄웠습니다!');
     };
 
     window.runSheetLiveWriteTest = async () => {
@@ -31953,8 +32228,9 @@ ${handleUrl}`);
       }
     };
 
-    // 초기 로드 시 공식 도메인 · HTTPS 즉시 검증
+    // 초기 로드 시 공식 도메인 · HTTPS 즉시 검증 + 화면 좌우 스와이프 활성화
     checkCloneDomainWarning();
+    initMainScreenSwipe();
   </script>
 </body>
 </html>
