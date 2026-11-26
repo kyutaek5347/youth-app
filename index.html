@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=201" />
+  <link rel="manifest" href="./manifest.json?v=202" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=201" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=201" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=202" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=202" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3551,7 +3551,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=201" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=202" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5226,7 +5226,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 201;
+    const APP_CLIENT_BUILD = 202;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_SEEN_ADMIN_IDS = 'right_youth_seen_admin_ids_v1';
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
@@ -5290,6 +5290,11 @@
       officialHost: 'kyutaek5347.github.io'
     };
     const DEFAULT_AUTO_DIAG_CONFIG = {
+      enabled: false,
+      intervalSec: 30,
+      stopOnWarn: false
+    };
+    const DEFAULT_AUTO_SEC_CONFIG = {
       enabled: false,
       intervalSec: 30,
       stopOnWarn: false
@@ -6139,7 +6144,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=201" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=202" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6163,8 +6168,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=201', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=201', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=202', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=202', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -6606,6 +6611,18 @@
     let securityConfig = structuredClone(DEFAULT_SECURITY_CONFIG);
     let secCheckResults = {};
     let secCheckRunningAll = false;
+    let autoSecConfig = structuredClone(DEFAULT_AUTO_SEC_CONFIG);
+    let autoSecState = {
+      phase: 'off', // 'off' | 'watching' | 'checking' | 'paused_issue'
+      issueIds: [],
+      pausedAt: '',
+      lastRunAt: '',
+      nextRunAtTs: 0,
+      cycleCount: 0
+    };
+    let autoSecTimerId = null;
+    let autoSecCountdownTimerId = null;
+    let autoSecBusy = false;
     let pendingExternalGuardUrl = '';
     let cloneBannerDismissed = false;
     let auditLogsFirstSnap = true;
@@ -6781,6 +6798,7 @@
       knownPendingAdminIds = new Set();
       knownActiveAdminIds = new Set();
       if (typeof stopAutoDiagRunner === 'function') stopAutoDiagRunner(true);
+      if (typeof stopAutoSecRunner === 'function') stopAutoSecRunner(true);
     }
 
     function getRoleById(roleId) {
@@ -7153,6 +7171,11 @@
           ? Math.max(1, (autoDiagState.issueIds || []).length)
           : 0;
       }
+      if (subId === 'security') {
+        return (autoSecState && autoSecState.phase === 'paused_issue')
+          ? Math.max(1, (autoSecState.issueIds || []).length)
+          : 0;
+      }
       return 0;
     }
 
@@ -7161,7 +7184,8 @@
         + getManageSubTabBadgeCount('admins')
         + getManageSubTabBadgeCount('inquiries')
         + getManageSubTabBadgeCount('videos')
-        + getManageSubTabBadgeCount('diagnostics');
+        + getManageSubTabBadgeCount('diagnostics')
+        + getManageSubTabBadgeCount('security');
     }
 
     function buildSubTabBadgeHtml(cnt) {
@@ -8668,6 +8692,17 @@
               autoDiagConfig = structuredClone(DEFAULT_AUTO_DIAG_CONFIG);
             }
             if (typeof syncAutoDiagRunner === 'function') syncAutoDiagRunner();
+            if (d.autoSecConfig && typeof d.autoSecConfig === 'object') {
+              const rawSec2 = Number(d.autoSecConfig.intervalSec);
+              autoSecConfig = {
+                enabled: !!d.autoSecConfig.enabled,
+                intervalSec: (Number.isFinite(rawSec2) && rawSec2 >= 5 && rawSec2 <= 600) ? Math.round(rawSec2) : 30,
+                stopOnWarn: !!d.autoSecConfig.stopOnWarn
+              };
+            } else {
+              autoSecConfig = structuredClone(DEFAULT_AUTO_SEC_CONFIG);
+            }
+            if (typeof syncAutoSecRunner === 'function') syncAutoSecRunner();
             if (typeof d.latestBuild === 'number' && d.latestBuild > serverLatestBuild) {
               serverLatestBuild = d.latestBuild;
               notifyPendingAppUpdateIfNeeded();
@@ -10840,6 +10875,7 @@
         checkAndPromoteDueScheduledItems();
         checkAndNotifyNewcomers();
         if (typeof onAutoDiagVisibilityVisible === 'function') onAutoDiagVisibilityVisible();
+        if (typeof onAutoSecVisibilityVisible === 'function') onAutoSecVisibilityVisible();
         const u = getCurrentUser();
         if (u) {
           if (currentMainTab === 'home') renderHomeView(u);
@@ -21925,6 +21961,7 @@
       previewAsObserverMode = false;
       if (previewAsMemberMode) {
         stopAutoDiagRunner(false);
+        stopAutoSecRunner(false);
         currentMainTab = 'home';
         showToast('일반 회원 시점으로 전환했습니다. 상단 [관리자 복귀]로 언제든 돌아올 수 있습니다.');
       } else {
@@ -21932,6 +21969,7 @@
         currentManageSubTab = 'diagnostics';
         showToast('관리자 화면으로 복귀했습니다.');
         syncAutoDiagRunner(false);
+        syncAutoSecRunner(false);
       }
       applyScreen();
     };
@@ -21941,6 +21979,7 @@
       previewAsMemberMode = false;
       if (previewAsObserverMode) {
         stopAutoDiagRunner(false);
+        stopAutoSecRunner(false);
         currentMainTab = 'manage';
         if (currentManageSubTab === 'admincode') currentManageSubTab = 'content';
         showToast('참관자(구경) 시점으로 전환했습니다. 읽기 전용 잠금 상태를 확인 후 상단 [관리자 복귀]를 눌러주세요.');
@@ -21949,6 +21988,7 @@
         currentManageSubTab = 'diagnostics';
         showToast('관리자 화면으로 복귀했습니다.');
         syncAutoDiagRunner(false);
+        syncAutoSecRunner(false);
       }
       applyScreen();
     };
@@ -22703,7 +22743,134 @@
       { id: 'defense_storage', title: '11. 실시간 방어 정책 · 기기 저장소 보안 점검', desc: '핵심 실시간 차단 스위치 활성화 상태와 브라우저 저장소 내 민감 정보 미노출 여부를 점검합니다.' }
     ];
 
-    function setSecCheckResult(id, status, msg, advice = null) {
+    function buildSecItemsCardsHtml() {
+      const badgeMap = {
+        idle: '<span class="tag slate">대기</span>',
+        running: '<span class="tag warm">점검 중...</span>',
+        ok: '<span class="tag green">✅ 안전</span>',
+        warn: '<span class="tag warm">⚠️ 주의</span>',
+        err: '<span class="tag red">🚨 위험</span>'
+      };
+      return SEC_CHECK_ITEMS.map(item => {
+        const res = secCheckResults[item.id] || { status: 'idle', msg: item.desc, ts: '' };
+        const isPausedTarget = autoSecState.phase === 'paused_issue' && (autoSecState.issueIds || []).includes(item.id);
+        return `
+          <div class="diag-card ${res.status}" style="${isPausedTarget ? 'box-shadow:0 0 0 2px #EF4444;' : ''}">
+            <div class="layout-item-head">
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; min-width:0;">
+                <strong style="font-size:13.5px; color:#0F172A;">${escapeHtml(item.title)}</strong>
+                ${badgeMap[res.status] || badgeMap.idle}
+                ${isPausedTarget ? '<span class="tag red" style="font-size:10px;">🚨 자동점검 중단 원인</span>' : ''}
+              </div>
+              <button class="btn-sm primary" type="button" style="white-space:nowrap;" onclick="runSingleSecurityCheck('${item.id}')">개별 점검</button>
+            </div>
+            <div class="diag-msg">${escapeHtml(res.msg)}</div>
+            ${buildCheckAdviceHtml(res)}
+            ${res.ts ? `<div style="font-size:10.5px; color:#94A3B8; margin-top:4px;">최근 점검: ${escapeHtml(res.ts)}</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function buildAutoSecLiveBoxHtml() {
+      const cfg = autoSecConfig || DEFAULT_AUTO_SEC_CONFIG;
+      const sec = Math.max(5, Number(cfg.intervalSec || 30));
+      const secLabel = sec < 60 ? `${sec}초` : (sec % 60 === 0 ? `${sec / 60}분` : `${sec}초`);
+      const remainSec = autoSecState.nextRunAtTs > Date.now()
+        ? Math.ceil((autoSecState.nextRunAtTs - Date.now()) / 1000)
+        : 0;
+
+      if (!cfg.enabled || autoSecState.phase === 'off') {
+        return `
+          <div class="auto-diag-status-pill off">⚪ 자동 보안 점검 꺼짐</div>
+          <div style="font-size:11.5px; color:#CBD5E1; line-height:1.45;">
+            위 스위치를 켜면 <b>${escapeHtml(secLabel)}</b>마다 ${SEC_CHECK_ITEMS.length}개 보안 항목을 자동으로 점검합니다.
+          </div>
+        `;
+      }
+
+      if (autoSecState.phase === 'paused_issue') {
+        const issueTitles = (autoSecState.issueIds || []).map(id => {
+          const it = SEC_CHECK_ITEMS.find(x => x.id === id);
+          return it ? it.title : id;
+        });
+        return `
+          <div class="auto-diag-status-pill paused">🚨 보안 문제 감지 · 자동 점검 일시 정지됨</div>
+          <div class="auto-diag-alert-box">
+            <div style="font-weight:800; margin-bottom:4px;">감지 시각: ${escapeHtml(autoSecState.pausedAt || '-')} · 관리자 알림 발송 완료</div>
+            <div style="margin-bottom:6px;">• 문제 항목: <b>${escapeHtml(issueTitles.join(', ') || '확인 필요')}</b></div>
+            <div style="font-size:11.5px; color:#FDE68A;">
+              🔄 보안 문제가 해결되면 자동으로 다시 계속 점검합니다.${remainSec > 0 ? ` (다음 해결 확인까지 <b>${remainSec}초</b>)` : ' (해결 여부 확인 중...)'}
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">
+              <button class="btn-sm approve" type="button" style="flex:1; padding:7px 9px;" onclick="recheckPausedAutoSecNow()">🔍 지금 해결 확인 및 재개</button>
+              <button class="btn-sm danger" type="button" style="padding:7px 9px;" onclick="handleToggleAutoSec(false)">자동 점검 끄기</button>
+            </div>
+          </div>
+        `;
+      }
+
+      if (autoSecState.phase === 'checking') {
+        return `
+          <div class="auto-diag-status-pill checking">🔄 자동 보안 일괄 점검 실행 중...</div>
+          <div style="font-size:11.5px; color:#CBD5E1; line-height:1.45;">
+            ${SEC_CHECK_ITEMS.length}개 보안 항목 상태를 백그라운드에서 점검하고 있습니다.
+          </div>
+        `;
+      }
+
+      return `
+        <div class="auto-diag-status-pill watching">🟢 자동 보안 감시 가동 중 (${escapeHtml(secLabel)} 주기)</div>
+        <div style="font-size:11.5px; color:#E2E8F0; line-height:1.5;">
+          ${remainSec > 0 ? `⏳ 다음 자동 보안 점검까지 <b>${remainSec}초</b>` : '⏳ 곧 다음 자동 보안 점검을 시작합니다.'}
+          ${autoSecState.lastRunAt ? ` · 최근 완료: ${escapeHtml(autoSecState.lastRunAt)}` : ''}
+          ${autoSecState.cycleCount > 0 ? ` · 정상 완료 <b>${autoSecState.cycleCount}회</b>` : ''}
+        </div>
+      `;
+    }
+
+    function refreshSecurityLiveUI() {
+      const u = getCurrentUser();
+      if (!u || currentMainTab !== 'manage' || currentManageSubTab !== 'security') return;
+      const cfg = securityConfig || DEFAULT_SECURITY_CONFIG;
+      const okCnt = SEC_CHECK_ITEMS.filter(it => secCheckResults[it.id] && secCheckResults[it.id].status === 'ok').length;
+      const warnCnt = SEC_CHECK_ITEMS.filter(it => secCheckResults[it.id] && secCheckResults[it.id].status === 'warn').length;
+      const errCnt = SEC_CHECK_ITEMS.filter(it => secCheckResults[it.id] && secCheckResults[it.id].status === 'err').length;
+
+      const heroTag = document.getElementById('secHeroStatusTag');
+      if (heroTag) {
+        heroTag.className = `tag ${errCnt > 0 ? 'red' : (warnCnt > 0 ? 'warm' : 'green')}`;
+        heroTag.textContent = errCnt > 0 ? '🚨 위험 감지' : (warnCnt > 0 ? '⚠️ 주의 항목 있음' : (okCnt === SEC_CHECK_ITEMS.length ? '✅ 전 항목 안전' : '🛡️ 방어 가동 중'));
+      }
+      const scoreRow = document.getElementById('secScoreRow');
+      if (scoreRow) {
+        scoreRow.innerHTML = `
+          <span class="sec-pill ok">✅ 안전 ${okCnt}</span>
+          <span class="sec-pill warn">⚠️ 주의 ${warnCnt}</span>
+          <span class="sec-pill err">🚨 위험 ${errCnt}</span>
+          <span class="sec-pill">🔒 실시간 방어 ${[cfg.blockMaliciousInput, cfg.blockSuspiciousLinks, cfg.confirmExternalLinks, cfg.detectCloneDomain].filter(Boolean).length}/4 ON</span>
+          <span class="sec-pill ${cfg.alertAdminOnSecurityEvent !== false ? 'ok' : ''}">🚨 관리자 알림 ${cfg.alertAdminOnSecurityEvent !== false ? 'ON' : 'OFF'}</span>
+        `;
+      }
+      const listBadge = document.getElementById('secCheckListBadge');
+      if (listBadge) {
+        listBadge.className = `tag ${errCnt > 0 ? 'red' : (okCnt === SEC_CHECK_ITEMS.length ? 'green' : 'slate')}`;
+        listBadge.textContent = `${okCnt}/${SEC_CHECK_ITEMS.length}`;
+      }
+      const liveBox = document.getElementById('autoSecLiveBox');
+      if (liveBox) liveBox.innerHTML = buildAutoSecLiveBoxHtml();
+
+      const cardsWrap = document.getElementById('secItemsCardsContainer');
+      if (cardsWrap) cardsWrap.innerHTML = buildSecItemsCardsHtml();
+    }
+
+    function isSecStatusProblem(status) {
+      if (status === 'err') return true;
+      if (autoSecConfig && autoSecConfig.stopOnWarn && status === 'warn') return true;
+      return false;
+    }
+
+    function setSecCheckResult(id, status, msg, advice = null, silentUi = false) {
       secCheckResults[id] = {
         status,
         msg,
@@ -22714,7 +22881,11 @@
       };
       const u = getCurrentUser();
       if (u && currentMainTab === 'manage' && currentManageSubTab === 'security') {
-        renderManageSecurity(document.getElementById('manageContent'), u);
+        if (silentUi || document.getElementById('secItemsCardsContainer')) {
+          refreshSecurityLiveUI();
+        } else {
+          renderManageSecurity(document.getElementById('manageContent'), u);
+        }
       }
     }
 
@@ -22760,14 +22931,14 @@
               <div style="font-size:16px; font-weight:900; color:#FFFFFF;">${escapeHtml(getManageSectionTitle('sec_hero', `${getTabIcon('manageSecurity')} ${getTabLabel('manageSecurity')} · 공격 방어 센터`))}</div>
               ${buildSectionEditBtnHtml('sec_hero', `${getTabIcon('manageSecurity')} ${getTabLabel('manageSecurity')} · 공격 방어 센터`, true)}
             </div>
-            <span class="tag ${errCnt > 0 ? 'red' : (warnCnt > 0 ? 'warm' : 'green')}">
+            <span id="secHeroStatusTag" class="tag ${errCnt > 0 ? 'red' : (warnCnt > 0 ? 'warm' : 'green')}">
               ${errCnt > 0 ? '🚨 위험 감지' : (warnCnt > 0 ? '⚠️ 주의 항목 있음' : (okCnt === SEC_CHECK_ITEMS.length ? '✅ 전 항목 안전' : '🛡️ 방어 가동 중'))}
             </span>
           </div>
           <div style="font-size:12px; color:#CBD5E1; line-height:1.5; margin-top:6px;">
-            해킹(XSS)·피싱 링크·복제 도메인 등 악의적 공격을 <b>실시간 감지·차단</b>하고, 앱 전체 데이터의 보안 상태를 점검합니다.
+            해킹(XSS)·피싱 링크·개인정보 노출·복제 도메인 등 보안 위협을 <b>수동 또는 실시간 자동 주기</b>로 점검하고, 문제 감지 시 즉시 일시 정지·알림 후 해결되면 자동 재개합니다.
           </div>
-          <div class="sec-score-row">
+          <div id="secScoreRow" class="sec-score-row">
             <span class="sec-pill ok">✅ 안전 ${okCnt}</span>
             <span class="sec-pill warn">⚠️ 주의 ${warnCnt}</span>
             <span class="sec-pill err">🚨 위험 ${errCnt}</span>
@@ -22775,8 +22946,49 @@
             <span class="sec-pill ${cfg.alertAdminOnSecurityEvent !== false ? 'ok' : ''}">🚨 관리자 알림 ${cfg.alertAdminOnSecurityEvent !== false ? 'ON' : 'OFF'}</span>
           </div>
           <button id="runAllSecBtn" class="btn-full btn-amber" type="button" style="padding:12px; font-size:14px;" ${secCheckRunningAll ? 'disabled' : ''} onclick="runAllSecurityChecks()">
-            ${secCheckRunningAll ? '⏳ 전체 보안 정밀 점검 중...' : `🛡️ 전체 보안 일괄 점검 실행 (${SEC_CHECK_ITEMS.length}개 항목)`}
+            ${secCheckRunningAll ? '⏳ 전체 보안 정밀 점검 중...' : `🛡️ 수동 전체 보안 일괄 점검 실행 (${SEC_CHECK_ITEMS.length}개 항목)`}
           </button>
+
+          <!-- 실시간 자동 보안 일괄 점검 설정 & 상태 패널 -->
+          <div class="auto-diag-panel">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;">
+              <div>
+                <div style="font-size:13.5px; font-weight:800; color:#FFFFFF;">🤖 실시간 자동 보안 일괄 점검</div>
+                <div style="font-size:11.5px; color:#A7F3D0; margin-top:2px;">문제 감지 시 즉시 멈춤·관리자 알림 · 해결 시 자동 재개</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="cfgAutoSecEnabled" ${autoSecConfig.enabled ? 'checked' : ''} onchange="handleToggleAutoSec(this.checked)" />
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div style="margin-bottom:8px;">
+              <div style="font-size:11.5px; font-weight:700; color:#CBD5E1; margin-bottom:5px;">⏱️ 자동 보안 점검 주기 (초)</div>
+              <div style="display:flex; gap:5px; flex-wrap:wrap; align-items:center;">
+                ${[10, 30, 60, 180, 300].map(sec => {
+                  const lbl = sec < 60 ? `${sec}초` : `${sec / 60}분`;
+                  return `<button class="auto-diag-chip ${Number(autoSecConfig.intervalSec) === sec ? 'active' : ''}" type="button" onclick="handleSetAutoSecInterval(${sec})">${lbl}</button>`;
+                }).join('')}
+                <div style="display:inline-flex; align-items:center; gap:4px; margin-left:auto;">
+                  <input id="cfgAutoSecSecInput" type="number" min="5" max="600" inputmode="numeric" value="${escapeHtml(String(autoSecConfig.intervalSec || 30))}" style="width:62px; padding:5px 7px; border-radius:8px; border:1px solid rgba(255,255,255,0.22); background:rgba(15,23,42,0.7); color:#fff; font-size:12px; font-weight:700; text-align:center;" />
+                  <button class="auto-diag-chip" type="button" style="padding:5px 8px;" onclick="handleSaveCustomAutoSecSec()">초 적용</button>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-bottom:9px;">
+              <div style="font-size:11.5px; font-weight:700; color:#CBD5E1; margin-bottom:5px;">🚨 중단 · 알림 기준</div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button class="auto-diag-chip ${!autoSecConfig.stopOnWarn ? 'active' : ''}" type="button" onclick="handleSetAutoSecStopOnWarn(false)">🚨 위험만 감지 (권장)</button>
+                <button class="auto-diag-chip ${autoSecConfig.stopOnWarn ? 'active' : ''}" type="button" onclick="handleSetAutoSecStopOnWarn(true)">⚠️ 주의 + 🚨 위험 모두</button>
+              </div>
+            </div>
+
+            <div id="autoSecLiveBox">${buildAutoSecLiveBoxHtml()}</div>
+            <div style="font-size:10.5px; color:#94A3B8; margin-top:7px; line-height:1.45;">
+              • 최고 관리자 화면에서만 실행되며, 이미 동기화된 앱 데이터와 기기 보안 상태를 백그라운드에서 가볍게 점검합니다.
+            </div>
+          </div>
         </div>
 
         <div class="card" style="background:#EFF6FF; border-color:#BFDBFE; margin-bottom:12px; padding:10px 13px;">
@@ -22801,34 +23013,11 @@
         ${buildManageAccordionBar({
           key: 'sec_check_list',
           titleHtml: `🔍 해킹 · 피싱 · 접근 통제 ${SEC_CHECK_ITEMS.length}개 보안 진단`,
-          badgeHtml: `<span class="tag ${errCnt > 0 ? 'red' : (okCnt === SEC_CHECK_ITEMS.length ? 'green' : 'slate')}">${okCnt}/${SEC_CHECK_ITEMS.length}</span>`,
+          badgeHtml: `<span id="secCheckListBadge" class="tag ${errCnt > 0 ? 'red' : (okCnt === SEC_CHECK_ITEMS.length ? 'green' : 'slate')}">${okCnt}/${SEC_CHECK_ITEMS.length}</span>`,
           defaultOpen: true
         })}
         <div data-acc-body="sec_check_list" class="${checksOpen ? '' : 'hidden'}">
-          ${SEC_CHECK_ITEMS.map(item => {
-            const res = secCheckResults[item.id] || { status: 'idle', msg: item.desc, ts: '' };
-            const badgeMap = {
-              idle: '<span class="tag slate">대기</span>',
-              running: '<span class="tag warm">점검 중...</span>',
-              ok: '<span class="tag green">✅ 안전</span>',
-              warn: '<span class="tag warm">⚠️ 주의</span>',
-              err: '<span class="tag red">🚨 위험</span>'
-            };
-            return `
-              <div class="diag-card ${res.status}">
-                <div class="layout-item-head">
-                  <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; min-width:0;">
-                    <strong style="font-size:13.5px; color:#0F172A;">${escapeHtml(item.title)}</strong>
-                    ${badgeMap[res.status] || badgeMap.idle}
-                  </div>
-                  <button class="btn-sm primary" type="button" style="white-space:nowrap;" onclick="runSingleSecurityCheck('${item.id}')">개별 점검</button>
-                </div>
-                <div class="diag-msg">${escapeHtml(res.msg)}</div>
-                ${buildCheckAdviceHtml(res)}
-                ${res.ts ? `<div style="font-size:10.5px; color:#94A3B8; margin-top:4px;">최근 점검: ${escapeHtml(res.ts)}</div>` : ''}
-              </div>
-            `;
-          }).join('')}
+          <div id="secItemsCardsContainer">${buildSecItemsCardsHtml()}</div>
         </div>
 
         ` : ''}
@@ -22965,8 +23154,12 @@
       /^https:\/\/apis\.google\.com\/js\/api\.js/i
     ];
 
-    window.runSingleSecurityCheck = async (id) => {
-      setSecCheckResult(id, 'running', '보안 정밀 점검을 실행하고 있습니다...');
+    window.runSingleSecurityCheck = async (id, opts = {}) => {
+      const silent = !!(opts && opts.silent);
+      const isAuto = !!(opts && opts.isAuto);
+      if (!silent) {
+        setSecCheckResult(id, 'running', '보안 정밀 점검을 실행하고 있습니다...', null, true);
+      }
       try {
         const cfg = securityConfig || DEFAULT_SECURITY_CONFIG;
         const mLbl = getTabLabel('manageMembers');
@@ -23389,7 +23582,10 @@
           reason: '보안 항목을 검사하는 중 예상치 못한 스크립트 또는 통신 오류가 발생했습니다.',
           solution: '잠시 후 [개별 점검]을 다시 실행해 보시고, 오류가 계속되면 새로고침 후 재시도해 주세요.',
           actions: [{ label: '🔄 다시 점검', type: 'retest_sec', param: id, primary: true }]
-        });
+        }, silent);
+      }
+      if (!isAuto) {
+        evaluateAutoSecAfterManualCheck();
       }
     };
 
@@ -23397,17 +23593,24 @@
       if (secCheckRunningAll) return;
       secCheckRunningAll = true;
       toggleManageSection('sec_check_list', true, true);
-      const u = getCurrentUser();
-      if (u && currentMainTab === 'manage' && currentManageSubTab === 'security') {
-        renderManageSecurity(document.getElementById('manageContent'), u);
+      const btn = document.getElementById('runAllSecBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = '⏳ 전체 보안 정밀 점검 중...';
       }
       for (const item of SEC_CHECK_ITEMS) {
         await runSingleSecurityCheck(item.id);
       }
       secCheckRunningAll = false;
+      evaluateAutoSecAfterManualCheck();
       const u2 = getCurrentUser();
       if (u2 && currentMainTab === 'manage' && currentManageSubTab === 'security') {
-        renderManageSecurity(document.getElementById('manageContent'), u2);
+        const btn2 = document.getElementById('runAllSecBtn');
+        if (btn2) {
+          btn2.disabled = false;
+          btn2.textContent = `🛡️ 수동 전체 보안 일괄 점검 실행 (${SEC_CHECK_ITEMS.length}개 항목)`;
+        }
+        refreshSecurityLiveUI();
       }
       const errItems = SEC_CHECK_ITEMS.filter(it => secCheckResults[it.id] && secCheckResults[it.id].status === 'err');
       if (errItems.length > 0) {
@@ -23417,6 +23620,290 @@
         );
       }
       showToast(`🛡️ 전체 ${SEC_CHECK_ITEMS.length}개 보안 항목 일괄 점검이 완료되었습니다!`);
+    };
+
+    // --- 실시간 자동 보안 일괄 점검 엔진 (주기 실행 → 문제 감지 시 일시 정지·관리자 알림 → 해결 시 자동 재개) ---
+    function stopAutoSecRunner(resetPhase = true) {
+      if (autoSecTimerId) { clearTimeout(autoSecTimerId); autoSecTimerId = null; }
+      if (autoSecCountdownTimerId) { clearInterval(autoSecCountdownTimerId); autoSecCountdownTimerId = null; }
+      autoSecState.nextRunAtTs = 0;
+      if (resetPhase) {
+        autoSecState.phase = 'off';
+        autoSecState.issueIds = [];
+        autoSecState.pausedAt = '';
+      }
+    }
+
+    function ensureAutoSecCountdownTicker() {
+      if (autoSecCountdownTimerId) return;
+      autoSecCountdownTimerId = setInterval(() => {
+        const u = getCurrentUser();
+        if (!u || !u.isSuperAdmin || !autoSecConfig.enabled) {
+          stopAutoSecRunner(true);
+          return;
+        }
+        if (currentMainTab === 'manage' && currentManageSubTab === 'security') {
+          const liveBox = document.getElementById('autoSecLiveBox');
+          if (liveBox) liveBox.innerHTML = buildAutoSecLiveBoxHtml();
+        }
+      }, 1000);
+    }
+
+    function scheduleNextAutoSecTick(delayMs) {
+      if (autoSecTimerId) { clearTimeout(autoSecTimerId); autoSecTimerId = null; }
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin || !autoSecConfig.enabled) {
+        stopAutoSecRunner(true);
+        return;
+      }
+      const safeDelay = Math.max(5000, Number(delayMs || (autoSecConfig.intervalSec || 30) * 1000));
+      autoSecState.nextRunAtTs = Date.now() + safeDelay;
+      ensureAutoSecCountdownTicker();
+      autoSecTimerId = setTimeout(() => {
+        autoSecTimerId = null;
+        executeAutoSecTick();
+      }, safeDelay);
+      refreshSecurityLiveUI();
+    }
+
+    function dispatchAutoSecIssueAlert(problemItems) {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const firstTitle = problemItems[0] ? problemItems[0].title : '보안 항목';
+      const summary = problemItems.length === 1
+        ? `${firstTitle}에서 보안 문제가 감지되어 자동 점검을 멈췄습니다.`
+        : `${firstTitle} 외 ${problemItems.length - 1}건의 보안 문제가 감지되어 자동 점검을 멈췄습니다.`;
+      const title = '🚨 자동 보안 점검 중단 · 문제 감지';
+      showInAppNotif(
+        '🚨',
+        title,
+        `${summary} 탭해서 원인을 확인하세요.`,
+        () => {
+          currentMainTab = 'manage';
+          currentManageSubTab = 'security';
+          manageSectionOpen['sec_check_list'] = true;
+          applyScreen();
+        },
+        'sec-alert'
+      );
+      sendDeviceNotification(title, summary);
+      recordAuditLog({
+        actorType: 'admin',
+        category: '보안·설정',
+        action: '자동 보안 점검 문제 감지(일시 정지)',
+        target: problemItems.map(x => x.id).join(', '),
+        detail: problemItems.map(x => `${x.title}: ${(secCheckResults[x.id] && secCheckResults[x.id].msg) || ''}`).join(' / ').slice(0, 260)
+      });
+    }
+
+    function dispatchAutoSecResumedAlert() {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const sec = Math.max(5, Number(autoSecConfig.intervalSec || 30));
+      const secLbl = sec < 60 ? `${sec}초` : (sec % 60 === 0 ? `${sec / 60}분` : `${sec}초`);
+      const title = '✅ 보안 문제 해결 확인 · 자동 점검 재개';
+      const body = `감지되었던 보안 문제가 해결되어 ${secLbl} 주기 자동 보안 점검을 다시 시작합니다.`;
+      showInAppNotif('🛡️', title, body, () => {
+        currentMainTab = 'manage';
+        currentManageSubTab = 'security';
+        applyScreen();
+      });
+      sendDeviceNotification(title, body);
+      showToast(body);
+    }
+
+    async function executeAutoSecTick() {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin || !autoSecConfig.enabled) {
+        stopAutoSecRunner(true);
+        return;
+      }
+      if (document.visibilityState !== 'visible') {
+        scheduleNextAutoSecTick((autoSecConfig.intervalSec || 30) * 1000);
+        return;
+      }
+      if (autoSecBusy || secCheckRunningAll) {
+        scheduleNextAutoSecTick(5000);
+        return;
+      }
+
+      autoSecBusy = true;
+      try {
+        // Case A: 문제로 일시 정지 중 → 문제 항목만 조용히 재확인해 해결 시 자동 재개
+        if (autoSecState.phase === 'paused_issue' && (autoSecState.issueIds || []).length > 0) {
+          const targets = [...autoSecState.issueIds];
+          for (const tid of targets) {
+            await runSingleSecurityCheck(tid, { silent: true, isAuto: true });
+          }
+          const stillBroken = targets.filter(tid => secCheckResults[tid] && isSecStatusProblem(secCheckResults[tid].status));
+          if (stillBroken.length === 0) {
+            autoSecState.phase = 'watching';
+            autoSecState.issueIds = [];
+            autoSecState.pausedAt = '';
+            autoSecState.lastRunAt = formatKstDateTime();
+            dispatchAutoSecResumedAlert();
+            applyScreen();
+            scheduleNextAutoSecTick((autoSecConfig.intervalSec || 30) * 1000);
+          } else {
+            autoSecState.issueIds = stillBroken;
+            const recIntervalMs = Math.max(10000, Number(autoSecConfig.intervalSec || 30) * 1000);
+            scheduleNextAutoSecTick(recIntervalMs);
+          }
+          return;
+        }
+
+        // Case B: 정상 감시 중 → 11개 보안 항목 전체 자동 점검
+        autoSecState.phase = 'checking';
+        refreshSecurityLiveUI();
+
+        for (const item of SEC_CHECK_ITEMS) {
+          const curU = getCurrentUser();
+          if (!curU || !curU.isSuperAdmin || !autoSecConfig.enabled) {
+            stopAutoSecRunner(true);
+            return;
+          }
+          await runSingleSecurityCheck(item.id, { silent: true, isAuto: true });
+        }
+
+        autoSecState.lastRunAt = formatKstDateTime();
+        const problemItems = SEC_CHECK_ITEMS.filter(it => secCheckResults[it.id] && isSecStatusProblem(secCheckResults[it.id].status));
+
+        if (problemItems.length > 0) {
+          autoSecState.phase = 'paused_issue';
+          autoSecState.issueIds = problemItems.map(it => it.id);
+          autoSecState.pausedAt = formatKstDateTime();
+          dispatchAutoSecIssueAlert(problemItems);
+          applyScreen();
+          const recIntervalMs = Math.max(10000, Number(autoSecConfig.intervalSec || 30) * 1000);
+          scheduleNextAutoSecTick(recIntervalMs);
+        } else {
+          autoSecState.phase = 'watching';
+          autoSecState.issueIds = [];
+          autoSecState.pausedAt = '';
+          autoSecState.cycleCount += 1;
+          scheduleNextAutoSecTick((autoSecConfig.intervalSec || 30) * 1000);
+        }
+      } finally {
+        autoSecBusy = false;
+        refreshSecurityLiveUI();
+      }
+    }
+
+    function evaluateAutoSecAfterManualCheck() {
+      if (!autoSecConfig || !autoSecConfig.enabled) return;
+      if (autoSecState.phase !== 'paused_issue' || (autoSecState.issueIds || []).length === 0) return;
+      const stillBroken = autoSecState.issueIds.filter(tid => secCheckResults[tid] && isSecStatusProblem(secCheckResults[tid].status));
+      if (stillBroken.length === 0) {
+        autoSecState.phase = 'watching';
+        autoSecState.issueIds = [];
+        autoSecState.pausedAt = '';
+        dispatchAutoSecResumedAlert();
+        applyScreen();
+        scheduleNextAutoSecTick((autoSecConfig.intervalSec || 30) * 1000);
+      } else {
+        autoSecState.issueIds = stillBroken;
+        refreshSecurityLiveUI();
+      }
+    }
+
+    function syncAutoSecRunner(runImmediate = false) {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin || !autoSecConfig || !autoSecConfig.enabled) {
+        stopAutoSecRunner(true);
+        return;
+      }
+      if (autoSecState.phase === 'off') {
+        autoSecState.phase = 'watching';
+        scheduleNextAutoSecTick(runImmediate ? 500 : 4500);
+      } else if (!autoSecTimerId && !autoSecBusy) {
+        scheduleNextAutoSecTick(runImmediate ? 500 : (autoSecConfig.intervalSec || 30) * 1000);
+      } else if (runImmediate && !autoSecBusy) {
+        scheduleNextAutoSecTick(500);
+      }
+    }
+
+    function onAutoSecVisibilityVisible() {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin || !autoSecConfig || !autoSecConfig.enabled) return;
+      if (autoSecBusy) return;
+      if (autoSecState.phase === 'paused_issue' || Date.now() >= Number(autoSecState.nextRunAtTs || 0)) {
+        scheduleNextAutoSecTick(1200);
+      }
+    }
+
+    async function saveAutoSecConfig(patch, toastMsg = '') {
+      const next = {
+        ...DEFAULT_AUTO_SEC_CONFIG,
+        ...(autoSecConfig || {}),
+        ...patch
+      };
+      next.intervalSec = Math.min(600, Math.max(5, Math.round(Number(next.intervalSec || 30))));
+      try {
+        await db.collection('config').doc('layout').set({ autoSecConfig: next }, { merge: true });
+        autoSecConfig = next;
+        if (next.enabled) {
+          if (patch.enabled === true) {
+            autoSecState.phase = 'watching';
+            autoSecState.issueIds = [];
+            autoSecState.pausedAt = '';
+            autoSecState.cycleCount = 0;
+          }
+          syncAutoSecRunner(patch.enabled === true || patch.stopOnWarn !== undefined);
+        } else {
+          stopAutoSecRunner(true);
+        }
+        const u = getCurrentUser();
+        if (u && currentMainTab === 'manage' && currentManageSubTab === 'security') {
+          renderManageSecurity(document.getElementById('manageContent'), u);
+        } else {
+          applyScreen();
+        }
+        if (toastMsg) showToast(toastMsg);
+      } catch (err) {
+        handleDbError(err, '자동 보안 점검 설정 저장');
+      }
+    }
+
+    window.handleToggleAutoSec = async (checked) => {
+      const sec = Math.max(5, Number(autoSecConfig.intervalSec || 30));
+      const secLbl = sec < 60 ? `${sec}초` : (sec % 60 === 0 ? `${sec / 60}분` : `${sec}초`);
+      await saveAutoSecConfig(
+        { enabled: !!checked },
+        checked
+          ? `🤖 실시간 자동 보안 일괄 점검이 켜졌습니다 (${secLbl} 주기 · 이상 감지 시 일시 정지·알림)`
+          : '자동 보안 일괄 점검이 꺼졌습니다.'
+      );
+    };
+
+    window.handleSetAutoSecInterval = async (sec) => {
+      const val = Math.min(600, Math.max(5, Math.round(Number(sec || 30))));
+      const lbl = val < 60 ? `${val}초` : (val % 60 === 0 ? `${val / 60}분` : `${val}초`);
+      await saveAutoSecConfig({ intervalSec: val }, `자동 보안 점검 주기가 ${lbl}(으)로 저장되었습니다.`);
+    };
+
+    window.handleSaveCustomAutoSecSec = async () => {
+      const inp = document.getElementById('cfgAutoSecSecInput');
+      const raw = Number(inp ? inp.value : 30);
+      if (!Number.isFinite(raw) || raw < 5 || raw > 600) {
+        return showToast('자동 보안 점검 주기는 5초 ~ 600초(10분) 사이 숫자로 입력해 주세요.');
+      }
+      await handleSetAutoSecInterval(raw);
+    };
+
+    window.handleSetAutoSecStopOnWarn = async (stopOnWarn) => {
+      await saveAutoSecConfig(
+        { stopOnWarn: !!stopOnWarn },
+        stopOnWarn
+          ? '중단 기준: ⚠️ 주의 + 🚨 위험 모두 감지로 변경되었습니다.'
+          : '중단 기준: 🚨 위험만 감지(권장)로 변경되었습니다.'
+      );
+    };
+
+    window.recheckPausedAutoSecNow = async () => {
+      if (autoSecBusy) return showToast('이미 보안 점검이 진행 중입니다.');
+      showToast('감지된 보안 문제 항목의 해결 여부를 즉시 확인합니다...');
+      if (autoSecTimerId) { clearTimeout(autoSecTimerId); autoSecTimerId = null; }
+      await executeAutoSecTick();
     };
 
     window.handleSaveSecurityConfig = async () => {
