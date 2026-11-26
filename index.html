@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=188" />
+  <link rel="manifest" href="./manifest.json?v=189" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=188" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=188" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=189" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=189" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -608,6 +608,36 @@
     .reason-note-box.empty {
       color: #94A3B8;
       font-style: normal;
+    }
+    .observer-readonly-banner {
+      background: linear-gradient(135deg, #0E7490 0%, #0369A1 100%);
+      color: #FFFFFF;
+      border-radius: 14px;
+      padding: 11px 13px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.5;
+      box-shadow: 0 4px 12px rgba(14, 116, 144, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+    }
+    .observer-readonly-banner .obs-warn-sub {
+      margin-top: 6px;
+      padding: 7px 9px;
+      border-radius: 9px;
+      background: rgba(15, 23, 42, 0.35);
+      color: #FDE68A;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+    .manage-readonly-mode .observer-locked-btn {
+      opacity: 0.44 !important;
+      cursor: not-allowed !important;
+      filter: grayscale(0.35);
+    }
+    .manage-readonly-mode [data-observer-locked="1"]:not(button) {
+      opacity: 0.62;
+      cursor: not-allowed !important;
     }
 
     .card {
@@ -3163,7 +3193,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=188" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=189" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3471,8 +3501,9 @@
         <!-- (6) 이용자 설정 화면 (카테고리 리스트 · 관리자 메뉴 미포함) -->
         <section id="viewSettings" class="hidden"></section>
 
-        <!-- (7) 관리 센터 (관리자 전용) -->
+        <!-- (7) 관리 센터 (관리자 · 구경 역할) -->
         <section id="viewManage" class="hidden">
+          <div id="observerReadOnlyBanner" class="observer-readonly-banner hidden"></div>
           <div id="manageSubTabs" class="sub-tabs"></div>
           <div id="manageContent"></div>
         </section>
@@ -4093,6 +4124,13 @@
         <label class="form-label">역할 배지 색상</label>
         <div id="roleColorPalette" class="color-palette"></div>
       </div>
+      <label class="checkbox-row" style="background:#F0F9FF; border:1px solid #BAE6FD; border-radius:11px; padding:10px 11px; margin:10px 0 6px; cursor:pointer;">
+        <input type="checkbox" id="roleObserveManageInput" />
+        <span>
+          <b style="color:#0369A1;">👁️ 관리 센터 구경(읽기 전용) 권한 부여</b><br>
+          <span style="font-size:11.5px; color:#475569; font-weight:500;">켜면 이 역할의 회원이 관리 화면을 둘러볼 수 있지만, 추가·수정·삭제·승인 및 관리자 코드·시트 주소 열람은 전면 차단됩니다.</span>
+        </span>
+      </label>
       <button id="saveRoleBtn" class="btn-full btn-dark" type="button" style="margin-top:8px;">역할 저장하기</button>
     </div>
   </div>
@@ -4757,8 +4795,8 @@
     const authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 29;
-    const APP_CLIENT_BUILD = 188;
+    const CURRENT_SCHEMA_VERSION = 30;
+    const APP_CLIENT_BUILD = 189;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_SEEN_ADMIN_IDS = 'right_youth_seen_admin_ids_v1';
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
@@ -4910,22 +4948,22 @@
     const DEFAULT_UI_TEXTS = Object.fromEntries(UI_TEXT_REGISTRY.map(x => [x.key, x.defaultVal]));
 
     const MANAGE_SUBTAB_REGISTRY = [
-      { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', permCheck: p => !!(p.canEditLayout || p.canManageNotices) },
-      { id: 'quicklinks', labelKey: 'manageQuickLinks', defaultIcon: '🔗', defaultLabel: '사이트 바로가기 관리', permCheck: p => !!p.canEditLayout },
-      { id: 'videos', labelKey: 'manageVideos', defaultIcon: '🎬', defaultLabel: '영상 관리', permCheck: p => !!p.canManageMembers },
-      { id: 'worship', labelKey: 'manageWorship', defaultIcon: '⛪', defaultLabel: '예배 관리', permCheck: p => !!p.canManageMembers },
-      { id: 'sheet', labelKey: 'manageSheet', defaultIcon: '📊', defaultLabel: '시트 연동', permCheck: p => !!p.canManageMembers },
-      { id: 'qr', labelKey: 'manageQr', defaultIcon: '📲', defaultLabel: 'QR 관리', permCheck: p => !!p.canManageMembers },
-      { id: 'members', labelKey: 'manageMembers', defaultIcon: '👥', defaultLabel: '회원 승인', permCheck: p => !!p.canManageMembers },
-      { id: 'admins', labelKey: 'manageAdmins', defaultIcon: '👑', defaultLabel: '관리자', permCheck: p => !!p.canManageMembers },
-      { id: 'inquiries', labelKey: 'manageInquiries', defaultIcon: '💬', defaultLabel: '문의 관리', permCheck: p => !!p.canManageMembers },
-      { id: 'roles', labelKey: 'manageRoles', defaultIcon: '🏷️', defaultLabel: '역할 설정', permCheck: p => !!p.canManageMembers },
+      { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', permCheck: p => !!(p.canEditLayout || p.canManageNotices || p.canObserveManage) },
+      { id: 'quicklinks', labelKey: 'manageQuickLinks', defaultIcon: '🔗', defaultLabel: '사이트 바로가기 관리', permCheck: p => !!(p.canEditLayout || p.canObserveManage) },
+      { id: 'videos', labelKey: 'manageVideos', defaultIcon: '🎬', defaultLabel: '영상 관리', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'worship', labelKey: 'manageWorship', defaultIcon: '⛪', defaultLabel: '예배 관리', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'sheet', labelKey: 'manageSheet', defaultIcon: '📊', defaultLabel: '시트 연동', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'qr', labelKey: 'manageQr', defaultIcon: '📲', defaultLabel: 'QR 관리', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'members', labelKey: 'manageMembers', defaultIcon: '👥', defaultLabel: '회원 승인', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'admins', labelKey: 'manageAdmins', defaultIcon: '👑', defaultLabel: '관리자', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'inquiries', labelKey: 'manageInquiries', defaultIcon: '💬', defaultLabel: '문의 관리', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'roles', labelKey: 'manageRoles', defaultIcon: '🏷️', defaultLabel: '역할 설정', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
       { id: 'admincode', labelKey: 'manageAdminCode', defaultIcon: '🔐', defaultLabel: '관리자 코드', permCheck: p => !!p.canManageMembers },
-      { id: 'logs', labelKey: 'manageLogs', defaultIcon: '📋', defaultLabel: '로그', permCheck: p => !!p.canManageMembers },
-      { id: 'labels', labelKey: 'manageLabels', defaultIcon: '✏️', defaultLabel: '메뉴·이름', permCheck: p => !!p.canEditLayout },
-      { id: 'security', labelKey: 'manageSecurity', defaultIcon: '🛡️', defaultLabel: '보안 점검', permCheck: p => !!p.canManageMembers },
-      { id: 'diagnostics', labelKey: 'manageDiagnostics', defaultIcon: '🧪', defaultLabel: '기능 점검', permCheck: p => !!p.canManageMembers },
-      { id: 'guide', labelKey: 'manageGuide', defaultIcon: '📖', defaultLabel: '사용방법', permCheck: p => !!p.canManageMembers }
+      { id: 'logs', labelKey: 'manageLogs', defaultIcon: '📋', defaultLabel: '로그', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'labels', labelKey: 'manageLabels', defaultIcon: '✏️', defaultLabel: '메뉴·이름', permCheck: p => !!(p.canEditLayout || p.canObserveManage) },
+      { id: 'security', labelKey: 'manageSecurity', defaultIcon: '🛡️', defaultLabel: '보안 점검', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'diagnostics', labelKey: 'manageDiagnostics', defaultIcon: '🧪', defaultLabel: '기능 점검', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'guide', labelKey: 'manageGuide', defaultIcon: '📖', defaultLabel: '사용방법', permCheck: p => !!(p.canManageMembers || p.canObserveManage) }
     ];
     const DEFAULT_TAB_ORDER = BOTTOM_TAB_REGISTRY.map(t => t.key);
     const DEFAULT_MANAGE_SUBTAB_ORDER = MANAGE_SUBTAB_REGISTRY.map(t => t.id);
@@ -5234,13 +5272,22 @@
       canViewHome: true,
       canManageNotices: true,
       canEditLayout: true,
-      canManageMembers: true
+      canManageMembers: true,
+      canObserveManage: true
+    };
+    const OBSERVER_PERMS_READONLY = {
+      canViewHome: true,
+      canManageNotices: false,
+      canEditLayout: false,
+      canManageMembers: false,
+      canObserveManage: true
     };
     const MEMBER_PERMS_READONLY = {
       canViewHome: true,
       canManageNotices: false,
       canEditLayout: false,
-      canManageMembers: false
+      canManageMembers: false,
+      canObserveManage: false
     };
 
     const DEFAULT_LEADER_ROLE_IDS = ['role_pastor', 'role_director', 'role_teacher', 'role_president', 'role_leader', 'role_cell_leader'];
@@ -5258,20 +5305,31 @@
       return roles.filter(isLeaderGroupRoleObj).map(r => String(r.id));
     }
 
+    function isObserverRoleObj(r) {
+      if (!r) return false;
+      if (typeof r.canObserveManage === 'boolean') return r.canObserveManage;
+      return String(r.id) === 'role_observer';
+    }
+
     function sanitizeRolesList(roleList) {
       return (Array.isArray(roleList) ? roleList : []).map(r => ({
         id: String(r.id),
         name: String(r.name || '청년'),
-        color: String(r.color || '#475569')
+        color: String(r.color || '#475569'),
+        canObserveManage: isObserverRoleObj(r)
       }));
     }
 
     function buildRolesMetaByIdMap(roleList) {
       const map = {};
       sanitizeRolesList(roleList).forEach(r => {
-        map[r.id] = { name: r.name, color: r.color };
+        map[r.id] = { name: r.name, color: r.color, canObserveManage: !!r.canObserveManage };
       });
       return map;
+    }
+
+    function buildObserverRoleIds(roleList) {
+      return sanitizeRolesList(roleList).filter(r => r.canObserveManage).map(r => r.id);
     }
 
     function isNewcomerRoleObj(r) {
@@ -5517,8 +5575,9 @@
       { id: 'role_president', name: '회장', color: '#D97706', isLeaderGroup: true },
       { id: 'role_leader', name: '팀장', color: '#2563EB', isLeaderGroup: true },
       { id: 'role_cell_leader', name: '셀장', color: '#0D9488', isLeaderGroup: true },
-      { id: 'role_youth', name: '청년', color: '#475569', isLeaderGroup: false },
-      { id: 'role_newcomer', name: '새신자', color: '#DB2777', isLeaderGroup: false }
+      { id: 'role_youth', name: '청년', color: '#475569', isLeaderGroup: false, canObserveManage: false },
+      { id: 'role_newcomer', name: '새신자', color: '#DB2777', isLeaderGroup: false, canObserveManage: false },
+      { id: 'role_observer', name: '참관자', color: '#0891B2', isLeaderGroup: false, canObserveManage: true }
     ];
 
     const DEFAULT_BLOCKS = [
@@ -5643,7 +5702,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=188" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=189" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5667,8 +5726,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=188', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=188', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=189', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=189', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5907,6 +5966,8 @@
     }
 
     function buildSectionEditBtnHtml(key, defaultTitle, darkVariant = false) {
+      const curU = getCurrentUser();
+      if (!curU || !curU.isSuperAdmin) return '';
       const cls = darkVariant ? 'sec-title-edit-btn dark' : 'sec-title-edit-btn';
       return `<button class="${cls}" type="button" title="명칭 수정" onclick="event.stopPropagation(); openEditSectionTitleModal('${escapeJsAttr(key)}', '${escapeJsAttr(defaultTitle)}')">✏️ 수정</button>`;
     }
@@ -6058,6 +6119,8 @@
     }
     let memberHistoryMap = new Map();
     let unsubAdminRegistry = null;
+    let unsubAdminRegistryObserver = null;
+    let observerPermError = false;
     let unsubAttendanceAdmin = null;
     let unsubMyAttendance = null;
     let unsubMemberHistory = null;
@@ -6199,6 +6262,8 @@
       newcomerList = [];
       adminNewcomerSyncedOnce = false;
       if (unsubAdminRegistry) { unsubAdminRegistry(); unsubAdminRegistry = null; }
+      if (unsubAdminRegistryObserver) { unsubAdminRegistryObserver(); unsubAdminRegistryObserver = null; }
+      observerPermError = false;
       if (unsubAttendanceAdmin) { unsubAttendanceAdmin(); unsubAttendanceAdmin = null; }
       if (unsubMyAttendance) { unsubMyAttendance(); unsubMyAttendance = null; }
       if (unsubMemberHistory) { unsubMemberHistory(); unsubMemberHistory = null; }
@@ -6241,9 +6306,17 @@
 
     function getRoleById(roleId) {
       const found = roles.find(r => r.id === roleId) || roles.find(r => r.name === '청년') || roles[0];
-      return found
-        ? { id: found.id, name: found.name, color: found.color || '#475569', perms: MEMBER_PERMS_READONLY }
-        : { id: 'fallback', name: '청년', color: '#475569', perms: MEMBER_PERMS_READONLY };
+      if (!found) {
+        return { id: 'fallback', name: '청년', color: '#475569', canObserveManage: false, perms: MEMBER_PERMS_READONLY };
+      }
+      const canObs = isObserverRoleObj(found);
+      return {
+        id: found.id,
+        name: found.name,
+        color: found.color || '#475569',
+        canObserveManage: canObs,
+        perms: canObs ? OBSERVER_PERMS_READONLY : MEMBER_PERMS_READONLY
+      };
     }
 
     function getCurrentUser() {
@@ -6253,35 +6326,45 @@
         if (previewAsMemberMode) {
           return {
             isSuperAdmin: false,
+            isManageObserver: false,
             isPreviewMember: true,
             uid: fbUser.uid,
             name: currentAdminName,
             role: {
               id: 'role_youth', name: '청년 (미리보기)', color: '#475569',
+              canObserveManage: false,
               perms: MEMBER_PERMS_READONLY
             }
           };
         }
         return {
           isSuperAdmin: true,
+          isManageObserver: false,
           uid: fbUser.uid,
           name: currentAdminName,
           role: {
             id: 'super_admin', name: '최고 관리자', color: '#D97706',
+            canObserveManage: true,
             perms: ADMIN_PERMS_TRUE
           }
         };
       }
       if (myMemberDoc && myMemberDoc.status === 'approved') {
+        const resolvedRole = getRoleById(myMemberDoc.roleId);
         return {
           isSuperAdmin: false,
+          isManageObserver: !!resolvedRole.canObserveManage,
           uid: fbUser.uid,
           member: myMemberDoc,
           name: myMemberDoc.name,
-          role: getRoleById(myMemberDoc.roleId)
+          role: resolvedRole
         };
       }
       return null;
+    }
+
+    function isManageReadOnlyUser(user = getCurrentUser()) {
+      return !!(user && !user.isSuperAdmin && user.isManageObserver);
     }
 
     function hasUserPerm(user, key) {
@@ -6291,7 +6374,7 @@
     }
 
     function hasAnyManagePerm(perms) {
-      return !!(perms.canEditLayout || perms.canManageNotices || perms.canManageMembers);
+      return !!(perms && (perms.canEditLayout || perms.canManageNotices || perms.canManageMembers || perms.canObserveManage));
     }
 
     function getTabLabel(key) {
@@ -6726,8 +6809,9 @@
         const batch = db.batch();
         batch.set(appRef, { initialized: true, schemaVersion: CURRENT_SCHEMA_VERSION, latestBuild: APP_CLIENT_BUILD, createdAt: formatToday() });
         batch.set(db.collection('config').doc('roles'), {
-          items: DEFAULT_ROLES,
-          metaById: buildRolesMetaByIdMap(DEFAULT_ROLES)
+          items: sanitizeRolesList(DEFAULT_ROLES),
+          metaById: buildRolesMetaByIdMap(DEFAULT_ROLES),
+          observerRoleIds: buildObserverRoleIds(DEFAULT_ROLES)
         });
         batch.set(db.collection('config').doc('layout'), { blocksSeparatedV21: true, latestBuild: APP_CLIENT_BUILD });
         DEFAULT_BLOCKS.forEach((b, idx) => {
@@ -6770,9 +6854,13 @@
           ? rolesSnap.data().items
           : DEFAULT_ROLES;
         const cleanRoles = sanitizeRolesList(rawRoles);
+        if ((appSnap.data().schemaVersion || 0) < 30 && !cleanRoles.some(r => r.canObserveManage || r.id === 'role_observer')) {
+          cleanRoles.push({ id: 'role_observer', name: '참관자', color: '#0891B2', canObserveManage: true });
+        }
         await db.collection('config').doc('roles').set({
           items: cleanRoles,
-          metaById: buildRolesMetaByIdMap(cleanRoles)
+          metaById: buildRolesMetaByIdMap(cleanRoles),
+          observerRoleIds: buildObserverRoleIds(cleanRoles)
         });
 
         // 2) 사이트 바로가기(quickLinks)를 별도 보안 문서(config/quickLinks)로 분리 이관
@@ -7185,8 +7273,20 @@
 
     function syncMembersAllSubscription() {
       const user = getCurrentUser();
-      const needsAllMembers = !!(user && user.isSuperAdmin);
-      if (needsAllMembers && !unsubMembersAll) {
+      const isAdminUser = !!(user && user.isSuperAdmin);
+      const isObserverUser = isManageReadOnlyUser(user);
+      const canReadManage = isAdminUser || isObserverUser;
+      const needsAllMembers = isAdminUser;
+      const onManageReadErr = (err, label) => {
+        if (err && err.code === 'permission-denied' && isObserverUser) {
+          observerPermError = true;
+          if (currentMainTab === 'manage') applyScreen();
+          return;
+        }
+        if (isAdminUser) handleDbError(err, label);
+      };
+
+      if (canReadManage && !unsubMembersAll) {
         membersFirstSnap = true;
         knownPendingMemberIds = new Set();
         knownPendingRenameMap = new Map();
@@ -7194,39 +7294,24 @@
           const nextMembers = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
             .sort((a, b) => Number(b.createdTs || 0) - Number(a.createdTs || 0));
 
-          if (membersFirstSnap) {
-            nextMembers.forEach(m => {
-              if (m.status === 'pending') knownPendingMemberIds.add(m.id);
-              if (m.status === 'approved' && m.pendingName) {
-                knownPendingRenameMap.set(m.id, `${m.pendingName}:${m.pendingNameTs || 0}`);
-              }
-            });
-            membersFirstSnap = false;
-          } else {
-            nextMembers.forEach(m => {
-              if (m.status === 'pending' && !knownPendingMemberIds.has(m.id)) {
-                knownPendingMemberIds.add(m.id);
-                dispatchAppNotification({
-                  type: 'member',
-                  icon: '👤',
-                  title: '새 회원가입 승인 요청',
-                  body: `${m.name}님이${m.requestedRole ? ` [${m.requestedRole}] 역할로` : ''} 가입 승인을 기다리고 있습니다.`,
-                  onClick: () => {
-                    currentMainTab = 'manage';
-                    currentManageSubTab = 'members';
-                    applyScreen();
-                  }
-                });
-              }
-              if (m.status === 'approved' && m.pendingName) {
-                const sig = `${m.pendingName}:${m.pendingNameTs || 0}`;
-                if (knownPendingRenameMap.get(m.id) !== sig) {
-                  knownPendingRenameMap.set(m.id, sig);
+          if (isAdminUser) {
+            if (membersFirstSnap) {
+              nextMembers.forEach(m => {
+                if (m.status === 'pending') knownPendingMemberIds.add(m.id);
+                if (m.status === 'approved' && m.pendingName) {
+                  knownPendingRenameMap.set(m.id, `${m.pendingName}:${m.pendingNameTs || 0}`);
+                }
+              });
+              membersFirstSnap = false;
+            } else {
+              nextMembers.forEach(m => {
+                if (m.status === 'pending' && !knownPendingMemberIds.has(m.id)) {
+                  knownPendingMemberIds.add(m.id);
                   dispatchAppNotification({
                     type: 'member',
-                    icon: '✏️',
-                    title: '회원 이름 변경 승인 요청',
-                    body: `${m.name}님이 [${m.pendingName}](으)로 이름 변경을 신청했습니다.`,
+                    icon: '👤',
+                    title: '새 회원가입 승인 요청',
+                    body: `${m.name}님이${m.requestedRole ? ` [${m.requestedRole}] 역할로` : ''} 가입 승인을 기다리고 있습니다.`,
                     onClick: () => {
                       currentMainTab = 'manage';
                       currentManageSubTab = 'members';
@@ -7234,32 +7319,71 @@
                     }
                   });
                 }
-              } else {
-                knownPendingRenameMap.delete(m.id);
-              }
-            });
+                if (m.status === 'approved' && m.pendingName) {
+                  const sig = `${m.pendingName}:${m.pendingNameTs || 0}`;
+                  if (knownPendingRenameMap.get(m.id) !== sig) {
+                    knownPendingRenameMap.set(m.id, sig);
+                    dispatchAppNotification({
+                      type: 'member',
+                      icon: '✏️',
+                      title: '회원 이름 변경 승인 요청',
+                      body: `${m.name}님이 [${m.pendingName}](으)로 이름 변경을 신청했습니다.`,
+                      onClick: () => {
+                        currentMainTab = 'manage';
+                        currentManageSubTab = 'members';
+                        applyScreen();
+                      }
+                    });
+                  }
+                } else {
+                  knownPendingRenameMap.delete(m.id);
+                }
+              });
+            }
           }
 
           members = nextMembers;
-          if (!adminNewcomerSyncedOnce) {
-            adminNewcomerSyncedOnce = true;
-            syncAdminNewcomersCollection(nextMembers).catch(() => {});
+          if (isAdminUser) {
+            if (!adminNewcomerSyncedOnce) {
+              adminNewcomerSyncedOnce = true;
+              syncAdminNewcomersCollection(nextMembers).catch(() => {});
+            }
+            syncUnsyncedMembersToSheet(nextMembers).catch(() => {});
           }
-          syncUnsyncedMembersToSheet(nextMembers).catch(() => {});
           const activeEl = document.activeElement;
           if (activeEl && activeEl.id === 'roleMemberSearchInput' && currentMainTab === 'manage' && currentManageSubTab === 'roles') {
             renderRoleMembersListOnly();
           } else {
             applyScreen();
           }
-        }, err => handleDbError(err, '회원 목록 동기화'));
-      } else if (!needsAllMembers && unsubMembersAll) {
+        }, err => onManageReadErr(err, '회원 목록 동기화'));
+      } else if (!canReadManage && unsubMembersAll) {
         unsubMembersAll();
         unsubMembersAll = null;
         members = [];
         membersFirstSnap = true;
         knownPendingMemberIds = new Set();
         knownPendingRenameMap = new Map();
+      }
+
+      if (isObserverUser && !unsubAdminRegistryObserver) {
+        unsubAdminRegistryObserver = db.collection('config').doc('adminRegistry').onSnapshot(doc => {
+          const d = doc.exists ? doc.data() : {};
+          adminRegistry = {
+            lockAutoRegister: !!d.lockAutoRegister,
+            items: Array.isArray(d.items) ? d.items : [],
+            renameLogs: Array.isArray(d.renameLogs) ? d.renameLogs : []
+          };
+          if (currentMainTab === 'manage' && (currentManageSubTab === 'admins' || currentManageSubTab === 'logs')) {
+            applyScreen();
+          }
+        }, err => onManageReadErr(err, '관리자 명단 열람'));
+      } else if (!isObserverUser && unsubAdminRegistryObserver) {
+        unsubAdminRegistryObserver();
+        unsubAdminRegistryObserver = null;
+        if (!isAdminUser) {
+          adminRegistry = { lockAutoRegister: false, items: [], renameLogs: [] };
+        }
       }
 
       if (needsAllMembers && !unsubAdminSecret) {
@@ -7306,24 +7430,24 @@
         adminSheetUrl = '';
       }
 
-      if (needsAllMembers && !unsubAttendanceAdmin) {
+      if (canReadManage && !unsubAttendanceAdmin) {
         unsubAttendanceAdmin = db.collection('attendance').onSnapshot(snap => {
           attendanceRecords = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
             .sort((a, b) => Number(b.ts || 0) - Number(a.ts || 0));
-          if (adminSheetUrl) {
+          if (isAdminUser && adminSheetUrl) {
             syncUnsyncedAttendanceToSheet(attendanceRecords).catch(() => {});
           }
           if (currentMainTab === 'manage' && (currentManageSubTab === 'worship' || currentManageSubTab === 'sheet')) {
             applyScreen();
           }
-        }, () => {});
-      } else if (!needsAllMembers && unsubAttendanceAdmin) {
+        }, err => onManageReadErr(err, '출석 현황 동기화'));
+      } else if (!canReadManage && unsubAttendanceAdmin) {
         unsubAttendanceAdmin();
         unsubAttendanceAdmin = null;
         attendanceRecords = [];
       }
 
-      if (needsAllMembers && !unsubMemberHistory) {
+      if (canReadManage && !unsubMemberHistory) {
         unsubMemberHistory = db.collection('memberHistory').onSnapshot(snap => {
           const mp = new Map();
           snap.docs.forEach(d => mp.set(String(d.id), { ...d.data(), id: String(d.id) }));
@@ -7331,53 +7455,57 @@
           if (currentMainTab === 'manage' && currentManageSubTab === 'members') {
             applyScreen();
           }
-        }, () => {});
-      } else if (!needsAllMembers && unsubMemberHistory) {
+        }, err => onManageReadErr(err, '회원 이력 동기화'));
+      } else if (!canReadManage && unsubMemberHistory) {
         unsubMemberHistory();
         unsubMemberHistory = null;
         memberHistoryMap = new Map();
       }
 
-      if (needsAllMembers && !unsubAuditLogs) {
+      if (canReadManage && !unsubAuditLogs) {
         auditLogsFirstSnap = true;
         knownAuditLogIds = new Set();
         unsubAuditLogs = db.collection('auditLogs').onSnapshot(snap => {
           const nextLogs = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
             .sort((a, b) => Number(b.ts || 0) - Number(a.ts || 0));
 
-          if (auditLogsFirstSnap) {
-            nextLogs.forEach(l => knownAuditLogIds.add(l.id));
+          if (isAdminUser) {
+            if (auditLogsFirstSnap) {
+              nextLogs.forEach(l => knownAuditLogIds.add(l.id));
+              auditLogsFirstSnap = false;
+              auditLogs = nextLogs;
+              setTimeout(() => runSilentAdminSecurityWatch(), 1400);
+            } else {
+              const newThreatEvents = [];
+              nextLogs.forEach(l => {
+                if (!knownAuditLogIds.has(l.id)) {
+                  knownAuditLogIds.add(l.id);
+                  if (isSecurityThreatAuditEntry(l)) {
+                    newThreatEvents.push(l);
+                  }
+                }
+              });
+              auditLogs = nextLogs;
+              if (newThreatEvents.length > 0) {
+                const latest = newThreatEvents[0];
+                dispatchAdminSecurityAlert(
+                  `🚨 보안 위협 감지 · ${latest.action || '악성 행동 차단'}`,
+                  `${latest.actorName || '이용자'} · ${latest.target || '앱'} (${latest.detail || '보안 점검 탭에서 확인하세요'})`
+                );
+              }
+            }
+            if (adminSheetUrl) {
+              syncUnsyncedAuditLogsToSheet().catch(() => {});
+            }
+          } else {
             auditLogsFirstSnap = false;
             auditLogs = nextLogs;
-            setTimeout(() => runSilentAdminSecurityWatch(), 1400);
-          } else {
-            const newThreatEvents = [];
-            nextLogs.forEach(l => {
-              if (!knownAuditLogIds.has(l.id)) {
-                knownAuditLogIds.add(l.id);
-                if (isSecurityThreatAuditEntry(l)) {
-                  newThreatEvents.push(l);
-                }
-              }
-            });
-            auditLogs = nextLogs;
-            if (newThreatEvents.length > 0) {
-              const latest = newThreatEvents[0];
-              dispatchAdminSecurityAlert(
-                `🚨 보안 위협 감지 · ${latest.action || '악성 행동 차단'}`,
-                `${latest.actorName || '이용자'} · ${latest.target || '앱'} (${latest.detail || '보안 점검 탭에서 확인하세요'})`
-              );
-            }
-          }
-
-          if (adminSheetUrl) {
-            syncUnsyncedAuditLogsToSheet().catch(() => {});
           }
           if (currentMainTab === 'manage' && (currentManageSubTab === 'logs' || currentManageSubTab === 'security' || currentManageSubTab === 'sheet' || currentManageSubTab === 'members')) {
             applyScreen();
           }
-        }, () => {});
-      } else if (!needsAllMembers && unsubAuditLogs) {
+        }, err => onManageReadErr(err, '보안 로그 동기화'));
+      } else if (!canReadManage && unsubAuditLogs) {
         unsubAuditLogs();
         unsubAuditLogs = null;
         auditLogs = [];
@@ -7385,7 +7513,7 @@
         knownAuditLogIds = new Set();
       }
 
-      if (needsAllMembers && !unsubInquiriesAdmin) {
+      if (canReadManage && !unsubInquiriesAdmin) {
         inquiriesFirstSnap = true;
         knownInquiryIds = new Set();
         inquiriesPermError = false;
@@ -7393,36 +7521,41 @@
           const next = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
             .sort((a, b) => Number(b.createdTs || 0) - Number(a.createdTs || 0));
           inquiriesPermError = false;
-          if (inquiriesFirstSnap) {
-            next.forEach(q => knownInquiryIds.add(q.id));
-            inquiriesFirstSnap = false;
+          if (isAdminUser) {
+            if (inquiriesFirstSnap) {
+              next.forEach(q => knownInquiryIds.add(q.id));
+              inquiriesFirstSnap = false;
+            } else {
+              next.forEach(q => {
+                if (!knownInquiryIds.has(q.id)) {
+                  knownInquiryIds.add(q.id);
+                  dispatchAppNotification({
+                    type: 'inquiry_new',
+                    icon: '💬',
+                    title: `새 문의 사항 접수 [${q.category || '의견'}]`,
+                    body: `${q.authorName || '회원'}님: ${q.title || q.body || ''}`,
+                    onClick: () => {
+                      currentMainTab = 'manage';
+                      currentManageSubTab = 'inquiries';
+                      applyScreen();
+                    }
+                  });
+                }
+              });
+            }
           } else {
-            next.forEach(q => {
-              if (!knownInquiryIds.has(q.id)) {
-                knownInquiryIds.add(q.id);
-                dispatchAppNotification({
-                  type: 'inquiry_new',
-                  icon: '💬',
-                  title: `새 문의 사항 접수 [${q.category || '의견'}]`,
-                  body: `${q.authorName || '회원'}님: ${q.title || q.body || ''}`,
-                  onClick: () => {
-                    currentMainTab = 'manage';
-                    currentManageSubTab = 'inquiries';
-                    applyScreen();
-                  }
-                });
-              }
-            });
+            inquiriesFirstSnap = false;
           }
           inquiries = next;
           applyScreen();
         }, err => {
           if (err && err.code === 'permission-denied') {
             inquiriesPermError = true;
-            if (currentMainTab === 'manage' && currentManageSubTab === 'inquiries') applyScreen();
+            if (isObserverUser) observerPermError = true;
+            if (currentMainTab === 'manage') applyScreen();
           }
         });
-      } else if (!needsAllMembers && unsubInquiriesAdmin) {
+      } else if (!canReadManage && unsubInquiriesAdmin) {
         unsubInquiriesAdmin();
         unsubInquiriesAdmin = null;
         inquiries = [];
@@ -7430,7 +7563,7 @@
         knownInquiryIds = new Set();
       }
 
-      if (needsAllMembers && !unsubVideosAdmin) {
+      if (canReadManage && !unsubVideosAdmin) {
         videosFirstSnap = true;
         knownApprovedVideoIds = new Set();
         knownPendingVideoIds = new Set();
@@ -7439,53 +7572,58 @@
           const next = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
             .sort((a, b) => Number(b.createdTs || 0) - Number(a.createdTs || 0));
           videosPermError = false;
-          if (videosFirstSnap) {
-            next.forEach(v => {
-              if (v.status === 'approved') knownApprovedVideoIds.add(v.id);
-              if (v.status === 'pending') knownPendingVideoIds.add(v.id);
-            });
-            videosFirstSnap = false;
-          } else {
-            next.forEach(v => {
-              if (v.status === 'pending' && !knownPendingVideoIds.has(v.id)) {
-                knownPendingVideoIds.add(v.id);
-                dispatchAppNotification({
-                  type: 'video_pending',
-                  icon: '🎬',
-                  title: '미등록 채널 영상 검토 요청',
-                  body: `${v.authorName || '회원'}님이 [${v.title || '유튜브 영상'}](${v.channelName || '채널'}) 검토를 요청했습니다.`,
-                  onClick: () => {
-                    currentMainTab = 'manage';
-                    currentManageSubTab = 'videos';
-                    applyScreen();
-                  }
-                });
-              } else if (v.status === 'approved' && !knownApprovedVideoIds.has(v.id)) {
-                knownApprovedVideoIds.add(v.id);
-                if (v.autoApproved && v.uid !== (fbUser ? fbUser.uid : '')) {
+          if (isAdminUser) {
+            if (videosFirstSnap) {
+              next.forEach(v => {
+                if (v.status === 'approved') knownApprovedVideoIds.add(v.id);
+                if (v.status === 'pending') knownPendingVideoIds.add(v.id);
+              });
+              videosFirstSnap = false;
+            } else {
+              next.forEach(v => {
+                if (v.status === 'pending' && !knownPendingVideoIds.has(v.id)) {
+                  knownPendingVideoIds.add(v.id);
                   dispatchAppNotification({
-                    type: 'video_new',
-                    icon: isCcmVideo(v) ? '🎵' : '🎙️',
-                    title: `공식 채널 ${isCcmVideo(v) ? getTabLabel('ccm') : getTabLabel('sermon')} 자동 게시`,
-                    body: `[${getVideoCategoryDisplayLabel(v.category)}] ${v.title || ''}`,
-                    onClick: () => { switchMainTab(isCcmVideo(v) ? 'ccm' : 'sermon'); }
+                    type: 'video_pending',
+                    icon: '🎬',
+                    title: '미등록 채널 영상 검토 요청',
+                    body: `${v.authorName || '회원'}님이 [${v.title || '유튜브 영상'}](${v.channelName || '채널'}) 검토를 요청했습니다.`,
+                    onClick: () => {
+                      currentMainTab = 'manage';
+                      currentManageSubTab = 'videos';
+                      applyScreen();
+                    }
                   });
+                } else if (v.status === 'approved' && !knownApprovedVideoIds.has(v.id)) {
+                  knownApprovedVideoIds.add(v.id);
+                  if (v.autoApproved && v.uid !== (fbUser ? fbUser.uid : '')) {
+                    dispatchAppNotification({
+                      type: 'video_new',
+                      icon: isCcmVideo(v) ? '🎵' : '🎙️',
+                      title: `공식 채널 ${isCcmVideo(v) ? getTabLabel('ccm') : getTabLabel('sermon')} 자동 게시`,
+                      body: `[${getVideoCategoryDisplayLabel(v.category)}] ${v.title || ''}`,
+                      onClick: () => { switchMainTab(isCcmVideo(v) ? 'ccm' : 'sermon'); }
+                    });
+                  }
                 }
-              }
-            });
+              });
+            }
+          } else {
+            videosFirstSnap = false;
           }
           videoItems = next;
           applyScreen();
         }, err => {
           if (err && err.code === 'permission-denied') {
             videosPermError = true;
-            if (currentMainTab === 'manage' && currentManageSubTab === 'videos') applyScreen();
+            if (isObserverUser) observerPermError = true;
+            if (currentMainTab === 'manage') applyScreen();
           }
         });
-      } else if (!needsAllMembers && unsubVideosAdmin) {
+      } else if (!canReadManage && unsubVideosAdmin) {
         unsubVideosAdmin();
         unsubVideosAdmin = null;
-        videoItems = [];
+        if (isAdminUser) videoItems = [];
       }
     }
 
@@ -7704,13 +7842,14 @@
       const myRoleId = (!isActualAdmin && myMemberDoc && myMemberDoc.status === 'approved')
         ? String(myMemberDoc.roleId || 'role_youth')
         : '';
-      const desiredMode = isActualAdmin ? 'admin' : (myRoleId ? `member:${myRoleId}` : '');
+      const isObserver = !isActualAdmin && !!myRoleId && isObserverRoleObj(roles.find(r => String(r.id) === myRoleId));
+      const desiredMode = isActualAdmin ? 'admin' : (isObserver ? `observer:${myRoleId}` : (myRoleId ? `member:${myRoleId}` : ''));
       if (!desiredMode || scopedSubMode === desiredMode) return;
 
       clearScopedContentSubscriptions();
       scopedSubMode = desiredMode;
 
-      if (isActualAdmin) {
+      if (isActualAdmin || isObserver) {
         unsubScopedContent.push(
           db.collection('notices').onSnapshot(snap => {
             const mp = new Map();
@@ -7719,14 +7858,22 @@
             rebuildMergedNotices(true);
           }, err => handleDbError(err, '공개 공지 동기화'))
         );
+        const onAdminScopedErr = (err, label) => {
+          if (err && err.code === 'permission-denied' && isObserver) {
+            observerPermError = true;
+            if (currentMainTab === 'manage') applyScreen();
+            return;
+          }
+          handleDbError(err, label);
+        };
         unsubScopedContent.push(
           db.collection('adminNotices').onSnapshot(snap => {
             const mp = new Map();
             snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'adminNotices' }));
             roleOrAdminNoticesMap = mp;
             rebuildMergedNotices(false);
-            checkAndPromoteDueScheduledItems();
-          }, err => handleDbError(err, '비공개 공지 동기화'))
+            if (isActualAdmin) checkAndPromoteDueScheduledItems();
+          }, err => onAdminScopedErr(err, '비공개 공지 동기화'))
         );
         unsubScopedContent.push(
           db.collection('homeBlocks').onSnapshot(snap => {
@@ -7734,7 +7881,7 @@
             snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'homeBlocks' }));
             publicBlocksMap = mp;
             rebuildMergedBlocks(true);
-          }, err => handleDbError(err, '공개 배너 동기화'))
+          }, err => onAdminScopedErr(err, '공개 배너 동기화'))
         );
         unsubScopedContent.push(
           db.collection('adminBlocks').onSnapshot(snap => {
@@ -7742,12 +7889,14 @@
             snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'adminBlocks' }));
             roleOrAdminBlocksMap = mp;
             rebuildMergedBlocks(false);
-            checkAndPromoteDueScheduledItems();
-          }, err => handleDbError(err, '비공개 배너 동기화'))
+            if (isActualAdmin) checkAndPromoteDueScheduledItems();
+          }, err => onAdminScopedErr(err, '비공개 배너 동기화'))
         );
-        scheduledPromoteTimer = setInterval(() => {
-          checkAndPromoteDueScheduledItems();
-        }, 30000);
+        if (isActualAdmin) {
+          scheduledPromoteTimer = setInterval(() => {
+            checkAndPromoteDueScheduledItems();
+          }, 30000);
+        }
       } else {
         const onMemberScopedErr = (err, label) => {
           if (err && err.code === 'permission-denied') {
@@ -7901,6 +8050,7 @@
                 }
               });
             }
+            if (unsubVideosAdmin) return;
             videoItems = next;
             applyScreen();
           }, () => {});
@@ -8195,6 +8345,7 @@
         }
         renderSignupRoleOptions();
         if (getCurrentUser()) {
+          syncScopedContentSubscriptions();
           syncMembersAllSubscription();
           applyScreen();
         }
@@ -10429,13 +10580,120 @@
     };
 
     // ==================== 12. 관리 센터 ====================
+    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|selectRoleMemberTab|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|switchMainTab)\s*\(/;
+    const OBSERVER_ALLOWED_INPUT_IDS = new Set([
+      'roleMemberSearchInput', 'adminLogSearchInput', 'adminGuideSearchInput', 'adminAttSessionSearchInput', 'adminAttSessionSelect'
+    ]);
+    let observerReadOnlyGuardBound = false;
+    let observerApplyingLock = false;
+
+    function isAllowedObserverControl(el) {
+      if (!el || el.nodeType !== 1) return true;
+      const tag = el.tagName;
+      if (tag === 'SUMMARY' || tag === 'DETAILS') return true;
+      if (tag === 'INPUT') {
+        return el.type === 'search' || OBSERVER_ALLOWED_INPUT_IDS.has(el.id);
+      }
+      if (tag === 'SELECT') {
+        return el.id === 'adminAttSessionSelect' || String(el.getAttribute('onchange') || '').includes('setAdminLogCategoryFilter');
+      }
+      if (tag === 'TEXTAREA') return false;
+      if (tag === 'BUTTON') {
+        if (
+          el.classList.contains('filter-chip') ||
+          el.classList.contains('role-member-tab') ||
+          el.classList.contains('quick-tag') ||
+          el.classList.contains('search-clear') ||
+          el.classList.contains('acc-fold-footer-btn')
+        ) return true;
+        const oc = String(el.getAttribute('onclick') || '').trim();
+        return !!oc && OBSERVER_ALLOWED_ONCLICK_RE.test(oc);
+      }
+      if (el.classList.contains('stat-box')) return false;
+      const oc = String(el.getAttribute('onclick') || '').trim();
+      if (oc) return OBSERVER_ALLOWED_ONCLICK_RE.test(oc);
+      return true;
+    }
+
+    function applyManageReadOnlyLock(containerEl) {
+      const target = containerEl || document.getElementById('manageContent');
+      const viewEl = document.getElementById('viewManage');
+      const readOnly = isManageReadOnlyUser();
+      if (viewEl) viewEl.classList.toggle('manage-readonly-mode', readOnly);
+      if (!target || !readOnly) return;
+
+      observerApplyingLock = true;
+      try {
+        target.querySelectorAll('button, input, select, textarea, .stat-box[onclick]').forEach(node => {
+          if (isAllowedObserverControl(node)) return;
+          node.setAttribute('data-observer-locked', '1');
+          if (node.tagName === 'BUTTON') {
+            node.classList.add('observer-locked-btn');
+          } else if (node.tagName === 'INPUT' || node.tagName === 'SELECT' || node.tagName === 'TEXTAREA') {
+            node.disabled = true;
+            if (node.tagName === 'INPUT' && node.type !== 'checkbox' && node.type !== 'radio') node.readOnly = true;
+            if (node.tagName === 'TEXTAREA') node.readOnly = true;
+          }
+        });
+      } finally {
+        observerApplyingLock = false;
+      }
+    }
+
+    function ensureObserverReadOnlyGuards() {
+      if (observerReadOnlyGuardBound) return;
+      const contentEl = document.getElementById('manageContent');
+      if (!contentEl) return;
+      observerReadOnlyGuardBound = true;
+
+      const blockObserverAction = (e) => {
+        if (!isManageReadOnlyUser()) return;
+        const lockedEl = e.target && e.target.closest
+          ? e.target.closest('[data-observer-locked="1"], label.switch')
+          : null;
+        if (!lockedEl) return;
+        if (lockedEl.tagName === 'LABEL' && !lockedEl.querySelector('[data-observer-locked="1"]')) return;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        showToast('👁️ 구경(읽기 전용) 모드에서는 추가·수정·삭제·설정을 변경할 수 없습니다.');
+      };
+
+      contentEl.addEventListener('click', blockObserverAction, true);
+      contentEl.addEventListener('change', blockObserverAction, true);
+      contentEl.addEventListener('input', blockObserverAction, true);
+      contentEl.addEventListener('submit', blockObserverAction, true);
+
+      if (typeof MutationObserver !== 'undefined') {
+        const mo = new MutationObserver(() => {
+          if (!observerApplyingLock && isManageReadOnlyUser()) {
+            applyManageReadOnlyLock(contentEl);
+          }
+        });
+        mo.observe(contentEl, { childList: true, subtree: true });
+      }
+    }
+
     function renderManageView(user) {
+      ensureObserverReadOnlyGuards();
       const perms = user.role.perms;
       const allowed = getAllowedManageSubTabs(perms);
       if (allowed.length === 0) return;
 
       if (!allowed.some(t => t.id === currentManageSubTab)) {
         currentManageSubTab = allowed[0].id;
+      }
+
+      const isObserver = isManageReadOnlyUser(user);
+      const obsBanner = document.getElementById('observerReadOnlyBanner');
+      if (obsBanner) {
+        obsBanner.classList.toggle('hidden', !isObserver);
+        if (isObserver) {
+          obsBanner.innerHTML = `
+            <div>👁️ <b>[${escapeHtml(user.role.name)}] 관리 센터 구경(읽기 전용) 모드</b></div>
+            <div style="font-size:11.5px; font-weight:500; opacity:0.94; margin-top:2px;">관리 화면의 모든 현황과 목록을 둘러볼 수 있지만, 추가·수정·삭제·승인 및 관리자 코드·시트 주소 열람은 최고 관리자만 가능합니다.</div>
+            ${observerPermError ? '<div class="obs-warn-sub">🔐 일부 관리 항목을 불러오려면 최고 관리자가 최신 Firestore 보안 규칙(v10.89)을 Firebase에 게시해야 합니다.</div>' : ''}
+          `;
+        }
       }
 
       document.getElementById('manageSubTabs').innerHTML = allowed.map(t => {
@@ -10464,6 +10722,8 @@
       else if (currentManageSubTab === 'security') renderManageSecurity(content, user);
       else if (currentManageSubTab === 'diagnostics') renderManageDiagnostics(content, user);
       else if (currentManageSubTab === 'guide') renderManageGuide(content, user);
+
+      applyManageReadOnlyLock(content);
     }
 
     window.switchManageSubTab = (sub) => {
@@ -10485,8 +10745,8 @@
     };
 
     function renderManageContent(el, user) {
-      const canLayout = hasUserPerm(user, 'canEditLayout');
-      const canNotices = hasUserPerm(user, 'canManageNotices');
+      const canLayout = hasUserPerm(user, 'canEditLayout') || isManageReadOnlyUser(user);
+      const canNotices = hasUserPerm(user, 'canManageNotices') || isManageReadOnlyUser(user);
       const liveBlockCount = blocks.filter(b => getPublishState(b) === 'live').length;
       const liveNoticeCount = notices.filter(n => getPublishState(n) === 'live').length;
       const pendingOrDraftCount =
@@ -11948,15 +12208,17 @@
           rightHtml: `<div style="display:flex; gap:5px; flex-wrap:wrap;"><span class="tag warm">현재 ${activeAdmins.length}명</span><span class="tag slate">해제 ${removedAdmins.length}명</span><span class="tag ${pendingAdmins.length > 0 ? 'red' : 'slate'}">대기 ${pendingAdmins.length}명</span></div>`
         })}
 
-        <div class="card" style="background:#FFFBEB; border-color:#FDE68A; margin-bottom:10px; padding:12px 13px;">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
-            <div style="min-width:0; flex:1;">
-              <div style="font-size:13.5px; font-weight:800; color:#92400E;">✏️ 내 관리자 이름 설정</div>
-              <div style="font-size:11.5px; color:#78350F; margin-top:2px;">현재 표시 이름: <b>${escapeHtml(currentAdminName || '관리자')}</b> · 변경 시 보안 로그에 기록됩니다.</div>
+        ${!isManageReadOnlyUser() ? `
+          <div class="card" style="background:#FFFBEB; border-color:#FDE68A; margin-bottom:10px; padding:12px 13px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+              <div style="min-width:0; flex:1;">
+                <div style="font-size:13.5px; font-weight:800; color:#92400E;">✏️ 내 관리자 이름 설정</div>
+                <div style="font-size:11.5px; color:#78350F; margin-top:2px;">현재 표시 이름: <b>${escapeHtml(currentAdminName || '관리자')}</b> · 변경 시 보안 로그에 기록됩니다.</div>
+              </div>
+              <button class="btn-sm primary" type="button" onclick="openAdminRenameModal()">내 이름 변경</button>
             </div>
-            <button class="btn-sm primary" type="button" onclick="openAdminRenameModal()">내 이름 변경</button>
           </div>
-        </div>
+        ` : ''}
 
         <div class="card" style="background:#F8FAFC; margin-bottom:12px;">
           <div class="setting-row" style="padding:2px 0;">
@@ -12322,7 +12584,7 @@
                           <span>${escapeHtml(m.name)}</span>
                           <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
                         </div>
-                        <span class="tag ${isExpired ? 'red' : 'warm'}">${isExpired ? '만료됨' : `코드: ${escapeHtml(m.resetCode || '-')}`}</span>
+                        <span class="tag ${isExpired ? 'red' : 'warm'}">${isExpired ? '만료됨' : (isManageReadOnlyUser() ? '코드: •••••••• (비공개)' : `코드: ${escapeHtml(m.resetCode || '-')}`)}</span>
                       </div>
                       <div style="font-size:12px; color:${isExpired ? '#DC2626' : '#92400E'}; margin-bottom:10px;">
                         ${isExpired
@@ -13343,6 +13605,9 @@
                     ${isNewcomerRoleObj(r)
                       ? '<span class="tag" style="font-size:10.5px;">💐 새신자 자동 환영</span>'
                       : ''}
+                    ${isObserverRoleObj(r)
+                      ? '<span class="tag" style="font-size:10.5px; background:#ECFEFF; color:#0E7490;">👁️ 관리 구경(읽기전용)</span>'
+                      : ''}
                   </div>
                   <div style="display:flex; gap:6px;">
                     <button class="btn-sm" onclick="openEditRoleModal('${escapeJsAttr(r.id)}')">수정</button>
@@ -13500,6 +13765,8 @@
       document.getElementById('roleModalTitle').textContent = '새 역할 만들기';
       document.getElementById('editRoleId').value = '';
       document.getElementById('roleNameInput').value = '';
+      const obsChk = document.getElementById('roleObserveManageInput');
+      if (obsChk) obsChk.checked = false;
       selectedRoleColor = ROLE_COLORS[4];
       renderRoleColorPalette();
       document.getElementById('roleModal').classList.add('open');
@@ -13511,6 +13778,8 @@
       document.getElementById('roleModalTitle').textContent = `[${r.name}] 역할 수정`;
       document.getElementById('editRoleId').value = r.id;
       document.getElementById('roleNameInput').value = r.name;
+      const obsChk = document.getElementById('roleObserveManageInput');
+      if (obsChk) obsChk.checked = isObserverRoleObj(r);
       selectedRoleColor = r.color || ROLE_COLORS[0];
       renderRoleColorPalette();
       document.getElementById('roleModal').classList.add('open');
@@ -13519,6 +13788,7 @@
     document.getElementById('saveRoleBtn').addEventListener('click', async () => {
       const id = document.getElementById('editRoleId').value;
       const name = document.getElementById('roleNameInput').value.trim();
+      const canObserveManage = !!(document.getElementById('roleObserveManageInput') && document.getElementById('roleObserveManageInput').checked);
       if (!name) return showToast('역할 이름을 입력해 주세요.');
 
       const next = sanitizeRolesList(roles);
@@ -13526,17 +13796,18 @@
       const prevRoleObj = id ? roles.find(x => x.id === id) : null;
       if (id) {
         const r = next.find(x => x.id === id);
-        if (r) { r.name = name; r.color = selectedRoleColor; }
+        if (r) { r.name = name; r.color = selectedRoleColor; r.canObserveManage = canObserveManage; }
         msg = `[${name}] 역할이 수정되었습니다!`;
       } else {
         if (next.some(r => r.name === name)) return showToast('이미 같은 이름의 역할이 존재합니다.');
-        next.push({ id: 'role_' + Date.now(), name, color: selectedRoleColor });
+        next.push({ id: 'role_' + Date.now(), name, color: selectedRoleColor, canObserveManage });
         msg = `[${name}] 새 역할이 추가되었습니다!`;
       }
       try {
         await db.collection('config').doc('roles').set({
           items: next,
-          metaById: buildRolesMetaByIdMap(next)
+          metaById: buildRolesMetaByIdMap(next),
+          observerRoleIds: buildObserverRoleIds(next)
         });
         recordAuditLog({
           actorType: 'admin',
@@ -13544,7 +13815,8 @@
           action: id ? '역할 수정' : '역할 추가',
           target: name,
           beforeVal: prevRoleObj ? prevRoleObj.name : '',
-          afterVal: prevRoleObj ? name : ''
+          afterVal: prevRoleObj ? name : '',
+          detail: canObserveManage ? '관리 센터 구경(읽기 전용) 권한 포함' : ''
         });
         document.getElementById('roleModal').classList.remove('open');
         showToast(msg);
@@ -13559,7 +13831,8 @@
       try {
         await db.collection('config').doc('roles').set({
           items: next,
-          metaById: buildRolesMetaByIdMap(next)
+          metaById: buildRolesMetaByIdMap(next),
+          observerRoleIds: buildObserverRoleIds(next)
         });
         recordAuditLog({
           actorType: 'admin',
@@ -13585,7 +13858,8 @@
         const batch = db.batch();
         batch.set(db.collection('config').doc('roles'), {
           items: next,
-          metaById: buildRolesMetaByIdMap(next)
+          metaById: buildRolesMetaByIdMap(next),
+          observerRoleIds: buildObserverRoleIds(next)
         });
         members.forEach(m => {
           if (m.status !== 'removed' && m.roleId === roleId) {
@@ -17484,7 +17758,7 @@
           <div class="card">
             <div class="form-group">
               <label class="form-label" for="cfgSheetUrlInput">Google Apps Script 웹 앱 URL (일반 회원 비공개)</label>
-              <input id="cfgSheetUrlInput" type="url" class="form-input" value="${escapeHtml(sheetUrl)}" placeholder="구글 앱스 스크립트 웹앱 URL 입력" />
+              <input id="cfgSheetUrlInput" type="url" class="form-input" value="${escapeHtml(isManageReadOnlyUser(user) ? '' : sheetUrl)}" placeholder="${isManageReadOnlyUser(user) ? '최고 관리자 전용 비공개 (구경 모드에서는 연동 주소 미표시)' : '구글 앱스 스크립트 웹앱 URL 입력'}" />
             </div>
             <div style="font-size:11.5px; color:#64748B; line-height:1.55; margin-bottom:10px;">
               • 보안 강화를 위해 연동 주소는 <b>최고 관리자 전용 서버(config/sheetSecret)</b>에만 격리 보관되며 일반 회원에게는 노출되지 않습니다.<br>
@@ -18331,13 +18605,15 @@
       const newRole = {
         id: 'role_' + Date.now(),
         name,
-        color: ROLE_COLORS[roles.length % ROLE_COLORS.length]
+        color: ROLE_COLORS[roles.length % ROLE_COLORS.length],
+        canObserveManage: false
       };
       const next = [...sanitizeRolesList(roles), newRole];
       try {
         await db.collection('config').doc('roles').set({
           items: next,
-          metaById: buildRolesMetaByIdMap(next)
+          metaById: buildRolesMetaByIdMap(next),
+          observerRoleIds: buildObserverRoleIds(next)
         });
         roles = next;
         showToast(`[${name}] 새 역할이 자동 등록되었습니다!`);
