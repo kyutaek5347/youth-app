@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=233" />
+  <link rel="manifest" href="./manifest.json?v=234" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=233" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=233" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=234" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=234" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4000,7 +4000,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=233" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=234" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4036,7 +4036,7 @@
         <p class="login-sub">구미제일감리교회 청년부</p>
       </div>
 
-      <div class="login-card" data-ts-zone="auth_tabs">
+      <div class="login-card">
         <div id="authTabs" class="auth-tabs" role="tablist" data-ts-bar="auth_tabs">
           <button id="tabBtnLogin" class="auth-tab-btn active" type="button" onclick="switchAuthTab('login')">로그인</button>
           <button id="tabBtnSignup" class="auth-tab-btn" type="button" onclick="switchAuthTab('signup')">회원가입</button>
@@ -4159,7 +4159,7 @@
 
         <!-- (2) 설교 화면 (하단 탭) -->
         <section id="viewSermon" class="hidden">
-          <div class="sermon-hero" data-ts-zone="sermon_cat">
+          <div class="sermon-hero">
             <div class="hero-top-row">
               <div class="hero-top-text">
                 <div id="sermonViewTitle" class="hero-top-title">🎙️ 설교</div>
@@ -4184,7 +4184,7 @@
 
         <!-- (3) CCM 화면 (하단 탭) -->
         <section id="viewCcm" class="hidden">
-          <div class="ccm-hero" data-ts-zone="ccm_team">
+          <div class="ccm-hero">
             <div class="hero-top-row">
               <div class="hero-top-text">
                 <div id="ccmViewTitle" class="hero-top-title">🎵 CCM</div>
@@ -4320,7 +4320,7 @@
         <section id="viewManage" class="hidden">
           <div id="observerReadOnlyBanner" class="observer-readonly-banner hidden"></div>
           <div id="manageSubTabs" class="sub-tabs" data-ts-bar="manage_subtabs" data-ts-body="#manageContent"></div>
-          <div id="manageContent" class="ts-swipe-body"></div>
+          <div id="manageContent"></div>
         </section>
       </main>
 
@@ -4397,7 +4397,7 @@
       </div>
 
       <!-- (1) 비밀번호 변경 -->
-      <div id="accPanelPw" class="ts-swipe-body" data-ts-zone="account_tabs">
+      <div id="accPanelPw">
         <div class="form-group">
           <label class="form-label">현재 비밀번호</label>
           <input id="accCurPwInput" type="password" class="form-input" placeholder="현재 비밀번호 입력" />
@@ -4415,7 +4415,7 @@
       </div>
 
       <!-- (2) 본인 계정 삭제 (회원 탈퇴) -->
-      <div id="accPanelDelete" class="hidden ts-swipe-body" data-ts-zone="account_tabs">
+      <div id="accPanelDelete" class="hidden">
         <div class="info-box warn" style="margin-top:0; margin-bottom:12px;">
           ⚠️ <b>회원 탈퇴(계정 삭제) 안내</b><br>
           계정을 삭제하면 로그인 정보와 회원 기록이 즉시 영구 삭제됩니다. 다시 이용하려면 회원가입 신청이 필요합니다.
@@ -5095,7 +5095,7 @@
         <button id="celebPrevBtn2" class="filter-chip" type="button" onclick="setCelebPreviewMode('2')">2명 예시</button>
         <button id="celebPrevBtn3" class="filter-chip" type="button" onclick="setCelebPreviewMode('3')">3명 예시</button>
       </div>
-      <div id="celebNewcomerPreview" class="celeb-preview-box newcomer ts-swipe-body" data-ts-zone="celeb_preview_mode"></div>
+      <div id="celebNewcomerPreview" class="celeb-preview-box newcomer"></div>
 
       <div style="display:flex; gap:8px; margin-top:10px;">
         <button class="btn-outline" type="button" onclick="resetCelebrationMsgsDefaults()">기본값 복원</button>
@@ -5726,7 +5726,7 @@
         <h3 id="diagSimModalTitle" class="modal-title">🧪 기능 시뮬레이션</h3>
         <button class="close-btn" data-close="diagSimModal">✕</button>
       </div>
-      <div id="diagSimModalBody" class="ts-swipe-body" data-ts-zone="diag_sim_tabs"></div>
+      <div id="diagSimModalBody"></div>
     </div>
   </div>
 
@@ -5826,7 +5826,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 31;
-    const APP_CLIENT_BUILD = 233;
+    const APP_CLIENT_BUILD = 234;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -6824,7 +6824,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=233" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=234" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6848,8 +6848,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=233', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=233', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=234', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=234', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -12111,7 +12111,7 @@
           <button id="adminGuideSearchClear" class="search-clear ${adminGuideSearchQuery ? '' : 'hidden'}" type="button" onclick="clearAdminGuideSearch()">✕</button>
         </div>
         <div id="adminGuideSummaryText" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
-        <div id="adminGuideListArea" class="ts-swipe-body" data-ts-zone="manage_guide_cat"></div>
+        <div id="adminGuideListArea"></div>
       `;
       renderAdminGuideListOnly();
     }
@@ -13217,7 +13217,7 @@
               ${pendingOrDraftCount > 0 ? `<button class="filter-chip ${manageContentFilter === 'pending' ? 'active' : ''}" type="button" onclick="setManageContentFilter('pending')">⏳ 임시·예약 (${pendingOrDraftCount})</button>` : ''}
             </div>
 
-            <div id="manageContentCardsBody" class="ts-swipe-body" data-ts-zone="manage_content_filter">
+            <div id="manageContentCardsBody">
               ${emptyBlocksHintHtml}
               ${blockCardsHtml}
               ${noticeCardsHtml}
@@ -16190,7 +16190,7 @@
             <button id="roleMemberSearchClear" class="search-clear ${roleMemberSearchQuery ? '' : 'hidden'}" type="button" onclick="clearRoleMemberSearch()">✕</button>
           </div>
           <div id="roleMembersSummaryText" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 8px;"></div>
-          <div id="roleMembersListArea" class="card ts-swipe-body" data-ts-zone="manage_roles_tab"></div>
+          <div id="roleMembersListArea" class="card"></div>
         </div>
       `;
 
@@ -21244,7 +21244,7 @@
           </div>
         </div>
         <div id="adminLogsSummaryText" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
-        <div id="adminLogsListArea" class="ts-swipe-body" data-ts-zone="manage_logs_filter"></div>
+        <div id="adminLogsListArea"></div>
         </div>
       `;
 
@@ -22358,7 +22358,7 @@
           `}
         </div>
 
-        ${curSess ? '<div id="attRosterListsArea" class="ts-swipe-body" data-ts-zone="manage_att_filter"></div>' : ''}
+        ${curSess ? '<div id="attRosterListsArea"></div>' : ''}
       `;
 
       renderAttRosterQuickJumpListOnly();
@@ -33464,9 +33464,9 @@ ${handleUrl}`);
     };
 
 
-    // ==================== 24. 통합 탭 좌우 슬라이드 엔진 (전 화면 수동 스와이프 · 핵심 콘텐츠 6곳만 배너형 인디케이터 표시) ====================
+    // ==================== 24. 통합 탭 좌우 슬라이드 엔진 (핵심 이용자 콘텐츠 6곳 전용 · 스와이프 + 배너형 인디케이터 동기화) ====================
     const TAB_SLIDE_BAR_SELECTOR = '.filter-row:not([data-ts-skip="1"]), .sub-tabs:not([data-ts-skip="1"]), .role-member-tabs:not([data-ts-skip="1"]), .sermon-subtab-row:not([data-ts-skip="1"]), .auth-tabs:not([data-ts-skip="1"]), .modal-tabs-2:not([data-ts-skip="1"])';
-    const TAB_SLIDE_SHOW_CTRL_KEYS = new Set([
+    const TAB_SLIDE_ENABLED_KEYS = new Set([
       'home_notice',
       'home_videos',
       'sermon_sub',
@@ -33510,8 +33510,13 @@ ${handleUrl}`);
       return barEl.dataset.tsUid;
     }
 
+    function isTabSlideEnabledBar(barEl) {
+      if (!barEl) return false;
+      return TAB_SLIDE_ENABLED_KEYS.has(getTabSlideBarKey(barEl));
+    }
+
     function findTabSlideBarByKey(key) {
-      if (!key) return null;
+      if (!key || !TAB_SLIDE_ENABLED_KEYS.has(key)) return null;
       const bars = document.querySelectorAll(TAB_SLIDE_BAR_SELECTOR);
       for (const b of bars) {
         if (getTabSlideBarKey(b) === key && isTabSlideBarVisible(b)) return b;
@@ -33524,22 +33529,6 @@ ${handleUrl}`);
 
     function getTabSlideBodyEl(barEl) {
       if (!barEl) return null;
-      const key = getTabSlideBarKey(barEl);
-      if (key === 'auth_tabs') {
-        const panels = ['panelLogin', 'panelSignup', 'panelAdmin'];
-        for (const pid of panels) {
-          const el = document.getElementById(pid);
-          if (el && !el.classList.contains('hidden')) return el;
-        }
-        return document.querySelector('#loginScreen .login-card');
-      }
-      if (key === 'account_tabs') {
-        const p1 = document.getElementById('accPanelPw');
-        if (p1 && !p1.classList.contains('hidden')) return p1;
-        const p2 = document.getElementById('accPanelDelete');
-        if (p2 && !p2.classList.contains('hidden')) return p2;
-        return null;
-      }
       const spec = barEl.dataset.tsBody;
       if (spec) {
         if (spec.startsWith('#') || spec.startsWith('.') || spec.startsWith('[')) {
@@ -33578,23 +33567,21 @@ ${handleUrl}`);
 
     function renderControlBarForTabBar(barEl) {
       const key = getTabSlideBarKey(barEl);
-      const btns = isTabSlideBarVisible(barEl) ? getTabSlideButtons(barEl) : [];
-      const total = btns.length;
       const slotEl = document.querySelector(`[data-ts-ctrl-slot="${key}"]`);
       const nextSib = barEl.nextElementSibling;
       const existingCtrl = slotEl
         ? slotEl.querySelector(`.tab-slide-controls[data-ts-for="${key}"]`)
         : ((nextSib && nextSib.classList && nextSib.classList.contains('tab-slide-controls') && nextSib.dataset.tsFor === key) ? nextSib : null);
 
-      const showCtrlBar = TAB_SLIDE_SHOW_CTRL_KEYS.has(key);
-      if (total <= 1 || !showCtrlBar) {
+      if (!TAB_SLIDE_ENABLED_KEYS.has(key)) {
         if (existingCtrl) existingCtrl.remove();
-        if (pendingTabSlideAnim && pendingTabSlideAnim.uid === key && (Date.now() - pendingTabSlideAnim.ts) < 900) {
-          const dir = pendingTabSlideAnim.dir;
-          pendingTabSlideAnim = null;
-          const bodyEl = getTabSlideBodyEl(barEl);
-          playTabSlideEnterAnim(bodyEl, dir);
-        }
+        return;
+      }
+
+      const btns = isTabSlideBarVisible(barEl) ? getTabSlideButtons(barEl) : [];
+      const total = btns.length;
+      if (total <= 1) {
+        if (existingCtrl) existingCtrl.remove();
         return;
       }
 
@@ -33645,11 +33632,11 @@ ${handleUrl}`);
       if (tabSlideSyncingDom) return;
       tabSlideSyncingDom = true;
       try {
-        // 사라진 탭 바에 연결된 고아 컨트롤 바 정리
+        // 사라졌거나 비활성화된 탭 바에 연결된 컨트롤 바 정리
         document.querySelectorAll('.tab-slide-controls[data-ts-for]').forEach(ctrl => {
           const k = ctrl.dataset.tsFor;
           const bar = findTabSlideBarByKey(k);
-          if (!TAB_SLIDE_SHOW_CTRL_KEYS.has(k) || !bar || !isTabSlideBarVisible(bar) || getTabSlideButtons(bar).length <= 1) {
+          if (!TAB_SLIDE_ENABLED_KEYS.has(k) || !bar || !isTabSlideBarVisible(bar) || getTabSlideButtons(bar).length <= 1) {
             ctrl.remove();
           }
         });
@@ -33668,6 +33655,7 @@ ${handleUrl}`);
     }
 
     window.stepTabSlideBar = (key, delta) => {
+      if (!TAB_SLIDE_ENABLED_KEYS.has(key)) return;
       const bar = findTabSlideBarByKey(key);
       if (!bar || !isTabSlideBarVisible(bar)) return;
       const btns = getTabSlideButtons(bar);
@@ -33682,6 +33670,7 @@ ${handleUrl}`);
     };
 
     window.goToTabSlideBar = (key, idx) => {
+      if (!TAB_SLIDE_ENABLED_KEYS.has(key)) return;
       const bar = findTabSlideBarByKey(key);
       if (!bar || !isTabSlideBarVisible(bar)) return;
       const btns = getTabSlideButtons(bar);
@@ -33700,39 +33689,27 @@ ${handleUrl}`);
       if (target.closest('.top-banner-carousel, input, textarea, select, option, iframe, .switch, [contenteditable="true"]')) {
         return null;
       }
-      // 1) 탭 바 또는 컨트롤 바 자체를 직접 스와이프한 경우
+      // 1) 활성화된 컨트롤 바 또는 탭 바 자체를 직접 스와이프한 경우
       const directCtrl = target.closest('.tab-slide-controls[data-ts-for]');
-      if (directCtrl) {
+      if (directCtrl && TAB_SLIDE_ENABLED_KEYS.has(directCtrl.dataset.tsFor)) {
         const b = findTabSlideBarByKey(directCtrl.dataset.tsFor);
         if (b && isTabSlideBarVisible(b) && getTabSlideButtons(b).length > 1) return b;
       }
       const directBar = target.closest(TAB_SLIDE_BAR_SELECTOR);
-      if (directBar && isTabSlideBarVisible(directBar) && getTabSlideButtons(directBar).length > 1) {
+      if (directBar && isTabSlideEnabledBar(directBar) && isTabSlideBarVisible(directBar) && getTabSlideButtons(directBar).length > 1) {
         return directBar;
       }
-      // 2) 명시적 data-ts-zone 내부에서 스와이프한 경우 (가장 안쪽 존 우선)
+      // 2) 활성화된 6개 영역의 data-ts-zone 내부에서 스와이프한 경우만 허용
       let curZone = target.closest('[data-ts-zone]');
       while (curZone) {
         const zk = curZone.dataset.tsZone;
-        const bar = findTabSlideBarByKey(zk);
-        if (bar && isTabSlideBarVisible(bar) && getTabSlideButtons(bar).length > 1) {
-          return bar;
+        if (TAB_SLIDE_ENABLED_KEYS.has(zk)) {
+          const bar = findTabSlideBarByKey(zk);
+          if (bar && isTabSlideBarVisible(bar) && getTabSlideButtons(bar).length > 1) {
+            return bar;
+          }
         }
         curZone = curZone.parentElement ? curZone.parentElement.closest('[data-ts-zone]') : null;
-      }
-      // 3) 관리 센터(#manageContent) 내부에서는 현재 서브탭의 메인 필터 바 우선, 없으면 상단 관리 서브탭
-      const inManageContent = target.closest('#manageContent');
-      if (inManageContent && isTabSlideBarVisible(inManageContent)) {
-        const innerBars = Array.from(inManageContent.querySelectorAll(TAB_SLIDE_BAR_SELECTOR))
-          .filter(b => isTabSlideBarVisible(b) && getTabSlideButtons(b).length > 1);
-        if (innerBars.length > 0) {
-          const preferred = innerBars.find(b => b.dataset.tsBar !== 'manage_att_session') || innerBars[0];
-          return preferred;
-        }
-        const subTabsBar = document.getElementById('manageSubTabs');
-        if (subTabsBar && isTabSlideBarVisible(subTabsBar) && getTabSlideButtons(subTabsBar).length > 1) {
-          return subTabsBar;
-        }
       }
       return null;
     }
