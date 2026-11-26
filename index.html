@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=237" />
+  <link rel="manifest" href="./manifest.json?v=239" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=237" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=237" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=239" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=239" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4000,7 +4000,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=237" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=239" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5826,9 +5826,9 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 31;
-    const APP_CLIENT_BUILD = 237;
+    const APP_CLIENT_BUILD = 239;
     const APP_BOOT_TS = Date.now();
-    const SHEET_SCHEMA_VERSION = 'v10.137-10tab-fast-split';
+    const SHEET_SCHEMA_VERSION = 'v10.139-10tab-fast-split';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
       { id: 'members', name: '회원 명단', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '성명·역할·가입일·상태·이전이름 (생일 열 폐기)' },
@@ -6832,7 +6832,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=237" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=239" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6856,8 +6856,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=237', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=237', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=239', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=239', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -19151,6 +19151,96 @@
       refreshInviteQrOnActiveResume(true);
     });
 
+    function parseYmdPartsFromAny(rawDate) {
+      const s = String(rawDate || '').trim();
+      const ko = s.match(/(\d{4})\s*년\s*(\d{1,2})\s*월\s*(\d{1,2})\s*일/);
+      if (ko) return { y: Number(ko[1]), m: Number(ko[2]), d: Number(ko[3]) };
+      const num = s.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/);
+      if (num) return { y: Number(num[1]), m: Number(num[2]), d: Number(num[3]) };
+      return null;
+    }
+
+    function getWeekdayKoFromAnyDate(rawDate) {
+      const p = parseYmdPartsFromAny(rawDate);
+      if (!p) return '';
+      const dt = new Date(Date.UTC(p.y, p.m - 1, p.d));
+      return DAY_NAMES_KO[dt.getUTCDay()] || '';
+    }
+
+    function extractAttendanceEventName(rawDate, rawLabel, rawColTitle) {
+      const candidates = [rawLabel, rawColTitle, rawDate].map(v => String(v || '').trim()).filter(Boolean);
+      for (const cand of candidates) {
+        const paren = cand.match(/\(([^()]+)\)\s*$/);
+        if (paren) {
+          const inner = String(paren[1]).trim();
+          if (inner && !/^(일|월|화|수|목|금|토)(요일)?$/.test(inner) && !inner.includes('테스트')) {
+            return inner;
+          }
+        }
+        const dashEv = cand.match(/(?:\([월화수목금토일]요일\)|\d{1,2}일)\s*[-·:|]\s*(.+)$/);
+        if (dashEv && String(dashEv[1]).trim()) {
+          return String(dashEv[1]).trim();
+        }
+      }
+      const lbl = String(rawLabel || '').trim();
+      if (lbl && lbl !== '정기예배' && lbl !== '주일예배' && lbl !== '청년부 예배') {
+        return lbl;
+      }
+      return '';
+    }
+
+    function isAttendanceCheckinDay(rawDate, rawLabel = '', rawColTitle = '') {
+      const p = parseYmdPartsFromAny(rawDate || rawColTitle);
+      if (!p) return true;
+      const iso = `${p.y}-${String(p.m).padStart(2, '0')}-${String(p.d).padStart(2, '0')}`;
+      const dt = new Date(Date.UTC(p.y, p.m - 1, p.d));
+      const dow = dt.getUTCDay();
+      const cfg = attendanceConfig || DEFAULT_ATTENDANCE_CONFIG;
+      const regularOn = (cfg.regularEnabled !== false) && (dow === Number(cfg.regularDay ?? 0)) && !isSundayWorshipSkipped(iso, cfg);
+      const events = Array.isArray(cfg.specialEvents) ? cfg.specialEvents : [];
+      const hasEventOnDay = events.some(ev => {
+        if (!ev) return false;
+        const dates = getSpecialEventDatesList(ev);
+        return dates.includes(iso);
+      });
+      if (regularOn || hasEventOnDay) return true;
+      const evName = extractAttendanceEventName(rawDate, rawLabel, rawColTitle);
+      return !!evName;
+    }
+
+    function formatKoreanAttendanceDateLabel(rawDate, rawLabel = '', rawColTitle = '') {
+      const raw = String(rawDate || rawColTitle || '').trim();
+      const p = parseYmdPartsFromAny(raw || rawColTitle);
+      const weekday = p ? getWeekdayKoFromAnyDate(raw || rawColTitle) : '';
+      const evName = extractAttendanceEventName(raw, rawLabel, rawColTitle);
+      if (p) {
+        const base = `${p.y}년 ${p.m}월 ${p.d}일${weekday ? ` (${weekday})` : ''}`;
+        return evName ? `${base} - ${evName}` : base;
+      }
+      return evName ? `${raw} - ${evName}` : raw;
+    }
+
+    function buildAttendanceSheetPayloadItem(rec, extra = {}) {
+      if (!rec || !rec.name) return null;
+      if (!isAttendanceCheckinDay(rec.date || '', rec.label || '', rec.colTitle || '')) return null;
+      const isAbs = isAbsentAttendanceRecord(rec);
+      const oxLabel = isAbs ? '출석X' : '출석O';
+      const dateKo = formatKoreanAttendanceDateLabel(rec.date || rec.colTitle || '', rec.label || '', rec.colTitle || '');
+      const weekday = getWeekdayKoFromAnyDate(rec.date || rec.colTitle || '');
+      const eventName = extractAttendanceEventName(rec.date || '', rec.label || '', rec.colTitle || '');
+      return Object.assign({
+        action: 'attendance_upsert',
+        colTitle: dateKo,
+        date: dateKo,
+        weekday,
+        eventName,
+        name: rec.name,
+        status: oxLabel,
+        attendanceOX: oxLabel,
+        time: oxLabel
+      }, extra);
+    }
+
     function getAdminSheetUrl() {
       return String(adminSheetUrl || '').trim();
     }
@@ -19495,16 +19585,7 @@
       let failed = 0;
       try {
         for (const rec of toSync) {
-          const ok = await postToGoogleSheet({
-            action: 'attendance_upsert',
-            colTitle: rec.colTitle || rec.date,
-            date: rec.date,
-            name: rec.name,
-            role: rec.roleName || '',
-            time: isAbsentAttendanceRecord(rec) ? `X (불참 ${rec.time || ''})`.trim() : (rec.time || ''),
-            modifiedBy: rec.modifiedBy ? `${rec.modifiedBy}${rec.modifiedAt ? ` (${rec.modifiedAt})` : ''}` : '',
-            forceUpdate: true
-          }, url);
+          const ok = await postToGoogleSheet(buildAttendanceSheetPayloadItem(rec, { forceUpdate: true }), url);
           if (ok) {
             synced++;
             await db.collection('attendance').doc(String(rec.id)).update({ sheetSynced: true }).catch(() => {});
@@ -19834,6 +19915,17 @@
           sheetSynced: false
         };
         await docRef.set(record);
+        postToGoogleSheet({
+          action: 'attendance_upsert',
+          colTitle: formatKoreanAttendanceDateLabel(sess.date, sess.label, sess.colTitle),
+          date: formatKoreanAttendanceDateLabel(sess.date, sess.label, sess.colTitle),
+          weekday: getWeekdayKoFromAnyDate(sess.date),
+          eventName: extractAttendanceEventName(sess.date, sess.label, sess.colTitle),
+          name: user.name,
+          status: attStatus === 'absent' ? '출석X' : '출석O',
+          attendanceOX: attStatus === 'absent' ? '출석X' : '출석O',
+          time: attStatus === 'absent' ? '출석X' : '출석O'
+        }).catch(() => {});
         recordAuditLog({
           actorType: 'member',
           actorName: user.name,
@@ -24118,14 +24210,7 @@
     };
 
     function buildFullSheetSyncPayload() {
-      const attPayload = attendanceRecords.map(r => ({
-        colTitle: r.colTitle || r.date,
-        date: r.date,
-        name: r.name,
-        role: r.roleName || '',
-        time: isAbsentAttendanceRecord(r) ? `X (불참 ${r.time || ''})`.trim() : (r.time || ''),
-        modifiedBy: r.modifiedBy || ''
-      }));
+      const attPayload = attendanceRecords.map(r => buildAttendanceSheetPayloadItem(r)).filter(Boolean);
       const memberPayload = members.filter(m => m.status !== 'removed').map(m => {
         const isRe = !!m.isRejoin || memberHistoryMap.has(nameToHex(m.name));
         const st = m.status === 'pending'
@@ -24186,15 +24271,8 @@
 
       const attPayload = attendanceRecords
         .filter(r => r && (needAllAtt || r.sheetSynced !== true))
-        .map(r => ({
-          colTitle: r.colTitle || r.date,
-          date: r.date,
-          name: r.name,
-          role: r.roleName || '',
-          time: isAbsentAttendanceRecord(r) ? `X (불참 ${r.time || ''})`.trim() : (r.time || ''),
-          modifiedBy: r.modifiedBy || '',
-          forceUpdate: true
-        }));
+        .map(r => buildAttendanceSheetPayloadItem(r, { forceUpdate: true }))
+        .filter(Boolean);
 
       const memberPayload = members
         .filter(m => {
@@ -24331,7 +24409,7 @@
       if (data.multiTab === true || data.supportsAttendanceSplit === true || data.supportsSchemaInspect === true || data.supportsBatchSync === true) return true;
       if (Number(data.tabCount || 0) >= 3) return true;
       if (String(data.message || '').includes('탭')) return true;
-      if (String(data.version || '').includes('v10.136') || String(data.version || '').includes('v10.137')) return true;
+      if (String(data.version || '').includes('v10.136') || String(data.version || '').includes('v10.137') || String(data.version || '').includes('v10.138') || String(data.version || '').includes('v10.139')) return true;
       if (data.result && typeof data.result === 'object') return true;
       return false;
     }
@@ -24345,7 +24423,9 @@
         || String(data.version || '').includes('v10.109')
         || String(data.version || '').includes('v10.112')
         || String(data.version || '').includes('v10.136')
-        || String(data.version || '').includes('v10.137');
+        || String(data.version || '').includes('v10.137')
+        || String(data.version || '').includes('v10.138')
+        || String(data.version || '').includes('v10.139');
     }
 
     function isSheetResponseFastBatch(data) {
@@ -24771,12 +24851,14 @@
           });
           postToGoogleSheet({
             action: 'attendance_upsert',
-            colTitle: rec.colTitle || colTitle,
-            date: rec.date || dateDot,
+            colTitle: formatKoreanAttendanceDateLabel(rec.date || dateDot, rec.label || label, rec.colTitle || colTitle),
+            date: formatKoreanAttendanceDateLabel(rec.date || dateDot, rec.label || label, rec.colTitle || colTitle),
+            weekday: getWeekdayKoFromAnyDate(rec.date || dateDot),
+            eventName: extractAttendanceEventName(rec.date || dateDot, rec.label || label, rec.colTitle || colTitle),
             name: rec.name,
-            role: rec.roleName || '',
-            time: sheetTimeVal,
-            modifiedBy: `수정: ${adminActor} (${nowStr})`,
+            status: attStatus === 'absent' ? '출석X' : '출석O',
+            attendanceOX: attStatus === 'absent' ? '출석X' : '출석O',
+            time: attStatus === 'absent' ? '출석X' : '출석O',
             forceUpdate: true
           }, '', true).then(res => {
             if (res && res.ok) db.collection('attendance').doc(String(editDocId)).update({ sheetSynced: true }).catch(() => {});
@@ -24816,12 +24898,14 @@
           await db.collection('attendance').doc(newDocId).set(newRec);
           postToGoogleSheet({
             action: 'attendance_upsert',
-            colTitle,
-            date: dateDot,
+            colTitle: formatKoreanAttendanceDateLabel(dateDot, label, colTitle),
+            date: formatKoreanAttendanceDateLabel(dateDot, label, colTitle),
+            weekday: getWeekdayKoFromAnyDate(dateDot),
+            eventName: extractAttendanceEventName(dateDot, label, colTitle),
             name: m.name,
-            role: roleName,
-            time: sheetTimeVal,
-            modifiedBy: `추가: ${adminActor} (${nowStr})`,
+            status: attStatus === 'absent' ? '출석X' : '출석O',
+            attendanceOX: attStatus === 'absent' ? '출석X' : '출석O',
+            time: attStatus === 'absent' ? '출석X' : '출석O',
             forceUpdate: true
           }, '', true).then(res => {
             if (res && res.ok) db.collection('attendance').doc(newDocId).update({ sheetSynced: true }).catch(() => {});
@@ -24852,10 +24936,9 @@
         await db.collection('attendance').doc(String(docId)).delete();
         postToGoogleSheet({
           action: 'attendance_delete',
-          colTitle: rec.colTitle || rec.date,
-          date: rec.date,
-          name: rec.name,
-          modifiedBy: `삭제: ${adminActor} (${nowStr})`
+          colTitle: formatKoreanAttendanceDateLabel(rec.date || rec.colTitle || '', rec.label || '', rec.colTitle || ''),
+          date: formatKoreanAttendanceDateLabel(rec.date || rec.colTitle || '', rec.label || '', rec.colTitle || ''),
+          name: rec.name
         }).catch(() => {});
         recordAuditLog({
           actorType: 'admin',
