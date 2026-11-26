@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=206" />
+  <link rel="manifest" href="./manifest.json?v=207" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=206" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=206" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=207" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=207" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -728,7 +728,7 @@
       padding: 12px 0; border-bottom: 1px solid #F1F5F9; flex-wrap: wrap;
     }
     .member-row:last-child { border-bottom: none; padding-bottom: 2px; }
-    .member-name { font-size: 14.5px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 6px; }
+    .member-name { font-size: 14.5px; font-weight: 800; color: var(--text); display: flex; align-items: center; flex-wrap: wrap; gap: 5px 6px; line-height: 1.38; }
     .member-meta { font-size: 11.5px; color: var(--text-sub); margin-top: 3px; }
     .role-select {
       border: 1px solid var(--border); border-radius: 8px; padding: 5px 8px;
@@ -761,8 +761,10 @@
     .form-textarea { min-height: 95px; resize: vertical; }
     .checkbox-row {
       display: flex; align-items: flex-start; gap: 8px; font-size: 13px; font-weight: 600;
-      margin: 9px 0; line-height: 1.4;
+      margin: 9px 0; line-height: 1.45;
     }
+    .checkbox-row > input[type="checkbox"] { flex-shrink: 0; margin-top: 2px; }
+    .checkbox-row > span { min-width: 0; flex: 1; word-break: keep-all; overflow-wrap: anywhere; }
     .color-palette { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
     .color-dot {
       width: 28px; height: 28px; border-radius: 50%;
@@ -1167,16 +1169,18 @@
       overflow: hidden;
     }
     .newcomer-auto-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
+      display: inline-block;
+      max-width: 100%;
       background: rgba(255, 255, 255, 0.22);
       color: #FFFFFF;
       font-size: 11.5px;
       font-weight: 800;
+      line-height: 1.4;
       padding: 4px 10px;
-      border-radius: 999px;
+      border-radius: 14px;
       margin-bottom: 9px;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
     }
     .newcomer-auto-title {
       font-size: 18px;
@@ -1241,13 +1245,17 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      max-width: 100%;
       background: rgba(6, 78, 59, 0.55);
       color: #ECFDF5;
       font-size: 11.5px;
       font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 999px;
+      line-height: 1.4;
+      padding: 5px 10px;
+      border-radius: 14px;
       margin-bottom: 9px;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
     }
     .attendance-live-dot {
       width: 7px;
@@ -1255,6 +1263,7 @@
       border-radius: 50%;
       background: #6EE7B7;
       display: inline-block;
+      flex-shrink: 0;
     }
     .attendance-home-title {
       font-size: 18px;
@@ -1617,16 +1626,19 @@
       margin: 0 auto;
     }
     .qr-meta-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
+      display: inline-block;
+      max-width: 100%;
       background: #FEF3C7;
       color: #92400E;
       font-size: 11.5px;
       font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 999px;
+      line-height: 1.45;
+      padding: 5px 11px;
+      border-radius: 14px;
       margin-top: 10px;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      text-align: center;
     }
     .signup-qr-lock-box {
       background: #FEF2F2;
@@ -1635,18 +1647,22 @@
       padding: 20px 16px;
       text-align: center;
       color: #991B1B;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
     }
     .signup-qr-ok-badge {
-      display: flex;
-      align-items: center;
-      gap: 7px;
+      display: block;
       background: #DCFCE7;
       color: #166534;
       border: 1px solid #86EFAC;
       border-radius: 12px;
-      padding: 9px 12px;
+      padding: 10px 13px;
       font-size: 12.5px;
-      font-weight: 800;
+      font-weight: 700;
+      line-height: 1.55;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      text-align: left;
       margin-bottom: 13px;
     }
     .att-history-box {
@@ -1781,14 +1797,16 @@
       border: 1px solid rgba(255, 255, 255, 0.14);
     }
     .auto-diag-status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 9px;
-      border-radius: 999px;
+      display: inline-block;
+      max-width: 100%;
+      padding: 4px 10px;
+      border-radius: 14px;
       font-size: 11px;
       font-weight: 800;
+      line-height: 1.4;
       margin-bottom: 6px;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
     }
     .auto-diag-status-pill.watching { background: rgba(22, 163, 74, 0.24); color: #86EFAC; }
     .auto-diag-status-pill.checking { background: rgba(37, 99, 235, 0.28); color: #93C5FD; }
@@ -1880,17 +1898,19 @@
       margin-top: 8px;
     }
     .sched-preview-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
+      display: inline-block;
+      max-width: 100%;
       background: rgba(15, 23, 42, 0.72);
       color: #FDE68A;
       border: 1px solid rgba(253, 230, 138, 0.45);
       font-size: 11px;
       font-weight: 800;
-      padding: 3px 9px;
-      border-radius: 999px;
+      line-height: 1.4;
+      padding: 3.5px 10px;
+      border-radius: 14px;
       margin-bottom: 7px;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
     }
 
     /* ==================== v10.32 전 기기(모바일·태블릿·아이패드·PC 웹) 통합 반응형 & 타이포그래피 ==================== */
@@ -1962,11 +1982,17 @@
     }
 
     /* 버튼·배지 줄바꿈 깨짐 방지 */
-    .exit-btn, .btn-admin, .btn-sm, .tag, .hero-badge,
-    .newcomer-auto-badge, .attendance-live-badge, .role-pill,
+    .exit-btn, .btn-admin, .btn-sm, .role-pill,
     .filter-chip, .sub-tab-btn, .quick-tag {
       white-space: nowrap;
       flex-shrink: 0;
+    }
+    .tag, .hero-badge, .newcomer-auto-badge, .attendance-live-badge {
+      max-width: 100%;
+      white-space: normal;
+      line-height: 1.38;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
     }
 
     /* 플렉스·그리드 내부 자식 넘침 방지 */
@@ -2903,15 +2929,17 @@
       margin: 10px 0 12px;
     }
     .sec-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
+      display: inline-block;
+      max-width: 100%;
       padding: 4px 9px;
-      border-radius: 999px;
+      border-radius: 14px;
       font-size: 11.5px;
       font-weight: 800;
+      line-height: 1.38;
       background: rgba(255, 255, 255, 0.12);
       color: #F8FAFC;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
     }
     .sec-pill.ok { background: rgba(16, 185, 129, 0.22); color: #A7F3D0; }
     .sec-pill.warn { background: rgba(245, 158, 11, 0.25); color: #FDE68A; }
@@ -2946,11 +2974,14 @@
       border: 1px solid var(--border);
       background: #F8FAFC;
       color: #1E293B;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
     }
     .sec-sim-step.ok { background: #ECFDF5; border-color: #6EE7B7; color: #065F46; }
     .sec-sim-step.warn { background: #FFFBEB; border-color: #FCD34D; color: #92400E; }
     .sec-sim-step.err { background: #FEF2F2; border-color: #FCA5A5; color: #991B1B; }
-    .sec-sim-step-title { font-weight: 800; margin-bottom: 2px; display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+    .sec-sim-step-title { font-weight: 800; margin-bottom: 3px; display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+    .sec-sim-step-title > span:first-child { min-width: 0; flex: 1 1 160px; }
     .sec-sim-preview {
       border-radius: 12px;
       padding: 11px 12px;
@@ -3428,8 +3459,11 @@
       display: flex;
       align-items: flex-start;
       gap: 6px;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
+      line-height: 1.5;
     }
+    .video-inspect-step > span:first-child { flex-shrink: 0; }
+    .video-inspect-step > span:last-child { min-width: 0; flex: 1; word-break: keep-all; overflow-wrap: anywhere; }
     .video-inspect-step:last-child { margin-bottom: 0; }
     .video-player-frame-wrap {
       position: relative;
@@ -3563,7 +3597,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=206" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=207" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5237,7 +5271,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 206;
+    const APP_CLIENT_BUILD = 207;
     const KEY_LAST_SEC_WATCH_SIG = 'right_youth_sec_watch_sig_v1';
     const KEY_AUTO_SEC_LAST_ALERT_SIG = 'right_youth_auto_sec_alert_sig_v1';
     const KEY_AUTO_DIAG_LAST_ALERT_SIG = 'right_youth_auto_diag_alert_sig_v1';
@@ -6157,7 +6191,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=206" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=207" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6181,8 +6215,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=206', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=206', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=207', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=207', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -9056,14 +9090,14 @@
         if (okBadge) {
           if (st.status === 'grace') {
             okBadge.className = 'signup-qr-ok-badge grace';
-            okBadge.innerHTML = `⏳ 초대 QR이 새로 변경되었습니다 · 직전 QR 유예 시간(<b>${formatCountdownMmSs(st.graceRemainMs)}</b> 남음) 안에 가입을 완료해 주세요. 시간이 지나면 새 QR을 스캔해야 합니다.`;
+            okBadge.innerHTML = `⏳ <b>초대 QR이 새로 변경되었습니다.</b><br>직전 QR 유예 시간(<b>${formatCountdownMmSs(st.graceRemainMs)}</b> 남음) 안에 가입을 완료해 주세요. 시간이 지나면 새 QR을 스캔해야 합니다.`;
           } else if (st.modeMin > 0) {
             const gMin = getInviteGraceMinutes(st.modeMin);
             okBadge.className = 'signup-qr-ok-badge';
-            okBadge.innerHTML = `✅ 현장 초대 QR 인증 완료 · 남은 시간 <b>${formatCountdownMmSs(st.remainMs)}</b> (갱신 시 직전 QR ${gMin}분 유예)`;
+            okBadge.innerHTML = `✅ <b>현장 초대 QR 인증 완료</b> · 남은 시간 <b>${formatCountdownMmSs(st.remainMs)}</b><br><span style="font-weight:600; opacity:0.9;">갱신 시에도 직전 QR로 ${gMin}분간 가입 유예됩니다.</span>`;
           } else {
             okBadge.className = 'signup-qr-ok-badge';
-            okBadge.textContent = '✅ 오늘의 초대 QR 인증 완료 · 회원가입 가능';
+            okBadge.innerHTML = '✅ <b>오늘의 초대 QR 인증 완료</b> · 회원가입 가능';
           }
         }
         return;
@@ -17028,7 +17062,7 @@
         return `
           <div class="home-block">
             <div class="attendance-home-card">
-              <span class="attendance-live-badge"><span class="attendance-live-dot"></span> ${escapeHtml(sess.label)} 출석 진행 중 · ${escapeHtml(sess.start)}~${escapeHtml(sess.end)}</span>
+              <span class="attendance-live-badge"><span class="attendance-live-dot"></span><span>${escapeHtml(sess.label)} 출석 진행 중 · ${escapeHtml(sess.start)}~${escapeHtml(sess.end)}</span></span>
               <h2 class="attendance-home-title">📋 출석O ${presentCnt}명 · 출석X ${absentCnt}명</h2>
               <p class="attendance-home-desc">${escapeHtml(getTabLabel('manage'))}에서 실시간 출석 명단 확인 및 추가·수정·삭제를 할 수 있습니다.</p>
               <button class="btn-attendance-cta" type="button" onclick="goToAttendanceManage()">✅ 출석 현황 관리 바로가기</button>
@@ -17044,7 +17078,7 @@
       return pendingSessions.map(sess => `
         <div class="home-block">
           <div class="attendance-home-card">
-            <span class="attendance-live-badge"><span class="attendance-live-dot"></span> ${escapeHtml(sess.label)} 출석 진행 중 · ${escapeHtml(sess.start)}~${escapeHtml(sess.end)}</span>
+            <span class="attendance-live-badge"><span class="attendance-live-dot"></span><span>${escapeHtml(sess.label)} 출석 진행 중 · ${escapeHtml(sess.start)}~${escapeHtml(sess.end)}</span></span>
             <h2 class="attendance-home-title">오늘 ${escapeHtml(sess.label)}에 참석하시나요?</h2>
             <p class="attendance-home-desc">아래에서 <b>출석O</b> 또는 <b>출석X</b>를 눌러 주세요. (1인 1회 · 완료 후 카드 자동 숨김)</p>
             <div class="att-choice-grid">
@@ -21978,7 +22012,7 @@
               : `주일 예배 시간(${escapeHtml(sessTime)})에 일반 회원 ${escapeHtml(getTabLabel('home'))} 최상단에 뜨는 출석 카드입니다. 출석O 또는 출석X를 눌러 체험해 보세요. (실제 DB 저장 없음)`}
           </div>
           <div class="attendance-home-card" style="margin-bottom:12px;">
-            <span class="attendance-live-badge"><span class="attendance-live-dot"></span> ${escapeHtml(sessTitle)} · ${escapeHtml(sessTime)}</span>
+            <span class="attendance-live-badge"><span class="attendance-live-dot"></span><span>${escapeHtml(sessTitle)} · ${escapeHtml(sessTime)}</span></span>
             <h2 class="attendance-home-title">${isEv ? '오늘 특별 행사에 참석하시나요?' : '오늘 주일 예배에 참석하셨나요?'}</h2>
             <p class="attendance-home-desc">출석O 또는 출석X를 누르면 출석부에 자동 기록되며, 완료 후 버튼은 자동으로 숨겨집니다.</p>
             <div class="att-choice-grid">
@@ -22097,21 +22131,21 @@
       const boxCls = m === 'official' ? 'ok' : (m === 'pending' ? 'warn' : 'err');
       const stepsHtml = m === 'official'
         ? `
-          <div class="video-inspect-step">✅ <span>1단계 도메인 검증: 공식 유튜브 도메인(youtube.com) 확인 완료</span></div>
-          <div class="video-inspect-step">✅ <span>2단계 실존·메타 확인: [주일 청년부 예배 설교] · 구미제일감리교회 라이트 청년부</span></div>
-          <div class="video-inspect-step">✅ <span>3단계 위험 문구·저작권 검사: 무단 음원/도박/피싱 위험 키워드 없음</span></div>
-          <div class="video-inspect-step">⚡ <span>4단계 공식 채널 판정: 등록된 공식 채널 일치 → <b>즉시 자동 게시</b></span></div>
+          <div class="video-inspect-step"><span>✅</span><span>1단계 도메인 검증: 공식 유튜브 도메인(youtube.com) 확인 완료</span></div>
+          <div class="video-inspect-step"><span>✅</span><span>2단계 실존·메타 확인: [주일 청년부 예배 설교] · 구미제일감리교회 라이트 청년부</span></div>
+          <div class="video-inspect-step"><span>✅</span><span>3단계 위험 문구·저작권 검사: 무단 음원/도박/피싱 위험 키워드 없음</span></div>
+          <div class="video-inspect-step"><span>⚡</span><span>4단계 공식 채널 판정: 등록된 공식 채널 일치 → <b>즉시 자동 게시</b></span></div>
         `
         : (m === 'pending'
           ? `
-            <div class="video-inspect-step">✅ <span>1단계 도메인 검증: 공식 유튜브 도메인(youtu.be) 확인 완료</span></div>
-            <div class="video-inspect-step">✅ <span>2단계 실존·메타 확인: [은혜로운 CCM 라이브] · 마커스워십(미등록 채널)</span></div>
-            <div class="video-inspect-step">✅ <span>3단계 위험 문구·저작권 검사: 특이 위험 문구 없음</span></div>
-            <div class="video-inspect-step">⏳ <span>4단계 공식 채널 판정: 미등록 채널 → <b>관리자 [🎬 영상 관리 → 검토 대기]로 전송</b></span></div>
+            <div class="video-inspect-step"><span>✅</span><span>1단계 도메인 검증: 공식 유튜브 도메인(youtu.be) 확인 완료</span></div>
+            <div class="video-inspect-step"><span>✅</span><span>2단계 실존·메타 확인: [은혜로운 CCM 라이브] · 마커스워십(미등록 채널)</span></div>
+            <div class="video-inspect-step"><span>✅</span><span>3단계 위험 문구·저작권 검사: 특이 위험 문구 없음</span></div>
+            <div class="video-inspect-step"><span>⏳</span><span>4단계 공식 채널 판정: 미등록 채널 → <b>관리자 [🎬 영상 관리 → 검토 대기]로 전송</b></span></div>
           `
           : `
-            <div class="video-inspect-step">❌ <span>1단계 보안 검사 차단: 비유튜브 단축 URL(bit.ly) 또는 위험 키워드("무료 다운로드·음원 추출") 감지</span></div>
-            <div class="video-inspect-step">🚨 <span>자동 방어 조치: 등록 즉시 차단 + [📋 로그] 및 [🛡️ 보안 점검]에 자동 기록</span></div>
+            <div class="video-inspect-step"><span>❌</span><span>1단계 보안 검사 차단: 비유튜브 단축 URL(bit.ly) 또는 위험 키워드("무료 다운로드·음원 추출") 감지</span></div>
+            <div class="video-inspect-step"><span>🚨</span><span>자동 방어 조치: 등록 즉시 차단 + [📋 로그] 및 [🛡️ 보안 점검]에 자동 기록</span></div>
           `);
 
       document.getElementById('diagSimModalBody').innerHTML = `
@@ -22140,12 +22174,12 @@
           <button class="auth-tab-btn ${curMode === 'changed' ? 'active' : ''}" style="font-size:12px; padding:9px 4px;" type="button" onclick="openDiagSimQrGate('changed')">🔄 변경·만료</button>
         </div>
         ${curMode === 'valid' ? `
-          <div class="signup-qr-ok-badge">✅ 현장 초대 QR 인증 완료 · 남은 시간 04:42 (갱신 시 직전 QR 3분 유예)</div>
+          <div class="signup-qr-ok-badge">✅ <b>현장 초대 QR 인증 완료</b> · 남은 시간 <b>04:42</b><br><span style="font-weight:600; opacity:0.9;">갱신 시에도 직전 QR로 3분간 가입 유예됩니다.</span></div>
           <div class="info-box" style="margin-top:0;">
             유효한 초대 QR을 스캔해 접속하면 <b>회원가입 탭이 자동으로 열리고</b>, 성명·역할·비밀번호를 입력해 가입을 신청할 수 있습니다.
           </div>
         ` : (curMode === 'grace' ? `
-          <div class="signup-qr-ok-badge grace">⏳ 초대 QR이 새로 변경되었습니다 · 직전 QR 유예 시간(<b>02:35</b> 남음) 안에 가입을 완료해 주세요. 시간이 지나면 새 QR을 스캔해야 합니다.</div>
+          <div class="signup-qr-ok-badge grace">⏳ <b>초대 QR이 새로 변경되었습니다.</b><br>직전 QR 유예 시간(<b>02:35</b> 남음) 안에 가입을 완료해 주세요. 시간이 지나면 새 QR을 스캔해야 합니다.</div>
           <div class="info-box" style="margin-top:0;">
             5분·10분 모드에서 방금 QR이 갱신되었더라도, 직전 QR로 입력 중이던 가입자가 튕기지 않도록 <b>유예 시간(3~5분)</b> 동안 가입을 마칠 수 있게 안내합니다.
           </div>
