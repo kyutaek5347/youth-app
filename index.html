@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=214" />
+  <link rel="manifest" href="./manifest.json?v=215" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=214" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=214" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=215" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=215" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3411,6 +3411,56 @@
       margin-bottom: 13px;
       box-shadow: 0 8px 22px rgba(147, 51, 234, 0.24);
     }
+    .sermon-subtabs-box {
+      background: #F1F5F9;
+      border: 1px solid #CBD5E1;
+      border-radius: 13px;
+      padding: 8px 10px 9px;
+      margin-bottom: 11px;
+    }
+    .sermon-subtabs-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .sermon-subtabs-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #475569;
+    }
+    .sermon-subtab-row {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .sermon-subtab-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid #CBD5E1;
+      background: #FFFFFF;
+      color: #334155;
+      border-radius: 9px;
+      padding: 5px 10px;
+      font-size: 11.5px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .sermon-subtab-chip.active {
+      background: #1D4ED8;
+      border-color: #1D4ED8;
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(29, 78, 216, 0.24);
+    }
+    .sermon-subtab-chip.has-badge:not(.active) {
+      border-color: #FCA5A5;
+      background: #FFF5F5;
+      color: #991B1B;
+    }
     .video-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -3625,7 +3675,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=214" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=215" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3789,15 +3839,19 @@
                 <div id="sermonViewTitle" class="hero-top-title">🎙️ 설교</div>
                 <div id="sermonViewSub" class="hero-top-sub">자동 보안·채널 검사를 통과한 교회 설교·특강 영상을 편하게 시청하세요.</div>
               </div>
-              <button id="sermonRecommendTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openVideoSubmitModal(sermonCatFilter === '라이트 청년부' ? '라이트 청년부' : '설교')">+ 설교 추천</button>
+              <div class="hero-top-actions">
+                <button id="sermonTabsManageBtn" class="hero-write-btn hidden" type="button" style="background:rgba(255,255,255,0.16); color:#FFFFFF; border:1px solid rgba(255,255,255,0.32);" onclick="openSermonTabsModal()">🗂️ 탭 관리</button>
+                <button id="sermonRecommendTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openVideoSubmitModal(sermonCatFilter === '라이트 청년부' ? '라이트 청년부' : '설교')">+ 설교 추천</button>
+              </div>
             </div>
           </div>
           <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input id="sermonSearchInput" class="search-input" type="search" placeholder="설교 제목·채널·추천글 검색..." oninput="onSermonSearchInput(this.value)" />
+            <input id="sermonSearchInput" class="search-input" type="search" placeholder="설교 제목·세부 탭·교회·추천글 검색..." oninput="onSermonSearchInput(this.value)" />
             <button id="sermonSearchClear" class="search-clear hidden" type="button" onclick="clearSermonSearch()">✕</button>
           </div>
           <div id="sermonCatChips" class="filter-row"></div>
+          <div id="sermonSubTabsBox" class="sermon-subtabs-box"></div>
           <div id="sermonListArea"></div>
           <div id="mySubmittedSermonArea"></div>
         </section>
@@ -5129,6 +5183,15 @@
         </div>
       </div>
 
+      <div class="form-group" id="videoSermonTabGroup">
+        <label class="form-label" for="videoSermonTabSelect">📂 설교 세부 탭 (선택 또는 직접 입력)</label>
+        <select id="videoSermonTabSelect" class="form-select" onchange="onVideoSermonTabSelectChange()"></select>
+        <input id="videoSermonTabCustomInput" class="form-input hidden" style="margin-top:6px;" maxlength="20" placeholder="새 세부 탭 이름 입력 (예: 로마서 강해, 금요기도회)" oninput="onVideoSermonTabSelectChange()" />
+        <div style="font-size:11px; color:#64748B; margin-top:4px; line-height:1.45;">
+          자동 분류를 선택하면 영상 제목에 따라 알맞은 세부 탭에 자동 배치되며, 원하는 탭을 직접 선택할 수도 있습니다.
+        </div>
+      </div>
+
       <div class="form-group">
         <label class="form-label" for="videoNoteInput">은혜 나눔 · 추천 한마디 (선택)</label>
         <textarea id="videoNoteInput" class="form-textarea" style="min-height:82px;" maxlength="400" placeholder="어떤 부분에서 은혜를 받았는지 간단히 나눠 주세요."></textarea>
@@ -5147,6 +5210,34 @@
       <div style="display:flex; gap:8px;">
         <button id="submitVideoBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSubmitVideo()">🔍 검사 후 등록하기</button>
         <button class="btn-outline" type="button" data-close="videoSubmitModal">취소</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 관리자: 설교 세부 탭 관리 모달 (추가 · 이름 수정 · 순서 변경 · 삭제) -->
+  <div id="sermonTabsModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 class="modal-title">🗂️ 설교 세부 탭 관리</h3>
+        <button class="close-btn" data-close="sermonTabsModal">✕</button>
+      </div>
+      <div class="info-box" style="margin-top:0; margin-bottom:12px;">
+        • <b>설교</b> 화면 안에서 교회별 1차 탭 아래에 표시되는 <b>2차 세부 탭</b>을 자유롭게 추가·수정·순서 변경·삭제할 수 있습니다.<br>
+        • 탭 이름을 수정하면 해당 탭에 들어 있던 기존 설교 영상들도 새 탭 이름으로 함께 이동됩니다.
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="newSermonTabInput">새 세부 탭 추가 (최대 20자)</label>
+        <div style="display:flex; gap:6px;">
+          <input id="newSermonTabInput" class="form-input" style="flex:1;" maxlength="20" placeholder="예: 주일오후예배, 로마서 강해, 수련회" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleAddSermonSubTab('newSermonTabInput');}" />
+          <button class="btn-admin" type="button" style="white-space:nowrap;" onclick="handleAddSermonSubTab('newSermonTabInput')">+ 추가</button>
+        </div>
+      </div>
+      <div id="sermonTabsModalList" style="margin-bottom:10px;"></div>
+      <div id="sermonTabsModalFeedback"></div>
+      <div style="display:flex; gap:8px; margin-top:10px;">
+        <button class="btn-outline" type="button" onclick="handleResetDefaultSermonSubTabs()">🔄 기본 탭 복원</button>
+        <button class="btn-full btn-dark" type="button" style="flex:1; padding:11px;" data-close="sermonTabsModal">닫기</button>
       </div>
     </div>
   </div>
@@ -5299,7 +5390,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 214;
+    const APP_CLIENT_BUILD = 215;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -5394,10 +5485,12 @@
         addedBy: '필수 자동 등록'
       }
     ];
+    const DEFAULT_SERMON_SUB_TABS = ['주일예배', '청년부예배', '수요·금요예배', '특강·수련회'];
     const DEFAULT_VIDEO_SETTINGS = {
       showOnHome: true,
       submitAudience: 'roles',
-      submitTargetRoles: ['role_pastor', 'role_director', 'role_teacher', 'role_president', 'role_leader', 'role_cell_leader']
+      submitTargetRoles: ['role_pastor', 'role_director', 'role_teacher', 'role_president', 'role_leader', 'role_cell_leader'],
+      sermonTabs: [...DEFAULT_SERMON_SUB_TABS]
     };
     const YOUTUBE_RISK_KEYWORDS = [
       '무단', '무료 다운로드', '음원 추출', '불법', '가사 영상', '가사영상',
@@ -6277,7 +6370,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=214" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=215" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6301,8 +6394,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=214', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=214', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=215', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=215', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -6851,6 +6944,7 @@
     let videoCatFilter = '전체';
     let sermonSearchQuery = '';
     let sermonCatFilter = '전체';
+    let sermonSubTabFilter = '전체';
     let ccmSearchQuery = '';
     let ccmTeamFilter = '전체';
     let lastVideoInspectResult = null;
@@ -9007,7 +9101,10 @@
                 ...d.videoSettings,
                 submitTargetRoles: Array.isArray(d.videoSettings.submitTargetRoles)
                   ? d.videoSettings.submitTargetRoles.map(String)
-                  : [...DEFAULT_VIDEO_SETTINGS.submitTargetRoles]
+                  : [...DEFAULT_VIDEO_SETTINGS.submitTargetRoles],
+                sermonTabs: Array.isArray(d.videoSettings.sermonTabs)
+                  ? Array.from(new Set(d.videoSettings.sermonTabs.map(x => String(x || '').trim()).filter(Boolean)))
+                  : [...DEFAULT_SERMON_SUB_TABS]
               };
             } else {
               videoSettings = structuredClone(DEFAULT_VIDEO_SETTINGS);
@@ -17371,7 +17468,9 @@
     function buildVideoSheetRow(v) {
       if (!v) return null;
       const catLabel = getVideoCategoryDisplayLabel(v.category);
-      const grpLabel = getVideoAutoGroupLabel(v);
+      const baseGrp = getVideoAutoGroupLabel(v);
+      const sTab = (!isCcmVideo(v) && typeof getSermonSubTabLabel === 'function') ? getSermonSubTabLabel(v) : '';
+      const grpLabel = (sTab && sTab !== '기타 설교') ? `${baseGrp} · ${sTab}` : baseGrp;
       const stLabel = v.status === 'approved' ? '게시 완료' : (v.status === 'pending' ? '검토 대기' : '반려됨');
       const approvedInfo = v.status === 'approved'
         ? `${v.approvedBy || '자동'}${v.approvedAt ? ` (${v.approvedAt})` : ''}`
@@ -17394,7 +17493,7 @@
     }
 
     function computeVideoSheetSig(v) {
-      return `${v.category || ''}|${v.title || ''}|${v.status || ''}|${v.officialVerified ? 1 : 0}|${v.updatedTs || 0}|${v.approvedTs || 0}|${v.rejectReason || ''}`;
+      return `${v.category || ''}|${v.sermonTab || ''}|${v.title || ''}|${v.status || ''}|${v.officialVerified ? 1 : 0}|${v.updatedTs || 0}|${v.approvedTs || 0}|${v.rejectReason || ''}`;
     }
 
     function syncVideoToSheet(v) {
@@ -29351,6 +29450,263 @@ ${handleUrl}`);
       if (!v) return '';
       return isCcmVideo(v) ? getCcmTeamLabel(v) : getSermonChurchLabel(v);
     }
+    function getConfiguredSermonSubTabs() {
+      const raw = (videoSettings && Array.isArray(videoSettings.sermonTabs))
+        ? videoSettings.sermonTabs
+        : DEFAULT_SERMON_SUB_TABS;
+      return Array.from(new Set(raw.map(x => String(x || '').trim()).filter(x => x && x !== '전체' && x !== '기타 설교')));
+    }
+
+    function getSermonSubTabLabel(v) {
+      if (!v || isCcmVideo(v)) return '';
+      const explicit = String(v.sermonTab || '').trim();
+      if (explicit && explicit !== '전체') return explicit;
+
+      const tabs = getConfiguredSermonSubTabs();
+      const hay = `${v.title || v.fetchedTitle || ''} ${v.note || ''}`;
+
+      // 1) 관리자가 만든 커스텀 탭 포함, 제목·추천글에 탭 이름이 직접 들어가면 자동 매칭 (긴 이름 우선)
+      const byLen = [...tabs].sort((a, b) => b.length - a.length);
+      for (const tName of byLen) {
+        if (tName.length >= 2 && hay.includes(tName)) return tName;
+      }
+
+      // 2) 일반 예배·집회 키워드 자동 분류 (설정에 해당 탭이 있을 때 매칭)
+      const pickIfExists = (target, fallbackKeywordRe) => {
+        if (tabs.includes(target)) return target;
+        const found = tabs.find(t => fallbackKeywordRe.test(t));
+        return found || '';
+      };
+
+      if (isRightYouthVideo(v) || /청년부|청년\s*예배|라이트\s*청년/i.test(hay)) {
+        const m = pickIfExists('청년부예배', /청년/);
+        if (m) return m;
+      }
+      if (/수련회|특강|부흥회|집회|세미나|캠프|간증|컨퍼런스/i.test(hay)) {
+        const m = pickIfExists('특강·수련회', /특강|수련회|집회/);
+        if (m) return m;
+      }
+      if (/수요|금요|심야|철야|새벽|기도회/i.test(hay)) {
+        const m = pickIfExists('수요·금요예배', /수요|금요|기도|새벽/);
+        if (m) return m;
+      }
+      if (/주일|대예배|[123]부\s*예배|주일\s*설교/i.test(hay)) {
+        const m = pickIfExists('주일예배', /주일/);
+        if (m) return m;
+      }
+      return '기타 설교';
+    }
+
+    function populateVideoSermonTabSelect(selectedVal = '') {
+      const sel = document.getElementById('videoSermonTabSelect');
+      const customInp = document.getElementById('videoSermonTabCustomInput');
+      if (!sel) return;
+      const tabs = getConfiguredSermonSubTabs();
+      const val = String(selectedVal || '').trim();
+      const extraOpt = (val && val !== '기타 설교' && !tabs.includes(val))
+        ? `<option value="${escapeHtml(val)}">${escapeHtml(val)}</option>`
+        : '';
+      sel.innerHTML = [
+        '<option value="">✨ 자동 분류 (영상 제목 기준)</option>',
+        ...tabs.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`),
+        extraOpt,
+        '<option value="__custom__">✏️ 새 세부 탭 직접 입력...</option>'
+      ].join('');
+      sel.value = (val && val !== '기타 설교') ? val : '';
+      if (customInp) {
+        customInp.value = '';
+        customInp.classList.add('hidden');
+      }
+    }
+
+    function syncVideoSermonTabFieldVisibility() {
+      const catSel = document.getElementById('videoCategorySelect');
+      const grp = document.getElementById('videoSermonTabGroup');
+      if (!catSel || !grp) return;
+      const isCcm = catSel.value === 'CCM';
+      grp.classList.toggle('hidden', isCcm);
+    }
+
+    function getSelectedVideoSermonTabInput() {
+      const catSel = document.getElementById('videoCategorySelect');
+      if (catSel && catSel.value === 'CCM') return '';
+      const sel = document.getElementById('videoSermonTabSelect');
+      if (!sel) return '';
+      if (sel.value === '__custom__') {
+        const customInp = document.getElementById('videoSermonTabCustomInput');
+        return String(customInp ? customInp.value : '').trim().slice(0, 20);
+      }
+      return String(sel.value || '').trim();
+    }
+
+    window.onVideoSermonTabSelectChange = () => {
+      const sel = document.getElementById('videoSermonTabSelect');
+      const customInp = document.getElementById('videoSermonTabCustomInput');
+      if (sel && customInp) {
+        const isCustom = sel.value === '__custom__';
+        customInp.classList.toggle('hidden', !isCustom);
+        if (isCustom && document.activeElement !== customInp) {
+          setTimeout(() => customInp.focus(), 30);
+        }
+      }
+      if (lastVideoInspectResult && lastVideoInspectResult.ok) {
+        renderVideoInspectPreview(lastVideoInspectResult);
+      }
+    };
+
+    async function saveSermonSubTabsList(nextTabs, auditAction, auditDetail = '', toastMsg = '') {
+      const cleaned = Array.from(new Set((Array.isArray(nextTabs) ? nextTabs : []).map(x => String(x || '').trim().slice(0, 20)).filter(x => x && x !== '전체' && x !== '기타 설교')));
+      const nextSettings = {
+        ...DEFAULT_VIDEO_SETTINGS,
+        ...(videoSettings || {}),
+        sermonTabs: cleaned
+      };
+      setInlineSaveStatus('sermon_tabs', 'loading', '⏳ 설교 세부 탭을 저장하는 중입니다...');
+      try {
+        await db.collection('config').doc('layout').set({ videoSettings: nextSettings }, { merge: true });
+        videoSettings = nextSettings;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '영상',
+          action: auditAction || '설교 세부 탭 변경',
+          target: `${cleaned.length}개 탭`,
+          detail: auditDetail || cleaned.join(', ')
+        });
+        setInlineSaveStatus('sermon_tabs', 'ok', toastMsg || '✅ 설교 세부 탭이 저장되었습니다.');
+        renderSermonTabsModalList();
+        if (currentMainTab === 'sermon') renderSermonView();
+        const u = getCurrentUser();
+        if (u && currentMainTab === 'manage' && currentManageSubTab === 'videos') {
+          renderManageVideos(document.getElementById('manageContent'), u);
+        }
+        if (toastMsg) showToast(toastMsg, 'ok');
+        return true;
+      } catch (err) {
+        setInlineSaveStatus('sermon_tabs', 'err', '❌ 설교 세부 탭 저장에 실패했습니다.');
+        handleDbError(err, '설교 세부 탭 저장');
+        return false;
+      }
+    }
+
+    function buildSermonTabsManagerRowsHtml() {
+      const tabs = getConfiguredSermonSubTabs();
+      const sermonVids = (videoItems || []).filter(v => v.status === 'approved' && isSermonVideo(v));
+      if (tabs.length === 0) {
+        return '<div class="card" style="text-align:center; color:#64748B; font-size:12.5px; padding:16px 12px;">등록된 설교 세부 탭이 없습니다. 위 입력창에서 새 탭을 추가하거나 기본 탭을 복원해 주세요.</div>';
+      }
+      return tabs.map((name, idx) => {
+        const cnt = sermonVids.filter(v => getSermonSubTabLabel(v) === name).length;
+        return `
+          <div class="tab-order-row" style="justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">
+              <span class="tab-order-num">${idx + 1}</span>
+              <div style="min-width:0; flex:1;">
+                <div style="font-size:13.5px; font-weight:800; color:#0F172A;">📂 ${escapeHtml(name)}</div>
+                <div style="font-size:11px; color:#64748B;">현재 설교 ${cnt}편</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
+              <button class="order-btn" type="button" ${idx === 0 ? 'disabled' : ''} onclick="handleMoveSermonSubTab(${idx}, -1)" title="위로">▲</button>
+              <button class="order-btn" type="button" ${idx === tabs.length - 1 ? 'disabled' : ''} onclick="handleMoveSermonSubTab(${idx}, 1)" title="아래로">▼</button>
+              <button class="btn-sm" type="button" style="padding:5px 8px;" onclick="handleRenameSermonSubTab(${idx})">✏️ 수정</button>
+              <button class="btn-sm danger" type="button" style="padding:5px 8px;" onclick="handleDeleteSermonSubTab(${idx})">삭제</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderSermonTabsModalList() {
+      const listEl = document.getElementById('sermonTabsModalList');
+      if (listEl) listEl.innerHTML = buildSermonTabsManagerRowsHtml();
+      const fbEl = document.getElementById('sermonTabsModalFeedback');
+      if (fbEl) fbEl.innerHTML = buildInlineSaveStatusHtml('sermon_tabs');
+    }
+
+    window.openSermonTabsModal = () => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return showToast('최고 관리자만 설교 세부 탭을 관리할 수 있습니다.');
+      const inp = document.getElementById('newSermonTabInput');
+      if (inp) inp.value = '';
+      renderSermonTabsModalList();
+      document.getElementById('sermonTabsModal').classList.add('open');
+    };
+
+    window.handleAddSermonSubTab = async (inputId = 'newSermonTabInput') => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const inp = document.getElementById(inputId);
+      const raw = String(inp ? inp.value : '').trim().slice(0, 20);
+      if (!raw) return showToast('추가할 세부 탭 이름을 입력해 주세요.');
+      if (raw === '전체' || raw === '기타 설교') return showToast('해당 이름은 시스템 예약 탭 이름입니다. 다른 이름을 입력해 주세요.');
+      if (!enforceInputSecurity(raw, '설교 세부 탭 이름', true)) return;
+      const cur = getConfiguredSermonSubTabs();
+      if (cur.includes(raw)) return showToast(`이미 [${raw}] 탭이 등록되어 있습니다.`);
+      const ok = await saveSermonSubTabsList([...cur, raw], '설교 세부 탭 추가', `추가: ${raw}`, `✅ [${raw}] 세부 탭이 추가되었습니다!`);
+      if (ok && inp) inp.value = '';
+    };
+
+    window.handleMoveSermonSubTab = async (idx, dir) => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const cur = getConfiguredSermonSubTabs();
+      const target = idx + dir;
+      if (idx < 0 || idx >= cur.length || target < 0 || target >= cur.length) return;
+      [cur[idx], cur[target]] = [cur[target], cur[idx]];
+      await saveSermonSubTabsList(cur, '설교 세부 탭 순서 변경', cur.join(' → '), '✅ 설교 세부 탭 순서가 저장되었습니다!');
+    };
+
+    window.handleRenameSermonSubTab = async (idx) => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const cur = getConfiguredSermonSubTabs();
+      const oldName = cur[idx];
+      if (!oldName) return;
+      const nextNameRaw = prompt(`[${oldName}] 탭의 새 이름을 입력해 주세요 (최대 20자):`, oldName);
+      if (nextNameRaw === null) return;
+      const nextName = String(nextNameRaw || '').trim().slice(0, 20);
+      if (!nextName || nextName === oldName) return;
+      if (nextName === '전체' || nextName === '기타 설교') return showToast('해당 이름은 사용할 수 없습니다.');
+      if (!enforceInputSecurity(nextName, '설교 세부 탭 이름', true)) return;
+      if (cur.includes(nextName)) return showToast(`이미 [${nextName}] 탭이 존재합니다.`);
+
+      cur[idx] = nextName;
+      const ok = await saveSermonSubTabsList(cur, '설교 세부 탭 이름 변경', `${oldName} → ${nextName}`, `✅ [${oldName}] → [${nextName}] 이름으로 변경되었습니다!`);
+      if (ok) {
+        if (sermonSubTabFilter === oldName) sermonSubTabFilter = nextName;
+        const toMigrate = (videoItems || []).filter(v => v && isSermonVideo(v) && String(v.sermonTab || '').trim() === oldName);
+        if (toMigrate.length > 0) {
+          try {
+            const batch = db.batch();
+            const nowTs = Date.now();
+            toMigrate.forEach(v => {
+              batch.update(db.collection('videos').doc(String(v.id)), { sermonTab: nextName, updatedTs: nowTs });
+            });
+            await batch.commit();
+          } catch (e) { console.warn('Sermon tab video rename batch error:', e); }
+        }
+      }
+    };
+
+    window.handleDeleteSermonSubTab = async (idx) => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const cur = getConfiguredSermonSubTabs();
+      const targetName = cur[idx];
+      if (!targetName) return;
+      if (!confirm(`[${targetName}] 설교 세부 탭을 삭제할까요?\n(해당 탭에 있던 설교 영상 자체는 삭제되지 않고 [전체] 또는 자동 분류로 유지됩니다.)`)) return;
+      cur.splice(idx, 1);
+      if (sermonSubTabFilter === targetName) sermonSubTabFilter = '전체';
+      await saveSermonSubTabsList(cur, '설교 세부 탭 삭제', `삭제: ${targetName}`, `🗑️ [${targetName}] 세부 탭을 삭제했습니다.`);
+    };
+
+    window.handleResetDefaultSermonSubTabs = async () => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      if (!confirm(`설교 세부 탭을 기본 구성(${DEFAULT_SERMON_SUB_TABS.join(', ')})으로 복원할까요?`)) return;
+      await saveSermonSubTabsList([...DEFAULT_SERMON_SUB_TABS], '설교 세부 탭 기본 복원', DEFAULT_SERMON_SUB_TABS.join(', '), '🔄 설교 세부 탭이 기본값으로 복원되었습니다!');
+    };
+
 
     function getVideoCategoryDisplayLabel(cat) {
       const c = String(cat || '').trim();
@@ -29394,6 +29750,7 @@ ${handleUrl}`);
                       <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap; margin-bottom:3px;">
                         ${vidNew ? '<span class="new-badge">NEW</span>' : ''}
                         <span class="tag slate" style="font-size:10px; padding:2px 6px;">${ccm ? '🎵' : (grp === '라이트 청년부' ? '✨' : '⛪')} ${escapeHtml(grp)}</span>
+                        ${(!ccm && getSermonSubTabLabel(v) && getSermonSubTabLabel(v) !== '기타 설교') ? `<span class="tag" style="font-size:10px; padding:2px 6px;">📂 ${escapeHtml(getSermonSubTabLabel(v))}</span>` : ''}
                         ${v.officialVerified ? '<span class="tag green" style="font-size:10px; padding:2px 6px;">✅ 공식 채널</span>' : '<span class="tag" style="font-size:10px; padding:2px 6px;">🛡️ 관리자 검증</span>'}
                       </div>
                       <div style="font-size:13.5px; font-weight:800; color:#0F172A; line-height:1.35; margin-bottom:3px;">${escapeHtml(v.title || '')}</div>
@@ -29432,7 +29789,8 @@ ${handleUrl}`);
       const badgesEl = document.getElementById('videoPlayerBadges');
       if (badgesEl) {
         const grpLbl = rec ? getVideoAutoGroupLabel(rec) : '설교·CCM';
-        const catTag = `<span class="tag slate">${rec && isCcmVideo(rec) ? '🎵' : (grpLbl === '라이트 청년부' ? '✨' : '⛪')} ${escapeHtml(grpLbl)}</span>`;
+        const sTabLbl = (rec && !isCcmVideo(rec)) ? getSermonSubTabLabel(rec) : '';
+        const catTag = `<span class="tag slate">${rec && isCcmVideo(rec) ? '🎵' : (grpLbl === '라이트 청년부' ? '✨' : '⛪')} ${escapeHtml(grpLbl)}</span>${(sTabLbl && sTabLbl !== '기타 설교') ? `<span class="tag">📂 ${escapeHtml(sTabLbl)}</span>` : ''}`;
         const verTag = rec
           ? (rec.officialVerified
               ? '<span class="tag green">✅ 공식 채널</span>'
@@ -29488,9 +29846,10 @@ ${handleUrl}`);
       const ccm = isCcmVideo(v);
       const grp = getVideoAutoGroupLabel(v);
       const vidNew = isVideoUnread(v);
+      const sermonSubTab = ccm ? '' : getSermonSubTabLabel(v);
       const grpBadgeHtml = ccm
         ? `<button class="tag" type="button" style="border:none; cursor:pointer; background:#F3E8FF; color:#7E22CE;" onclick="jumpToCcmTeam('${escapeJsAttr(grp)}')">🎵 ${escapeHtml(grp)}</button>`
-        : `<button class="tag slate" type="button" style="border:none; cursor:pointer;" onclick="jumpToSermonChurch('${escapeJsAttr(grp)}')">${grp === '라이트 청년부' ? '✨' : '⛪'} ${escapeHtml(grp)}</button>`;
+        : `<button class="tag slate" type="button" style="border:none; cursor:pointer;" onclick="jumpToSermonChurch('${escapeJsAttr(grp)}')">${grp === '라이트 청년부' ? '✨' : '⛪'} ${escapeHtml(grp)}</button>${sermonSubTab ? `<button class="tag" type="button" style="border:none; cursor:pointer;" onclick="jumpToSermonSubTab('${escapeJsAttr(grp)}', '${escapeJsAttr(sermonSubTab)}')">📂 ${escapeHtml(sermonSubTab)}</button>` : ''}`;
       return `
         <div class="video-card">
           <div class="video-thumb-wrap" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">
@@ -29532,6 +29891,17 @@ ${handleUrl}`);
 
     window.jumpToSermonChurch = (churchName) => {
       sermonCatFilter = churchName || '전체';
+      sermonSubTabFilter = '전체';
+      if (currentMainTab !== 'sermon') {
+        switchMainTab('sermon');
+      } else {
+        renderSermonView();
+      }
+    };
+
+    window.jumpToSermonSubTab = (churchName, subTabName) => {
+      sermonCatFilter = churchName || '전체';
+      sermonSubTabFilter = subTabName || '전체';
       if (currentMainTab !== 'sermon') {
         switchMainTab('sermon');
       } else {
@@ -29585,6 +29955,8 @@ ${handleUrl}`);
       const canSubmit = canUserSubmitVideo(user);
       const topBtn = document.getElementById('sermonRecommendTopBtn');
       if (topBtn) topBtn.classList.toggle('hidden', !canSubmit);
+      const tabsMgrBtn = document.getElementById('sermonTabsManageBtn');
+      if (tabsMgrBtn) tabsMgrBtn.classList.toggle('hidden', !user.isSuperAdmin);
 
       const approved = (videoItems || []).filter(v => v.status === 'approved' && isSermonVideo(v));
       const churchCountMap = new Map();
@@ -29599,7 +29971,7 @@ ${handleUrl}`);
         }
       });
 
-      // 기본 탭: [전체] + [라이트 청년부] 고정 생성, 나머지 교회 탭은 영상 등록 시 자동 생성
+      // 1차 탭: 교회 · 채널별 ([전체] + [라이트 청년부] + 등록된 교회 자동 생성)
       const dynamicChurches = Array.from(churchCountMap.keys())
         .filter(name => name !== '라이트 청년부')
         .sort((a, b) => {
@@ -29622,15 +29994,57 @@ ${handleUrl}`);
         }).join('');
       }
 
+      // 2차 탭: 설교 세부 탭 (관리자 설정 탭 + 영상에 지정된 커스텀 탭 + 미분류 시 '기타 설교')
+      const churchScoped = approved.filter(v => sermonCatFilter === '전체' || getSermonChurchLabel(v) === sermonCatFilter);
+      const subCountMap = new Map();
+      const subUnreadMap = new Map();
+      let scopedUnreadTotal = 0;
+      churchScoped.forEach(v => {
+        const sTab = getSermonSubTabLabel(v) || '기타 설교';
+        subCountMap.set(sTab, (subCountMap.get(sTab) || 0) + 1);
+        if (isVideoUnread(v)) {
+          scopedUnreadTotal++;
+          subUnreadMap.set(sTab, (subUnreadMap.get(sTab) || 0) + 1);
+        }
+      });
+
+      const configuredSubTabs = getConfiguredSermonSubTabs();
+      const extraUsedSubTabs = Array.from(subCountMap.keys()).filter(k => k && k !== '기타 설교' && !configuredSubTabs.includes(k));
+      const hasEtcSermons = (subCountMap.get('기타 설교') || 0) > 0;
+      const subTabs = ['전체', ...configuredSubTabs, ...extraUsedSubTabs, ...(hasEtcSermons ? ['기타 설교'] : [])];
+      if (!subTabs.includes(sermonSubTabFilter)) {
+        sermonSubTabFilter = '전체';
+      }
+
+      const subBoxEl = document.getElementById('sermonSubTabsBox');
+      if (subBoxEl) {
+        const scopeName = sermonCatFilter === '전체' ? '전체 설교' : sermonCatFilter;
+        subBoxEl.innerHTML = `
+          <div class="sermon-subtabs-head">
+            <span class="sermon-subtabs-label">📂 ${escapeHtml(scopeName)} 세부 탭</span>
+            ${user.isSuperAdmin ? '<button class="btn-sm" type="button" style="padding:2.5px 7px; font-size:10.5px;" onclick="openSermonTabsModal()">+ 탭 편집</button>' : ''}
+          </div>
+          <div class="sermon-subtab-row">
+            ${subTabs.map(tabName => {
+              const cnt = tabName === '전체' ? churchScoped.length : (subCountMap.get(tabName) || 0);
+              const uCnt = tabName === '전체' ? scopedUnreadTotal : (subUnreadMap.get(tabName) || 0);
+              const cntTxt = cnt > 0 ? ` (${cnt})` : '';
+              return `<button class="sermon-subtab-chip ${sermonSubTabFilter === tabName ? 'active' : ''} ${uCnt > 0 ? 'has-badge' : ''}" type="button" onclick="setSermonSubTabFilter('${escapeJsAttr(tabName)}')"><span>${escapeHtml(tabName)}${cntTxt}</span>${buildSubTabBadgeHtml(uCnt)}</button>`;
+            }).join('')}
+          </div>
+        `;
+      }
+
       const q = String(sermonSearchQuery || '').trim().toLowerCase();
       const clr = document.getElementById('sermonSearchClear');
       if (clr) clr.classList.toggle('hidden', !q);
 
-      const filtered = approved.filter(v => {
+      const filtered = churchScoped.filter(v => {
         const chName = getSermonChurchLabel(v);
-        if (sermonCatFilter !== '전체' && chName !== sermonCatFilter) return false;
+        const sTab = getSermonSubTabLabel(v) || '기타 설교';
+        if (sermonSubTabFilter !== '전체' && sTab !== sermonSubTabFilter) return false;
         if (!q) return true;
-        const hay = `${v.title || ''} ${v.channelName || ''} ${chName} ${v.note || ''} ${v.authorName || ''}`.toLowerCase();
+        const hay = `${v.title || ''} ${v.channelName || ''} ${chName} ${sTab} ${v.note || ''} ${v.authorName || ''}`.toLowerCase();
         return hay.includes(q);
       });
 
@@ -29638,11 +30052,18 @@ ${handleUrl}`);
       if (listEl) {
         const sLbl = getTabLabel('sermon');
         if (filtered.length === 0) {
+          const emptyScope = [
+            sermonCatFilter !== '전체' ? sermonCatFilter : '',
+            sermonSubTabFilter !== '전체' ? sermonSubTabFilter : ''
+          ].filter(Boolean).join(' · ');
           listEl.innerHTML = `
             <div class="card" style="text-align:center; padding:30px 16px; color:#64748B;">
               <div style="font-size:28px; margin-bottom:7px;">${escapeHtml(getTabIcon('sermon'))}</div>
-              <div style="font-size:14px; font-weight:800; color:#334155;">${sermonCatFilter === '전체' ? `등록된 ${escapeHtml(sLbl)} 영상이 없습니다.` : `[${escapeHtml(sermonCatFilter)}] 영상이 아직 없습니다.`}</div>
-              <div style="font-size:12px; margin-top:4px; line-height:1.5;">${canSubmit ? `오른쪽 위 [+ ${escapeHtml(sLbl)} 추천]으로 영상을 올리면 해당 교회 이름 탭이 자동으로 생성됩니다.` : `교회별 설교나 라이트 청년부 영상이 등록되면 이곳에 자동 분류됩니다.`}</div>
+              <div style="font-size:14px; font-weight:800; color:#334155;">${emptyScope ? `[${escapeHtml(emptyScope)}] 영상이 아직 없습니다.` : `등록된 ${escapeHtml(sLbl)} 영상이 없습니다.`}</div>
+              <div style="font-size:12px; margin-top:4px; line-height:1.5;">${canSubmit ? `오른쪽 위 [+ ${escapeHtml(sLbl)} 추천]으로 영상을 올리고 원하는 세부 탭을 선택해 분류해 보세요.` : `교회별·세부 탭 설교 영상이 등록되면 이곳에 자동 분류됩니다.`}</div>
+              ${(canSubmit && sermonSubTabFilter !== '전체' && sermonSubTabFilter !== '기타 설교')
+                ? `<button class="btn-sm primary" type="button" style="margin-top:11px; padding:7px 12px;" onclick="openVideoSubmitModal(sermonCatFilter === '라이트 청년부' ? '라이트 청년부' : '설교', '${escapeJsAttr(sermonSubTabFilter)}')">+ [${escapeHtml(sermonSubTabFilter)}] 설교 등록</button>`
+                : ''}
             </div>
           `;
         } else {
@@ -29658,6 +30079,10 @@ ${handleUrl}`);
 
     window.setSermonCatFilter = (cat) => {
       sermonCatFilter = cat;
+      renderSermonView();
+    };
+    window.setSermonSubTabFilter = (subTab) => {
+      sermonSubTabFilter = subTab || '전체';
       renderSermonView();
     };
     window.onSermonSearchInput = (val) => {
@@ -29876,7 +30301,7 @@ ${handleUrl}`);
       }
     };
 
-    window.openVideoSubmitModal = (defaultCat = '') => {
+    window.openVideoSubmitModal = (defaultCat = '', defaultSermonTab = '') => {
       const user = getCurrentUser();
       if (!canUserSubmitVideo(user)) return showToast('영상 추천 권한이 없습니다.');
       lastVideoInspectResult = null;
@@ -29889,6 +30314,9 @@ ${handleUrl}`);
       document.getElementById('videoUrlFieldGroup').classList.remove('hidden');
       document.getElementById('videoUrlInput').value = '';
       document.getElementById('videoCategorySelect').value = (initCat === '찬양' ? 'CCM' : (initCat === '청년부 영상' ? '라이트 청년부' : (['설교', '라이트 청년부', 'CCM'].includes(initCat) ? initCat : '설교')));
+      const initSubTab = defaultSermonTab || ((currentMainTab === 'sermon' && sermonSubTabFilter && sermonSubTabFilter !== '전체' && sermonSubTabFilter !== '기타 설교') ? sermonSubTabFilter : '');
+      populateVideoSermonTabSelect(initSubTab);
+      syncVideoSermonTabFieldVisibility();
       document.getElementById('videoTitleInput').value = '';
       applyVideoTitleFieldLock(user);
       document.getElementById('videoNoteInput').value = '';
@@ -29911,6 +30339,8 @@ ${handleUrl}`);
       document.getElementById('editVideoDocId').value = v.id;
       document.getElementById('videoUrlFieldGroup').classList.add('hidden');
       document.getElementById('videoCategorySelect').value = (isCcmVideo(v) ? 'CCM' : (isRightYouthVideo(v) ? '라이트 청년부' : '설교'));
+      populateVideoSermonTabSelect(isCcmVideo(v) ? '' : (v.sermonTab || ''));
+      syncVideoSermonTabFieldVisibility();
       document.getElementById('videoTitleInput').value = v.title || '';
       applyVideoTitleFieldLock(user);
       document.getElementById('videoNoteInput').value = v.note || '';
@@ -29953,7 +30383,7 @@ ${handleUrl}`);
           <div style="min-width:0; flex:1;">
             <div style="font-size:12.5px; font-weight:800; color:#0F172A; line-height:1.35;">${escapeHtml(res.fetchedTitle || '제목 없음')}</div>
             <div style="font-size:11.5px; color:#475569; margin-top:2px;">📺 ${escapeHtml(res.channelName || '알 수 없음')}</div>
-            ${autoGrp ? `<div style="margin-top:4px;"><span class="tag" style="font-size:10.5px; padding:2px 7px; background:${curCatVal === 'CCM' ? '#F3E8FF' : '#EFF6FF'}; color:${curCatVal === 'CCM' ? '#7E22CE' : '#1D4ED8'};">${autoGrpPrefix}: <b>${escapeHtml(autoGrp)}</b></span></div>` : ''}
+            ${autoGrp ? `<div style="margin-top:4px; display:flex; gap:4px; flex-wrap:wrap;"><span class="tag" style="font-size:10.5px; padding:2px 7px; background:${curCatVal === 'CCM' ? '#F3E8FF' : '#EFF6FF'}; color:${curCatVal === 'CCM' ? '#7E22CE' : '#1D4ED8'};">${autoGrpPrefix}: <b>${escapeHtml(autoGrp)}</b></span>${curCatVal !== 'CCM' ? `<span class="tag" style="font-size:10.5px; padding:2px 7px;">📂 세부 탭: <b>${escapeHtml(getSelectedVideoSermonTabInput() || getSermonSubTabLabel({ category: curCatVal, channelId: res.channelId || '', channelName: res.channelName || '', matchedChannelName: res.matchedOfficialChannel ? res.matchedOfficialChannel.name : '', title: res.fetchedTitle || '' }))}</b></span>` : ''}</div>` : ''}
           </div>
         </div>
       ` : '';
@@ -29979,6 +30409,7 @@ ${handleUrl}`);
     }
 
     window.onVideoCategorySelectChange = () => {
+      syncVideoSermonTabFieldVisibility();
       if (lastVideoInspectResult && lastVideoInspectResult.ok) {
         renderVideoInspectPreview(lastVideoInspectResult);
       }
@@ -30072,6 +30503,8 @@ ${handleUrl}`);
             category,
             title: finalEditTitle
           });
+          const chosenSermonTab = getSelectedVideoSermonTabInput();
+          if (chosenSermonTab && !enforceInputSecurity(chosenSermonTab, '설교 세부 탭', !!user.isSuperAdmin)) return;
           const editPatch = {
             category,
             groupLabel: editGroupLabel,
@@ -30080,10 +30513,28 @@ ${handleUrl}`);
             updatedAt: nowFull,
             updatedTs: Date.now()
           };
+          if (category !== 'CCM') {
+            editPatch.sermonTab = chosenSermonTab;
+          } else {
+            editPatch.sermonTab = '';
+          }
           if (user.isSuperAdmin) {
             editPatch.title = finalEditTitle;
           }
-          await db.collection('videos').doc(String(editId)).update(editPatch);
+          try {
+            await db.collection('videos').doc(String(editId)).update(editPatch);
+          } catch (updErr) {
+            if (!user.isSuperAdmin && updErr && updErr.code === 'permission-denied' && Object.prototype.hasOwnProperty.call(editPatch, 'sermonTab')) {
+              const fallbackPatch = { ...editPatch };
+              delete fallbackPatch.sermonTab;
+              await db.collection('videos').doc(String(editId)).update(fallbackPatch);
+            } else {
+              throw updErr;
+            }
+          }
+          if (user.isSuperAdmin && category !== 'CCM' && chosenSermonTab && chosenSermonTab !== '기타 설교' && !getConfiguredSermonSubTabs().includes(chosenSermonTab)) {
+            await saveSermonSubTabsList([...getConfiguredSermonSubTabs(), chosenSermonTab], '설교 세부 탭 자동 추가', `영상 수정 중 추가: ${chosenSermonTab}`, '');
+          }
           recordAuditLog({
             actorType: user.isSuperAdmin ? 'admin' : 'member',
             actorName: user.name,
@@ -30185,6 +30636,7 @@ ${handleUrl}`);
           url: res.cleanUrl,
           thumbnailUrl: res.thumbnailUrl,
           category,
+          sermonTab: category === 'CCM' ? '' : getSelectedVideoSermonTabInput(),
           title: finalTitle,
           note,
           channelName: res.channelName || '유튜브',
@@ -30215,6 +30667,12 @@ ${handleUrl}`);
           approvedTs: (isAutoApprove || isAdminDirect) ? nowTs : 0,
           rejectReason: ''
         });
+
+        // 관리자가 새 설교 세부 탭을 직접 입력해 등록한 경우 세부 탭 목록에도 자동 추가
+        const createdSermonTab = category === 'CCM' ? '' : getSelectedVideoSermonTabInput();
+        if (isAdminDirect && createdSermonTab && createdSermonTab !== '기타 설교' && !getConfiguredSermonSubTabs().includes(createdSermonTab)) {
+          await saveSermonSubTabsList([...getConfiguredSermonSubTabs(), createdSermonTab], '설교 세부 탭 자동 추가', `영상 등록 중 추가: ${createdSermonTab}`, '');
+        }
 
         // 관리자가 미등록 채널을 공식 채널로 함께 추가 체크한 경우 자동 학습
         if (isAdminDirect && !res.officialVerified && document.getElementById('videoAdminAutoAddChannelInput').checked) {
@@ -30317,8 +30775,8 @@ ${handleUrl}`);
     };
 
     window.setManageVideosFilter = (f) => {
-      manageVideosFilter = ['all', 'pending', 'channels', 'perm', 'approved'].includes(f) ? f : 'all';
-      const accMap = { pending: 'vid_pending', channels: 'vid_channels', perm: 'vid_perm', approved: 'vid_approved' };
+      manageVideosFilter = ['all', 'pending', 'sermontabs', 'channels', 'perm', 'approved'].includes(f) ? f : 'all';
+      const accMap = { pending: 'vid_pending', sermontabs: 'vid_sermon_tabs', channels: 'vid_channels', perm: 'vid_perm', approved: 'vid_approved' };
       if (accMap[manageVideosFilter]) manageSectionOpen[accMap[manageVideosFilter]] = true;
       const u = getCurrentUser();
       if (u && currentMainTab === 'manage' && currentManageSubTab === 'videos') {
@@ -30333,11 +30791,14 @@ ${handleUrl}`);
       const cfg = videoSettings || DEFAULT_VIDEO_SETTINGS;
       const hiddenDefs = DEFAULT_OFFICIAL_YT_CHANNELS.filter(d => (hiddenDefaultYtChannelIds || []).includes(String(d.id)));
       const vf = manageVideosFilter || 'all';
+      const sermonSubTabsList = getConfiguredSermonSubTabs();
       const showPending = vf === 'all' || vf === 'pending';
+      const showSermonTabs = vf === 'all' || vf === 'sermontabs';
       const showChannels = vf === 'all' || vf === 'channels';
       const showPerm = vf === 'all' || vf === 'perm';
       const showApproved = vf === 'all' || vf === 'approved';
       const pendingOpen = isManageSectionOpen('vid_pending', pending.length > 0 || vf === 'pending');
+      const sermonTabsOpen = isManageSectionOpen('vid_sermon_tabs', vf === 'sermontabs');
       const permOpen = isManageSectionOpen('vid_perm', vf === 'perm');
       const chOpen = isManageSectionOpen('vid_channels', true);
       const approvedOpen = isManageSectionOpen('vid_approved', approved.length <= 5 || vf === 'approved');
@@ -30366,6 +30827,7 @@ ${handleUrl}`);
         <div class="filter-row" style="margin-bottom:10px;">
           <button class="filter-chip ${vf === 'all' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('all')">전체</button>
           <button class="filter-chip ${vf === 'pending' ? 'active' : ''} ${pending.length > 0 ? 'has-badge' : ''}" type="button" onclick="setManageVideosFilter('pending')">🔴 검토 대기 (${pending.length})</button>
+          <button class="filter-chip ${vf === 'sermontabs' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('sermontabs')">🗂️ 설교 세부 탭 (${sermonSubTabsList.length})</button>
           <button class="filter-chip ${vf === 'channels' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('channels')">✅ 공식 채널 (${officialYtChannels.length})</button>
           <button class="filter-chip ${vf === 'perm' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('perm')">⚙️ 권한 · 표시</button>
           <button class="filter-chip ${vf === 'approved' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('approved')">🎬 게시된 영상 (${approved.length})</button>
@@ -30417,6 +30879,33 @@ ${handleUrl}`);
               </div>
             `).join('')}
 
+        </div>
+        ` : ''}
+
+        ${showSermonTabs ? `
+        <!-- 1.5) 설교 2차 세부 탭 관리 -->
+        ${buildManageAccordionBar({
+          key: 'vid_sermon_tabs',
+          marginTop: showPending ? '10px' : '',
+          titleHtml: '🗂️ 설교 세부 탭 관리 (주제 · 예배별 2차 탭)',
+          badgeHtml: `<span class="tag">${sermonSubTabsList.length}개 탭</span>`,
+          defaultOpen: vf === 'sermontabs'
+        })}
+        <div data-acc-body="vid_sermon_tabs" class="${sermonTabsOpen ? '' : 'hidden'}">
+          <div class="card">
+            <div style="font-size:12px; color:#475569; line-height:1.5; margin-bottom:10px;">
+              <b>🎙️ 설교</b> 화면에서 교회별 1차 탭 아래에 표시되는 <b>세부 탭</b>을 추가·수정·순서 변경·삭제할 수 있습니다.
+            </div>
+            <div style="display:flex; gap:6px; margin-bottom:10px;">
+              <input id="manageNewSermonTabInput" class="form-input" style="flex:1; padding:8px 10px; font-size:13px;" maxlength="20" placeholder="새 세부 탭 추가 (예: 주일오후, 로마서 강해)" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleAddSermonSubTab('manageNewSermonTabInput');}" />
+              <button class="btn-admin" type="button" style="white-space:nowrap;" onclick="handleAddSermonSubTab('manageNewSermonTabInput')">+ 추가</button>
+            </div>
+            ${buildSermonTabsManagerRowsHtml()}
+            <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+              <button class="btn-sm" type="button" onclick="handleResetDefaultSermonSubTabs()">🔄 기본 탭 복원</button>
+            </div>
+            ${buildInlineSaveStatusHtml('sermon_tabs')}
+          </div>
         </div>
         ` : ''}
 
@@ -30532,6 +31021,7 @@ ${handleUrl}`);
                     <div style="min-width:0; flex:1;">
                       <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:3px;">
                         <span class="tag slate" style="font-size:10px;">${isCcmVideo(v) ? '🎵' : (getVideoAutoGroupLabel(v) === '라이트 청년부' ? '✨' : '⛪')} ${escapeHtml(getVideoAutoGroupLabel(v))}</span>
+                        ${(!isCcmVideo(v) && getSermonSubTabLabel(v) && getSermonSubTabLabel(v) !== '기타 설교') ? `<span class="tag" style="font-size:10px;">📂 ${escapeHtml(getSermonSubTabLabel(v))}</span>` : ''}
                         ${v.autoApproved ? '<span class="tag green" style="font-size:10px;">⚡ 공식 자동 게시</span>' : '<span class="tag" style="font-size:10px;">✅ 관리자 승인</span>'}
                       </div>
                       <div style="font-size:13.5px; font-weight:800; color:#0F172A; line-height:1.35;">${escapeHtml(v.title || '')}</div>
@@ -30565,7 +31055,7 @@ ${handleUrl}`);
       if (submitAudience === 'roles' && submitTargetRoles.length === 0) {
         return showToast('추천 권한을 부여할 역할을 1개 이상 선택해 주세요.');
       }
-      const next = { showOnHome, submitAudience, submitTargetRoles };
+      const next = { showOnHome, submitAudience, submitTargetRoles, sermonTabs: getConfiguredSermonSubTabs() };
       const btn = document.getElementById('saveVideoSettingsBtn');
       if (btn) { btn.disabled = true; btn.textContent = '⏳ 저장 중...'; }
       setInlineSaveStatus('video_cfg', 'loading', '⏳ 영상 권한 및 홈 표시 설정을 저장하는 중입니다...');
