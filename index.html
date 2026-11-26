@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=195" />
+  <link rel="manifest" href="./manifest.json?v=196" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=195" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=195" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=196" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=196" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -1453,10 +1453,35 @@
     }
     .att-cal-dot.rec { background: #16A34A; }
     .att-cal-dot.sched { background: #2563EB; }
+    .att-cal-dot.event { background: #F59E0B; }
     .att-cal-dot.skip { background: #EF4444; }
     .att-cal-cell.selected .att-cal-dot.rec { background: #4ADE80; }
     .att-cal-cell.selected .att-cal-dot.sched { background: #93C5FD; }
+    .att-cal-cell.selected .att-cal-dot.event { background: #FDE68A; }
     .att-cal-cell.selected .att-cal-dot.skip { background: #FCA5A5; }
+    .att-month-events-bar {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed #E2E8F0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .att-month-ev-pill {
+      border: 1px solid #FDE68A;
+      background: #FFFBEB;
+      color: #92400E;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .att-month-ev-pill:active {
+      background: #FEF3C7;
+    }
     .att-cal-legend {
       display: flex;
       align-items: center;
@@ -3478,7 +3503,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=195" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=196" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5153,7 +5178,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 195;
+    const APP_CLIENT_BUILD = 196;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_SEEN_ADMIN_IDS = 'right_youth_seen_admin_ids_v1';
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
@@ -6061,7 +6086,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=195" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=196" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6085,8 +6110,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=195', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=195', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=196', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=196', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -19189,7 +19214,8 @@
         const isSun = dow === 0;
         const isSkipped = isSun && isSundayWorshipSkipped(dot, cfg);
         const hasRec = recDateSet.has(iso);
-        const hasSched = eventDateSet.has(iso) || (isSun && !isSkipped);
+        const hasRegularSun = isSun && !isSkipped;
+        const hasSpecialEv = eventDateSet.has(iso);
 
         const cls = ['att-cal-cell'];
         if (isSun) cls.push('sun');
@@ -19199,7 +19225,8 @@
 
         const dots = [];
         if (hasRec) dots.push('<span class="att-cal-dot rec"></span>');
-        if (hasSched) dots.push('<span class="att-cal-dot sched"></span>');
+        if (hasRegularSun) dots.push('<span class="att-cal-dot sched"></span>');
+        if (hasSpecialEv) dots.push('<span class="att-cal-dot event"></span>');
         if (isSkipped) dots.push('<span class="att-cal-dot skip"></span>');
 
         cellsHtml += `
@@ -19209,6 +19236,30 @@
           </button>
         `;
       }
+
+      const monthPrefix = `${attRosterCalYear}-${String(attRosterCalMonth).padStart(2, '0')}-`;
+      const monthSpecialEvents = [];
+      (Array.isArray(cfg.specialEvents) ? cfg.specialEvents : []).forEach(ev => {
+        if (!ev || !ev.id) return;
+        const { startIso, endIso } = getEventDateRangeIso(ev);
+        if (!startIso) return;
+        const days = enumerateIsoDatesInRange(startIso, endIso);
+        const inMonth = days.filter(d => d.startsWith(monthPrefix));
+        if (inMonth.length > 0) {
+          const jumpIso = inMonth[0];
+          const jumpIdx = Math.max(0, days.indexOf(jumpIso));
+          const jumpSess = buildSpecialEventDaySession(ev, jumpIso, jumpIdx, days.length);
+          const sMd = `${Number(startIso.slice(5, 7))}.${Number(startIso.slice(8, 10))}`;
+          const eMd = `${Number(endIso.slice(5, 7))}.${Number(endIso.slice(8, 10))}`;
+          const rangeText = startIso === endIso ? `${sMd}(${DAY_SHORT_KO[getDowForDateStr(startIso.replace(/-/g, '.'))] || ''})` : `${sMd}~${eMd}`;
+          monthSpecialEvents.push({
+            jumpIso,
+            sessionId: jumpSess.sessionId,
+            title: getCustomSessionLabel(ev.id, ev.title),
+            rangeText
+          });
+        }
+      });
 
       const selDot = attRosterSelectedIso.replace(/-/g, '.');
       const selDateLabel = formatDateWithDowKo(selDot);
@@ -19253,12 +19304,23 @@
           <div class="sp-cal-grid">${cellsHtml}</div>
           <div class="att-cal-legend">
             <span><i class="att-cal-dot rec"></i>출석 기록 있음</span>
-            <span><i class="att-cal-dot sched"></i>예배·행사 일정</span>
+            <span><i class="att-cal-dot sched"></i>주일 예배</span>
+            <span><i class="att-cal-dot event"></i>특별 행사</span>
             <span><i class="att-cal-dot skip"></i>예배X(휴무)</span>
           </div>
+          ${monthSpecialEvents.length > 0 ? `
+            <div class="att-month-events-bar">
+              <span style="font-size:11px; font-weight:800; color:#92400E;">📅 ${attRosterCalMonth}월 행사:</span>
+              ${monthSpecialEvents.map(ev => `
+                <button type="button" class="att-month-ev-pill" onclick="jumpAttRosterToIso('${escapeJsAttr(ev.jumpIso)}', '${escapeJsAttr(ev.sessionId)}')">
+                  ${escapeHtml(ev.rangeText)} · ${escapeHtml(ev.title)}
+                </button>
+              `).join('')}
+            </div>
+          ` : ''}
         </div>
 
-        <!-- 2) 선택한 날짜 상세 현황 + 예배X / 예배명 변경 / 수동 추가 -->
+        <!-- 2) 선택한 날짜 상세 현황 + 예배X / 행사 추가·수정 / 수동 출석 추가 -->
         <div class="card" style="padding:13px 14px; margin-bottom:10px;">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap; margin-bottom:6px;">
             <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
@@ -19270,17 +19332,18 @@
               : (selIsSkipped ? '<span class="tag red">🚫 예배X (휴무)</span>' : '<span class="tag slate">일정 없음</span>')}
           </div>
 
-          ${(selIsSun || curSess) ? `
-            <div style="display:flex; gap:5px; flex-wrap:wrap; margin:6px 0 8px;">
-              ${selIsSun ? `
-                <button class="btn-sm ${selIsSkipped ? 'approve' : 'danger'}" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="toggleSkipSundayWorship('${escapeJsAttr(selDot)}')">
-                  ${selIsSkipped ? '✅ 예배O로 복구' : '🚫 이 주 예배X'}
-                </button>
-              ` : ''}
-              ${curSess ? `<button class="btn-sm" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="renameAttRosterSession()">✏️ 예배명 변경</button>` : ''}
-              ${curSess ? `<button class="btn-sm primary" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="openAddAdminAttendanceModal()">+ 출석 추가</button>` : ''}
-            </div>
-          ` : ''}
+          <div style="display:flex; gap:5px; flex-wrap:wrap; margin:6px 0 8px;">
+            ${selIsSun ? `
+              <button class="btn-sm ${selIsSkipped ? 'approve' : 'danger'}" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="toggleSkipSundayWorship('${escapeJsAttr(selDot)}')">
+                ${selIsSkipped ? '✅ 예배O로 복구' : '🚫 이 주 예배X'}
+              </button>
+            ` : ''}
+            ${curSess ? `<button class="btn-sm" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="renameAttRosterSession()">✏️ ${curSess.isSpecial ? '행사명 변경' : '예배명 변경'}</button>` : ''}
+            ${curSess && curSess.isSpecial && curSess.eventId ? `<button class="btn-sm" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="openEditSpecialEventModal('${escapeJsAttr(curSess.eventId)}')">⚙️ 기간·시간 수정</button>` : ''}
+            ${curSess && curSess.isSpecial && curSess.eventId ? `<button class="btn-sm danger" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="deleteSpecialEvent('${escapeJsAttr(curSess.eventId)}')">🗑️ 행사 삭제</button>` : ''}
+            ${curSess ? `<button class="btn-sm primary" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="openAddAdminAttendanceModal()">+ 출석 추가</button>` : ''}
+            <button class="btn-sm ${!curSess ? 'primary' : ''}" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="openSpecialEventModal('${escapeJsAttr(attRosterSelectedIso)}')">📅 + 이 날짜 행사 추가</button>
+          </div>
 
           ${daySessions.length > 1 ? `
             <div class="filter-row" style="margin:6px 0 8px;">
@@ -19293,10 +19356,10 @@
           ` : ''}
 
           ${!curSess ? `
-            <div style="text-align:center; padding:14px 8px; color:#64748B; font-size:12.5px; line-height:1.55;">
+            <div style="text-align:center; padding:12px 8px 6px; color:#64748B; font-size:12.5px; line-height:1.58;">
               ${selIsSkipped
                 ? '이 날짜의 주일 예배는 <b>[🚫 예배X (휴무)]</b>로 설정되어 출석체크가 진행되지 않았습니다.<br>다시 열려면 위 <b>[✅ 예배O로 복구]</b> 버튼을 눌러 주세요.'
-                : '이 날짜에는 예정된 예배·행사나 출석 기록이 없습니다.<br>달력에서 파란 점(예배·행사) 또는 초록 점(기록 있음) 날짜를 클릭하거나 위 검색창에서 빠르게 찾아보세요.'}
+                : '이 날짜에는 예정된 예배·행사나 출석 기록이 없습니다.<br>평일·토요일에도 위 <b>[📅 + 이 날짜 행사 추가]</b>로 특별 행사를 등록하면 <b>주말이 아니어도 출석O · 출석X · 미응답 현황</b>이 바로 표시됩니다.'}
             </div>
           ` : `
             <div class="att-roster-stat-grid" style="margin-top:6px;">
@@ -19679,18 +19742,18 @@
       renderSpEventCalendar();
     };
 
-    window.openSpecialEventModal = () => {
+    window.openSpecialEventModal = (presetIso = '') => {
       const mTitle = document.getElementById('spEventModalTitle');
       if (mTitle) mTitle.textContent = '📅 특별 행사 · 수련회 출석 추가';
       const editEl = document.getElementById('editSpEventId');
       if (editEl) editEl.value = '';
       document.getElementById('spEventTitleInput').value = '';
-      const todayIso = getKstNowInfo().iso;
-      const [y, m] = todayIso.split('-').map(Number);
+      const baseIso = normalizeDateAnyInput(presetIso) || getKstNowInfo().iso;
+      const [y, m] = baseIso.split('-').map(Number);
       spCalYear = y;
       spCalMonth = m;
-      spCalStartIso = todayIso;
-      spCalEndIso = todayIso;
+      spCalStartIso = baseIso;
+      spCalEndIso = baseIso;
       spCalPickingEnd = true;
       document.getElementById('spEventStartInput').value = '09:00';
       document.getElementById('spEventEndInput').value = '21:00';
@@ -19784,6 +19847,13 @@
           afterVal: `${title} (${rangeLbl} ${start}~${end})`,
           detail: `${rangeLbl} ${start}~${end}`
         });
+        if (currentMainTab === 'manage' && currentManageSubTab === 'attendance' && startDate) {
+          const [sy, sm] = startDate.split('-').map(Number);
+          attRosterCalYear = sy;
+          attRosterCalMonth = sm;
+          attRosterSelectedIso = startDate;
+          attRosterSelectedSessionId = '';
+        }
         document.getElementById('specialEventModal').classList.remove('open');
         showToast(editId ? `[${title}] 행사 일정이 수정되었습니다!` : `[${title}] 행사 출석 일정이 추가되었습니다!`);
       } catch (err) {
@@ -19799,6 +19869,7 @@
       const nextEvents = (attendanceConfig.specialEvents || []).filter(e => String(e.id) !== String(evId));
       try {
         await db.collection('config').doc('attendance').set({ specialEvents: nextEvents }, { merge: true });
+        attRosterSelectedSessionId = '';
         recordAuditLog({
           actorType: 'admin',
           category: '예배·출석',
