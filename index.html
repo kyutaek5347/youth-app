@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=229" />
+  <link rel="manifest" href="./manifest.json?v=230" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=229" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=229" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=230" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=230" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -469,6 +469,29 @@
       color: #64748B;
       min-width: 28px;
       text-align: center;
+    }
+    .top-banner-pause-btn {
+      height: 24px;
+      min-width: 24px;
+      padding: 0 7px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      color: #475569;
+      font-size: 10px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      line-height: 1;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+      transition: background 0.14s ease, color 0.14s ease, border-color 0.14s ease;
+    }
+    .top-banner-pause-btn.paused {
+      background: #111827;
+      border-color: #111827;
+      color: #FDE68A;
     }
     .hero-badge {
       display: inline-block; background: rgba(245, 158, 11, 0.24); color: #FDE68A;
@@ -3895,7 +3918,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=229" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=230" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5721,7 +5744,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 31;
-    const APP_CLIENT_BUILD = 229;
+    const APP_CLIENT_BUILD = 230;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -5782,6 +5805,9 @@
     const KEY_TAB_LABELS_CACHE = 'right_youth_tab_labels_cache_v1';
     const KEY_CELEB_MSGS_CACHE = 'right_youth_celeb_msgs_cache_v1';
     const KEY_QUICK_LINKS_CACHE = 'right_youth_quick_links_cache_v1';
+    const KEY_BANNER_AUTO_SLIDE_SEC = 'right_youth_banner_auto_slide_sec_v1';
+    const DEFAULT_BANNER_AUTO_SLIDE_SEC = 5;
+    const ALLOWED_BANNER_AUTO_SLIDE_SECS = [0, 3, 5, 7, 10];
 
     const KEY_NOTIF_PREFS = 'right_youth_notif_prefs_v103';
     const KEY_MEMBER_CACHE = 'right_youth_member_cache_v1';
@@ -6716,7 +6742,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=229" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=230" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6740,8 +6766,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=229', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=229', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=230', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=230', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -6989,6 +7015,30 @@
       } catch {}
     }
 
+    function normalizeBannerAutoSlideSec(val) {
+      const n = Number(val);
+      if (Number.isFinite(n) && ALLOWED_BANNER_AUTO_SLIDE_SECS.includes(Math.round(n))) {
+        return Math.round(n);
+      }
+      return DEFAULT_BANNER_AUTO_SLIDE_SEC;
+    }
+
+    function loadCachedBannerAutoSlideSec() {
+      try {
+        const raw = localStorage.getItem(KEY_BANNER_AUTO_SLIDE_SEC);
+        if (raw === null || raw === '') return DEFAULT_BANNER_AUTO_SLIDE_SEC;
+        return normalizeBannerAutoSlideSec(Number(raw));
+      } catch {}
+      return DEFAULT_BANNER_AUTO_SLIDE_SEC;
+    }
+
+    function saveCachedBannerAutoSlideSec(sec) {
+      try {
+        localStorage.setItem(KEY_BANNER_AUTO_SLIDE_SEC, String(normalizeBannerAutoSlideSec(sec)));
+      } catch {}
+    }
+
+    let bannerAutoSlideSec = loadCachedBannerAutoSlideSec();
     let quickLinks = loadCachedQuickLinks();
     let selectedQuickLinkTheme = 'instagram';
     let tabLabels = loadCachedTabLabels();
@@ -7517,6 +7567,7 @@
       if (typeof stopAutoDiagRunner === 'function') stopAutoDiagRunner(true);
       if (typeof stopAutoSecRunner === 'function') stopAutoSecRunner(true);
       if (typeof stopAutoSheetRunner === 'function') stopAutoSheetRunner(true);
+      if (typeof stopHomeTopBannerAutoSlide === 'function') stopHomeTopBannerAutoSlide();
     }
 
     function getRoleById(roleId) {
@@ -9721,6 +9772,13 @@
             celebrationMsgs = structuredClone(DEFAULT_CELEBRATION_MSGS);
             saveCachedCelebrationMsgs(celebrationMsgs);
           }
+          if (d.bannerAutoSlideSec !== undefined) {
+            bannerAutoSlideSec = normalizeBannerAutoSlideSec(d.bannerAutoSlideSec);
+            saveCachedBannerAutoSlideSec(bannerAutoSlideSec);
+          } else if (!(doc.metadata && doc.metadata.fromCache)) {
+            bannerAutoSlideSec = DEFAULT_BANNER_AUTO_SLIDE_SEC;
+            saveCachedBannerAutoSlideSec(bannerAutoSlideSec);
+          }
           customTermsArticles = Array.isArray(d.customTerms) ? d.customTerms : null;
           customBylawsArticles = Array.isArray(d.customBylaws) ? d.customBylaws : null;
           hiddenDefaultYtChannelIds = Array.isArray(d.hiddenDefaultYtChannelIds) ? d.hiddenDefaultYtChannelIds.map(String) : [];
@@ -11304,6 +11362,9 @@
         draftTabInitialized = false;
       }
       const changed = currentMainTab !== tab;
+      if (tab !== 'home' && typeof stopHomeTopBannerAutoSlide === 'function') {
+        stopHomeTopBannerAutoSlide();
+      }
       currentMainTab = tab;
       applyScreen();
       if (changed && (swipeDir === 'next' || swipeDir === 'prev')) {
@@ -12174,6 +12235,8 @@
           if (currentMainTab === 'home') renderHomeView(u);
           else if (currentMainTab === 'manage') renderManageView(u);
         }
+      } else {
+        if (typeof stopHomeTopBannerAutoSlide === 'function') stopHomeTopBannerAutoSlide();
       }
     });
     window.addEventListener('online', () => {
@@ -12344,6 +12407,11 @@
     }
 
     let homeTopBannerIdx = 0;
+    let homeTopBannerTimerId = null;
+    let homeTopBannerPausedByUser = false;
+    let homeTopBannerInteracting = false;
+    let homeTopBannerProgrammaticUntilTs = 0;
+    let homeTopBannerSwipeResetTimer = null;
 
     function getDefaultHeroBannerBadge(b) {
       const rawHeroBadge = String((b && b.badge) || '').trim();
@@ -12464,6 +12532,62 @@
       `;
     }
 
+    function stopHomeTopBannerAutoSlide() {
+      if (homeTopBannerTimerId) {
+        clearInterval(homeTopBannerTimerId);
+        homeTopBannerTimerId = null;
+      }
+      if (homeTopBannerSwipeResetTimer) {
+        clearTimeout(homeTopBannerSwipeResetTimer);
+        homeTopBannerSwipeResetTimer = null;
+      }
+    }
+
+    function updateHomeTopBannerPauseBtn() {
+      const btn = document.getElementById('homeTopBannerPauseBtn');
+      if (!btn) return;
+      btn.classList.toggle('paused', homeTopBannerPausedByUser);
+      btn.textContent = homeTopBannerPausedByUser ? '▶' : '❚❚';
+      btn.setAttribute('aria-label', homeTopBannerPausedByUser ? '자동 넘김 다시 시작' : '자동 넘김 일시정지');
+      btn.title = homeTopBannerPausedByUser ? '자동 넘김 다시 시작' : '자동 넘김 일시정지';
+    }
+
+    function startHomeTopBannerAutoSlide() {
+      stopHomeTopBannerAutoSlide();
+      const sec = normalizeBannerAutoSlideSec(bannerAutoSlideSec);
+      if (sec <= 0 || homeTopBannerPausedByUser || homeTopBannerInteracting) return;
+      if (currentMainTab !== 'home' || document.visibilityState !== 'visible') return;
+      const track = document.getElementById('homeTopBannerTrack');
+      if (!track || track.children.length <= 1) return;
+
+      homeTopBannerTimerId = setInterval(() => {
+        if (currentMainTab !== 'home' || document.visibilityState !== 'visible') {
+          stopHomeTopBannerAutoSlide();
+          return;
+        }
+        if (homeTopBannerPausedByUser || homeTopBannerInteracting) return;
+        if (document.querySelector('.modal-backdrop.open')) return;
+        const liveTrack = document.getElementById('homeTopBannerTrack');
+        if (!liveTrack || liveTrack.children.length <= 1) {
+          stopHomeTopBannerAutoSlide();
+          return;
+        }
+        const total = liveTrack.children.length;
+        const next = (homeTopBannerIdx + 1) % total;
+        goToHomeTopBanner(next, true);
+      }, sec * 1000);
+    }
+
+    window.toggleHomeTopBannerAutoPause = () => {
+      homeTopBannerPausedByUser = !homeTopBannerPausedByUser;
+      updateHomeTopBannerPauseBtn();
+      if (homeTopBannerPausedByUser) {
+        stopHomeTopBannerAutoSlide();
+      } else {
+        startHomeTopBannerAutoSlide();
+      }
+    };
+
     function buildTopBannerCarouselHtml(slides) {
       const total = slides.length;
       if (total === 0) return '';
@@ -12471,6 +12595,9 @@
       const dotsHtml = slides.map((s, idx) => `
         <button class="top-banner-dot ${idx === homeTopBannerIdx ? 'active' : ''}" type="button" aria-label="${escapeHtml(s.label)} (${idx + 1}/${total})" onclick="goToHomeTopBanner(${idx})"></button>
       `).join('');
+      const pauseBtnHtml = bannerAutoSlideSec > 0
+        ? `<button id="homeTopBannerPauseBtn" class="top-banner-pause-btn ${homeTopBannerPausedByUser ? 'paused' : ''}" type="button" aria-label="${homeTopBannerPausedByUser ? '자동 넘김 다시 시작' : '자동 넘김 일시정지'}" title="${homeTopBannerPausedByUser ? '자동 넘김 다시 시작' : '자동 넘김 일시정지'}" onclick="toggleHomeTopBannerAutoPause()">${homeTopBannerPausedByUser ? '▶' : '❚❚'}</button>`
+        : '';
       return `
         <div class="top-banner-carousel" data-total="${total}">
           <div id="homeTopBannerTrack" class="top-banner-track">
@@ -12480,6 +12607,7 @@
             <button class="top-banner-arrow" type="button" aria-label="이전 배너" onclick="stepHomeTopBanner(-1)">‹</button>
             <div id="homeTopBannerDots" class="top-banner-dots">${dotsHtml}</div>
             <span id="homeTopBannerCount" class="top-banner-count">${homeTopBannerIdx + 1} / ${total}</span>
+            ${pauseBtnHtml}
             <button class="top-banner-arrow" type="button" aria-label="다음 배너" onclick="stepHomeTopBanner(1)">›</button>
           </div>
         </div>
@@ -12497,15 +12625,19 @@
       if (countEl) countEl.textContent = `${idx + 1} / ${total}`;
     }
 
-    window.goToHomeTopBanner = (idx) => {
+    window.goToHomeTopBanner = (idx, fromAuto = false) => {
       const track = document.getElementById('homeTopBannerTrack');
       if (!track) return;
       const total = track.children.length;
       if (total <= 1) return;
       const clamped = Math.max(0, Math.min(total - 1, Number(idx || 0)));
       homeTopBannerIdx = clamped;
+      homeTopBannerProgrammaticUntilTs = Date.now() + 620;
       track.scrollTo({ left: clamped * track.clientWidth, behavior: 'smooth' });
       updateHomeTopBannerIndicators(clamped, total);
+      if (!fromAuto) {
+        startHomeTopBannerAutoSlide();
+      }
     };
 
     window.stepHomeTopBanner = (delta) => {
@@ -12514,10 +12646,12 @@
       const total = track.children.length;
       if (total <= 1) return;
       const next = (homeTopBannerIdx + Number(delta || 0) + total) % total;
-      goToHomeTopBanner(next);
+      goToHomeTopBanner(next, false);
     };
 
     function bindHomeTopBannerCarousel() {
+      stopHomeTopBannerAutoSlide();
+      homeTopBannerInteracting = false;
       const track = document.getElementById('homeTopBannerTrack');
       if (!track) return;
       const total = track.children.length;
@@ -12525,11 +12659,28 @@
       if (homeTopBannerIdx >= total || homeTopBannerIdx < 0) homeTopBannerIdx = 0;
 
       if (homeTopBannerIdx > 0) {
+        homeTopBannerProgrammaticUntilTs = Date.now() + 180;
         track.style.scrollBehavior = 'auto';
         track.scrollLeft = homeTopBannerIdx * track.clientWidth;
         requestAnimationFrame(() => { track.style.scrollBehavior = ''; });
       }
       updateHomeTopBannerIndicators(homeTopBannerIdx, total);
+      updateHomeTopBannerPauseBtn();
+
+      const pauseForInteraction = () => {
+        homeTopBannerInteracting = true;
+        stopHomeTopBannerAutoSlide();
+      };
+      const resumeAfterInteraction = () => {
+        homeTopBannerInteracting = false;
+        startHomeTopBannerAutoSlide();
+      };
+
+      track.addEventListener('touchstart', pauseForInteraction, { passive: true });
+      track.addEventListener('touchend', resumeAfterInteraction, { passive: true });
+      track.addEventListener('touchcancel', resumeAfterInteraction, { passive: true });
+      track.addEventListener('mouseenter', pauseForInteraction, { passive: true });
+      track.addEventListener('mouseleave', resumeAfterInteraction, { passive: true });
 
       let rafPending = false;
       track.addEventListener('scroll', () => {
@@ -12537,6 +12688,7 @@
         rafPending = true;
         requestAnimationFrame(() => {
           rafPending = false;
+          if (Date.now() < homeTopBannerProgrammaticUntilTs) return;
           const w = track.clientWidth;
           if (!w) return;
           const nextIdx = Math.max(0, Math.min(total - 1, Math.round(track.scrollLeft / w)));
@@ -12544,8 +12696,17 @@
             homeTopBannerIdx = nextIdx;
             updateHomeTopBannerIndicators(nextIdx, total);
           }
+          if (!homeTopBannerInteracting && !homeTopBannerPausedByUser) {
+            if (homeTopBannerSwipeResetTimer) clearTimeout(homeTopBannerSwipeResetTimer);
+            homeTopBannerSwipeResetTimer = setTimeout(() => {
+              homeTopBannerSwipeResetTimer = null;
+              startHomeTopBannerAutoSlide();
+            }, 220);
+          }
         });
       }, { passive: true });
+
+      startHomeTopBannerAutoSlide();
     }
 
     function renderHomeView(user) {
@@ -12696,6 +12857,7 @@
       }).join('') + homeVideosHtml;
 
       if (useTopCarousel) bindHomeTopBannerCarousel();
+      else stopHomeTopBannerAutoSlide();
     }
 
     window.setFilter = (cat) => {
@@ -12932,6 +13094,33 @@
     };
 
     // (A) 화면·공지 관리 (새신자 환영 멘트 + 홈 배너·칸 배치 및 공지·광고 통합 관리)
+    window.handleSetBannerAutoSlideSec = async (sec) => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const nextSec = normalizeBannerAutoSlideSec(sec);
+      const prevSec = bannerAutoSlideSec;
+      bannerAutoSlideSec = nextSec;
+      saveCachedBannerAutoSlideSec(nextSec);
+      if (nextSec > 0) homeTopBannerPausedByUser = false;
+      try {
+        await db.collection('config').doc('layout').set({ bannerAutoSlideSec: nextSec }, { merge: true });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '공지·배너',
+          action: '상단 배너 자동 전환 간격 변경',
+          target: '홈 상단 배너',
+          beforeVal: prevSec > 0 ? `${prevSec}초` : '꺼짐',
+          afterVal: nextSec > 0 ? `${nextSec}초` : '꺼짐'
+        });
+        applyScreen();
+        showToast(nextSec > 0 ? `⏱️ 상단 배너가 ${nextSec}초마다 자동으로 넘어가도록 저장했습니다!` : '상단 배너 자동 전환을 껐습니다.');
+      } catch (err) {
+        bannerAutoSlideSec = prevSec;
+        saveCachedBannerAutoSlideSec(prevSec);
+        handleDbError(err, '배너 자동 전환 설정');
+      }
+    };
+
     window.setManageContentFilter = (filterKey) => {
       manageContentFilter = ['all', 'blocks', 'notices', 'pending'].includes(filterKey) ? filterKey : 'all';
       manageSectionOpen.content_unified = true;
@@ -13091,6 +13280,21 @@
           </div>
           `;
         })() : ''}
+
+        ${canLayout ? `
+          <div class="card" style="padding:12px 14px; margin-bottom:10px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:7px; flex-wrap:wrap;">
+              <div style="font-size:13px; font-weight:800; color:#0F172A;">⏱️ 상단 배너 자동 전환 간격</div>
+              <span class="tag ${bannerAutoSlideSec > 0 ? 'green' : 'slate'}">${bannerAutoSlideSec > 0 ? `${bannerAutoSlideSec}초마다 자동 순환` : '자동 전환 꺼짐'}</span>
+            </div>
+            <div class="filter-row" style="margin-bottom:4px;">
+              ${ALLOWED_BANNER_AUTO_SLIDE_SECS.map(s => `
+                <button class="filter-chip ${bannerAutoSlideSec === s ? 'active' : ''}" type="button" onclick="handleSetBannerAutoSlideSec(${s})">${s === 0 ? '꺼짐' : (s === DEFAULT_BANNER_AUTO_SLIDE_SEC ? `${s}초 (기본)` : `${s}초`)}</button>
+              `).join('')}
+            </div>
+            <div style="font-size:11px; color:#64748B; line-height:1.45;">배너가 2개 이상일 때 설정한 시간마다 자동으로 넘어가며, 마지막 배너 다음엔 다시 첫 배너로 돌아가 반복됩니다.</div>
+          </div>
+        ` : ''}
 
         ${(canLayout || canNotices) ? `
           ${buildManageAccordionBar({
