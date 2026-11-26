@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=199" />
+  <link rel="manifest" href="./manifest.json?v=200" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=199" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=199" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=200" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=200" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -1773,6 +1773,54 @@
       font-family: inherit;
     }
     .diag-sim-btn:active { background: #EFF6FF; border-color: #93C5FD; }
+    .auto-diag-panel {
+      margin-top: 11px;
+      padding: 12px;
+      border-radius: 13px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    .auto-diag-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .auto-diag-status-pill.watching { background: rgba(22, 163, 74, 0.24); color: #86EFAC; }
+    .auto-diag-status-pill.checking { background: rgba(37, 99, 235, 0.28); color: #93C5FD; }
+    .auto-diag-status-pill.paused { background: rgba(239, 68, 68, 0.3); color: #FECACA; }
+    .auto-diag-status-pill.off { background: rgba(148, 163, 184, 0.2); color: #CBD5E1; }
+    .auto-diag-chip {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      color: #E2E8F0;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .auto-diag-chip.active {
+      background: #F59E0B;
+      border-color: #F59E0B;
+      color: #0F172A;
+      font-weight: 800;
+    }
+    .auto-diag-alert-box {
+      margin-top: 9px;
+      padding: 10px 11px;
+      border-radius: 11px;
+      background: rgba(153, 27, 27, 0.55);
+      border: 1px solid rgba(252, 165, 165, 0.55);
+      color: #FEE2E2;
+      font-size: 12px;
+      line-height: 1.5;
+    }
 
     /* ==================== v10.26 역할별 공개 대상 선택 UI ==================== */
     .role-target-box {
@@ -3503,7 +3551,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=199" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=200" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5178,7 +5226,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 199;
+    const APP_CLIENT_BUILD = 200;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_SEEN_ADMIN_IDS = 'right_youth_seen_admin_ids_v1';
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
@@ -5240,6 +5288,11 @@
       detectCloneDomain: true,
       alertAdminOnSecurityEvent: true,
       officialHost: 'kyutaek5347.github.io'
+    };
+    const DEFAULT_AUTO_DIAG_CONFIG = {
+      enabled: false,
+      intervalSec: 30,
+      stopOnWarn: false
     };
     const DEFAULT_MAINTENANCE_CONFIG = {
       enabled: false,
@@ -6086,7 +6139,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=199" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=200" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6110,8 +6163,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=199', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=199', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=200', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=200', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -6535,6 +6588,21 @@
     let previewAsObserverMode = false;
     let diagResults = {};
     let diagRunningAll = false;
+    let autoDiagConfig = structuredClone(DEFAULT_AUTO_DIAG_CONFIG);
+    let autoDiagState = {
+      phase: 'off', // 'off' | 'watching' | 'checking' | 'paused_issue'
+      issueIds: [],
+      pausedAt: '',
+      lastRunAt: '',
+      nextRunAtTs: 0,
+      cycleCount: 0,
+      lastSheetNetCheckTs: 0,
+      lastVideoNetCheckTs: 0,
+      lastVideoOembedOk: true
+    };
+    let autoDiagTimerId = null;
+    let autoDiagCountdownTimerId = null;
+    let autoDiagBusy = false;
     let securityConfig = structuredClone(DEFAULT_SECURITY_CONFIG);
     let secCheckResults = {};
     let secCheckRunningAll = false;
@@ -6712,6 +6780,7 @@
       adminRegFirstSnap = true;
       knownPendingAdminIds = new Set();
       knownActiveAdminIds = new Set();
+      if (typeof stopAutoDiagRunner === 'function') stopAutoDiagRunner(true);
     }
 
     function getRoleById(roleId) {
@@ -7079,6 +7148,11 @@
       if (subId === 'videos') {
         return (videoItems || []).filter(v => v.status === 'pending').length;
       }
+      if (subId === 'diagnostics') {
+        return (autoDiagState && autoDiagState.phase === 'paused_issue')
+          ? Math.max(1, (autoDiagState.issueIds || []).length)
+          : 0;
+      }
       return 0;
     }
 
@@ -7086,7 +7160,8 @@
       return getManageSubTabBadgeCount('members')
         + getManageSubTabBadgeCount('admins')
         + getManageSubTabBadgeCount('inquiries')
-        + getManageSubTabBadgeCount('videos');
+        + getManageSubTabBadgeCount('videos')
+        + getManageSubTabBadgeCount('diagnostics');
     }
 
     function buildSubTabBadgeHtml(cnt) {
@@ -8582,6 +8657,17 @@
             } else {
               securityConfig = structuredClone(DEFAULT_SECURITY_CONFIG);
             }
+            if (d.autoDiagConfig && typeof d.autoDiagConfig === 'object') {
+              const rawSec = Number(d.autoDiagConfig.intervalSec);
+              autoDiagConfig = {
+                enabled: !!d.autoDiagConfig.enabled,
+                intervalSec: (Number.isFinite(rawSec) && rawSec >= 5 && rawSec <= 600) ? Math.round(rawSec) : 30,
+                stopOnWarn: !!d.autoDiagConfig.stopOnWarn
+              };
+            } else {
+              autoDiagConfig = structuredClone(DEFAULT_AUTO_DIAG_CONFIG);
+            }
+            if (typeof syncAutoDiagRunner === 'function') syncAutoDiagRunner();
             if (typeof d.latestBuild === 'number' && d.latestBuild > serverLatestBuild) {
               serverLatestBuild = d.latestBuild;
               notifyPendingAppUpdateIfNeeded();
@@ -10753,6 +10839,7 @@
         handleKstDayRolloverCheck();
         checkAndPromoteDueScheduledItems();
         checkAndNotifyNewcomers();
+        if (typeof onAutoDiagVisibilityVisible === 'function') onAutoDiagVisibilityVisible();
         const u = getCurrentUser();
         if (u) {
           if (currentMainTab === 'home') renderHomeView(u);
@@ -20854,44 +20941,62 @@
           ${buildManageAccordionBar({
             key: 'diag_auto',
             titleHtml: '🔍 통합 · 항목별 자동 진단',
-            badgeHtml: `<span class="tag ${errCnt > 0 ? 'red' : (okCnt === DIAG_ITEMS.length ? 'green' : 'slate')}">정상 ${okCnt} · 주의 ${warnCnt} · 오류 ${errCnt}</span>`,
+            badgeHtml: `<span id="diagAutoSummaryTag" class="tag ${errCnt > 0 ? 'red' : (okCnt === DIAG_ITEMS.length ? 'green' : 'slate')}">정상 ${okCnt} · 주의 ${warnCnt} · 오류 ${errCnt}</span>`,
             defaultOpen: true,
             marginTop: showMaint ? '10px' : ''
           })}
           <div data-acc-body="diag_auto" class="${autoOpen ? '' : 'hidden'}">
             <div class="card" style="background:#0F172A; color:#fff; border-color:#1E293B;">
-              <div style="font-size:14.5px; font-weight:800; color:#FDE68A; margin-bottom:5px;">🚀 통합 일괄 점검 & 항목별 개별 테스트</div>
-              <div style="font-size:12px; color:#CBD5E1; line-height:1.5; margin-bottom:12px;">
-                전체 일괄 점검으로 앱 상태를 한 번에 확인하고, 문제가 발견된 항목은 아래 <b>개별 테스트</b> 버튼으로 원인을 바로 재확인할 수 있습니다.
+              <div style="font-size:14.5px; font-weight:800; color:#FDE68A; margin-bottom:5px;">🚀 통합 일괄 점검 & 실시간 자동 감시</div>
+              <div style="font-size:12px; color:#CBD5E1; line-height:1.5; margin-bottom:11px;">
+                수동 일괄 점검은 물론, 아래 <b>자동 점검 스위치</b>를 켜면 설정한 초마다 자동으로 점검하다가 <b>문제 감지 시 즉시 멈추고 관리자에게 알림</b>을 보냅니다. 문제가 해결되면 자동으로 다시 계속 점검합니다.
               </div>
               <button id="runAllDiagBtn" class="btn-full btn-amber" type="button" style="padding:12px; font-size:14px;" ${diagRunningAll ? 'disabled' : ''} onclick="runAllDiagnostics()">
-                ${diagRunningAll ? '⏳ 전체 기능 일괄 점검 중...' : `🚀 전체 일괄 점검 실행 (${DIAG_ITEMS.length}개 항목)`}
+                ${diagRunningAll ? '⏳ 전체 기능 일괄 점검 중...' : `🚀 수동 전체 일괄 점검 실행 (${DIAG_ITEMS.length}개 항목)`}
               </button>
-            </div>
-            ${DIAG_ITEMS.map(item => {
-              const res = diagResults[item.id] || { status: 'idle', msg: item.desc, ts: '' };
-              const badgeMap = {
-                idle: '<span class="tag slate">대기</span>',
-                running: '<span class="tag warm">점검 중...</span>',
-                ok: '<span class="tag green">✅ 정상</span>',
-                warn: '<span class="tag warm">⚠️ 주의</span>',
-                err: '<span class="tag red">❌ 오류</span>'
-              };
-              return `
-                <div class="diag-card ${res.status}">
-                  <div class="layout-item-head">
-                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; min-width:0;">
-                      <strong style="font-size:13.5px; color:#0F172A;">${escapeHtml(item.title)}</strong>
-                      ${badgeMap[res.status] || badgeMap.idle}
-                    </div>
-                    <button class="btn-sm primary" type="button" style="white-space:nowrap;" onclick="runSingleDiagnostic('${item.id}')">개별 테스트</button>
+
+              <!-- 실시간 자동 일괄 점검 설정 & 상태 패널 -->
+              <div class="auto-diag-panel">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;">
+                  <div>
+                    <div style="font-size:13.5px; font-weight:800; color:#FFFFFF;">🤖 실시간 자동 일괄 점검</div>
+                    <div style="font-size:11.5px; color:#94A3B8; margin-top:2px;">이상 감지 시 일시 정지·알림 · 해결 시 자동 재개</div>
                   </div>
-                  <div class="diag-msg">${escapeHtml(res.msg)}</div>
-                  ${buildCheckAdviceHtml(res)}
-                  ${res.ts ? `<div style="font-size:10.5px; color:#94A3B8; margin-top:4px;">최근 점검: ${escapeHtml(res.ts)}</div>` : ''}
+                  <label class="switch">
+                    <input type="checkbox" id="cfgAutoDiagEnabled" ${autoDiagConfig.enabled ? 'checked' : ''} onchange="handleToggleAutoDiag(this.checked)" />
+                    <span class="slider"></span>
+                  </label>
                 </div>
-              `;
-            }).join('')}
+
+                <div style="margin-bottom:8px;">
+                  <div style="font-size:11.5px; font-weight:700; color:#CBD5E1; margin-bottom:5px;">⏱️ 자동 점검 주기 (초)</div>
+                  <div style="display:flex; gap:5px; flex-wrap:wrap; align-items:center;">
+                    ${[10, 30, 60, 180, 300].map(sec => {
+                      const lbl = sec < 60 ? `${sec}초` : `${sec / 60}분`;
+                      return `<button class="auto-diag-chip ${Number(autoDiagConfig.intervalSec) === sec ? 'active' : ''}" type="button" onclick="handleSetAutoDiagInterval(${sec})">${lbl}</button>`;
+                    }).join('')}
+                    <div style="display:inline-flex; align-items:center; gap:4px; margin-left:auto;">
+                      <input id="cfgAutoDiagSecInput" type="number" min="5" max="600" inputmode="numeric" value="${escapeHtml(String(autoDiagConfig.intervalSec || 30))}" style="width:62px; padding:5px 7px; border-radius:8px; border:1px solid rgba(255,255,255,0.22); background:rgba(15,23,42,0.7); color:#fff; font-size:12px; font-weight:700; text-align:center;" />
+                      <button class="auto-diag-chip" type="button" style="padding:5px 8px;" onclick="handleSaveCustomAutoDiagSec()">초 적용</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="margin-bottom:9px;">
+                  <div style="font-size:11.5px; font-weight:700; color:#CBD5E1; margin-bottom:5px;">🚨 중단 · 알림 기준</div>
+                  <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                    <button class="auto-diag-chip ${!autoDiagConfig.stopOnWarn ? 'active' : ''}" type="button" onclick="handleSetAutoDiagStopOnWarn(false)">❌ 오류만 감지 (권장)</button>
+                    <button class="auto-diag-chip ${autoDiagConfig.stopOnWarn ? 'active' : ''}" type="button" onclick="handleSetAutoDiagStopOnWarn(true)">⚠️ 주의 + ❌ 오류 모두</button>
+                  </div>
+                </div>
+
+                <div id="autoDiagLiveBox">${buildAutoDiagLiveBoxHtml()}</div>
+                <div style="font-size:10.5px; color:#94A3B8; margin-top:7px; line-height:1.45;">
+                  • 최고 관리자 화면에서만 작동하며, 외부 통신(구글 시트·유튜브)은 정상 상태에서 최소 60초 간격으로 보호 점검하고 문제·해결 확인 시 즉시 실통신 검증합니다.
+                </div>
+              </div>
+            </div>
+            <div id="diagItemsCardsContainer">${buildDiagItemsCardsHtml()}</div>
           </div>
         ` : ''}
 
@@ -21009,7 +21114,118 @@
       }
     };
 
-    function setDiagResult(id, status, msg, advice = null) {
+    function buildDiagItemsCardsHtml() {
+      const badgeMap = {
+        idle: '<span class="tag slate">대기</span>',
+        running: '<span class="tag warm">점검 중...</span>',
+        ok: '<span class="tag green">✅ 정상</span>',
+        warn: '<span class="tag warm">⚠️ 주의</span>',
+        err: '<span class="tag red">❌ 오류</span>'
+      };
+      return DIAG_ITEMS.map(item => {
+        const res = diagResults[item.id] || { status: 'idle', msg: item.desc, ts: '' };
+        const isPausedTarget = autoDiagState.phase === 'paused_issue' && (autoDiagState.issueIds || []).includes(item.id);
+        return `
+          <div class="diag-card ${res.status}" style="${isPausedTarget ? 'box-shadow:0 0 0 2px #EF4444;' : ''}">
+            <div class="layout-item-head">
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; min-width:0;">
+                <strong style="font-size:13.5px; color:#0F172A;">${escapeHtml(item.title)}</strong>
+                ${badgeMap[res.status] || badgeMap.idle}
+                ${isPausedTarget ? '<span class="tag red" style="font-size:10px;">🚨 자동점검 중단 원인</span>' : ''}
+              </div>
+              <button class="btn-sm primary" type="button" style="white-space:nowrap;" onclick="runSingleDiagnostic('${item.id}')">개별 테스트</button>
+            </div>
+            <div class="diag-msg">${escapeHtml(res.msg)}</div>
+            ${buildCheckAdviceHtml(res)}
+            ${res.ts ? `<div style="font-size:10.5px; color:#94A3B8; margin-top:4px;">최근 점검: ${escapeHtml(res.ts)}</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function buildAutoDiagLiveBoxHtml() {
+      const cfg = autoDiagConfig || DEFAULT_AUTO_DIAG_CONFIG;
+      const sec = Math.max(5, Number(cfg.intervalSec || 30));
+      const secLabel = sec < 60 ? `${sec}초` : (sec % 60 === 0 ? `${sec / 60}분` : `${sec}초`);
+      const remainSec = autoDiagState.nextRunAtTs > Date.now()
+        ? Math.ceil((autoDiagState.nextRunAtTs - Date.now()) / 1000)
+        : 0;
+
+      if (!cfg.enabled || autoDiagState.phase === 'off') {
+        return `
+          <div class="auto-diag-status-pill off">⚪ 자동 점검 꺼짐</div>
+          <div style="font-size:11.5px; color:#CBD5E1; line-height:1.45;">
+            위 스위치를 켜면 <b>${escapeHtml(secLabel)}</b>마다 9개 항목을 자동으로 점검합니다.
+          </div>
+        `;
+      }
+
+      if (autoDiagState.phase === 'paused_issue') {
+        const issueTitles = (autoDiagState.issueIds || []).map(id => {
+          const it = DIAG_ITEMS.find(x => x.id === id);
+          return it ? it.title : id;
+        });
+        return `
+          <div class="auto-diag-status-pill paused">🚨 문제 감지 · 자동 점검 일시 정지됨</div>
+          <div class="auto-diag-alert-box">
+            <div style="font-weight:800; margin-bottom:4px;">감지 시각: ${escapeHtml(autoDiagState.pausedAt || '-')} · 관리자 알림 발송 완료</div>
+            <div style="margin-bottom:6px;">• 문제 항목: <b>${escapeHtml(issueTitles.join(', ') || '확인 필요')}</b></div>
+            <div style="font-size:11.5px; color:#FDE68A;">
+              🔄 문제가 해결되면 자동으로 다시 계속 점검합니다.${remainSec > 0 ? ` (다음 해결 확인까지 <b>${remainSec}초</b>)` : ' (해결 여부 확인 중...)'}
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">
+              <button class="btn-sm approve" type="button" style="flex:1; padding:7px 9px;" onclick="recheckPausedAutoDiagNow()">🔍 지금 해결 확인 및 재개</button>
+              <button class="btn-sm danger" type="button" style="padding:7px 9px;" onclick="handleToggleAutoDiag(false)">자동 점검 끄기</button>
+            </div>
+          </div>
+        `;
+      }
+
+      if (autoDiagState.phase === 'checking') {
+        return `
+          <div class="auto-diag-status-pill checking">🔄 자동 통합 점검 실행 중...</div>
+          <div style="font-size:11.5px; color:#CBD5E1; line-height:1.45;">
+            9개 항목 상태를 백그라운드에서 점검하고 있습니다.
+          </div>
+        `;
+      }
+
+      return `
+        <div class="auto-diag-status-pill watching">🟢 자동 감시 가동 중 (${escapeHtml(secLabel)} 주기)</div>
+        <div style="font-size:11.5px; color:#E2E8F0; line-height:1.5;">
+          ${remainSec > 0 ? `⏳ 다음 자동 점검까지 <b>${remainSec}초</b>` : '⏳ 곧 다음 자동 점검을 시작합니다.'}
+          ${autoDiagState.lastRunAt ? ` · 최근 완료: ${escapeHtml(autoDiagState.lastRunAt)}` : ''}
+          ${autoDiagState.cycleCount > 0 ? ` · 정상 완료 <b>${autoDiagState.cycleCount}회</b>` : ''}
+        </div>
+      `;
+    }
+
+    function refreshDiagnosticsLiveUI() {
+      const u = getCurrentUser();
+      if (!u || currentMainTab !== 'manage' || currentManageSubTab !== 'diagnostics') return;
+      const okCnt = DIAG_ITEMS.filter(it => diagResults[it.id] && diagResults[it.id].status === 'ok').length;
+      const warnCnt = DIAG_ITEMS.filter(it => diagResults[it.id] && diagResults[it.id].status === 'warn').length;
+      const errCnt = DIAG_ITEMS.filter(it => diagResults[it.id] && diagResults[it.id].status === 'err').length;
+
+      const sumTag = document.getElementById('diagAutoSummaryTag');
+      if (sumTag) {
+        sumTag.className = `tag ${errCnt > 0 ? 'red' : (okCnt === DIAG_ITEMS.length ? 'green' : 'slate')}`;
+        sumTag.textContent = `정상 ${okCnt} · 주의 ${warnCnt} · 오류 ${errCnt}`;
+      }
+      const liveBox = document.getElementById('autoDiagLiveBox');
+      if (liveBox) liveBox.innerHTML = buildAutoDiagLiveBoxHtml();
+
+      const cardsWrap = document.getElementById('diagItemsCardsContainer');
+      if (cardsWrap) cardsWrap.innerHTML = buildDiagItemsCardsHtml();
+    }
+
+    function isDiagStatusProblem(status) {
+      if (status === 'err') return true;
+      if (autoDiagConfig && autoDiagConfig.stopOnWarn && status === 'warn') return true;
+      return false;
+    }
+
+    function setDiagResult(id, status, msg, advice = null, silentUi = false) {
       diagResults[id] = {
         status,
         msg,
@@ -21020,12 +21236,21 @@
       };
       const u = getCurrentUser();
       if (u && currentMainTab === 'manage' && currentManageSubTab === 'diagnostics') {
-        renderManageDiagnostics(document.getElementById('manageContent'), u);
+        if (silentUi || document.getElementById('diagItemsCardsContainer')) {
+          refreshDiagnosticsLiveUI();
+        } else {
+          renderManageDiagnostics(document.getElementById('manageContent'), u);
+        }
       }
     }
 
-    window.runSingleDiagnostic = async (id) => {
-      setDiagResult(id, 'running', '점검을 실행하고 있습니다...');
+    window.runSingleDiagnostic = async (id, opts = {}) => {
+      const silent = !!(opts && opts.silent);
+      const isAuto = !!(opts && opts.isAuto);
+      const forceNetwork = !!(opts && opts.forceNetwork);
+      if (!silent) {
+        setDiagResult(id, 'running', '점검을 실행하고 있습니다...', null, true);
+      }
       try {
         const shLbl = getTabLabel('manageSheet');
         const shIcn = getTabIcon('manageSheet');
@@ -21055,7 +21280,10 @@
               solution: `[${shLbl}] 탭에 배포한 Apps Script 웹 앱 URL을 입력하고 저장해 주세요.`,
               actions: [{ label: `${shIcn} ${shLbl} 열기`, type: 'subtab', param: 'sheet', primary: true }]
             });
+          } else if (isAuto && !forceNetwork && diagResults.sheet && diagResults.sheet.status === 'ok' && (Date.now() - Number(autoDiagState.lastSheetNetCheckTs || 0)) < 60000) {
+            setDiagResult(id, 'ok', diagResults.sheet.msg, null, silent);
           } else {
+            autoDiagState.lastSheetNetCheckTs = Date.now();
             const res = await postToGoogleSheet({ action: 'test', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url, true);
             if (!res.ok) {
               setDiagResult(id, 'err', '구글 시트 전송 실패: URL 오타 또는 네트워크 오류를 확인해 주세요.', {
@@ -21126,9 +21354,11 @@
           }
         } else if (id === 'notif') {
           const perm = getNotifPermissionState();
-          showInAppNotif(getTabIcon('manageDiagnostics'), `${getTabLabel('manageDiagnostics')} 테스트 알림`, '앱 내 실시간 상단 팝업 알림이 정상 작동 중입니다.', () => {});
+          if (!silent) {
+            showInAppNotif(getTabIcon('manageDiagnostics'), `${getTabLabel('manageDiagnostics')} 테스트 알림`, '앱 내 실시간 상단 팝업 알림이 정상 작동 중입니다.', () => {});
+          }
           if (perm === 'granted' && notifPrefs.enabled) {
-            setDiagResult(id, 'ok', '기기 알림 권한 허용됨 · 앱 내 알림 켜짐 · 상단 테스트 팝업 표시 완료');
+            setDiagResult(id, 'ok', silent ? '기기 알림 권한 허용됨 · 앱 내 알림 켜짐 (자동 감시 정상)' : '기기 알림 권한 허용됨 · 앱 내 알림 켜짐 · 상단 테스트 팝업 표시 완료', null, silent);
           } else if (perm === 'denied') {
             setDiagResult(id, 'warn', '앱 내 팝업 알림은 정상이나, 기기 시스템 알림이 차단되어 있습니다.', {
               reason: '현재 스마트폰/브라우저에서 이 사이트의 알림 권한이 [차단]으로 설정되어 있어 OS 상단 알림을 띄울 수 없습니다.',
@@ -21184,11 +21414,17 @@
             const approvedV = (videoItems || []).filter(v => v.status === 'approved');
             const pendingV = (videoItems || []).filter(v => v.status === 'pending');
             const brokenV = (videoItems || []).filter(v => !v.videoId || !/^[a-zA-Z0-9_-]{11}$/.test(String(v.videoId)));
-            let oembedOk = false;
-            try {
-              const testRes = await fetch('https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DdQw4w9WgXcQ&format=json');
-              oembedOk = testRes.ok;
-            } catch {}
+            let oembedOk = !!autoDiagState.lastVideoOembedOk;
+            const needVideoNet = !isAuto || forceNetwork || !autoDiagState.lastVideoNetCheckTs || (Date.now() - Number(autoDiagState.lastVideoNetCheckTs || 0)) >= 60000;
+            if (needVideoNet) {
+              oembedOk = false;
+              try {
+                const testRes = await fetch('https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DdQw4w9WgXcQ&format=json');
+                oembedOk = testRes.ok;
+              } catch {}
+              autoDiagState.lastVideoOembedOk = oembedOk;
+              autoDiagState.lastVideoNetCheckTs = Date.now();
+            }
             if (brokenV.length > 0) {
               setDiagResult(id, 'err', `영상 ID가 손상된 항목 ${brokenV.length}건이 발견되었습니다.`, {
                 reason: '유튜브 영상 ID(11자리)가 비어 있거나 형식이 잘못되어 재생되지 않을 수 있습니다.',
@@ -21339,36 +21575,337 @@
           reason: '점검 요청을 처리하는 도중 네트워크 끊김 또는 서버 권한 오류가 발생했습니다.',
           solution: '인터넷 연결 상태를 확인하고 [다시 테스트]를 눌러 주세요. 반복되면 Firebase 규칙 게시 상태를 확인해 주세요.',
           actions: [{ label: '🔄 다시 테스트', type: 'retest_diag', param: id, primary: true }]
-        });
+        }, silent);
+      }
+      if (!isAuto) {
+        evaluateAutoDiagAfterManualCheck();
       }
     };
 
     window.runAllDiagnostics = async () => {
       if (diagRunningAll) return;
       diagRunningAll = true;
-      const u = getCurrentUser();
-      if (u) renderManageDiagnostics(document.getElementById('manageContent'), u);
+      const btn = document.getElementById('runAllDiagBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = '⏳ 전체 기능 일괄 점검 중...';
+      }
       for (const item of DIAG_ITEMS) {
-        await runSingleDiagnostic(item.id);
+        await runSingleDiagnostic(item.id, { forceNetwork: true });
       }
       diagRunningAll = false;
+      evaluateAutoDiagAfterManualCheck();
       const u2 = getCurrentUser();
       if (u2 && currentMainTab === 'manage' && currentManageSubTab === 'diagnostics') {
-        renderManageDiagnostics(document.getElementById('manageContent'), u2);
+        const btn2 = document.getElementById('runAllDiagBtn');
+        if (btn2) {
+          btn2.disabled = false;
+          btn2.textContent = `🚀 수동 전체 일괄 점검 실행 (${DIAG_ITEMS.length}개 항목)`;
+        }
+        refreshDiagnosticsLiveUI();
       }
       showToast(`전체 ${DIAG_ITEMS.length}개 항목 일괄 점검이 완료되었습니다!`);
+    };
+
+    // --- 실시간 자동 통합 일괄 점검 엔진 (주기 실행 → 문제 감지 시 일시 정지·관리자 알림 → 해결 시 자동 재개) ---
+    function stopAutoDiagRunner(resetPhase = true) {
+      if (autoDiagTimerId) { clearTimeout(autoDiagTimerId); autoDiagTimerId = null; }
+      if (autoDiagCountdownTimerId) { clearInterval(autoDiagCountdownTimerId); autoDiagCountdownTimerId = null; }
+      autoDiagState.nextRunAtTs = 0;
+      if (resetPhase) {
+        autoDiagState.phase = 'off';
+        autoDiagState.issueIds = [];
+        autoDiagState.pausedAt = '';
+      }
+    }
+
+    function ensureAutoDiagCountdownTicker() {
+      if (autoDiagCountdownTimerId) return;
+      autoDiagCountdownTimerId = setInterval(() => {
+        const u = getCurrentUser();
+        if (!u || !u.isSuperAdmin || !autoDiagConfig.enabled) {
+          stopAutoDiagRunner(true);
+          return;
+        }
+        if (currentMainTab === 'manage' && currentManageSubTab === 'diagnostics') {
+          const liveBox = document.getElementById('autoDiagLiveBox');
+          if (liveBox) liveBox.innerHTML = buildAutoDiagLiveBoxHtml();
+        }
+      }, 1000);
+    }
+
+    function scheduleNextAutoDiagTick(delayMs) {
+      if (autoDiagTimerId) { clearTimeout(autoDiagTimerId); autoDiagTimerId = null; }
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin || !autoDiagConfig.enabled) {
+        stopAutoDiagRunner(true);
+        return;
+      }
+      const safeDelay = Math.max(5000, Number(delayMs || (autoDiagConfig.intervalSec || 30) * 1000));
+      autoDiagState.nextRunAtTs = Date.now() + safeDelay;
+      ensureAutoDiagCountdownTicker();
+      autoDiagTimerId = setTimeout(() => {
+        autoDiagTimerId = null;
+        executeAutoDiagTick();
+      }, safeDelay);
+      refreshDiagnosticsLiveUI();
+    }
+
+    function dispatchAutoDiagIssueAlert(problemItems) {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const firstTitle = problemItems[0] ? problemItems[0].title : '점검 항목';
+      const summary = problemItems.length === 1
+        ? `${firstTitle}에서 문제가 감지되어 자동 점검을 멈췄습니다.`
+        : `${firstTitle} 외 ${problemItems.length - 1}건의 문제가 감지되어 자동 점검을 멈췄습니다.`;
+      const title = '🚨 자동 기능 점검 중단 · 문제 감지';
+      showInAppNotif(
+        '🚨',
+        title,
+        `${summary} 탭해서 원인을 확인하세요.`,
+        () => {
+          currentMainTab = 'manage';
+          currentManageSubTab = 'diagnostics';
+          manageSectionOpen['diag_auto'] = true;
+          applyScreen();
+        },
+        'sec-alert'
+      );
+      sendDeviceNotification(title, summary);
+      recordAuditLog({
+        actorType: 'admin',
+        category: '보안·설정',
+        action: '자동 기능 점검 문제 감지(일시 정지)',
+        target: problemItems.map(x => x.id).join(', '),
+        detail: problemItems.map(x => `${x.title}: ${(diagResults[x.id] && diagResults[x.id].msg) || ''}`).join(' / ').slice(0, 260)
+      });
+    }
+
+    function dispatchAutoDiagResumedAlert() {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const sec = Math.max(5, Number(autoDiagConfig.intervalSec || 30));
+      const secLbl = sec < 60 ? `${sec}초` : (sec % 60 === 0 ? `${sec / 60}분` : `${sec}초`);
+      const title = '✅ 문제 해결 확인 · 자동 점검 재개';
+      const body = `감지되었던 문제가 해결되어 ${secLbl} 주기 자동 통합 점검을 다시 시작합니다.`;
+      showInAppNotif('✅', title, body, () => {
+        currentMainTab = 'manage';
+        currentManageSubTab = 'diagnostics';
+        applyScreen();
+      });
+      sendDeviceNotification(title, body);
+      showToast(body);
+    }
+
+    async function executeAutoDiagTick() {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin || !autoDiagConfig.enabled) {
+        stopAutoDiagRunner(true);
+        return;
+      }
+      if (document.visibilityState !== 'visible') {
+        scheduleNextAutoDiagTick((autoDiagConfig.intervalSec || 30) * 1000);
+        return;
+      }
+      if (autoDiagBusy || diagRunningAll) {
+        scheduleNextAutoDiagTick(5000);
+        return;
+      }
+
+      autoDiagBusy = true;
+      try {
+        // Case A: 문제로 일시 정지 중 → 문제 항목만 조용히 재확인해 해결 시 자동 재개
+        if (autoDiagState.phase === 'paused_issue' && (autoDiagState.issueIds || []).length > 0) {
+          const targets = [...autoDiagState.issueIds];
+          for (const tid of targets) {
+            await runSingleDiagnostic(tid, { silent: true, isAuto: true, forceNetwork: true });
+          }
+          const stillBroken = targets.filter(tid => diagResults[tid] && isDiagStatusProblem(diagResults[tid].status));
+          if (stillBroken.length === 0) {
+            // 모든 문제 항목 해결됨 → 전체 자동 점검 재개!
+            autoDiagState.phase = 'watching';
+            autoDiagState.issueIds = [];
+            autoDiagState.pausedAt = '';
+            autoDiagState.lastRunAt = formatKstDateTime();
+            dispatchAutoDiagResumedAlert();
+            applyScreen();
+            scheduleNextAutoDiagTick((autoDiagConfig.intervalSec || 30) * 1000);
+          } else {
+            autoDiagState.issueIds = stillBroken;
+            const recIntervalMs = Math.max(10000, Number(autoDiagConfig.intervalSec || 30) * 1000);
+            scheduleNextAutoDiagTick(recIntervalMs);
+          }
+          return;
+        }
+
+        // Case B: 정상 감시 중 → 9개 항목 전체 자동 점검
+        autoDiagState.phase = 'checking';
+        refreshDiagnosticsLiveUI();
+
+        const isFirstCycle = autoDiagState.cycleCount === 0;
+        for (const item of DIAG_ITEMS) {
+          const curU = getCurrentUser();
+          if (!curU || !curU.isSuperAdmin || !autoDiagConfig.enabled) {
+            stopAutoDiagRunner(true);
+            return;
+          }
+          await runSingleDiagnostic(item.id, { silent: true, isAuto: true, forceNetwork: isFirstCycle });
+        }
+
+        autoDiagState.lastRunAt = formatKstDateTime();
+        const problemItems = DIAG_ITEMS.filter(it => diagResults[it.id] && isDiagStatusProblem(diagResults[it.id].status));
+
+        if (problemItems.length > 0) {
+          // 문제 발견 → 자동 점검 일시 정지 + 관리자 알림 발송 + 해결 감시 모드 전환
+          autoDiagState.phase = 'paused_issue';
+          autoDiagState.issueIds = problemItems.map(it => it.id);
+          autoDiagState.pausedAt = formatKstDateTime();
+          dispatchAutoDiagIssueAlert(problemItems);
+          applyScreen();
+          const recIntervalMs = Math.max(10000, Number(autoDiagConfig.intervalSec || 30) * 1000);
+          scheduleNextAutoDiagTick(recIntervalMs);
+        } else {
+          autoDiagState.phase = 'watching';
+          autoDiagState.issueIds = [];
+          autoDiagState.pausedAt = '';
+          autoDiagState.cycleCount += 1;
+          scheduleNextAutoDiagTick((autoDiagConfig.intervalSec || 30) * 1000);
+        }
+      } finally {
+        autoDiagBusy = false;
+        refreshDiagnosticsLiveUI();
+      }
+    }
+
+    function evaluateAutoDiagAfterManualCheck() {
+      if (!autoDiagConfig || !autoDiagConfig.enabled) return;
+      if (autoDiagState.phase !== 'paused_issue' || (autoDiagState.issueIds || []).length === 0) return;
+      const stillBroken = autoDiagState.issueIds.filter(tid => diagResults[tid] && isDiagStatusProblem(diagResults[tid].status));
+      if (stillBroken.length === 0) {
+        autoDiagState.phase = 'watching';
+        autoDiagState.issueIds = [];
+        autoDiagState.pausedAt = '';
+        dispatchAutoDiagResumedAlert();
+        applyScreen();
+        scheduleNextAutoDiagTick((autoDiagConfig.intervalSec || 30) * 1000);
+      } else {
+        autoDiagState.issueIds = stillBroken;
+        refreshDiagnosticsLiveUI();
+      }
+    }
+
+    function syncAutoDiagRunner(runImmediate = false) {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin || !autoDiagConfig || !autoDiagConfig.enabled) {
+        stopAutoDiagRunner(true);
+        return;
+      }
+      if (autoDiagState.phase === 'off') {
+        autoDiagState.phase = 'watching';
+        scheduleNextAutoDiagTick(runImmediate ? 500 : 3000);
+      } else if (!autoDiagTimerId && !autoDiagBusy) {
+        scheduleNextAutoDiagTick(runImmediate ? 500 : (autoDiagConfig.intervalSec || 30) * 1000);
+      } else if (runImmediate && !autoDiagBusy) {
+        scheduleNextAutoDiagTick(500);
+      }
+    }
+
+    function onAutoDiagVisibilityVisible() {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin || !autoDiagConfig || !autoDiagConfig.enabled) return;
+      if (autoDiagBusy) return;
+      if (autoDiagState.phase === 'paused_issue' || Date.now() >= Number(autoDiagState.nextRunAtTs || 0)) {
+        scheduleNextAutoDiagTick(1000);
+      }
+    }
+
+    async function saveAutoDiagConfig(patch, toastMsg = '') {
+      const next = {
+        ...DEFAULT_AUTO_DIAG_CONFIG,
+        ...(autoDiagConfig || {}),
+        ...patch
+      };
+      next.intervalSec = Math.min(600, Math.max(5, Math.round(Number(next.intervalSec || 30))));
+      try {
+        await db.collection('config').doc('layout').set({ autoDiagConfig: next }, { merge: true });
+        autoDiagConfig = next;
+        if (next.enabled) {
+          if (patch.enabled === true) {
+            autoDiagState.phase = 'watching';
+            autoDiagState.issueIds = [];
+            autoDiagState.pausedAt = '';
+            autoDiagState.cycleCount = 0;
+          }
+          syncAutoDiagRunner(patch.enabled === true || patch.stopOnWarn !== undefined);
+        } else {
+          stopAutoDiagRunner(true);
+        }
+        const u = getCurrentUser();
+        if (u && currentMainTab === 'manage' && currentManageSubTab === 'diagnostics') {
+          renderManageDiagnostics(document.getElementById('manageContent'), u);
+        } else {
+          applyScreen();
+        }
+        if (toastMsg) showToast(toastMsg);
+      } catch (err) {
+        handleDbError(err, '자동 점검 설정 저장');
+      }
+    }
+
+    window.handleToggleAutoDiag = async (checked) => {
+      const sec = Math.max(5, Number(autoDiagConfig.intervalSec || 30));
+      const secLbl = sec < 60 ? `${sec}초` : (sec % 60 === 0 ? `${sec / 60}분` : `${sec}초`);
+      await saveAutoDiagConfig(
+        { enabled: !!checked },
+        checked
+          ? `🤖 실시간 자동 일괄 점검이 켜졌습니다 (${secLbl} 주기 · 이상 감지 시 일시 정지·알림)`
+          : '자동 일괄 점검이 꺼졌습니다.'
+      );
+    };
+
+    window.handleSetAutoDiagInterval = async (sec) => {
+      const val = Math.min(600, Math.max(5, Math.round(Number(sec || 30))));
+      const lbl = val < 60 ? `${val}초` : (val % 60 === 0 ? `${val / 60}분` : `${val}초`);
+      await saveAutoDiagConfig({ intervalSec: val }, `자동 점검 주기가 ${lbl}(으)로 저장되었습니다.`);
+    };
+
+    window.handleSaveCustomAutoDiagSec = async () => {
+      const inp = document.getElementById('cfgAutoDiagSecInput');
+      const raw = Number(inp ? inp.value : 30);
+      if (!Number.isFinite(raw) || raw < 5 || raw > 600) {
+        return showToast('자동 점검 주기는 5초 ~ 600초(10분) 사이 숫자로 입력해 주세요.');
+      }
+      await handleSetAutoDiagInterval(raw);
+    };
+
+    window.handleSetAutoDiagStopOnWarn = async (stopOnWarn) => {
+      await saveAutoDiagConfig(
+        { stopOnWarn: !!stopOnWarn },
+        stopOnWarn
+          ? '중단 기준: ⚠️ 주의 + ❌ 오류 모두 감지로 변경되었습니다.'
+          : '중단 기준: ❌ 오류만 감지(권장)로 변경되었습니다.'
+      );
+    };
+
+    window.recheckPausedAutoDiagNow = async () => {
+      if (autoDiagBusy) return showToast('이미 점검이 진행 중입니다.');
+      showToast('감지된 문제 항목의 해결 여부를 즉시 확인합니다...');
+      if (autoDiagTimerId) { clearTimeout(autoDiagTimerId); autoDiagTimerId = null; }
+      await executeAutoDiagTick();
     };
 
     window.toggleMemberPreviewMode = (enable) => {
       previewAsMemberMode = !!enable;
       previewAsObserverMode = false;
       if (previewAsMemberMode) {
+        stopAutoDiagRunner(false);
         currentMainTab = 'home';
         showToast('일반 회원 시점으로 전환했습니다. 상단 [관리자 복귀]로 언제든 돌아올 수 있습니다.');
       } else {
         currentMainTab = 'manage';
         currentManageSubTab = 'diagnostics';
         showToast('관리자 화면으로 복귀했습니다.');
+        syncAutoDiagRunner(false);
       }
       applyScreen();
     };
@@ -21377,6 +21914,7 @@
       previewAsObserverMode = !!enable;
       previewAsMemberMode = false;
       if (previewAsObserverMode) {
+        stopAutoDiagRunner(false);
         currentMainTab = 'manage';
         if (currentManageSubTab === 'admincode') currentManageSubTab = 'content';
         showToast('참관자(구경) 시점으로 전환했습니다. 읽기 전용 잠금 상태를 확인 후 상단 [관리자 복귀]를 눌러주세요.');
@@ -21384,6 +21922,7 @@
         currentMainTab = 'manage';
         currentManageSubTab = 'diagnostics';
         showToast('관리자 화면으로 복귀했습니다.');
+        syncAutoDiagRunner(false);
       }
       applyScreen();
     };
