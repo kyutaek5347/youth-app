@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=178" />
+  <link rel="manifest" href="./manifest.json?v=179" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=178" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=178" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=179" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=179" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -677,11 +677,71 @@
       display: flex; align-items: flex-start; gap: 8px; font-size: 13px; font-weight: 600;
       margin: 9px 0; line-height: 1.4;
     }
-    .color-palette { display: flex; gap: 8px; flex-wrap: wrap; }
+    .color-palette { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
     .color-dot {
-      width: 28px; height: 28px; border-radius: 50%; border: 2.5px solid transparent; cursor: pointer;
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 2.5px solid rgba(15, 23, 42, 0.12);
+      cursor: pointer; flex-shrink: 0;
+      transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
     }
-    .color-dot.selected { border-color: #0F172A; transform: scale(1.12); }
+    .color-dot.selected {
+      border-color: #0F172A;
+      transform: scale(1.14);
+      box-shadow: 0 0 0 2px #FFFFFF, 0 2px 8px rgba(15, 23, 42, 0.28);
+    }
+    .color-custom-pill {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 30px;
+      padding: 0 10px 0 6px;
+      border-radius: 999px;
+      border: 1.5px dashed #94A3B8;
+      background: #F8FAFC;
+      color: #334155;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+      overflow: hidden;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .color-custom-pill.selected {
+      border-style: solid;
+      border-color: #0F172A;
+      background: #EFF6FF;
+      color: #0F172A;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.14);
+    }
+    .color-custom-swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(15, 23, 42, 0.18);
+      flex-shrink: 0;
+    }
+    .color-custom-input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      border: 0;
+      padding: 0;
+    }
+    .light-banner-text {
+      color: #0F172A !important;
+      border-color: rgba(15, 23, 42, 0.14) !important;
+    }
+    .light-banner-text .hero-desc {
+      color: rgba(15, 23, 42, 0.82) !important;
+    }
+    .light-banner-text .hero-badge {
+      background: rgba(15, 23, 42, 0.12) !important;
+      color: #0F172A !important;
+    }
 
 
     .auth-footer-links {
@@ -3047,7 +3107,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=178" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=179" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3690,11 +3750,6 @@
         <textarea id="uniBodyInput" class="form-textarea" placeholder="일시, 장소, 준비물 등을 적어주세요."></textarea>
       </div>
 
-      <div class="form-group" id="uniSourceGroup">
-        <label class="form-label" for="uniSourceInput">출처 (외부 자료 인용 시 작성 · 선택)</label>
-        <input id="uniSourceInput" class="form-input" maxlength="80" placeholder="예: 교회 주보 / 참고 자료 출처 (선택)" />
-      </div>
-
       <div class="form-group">
         <label class="form-label" for="uniAudienceSelect">공개 대상 (누가 볼 수 있나요?)</label>
         <select id="uniAudienceSelect" class="form-select" onchange="onUnifiedAudienceChange()">
@@ -3784,10 +3839,6 @@
       <div class="form-group">
         <label class="form-label">내용</label>
         <textarea id="noticeBodyInput" class="form-textarea" placeholder="일시, 장소, 준비물 등을 적어주세요."></textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="noticeSourceInput">출처 (외부 자료 인용 시 작성 · 선택)</label>
-        <input id="noticeSourceInput" class="form-input" maxlength="80" placeholder="예: 교회 주보 / 참고 자료 출처 (선택)" />
       </div>
 
       <div class="form-group">
@@ -4604,7 +4655,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 29;
-    const APP_CLIENT_BUILD = 178;
+    const APP_CLIENT_BUILD = 179;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -4823,7 +4874,7 @@
       },
       {
         id: 'blue',
-        label: '블루 링크',
+        label: '로열 블루',
         css: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
         darkText: false,
         svg: '🔗'
@@ -4834,7 +4885,20 @@
         css: 'linear-gradient(135deg, #1E293B 0%, #334155 100%)',
         darkText: false,
         svg: '🌐'
-      }
+      },
+      { id: 'crimson', label: '크림슨 레드', css: 'linear-gradient(135deg, #991B1B 0%, #DC2626 100%)', darkText: false, svg: '🔗' },
+      { id: 'coral', label: '코랄 선셋', css: 'linear-gradient(135deg, #EA580C 0%, #F43F5E 100%)', darkText: false, svg: '🔗' },
+      { id: 'orange', label: '선셋 오렌지', css: 'linear-gradient(135deg, #C2410C 0%, #F97316 100%)', darkText: false, svg: '🔗' },
+      { id: 'gold', label: '골드 앰버', css: 'linear-gradient(135deg, #B45309 0%, #D97706 100%)', darkText: false, svg: '🔗' },
+      { id: 'olive', label: '올리브 그린', css: 'linear-gradient(135deg, #3F6212 0%, #65A30D 100%)', darkText: false, svg: '🔗' },
+      { id: 'emerald', label: '에메랄드', css: 'linear-gradient(135deg, #065F46 0%, #10B981 100%)', darkText: false, svg: '🔗' },
+      { id: 'teal', label: '딥 틸', css: 'linear-gradient(135deg, #115E59 0%, #0D9488 100%)', darkText: false, svg: '🔗' },
+      { id: 'cyan', label: '아쿠아 시안', css: 'linear-gradient(135deg, #155E75 0%, #06B6D4 100%)', darkText: false, svg: '🔗' },
+      { id: 'sky', label: '스카이 블루', css: 'linear-gradient(135deg, #0369A1 0%, #0EA5E9 100%)', darkText: false, svg: '🔗' },
+      { id: 'indigo', label: '딥 인디고', css: 'linear-gradient(135deg, #312E81 0%, #4F46E5 100%)', darkText: false, svg: '🔗' },
+      { id: 'violet', label: '바이올렛', css: 'linear-gradient(135deg, #5B21B6 0%, #7C3AED 100%)', darkText: false, svg: '🔗' },
+      { id: 'purple', label: '퍼플 마젠타', css: 'linear-gradient(135deg, #6B21A8 0%, #C026D3 100%)', darkText: false, svg: '🔗' },
+      { id: 'rose', label: '로즈 핑크', css: 'linear-gradient(135deg, #9D174D 0%, #EC4899 100%)', darkText: false, svg: '🔗' }
     ];
 
     const DEFAULT_QUICK_LINKS = [
@@ -5310,13 +5374,33 @@
       el.value = formatted;
     };
 
-    const ROLE_COLORS = ['#7C3AED', '#1E3A8A', '#059669', '#D97706', '#2563EB', '#475569', '#DB2777', '#DC2626', '#0D9488'];
+    const ROLE_COLORS = [
+      '#7C3AED', '#1E3A8A', '#059669', '#D97706', '#2563EB',
+      '#475569', '#DB2777', '#DC2626', '#0D9488', '#0F172A',
+      '#EA580C', '#CA8A04', '#65A30D', '#16A34A', '#0891B2',
+      '#0284C7', '#4F46E5', '#9333EA', '#C026D3', '#92400E'
+    ];
     const BANNER_THEMES = [
       { id: 'dark', label: '다크 네이비', css: 'linear-gradient(135deg, #09090B 0%, #1F2937 65%, #374151 100%)' },
       { id: 'indigo', label: '딥 인디고', css: 'linear-gradient(135deg, #1E1B4B 0%, #4338CA 100%)' },
       { id: 'gold', label: '골드 앰버', css: 'linear-gradient(135deg, #92400E 0%, #D97706 100%)' },
       { id: 'emerald', label: '에메랄드', css: 'linear-gradient(135deg, #065F46 0%, #059669 100%)' },
-      { id: 'rose', label: '로즈 핑크', css: 'linear-gradient(135deg, #9D174D 0%, #DB2777 100%)' }
+      { id: 'rose', label: '로즈 핑크', css: 'linear-gradient(135deg, #9D174D 0%, #DB2777 100%)' },
+      { id: 'crimson', label: '크림슨 레드', css: 'linear-gradient(135deg, #7F1D1D 0%, #DC2626 100%)' },
+      { id: 'coral', label: '코랄 선셋', css: 'linear-gradient(135deg, #C2410C 0%, #F43F5E 100%)' },
+      { id: 'orange', label: '선셋 오렌지', css: 'linear-gradient(135deg, #9A3412 0%, #EA580C 100%)' },
+      { id: 'bronze', label: '웜 브라운', css: 'linear-gradient(135deg, #451A03 0%, #92400E 100%)' },
+      { id: 'olive', label: '올리브 그린', css: 'linear-gradient(135deg, #365314 0%, #65A30D 100%)' },
+      { id: 'forest', label: '포레스트 그린', css: 'linear-gradient(135deg, #14532D 0%, #16A34A 100%)' },
+      { id: 'teal', label: '딥 틸', css: 'linear-gradient(135deg, #134E4A 0%, #0D9488 100%)' },
+      { id: 'cyan', label: '아쿠아 시안', css: 'linear-gradient(135deg, #164E63 0%, #0891B2 100%)' },
+      { id: 'sky', label: '스카이 블루', css: 'linear-gradient(135deg, #0C4A6E 0%, #0284C7 100%)' },
+      { id: 'royal', label: '로열 블루', css: 'linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%)' },
+      { id: 'navy', label: '미드나잇 블루', css: 'linear-gradient(135deg, #0F172A 0%, #1E40AF 100%)' },
+      { id: 'violet', label: '바이올렛', css: 'linear-gradient(135deg, #4C1D95 0%, #7C3AED 100%)' },
+      { id: 'purple', label: '딥 퍼플', css: 'linear-gradient(135deg, #581C87 0%, #9333EA 100%)' },
+      { id: 'fuchsia', label: '마젠타 핑크', css: 'linear-gradient(135deg, #701A75 0%, #C026D3 100%)' },
+      { id: 'slate', label: '모던 슬레이트', css: 'linear-gradient(135deg, #1E293B 0%, #475569 100%)' }
     ];
 
     const DEFAULT_ROLES = [
@@ -5451,7 +5535,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=178" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=179" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5475,8 +5559,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=178', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=178', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=179', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=179', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -6382,9 +6466,45 @@
       return '';
     }
 
+    function isValidHex6(raw) {
+      return /^#[0-9A-Fa-f]{6}$/.test(String(raw || '').trim());
+    }
+
+    function darkenHexColor(hex, factor = 0.62) {
+      const h = String(hex || '').trim();
+      if (!isValidHex6(h)) return '#1E293B';
+      const r = Math.max(0, Math.min(255, Math.round(parseInt(h.slice(1, 3), 16) * factor)));
+      const g = Math.max(0, Math.min(255, Math.round(parseInt(h.slice(3, 5), 16) * factor)));
+      const b = Math.max(0, Math.min(255, Math.round(parseInt(h.slice(5, 7), 16) * factor)));
+      return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+    }
+
+    function isLightHexColor(hex) {
+      const h = String(hex || '').trim();
+      if (!isValidHex6(h)) return false;
+      const r = parseInt(h.slice(1, 3), 16);
+      const g = parseInt(h.slice(3, 5), 16);
+      const b = parseInt(h.slice(5, 7), 16);
+      const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+      return yiq >= 176;
+    }
+
+    function buildCustomGradientCss(hex) {
+      const safe = sanitizeHexColor(hex, '#1E293B');
+      if (!isValidHex6(safe)) return BANNER_THEMES[0].css;
+      return `linear-gradient(135deg, ${darkenHexColor(safe, 0.68)} 0%, ${safe} 100%)`;
+    }
+
     function getThemeCss(themeId) {
-      const t = BANNER_THEMES.find(x => x.id === themeId);
+      const raw = String(themeId || '').trim();
+      if (isValidHex6(raw)) return buildCustomGradientCss(raw);
+      const t = BANNER_THEMES.find(x => x.id === raw);
       return t ? t.css : BANNER_THEMES[0].css;
+    }
+
+    function isBannerThemeLight(themeId) {
+      const raw = String(themeId || '').trim();
+      return isValidHex6(raw) && isLightHexColor(raw);
     }
 
     function showError(id, msg) {
@@ -9800,7 +9920,7 @@
           if (!pinned) return '';
           return `
             <div class="home-block">
-              <div class="hero-banner" style="background:${getThemeCss(b.theme)};" onclick="openDetail('${escapeJsAttr(pinned.id)}')">
+              <div class="hero-banner ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)};" onclick="openDetail('${escapeJsAttr(pinned.id)}')">
                 <span class="hero-badge">${escapeHtml(b.badge || '📌 중요 공지')} · ${escapeHtml(pinned.category)}${pinned.audience && pinned.audience !== 'all' ? ' · 지정대상' : ''}</span>
                 <h2 class="hero-title">${escapeHtml(pinned.title)}</h2>
                 <p class="hero-desc">${escapeHtml((pinned.body || '').split('\n')[0])}</p>
@@ -9812,7 +9932,7 @@
         if (b.type === 'newcomer_card') {
           return `
             <div class="home-block">
-              <div class="newcomer-card" style="background:${getThemeCss(b.theme)};">
+              <div class="newcomer-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)};">
                 ${getAdminSchedPill(b)}
                 ${b.badge ? `<span class="hero-badge" style="background:rgba(255,255,255,0.22);color:#fff;">${escapeHtml(b.badge)}</span>` : ''}
                 <h3 class="hero-title" style="font-size:17px;">${escapeHtml(b.title)}</h3>
@@ -9825,7 +9945,7 @@
         if (b.type === 'leader_card') {
           return `
             <div class="home-block">
-              <div class="leader-card" style="background:${getThemeCss(b.theme)};">
+              <div class="leader-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)};">
                 ${getAdminSchedPill(b)}
                 ${b.badge ? `<span class="hero-badge">${escapeHtml(b.badge)}</span>` : ''}
                 <h3 class="hero-title" style="font-size:16.5px;">${escapeHtml(b.title)}</h3>
@@ -9838,7 +9958,7 @@
         if (b.type === 'custom_ad') {
           return `
             <div class="home-block">
-              <div class="custom-banner-card" style="background:${getThemeCss(b.theme)};">
+              <div class="custom-banner-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)};">
                 ${getAdminSchedPill(b)}
                 ${b.badge ? `<span class="hero-badge" style="margin-bottom:7px;">${escapeHtml(b.badge)}</span>` : ''}
                 <h3 class="hero-title" style="font-size:16.5px;">${escapeHtml(b.title)}</h3>
@@ -10261,14 +10381,40 @@
       recordAuditLog({ actorType: 'admin', category: '공지·배너', action: '메인 칸 삭제', target: getBlockDisplayLabel(b), detail: b.desc || '' });
     };
 
+    function buildCustomColorPillHtml({ idPrefix, activeVal, isCustomSelected, onInputFn, onChangeFn }) {
+      const hexVal = isValidHex6(activeVal) ? activeVal : '#3B82F6';
+      return `
+        <label class="color-custom-pill ${isCustomSelected ? 'selected' : ''}" title="원하는 색상을 직접 선택">
+          <span id="${idPrefix}CustomSwatch" class="color-custom-swatch" style="background:${isCustomSelected ? hexVal : 'conic-gradient(#EF4444, #F59E0B, #10B981, #3B82F6, #8B5CF6, #EC4899, #EF4444)'};"></span>
+          <span>🎨 직접 선택</span>
+          <input type="color" class="color-custom-input" value="${hexVal}"
+                 oninput="${onInputFn}(this.value)"
+                 onchange="${onChangeFn}(this.value)" />
+        </label>
+      `;
+    }
+
     function renderBlockThemePalette() {
+      const isCustom = isValidHex6(selectedBlockTheme);
       document.getElementById('blockColorPalette').innerHTML = BANNER_THEMES.map(t => `
         <div class="color-dot ${selectedBlockTheme === t.id ? 'selected' : ''}"
              style="background:${t.css};" title="${t.label}"
              onclick="selectBlockTheme('${t.id}')"></div>
-      `).join('');
+      `).join('') + buildCustomColorPillHtml({
+        idPrefix: 'block',
+        activeVal: selectedBlockTheme,
+        isCustomSelected: isCustom,
+        onInputFn: 'previewBlockCustomTheme',
+        onChangeFn: 'selectBlockTheme'
+      });
     }
-    window.selectBlockTheme = (id) => { selectedBlockTheme = id; renderBlockThemePalette(); };
+    window.previewBlockCustomTheme = (hex) => {
+      if (!isValidHex6(hex)) return;
+      selectedBlockTheme = hex.toUpperCase();
+      const sw = document.getElementById('blockCustomSwatch');
+      if (sw) sw.style.background = selectedBlockTheme;
+    };
+    window.selectBlockTheme = (id) => { selectedBlockTheme = isValidHex6(id) ? id.toUpperCase() : id; renderBlockThemePalette(); };
 
     function renderRoleChecklist(prefix, selectedIds) {
       const el = document.getElementById(`${prefix}RoleChecklist`);
@@ -10386,13 +10532,26 @@
     function renderUnifiedThemePalette() {
       const el = document.getElementById('uniColorPalette');
       if (!el) return;
+      const isCustom = isValidHex6(selectedUnifiedTheme);
       el.innerHTML = BANNER_THEMES.map(t => `
         <div class="color-dot ${selectedUnifiedTheme === t.id ? 'selected' : ''}"
              style="background:${t.css};" title="${t.label}"
              onclick="selectUnifiedTheme('${t.id}')"></div>
-      `).join('');
+      `).join('') + buildCustomColorPillHtml({
+        idPrefix: 'uni',
+        activeVal: selectedUnifiedTheme,
+        isCustomSelected: isCustom,
+        onInputFn: 'previewUnifiedCustomTheme',
+        onChangeFn: 'selectUnifiedTheme'
+      });
     }
-    window.selectUnifiedTheme = (id) => { selectedUnifiedTheme = id; renderUnifiedThemePalette(); };
+    window.previewUnifiedCustomTheme = (hex) => {
+      if (!isValidHex6(hex)) return;
+      selectedUnifiedTheme = hex.toUpperCase();
+      const sw = document.getElementById('uniCustomSwatch');
+      if (sw) sw.style.background = selectedUnifiedTheme;
+    };
+    window.selectUnifiedTheme = (id) => { selectedUnifiedTheme = isValidHex6(id) ? id.toUpperCase() : id; renderUnifiedThemePalette(); };
 
     function populateUnifiedBlockTypeOptions(mode, keepVal = '') {
       const sel = document.getElementById('uniBlockTypeSelect');
@@ -10550,7 +10709,6 @@
       const hasNotice = nextMode === 'notice' || nextMode === 'both';
       const hasBanner = nextMode === 'banner' || nextMode === 'both';
       document.getElementById('uniNoticeFields').classList.toggle('hidden', !hasNotice);
-      document.getElementById('uniSourceGroup').classList.toggle('hidden', !hasNotice);
       document.getElementById('uniBannerTypeGroup').classList.toggle('hidden', !hasBanner);
 
       const prevType = (document.getElementById('uniBlockTypeSelect') || {}).value || 'custom_ad';
@@ -10597,7 +10755,6 @@
 
       document.getElementById('uniTitleInput').value = '';
       document.getElementById('uniBodyInput').value = '';
-      document.getElementById('uniSourceInput').value = '';
       document.getElementById('uniAudienceSelect').value = 'all';
       renderRoleChecklist('uni', []);
       onUnifiedAudienceChange();
@@ -10632,7 +10789,7 @@
       const badge = (document.getElementById('uniBadgeInput').value || '').trim();
       const title = (document.getElementById('uniTitleInput').value || '').trim();
       const body = (document.getElementById('uniBodyInput').value || '').trim();
-      const source = ((document.getElementById('uniSourceInput') || {}).value || '').trim();
+      const source = '';
       const audience = document.getElementById('uniAudienceSelect').value || 'all';
       const targetRoles = audience === 'roles' ? getSelectedRoleIds('uni') : [];
       const publishMode = document.getElementById('uniPublishModeSelect').value || 'now';
@@ -11179,8 +11336,6 @@
       onNoticeCategorySelectChange();
       document.getElementById('noticeTitleInput').value = '';
       document.getElementById('noticeBodyInput').value = '';
-      const nsInp = document.getElementById('noticeSourceInput');
-      if (nsInp) nsInp.value = '';
       document.getElementById('noticeAudienceSelect').value = 'all';
       renderRoleChecklist('notice', []);
       onNoticeAudienceChange();
@@ -11210,8 +11365,6 @@
       onNoticeCategorySelectChange();
       document.getElementById('noticeTitleInput').value = n.title;
       document.getElementById('noticeBodyInput').value = n.body;
-      const nsInp = document.getElementById('noticeSourceInput');
-      if (nsInp) nsInp.value = n.source || '';
       const audVal = n.audience || 'all';
       const initRoles = Array.isArray(n.targetRoles) ? n.targetRoles : [];
       document.getElementById('noticeAudienceSelect').value = audVal;
@@ -11249,7 +11402,6 @@
       if (!category) return showToast('구분을 선택하거나 직접 입력해 주세요.');
       const title = document.getElementById('noticeTitleInput').value.trim();
       const body = document.getElementById('noticeBodyInput').value.trim();
-      const source = ((document.getElementById('noticeSourceInput') || {}).value || '').trim();
       const audience = document.getElementById('noticeAudienceSelect').value || 'all';
       const targetRoles = audience === 'roles' ? getSelectedRoleIds('notice') : [];
       const publishMode = document.getElementById('noticePublishModeSelect').value || 'now';
@@ -11257,7 +11409,7 @@
       const notify = document.getElementById('noticeNotifyInput').checked;
 
       if (!title || !body) return showToast('제목과 내용을 모두 입력해 주세요.');
-      if (!enforceInputSecurity(`${category}\n${title}\n${body}\n${source}`, `공지·광고(${title})`, true)) return;
+      if (!enforceInputSecurity(`${category}\n${title}\n${body}`, `공지·광고(${title})`, true)) return;
       if (audience === 'roles' && targetRoles.length === 0) {
         return showToast('이 공지를 볼 수 있는 역할을 1개 이상 선택해 주세요.');
       }
@@ -11302,7 +11454,6 @@
           category,
           title,
           body,
-          source,
           pinned,
           audience,
           targetRoles,
@@ -12295,12 +12446,26 @@
     };
 
     function renderRoleColorPalette() {
+      const curUpper = String(selectedRoleColor || '').toUpperCase();
+      const isCustom = isValidHex6(curUpper) && !ROLE_COLORS.includes(curUpper);
       document.getElementById('roleColorPalette').innerHTML = ROLE_COLORS.map(c => `
-        <div class="color-dot ${selectedRoleColor === c ? 'selected' : ''}"
-             style="background:${c};" onclick="selectRoleColor('${c}')"></div>
-      `).join('');
+        <div class="color-dot ${curUpper === c ? 'selected' : ''}"
+             style="background:${c};" title="${c}" onclick="selectRoleColor('${c}')"></div>
+      `).join('') + buildCustomColorPillHtml({
+        idPrefix: 'role',
+        activeVal: curUpper,
+        isCustomSelected: isCustom,
+        onInputFn: 'previewRoleCustomColor',
+        onChangeFn: 'selectRoleColor'
+      });
     }
-    window.selectRoleColor = (c) => { selectedRoleColor = c; renderRoleColorPalette(); };
+    window.previewRoleCustomColor = (hex) => {
+      if (!isValidHex6(hex)) return;
+      selectedRoleColor = hex.toUpperCase();
+      const sw = document.getElementById('roleCustomSwatch');
+      if (sw) sw.style.background = selectedRoleColor;
+    };
+    window.selectRoleColor = (c) => { selectedRoleColor = isValidHex6(c) ? c.toUpperCase() : c; renderRoleColorPalette(); };
 
     window.openAddRoleModal = () => {
       document.getElementById('roleModalTitle').textContent = '새 역할 만들기';
@@ -13300,7 +13465,17 @@
 
     // ==================== 17. 더보기(☰) 사이트 바로가기 바텀시트 및 관리자 편집 ====================
     function getQuickLinkTheme(themeId) {
-      return QUICK_LINK_THEMES.find(t => t.id === themeId) || QUICK_LINK_THEMES[5];
+      const raw = String(themeId || '').trim();
+      if (isValidHex6(raw)) {
+        return {
+          id: raw.toUpperCase(),
+          label: '직접 선택 색상',
+          css: buildCustomGradientCss(raw),
+          darkText: isLightHexColor(raw),
+          svg: '🔗'
+        };
+      }
+      return QUICK_LINK_THEMES.find(t => t.id === raw) || QUICK_LINK_THEMES[5];
     }
 
     function normalizeExternalUrl(raw) {
@@ -13445,17 +13620,31 @@
     };
 
     function renderQuickLinkThemePalette() {
+      const isCustom = isValidHex6(selectedQuickLinkTheme);
       document.getElementById('quickLinkThemePalette').innerHTML = QUICK_LINK_THEMES.map(t => `
         <div class="color-dot ${selectedQuickLinkTheme === t.id ? 'selected' : ''}"
              style="background:${t.css}; display:inline-flex; align-items:center; justify-content:center; color:${t.darkText ? '#191919' : '#fff'}; font-size:13px;"
              title="${escapeHtml(t.label)}"
              onclick="selectQuickLinkTheme('${t.id}')">
         </div>
-      `).join('');
+      `).join('') + buildCustomColorPillHtml({
+        idPrefix: 'ql',
+        activeVal: selectedQuickLinkTheme,
+        isCustomSelected: isCustom,
+        onInputFn: 'previewQuickLinkCustomTheme',
+        onChangeFn: 'selectQuickLinkTheme'
+      });
     }
 
+    window.previewQuickLinkCustomTheme = (hex) => {
+      if (!isValidHex6(hex)) return;
+      selectedQuickLinkTheme = hex.toUpperCase();
+      const sw = document.getElementById('qlCustomSwatch');
+      if (sw) sw.style.background = selectedQuickLinkTheme;
+    };
+
     window.selectQuickLinkTheme = (id) => {
-      selectedQuickLinkTheme = id;
+      selectedQuickLinkTheme = isValidHex6(id) ? id.toUpperCase() : id;
       renderQuickLinkThemePalette();
     };
 
