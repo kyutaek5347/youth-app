@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=177" />
+  <link rel="manifest" href="./manifest.json?v=178" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=177" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=177" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=178" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=178" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3047,7 +3047,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=177" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=178" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3629,6 +3629,132 @@
       <div style="display:flex;">
         <button class="btn-outline" style="width:100%; padding:11px;" data-close="detailModal">닫기</button>
       </div>
+    </div>
+  </div>
+
+  <!-- 관리자: 배너·칸 + 공지·광고 통합 등록 모달 -->
+  <div id="unifiedPostModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="unifiedPostModalTitle" class="modal-title">✨ 새 배너 · 공지 · 광고 등록</h3>
+        <button class="close-btn" data-close="unifiedPostModal">✕</button>
+      </div>
+
+      <div class="form-group" style="margin-bottom:10px;">
+        <label class="form-label">등록 방식 선택</label>
+        <div id="uniModeGrid" class="qr-mode-grid" style="margin-top:0; margin-bottom:6px;">
+          <button id="uniModeNoticeBtn" class="qr-mode-btn active" type="button" onclick="setUnifiedPostMode('notice')">📝 공지·광고<small>목록에만 등록</small></button>
+          <button id="uniModeBannerBtn" class="qr-mode-btn" type="button" onclick="setUnifiedPostMode('banner')">🎨 배너·칸<small>홈 배너만 추가</small></button>
+          <button id="uniModeBothBtn" class="qr-mode-btn" type="button" onclick="setUnifiedPostMode('both')">✨ 둘 다 등록<small>배너 + 공지 동시</small></button>
+        </div>
+        <div id="uniModeHint" class="info-box" style="margin-top:0; padding:9px 11px; font-size:11.5px;"></div>
+      </div>
+
+      <div id="uniNoticeFields">
+        <div class="form-group">
+          <label class="form-label" for="uniCategorySelect">공지·광고 구분 (선택 또는 직접 입력)</label>
+          <select id="uniCategorySelect" class="form-select" onchange="onUnifiedCategoryChange()">
+            <option value="공지">공지</option>
+            <option value="광고">광고</option>
+            <option value="소식">소식</option>
+            <option value="행사">행사</option>
+            <option value="__custom__">✏️ 직접 입력...</option>
+          </select>
+          <input id="uniCategoryCustomInput" class="form-input hidden" style="margin-top:6px;" maxlength="12" placeholder="구분 직접 입력 (예: 수련회)" oninput="onUnifiedCategoryChange()" />
+        </div>
+      </div>
+
+      <div id="uniBannerTypeGroup" class="form-group hidden">
+        <label class="form-label" for="uniBlockTypeSelect">배너·칸 유형</label>
+        <select id="uniBlockTypeSelect" class="form-select" onchange="onUnifiedBlockTypeChange()"></select>
+      </div>
+
+      <div id="uniBannerStyleFields" class="hidden">
+        <div class="form-group" id="uniBadgeGroup">
+          <label class="form-label" for="uniBadgeInput">배너 배지 문구 (상단 작은 글씨)</label>
+          <input id="uniBadgeInput" class="form-input" maxlength="24" placeholder="예: 📣 청년부 광고 / 📌 이번 주 안내" />
+        </div>
+        <div class="form-group" id="uniColorGroup">
+          <label class="form-label">배너 배경 색상 테마</label>
+          <div id="uniColorPalette" class="color-palette"></div>
+        </div>
+      </div>
+
+      <div class="form-group" id="uniTitleGroup">
+        <label class="form-label" id="uniTitleLabel" for="uniTitleInput">제목</label>
+        <input id="uniTitleInput" class="form-input" placeholder="제목을 입력하세요" />
+      </div>
+
+      <div class="form-group" id="uniBodyGroup">
+        <label class="form-label" id="uniBodyLabel" for="uniBodyInput">내용</label>
+        <textarea id="uniBodyInput" class="form-textarea" placeholder="일시, 장소, 준비물 등을 적어주세요."></textarea>
+      </div>
+
+      <div class="form-group" id="uniSourceGroup">
+        <label class="form-label" for="uniSourceInput">출처 (외부 자료 인용 시 작성 · 선택)</label>
+        <input id="uniSourceInput" class="form-input" maxlength="80" placeholder="예: 교회 주보 / 참고 자료 출처 (선택)" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="uniAudienceSelect">공개 대상 (누가 볼 수 있나요?)</label>
+        <select id="uniAudienceSelect" class="form-select" onchange="onUnifiedAudienceChange()">
+          <option value="all">전체 승인 회원 (기본)</option>
+          <option value="roles">🎯 선택한 역할만 보기</option>
+          <option value="admin">🔐 최고 관리자만 보기</option>
+        </select>
+        <div id="uniRoleTargetBox" class="role-target-box hidden">
+          <div class="role-target-actions">
+            <button class="btn-sm primary" type="button" onclick="applyRolePickerPreset('uni', 'all')">전체 선택</button>
+            <button class="btn-sm" type="button" onclick="applyRolePickerPreset('uni', 'none')">선택 해제</button>
+            <span style="font-size:11px; color:#64748B; align-self:center;">보여줄 역할을 직접 선택 (중복 가능)</span>
+          </div>
+          <div id="uniRoleChecklist" class="role-target-grid"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="uniPublishModeSelect">게시 방식</label>
+        <select id="uniPublishModeSelect" class="form-select" onchange="onUnifiedPublishModeChange()">
+          <option value="now">🚀 바로 게시 (즉시 공개)</option>
+          <option value="draft">📝 임시저장 (숨김 · 관리자만 확인)</option>
+          <option value="scheduled">⏰ 예약 게시 (지정한 한국시간에 자동 공개)</option>
+        </select>
+        <div id="uniScheduleBox" class="schedule-time-box hidden">
+          <div class="form-grid-2">
+            <div>
+              <label class="form-label" for="uniScheduleDateInput" style="font-size:11.5px; margin-bottom:4px;">예약 날짜 (KST)</label>
+              <div class="combo-input-row">
+                <input id="uniScheduleDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="2026.11.29" oninput="formatDateTyping(this)" />
+                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="달력에서 선택" onclick="openNativePicker('uniScheduleDatePicker', 'uniScheduleDateInput', 'date')">📅</button>
+                <input id="uniScheduleDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('uniScheduleDatePicker', 'uniScheduleDateInput', 'date')" />
+              </div>
+            </div>
+            <div>
+              <label class="form-label" for="uniScheduleTimeInput" style="font-size:11.5px; margin-bottom:4px;">예약 시각 (KST)</label>
+              <div class="combo-input-row">
+                <input id="uniScheduleTimeInput" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="09:00" oninput="formatTimeTyping(this)" />
+                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="시계에서 선택" onclick="openNativePicker('uniScheduleTimePicker', 'uniScheduleTimeInput', 'time')">🕒</button>
+                <input id="uniScheduleTimePicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('uniScheduleTimePicker', 'uniScheduleTimeInput', 'time')" />
+              </div>
+            </div>
+          </div>
+          <div style="font-size:11px; color:#3730A3; margin-top:7px; line-height:1.45;">
+            예약된 항목은 보안상 관리자 전용 서버에 격리 보관되며, 지정 시각 이후 관리자가 앱에 접속 중이거나 열 때 즉시 자동 공개됩니다.
+          </div>
+        </div>
+      </div>
+
+      <label id="uniPinBannerRow" class="checkbox-row" style="margin-bottom:8px;">
+        <input type="checkbox" id="uniPinBannerInput" checked />
+        <span id="uniPinBannerLabel">📌 상단 고정 공지 배너에도 함께 띄우기</span>
+      </label>
+
+      <label id="uniNotifyRow" class="checkbox-row" style="margin-bottom:16px;">
+        <input type="checkbox" id="uniNotifyInput" checked />
+        <span>바로 게시 시 대상 회원들에게 알림 띄우기</span>
+      </label>
+
+      <button id="saveUnifiedPostBtn" class="btn-full btn-dark" type="button" onclick="handleSaveUnifiedPost()">📝 공지·광고 저장하기</button>
     </div>
   </div>
 
@@ -4478,7 +4604,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 29;
-    const APP_CLIENT_BUILD = 177;
+    const APP_CLIENT_BUILD = 178;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -5325,7 +5451,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=177" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=178" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5349,8 +5475,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=177', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=177', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=178', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=178', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5821,6 +5947,8 @@
     let currentDetailId = null;
     let selectedRoleColor = ROLE_COLORS[0];
     let selectedBlockTheme = 'dark';
+    let unifiedPostMode = 'notice';
+    let selectedUnifiedTheme = 'gold';
 
     // 회칙 화면 필터 상태
     let bylawSearchQuery = '';
@@ -9206,7 +9334,7 @@
           targetTab: 'content',
           targetLabel: `${getTabIcon('manageContent')} ${getTabLabel('manageContent')} 열기`,
           steps: [
-            `<b>${hLbl} 배너·공지·광고 통합 관리:</b> 하나의 통합 목록에서 <b>[+ 배너·칸 추가]</b>와 <b>[+ 공지·광고 등록]</b>, <b>전체/배너·칸/공지·광고/임시·예약</b> 필터, <b>▲/▼</b> 순서 변경을 한눈에 관리할 수 있습니다.`,
+            `<b>${hLbl} 배너·공지·광고 통합 등록·관리:</b> <b>[+ 새 배너 · 공지 · 광고 등록]</b> 버튼 하나로 <b>공지·광고만 / 배너·칸만 / 둘 다 동시 등록</b>을 선택해 올릴 수 있으며, 통합 목록에서 필터와 <b>▲/▼</b> 순서를 한눈에 관리합니다.`,
             `<b>공지 상단 배너 고정:</b> 공지 작성 시 <b>[📌 상단 고정 공지 배너에도 함께 띄우기]</b>를 체크하거나 목록의 <b>[📌 배너 고정]</b>을 누르면 ${hLbl} 최상단 배너에 자동 연동됩니다.`,
             '<b>특정 역할에게만 보여주기 (서버 보안 분리):</b> 공개 대상에서 <b>[🎯 선택한 역할만 보기]</b>를 고르고 원하는 역할(예: 목사·부장·회장·팀장·셀장 등 중복 선택 가능)을 체크하면 해당 역할 회원에게만 표시됩니다.',
             '<b>임시저장 & 예약 게시:</b> <b>[📝 임시저장]</b>은 관리자만 볼 수 있고, <b>[⏰ 예약 게시]</b>는 지정한 한국시간(KST)이 지나면 자동으로 공개됩니다.',
@@ -9726,7 +9854,7 @@
             <div class="home-block">
               <div class="section-head">
                 <h2 class="section-title">${escapeHtml(b.title || '📢 공지 · 광고 · 소식')}</h2>
-                ${perms.canManageNotices ? `<button class="btn-sm primary" onclick="openNewNoticeModal()">+ 글쓰기</button>` : ''}
+                ${perms.canManageNotices ? `<button class="btn-sm primary" onclick="openUnifiedContentModal('notice')">+ 글쓰기</button>` : ''}
               </div>
               <div class="filter-row">
                 ${Array.from(new Set(['전체', '공지', '광고', '소식', '행사', ...visibleNotices.map(n => n.category).filter(Boolean)])).map(cat => `
@@ -9937,7 +10065,7 @@
              <div>배치된 ${escapeHtml(getTabLabel('home'))} 배너·칸이 없습니다.</div>
              <div style="margin-top:8px; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
                <button class="btn-sm primary" type="button" onclick="restoreDefaultLayoutBlocks()">✨ 기본 ${escapeHtml(getTabLabel('home'))} 칸 자동 채우기</button>
-               <button class="btn-sm" type="button" onclick="openAddBlockModal()">+ 직접 칸 추가</button>
+               <button class="btn-sm" type="button" onclick="openUnifiedContentModal('banner')">+ 직접 칸 추가</button>
              </div>
            </div>`
         : '';
@@ -9989,9 +10117,8 @@
             marginTop: '12px'
           })}
           <div data-acc-body="content_unified" class="${isManageSectionOpen('content_unified', true) ? '' : 'hidden'}">
-            <div style="display:flex; gap:7px; margin-bottom:10px; flex-wrap:wrap;">
-              ${canLayout ? `<button class="btn-admin" type="button" style="flex:1; padding:9px 10px; font-size:12.5px;" onclick="openAddBlockModal()">+ 배너·칸 추가</button>` : ''}
-              ${canNotices ? `<button class="btn-admin" type="button" style="flex:1; padding:9px 10px; font-size:12.5px; background:#2563EB;" onclick="openNewNoticeModal()">+ 공지·광고 등록</button>` : ''}
+            <div style="margin-bottom:10px;">
+              <button class="btn-full btn-dark" type="button" style="padding:11px 12px; font-size:13.5px; border-radius:12px;" onclick="openUnifiedContentModal()">+ 새 배너 · 공지 · 광고 등록</button>
             </div>
 
             <div class="filter-row" style="margin-bottom:10px;">
@@ -10246,6 +10373,464 @@
           if (!dEl.value.trim()) dEl.value = def.dot;
           if (!tEl.value.trim()) tEl.value = def.hhmm;
         }
+      }
+    };
+
+    const UNI_AUTO_BADGES = {
+      '공지': '📢 청년부 공지',
+      '광고': '📣 청년부 광고',
+      '소식': '✨ 청년부 소식',
+      '행사': '🎉 청년부 행사'
+    };
+
+    function renderUnifiedThemePalette() {
+      const el = document.getElementById('uniColorPalette');
+      if (!el) return;
+      el.innerHTML = BANNER_THEMES.map(t => `
+        <div class="color-dot ${selectedUnifiedTheme === t.id ? 'selected' : ''}"
+             style="background:${t.css};" title="${t.label}"
+             onclick="selectUnifiedTheme('${t.id}')"></div>
+      `).join('');
+    }
+    window.selectUnifiedTheme = (id) => { selectedUnifiedTheme = id; renderUnifiedThemePalette(); };
+
+    function populateUnifiedBlockTypeOptions(mode, keepVal = '') {
+      const sel = document.getElementById('uniBlockTypeSelect');
+      if (!sel) return;
+      const baseOpts = [
+        { val: 'custom_ad', label: '광고 · 홍보 배너 칸' },
+        { val: 'newcomer_card', label: '새신자 소식 · 환영 안내 칸' },
+        { val: 'leader_card', label: '🎯 특정 역할 전용 소식 칸' }
+      ];
+      const extraOpts = mode === 'banner'
+        ? [
+            { val: 'hero_notice', label: '상단 메인 고정 공지 배너' },
+            { val: 'notice_list', label: '공지 · 광고 · 소식 목록' }
+          ]
+        : [];
+      const allOpts = [...baseOpts, ...extraOpts];
+      sel.innerHTML = allOpts.map(o => `<option value="${o.val}">${o.label}</option>`).join('');
+      if (keepVal && allOpts.some(o => o.val === keepVal)) {
+        sel.value = keepVal;
+      } else {
+        sel.value = 'custom_ad';
+      }
+    }
+
+    window.onUnifiedCategoryChange = () => {
+      const sel = document.getElementById('uniCategorySelect');
+      const customEl = document.getElementById('uniCategoryCustomInput');
+      if (!sel || !customEl) return;
+      const isCustom = sel.value === '__custom__';
+      customEl.classList.toggle('hidden', !isCustom);
+      if (isCustom && document.activeElement === sel) {
+        setTimeout(() => customEl.focus(), 40);
+      }
+      const badgeEl = document.getElementById('uniBadgeInput');
+      if (badgeEl) {
+        const curBadge = badgeEl.value.trim();
+        const isAuto = !curBadge || Object.values(UNI_AUTO_BADGES).includes(curBadge);
+        if (isAuto) {
+          const catVal = isCustom ? customEl.value.trim() : sel.value;
+          badgeEl.value = UNI_AUTO_BADGES[catVal] || (catVal ? `📣 ${catVal}` : '📣 청년부 광고');
+        }
+      }
+    };
+
+    window.onUnifiedBlockTypeChange = (isInitialLoad = false) => {
+      const mode = unifiedPostMode;
+      const type = (document.getElementById('uniBlockTypeSelect') || {}).value || 'custom_ad';
+      const isBannerIncluded = mode === 'banner' || mode === 'both';
+      const isNoticeListOnly = mode === 'banner' && type === 'notice_list';
+      const isHeroOnly = mode === 'banner' && type === 'hero_notice';
+
+      document.getElementById('uniBannerStyleFields').classList.toggle('hidden', !isBannerIncluded || isNoticeListOnly);
+      document.getElementById('uniBodyGroup').classList.toggle('hidden', isNoticeListOnly);
+
+      const titleLbl = document.getElementById('uniTitleLabel');
+      const titleInp = document.getElementById('uniTitleInput');
+      const bodyLbl = document.getElementById('uniBodyLabel');
+      if (titleLbl && titleInp) {
+        if (isHeroOnly) {
+          titleLbl.textContent = '배너 제목 (비워두면 고정 공지 제목 자동 연동)';
+          titleInp.placeholder = '고정 공지 자동 연동';
+        } else if (isNoticeListOnly) {
+          titleLbl.textContent = '목록 영역 제목';
+          titleInp.placeholder = '📢 공지 · 광고 · 소식';
+        } else {
+          titleLbl.textContent = '제목';
+          titleInp.placeholder = mode === 'banner' ? '배너에 표시될 제목을 입력하세요' : '제목을 입력하세요';
+        }
+      }
+      if (bodyLbl) {
+        bodyLbl.textContent = mode === 'both' ? '내용 (배너 설명 & 공지 본문으로 함께 등록)' : '내용';
+      }
+
+      if (!isInitialLoad && isBannerIncluded) {
+        if (type === 'leader_card') {
+          document.getElementById('uniAudienceSelect').value = 'roles';
+          onUnifiedAudienceChange();
+          const badgeEl = document.getElementById('uniBadgeInput');
+          if (badgeEl && (!badgeEl.value.trim() || Object.values(UNI_AUTO_BADGES).includes(badgeEl.value.trim()))) {
+            badgeEl.value = '🎯 전용 안내';
+          }
+          selectedUnifiedTheme = 'dark';
+          renderUnifiedThemePalette();
+        } else if (type === 'newcomer_card') {
+          const badgeEl = document.getElementById('uniBadgeInput');
+          if (badgeEl && (!badgeEl.value.trim() || Object.values(UNI_AUTO_BADGES).includes(badgeEl.value.trim()) || badgeEl.value.trim() === '🎯 전용 안내')) {
+            badgeEl.value = '💐 새신자 소식';
+          }
+          selectedUnifiedTheme = 'rose';
+          renderUnifiedThemePalette();
+        }
+      }
+    };
+
+    window.onUnifiedAudienceChange = () => {
+      const aud = document.getElementById('uniAudienceSelect').value;
+      const box = document.getElementById('uniRoleTargetBox');
+      if (box) box.classList.toggle('hidden', aud !== 'roles');
+    };
+
+    window.onUnifiedPublishModeChange = () => {
+      const pubMode = document.getElementById('uniPublishModeSelect').value;
+      document.getElementById('uniScheduleBox').classList.toggle('hidden', pubMode !== 'scheduled');
+      document.getElementById('uniNotifyRow').classList.toggle('hidden', pubMode !== 'now');
+      const showPin = (unifiedPostMode === 'notice' || unifiedPostMode === 'both') && pubMode !== 'draft';
+      document.getElementById('uniPinBannerRow').classList.toggle('hidden', !showPin);
+      if (pubMode === 'scheduled') {
+        const dEl = document.getElementById('uniScheduleDateInput');
+        const tEl = document.getElementById('uniScheduleTimeInput');
+        if (!dEl.value.trim() || !tEl.value.trim()) {
+          const def = getDefaultScheduleKst();
+          if (!dEl.value.trim()) dEl.value = def.dot;
+          if (!tEl.value.trim()) tEl.value = def.hhmm;
+        }
+      }
+    };
+
+    window.setUnifiedPostMode = (mode, isInit = false) => {
+      const user = getCurrentUser();
+      const canLayout = hasUserPerm(user, 'canEditLayout');
+      const canNotices = hasUserPerm(user, 'canManageNotices');
+      let nextMode = ['notice', 'banner', 'both'].includes(mode) ? mode : 'notice';
+      if (nextMode === 'banner' && !canLayout) nextMode = 'notice';
+      if (nextMode === 'notice' && !canNotices) nextMode = 'banner';
+      if (nextMode === 'both' && (!canLayout || !canNotices)) nextMode = canNotices ? 'notice' : 'banner';
+      unifiedPostMode = nextMode;
+
+      const btnNotice = document.getElementById('uniModeNoticeBtn');
+      const btnBanner = document.getElementById('uniModeBannerBtn');
+      const btnBoth = document.getElementById('uniModeBothBtn');
+      if (btnNotice) {
+        btnNotice.classList.toggle('active', nextMode === 'notice');
+        btnNotice.classList.toggle('hidden', !canNotices);
+      }
+      if (btnBanner) {
+        btnBanner.classList.toggle('active', nextMode === 'banner');
+        btnBanner.classList.toggle('hidden', !canLayout);
+      }
+      if (btnBoth) {
+        btnBoth.classList.toggle('active', nextMode === 'both');
+        btnBoth.classList.toggle('hidden', !(canLayout && canNotices));
+      }
+
+      const hintEl = document.getElementById('uniModeHint');
+      if (hintEl) {
+        if (nextMode === 'notice') {
+          hintEl.innerHTML = '📝 <b>공지·광고 목록</b>에 새 글을 등록합니다. (아래 체크 시 상단 고정 공지 배너에도 함께 연동됩니다)';
+        } else if (nextMode === 'banner') {
+          hintEl.innerHTML = '🎨 <b>홈 화면 배너·칸</b>을 새로 추가합니다. (공지·광고 목록에는 올라가지 않습니다)';
+        } else {
+          hintEl.innerHTML = '✨ 한 번 작성으로 <b>홈 화면 배너 카드 추가</b>와 <b>공지·광고 목록 등록</b>을 동시에 처리합니다.';
+        }
+      }
+
+      const hasNotice = nextMode === 'notice' || nextMode === 'both';
+      const hasBanner = nextMode === 'banner' || nextMode === 'both';
+      document.getElementById('uniNoticeFields').classList.toggle('hidden', !hasNotice);
+      document.getElementById('uniSourceGroup').classList.toggle('hidden', !hasNotice);
+      document.getElementById('uniBannerTypeGroup').classList.toggle('hidden', !hasBanner);
+
+      const prevType = (document.getElementById('uniBlockTypeSelect') || {}).value || 'custom_ad';
+      if (hasBanner) {
+        populateUnifiedBlockTypeOptions(nextMode, prevType);
+      }
+
+      const pinInp = document.getElementById('uniPinBannerInput');
+      const pinLbl = document.getElementById('uniPinBannerLabel');
+      if (pinInp && pinLbl) {
+        if (nextMode === 'both') {
+          pinInp.checked = false;
+          pinLbl.textContent = '📌 기존 상단 고정 공지 배너에도 중복 고정하기 (선택 · 별도 배너가 이미 생성됨)';
+        } else if (nextMode === 'notice') {
+          if (!isInit) pinInp.checked = true;
+          pinLbl.textContent = '📌 상단 고정 공지 배너에도 함께 띄우기';
+        }
+      }
+
+      const saveBtn = document.getElementById('saveUnifiedPostBtn');
+      if (saveBtn) {
+        saveBtn.textContent = nextMode === 'both'
+          ? '✨ 배너 + 공지·광고 동시 저장하기'
+          : (nextMode === 'banner' ? '🎨 배너·칸 저장하기' : '📝 공지·광고 저장하기');
+      }
+
+      onUnifiedBlockTypeChange(true);
+      onUnifiedPublishModeChange();
+    };
+
+    window.openUnifiedContentModal = (initialMode = '') => {
+      const user = getCurrentUser();
+      if (!user) return;
+      let startMode = initialMode;
+      if (!startMode) {
+        if (manageContentFilter === 'blocks') startMode = 'banner';
+        else startMode = 'notice';
+      }
+
+      document.getElementById('uniCategorySelect').value = '공지';
+      document.getElementById('uniCategoryCustomInput').value = '';
+      document.getElementById('uniBadgeInput').value = UNI_AUTO_BADGES['공지'];
+      onUnifiedCategoryChange();
+
+      document.getElementById('uniTitleInput').value = '';
+      document.getElementById('uniBodyInput').value = '';
+      document.getElementById('uniSourceInput').value = '';
+      document.getElementById('uniAudienceSelect').value = 'all';
+      renderRoleChecklist('uni', []);
+      onUnifiedAudienceChange();
+
+      const def = getDefaultScheduleKst();
+      document.getElementById('uniPublishModeSelect').value = 'now';
+      document.getElementById('uniScheduleDateInput').value = def.dot;
+      document.getElementById('uniScheduleTimeInput').value = def.hhmm;
+      document.getElementById('uniPinBannerInput').checked = (startMode === 'notice');
+      document.getElementById('uniNotifyInput').checked = true;
+
+      selectedUnifiedTheme = 'gold';
+      renderUnifiedThemePalette();
+      setUnifiedPostMode(startMode, true);
+      document.getElementById('unifiedPostModal').classList.add('open');
+      setTimeout(() => {
+        const t = document.getElementById('uniTitleInput');
+        if (t) t.focus();
+      }, 60);
+    };
+
+    window.handleSaveUnifiedPost = async () => {
+      const mode = unifiedPostMode;
+      const hasNotice = mode === 'notice' || mode === 'both';
+      const hasBanner = mode === 'banner' || mode === 'both';
+
+      const rawCat = document.getElementById('uniCategorySelect').value;
+      const category = rawCat === '__custom__'
+        ? (document.getElementById('uniCategoryCustomInput').value || '').trim()
+        : rawCat;
+      const blockType = hasBanner ? (document.getElementById('uniBlockTypeSelect').value || 'custom_ad') : 'custom_ad';
+      const badge = (document.getElementById('uniBadgeInput').value || '').trim();
+      const title = (document.getElementById('uniTitleInput').value || '').trim();
+      const body = (document.getElementById('uniBodyInput').value || '').trim();
+      const source = ((document.getElementById('uniSourceInput') || {}).value || '').trim();
+      const audience = document.getElementById('uniAudienceSelect').value || 'all';
+      const targetRoles = audience === 'roles' ? getSelectedRoleIds('uni') : [];
+      const publishMode = document.getElementById('uniPublishModeSelect').value || 'now';
+      const pinChecked = document.getElementById('uniPinBannerInput').checked;
+      const notify = document.getElementById('uniNotifyInput').checked;
+
+      if (hasNotice && !category) {
+        return showToast('구분을 선택하거나 직접 입력해 주세요.');
+      }
+      if (hasNotice && (!title || !body)) {
+        return showToast('제목과 내용을 모두 입력해 주세요.');
+      }
+      if (mode === 'banner' && blockType !== 'hero_notice' && blockType !== 'notice_list' && !title) {
+        return showToast('배너 제목을 입력해 주세요.');
+      }
+      if (audience === 'roles' && targetRoles.length === 0) {
+        return showToast('볼 수 있는 역할을 1개 이상 선택해 주세요.');
+      }
+      const secSample = [category, badge, title, body, source].filter(Boolean).join('\n');
+      if (secSample && !enforceInputSecurity(secSample, `배너·공지 등록(${title || blockType})`, true)) return;
+
+      let publishAtTs = 0;
+      if (publishMode === 'scheduled') {
+        const dRaw = document.getElementById('uniScheduleDateInput').value;
+        const tRaw = document.getElementById('uniScheduleTimeInput').value;
+        publishAtTs = kstDateTimeToTs(dRaw, tRaw);
+        if (!publishAtTs) return showToast('예약 날짜와 시각(한국시간)을 올바르게 입력해 주세요.');
+        if (publishAtTs <= Date.now()) return showToast('예약 시각은 현재 한국시간보다 미래로 설정해 주세요.');
+      }
+
+      const btn = document.getElementById('saveUnifiedPostBtn');
+      if (btn) btn.disabled = true;
+      document.getElementById('unifiedPostModal').classList.remove('open');
+
+      try {
+        const nowTs = Date.now();
+        const pinned = (hasNotice && publishMode !== 'draft') ? !!pinChecked : false;
+        let createdBlockLabel = '';
+
+        // 1) 배너·칸 생성 (banner 또는 both)
+        if (hasBanner) {
+          const finalTitle = title || (blockType === 'notice_list' ? '📢 공지 · 광고 · 소식' : '');
+          const autoLabel = (blockType === 'hero_notice')
+            ? BLOCK_TYPE_NAMES.hero_notice
+            : (finalTitle || BLOCK_TYPE_NAMES[blockType] || '배너·칸');
+          createdBlockLabel = autoLabel;
+          const targetBlockId = 'blk_' + nowTs;
+          const hiddenOnHome = publishMode === 'draft';
+          const nextBlocks = structuredClone(blocks);
+
+          nextBlocks.unshift({
+            id: targetBlockId,
+            type: blockType,
+            label: autoLabel,
+            badge: badge || (hasNotice ? (UNI_AUTO_BADGES[category] || `📣 ${category}`) : ''),
+            title: finalTitle,
+            desc: body,
+            theme: selectedUnifiedTheme,
+            audience,
+            targetRoles,
+            publishMode,
+            publishAtTs,
+            hiddenOnHome
+          });
+
+          // both + 즉시 게시일 때는 공지 목록 칸(및 고정 시 hero_notice)도 단일 배치로 함께 보장해 경쟁 조건 방지
+          if (hasNotice && publishMode === 'now') {
+            const reqTypes = pinned ? ['hero_notice', 'notice_list'] : ['notice_list'];
+            reqTypes.forEach(reqType => {
+              const ex = nextBlocks.find(b => b.type === reqType);
+              if (ex) {
+                if (ex.hiddenOnHome || ex.publishMode === 'draft') {
+                  ex.hiddenOnHome = false;
+                  ex.publishMode = 'now';
+                  ex.publishAtTs = 0;
+                }
+              } else {
+                const tpl = DEFAULT_BLOCKS.find(d => d.type === reqType);
+                if (tpl) {
+                  const cp = structuredClone(tpl);
+                  cp.hiddenOnHome = false;
+                  if (reqType === 'hero_notice') nextBlocks.unshift(cp);
+                  else nextBlocks.push(cp);
+                }
+              }
+            });
+          }
+
+          // both 모드에서는 공지 알림으로 1회만 발송되도록 배너 alertObj는 banner 단독일 때만 전달
+          const bannerAlertObj = (mode === 'banner' && publishMode === 'now' && notify) ? {
+            title: `📌 ${autoLabel}`,
+            body: body || finalTitle || '메인 홈 배너가 업데이트되었습니다.',
+            audience,
+            targetRoles
+          } : null;
+
+          await saveBlocksToCloud(nextBlocks, '', bannerAlertObj, targetBlockId);
+        }
+
+        // 2) 공지·광고 등록 (notice 또는 both)
+        if (hasNotice) {
+          lastSelfNoticeEditTs = Date.now();
+          const batch = db.batch();
+          const targetNoticeId = String(nowTs + 1);
+          if (pinned && publishMode === 'now') {
+            notices.forEach(n => {
+              if (n.pinned && String(n.id) !== targetNoticeId) {
+                const col = n._col || (isServerRestrictedItem(n) ? 'adminNotices' : 'notices');
+                batch.update(db.collection(col).doc(String(n.id)), { pinned: false });
+              }
+            });
+          }
+
+          const minOrder = notices.length > 0 ? Math.min(...notices.map(n => Number(n.order || 0))) - 1 : 0;
+          const nextNotice = {
+            id: targetNoticeId,
+            date: formatToday(),
+            order: minOrder,
+            category,
+            title,
+            body,
+            source,
+            pinned,
+            audience,
+            targetRoles,
+            publishMode,
+            publishAtTs,
+            alertTs: (publishMode === 'now' && notify) ? Date.now() : 0
+          };
+          const restricted = isServerRestrictedItem(nextNotice);
+          nextNotice.visibleTo = computeVisibleTo(nextNotice);
+
+          if (restricted) {
+            batch.set(db.collection('adminNotices').doc(targetNoticeId), nextNotice);
+            batch.delete(db.collection('notices').doc(targetNoticeId));
+          } else {
+            batch.set(db.collection('notices').doc(targetNoticeId), nextNotice);
+            batch.delete(db.collection('adminNotices').doc(targetNoticeId));
+          }
+          await batch.commit();
+
+          if (mode === 'notice' && publishMode === 'now') {
+            await ensureHomeBlocksExistForTypes(pinned ? ['hero_notice', 'notice_list'] : ['notice_list']);
+          }
+        }
+
+        // 3) 감사 로그 & 완료 토스트
+        const pubLabel = publishMode === 'draft' ? '임시저장' : (publishMode === 'scheduled' ? '예약' : '즉시');
+        if (mode === 'both') {
+          recordAuditLog({
+            actorType: 'admin',
+            category: '공지·배너',
+            action: '배너 + 공지·광고 동시 등록',
+            target: `[${category}] ${title}`,
+            detail: `게시: ${pubLabel} · 배너유형: ${BLOCK_TYPE_NAMES[blockType] || blockType} · ${body}`
+          });
+          showToast(
+            publishMode === 'draft'
+              ? '배너와 공지·광고를 모두 임시저장(숨김)으로 저장했습니다.'
+              : (publishMode === 'scheduled'
+                ? `⏰ ${tsToKstParts(publishAtTs).shortLabel}에 배너와 공지가 함께 공개되도록 예약했습니다!`
+                : '✨ 홈 배너와 공지·광고 목록에 동시에 게시했습니다!')
+          );
+        } else if (mode === 'banner') {
+          recordAuditLog({
+            actorType: 'admin',
+            category: '공지·배너',
+            action: '메인 칸 추가',
+            target: createdBlockLabel || title || blockType,
+            detail: `게시: ${pubLabel} · ${body || title}`
+          });
+          showToast(
+            publishMode === 'draft'
+              ? '배너·칸을 임시저장(숨김) 상태로 저장했습니다.'
+              : (publishMode === 'scheduled'
+                ? `⏰ ${tsToKstParts(publishAtTs).shortLabel}에 자동 공개되도록 예약했습니다!`
+                : '🎨 메인 화면 배너·칸을 바로 게시했습니다!')
+          );
+        } else {
+          recordAuditLog({
+            actorType: 'admin',
+            category: '공지·배너',
+            action: '공지·광고 등록',
+            target: `[${category}] ${title}`,
+            detail: `게시: ${pubLabel} · ${body}`
+          });
+          showToast(
+            publishMode === 'draft'
+              ? '임시저장(숨김) 상태로 저장했습니다.'
+              : (publishMode === 'scheduled'
+                ? `⏰ ${tsToKstParts(publishAtTs).shortLabel}에 자동 공개되도록 예약했습니다!`
+                : (pinned ? '메인 상단 배너와 공지 목록에 바로 게시했습니다!' : '공지·광고 목록에 바로 게시했습니다!'))
+          );
+        }
+      } catch (err) {
+        handleDbError(err, '배너·공지 등록');
+      } finally {
+        if (btn) btn.disabled = false;
       }
     };
 
