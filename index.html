@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=183" />
+  <link rel="manifest" href="./manifest.json?v=184" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=183" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=183" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=184" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=184" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -563,6 +563,23 @@
       border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 700; white-space: nowrap; cursor: pointer;
     }
     .filter-chip.active { background: #111827; border-color: #111827; color: #fff; }
+    .filter-chip.has-badge:not(.active) { border-color: #FCA5A5; background: #FFF5F5; color: #991B1B; }
+    .btn-sm.has-badge { display: inline-flex; align-items: center; gap: 4px; border-color: #FCA5A5; background: #FFF5F5; color: #991B1B; }
+    .new-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 2px 6px; border-radius: 999px;
+      background: #EF4444; color: #FFFFFF;
+      font-size: 10px; font-weight: 900; letter-spacing: 0.4px; line-height: 1.2;
+      box-shadow: 0 1px 4px rgba(239, 68, 68, 0.35); flex-shrink: 0;
+      vertical-align: middle;
+    }
+    .video-new-corner-badge {
+      position: absolute; top: 9px; left: 9px; z-index: 2;
+      padding: 3px 8px; border-radius: 999px;
+      background: #EF4444; color: #FFFFFF;
+      font-size: 10.5px; font-weight: 900; letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.38); pointer-events: none;
+    }
 
     .card {
       background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
@@ -3117,7 +3134,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=183" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=184" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4668,8 +4685,9 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 29;
-    const APP_CLIENT_BUILD = 183;
+    const APP_CLIENT_BUILD = 184;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
+    const KEY_READ_ITEMS = 'right_youth_read_items_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
     const KEY_NOTIF_PREFS = 'right_youth_notif_prefs_v103';
@@ -5549,7 +5567,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=183" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=184" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5573,8 +5591,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=183', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=183', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=184', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=184', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -8998,11 +9016,6 @@
       badge.style.background = user.role.color;
       document.getElementById('headerSubText').textContent = `${user.name}님`;
 
-      // 현재 보고 있는 탭은 자동 읽음 처리
-      if (currentMainTab === 'home' && homeNoticesLoaded && homeBlocksLoaded) markTabAsSeen('home');
-      if (currentMainTab === 'sermon') markTabAsSeen('sermon');
-      if (currentMainTab === 'ccm') markTabAsSeen('ccm');
-
       const pendingCount = getManageTotalBadgeCount();
 
       const tabbar = document.getElementById('appTabbar');
@@ -9022,18 +9035,21 @@
                 </svg>
               </span>`
             : `<span class="tab-icon">${escapeHtml(iconVal)}</span>`;
+          const moreUnread = getUnreadCountForTab('more', user);
+          const moreBadgeHtml = moreUnread > 0 ? `<span class="tab-badge">${moreUnread > 99 ? '99+' : moreUnread}</span>` : '';
           return `
             <button id="tabBtnMore" class="tab-btn ${isMoreOpen ? 'more-active' : ''}" onclick="toggleQuickLinksSheet()">
               ${moreIconHtml}
               <span>${escapeHtml(getTabLabel('more'))}</span>
+              ${moreBadgeHtml}
             </button>
           `;
         }
         let badgeCnt = 0;
         if (key === 'manage' && perms.canManageMembers) badgeCnt = pendingCount;
-        else if (key === 'home' && currentMainTab !== 'home') badgeCnt = getUnreadCountForTab('home', user);
-        else if (key === 'sermon' && currentMainTab !== 'sermon') badgeCnt = getUnreadCountForTab('sermon', user);
-        else if (key === 'ccm' && currentMainTab !== 'ccm') badgeCnt = getUnreadCountForTab('ccm', user);
+        else if (key === 'home') badgeCnt = getUnreadCountForTab('home', user);
+        else if (key === 'sermon') badgeCnt = getUnreadCountForTab('sermon', user);
+        else if (key === 'ccm') badgeCnt = getUnreadCountForTab('ccm', user);
         else if (key === 'settings') badgeCnt = getUnreadCountForTab('settings', user);
 
         const badgeDisp = badgeCnt > 99 ? '99+' : String(badgeCnt);
@@ -9076,7 +9092,6 @@
       if (currentMainTab === 'manage' && tab !== 'manage') {
         draftTabInitialized = false;
       }
-      if (tab === 'home' || tab === 'sermon' || tab === 'ccm') markTabAsSeen(tab);
       currentMainTab = tab;
       applyScreen();
     };
@@ -9962,10 +9977,14 @@
         if (b.type === 'hero_notice') {
           const pinned = visibleNotices.find(n => n.pinned) || visibleNotices[0];
           if (!pinned) return '';
+          const pinnedNew = isNoticeUnread(pinned, user);
           return `
             <div class="home-block">
               <div class="hero-banner ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)};" onclick="openDetail('${escapeJsAttr(pinned.id)}')">
-                <span class="hero-badge">${escapeHtml(b.badge || '📌 중요 공지')} · ${escapeHtml(pinned.category)}${pinned.audience && pinned.audience !== 'all' ? ' · 지정대상' : ''}</span>
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
+                  <span class="hero-badge" style="margin-bottom:0;">${escapeHtml(b.badge || '📌 중요 공지')} · ${escapeHtml(pinned.category)}${pinned.audience && pinned.audience !== 'all' ? ' · 지정대상' : ''}</span>
+                  ${pinnedNew ? '<span class="new-badge">NEW</span>' : ''}
+                </div>
                 <h2 class="hero-title">${escapeHtml(pinned.title)}</h2>
                 <p class="hero-desc">${escapeHtml((pinned.body || '').split('\n')[0])}</p>
               </div>
@@ -9974,11 +9993,15 @@
         }
 
         if (b.type === 'newcomer_card') {
+          const blkNew = isBlockUnread(b, user);
           return `
             <div class="home-block">
-              <div class="newcomer-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)};">
+              <div class="newcomer-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)}; ${blkNew ? 'cursor:pointer;' : ''}" ${blkNew ? `onclick="markBlockRead('${escapeJsAttr(b.id)}')"` : ''}>
                 ${getAdminSchedPill(b)}
-                ${b.badge ? `<span class="hero-badge" style="background:rgba(255,255,255,0.22);color:#fff;">${escapeHtml(b.badge)}</span>` : ''}
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:${(b.badge || blkNew) ? '8px' : '0'};">
+                  ${b.badge ? `<span class="hero-badge" style="background:rgba(255,255,255,0.22);color:#fff;margin-bottom:0;">${escapeHtml(b.badge)}</span>` : ''}
+                  ${blkNew ? '<span class="new-badge">NEW</span>' : ''}
+                </div>
                 <h3 class="hero-title" style="font-size:17px;">${escapeHtml(b.title)}</h3>
                 <p class="hero-desc">${escapeHtml(b.desc)}</p>
               </div>
@@ -9987,11 +10010,15 @@
         }
 
         if (b.type === 'leader_card') {
+          const blkNew = isBlockUnread(b, user);
           return `
             <div class="home-block">
-              <div class="leader-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)};">
+              <div class="leader-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)}; ${blkNew ? 'cursor:pointer;' : ''}" ${blkNew ? `onclick="markBlockRead('${escapeJsAttr(b.id)}')"` : ''}>
                 ${getAdminSchedPill(b)}
-                ${b.badge ? `<span class="hero-badge">${escapeHtml(b.badge)}</span>` : ''}
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:${(b.badge || blkNew) ? '8px' : '0'};">
+                  ${b.badge ? `<span class="hero-badge" style="margin-bottom:0;">${escapeHtml(b.badge)}</span>` : ''}
+                  ${blkNew ? '<span class="new-badge">NEW</span>' : ''}
+                </div>
                 <h3 class="hero-title" style="font-size:16.5px;">${escapeHtml(b.title)}</h3>
                 <p class="hero-desc">${escapeHtml(b.desc)}</p>
               </div>
@@ -10000,11 +10027,15 @@
         }
 
         if (b.type === 'custom_ad') {
+          const blkNew = isBlockUnread(b, user);
           return `
             <div class="home-block">
-              <div class="custom-banner-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)};">
+              <div class="custom-banner-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)}; ${blkNew ? 'cursor:pointer;' : ''}" ${blkNew ? `onclick="markBlockRead('${escapeJsAttr(b.id)}')"` : ''}>
                 ${getAdminSchedPill(b)}
-                ${b.badge ? `<span class="hero-badge" style="margin-bottom:7px;">${escapeHtml(b.badge)}</span>` : ''}
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:${(b.badge || blkNew) ? '7px' : '0'};">
+                  ${b.badge ? `<span class="hero-badge" style="margin-bottom:0;">${escapeHtml(b.badge)}</span>` : ''}
+                  ${blkNew ? '<span class="new-badge">NEW</span>' : ''}
+                </div>
                 <h3 class="hero-title" style="font-size:16.5px;">${escapeHtml(b.title)}</h3>
                 <p class="hero-desc">${escapeHtml(b.desc)}</p>
               </div>
@@ -10014,6 +10045,15 @@
 
         if (b.type === 'notice_list') {
           const filtered = currentFilter === '전체' ? visibleNotices : visibleNotices.filter(n => n.category === currentFilter);
+          const unreadCatMap = new Map();
+          let totalUnreadNotices = 0;
+          visibleNotices.forEach(n => {
+            if (isNoticeUnread(n, user)) {
+              totalUnreadNotices++;
+              const c = String(n.category || '');
+              unreadCatMap.set(c, (unreadCatMap.get(c) || 0) + 1);
+            }
+          });
           return `
             <div class="home-block">
               <div class="section-head">
@@ -10021,27 +10061,32 @@
                 ${perms.canManageNotices ? `<button class="btn-sm primary" onclick="openUnifiedContentModal('notice')">+ 글쓰기</button>` : ''}
               </div>
               <div class="filter-row">
-                ${Array.from(new Set(['전체', '공지', '광고', '소식', '행사', ...visibleNotices.map(n => n.category).filter(Boolean)])).map(cat => `
-                  <button class="filter-chip ${currentFilter === cat ? 'active' : ''}" data-cat="${escapeHtml(cat)}" onclick="setFilter(this.dataset.cat)">${escapeHtml(cat)}</button>
-                `).join('')}
+                ${Array.from(new Set(['전체', '공지', '광고', '소식', '행사', ...visibleNotices.map(n => n.category).filter(Boolean)])).map(cat => {
+                  const uCnt = cat === '전체' ? totalUnreadNotices : (unreadCatMap.get(cat) || 0);
+                  return `<button class="filter-chip ${currentFilter === cat ? 'active' : ''} ${uCnt > 0 ? 'has-badge' : ''}" data-cat="${escapeHtml(cat)}" onclick="setFilter(this.dataset.cat)"><span>${escapeHtml(cat)}</span>${buildSubTabBadgeHtml(uCnt)}</button>`;
+                }).join('')}
               </div>
               ${filtered.length === 0
                 ? '<div class="card" style="text-align:center;color:#64748B;">해당 구분의 글이 없습니다.</div>'
-                : filtered.map(n => `
-                    <div class="card clickable" onclick="openDetail('${escapeJsAttr(n.id)}')">
-                      <div class="card-top">
-                        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-                          <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
-                          ${n.pinned ? '<span class="tag green">배너고정</span>' : ''}
-                          ${getPublishState(n) === 'scheduled' ? getPublishStateBadgeHtml(n) : ''}
-                          ${getAudienceBadgeHtml(n)}
+                : filtered.map(n => {
+                    const isNewN = isNoticeUnread(n, user);
+                    return `
+                      <div class="card clickable" onclick="openDetail('${escapeJsAttr(n.id)}')">
+                        <div class="card-top">
+                          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                            ${isNewN ? '<span class="new-badge">NEW</span>' : ''}
+                            <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
+                            ${n.pinned ? '<span class="tag green">배너고정</span>' : ''}
+                            ${getPublishState(n) === 'scheduled' ? getPublishStateBadgeHtml(n) : ''}
+                            ${getAudienceBadgeHtml(n)}
+                          </div>
+                          <span class="card-date">${escapeHtml(n.date)}</span>
                         </div>
-                        <span class="card-date">${escapeHtml(n.date)}</span>
+                        <h3 class="card-title">${escapeHtml(n.title)}</h3>
+                        <p class="card-body clamp">${escapeHtml(n.body)}</p>
                       </div>
-                      <h3 class="card-title">${escapeHtml(n.title)}</h3>
-                      <p class="card-body clamp">${escapeHtml(n.body)}</p>
-                    </div>
-                  `).join('')}
+                    `;
+                  }).join('')}
             </div>
           `;
         }
@@ -10065,6 +10110,11 @@
       const n = notices.find(item => String(item.id) === String(id));
       const user = getCurrentUser();
       if (!n || !canUserSeeTarget(user, n) || (!user.isSuperAdmin && getPublishState(n) !== 'live')) return;
+      const wasUnread = isNoticeUnread(n, user);
+      if (wasUnread) {
+        markItemRead('notices', n.id, getNoticeItemTs(n));
+        applyScreen();
+      }
       currentDetailId = String(id);
       document.getElementById('detailTag').textContent = n.category;
       document.getElementById('detailTitle').textContent = n.title;
@@ -13667,15 +13717,17 @@
         const textCls = theme.darkText ? 'dark-text' : '';
 
         if (safeUrl) {
+          const qlNew = isQuickLinkUnread(ql);
           const linkRisk = analyzeUrlRisk(safeUrl);
           const needGuardModal = (linkRisk.riskLevel !== 'safe') || (securityConfig && securityConfig.confirmExternalLinks === true);
           if (needGuardModal) {
             return `
               <button class="quick-link-btn ${textCls}" type="button" style="background:${theme.css};"
-                      onclick="closeQuickLinksSheet(); openExternalLinkSafely('${escapeJsAttr(safeUrl)}', '${escapeJsAttr(ql.label)}')">
+                      onclick="markQuickLinkRead('${escapeJsAttr(ql.id)}'); closeQuickLinksSheet(); openExternalLinkSafely('${escapeJsAttr(safeUrl)}', '${escapeJsAttr(ql.label)}')">
                 <span class="quick-link-left">
                   <span class="quick-link-icon">${theme.svg}</span>
                   <span class="quick-link-label">${escapeHtml(ql.label)}</span>
+                  ${qlNew ? '<span class="new-badge">NEW</span>' : ''}
                 </span>
                 <span class="quick-link-arrow">▸</span>
               </button>
@@ -13684,10 +13736,11 @@
           return `
             <a class="quick-link-btn ${textCls}" style="background:${theme.css};"
                href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer"
-               onclick="closeQuickLinksSheet()">
+               onclick="markQuickLinkRead('${escapeJsAttr(ql.id)}'); closeQuickLinksSheet()">
               <span class="quick-link-left">
                 <span class="quick-link-icon">${theme.svg}</span>
                 <span class="quick-link-label">${escapeHtml(ql.label)}</span>
+                ${qlNew ? '<span class="new-badge">NEW</span>' : ''}
               </span>
               <span class="quick-link-arrow">▸</span>
             </a>
@@ -13849,19 +13902,24 @@
       }
 
       const next = structuredClone(quickLinks);
+      const nowTs = Date.now();
       if (id) {
         const target = next.find(x => x.id === id);
         if (target) {
+          const hadUrl = !!(target.url && String(target.url).trim());
           target.label = label;
           target.url = url;
           target.theme = selectedQuickLinkTheme;
+          if (!hadUrl && url) target.updatedTs = nowTs;
         }
       } else {
         next.push({
-          id: 'ql_' + Date.now(),
+          id: 'ql_' + nowTs,
           label,
           url,
-          theme: selectedQuickLinkTheme
+          theme: selectedQuickLinkTheme,
+          createdTs: nowTs,
+          updatedTs: nowTs
         });
       }
 
@@ -19145,17 +19203,18 @@
           `;
         } else if (key === 'setVideos') {
           const approvedVidCnt = (videoItems || []).filter(v => v.status === 'approved').length;
+          const unreadVidCnt = (videoItems || []).filter(v => isVideoUnread(v)).length;
           rowHtml = `
             <button class="settings-row-btn" type="button" onclick="openFromSettingsTab('videos')">
               <span class="settings-row-left">
                 <span class="settings-row-icon">${escapeHtml(ic)}</span>
                 <span style="min-width:0;">
-                  <div class="settings-row-title">${escapeHtml(lb)}</div>
+                  <div class="settings-row-title" style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;"><span>${escapeHtml(lb)}</span>${unreadVidCnt > 0 ? '<span class="new-badge">NEW</span>' : ''}</div>
                   <div class="settings-row-sub">교회 공식 설교·찬양 유튜브 영상 보기 및 추천</div>
                 </span>
               </span>
               <span class="settings-row-right">
-                ${approvedVidCnt > 0 ? `<span class="tag slate">${approvedVidCnt}</span>` : ''}
+                ${unreadVidCnt > 0 ? buildSubTabBadgeHtml(unreadVidCnt) : (approvedVidCnt > 0 ? `<span class="tag slate">${approvedVidCnt}</span>` : '')}
                 <span>▸</span>
               </span>
             </button>
@@ -19166,12 +19225,12 @@
               <span class="settings-row-left">
                 <span class="settings-row-icon">${escapeHtml(ic)}</span>
                 <span style="min-width:0;">
-                  <div class="settings-row-title">${escapeHtml(lb)}</div>
+                  <div class="settings-row-title" style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;"><span>${escapeHtml(lb)}</span>${unreadMyReplyCnt > 0 ? '<span class="new-badge">NEW</span>' : ''}</div>
                   <div class="settings-row-sub">불편한 점 · 개선 사항 · 기능 요청 · 의견 보내기</div>
                 </span>
               </span>
               <span class="settings-row-right">
-                ${unreadMyReplyCnt > 0 ? `<span class="tag red">답변 ${unreadMyReplyCnt}</span>` : ''}
+                ${unreadMyReplyCnt > 0 ? buildSubTabBadgeHtml(unreadMyReplyCnt) : ''}
                 <span>▸</span>
               </span>
             </button>
@@ -19296,24 +19355,25 @@
       `;
     }
 
-    // ==================== 24. 하단 탭 안 읽은 배지 (1, 2...) 추적 엔진 ====================
+    // ==================== 24. 항목별 읽음 · NEW 배지 · 탭 숫자 (1, 2...) 추적 엔진 ====================
     function loadTabSeenTs() {
       try {
         const raw = JSON.parse(localStorage.getItem(KEY_TAB_SEEN_TS) || '{}');
         const now = Date.now();
         if (!raw || typeof raw !== 'object' || !raw.initialized) {
-          const init = { initialized: true, home: now, sermon: now, ccm: now, inquiryReply: now };
+          const init = { initialized: true, home: now, sermon: now, ccm: now, quickLinks: now, inquiryReply: now };
           localStorage.setItem(KEY_TAB_SEEN_TS, JSON.stringify(init));
           return init;
         }
         let changed = false;
         if (raw.sermon === undefined) { raw.sermon = now; changed = true; }
         if (raw.ccm === undefined) { raw.ccm = now; changed = true; }
+        if (raw.quickLinks === undefined) { raw.quickLinks = now; changed = true; }
         if (changed) localStorage.setItem(KEY_TAB_SEEN_TS, JSON.stringify(raw));
         return raw;
       } catch {
         const now = Date.now();
-        return { initialized: true, home: now, sermon: now, ccm: now, inquiryReply: now };
+        return { initialized: true, home: now, sermon: now, ccm: now, quickLinks: now, inquiryReply: now };
       }
     }
 
@@ -19325,6 +19385,129 @@
       } catch {}
     }
 
+    function loadReadItemsMap() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(KEY_READ_ITEMS) || '{}');
+        return {
+          videos: (raw && raw.videos && typeof raw.videos === 'object') ? raw.videos : {},
+          notices: (raw && raw.notices && typeof raw.notices === 'object') ? raw.notices : {},
+          blocks: (raw && raw.blocks && typeof raw.blocks === 'object') ? raw.blocks : {},
+          quickLinks: (raw && raw.quickLinks && typeof raw.quickLinks === 'object') ? raw.quickLinks : {}
+        };
+      } catch {
+        return { videos: {}, notices: {}, blocks: {}, quickLinks: {} };
+      }
+    }
+
+    function markItemRead(bucket, id, itemTs = 0) {
+      const key = String(id || '').trim();
+      if (!key) return;
+      try {
+        const map = loadReadItemsMap();
+        if (!map[bucket] || typeof map[bucket] !== 'object') map[bucket] = {};
+        map[bucket][key] = Math.max(Date.now(), Number(itemTs || 0));
+        const entries = Object.entries(map[bucket]);
+        if (entries.length > 300) {
+          entries.sort((a, b) => Number(b[1] || 0) - Number(a[1] || 0));
+          map[bucket] = Object.fromEntries(entries.slice(0, 250));
+        }
+        localStorage.setItem(KEY_READ_ITEMS, JSON.stringify(map));
+      } catch {}
+    }
+
+    function getNoticeItemTs(n) {
+      if (!n) return 0;
+      const idStr = String(n.id || '');
+      const idTs = /^\d{12,14}$/.test(idStr) ? Number(idStr) : 0;
+      return Math.max(Number(n.alertTs || 0), Number(n.updatedTs || 0), idTs);
+    }
+
+    function getBlockItemTs(b) {
+      if (!b) return 0;
+      const idStr = String(b.id || '');
+      const m = idStr.match(/^blk_(\d{12,14})$/);
+      const idTs = m ? Number(m[1]) : 0;
+      return Math.max(Number(b.alertTs || 0), Number(b.updatedTs || 0), idTs);
+    }
+
+    function getVideoItemTs(v) {
+      if (!v) return 0;
+      return Math.max(Number(v.approvedTs || 0), Number(v.createdTs || 0));
+    }
+
+    function getQuickLinkItemTs(ql) {
+      if (!ql) return 0;
+      const idStr = String(ql.id || '');
+      const m = idStr.match(/^ql_(\d{12,14})$/);
+      const idTs = m ? Number(m[1]) : 0;
+      return Math.max(Number(ql.updatedTs || 0), Number(ql.createdTs || 0), idTs);
+    }
+
+    function isVideoUnread(v) {
+      if (!v || v.status !== 'approved') return false;
+      const ts = getVideoItemTs(v);
+      if (!ts) return false;
+      const seen = loadTabSeenTs();
+      const baseline = isCcmVideo(v) ? Number(seen.ccm || 0) : Number(seen.sermon || 0);
+      if (ts <= baseline) return false;
+      const readMap = loadReadItemsMap();
+      const readTs = Number((readMap.videos && readMap.videos[String(v.id)]) || 0);
+      return readTs < ts;
+    }
+
+    function isNoticeUnread(n, user) {
+      if (!n || !user) return false;
+      if (!canUserSeeTarget(user, n) || getPublishState(n) !== 'live') return false;
+      const ts = getNoticeItemTs(n);
+      if (!ts) return false;
+      const seen = loadTabSeenTs();
+      const baseline = Number(seen.home || 0);
+      if (ts <= baseline) return false;
+      const readMap = loadReadItemsMap();
+      const readTs = Number((readMap.notices && readMap.notices[String(n.id)]) || 0);
+      return readTs < ts;
+    }
+
+    function isBlockUnread(b, user) {
+      if (!b || !user) return false;
+      if (b.type === 'notice_list' || b.type === 'hero_notice') return false;
+      if (!canUserSeeTarget(user, b) || getPublishState(b) !== 'live') return false;
+      const ts = getBlockItemTs(b);
+      if (!ts) return false;
+      const seen = loadTabSeenTs();
+      const baseline = Number(seen.home || 0);
+      if (ts <= baseline) return false;
+      const readMap = loadReadItemsMap();
+      const readTs = Number((readMap.blocks && readMap.blocks[String(b.id)]) || 0);
+      return readTs < ts;
+    }
+
+    function isQuickLinkUnread(ql) {
+      if (!ql || !ql.url || !String(ql.url).trim()) return false;
+      const ts = getQuickLinkItemTs(ql);
+      if (!ts) return false;
+      const seen = loadTabSeenTs();
+      const baseline = Number(seen.quickLinks || 0);
+      if (ts <= baseline) return false;
+      const readMap = loadReadItemsMap();
+      const readTs = Number((readMap.quickLinks && readMap.quickLinks[String(ql.id)]) || 0);
+      return readTs < ts;
+    }
+
+    window.markBlockRead = (id) => {
+      const b = (blocks || []).find(x => String(x.id) === String(id));
+      if (!b) return;
+      markItemRead('blocks', b.id, getBlockItemTs(b));
+      applyScreen();
+    };
+
+    window.markQuickLinkRead = (id) => {
+      const ql = (quickLinks || []).find(x => String(x.id) === String(id));
+      if (!ql) return;
+      markItemRead('quickLinks', ql.id, getQuickLinkItemTs(ql));
+      applyScreen();
+    };
+
     function getUnreadInquiryReplyCount() {
       const seen = loadTabSeenTs();
       const lastSeen = Number(seen.inquiryReply || 0);
@@ -19333,31 +19516,19 @@
 
     function getUnreadCountForTab(tabKey, user) {
       if (!user) return 0;
-      const seen = loadTabSeenTs();
       if (tabKey === 'home') {
-        const lastSeen = Number(seen.home || 0);
-        const newNotices = (notices || []).filter(n => {
-          if (!canUserSeeTarget(user, n) || getPublishState(n) !== 'live') return false;
-          const ts = Number(n.alertTs || n.updatedTs || n.id || 0);
-          return ts > lastSeen;
-        }).length;
-        const newBlocks = (blocks || []).filter(b => {
-          if (!canUserSeeTarget(user, b) || getPublishState(b) !== 'live') return false;
-          return Number(b.alertTs || 0) > lastSeen;
-        }).length;
+        const newNotices = (notices || []).filter(n => isNoticeUnread(n, user)).length;
+        const newBlocks = (blocks || []).filter(b => isBlockUnread(b, user)).length;
         return newNotices + newBlocks;
       }
       if (tabKey === 'sermon') {
-        const lastSeen = Number(seen.sermon || 0);
-        return (videoItems || []).filter(v =>
-          v.status === 'approved' && isSermonVideo(v) && Number(v.approvedTs || v.createdTs || 0) > lastSeen
-        ).length;
+        return (videoItems || []).filter(v => isSermonVideo(v) && isVideoUnread(v)).length;
       }
       if (tabKey === 'ccm') {
-        const lastSeen = Number(seen.ccm || 0);
-        return (videoItems || []).filter(v =>
-          v.status === 'approved' && isCcmVideo(v) && Number(v.approvedTs || v.createdTs || 0) > lastSeen
-        ).length;
+        return (videoItems || []).filter(v => isCcmVideo(v) && isVideoUnread(v)).length;
+      }
+      if (tabKey === 'more') {
+        return (quickLinks || []).filter(ql => isQuickLinkUnread(ql)).length;
       }
       if (tabKey === 'settings') {
         let cnt = 0;
@@ -21218,13 +21389,15 @@ ${handleUrl}`);
       const secTitle = getUiText('videosHeroTitle');
       const secIcon = getTabIcon('setVideos');
       const latest = approved.slice(0, 3);
+      const unreadSermonCnt = approved.filter(v => isSermonVideo(v) && isVideoUnread(v)).length;
+      const unreadCcmCnt = approved.filter(v => isCcmVideo(v) && isVideoUnread(v)).length;
       return `
         <div class="home-block">
           <div class="section-head">
             <h2 class="section-title">${escapeHtml(secIcon)} ${escapeHtml(secTitle)}</h2>
             <div style="display:flex; gap:5px; align-items:center; flex-wrap:wrap;">
-              <button class="btn-sm" type="button" onclick="switchMainTab('sermon')">${escapeHtml(getTabIcon('sermon'))} ${escapeHtml(getTabLabel('sermon'))}</button>
-              <button class="btn-sm" type="button" onclick="switchMainTab('ccm')">${escapeHtml(getTabIcon('ccm'))} ${escapeHtml(getTabLabel('ccm'))}</button>
+              <button class="btn-sm ${unreadSermonCnt > 0 ? 'has-badge' : ''}" type="button" onclick="switchMainTab('sermon')"><span>${escapeHtml(getTabIcon('sermon'))} ${escapeHtml(getTabLabel('sermon'))}</span>${buildSubTabBadgeHtml(unreadSermonCnt)}</button>
+              <button class="btn-sm ${unreadCcmCnt > 0 ? 'has-badge' : ''}" type="button" onclick="switchMainTab('ccm')"><span>${escapeHtml(getTabIcon('ccm'))} ${escapeHtml(getTabLabel('ccm'))}</span>${buildSubTabBadgeHtml(unreadCcmCnt)}</button>
               ${canSubmit ? `<button class="btn-sm primary" type="button" onclick="openVideoSubmitModal()">+ 추천</button>` : ''}
             </div>
           </div>
@@ -21233,12 +21406,14 @@ ${handleUrl}`);
             : latest.map(v => {
                 const grp = getVideoAutoGroupLabel(v);
                 const ccm = isCcmVideo(v);
+                const vidNew = isVideoUnread(v);
                 return `
                 <div class="card" style="padding:11px 12px; margin-bottom:9px;">
                   <div class="video-compact-row" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">
                     <img class="video-compact-thumb" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="썸네일" loading="lazy" />
                     <div style="min-width:0; flex:1;">
                       <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap; margin-bottom:3px;">
+                        ${vidNew ? '<span class="new-badge">NEW</span>' : ''}
                         <span class="tag slate" style="font-size:10px; padding:2px 6px;">${ccm ? '🎵' : (grp === '라이트 청년부' ? '✨' : '⛪')} ${escapeHtml(grp)}</span>
                         ${v.officialVerified ? '<span class="tag green" style="font-size:10px; padding:2px 6px;">✅ 공식 채널</span>' : '<span class="tag" style="font-size:10px; padding:2px 6px;">🛡️ 관리자 검증</span>'}
                       </div>
@@ -21259,6 +21434,10 @@ ${handleUrl}`);
       }
       const allVids = [...(videoItems || []), ...(myVideoItems || [])];
       const rec = allVids.find(x => (docId && String(x.id) === String(docId)) || String(x.videoId) === cleanId) || null;
+      if (rec && isVideoUnread(rec)) {
+        markItemRead('videos', rec.id, getVideoItemTs(rec));
+        applyScreen();
+      }
 
       const safeWatchUrl = `https://www.youtube.com/watch?v=${cleanId}`;
       const embedParams = new URLSearchParams({
@@ -21329,12 +21508,14 @@ ${handleUrl}`);
       const canEdit = user.isSuperAdmin || isMine;
       const ccm = isCcmVideo(v);
       const grp = getVideoAutoGroupLabel(v);
+      const vidNew = isVideoUnread(v);
       const grpBadgeHtml = ccm
         ? `<button class="tag" type="button" style="border:none; cursor:pointer; background:#F3E8FF; color:#7E22CE;" onclick="jumpToCcmTeam('${escapeJsAttr(grp)}')">🎵 ${escapeHtml(grp)}</button>`
         : `<button class="tag slate" type="button" style="border:none; cursor:pointer;" onclick="jumpToSermonChurch('${escapeJsAttr(grp)}')">${grp === '라이트 청년부' ? '✨' : '⛪'} ${escapeHtml(grp)}</button>`;
       return `
         <div class="video-card">
           <div class="video-thumb-wrap" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">
+            ${vidNew ? '<span class="video-new-corner-badge">NEW</span>' : ''}
             <img class="video-thumb-img" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="${escapeHtml(v.title || '영상')}" loading="lazy" />
             <div class="video-play-overlay">
               <span class="video-play-pill">▶ 바로 재생</span>
@@ -21343,6 +21524,7 @@ ${handleUrl}`);
           <div class="video-card-body">
             <div class="card-top" style="margin-bottom:5px;">
               <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+                ${vidNew ? '<span class="new-badge">NEW</span>' : ''}
                 ${grpBadgeHtml}
                 ${v.officialVerified
                   ? '<span class="tag green">✅ 공식 채널 · 자동 검사 통과</span>'
@@ -21427,9 +21609,15 @@ ${handleUrl}`);
 
       const approved = (videoItems || []).filter(v => v.status === 'approved' && isSermonVideo(v));
       const churchCountMap = new Map();
+      const churchUnreadMap = new Map();
+      let totalSermonUnread = 0;
       approved.forEach(v => {
         const chName = getSermonChurchLabel(v);
         churchCountMap.set(chName, (churchCountMap.get(chName) || 0) + 1);
+        if (isVideoUnread(v)) {
+          totalSermonUnread++;
+          churchUnreadMap.set(chName, (churchUnreadMap.get(chName) || 0) + 1);
+        }
       });
 
       // 기본 탭: [전체] + [라이트 청년부] 고정 생성, 나머지 교회 탭은 영상 등록 시 자동 생성
@@ -21449,8 +21637,9 @@ ${handleUrl}`);
       if (chipsEl) {
         chipsEl.innerHTML = churchTabs.map(name => {
           const cnt = name === '전체' ? approved.length : (churchCountMap.get(name) || 0);
+          const uCnt = name === '전체' ? totalSermonUnread : (churchUnreadMap.get(name) || 0);
           const countTxt = cnt > 0 ? ` (${cnt})` : '';
-          return `<button class="filter-chip ${sermonCatFilter === name ? 'active' : ''}" type="button" onclick="setSermonCatFilter('${escapeJsAttr(name)}')">${escapeHtml(name)}${countTxt}</button>`;
+          return `<button class="filter-chip ${sermonCatFilter === name ? 'active' : ''} ${uCnt > 0 ? 'has-badge' : ''}" type="button" onclick="setSermonCatFilter('${escapeJsAttr(name)}')"><span>${escapeHtml(name)}${countTxt}</span>${buildSubTabBadgeHtml(uCnt)}</button>`;
         }).join('');
       }
 
@@ -21512,9 +21701,15 @@ ${handleUrl}`);
 
       const approved = (videoItems || []).filter(v => v.status === 'approved' && isCcmVideo(v));
       const teamCountMap = new Map();
+      const teamUnreadMap = new Map();
+      let totalCcmUnread = 0;
       approved.forEach(v => {
         const teamName = getCcmTeamLabel(v);
         teamCountMap.set(teamName, (teamCountMap.get(teamName) || 0) + 1);
+        if (isVideoUnread(v)) {
+          totalCcmUnread++;
+          teamUnreadMap.set(teamName, (teamUnreadMap.get(teamName) || 0) + 1);
+        }
       });
 
       // CCM 영상 등록 시 해당 찬양팀 이름(어노인팅, 마커스 등) 탭 자동 생성
@@ -21530,8 +21725,9 @@ ${handleUrl}`);
       if (chipsEl) {
         chipsEl.innerHTML = teamTabs.map(name => {
           const cnt = name === '전체' ? approved.length : (teamCountMap.get(name) || 0);
+          const uCnt = name === '전체' ? totalCcmUnread : (teamUnreadMap.get(name) || 0);
           const countTxt = cnt > 0 ? ` (${cnt})` : '';
-          return `<button class="filter-chip ${ccmTeamFilter === name ? 'active' : ''}" type="button" onclick="setCcmTeamFilter('${escapeJsAttr(name)}')">${escapeHtml(name)}${countTxt}</button>`;
+          return `<button class="filter-chip ${ccmTeamFilter === name ? 'active' : ''} ${uCnt > 0 ? 'has-badge' : ''}" type="button" onclick="setCcmTeamFilter('${escapeJsAttr(name)}')"><span>${escapeHtml(name)}${countTxt}</span>${buildSubTabBadgeHtml(uCnt)}</button>`;
         }).join('');
       }
 
@@ -21594,11 +21790,18 @@ ${handleUrl}`);
       const approved = (videoItems || []).filter(v => v.status === 'approved');
       const cats = ['전체', '설교', '라이트 청년부', 'CCM'];
       if (!cats.includes(videoCatFilter)) videoCatFilter = '전체';
+      const vidCatUnread = {
+        '전체': approved.filter(v => isVideoUnread(v)).length,
+        '설교': approved.filter(v => isSermonVideo(v) && !isRightYouthVideo(v) && isVideoUnread(v)).length,
+        '라이트 청년부': approved.filter(v => isRightYouthVideo(v) && isVideoUnread(v)).length,
+        'CCM': approved.filter(v => isCcmVideo(v) && isVideoUnread(v)).length
+      };
       const chipsEl = document.getElementById('videoCatChips');
       if (chipsEl) {
-        chipsEl.innerHTML = cats.map(c => `
-          <button class="filter-chip ${videoCatFilter === c ? 'active' : ''}" type="button" onclick="setVideoCatFilter('${escapeJsAttr(c)}')">${escapeHtml(c)}</button>
-        `).join('');
+        chipsEl.innerHTML = cats.map(c => {
+          const uCnt = vidCatUnread[c] || 0;
+          return `<button class="filter-chip ${videoCatFilter === c ? 'active' : ''} ${uCnt > 0 ? 'has-badge' : ''}" type="button" onclick="setVideoCatFilter('${escapeJsAttr(c)}')"><span>${escapeHtml(c)}</span>${buildSubTabBadgeHtml(uCnt)}</button>`;
+        }).join('');
       }
 
       const q = String(videoSearchQuery || '').trim().toLowerCase();
