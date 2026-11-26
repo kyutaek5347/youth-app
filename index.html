@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=187" />
+  <link rel="manifest" href="./manifest.json?v=188" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=187" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=187" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=188" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=188" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3163,7 +3163,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=187" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=188" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3705,6 +3705,17 @@
           </div>
           <label class="switch">
             <input type="checkbox" id="notifMemberToggle" onchange="toggleNotifOption('memberPending', this.checked)" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row hidden" id="notifAdminEntryRow">
+          <div>
+            <div class="setting-title">👑 새 관리자 입장 · 승인 요청 알림</div>
+            <div class="setting-sub">새로운 관리자가 입장하거나 입장 승인을 요청했을 때 (관리자 전용)</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notifAdminEntryToggle" onchange="toggleNotifOption('adminEntry', this.checked)" />
             <span class="slider"></span>
           </label>
         </div>
@@ -4747,8 +4758,9 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 29;
-    const APP_CLIENT_BUILD = 187;
+    const APP_CLIENT_BUILD = 188;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
+    const KEY_SEEN_ADMIN_IDS = 'right_youth_seen_admin_ids_v1';
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
     const KEY_READ_ITEMS = 'right_youth_read_items_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
@@ -5592,13 +5604,14 @@
           enabled: raw.enabled !== undefined ? !!raw.enabled : true,
           homeNews: raw.homeNews !== undefined ? !!raw.homeNews : legacyHome,
           memberPending: raw.memberPending !== undefined ? !!raw.memberPending : true,
+          adminEntry: raw.adminEntry !== undefined ? !!raw.adminEntry : true,
           inquiryNew: raw.inquiryNew !== undefined ? !!raw.inquiryNew : true,
           inquiryReply: raw.inquiryReply !== undefined ? !!raw.inquiryReply : true,
           newVideo: raw.newVideo !== undefined ? !!raw.newVideo : true,
           videoPending: raw.videoPending !== undefined ? !!raw.videoPending : true
         };
       } catch {
-        return { enabled: true, homeNews: true, memberPending: true, inquiryNew: true, inquiryReply: true, newVideo: true, videoPending: true };
+        return { enabled: true, homeNews: true, memberPending: true, adminEntry: true, inquiryNew: true, inquiryReply: true, newVideo: true, videoPending: true };
       }
     }
 
@@ -5630,7 +5643,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=187" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=188" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5654,8 +5667,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=187', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=187', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=188', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=188', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5678,6 +5691,7 @@
       if (!notifPrefs.enabled) return;
       if ((type === 'notice' || type === 'banner') && !notifPrefs.homeNews) return;
       if (type === 'member' && !notifPrefs.memberPending) return;
+      if (type === 'admin_entry' && !notifPrefs.adminEntry) return;
       if (type === 'inquiry_new' && !notifPrefs.inquiryNew) return;
       if (type === 'inquiry_reply' && !notifPrefs.inquiryReply) return;
       if (type === 'video_new' && !notifPrefs.newVideo) return;
@@ -5700,10 +5714,12 @@
       document.getElementById('notifMasterToggle').checked = notifPrefs.enabled;
       document.getElementById('notifHomeToggle').checked = notifPrefs.homeNews;
       document.getElementById('notifMemberToggle').checked = notifPrefs.memberPending;
+      const admEntEl = document.getElementById('notifAdminEntryToggle');
       const inqNewEl = document.getElementById('notifInquiryNewToggle');
       const inqRepEl = document.getElementById('notifInquiryReplyToggle');
       const vidNewEl = document.getElementById('notifVideoNewToggle');
       const vidPendEl = document.getElementById('notifVideoPendingToggle');
+      if (admEntEl) admEntEl.checked = notifPrefs.adminEntry;
       if (inqNewEl) inqNewEl.checked = notifPrefs.inquiryNew;
       if (inqRepEl) inqRepEl.checked = notifPrefs.inquiryReply;
       if (vidNewEl) vidNewEl.checked = notifPrefs.newVideo;
@@ -5711,15 +5727,18 @@
 
       document.getElementById('notifHomeToggle').disabled = !notifPrefs.enabled;
       document.getElementById('notifMemberToggle').disabled = !notifPrefs.enabled;
+      if (admEntEl) admEntEl.disabled = !notifPrefs.enabled;
       if (inqNewEl) inqNewEl.disabled = !notifPrefs.enabled;
       if (inqRepEl) inqRepEl.disabled = !notifPrefs.enabled;
       if (vidNewEl) vidNewEl.disabled = !notifPrefs.enabled;
       if (vidPendEl) vidPendEl.disabled = !notifPrefs.enabled;
       document.getElementById('notifDetailGroup').style.opacity = notifPrefs.enabled ? '1' : '0.48';
       document.getElementById('notifMemberRow').classList.toggle('hidden', !canManageMembers);
+      const admEntRow = document.getElementById('notifAdminEntryRow');
       const inqNewRow = document.getElementById('notifInquiryNewRow');
       const inqRepRow = document.getElementById('notifInquiryReplyRow');
       const vidPendRow = document.getElementById('notifVideoPendingRow');
+      if (admEntRow) admEntRow.classList.toggle('hidden', !canManageMembers);
       if (inqNewRow) inqNewRow.classList.toggle('hidden', !canManageMembers);
       if (inqRepRow) inqRepRow.classList.toggle('hidden', canManageMembers);
       if (vidPendRow) vidPendRow.classList.toggle('hidden', !canManageMembers);
@@ -6044,6 +6063,8 @@
     let unsubMemberHistory = null;
     let adminRegFirstSnap = true;
     let knownPendingAdminIds = new Set();
+    let knownActiveAdminIds = new Set();
+    let removeReasonRequired = true;
     let isLoggingInAdmin = false;
     let sessionEpochResetDone = false;
     let previewAsMemberMode = false;
@@ -6215,6 +6236,7 @@
       pendingAdminStatus = null;
       adminRegFirstSnap = true;
       knownPendingAdminIds = new Set();
+      knownActiveAdminIds = new Set();
     }
 
     function getRoleById(roleId) {
@@ -8084,8 +8106,9 @@
         if (myMemberDoc.status === 'approved') {
           if (prevStatus && prevStatus !== 'approved') {
             currentMainTab = 'home';
+            const rr = myMemberDoc.restoreReason ? ` (사유: ${myMemberDoc.restoreReason})` : '';
             showToast(prevStatus === 'removed'
-              ? `✅ 차단(내보내기)이 해제되어 복구되었습니다! ${myMemberDoc.name}님 환영합니다.`
+              ? `✅ 차단(내보내기)이 해제되어 복구되었습니다!${rr}`
               : `가입이 승인되었습니다! ${myMemberDoc.name}님 환영합니다.`);
           }
           const curRes = myMemberDoc.lastRenameResult || null;
@@ -8387,10 +8410,46 @@
       }
     } catch {}
 
+    function loadSeenAdminRegistryState() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(KEY_SEEN_ADMIN_IDS) || 'null');
+        if (raw && typeof raw === 'object' && raw.initialized) {
+          return {
+            initialized: true,
+            active: Array.isArray(raw.active) ? raw.active.map(String) : [],
+            pending: Array.isArray(raw.pending) ? raw.pending.map(String) : []
+          };
+        }
+      } catch {}
+      return { initialized: false, active: [], pending: [] };
+    }
+
+    function saveSeenAdminRegistryState(activeSet, pendingSet) {
+      try {
+        localStorage.setItem(KEY_SEEN_ADMIN_IDS, JSON.stringify({
+          initialized: true,
+          active: Array.from(activeSet).slice(-120),
+          pending: Array.from(pendingSet).slice(-120)
+        }));
+      } catch {}
+    }
+
+    function markAdminIdSeenLocally(admId) {
+      const key = String(admId || '').trim();
+      if (!key) return;
+      knownActiveAdminIds.add(key);
+      const st = loadSeenAdminRegistryState();
+      const aSet = new Set(st.active);
+      const pSet = new Set(st.pending);
+      aSet.add(key);
+      saveSeenAdminRegistryState(aSet, pSet);
+    }
+
     function attachAdminRegistryListener() {
       if (unsubAdminRegistry) { unsubAdminRegistry(); unsubAdminRegistry = null; }
       adminRegFirstSnap = true;
       knownPendingAdminIds = new Set();
+      knownActiveAdminIds = new Set();
       unsubAdminRegistry = db.collection('config').doc('adminRegistry').onSnapshot(doc => {
         const d = doc.exists ? doc.data() : {};
         adminRegistry = {
@@ -8460,26 +8519,84 @@
           showToast(`${currentAdminName}님의 관리자 입장이 승인되었습니다!`);
         }
 
+        const curActiveIds = new Set();
+        const curPendingIds = new Set();
+        adminRegistry.items.forEach(a => {
+          if (a.status === 'active') curActiveIds.add(String(a.id));
+          if (a.status === 'pending') curPendingIds.add(String(a.id));
+        });
+
+        const fireNewAdminAlert = (a, kind, delayMs = 0) => {
+          const isPend = kind === 'pending';
+          const title = isPend
+            ? (a.isReentry ? '👑 해제된 관리자 재입장 요청' : '👑 새 관리자 입장 승인 요청')
+            : '👑 새 관리자 입장 알림';
+          const body = isPend
+            ? `${a.name}님이 관리자 입장을 요청했습니다. 눌러서 확인·승인해 주세요.`
+            : `${a.name}님이 새 관리자로 입장했습니다.${a.approvedBy ? ` (승인: ${a.approvedBy})` : ' (자동 등록)'}`;
+          const run = () => {
+            dispatchAppNotification({
+              type: 'admin_entry',
+              icon: '👑',
+              title,
+              body,
+              onClick: () => {
+                currentMainTab = 'manage';
+                currentManageSubTab = 'admins';
+                manageAdminsFilter = isPend ? 'pending' : 'all';
+                manageSectionOpen[isPend ? 'admins_pending' : 'admins_active'] = true;
+                applyScreen();
+              }
+            });
+          };
+          if (delayMs > 0) setTimeout(run, delayMs);
+          else run();
+        };
+
         if (adminRegFirstSnap) {
-          adminRegistry.items.forEach(a => { if (a.status === 'pending') knownPendingAdminIds.add(a.id); });
+          const storedSeen = loadSeenAdminRegistryState();
           adminRegFirstSnap = false;
+          if (!storedSeen.initialized) {
+            knownActiveAdminIds = new Set(curActiveIds);
+            knownPendingAdminIds = new Set(curPendingIds);
+            saveSeenAdminRegistryState(knownActiveAdminIds, knownPendingAdminIds);
+          } else {
+            const seenActiveSet = new Set(storedSeen.active);
+            const seenPendingSet = new Set(storedSeen.pending);
+            const missedAlerts = [];
+            adminRegistry.items.forEach(a => {
+              const aid = String(a.id);
+              const isOther = String(a.name || '').trim() !== currentAdminName;
+              if (!isOther) return;
+              if (a.status === 'pending' && !seenPendingSet.has(aid)) {
+                missedAlerts.push({ item: a, kind: 'pending' });
+              } else if (a.status === 'active' && !seenActiveSet.has(aid)) {
+                missedAlerts.push({ item: a, kind: 'active' });
+              }
+            });
+            knownActiveAdminIds = new Set(curActiveIds);
+            knownPendingAdminIds = new Set(curPendingIds);
+            saveSeenAdminRegistryState(knownActiveAdminIds, knownPendingAdminIds);
+            if (missedAlerts.length > 0) {
+              const latest = missedAlerts[missedAlerts.length - 1];
+              fireNewAdminAlert(latest.item, latest.kind, 750);
+            }
+          }
         } else {
           adminRegistry.items.forEach(a => {
-            if (a.status === 'pending' && !knownPendingAdminIds.has(a.id)) {
-              knownPendingAdminIds.add(a.id);
-              dispatchAppNotification({
-                type: 'member',
-                icon: '🔐',
-                title: a.isReentry ? '관리자 재입장 승인 요청' : '새 관리자 등록 승인 요청',
-                body: `${a.name}님이 관리자 입장을 요청했습니다.`,
-                onClick: () => {
-                  currentMainTab = 'manage';
-                  currentManageSubTab = 'admins';
-                  applyScreen();
-                }
-              });
+            const aid = String(a.id);
+            const isOther = String(a.name || '').trim() !== currentAdminName;
+            if (a.status === 'pending' && !knownPendingAdminIds.has(aid)) {
+              knownPendingAdminIds.add(aid);
+              if (isOther) fireNewAdminAlert(a, 'pending', 0);
+            } else if (a.status === 'active' && !knownActiveAdminIds.has(aid)) {
+              knownActiveAdminIds.add(aid);
+              if (isOther) fireNewAdminAlert(a, 'active', 0);
             }
           });
+          knownActiveAdminIds = new Set(curActiveIds);
+          knownPendingAdminIds = new Set(curPendingIds);
+          saveSeenAdminRegistryState(knownActiveAdminIds, knownPendingAdminIds);
         }
 
         subscribeCoreData();
@@ -11799,13 +11916,14 @@
       manageAdminsFilter = allowed.includes(filterKey) ? filterKey : 'all';
       if (manageAdminsFilter === 'active') manageSectionOpen.admins_active = true;
       else if (manageAdminsFilter === 'removed') manageSectionOpen.admins_removed = true;
+      else if (manageAdminsFilter === 'pending') manageSectionOpen.admins_pending = true;
       const u = getCurrentUser();
       if (u && currentMainTab === 'manage' && currentManageSubTab === 'admins') {
         renderManageAdmins(document.getElementById('manageContent'));
       }
     };
 
-    // (C-0) 관리자 명단 · 재입장 승인 (독립 탭 · 현재/해제 관리자 분리 + 해제 사유)
+    // (C-0) 관리자 명단 · 재입장 승인 (현재 관리자 · 해제된 관리자 · 관리자 승인 대기)
     function renderManageAdmins(el) {
       const pendingAdmins = (adminRegistry.items || []).filter(a => a.status === 'pending');
       const activeAdmins = (adminRegistry.items || []).filter(a => a.status === 'active');
@@ -11813,19 +11931,21 @@
         .sort((a, b) => Number(b.removedTs || 0) - Number(a.removedTs || 0));
 
       const f = manageAdminsFilter || 'all';
-      const showPending = (f === 'all' || f === 'pending') && (pendingAdmins.length > 0 || f === 'pending');
       const showActive = f === 'all' || f === 'active';
       const showRemoved = f === 'all' || f === 'removed';
+      const showPending = f === 'all' || f === 'pending';
 
       const activeOpen = isManageSectionOpen('admins_active', true);
       const removedDefaultOpen = removedAdmins.length > 0;
       const removedOpen = isManageSectionOpen('admins_removed', removedDefaultOpen);
+      const pendingDefaultOpen = pendingAdmins.length > 0 || f === 'pending';
+      const pendingOpen = isManageSectionOpen('admins_pending', pendingDefaultOpen);
 
       el.innerHTML = `
         ${buildManageSectionHead({
           key: 'members_admins',
           defaultTitle: '🔐 관리자 명단 · 재입장 승인',
-          rightHtml: `<div style="display:flex; gap:5px; flex-wrap:wrap;"><span class="tag warm">현재 ${activeAdmins.length}명</span><span class="tag slate">해제 ${removedAdmins.length}명</span>${pendingAdmins.length > 0 ? `<span class="tag red">대기 ${pendingAdmins.length}</span>` : ''}</div>`
+          rightHtml: `<div style="display:flex; gap:5px; flex-wrap:wrap;"><span class="tag warm">현재 ${activeAdmins.length}명</span><span class="tag slate">해제 ${removedAdmins.length}명</span><span class="tag ${pendingAdmins.length > 0 ? 'red' : 'slate'}">대기 ${pendingAdmins.length}명</span></div>`
         })}
 
         <div class="card" style="background:#FFFBEB; border-color:#FDE68A; margin-bottom:10px; padding:12px 13px;">
@@ -11858,36 +11978,6 @@
           <button class="filter-chip ${f === 'pending' ? 'active' : ''} ${pendingAdmins.length > 0 ? 'has-badge' : ''}" type="button" onclick="setManageAdminsFilter('pending')"><span>⏳ 승인 대기</span>${pendingAdmins.length > 0 ? buildSubTabBadgeHtml(pendingAdmins.length) : '<span>(0)</span>'}</button>
         </div>
 
-        ${showPending ? `
-          ${pendingAdmins.length === 0
-            ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;margin-bottom:10px;">현재 입장 승인 대기 중인 관리자가 없습니다.</div>'
-            : pendingAdmins.map(a => `
-              <div class="card highlight-pending">
-                <div class="card-top">
-                  <div class="member-name">
-                    <span>${escapeHtml(a.name)}</span>
-                    <span class="tag ${a.isReentry ? 'red' : 'warm'}">${a.isReentry ? '🔄 삭제된 관리자 재입장 요청' : '🆕 신규 관리자 요청'}</span>
-                  </div>
-                  <span class="card-date">${escapeHtml(a.requestedAt || a.registeredAt || '')}</span>
-                </div>
-                <div style="font-size:12px; color:#92400E; margin-bottom:7px;">
-                  ${a.isReentry
-                    ? '이전에 관리자 목록에서 해제되었던 분이 다시 입장을 요청했습니다. 승인 시 구글 시트에 재입장 기록이 남습니다.'
-                    : '신규 관리자 등록 잠금 상태에서 입장을 요청했습니다.'}
-                </div>
-                ${a.isReentry && a.removeReason ? `
-                  <div class="reason-note-box admin-removed" style="margin-bottom:9px;">
-                    <b>이전 해제 사유:</b> ${escapeHtml(a.removeReason)}
-                  </div>
-                ` : ''}
-                <div style="display:flex; gap:6px;">
-                  <button class="btn-sm approve" style="flex:1; padding:8px;" onclick="approveAdminEntry('${escapeJsAttr(a.id)}')">✅ 관리자 입장 승인</button>
-                  <button class="btn-sm danger" style="padding:8px 12px;" onclick="rejectAdminEntry('${escapeJsAttr(a.id)}')">거절</button>
-                </div>
-              </div>
-            `).join('')}
-        ` : ''}
-
         ${showActive ? `
           ${buildManageAccordionBar({
             key: 'admins_active',
@@ -11912,6 +12002,7 @@
                             ${a.renameCount ? `<span class="tag" style="font-size:10px; padding:2px 6px;">변경 ${a.renameCount}회</span>` : ''}
                           </div>
                           <div class="member-meta">등록 ${escapeHtml(a.registeredAt || '-')} · 최근접속 ${escapeHtml(a.lastLoginAt || '-')}${a.prevName ? ` · 이전 이름: ${escapeHtml(a.prevName)}` : ''}</div>
+                          ${a.restoreReason ? `<div class="member-meta" style="color:#15803D;">🔓 최근 복구 사유: ${escapeHtml(a.restoreReason)}${a.restoredAt ? ` (${escapeHtml(a.restoredAt)})` : ''}</div>` : ''}
                         </div>
                         <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
                           <button class="btn-sm" type="button" onclick="openAdminRenameModal('${escapeJsAttr(a.id)}')">✏️ 이름 변경</button>
@@ -11964,9 +12055,48 @@
                 }).join('')}
             ${removedAdmins.length > 0 ? `
               <div style="font-size:11.5px; color:#64748B; padding:2px 4px 8px; line-height:1.45;">
-                ℹ️ <b>[🔓 차단 해제(복구)]</b>를 누르면 즉시 활성 관리자로 복구되어 바로 로그인할 수 있습니다. 복구 전 같은 성명으로 다시 로그인하면 상단 <b>[⏳ 승인 대기]</b>에 표시됩니다.
+                ℹ️ <b>[🔓 차단 해제(복구)]</b>를 누르면 즉시 활성 관리자로 복구되어 바로 로그인할 수 있습니다. 복구 전 같은 성명으로 다시 로그인하면 아래 <b>[⏳ 관리자 승인 대기]</b>에 표시됩니다.
               </div>
             ` : ''}
+          </div>
+        ` : ''}
+
+        ${showPending ? `
+          ${buildManageAccordionBar({
+            key: 'admins_pending',
+            titleHtml: '⏳ 관리자 승인 대기',
+            badgeHtml: `<span class="tag ${pendingAdmins.length > 0 ? 'red' : 'slate'}">${pendingAdmins.length}명</span>`,
+            defaultOpen: pendingDefaultOpen,
+            marginTop: f === 'all' ? '10px' : ''
+          })}
+          <div data-acc-body="admins_pending" class="${pendingOpen ? '' : 'hidden'}">
+            ${pendingAdmins.length === 0
+              ? '<div class="card" style="text-align:center;color:#64748B;font-size:12.5px;">현재 입장 승인 대기 중인 관리자가 없습니다.</div>'
+              : pendingAdmins.map(a => `
+                <div class="card highlight-pending" style="margin-bottom:9px;">
+                  <div class="card-top">
+                    <div class="member-name">
+                      <span>${escapeHtml(a.name)}</span>
+                      <span class="tag ${a.isReentry ? 'red' : 'warm'}">${a.isReentry ? '🔄 해제된 관리자 재입장 요청' : '🆕 신규 관리자 요청'}</span>
+                    </div>
+                    <span class="card-date">${escapeHtml(a.requestedAt || a.registeredAt || '')}</span>
+                  </div>
+                  <div style="font-size:12px; color:#92400E; margin-bottom:7px;">
+                    ${a.isReentry
+                      ? '이전에 관리자 목록에서 해제되었던 분이 다시 입장을 요청했습니다. 승인 시 구글 시트에 재입장 기록이 남습니다.'
+                      : '신규 관리자 등록 잠금 상태에서 입장을 요청했습니다.'}
+                  </div>
+                  ${a.isReentry && a.removeReason ? `
+                    <div class="reason-note-box admin-removed" style="margin-bottom:9px;">
+                      <b>이전 해제 사유:</b> ${escapeHtml(a.removeReason)}
+                    </div>
+                  ` : ''}
+                  <div style="display:flex; gap:6px;">
+                    <button class="btn-sm approve" style="flex:1; padding:8px;" onclick="approveAdminEntry('${escapeJsAttr(a.id)}')">✅ 관리자 입장 승인</button>
+                    <button class="btn-sm danger" style="padding:8px 12px;" onclick="rejectAdminEntry('${escapeJsAttr(a.id)}')">거절</button>
+                  </div>
+                </div>
+              `).join('')}
           </div>
         ` : ''}
       `;
@@ -12634,6 +12764,8 @@
 
     const ADMIN_REMOVE_REASON_PRESETS = ['임기 만료 · 인수인계', '사임 · 개인 사정', '직책 변경', '장기 미접속', '테스트 계정 정리'];
     const MEMBER_REMOVE_REASON_PRESETS = ['교회 이동 · 전출', '졸업 · 등반', '장기 미출석', '본인 요청', '중복 · 테스트 계정'];
+    const ADMIN_RESTORE_REASON_PRESETS = ['임원 재선임 · 복귀', '착오 해제 복구', '협의 완료 · 재합류', '업무 지원 재위임'];
+    const MEMBER_RESTORE_REASON_PRESETS = ['오해 해소 · 재합류', '착오 내보내기 복구', '본인 요청 복귀', '교회 복귀 · 재출석'];
 
     window.clearRemoveReasonError = () => {
       const errEl = document.getElementById('removeReasonError');
@@ -12648,7 +12780,8 @@
       inp.focus();
     };
 
-    function openRemoveReasonModal({ mode, targetId, title, descHtml, label, presets, initialValue, submitLabel, dangerBtn }) {
+    function openRemoveReasonModal({ mode, targetId, title, descHtml, label, presets, initialValue, submitLabel, dangerBtn, required = true, placeholder = '', confirmColor = '' }) {
+      removeReasonRequired = required !== false;
       document.getElementById('removeReasonMode').value = mode;
       document.getElementById('removeReasonTargetId').value = String(targetId || '');
       document.getElementById('removeReasonModalTitle').textContent = title;
@@ -12661,10 +12794,13 @@
       `).join('');
       const inp = document.getElementById('removeReasonInput');
       inp.value = String(initialValue || '');
+      inp.placeholder = placeholder || (removeReasonRequired
+        ? '해제 사유를 2글자 이상 필수로 입력해 주세요. (해제된 당사자에게 안내됩니다)'
+        : '차단 해제(복구) 사유가 있다면 입력해 주세요. (선택 사항 · 비워두셔도 복구됩니다)');
       clearRemoveReasonError();
       const btn = document.getElementById('submitRemoveReasonBtn');
       btn.textContent = submitLabel;
-      btn.style.background = dangerBtn ? '#EF4444' : '#111827';
+      btn.style.background = confirmColor || (dangerBtn ? '#EF4444' : '#111827');
       btn.disabled = false;
       document.getElementById('removeReasonModal').classList.add('open');
       setTimeout(() => inp.focus(), 50);
@@ -12708,13 +12844,13 @@
       const reason = (document.getElementById('removeReasonInput').value || '').trim();
       clearRemoveReasonError();
 
-      if (reason.length < 2) {
+      if (removeReasonRequired && reason.length < 2) {
         showError('removeReasonError', '사유를 2글자 이상 필수로 입력해 주세요. (해제된 당사자에게 사유가 안내됩니다)');
         const inp = document.getElementById('removeReasonInput');
         if (inp) inp.focus();
         return;
       }
-      if (typeof enforceInputSecurity === 'function' && !enforceInputSecurity(reason, '해제 사유', true)) return;
+      if (reason && typeof enforceInputSecurity === 'function' && !enforceInputSecurity(reason, '사유', true)) return;
 
       const btn = document.getElementById('submitRemoveReasonBtn');
       if (btn) btn.disabled = true;
@@ -12723,10 +12859,14 @@
           await executeRemoveAdminEntry(targetId, reason);
         } else if (mode === 'edit_admin_reason') {
           await executeUpdateAdminRemoveReason(targetId, reason);
+        } else if (mode === 'restore_admin') {
+          await executeRestoreRemovedAdmin(targetId, reason);
         } else if (mode === 'remove_member') {
           await executeDeleteMember(targetId, reason);
         } else if (mode === 'edit_member_reason') {
           await executeUpdateMemberRemoveReason(targetId, reason);
+        } else if (mode === 'restore_member') {
+          await executeRestoreRemovedMember(targetId, reason);
         }
         document.getElementById('removeReasonModal').classList.remove('open');
       } finally {
@@ -12846,7 +12986,7 @@
       } catch (err) { handleDbError(err, '회원 삭제'); }
     }
 
-    window.restoreRemovedMember = async (histId) => {
+    window.restoreRemovedMember = (histId) => {
       const h = memberHistoryMap.get(String(histId));
       if (!h) return;
       const targetName = String(h.name || '회원').trim();
@@ -12862,10 +13002,56 @@
 
       const removedDoc = (h.lastMemberUid && members.find(x => String(x.id) === String(h.lastMemberUid) && x.status === 'removed'))
         || members.find(x => x.status === 'removed' && nameToHex(x.name) === String(histId));
+      const prevReason = String(h.removeReason || '').trim();
+
+      if (removedDoc) {
+        const matchedRole = roles.find(r => String(r.id) === String(removedDoc.roleId))
+          || (h.role ? roles.find(r => String(r.name).trim() === String(h.role).trim()) : null)
+          || roles.find(r => r.id === 'role_youth')
+          || roles[0];
+        const restoredRoleName = matchedRole ? matchedRole.name : '청년';
+        openRemoveReasonModal({
+          mode: 'restore_member',
+          targetId: String(histId),
+          title: `🔓 [${targetName}] 회원 차단(내보내기) 해제`,
+          descHtml: `<b>${escapeHtml(targetName)}</b>님의 차단을 해제하고 <b>[${escapeHtml(restoredRoleName)}]</b> 역할로 복구합니다.<br>복구 후 해당 회원은 기존 아이디·비밀번호로 바로 다시 로그인할 수 있습니다.${prevReason ? `<br><span style="color:#991B1B;">• 이전 내보내기 사유: ${escapeHtml(prevReason)}</span>` : ''}`,
+          label: '차단 해제(복구) 사유 (선택 · 입력 시 로그 및 시트에 기록)',
+          presets: MEMBER_RESTORE_REASON_PRESETS,
+          initialValue: '',
+          submitLabel: '🔓 차단 해제 및 복구하기',
+          dangerBtn: false,
+          required: false,
+          confirmColor: '#16A34A'
+        });
+      } else {
+        openRemoveReasonModal({
+          mode: 'restore_member',
+          targetId: String(histId),
+          title: `🔓 [${targetName}] 내보낸 회원 차단 이력 해제`,
+          descHtml: `<b>${escapeHtml(targetName)}</b>님은 이전 버전에서 계정이 완전 삭제되어 자동 계정 복구는 어렵습니다.<br>내보낸 회원 목록에서 차단 이력을 해제하고, 추후 초대 QR로 재가입할 수 있게 정리합니다.${prevReason ? `<br><span style="color:#991B1B;">• 이전 내보내기 사유: ${escapeHtml(prevReason)}</span>` : ''}`,
+          label: '차단 이력 해제 사유 (선택 · 입력 시 로그에 기록)',
+          presets: MEMBER_RESTORE_REASON_PRESETS,
+          initialValue: '',
+          submitLabel: '🔓 차단 이력 해제하기',
+          dangerBtn: false,
+          required: false,
+          confirmColor: '#16A34A'
+        });
+      }
+    };
+
+    async function executeRestoreRemovedMember(histId, restoreReason = '') {
+      const h = memberHistoryMap.get(String(histId));
+      if (!h) return;
+      const targetName = String(h.name || '회원').trim();
+      const nameHex = nameToHex(targetName);
+      const removedDoc = (h.lastMemberUid && members.find(x => String(x.id) === String(h.lastMemberUid) && x.status === 'removed'))
+        || members.find(x => x.status === 'removed' && nameToHex(x.name) === String(histId));
 
       const nowStr = formatKstDateTime();
       const nowTs = Date.now();
       const prevReason = String(h.removeReason || '').trim();
+      const cleanReason = String(restoreReason || '').trim();
 
       if (removedDoc) {
         const matchedRole = roles.find(r => String(r.id) === String(removedDoc.roleId))
@@ -12874,8 +13060,6 @@
           || roles[0];
         const restoredRoleId = matchedRole ? matchedRole.id : 'role_youth';
         const restoredRoleName = matchedRole ? matchedRole.name : '청년';
-
-        if (!confirm(`${targetName}님의 차단(내보내기)을 해제하고 [${restoredRoleName}] 역할로 복구할까요?\n복구 후 해당 회원은 기존 아이디·비밀번호로 바로 다시 로그인할 수 있습니다.`)) return;
 
         try {
           const restoredAuthEmail = removedDoc.authEmail || hexToAuthEmail(nameHex, Number(removedDoc.authVer || 0));
@@ -12887,6 +13071,7 @@
             restoredAt: nowStr,
             restoredTs: nowTs,
             restoredBy: currentAdminName || '관리자',
+            restoreReason: cleanReason,
             sheetSyncedStatus: syncedStatusLabel,
             removedAt: FieldValue.delete(),
             removedTs: FieldValue.delete(),
@@ -12915,6 +13100,7 @@
             lastUpdatedAt: nowStr,
             restoredAt: nowStr,
             restoredBy: currentAdminName || '관리자',
+            restoreReason: cleanReason,
             lastRemoveReason: prevReason,
             removedType: FieldValue.delete()
           }, { merge: true });
@@ -12927,27 +13113,26 @@
             target: targetName,
             beforeVal: prevReason ? `내보냄 (${prevReason})` : '내보냄',
             afterVal: `복구 승인 (${restoredRoleName})`,
-            detail: `복구 처리자: ${currentAdminName || '관리자'}`
+            detail: `복구 처리자: ${currentAdminName || '관리자'}${cleanReason ? ` · 사유: ${cleanReason}` : ''}`
           });
           syncMemberEventToSheet({
             name: targetName,
             role: restoredRoleName,
             joinedAt: removedDoc.createdAt || nowStr,
-            status: '복구(승인)'
+            status: cleanReason ? `복구 (${cleanReason})` : '복구(승인)'
           });
-          showToast(`✅ ${targetName}님의 차단을 해제하고 [${restoredRoleName}] 역할로 복구했습니다!`);
+          showToast(`✅ ${targetName}님의 차단을 해제하고 [${restoredRoleName}] 역할로 복구했습니다!${cleanReason ? ' (사유 기록됨)' : ''}`);
         } catch (err) { handleDbError(err, '회원 차단 해제'); }
         return;
       }
 
-      // 이전 버전(v10.85 이전)에서 계정 문서가 완전 삭제되어 이력만 남은 경우
-      if (!confirm(`${targetName}님은 이전 버전에서 계정이 완전 삭제되어 자동 계정 복구는 어렵습니다.\n내보낸 회원 목록에서 차단 이력을 해제하고, 추후 초대 QR로 재가입할 수 있게 정리할까요?`)) return;
       try {
         await db.collection('memberHistory').doc(String(histId)).set({
           lastStatus: '차단 이력 해제',
           lastUpdatedAt: nowStr,
           restoredAt: nowStr,
           restoredBy: currentAdminName || '관리자',
+          restoreReason: cleanReason,
           lastRemoveReason: prevReason,
           removedType: FieldValue.delete()
         }, { merge: true });
@@ -12958,11 +13143,11 @@
           target: targetName,
           beforeVal: prevReason ? `내보냄 (${prevReason})` : '내보냄',
           afterVal: '이력 해제 (재가입 가능)',
-          detail: `처리자: ${currentAdminName || '관리자'}`
+          detail: `처리자: ${currentAdminName || '관리자'}${cleanReason ? ` · 사유: ${cleanReason}` : ''}`
         });
-        showToast(`✅ ${targetName}님의 차단 이력을 해제했습니다. 추후 초대 QR로 재가입할 수 있습니다.`);
+        showToast(`✅ ${targetName}님의 차단 이력을 해제했습니다.${cleanReason ? ' (사유 기록됨)' : ''}`);
       } catch (err) { handleDbError(err, '차단 이력 해제'); }
-    };
+    }
 
     // (D) 역할 설정 + 역할별 승인 회원 명단 · 역할 변경
     function renderRoleMembersListOnly() {
@@ -15979,6 +16164,7 @@
       }
 
       try {
+        markAdminIdSeenLocally(target.id);
         await db.collection('config').doc('adminRegistry').set({
           lockAutoRegister: !!adminRegistry.lockAutoRegister,
           items
@@ -16139,8 +16325,8 @@
       } catch (err) { handleDbError(err, '관리자 해제 사유 저장'); }
     }
 
-    window.restoreRemovedAdmin = async (admId) => {
-      const items = structuredClone(adminRegistry.items || []);
+    window.restoreRemovedAdmin = (admId) => {
+      const items = adminRegistry.items || [];
       const target = items.find(a => String(a.id) === String(admId));
       if (!target || target.status !== 'removed') return;
 
@@ -16148,21 +16334,43 @@
       if (dupActive) {
         return showToast(`이미 [${target.name}] 이름으로 등록된 활성 관리자가 있습니다.`);
       }
-      if (!confirm(`${target.name}님의 관리자 해제를 취소하고 다시 활성 관리자로 복구할까요?\n복구 후 해당 관리자는 승인 대기 없이 바로 관리자 로그인할 수 있습니다.`)) return;
+      const prevReason = String(target.removeReason || '').trim();
+      openRemoveReasonModal({
+        mode: 'restore_admin',
+        targetId: target.id,
+        title: `🔓 [${target.name}] 관리자 차단 해제(복구)`,
+        descHtml: `<b>${escapeHtml(target.name)}</b>님의 관리자 해제를 취소하고 다시 활성 관리자로 복구합니다.<br>복구 후 해당 관리자는 승인 대기 없이 바로 관리자 로그인할 수 있습니다.${prevReason ? `<br><span style="color:#991B1B;">• 이전 해제 사유: ${escapeHtml(prevReason)}</span>` : ''}`,
+        label: '차단 해제(복구) 사유 (선택 · 입력 시 로그 및 시트에 기록)',
+        presets: ADMIN_RESTORE_REASON_PRESETS,
+        initialValue: '',
+        submitLabel: '🔓 차단 해제(복구)하기',
+        dangerBtn: false,
+        required: false,
+        confirmColor: '#16A34A'
+      });
+    };
+
+    async function executeRestoreRemovedAdmin(admId, restoreReason = '') {
+      const items = structuredClone(adminRegistry.items || []);
+      const target = items.find(a => String(a.id) === String(admId));
+      if (!target || target.status !== 'removed') return;
 
       const nowStr = formatKstDateTime();
       const prevReason = String(target.removeReason || '').trim();
+      const cleanReason = String(restoreReason || '').trim();
       target.status = 'active';
       target.isReentry = false;
       target.approvedBy = currentAdminName || '관리자';
       target.approvedAt = nowStr;
       target.restoredBy = currentAdminName || '관리자';
       target.restoredAt = nowStr;
+      target.restoreReason = cleanReason;
       target.reentryCount = Number(target.reentryCount || 0) + 1;
       if (prevReason) target.lastRemoveReason = prevReason;
       delete target.removeReason;
 
       try {
+        markAdminIdSeenLocally(target.id);
         await db.collection('config').doc('adminRegistry').set({
           lockAutoRegister: !!adminRegistry.lockAutoRegister,
           items
@@ -16176,7 +16384,7 @@
           reentryCount: Number(target.reentryCount || 0),
           renameCount: Number(target.renameCount || 0),
           prevName: target.prevName || '',
-          note: `차단 해제(복구): ${currentAdminName || '관리자'}`
+          note: `차단 해제(복구): ${currentAdminName || '관리자'}${cleanReason ? ` · 사유: ${cleanReason}` : ''}`
         }).catch(() => {});
         recordAuditLog({
           actorType: 'admin',
@@ -16185,12 +16393,12 @@
           target: target.name,
           beforeVal: prevReason ? `해제됨 (${prevReason})` : '해제됨',
           afterVal: '활성 관리자 복구',
-          detail: `복구 처리자: ${currentAdminName || '관리자'}`,
+          detail: `복구 처리자: ${currentAdminName || '관리자'}${cleanReason ? ` · 사유: ${cleanReason}` : ''}`,
           decision: 'approved'
         });
-        showToast(`✅ ${target.name}님의 관리자 차단을 해제하고 복구했습니다!`);
+        showToast(`✅ ${target.name}님의 관리자 차단을 해제하고 복구했습니다!${cleanReason ? ' (사유 기록됨)' : ''}`);
       } catch (err) { handleDbError(err, '관리자 차단 해제'); }
-    };
+    }
 
     // --- 통합 보안 감사 로그 (auditLogs · 관리자 전체 활동 + 이용자 악용 가능 활동 · 삭제 불가 · 구글 시트 자동 연동) ---
     function truncateLogText(str, maxLen = 140) {
@@ -17584,7 +17792,8 @@
         time: a.lastLoginAt || a.registeredAt || formatKstDateTime(),
         note: [
           a.approvedBy ? `승인자: ${a.approvedBy}` : (a.removedBy ? `해제자: ${a.removedBy}` : '등록'),
-          a.removeReason ? `사유: ${a.removeReason}` : '',
+          a.removeReason ? `해제사유: ${a.removeReason}` : '',
+          a.restoreReason ? `복구사유: ${a.restoreReason}` : '',
           a.prevName ? `이전 이름: ${a.prevName}` : ''
         ].filter(Boolean).join(' · ')
       }));
