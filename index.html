@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=219" />
+  <link rel="manifest" href="./manifest.json?v=220" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=219" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=219" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=220" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=220" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3715,7 +3715,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=219" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=220" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5472,7 +5472,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 219;
+    const APP_CLIENT_BUILD = 220;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -6461,7 +6461,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=219" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=220" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6485,8 +6485,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=219', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=219', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=220', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=220', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -28448,7 +28448,7 @@
 
 
     // ==================== 27. 이용약관(회칙 기반) · 회칙 관리자 CRUD ====================
-    // --- (A) 라이트 청년부 앱 이용약관 (회칙 제1장~제7장 참고 기본 8개 조항 + 관리자 추가/수정/삭제/순서변경) ---
+    // --- (A) 라이트 청년부 앱 이용약관 (회칙 제1장~제7장 참고 기본 8개 조항 + 관리자 추가/수정/삭제) ---
     const DEFAULT_TERMS_ARTICLES = [
       {
         id: 'tos_1',
@@ -28544,8 +28544,6 @@
             <span class="bylaw-article-title">${highlightText(art.title || '', q)}</span>
             <div style="display:flex; gap:5px; flex-shrink:0; align-items:center;">
               <button class="btn-sm" type="button" onclick="copyTermsArticle(${idx})">복사</button>
-              ${canManage ? `<button class="btn-sm" type="button" onclick="moveTermsArticle(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>` : ''}
-              ${canManage ? `<button class="btn-sm" type="button" onclick="moveTermsArticle(${idx}, 1)" ${idx === all.length - 1 ? 'disabled' : ''}>▼</button>` : ''}
               ${canManage ? `<button class="btn-sm" type="button" onclick="openTermsFormModal(${idx})">수정</button>` : ''}
               ${canManage ? `<button class="btn-sm danger" type="button" onclick="deleteTermsArticle(${idx})">삭제</button>` : ''}
             </div>
@@ -28624,29 +28622,6 @@
         handleDbError(err, '이용약관 저장');
       } finally {
         if (btn) btn.disabled = false;
-      }
-    };
-
-    window.moveTermsArticle = async (idx, dir) => {
-      const next = structuredClone(getActiveTermsArticles());
-      const t = idx + dir;
-      if (t < 0 || t >= next.length) return;
-      const movedTitle = next[idx].title;
-      [next[idx], next[t]] = [next[t], next[idx]];
-      try {
-        await db.collection('config').doc('layout').set({ customTerms: next }, { merge: true });
-        customTermsArticles = next;
-        recordAuditLog({
-          actorType: 'admin',
-          category: '약관·회칙',
-          action: '이용약관 순서 변경',
-          target: movedTitle,
-          detail: `${idx + 1}번 → ${t + 1}번`
-        });
-        renderTermsView();
-        showToast('이용약관 순서가 변경되었습니다.');
-      } catch (err) {
-        handleDbError(err, '이용약관 순서 변경');
       }
     };
 
