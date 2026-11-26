@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=207" />
+  <link rel="manifest" href="./manifest.json?v=208" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=207" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=207" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=208" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=208" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3597,7 +3597,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=207" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=208" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5271,7 +5271,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 207;
+    const APP_CLIENT_BUILD = 208;
     const KEY_LAST_SEC_WATCH_SIG = 'right_youth_sec_watch_sig_v1';
     const KEY_AUTO_SEC_LAST_ALERT_SIG = 'right_youth_auto_sec_alert_sig_v1';
     const KEY_AUTO_DIAG_LAST_ALERT_SIG = 'right_youth_auto_diag_alert_sig_v1';
@@ -6191,7 +6191,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=207" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=208" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6215,8 +6215,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=207', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=207', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=208', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=208', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -14371,8 +14371,12 @@
     function renderManageAdminCode(el, user) {
       const prevCurEl = document.getElementById('curAdminPwInput');
       const prevNewEl = document.getElementById('newAdminPwInput');
+      const prevNewConfirmEl = document.getElementById('newAdminPwConfirmInput');
       const prevCur = prevCurEl ? prevCurEl.value : '';
       const prevNew = prevNewEl ? prevNewEl.value : '';
+      const prevNewConfirm = prevNewConfirmEl ? prevNewConfirmEl.value : '';
+      const prevNewType = prevNewEl ? prevNewEl.type : 'password';
+      const prevNewConfirmType = prevNewConfirmEl ? prevNewConfirmEl.type : 'password';
 
       const acf = manageAdminCodeFilter || 'all';
       const showCurrent = acf === 'all' || acf === 'current';
@@ -14435,14 +14439,22 @@
             <div class="card" style="border-color:#CBD5E1;">
               <div class="form-group" style="margin-bottom:8px;">
                 <label class="form-label" for="curAdminPwInput">현재 관리자 코드</label>
-                <input id="curAdminPwInput" type="password" class="form-input" placeholder="현재 관리자 코드 입력" />
+                <input id="curAdminPwInput" type="password" class="form-input" placeholder="현재 관리자 코드 입력" autocomplete="current-password" />
               </div>
-              <div class="form-group" style="margin-bottom:10px;">
+              <div class="form-group" style="margin-bottom:8px;">
                 <label class="form-label" for="newAdminPwInput">새 관리자 코드 (6자리 이상)</label>
                 <div style="display:flex; gap:6px;">
-                  <input id="newAdminPwInput" type="password" class="form-input" placeholder="새 코드 입력 (6자리 이상)" style="flex:1;" />
-                  <button id="toggleNewAdminPwBtn" class="btn-sm" type="button" style="white-space:nowrap;" onclick="toggleNewAdminPwVisibility()">👁️ 보기</button>
+                  <input id="newAdminPwInput" type="password" class="form-input" placeholder="새 코드 입력 (6자리 이상)" style="flex:1;" autocomplete="new-password" oninput="updateAdminPwMatchHint()" />
+                  <button id="toggleNewAdminPwBtn" class="btn-sm" type="button" style="white-space:nowrap;" onclick="toggleNewAdminPwVisibility('newAdminPwInput', 'toggleNewAdminPwBtn')">👁️ 보기</button>
                 </div>
+              </div>
+              <div class="form-group" style="margin-bottom:10px;">
+                <label class="form-label" for="newAdminPwConfirmInput">새 관리자 코드 확인 (6자리 이상)</label>
+                <div style="display:flex; gap:6px;">
+                  <input id="newAdminPwConfirmInput" type="password" class="form-input" placeholder="새 코드 한 번 더 입력 (6자리 이상)" style="flex:1;" autocomplete="new-password" oninput="updateAdminPwMatchHint()" />
+                  <button id="toggleNewAdminPwConfirmBtn" class="btn-sm" type="button" style="white-space:nowrap;" onclick="toggleNewAdminPwVisibility('newAdminPwConfirmInput', 'toggleNewAdminPwConfirmBtn')">👁️ 보기</button>
+                </div>
+                <div id="adminPwMatchHint" class="hidden" style="font-size:12px; font-weight:700; margin-top:6px; line-height:1.45;"></div>
               </div>
               <button class="btn-full btn-dark" type="button" style="padding:12px; font-size:14px;" onclick="changeAdminPassword()">💾 새 관리자 코드로 변경</button>
             </div>
@@ -14451,23 +14463,73 @@
       `;
 
       if (prevCur && document.getElementById('curAdminPwInput')) document.getElementById('curAdminPwInput').value = prevCur;
-      if (prevNew && document.getElementById('newAdminPwInput')) document.getElementById('newAdminPwInput').value = prevNew;
+      if (prevNew && document.getElementById('newAdminPwInput')) {
+        const elNew = document.getElementById('newAdminPwInput');
+        elNew.value = prevNew;
+        elNew.type = prevNewType === 'text' ? 'text' : 'password';
+        const btnNew = document.getElementById('toggleNewAdminPwBtn');
+        if (btnNew) btnNew.textContent = elNew.type === 'text' ? '숨기기' : '👁️ 보기';
+      }
+      if (prevNewConfirm && document.getElementById('newAdminPwConfirmInput')) {
+        const elConf = document.getElementById('newAdminPwConfirmInput');
+        elConf.value = prevNewConfirm;
+        elConf.type = prevNewConfirmType === 'text' ? 'text' : 'password';
+        const btnConf = document.getElementById('toggleNewAdminPwConfirmBtn');
+        if (btnConf) btnConf.textContent = elConf.type === 'text' ? '숨기기' : '👁️ 보기';
+      }
+      updateAdminPwMatchHint();
     }
+
+    window.updateAdminPwMatchHint = () => {
+      const inp = document.getElementById('newAdminPwInput');
+      const conf = document.getElementById('newAdminPwConfirmInput');
+      const hint = document.getElementById('adminPwMatchHint');
+      if (!inp || !conf || !hint) return;
+      const newPw = (inp.value || '').trim();
+      const confPw = (conf.value || '').trim();
+      if (!newPw && !confPw) {
+        hint.textContent = '';
+        hint.classList.add('hidden');
+        return;
+      }
+      hint.classList.remove('hidden');
+      if (newPw.length < 6) {
+        hint.style.color = '#B45309';
+        hint.textContent = '⚠️ 새 관리자 코드는 6자리 이상 입력해 주세요.';
+      } else if (!confPw) {
+        hint.style.color = '#64748B';
+        hint.textContent = 'ℹ️ 오타 방지를 위해 아래 칸에 새 코드를 한 번 더 입력해 주세요.';
+      } else if (newPw === confPw) {
+        hint.style.color = '#15803D';
+        hint.textContent = '✅ 새 관리자 코드가 일치합니다.';
+      } else {
+        hint.style.color = '#DC2626';
+        hint.textContent = '❌ 새 관리자 코드가 일치하지 않습니다. 오타가 없는지 확인해 주세요.';
+      }
+    };
 
     window.fillRandomAdminCode = () => {
       const inp = document.getElementById('newAdminPwInput');
+      const conf = document.getElementById('newAdminPwConfirmInput');
       const btn = document.getElementById('toggleNewAdminPwBtn');
+      const confBtn = document.getElementById('toggleNewAdminPwConfirmBtn');
       if (!inp) return;
       const code = generateResetCode();
       inp.value = code;
       inp.type = 'text';
       if (btn) btn.textContent = '숨기기';
+      if (conf) {
+        conf.value = code;
+        conf.type = 'text';
+      }
+      if (confBtn) confBtn.textContent = '숨기기';
+      updateAdminPwMatchHint();
       showToast('새 추천 코드가 입력되었습니다. 확인 후 변경 버튼을 눌러 주세요.');
     };
 
-    window.toggleNewAdminPwVisibility = () => {
-      const inp = document.getElementById('newAdminPwInput');
-      const btn = document.getElementById('toggleNewAdminPwBtn');
+    window.toggleNewAdminPwVisibility = (inputId = 'newAdminPwInput', btnId = 'toggleNewAdminPwBtn') => {
+      const inp = document.getElementById(inputId);
+      const btn = document.getElementById(btnId);
       if (!inp) return;
       const show = inp.type === 'password';
       inp.type = show ? 'text' : 'password';
@@ -14477,8 +14539,28 @@
     window.changeAdminPassword = async () => {
       const curPw = (document.getElementById('curAdminPwInput').value || '').trim();
       const newPw = (document.getElementById('newAdminPwInput').value || '').trim();
+      const confEl = document.getElementById('newAdminPwConfirmInput');
+      const confPw = (confEl ? confEl.value : '').trim();
       if (!curPw) return showToast('현재 관리자 코드를 입력해 주세요.');
-      if (newPw.length < 6) return showToast('새 관리자 코드는 6자리 이상 입력해 주세요.');
+      if (newPw.length < 6) {
+        updateAdminPwMatchHint();
+        return showToast('새 관리자 코드는 6자리 이상 입력해 주세요.');
+      }
+      if (!confPw) {
+        updateAdminPwMatchHint();
+        if (confEl) confEl.focus();
+        return showToast('새 관리자 코드 확인을 입력해 주세요.');
+      }
+      if (confPw.length < 6) {
+        updateAdminPwMatchHint();
+        if (confEl) confEl.focus();
+        return showToast('새 관리자 코드 확인도 6자리 이상 입력해 주세요.');
+      }
+      if (newPw !== confPw) {
+        updateAdminPwMatchHint();
+        if (confEl) confEl.focus();
+        return showToast('새 관리자 코드와 확인 코드가 일치하지 않습니다. 오타를 확인해 주세요.');
+      }
 
       try {
         const cred = firebase.auth.EmailAuthProvider.credential(ADMIN_EMAIL, curPw);
@@ -14492,8 +14574,15 @@
         document.getElementById('curAdminPwInput').value = '';
         document.getElementById('newAdminPwInput').value = '';
         document.getElementById('newAdminPwInput').type = 'password';
+        if (confEl) {
+          confEl.value = '';
+          confEl.type = 'password';
+        }
         const tBtn = document.getElementById('toggleNewAdminPwBtn');
         if (tBtn) tBtn.textContent = '👁️ 보기';
+        const tcBtn = document.getElementById('toggleNewAdminPwConfirmBtn');
+        if (tcBtn) tcBtn.textContent = '👁️ 보기';
+        updateAdminPwMatchHint();
         recordAuditLog({
           actorType: 'admin',
           category: '보안·설정',
