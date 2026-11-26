@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=227" />
+  <link rel="manifest" href="./manifest.json?v=228" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=227" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=227" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=228" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=228" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -1354,6 +1354,58 @@
       font-weight: 800;
       color: #0F172A;
       margin: 14px 0 8px;
+      flex-wrap: wrap;
+    }
+    .newcomer-mgr-box {
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 13px;
+    }
+    .newcomer-chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .newcomer-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 999px;
+      padding: 4px 8px 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #0F172A;
+    }
+    .newcomer-chip-tag {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 999px;
+      background: #EFF6FF;
+      color: #1D4ED8;
+    }
+    .newcomer-chip-tag.manual {
+      background: #FDF2F8;
+      color: #BE185D;
+    }
+    .newcomer-chip-del {
+      border: none;
+      background: #F1F5F9;
+      color: #64748B;
+      border-radius: 999px;
+      padding: 1px 6px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .newcomer-chip-del:hover {
+      background: #FEE2E2;
+      color: #DC2626;
     }
     .banner-quick-edit-btn {
       position: absolute;
@@ -3843,7 +3895,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=227" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=228" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4881,29 +4933,49 @@
   </div>
 
 
-  <!-- 관리자: 새가족 환영 멘트 편집 모달 -->
+  <!-- 관리자: 새가족 명단 · 환영 멘트 · 배너 색 편집 모달 -->
   <div id="celebrationMsgsModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">💐 새가족 환영 멘트 설정</h3>
+        <h3 class="modal-title">💐 새가족 명단 · 환영 설정</h3>
         <button class="close-btn" data-close="celebrationMsgsModal">✕</button>
       </div>
-      <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-        멘트 안에 <b>{이름}</b>을 넣으면 새가족 이름이 자동으로 채워집니다.<br>
-        저장하면 <b>메인 화면 배너</b>와 <b>알림 문구</b>에 모두 즉시 반영됩니다.
+
+      <div class="newcomer-mgr-box">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; flex-wrap:wrap;">
+          <div id="celebNewcomerCountHeading" style="font-size:13px; font-weight:800; color:#0F172A;">👥 현재 새가족 명단 (0명)</div>
+          <span class="tag green" style="font-size:10.5px;">2명 이상 무제한 · 인원수 자동 반영</span>
+        </div>
+        <div style="font-size:11.5px; color:#475569; line-height:1.48; margin-bottom:8px;">
+          등록된 새가족 수만큼 홈 환영 배너에 <b>모든 이름이 자동으로 추가</b>됩니다.<br>
+          (예: 1명 → <b>홍길동님</b> / 2명 → <b>홍길동님, 김영희님</b> / 3명 이상 모두 자동 표시)
+        </div>
+        <div style="display:flex; gap:6px; margin-bottom:7px;">
+          <input id="celebAddNewcomerInput" class="form-input" style="flex:1; background:#fff; padding:8px 10px; font-size:13px;" maxlength="80" placeholder="새가족 이름 입력 (쉼표로 여러 명 동시 추가: 홍길동, 김영희)" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleAddManualNewcomers();}" />
+          <button id="celebAddNewcomerBtn" class="btn-sm primary" type="button" style="white-space:nowrap; padding:0 12px;" onclick="handleAddManualNewcomers()">+ 추가</button>
+        </div>
+        <div id="celebMemberAssignRow" style="display:flex; gap:6px; margin-bottom:4px;">
+          <select id="celebAssignMemberSelect" class="form-select" style="flex:1; background:#fff; padding:7px 9px; font-size:12.5px;"></select>
+          <button id="celebAssignMemberBtn" class="btn-sm" type="button" style="white-space:nowrap;" onclick="handleAssignMemberAsNewcomer()">+ 회원 지정</button>
+        </div>
+        <div id="celebNewcomerChipList" class="newcomer-chip-list"></div>
       </div>
 
       <div class="celeb-section-head" style="margin-top:4px;">
         <span>💐 새가족 환영 멘트</span>
-        <button class="btn-sm" type="button" style="padding:3px 8px; font-size:11px;" onclick="insertNamePlaceholder('celebNewcomerTitleInput')">+ {이름} 넣기</button>
+        <div style="display:flex; gap:4px; flex-wrap:wrap;">
+          <button class="btn-sm" type="button" style="padding:3px 8px; font-size:11px;" onclick="insertNamePlaceholder('celebNewcomerTitleInput', '{이름}')">+ {이름} 넣기</button>
+          <button class="btn-sm" type="button" style="padding:3px 8px; font-size:11px;" onclick="insertNamePlaceholder('celebNewcomerTitleInput', '{인원}')">+ {인원} 넣기</button>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label" for="celebNewcomerBadgeInput">상단 배지 문구 (예: 💐 새가족 환영)</label>
         <input id="celebNewcomerBadgeInput" class="form-input" maxlength="24" placeholder="💐 새가족 환영" oninput="updateCelebrationPreview()" />
       </div>
       <div class="form-group">
-        <label class="form-label" for="celebNewcomerTitleInput">새가족 환영 제목</label>
+        <label class="form-label" for="celebNewcomerTitleInput">새가족 환영 제목 (<b>{이름}</b> 자리에 모든 새가족 이름 자동 입력)</label>
         <input id="celebNewcomerTitleInput" class="form-input" maxlength="60" placeholder="🎉 새가족 {이름}님을 환영합니다!" oninput="updateCelebrationPreview()" />
+        <div id="celebTitlePlaceholderWarn" class="hidden" style="font-size:11px; color:#B45309; margin-top:4px;">⚠️ 제목에 <b>{이름}</b>이 없으면 새가족 이름이 자동으로 채워지지 않습니다. 위 <b>[+ {이름} 넣기]</b>를 눌러 주세요.</div>
       </div>
       <div class="form-group">
         <label class="form-label" for="celebNewcomerDescInput">새가족 환영 내용</label>
@@ -4912,6 +4984,12 @@
       <div class="form-group">
         <label class="form-label">🎨 새가족 환영 배너 배경 색상</label>
         <div id="celebColorPalette" class="color-palette"></div>
+      </div>
+      <div id="celebPreviewModeRow" class="filter-row" style="margin-bottom:8px;">
+        <button id="celebPrevBtnLive" class="filter-chip active" type="button" onclick="setCelebPreviewMode('live')">현재 명단</button>
+        <button id="celebPrevBtn1" class="filter-chip" type="button" onclick="setCelebPreviewMode('1')">1명 예시</button>
+        <button id="celebPrevBtn2" class="filter-chip" type="button" onclick="setCelebPreviewMode('2')">2명 예시</button>
+        <button id="celebPrevBtn3" class="filter-chip" type="button" onclick="setCelebPreviewMode('3')">3명 예시</button>
       </div>
       <div id="celebNewcomerPreview" class="celeb-preview-box newcomer"></div>
 
@@ -5644,7 +5722,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 31;
-    const APP_CLIENT_BUILD = 227;
+    const APP_CLIENT_BUILD = 228;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -6269,7 +6347,8 @@
 
     function isNewcomerRoleObj(r) {
       if (!r) return false;
-      return String(r.id) === 'role_newcomer' || String(r.name || '').trim().includes('새신자');
+      const nm = String(r.name || '').trim();
+      return String(r.id) === 'role_newcomer' || nm.includes('새신자') || nm.includes('새가족');
     }
 
     function canUserSeeTarget(user, item) {
@@ -6638,7 +6717,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=227" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=228" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6662,8 +6741,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=227', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=227', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=228', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=228', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -6941,6 +7020,8 @@
     let members = [];
     let newcomerList = [];
     let adminNewcomerSyncedOnce = false;
+    let lastSyncedMemberNewcomerSig = '';
+    let celebPreviewMode = 'live';
     let publicRolesSubscribed = false;
     let publicInviteSubscribed = false;
     let inviteQrDoc = null;
@@ -7392,6 +7473,7 @@
       lastSeenLayoutAlertTs = 0;
       newcomerList = [];
       adminNewcomerSyncedOnce = false;
+      lastSyncedMemberNewcomerSig = '';
       if (unsubAdminRegistry) { unsubAdminRegistry(); unsubAdminRegistry = null; }
       if (unsubAdminRegistryObserver) { unsubAdminRegistryObserver(); unsubAdminRegistryObserver = null; }
       observerPermError = false;
@@ -8729,8 +8811,14 @@
 
           members = nextMembers;
           if (isAdminUser) {
-            if (!adminNewcomerSyncedOnce) {
+            const nextNewcomerSig = nextMembers
+              .filter(m => m.status === 'approved' && isNewcomerRoleId(m.roleId))
+              .map(m => `${m.id}:${m.name}`)
+              .sort()
+              .join('|');
+            if (!adminNewcomerSyncedOnce || nextNewcomerSig !== lastSyncedMemberNewcomerSig) {
               adminNewcomerSyncedOnce = true;
+              lastSyncedMemberNewcomerSig = nextNewcomerSig;
               syncAdminNewcomersCollection(nextMembers).catch(() => {});
             }
             syncUnsyncedMembersToSheet(nextMembers).catch(() => {});
@@ -9592,11 +9680,16 @@
       attachResilientCoreListener('newcomers', db.collection('newcomers'), snap => {
         coreConfigSynced.newcomers = true;
         newcomerList = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
-          .sort((a, b) => Number(b.addedTs || 0) - Number(a.addedTs || 0));
+          .sort((a, b) => (Number(a.addedTs || 0) - Number(b.addedTs || 0)) || String(a.id).localeCompare(String(b.id)));
         checkAndNotifyNewcomers();
-        if (currentMainTab === 'home') {
-          const u = getCurrentUser();
-          if (u) renderHomeView(u);
+        if (document.getElementById('celebrationMsgsModal').classList.contains('open')) {
+          renderCelebNewcomerManagerList();
+          updateCelebrationPreview();
+        }
+        const u = getCurrentUser();
+        if (u) {
+          if (currentMainTab === 'home') renderHomeView(u);
+          else if (currentMainTab === 'manage' && currentManageSubTab === 'content') renderManageContent(document.getElementById('manageContent'), u);
         }
       });
 
@@ -12115,9 +12208,9 @@
       if (notifPrefs.enabled && notifPrefs.homeNews) {
         const nextNotified = Array.from(new Set([...pruned, ...freshNewcomers.map(x => String(x.uid || x.id))]));
         try { localStorage.setItem(KEY_NEWCOMER_NOTIFIED, JSON.stringify(nextNotified)); } catch {}
-        const namesText = freshNewcomers.map(x => String(x.name).trim()).join(', ');
-        const msgTitle = renderCelebrationText(getCelebrationMsg('newcomerTitle'), namesText);
-        const msgBody = renderCelebrationText(getCelebrationMsg('newcomerDesc'), namesText).replace(/\s*\n\s*/g, ' ');
+        const freshNames = freshNewcomers.map(x => String(x.name).trim()).filter(Boolean);
+        const msgTitle = renderCelebrationText(getCelebrationMsg('newcomerTitle'), freshNames);
+        const msgBody = renderCelebrationText(getCelebrationMsg('newcomerDesc'), freshNames).replace(/\s*\n\s*/g, ' ');
         dispatchAppNotification({
           type: 'notice',
           icon: '💐',
@@ -12128,13 +12221,19 @@
       }
     }
 
+    function getValidNewcomerList() {
+      return (Array.isArray(newcomerList) ? newcomerList : [])
+        .filter(item => item && String(item.name || '').trim())
+        .sort((a, b) => (Number(a.addedTs || 0) - Number(b.addedTs || 0)) || String(a.id).localeCompare(String(b.id)));
+    }
+
     async function syncAdminNewcomersCollection(memberList) {
       const user = getCurrentUser();
       if (!user || !user.isSuperAdmin) return;
       try {
         const snap = await db.collection('newcomers').get();
         const existingMap = new Map();
-        snap.docs.forEach(d => existingMap.set(String(d.id), d.data()));
+        snap.docs.forEach(d => existingMap.set(String(d.id), d.data() || {}));
 
         const activeNewcomers = new Map();
         memberList.forEach(m => {
@@ -12142,7 +12241,8 @@
             activeNewcomers.set(String(m.id), {
               uid: String(m.id),
               name: m.name,
-              joinedAt: m.createdAt || formatToday()
+              joinedAt: m.createdAt || formatToday(),
+              manual: false
             });
           }
         });
@@ -12161,7 +12261,9 @@
           }
         });
 
-        existingMap.forEach((_, uid) => {
+        existingMap.forEach((curData, uid) => {
+          const isManual = !!(curData && curData.manual) || String(uid).startsWith('manual_');
+          if (isManual) return;
           if (!activeNewcomers.has(uid)) {
             batch.delete(db.collection('newcomers').doc(uid));
             ops++;
@@ -12181,8 +12283,19 @@
         : DEFAULT_CELEBRATION_MSGS[key];
     }
 
-    function renderCelebrationText(template, namesText) {
-      return String(template || '').replace(/\{이름\}/g, namesText);
+    function renderCelebrationText(template, namesOrStr) {
+      const rawList = Array.isArray(namesOrStr)
+        ? namesOrStr
+        : String(namesOrStr || '').split(',');
+      const names = rawList.map(x => String(x || '').trim()).filter(Boolean);
+      const cnt = names.length;
+      const plainJoined = names.join(', ');
+      const honorificJoined = names.map(n => (n.endsWith('님') ? n : `${n}님`)).join(', ');
+      return String(template || '')
+        .replace(/\{이름\}님/g, honorificJoined)
+        .replace(/\{이름\}/g, plainJoined)
+        .replace(/\{인원\}/g, `${cnt}명`)
+        .replace(/\{수\}/g, String(cnt));
     }
 
     let homeTopBannerIdx = 0;
@@ -12209,20 +12322,20 @@
     }
 
     function buildNewcomerAutoBannerCardInner(user) {
-      const valid = newcomerList.filter(item => item && String(item.name || '').trim());
+      const valid = getValidNewcomerList();
       if (valid.length === 0) return '';
-      const namesText = valid.map(item => String(item.name).trim()).join(', ');
+      const namesArr = valid.map(item => String(item.name).trim());
       const nTheme = getCelebrationMsg('newcomerTheme');
       const badgeText = getCelebrationMsg('newcomerBadge');
-      const titleText = renderCelebrationText(getCelebrationMsg('newcomerTitle'), namesText);
-      const descText = renderCelebrationText(getCelebrationMsg('newcomerDesc'), namesText);
+      const titleText = renderCelebrationText(getCelebrationMsg('newcomerTitle'), namesArr);
+      const descText = renderCelebrationText(getCelebrationMsg('newcomerDesc'), namesArr);
       const adminEditBtn = (user && user.isSuperAdmin)
-        ? `<button class="banner-quick-edit-btn" type="button" onclick="event.stopPropagation(); openCelebrationMsgsModal()">🎨 멘트·색 수정</button>`
+        ? `<button class="banner-quick-edit-btn" type="button" onclick="event.stopPropagation(); openCelebrationMsgsModal()">🎨 명단·멘트·색</button>`
         : '';
       return `
         <div class="newcomer-auto-banner ${isBannerThemeLight(nTheme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(nTheme)};">
           ${adminEditBtn}
-          <span class="newcomer-auto-badge" style="${adminEditBtn ? 'max-width:calc(100% - 104px);' : ''}">${escapeHtml(badgeText)} · ${valid.length}명</span>
+          <span class="newcomer-auto-badge" style="${adminEditBtn ? 'max-width:calc(100% - 114px);' : ''}">${escapeHtml(badgeText)} · ${valid.length}명</span>
           <h2 class="newcomer-auto-title">${escapeHtml(titleText)}</h2>
           <p class="newcomer-auto-desc">${escapeHtml(descText)}</p>
         </div>
@@ -12914,17 +13027,25 @@
           </div>
         </div>
 
-        ${canLayout ? `
+        ${canLayout ? (() => {
+          const curNc = getValidNewcomerList();
+          const curNcNames = curNc.map(x => String(x.name).trim());
+          return `
           <div class="card celeb-manage-card">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
-              <div style="font-size:13.5px; font-weight:800; color:#0F172A; display:inline-flex; align-items:center; gap:6px;"><span class="banner-swatch-dot" style="background:${getThemeCss(getCelebrationMsg('newcomerTheme'))};"></span>💐 새가족 환영 멘트·배너 색</div>
-              <button class="btn-sm primary" type="button" style="padding:6px 10px;" onclick="openCelebrationMsgsModal()">🎨 멘트·색 수정</button>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; flex-wrap:wrap;">
+              <div style="font-size:13.5px; font-weight:800; color:#0F172A; display:inline-flex; align-items:center; gap:6px;"><span class="banner-swatch-dot" style="background:${getThemeCss(getCelebrationMsg('newcomerTheme'))};"></span>💐 새가족 환영 · 현재 ${curNc.length}명</div>
+              <button class="btn-sm primary" type="button" style="padding:6px 10px;" onclick="openCelebrationMsgsModal()">🎨 명단·멘트·색 수정</button>
             </div>
-            <div style="font-size:12px; color:#475569; line-height:1.5; word-break:keep-all;">
-              <div>${escapeHtml(getCelebrationMsg('newcomerTitle'))}</div>
+            <div style="font-size:12px; color:#475569; line-height:1.52; word-break:keep-all;">
+              ${curNcNames.length > 0
+                ? `<div style="font-weight:700; color:#0F172A; margin-bottom:2px;">${escapeHtml(renderCelebrationText(getCelebrationMsg('newcomerTitle'), curNcNames))}</div>
+                   <div style="font-size:11.5px; color:#64748B;">등록 새가족 (${curNcNames.length}명): ${escapeHtml(curNcNames.join(', '))}</div>`
+                : `<div>${escapeHtml(getCelebrationMsg('newcomerTitle'))}</div>
+                   <div style="font-size:11.5px; color:#92400E; margin-top:2px;">현재 등록된 새가족이 없습니다. [명단·멘트·색 수정]에서 1명 이상(2명 이상 무제한) 추가하면 홈 배너에 자동 표시됩니다.</div>`}
             </div>
           </div>
-        ` : ''}
+          `;
+        })() : ''}
 
         ${(canLayout || canNotices) ? `
           ${buildManageAccordionBar({
@@ -17711,46 +17832,234 @@
       updateCelebrationPreview();
     };
 
+    function renderCelebNewcomerManagerList() {
+      const valid = getValidNewcomerList();
+      const headEl = document.getElementById('celebNewcomerCountHeading');
+      if (headEl) headEl.textContent = `👥 현재 새가족 명단 (${valid.length}명)`;
+
+      const listEl = document.getElementById('celebNewcomerChipList');
+      if (listEl) {
+        if (valid.length === 0) {
+          listEl.innerHTML = '<div style="font-size:11.5px; color:#64748B;">아직 등록된 새가족이 없습니다. 위에서 이름을 입력하거나 회원을 지정해 1명 이상(2명 이상 무제한) 추가해 보세요.</div>';
+        } else {
+          listEl.innerHTML = valid.map(item => {
+            const isManual = !!item.manual || String(item.id).startsWith('manual_');
+            return `
+              <span class="newcomer-chip">
+                <span>${escapeHtml(item.name)}</span>
+                <span class="newcomer-chip-tag ${isManual ? 'manual' : ''}">${isManual ? '직접등록' : '회원역할'}</span>
+                ${isManual
+                  ? `<button class="newcomer-chip-del" type="button" title="새가족 명단에서 삭제" onclick="handleRemoveManualNewcomer('${escapeJsAttr(item.id)}')">✕</button>`
+                  : `<button class="newcomer-chip-del" type="button" title="새가족 역할 해제" onclick="openReleaseNewcomerFromCeleb('${escapeJsAttr(item.uid || item.id)}')">해제</button>`}
+              </span>
+            `;
+          }).join('');
+        }
+      }
+
+      const assignRow = document.getElementById('celebMemberAssignRow');
+      const assignSel = document.getElementById('celebAssignMemberSelect');
+      if (assignRow && assignSel) {
+        const candidates = (members || [])
+          .filter(m => m.status === 'approved' && !isNewcomerRoleId(m.roleId))
+          .sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), 'ko'));
+        if (candidates.length === 0) {
+          assignRow.classList.add('hidden');
+        } else {
+          assignRow.classList.remove('hidden');
+          const prevVal = assignSel.value;
+          assignSel.innerHTML = '<option value="">기존 승인 회원에서 새가족 지정...</option>' + candidates.map(m => {
+            const rName = getRoleById(m.roleId).name;
+            return `<option value="${escapeHtml(m.id)}">${escapeHtml(m.name)} (현재: ${escapeHtml(rName)})</option>`;
+          }).join('');
+          if (prevVal && candidates.some(m => String(m.id) === String(prevVal))) {
+            assignSel.value = prevVal;
+          }
+        }
+      }
+
+      const liveBtn = document.getElementById('celebPrevBtnLive');
+      if (liveBtn) liveBtn.textContent = `현재 명단 (${valid.length}명)`;
+    }
+
+    window.handleAddManualNewcomers = async () => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const inp = document.getElementById('celebAddNewcomerInput');
+      const raw = (inp ? inp.value : '').trim();
+      if (!raw) return showToast('추가할 새가족 이름을 입력해 주세요.');
+      const parsedNames = raw
+        .split(/[,，/\n·]+/)
+        .map(s => s.trim())
+        .filter(Boolean);
+      if (parsedNames.length === 0) return showToast('올바른 이름을 입력해 주세요.');
+
+      const uniqueNames = [];
+      for (const nm of parsedNames) {
+        if (nm.length > 15) return showToast(`[${nm}] 이름은 15자 이내로 입력해 주세요.`);
+        if (!enforceInputSecurity(nm, '새가족 이름', true)) return;
+        if (!uniqueNames.includes(nm)) uniqueNames.push(nm);
+      }
+
+      const existingNames = new Set(getValidNewcomerList().map(x => String(x.name || '').trim()));
+      const toAdd = uniqueNames.filter(nm => !existingNames.has(nm));
+      if (toAdd.length === 0) {
+        if (inp) inp.value = '';
+        return showToast('이미 새가족 명단에 등록된 이름입니다.');
+      }
+
+      const btn = document.getElementById('celebAddNewcomerBtn');
+      if (btn) btn.disabled = true;
+      try {
+        const batch = db.batch();
+        const baseTs = Date.now();
+        toAdd.forEach((nm, i) => {
+          const docId = `manual_${baseTs}_${i}`;
+          batch.set(db.collection('newcomers').doc(docId), {
+            uid: docId,
+            name: nm,
+            joinedAt: formatToday(),
+            addedTs: baseTs + i,
+            manual: true,
+            addedBy: currentAdminName || '관리자'
+          });
+        });
+        await batch.commit();
+        if (inp) inp.value = '';
+        recordAuditLog({
+          actorType: 'admin',
+          category: '공지·배너',
+          action: '새가족 환영 명단 직접 추가',
+          target: toAdd.join(', '),
+          detail: `${toAdd.length}명 추가 (총 ${existingNames.size + toAdd.length}명)`
+        });
+        showToast(`💐 새가족 ${toAdd.join(', ')}님(${toAdd.length}명)을 환영 명단에 추가했습니다!`);
+      } catch (err) {
+        handleDbError(err, '새가족 추가');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    };
+
+    window.handleRemoveManualNewcomer = async (docId) => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const item = getValidNewcomerList().find(x => String(x.id) === String(docId));
+      if (!item) return;
+      if (!confirm(`[${item.name}]님을 새가족 환영 명단에서 삭제할까요?`)) return;
+      try {
+        await db.collection('newcomers').doc(String(docId)).delete();
+        recordAuditLog({
+          actorType: 'admin',
+          category: '공지·배너',
+          action: '새가족 환영 명단 삭제',
+          target: item.name
+        });
+        showToast(`${item.name}님을 새가족 환영 명단에서 삭제했습니다.`);
+      } catch (err) {
+        handleDbError(err, '새가족 삭제');
+      }
+    };
+
+    window.handleAssignMemberAsNewcomer = async () => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const sel = document.getElementById('celebAssignMemberSelect');
+      const memberId = sel ? sel.value : '';
+      if (!memberId) return showToast('새가족으로 지정할 회원을 선택해 주세요.');
+      const ncRole = roles.find(isNewcomerRoleObj) || { id: 'role_newcomer' };
+      const btn = document.getElementById('celebAssignMemberBtn');
+      if (btn) btn.disabled = true;
+      try {
+        await changeMemberRole(memberId, ncRole.id);
+        if (sel) sel.value = '';
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    };
+
+    window.openReleaseNewcomerFromCeleb = (memberId) => {
+      document.getElementById('celebrationMsgsModal').classList.remove('open');
+      openReleaseNewcomerModal(memberId);
+    };
+
+    window.setCelebPreviewMode = (mode) => {
+      celebPreviewMode = ['live', '1', '2', '3'].includes(String(mode)) ? String(mode) : 'live';
+      const map = { live: 'celebPrevBtnLive', '1': 'celebPrevBtn1', '2': 'celebPrevBtn2', '3': 'celebPrevBtn3' };
+      Object.entries(map).forEach(([k, id]) => {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('active', k === celebPreviewMode);
+      });
+      updateCelebrationPreview();
+    };
+
     window.openCelebrationMsgsModal = () => {
       const badgeEl = document.getElementById('celebNewcomerBadgeInput');
       if (badgeEl) badgeEl.value = getCelebrationMsg('newcomerBadge');
       document.getElementById('celebNewcomerTitleInput').value = getCelebrationMsg('newcomerTitle');
       document.getElementById('celebNewcomerDescInput').value = getCelebrationMsg('newcomerDesc');
+      const addInp = document.getElementById('celebAddNewcomerInput');
+      if (addInp) addInp.value = '';
       selectedCelebTheme = getCelebrationMsg('newcomerTheme') || 'newcomer_default';
+      celebPreviewMode = 'live';
+      renderCelebNewcomerManagerList();
       renderCelebThemePalette();
-      updateCelebrationPreview();
+      setCelebPreviewMode('live');
       document.getElementById('celebrationMsgsModal').classList.add('open');
     };
 
-    window.insertNamePlaceholder = (inputId) => {
+    window.insertNamePlaceholder = (inputId, token = '{이름}') => {
       const el = document.getElementById(inputId);
       if (!el) return;
       const start = el.selectionStart !== null ? el.selectionStart : el.value.length;
       const end = el.selectionEnd !== null ? el.selectionEnd : el.value.length;
       const before = el.value.slice(0, start);
       const after = el.value.slice(end);
-      el.value = before + '{이름}' + after;
+      el.value = before + token + after;
       el.focus();
-      try { el.setSelectionRange(start + 4, start + 4); } catch {}
+      try { el.setSelectionRange(start + token.length, start + token.length); } catch {}
       updateCelebrationPreview();
     };
 
     window.updateCelebrationPreview = () => {
-      const sampleName = '홍길동';
+      const valid = getValidNewcomerList();
+      let previewNames = [];
+      let previewLabel = '';
+      if (celebPreviewMode === '1') {
+        previewNames = ['홍길동'];
+        previewLabel = '1명 예시 미리보기';
+      } else if (celebPreviewMode === '2') {
+        previewNames = ['홍길동', '김영희'];
+        previewLabel = '2명 예시 미리보기';
+      } else if (celebPreviewMode === '3') {
+        previewNames = ['홍길동', '김영희', '박민수'];
+        previewLabel = '3명 예시 미리보기';
+      } else if (valid.length > 0) {
+        previewNames = valid.map(x => String(x.name).trim());
+        previewLabel = `현재 등록된 새가족 ${previewNames.length}명 실시간 미리보기`;
+      } else {
+        previewNames = ['홍길동', '김영희'];
+        previewLabel = '미리보기 (새가족 2명 예시 · 등록 시 자동 반영)';
+      }
+
       const badgeEl = document.getElementById('celebNewcomerBadgeInput');
+      const titleInputVal = document.getElementById('celebNewcomerTitleInput').value.trim();
       const nBadge = (badgeEl ? badgeEl.value.trim() : '') || DEFAULT_CELEBRATION_MSGS.newcomerBadge;
-      const nTitle = document.getElementById('celebNewcomerTitleInput').value.trim() || DEFAULT_CELEBRATION_MSGS.newcomerTitle;
+      const nTitle = titleInputVal || DEFAULT_CELEBRATION_MSGS.newcomerTitle;
       const nDesc = document.getElementById('celebNewcomerDescInput').value.trim() || DEFAULT_CELEBRATION_MSGS.newcomerDesc;
+
+      const warnEl = document.getElementById('celebTitlePlaceholderWarn');
+      if (warnEl) warnEl.classList.toggle('hidden', !titleInputVal || titleInputVal.includes('{이름}'));
 
       const box = document.getElementById('celebNewcomerPreview');
       if (!box) return;
       box.className = `celeb-preview-box newcomer ${isBannerThemeLight(selectedCelebTheme) ? 'light-banner-text' : ''}`;
       box.style.background = getThemeCss(selectedCelebTheme);
       box.innerHTML = `
-        <div style="font-size:10.5px; opacity:0.85; font-weight:700; margin-bottom:5px;">미리보기 (예시: ${sampleName})</div>
-        <span class="newcomer-auto-badge" style="margin-bottom:6px; font-size:11px;">${escapeHtml(nBadge)} · 1명</span>
-        <div style="font-size:14.5px; font-weight:900; margin-bottom:3px;">${escapeHtml(renderCelebrationText(nTitle, sampleName))}</div>
-        <div style="font-size:12px; opacity:0.93; white-space:pre-line;">${escapeHtml(renderCelebrationText(nDesc, sampleName))}</div>
+        <div style="font-size:10.5px; opacity:0.85; font-weight:700; margin-bottom:5px;">${escapeHtml(previewLabel)}</div>
+        <span class="newcomer-auto-badge" style="margin-bottom:6px; font-size:11px;">${escapeHtml(nBadge)} · ${previewNames.length}명</span>
+        <div style="font-size:14.5px; font-weight:900; margin-bottom:3px;">${escapeHtml(renderCelebrationText(nTitle, previewNames))}</div>
+        <div style="font-size:12px; opacity:0.93; white-space:pre-line;">${escapeHtml(renderCelebrationText(nDesc, previewNames))}</div>
       `;
     };
 
@@ -25771,14 +26080,15 @@
     };
 
     window.openDiagSimCelebration = () => {
-      const sample = '홍길동';
+      const curList = getValidNewcomerList().map(x => String(x.name).trim());
+      const sampleNames = curList.length > 0 ? curList : ['홍길동', '김영희'];
       const nTheme = getCelebrationMsg('newcomerTheme');
-      const nTitle = renderCelebrationText(getCelebrationMsg('newcomerTitle'), sample);
-      const nDesc = renderCelebrationText(getCelebrationMsg('newcomerDesc'), sample);
+      const nTitle = renderCelebrationText(getCelebrationMsg('newcomerTitle'), sampleNames);
+      const nDesc = renderCelebrationText(getCelebrationMsg('newcomerDesc'), sampleNames);
       document.getElementById('diagSimModalTitle').textContent = '💐 새가족 자동 환영 배너 체험';
       document.getElementById('diagSimModalBody').innerHTML = `
         <div class="newcomer-auto-banner ${isBannerThemeLight(nTheme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(nTheme)}; margin-bottom:12px;">
-          <span class="newcomer-auto-badge">${escapeHtml(getCelebrationMsg('newcomerBadge'))} · 미리보기</span>
+          <span class="newcomer-auto-badge">${escapeHtml(getCelebrationMsg('newcomerBadge'))} · ${sampleNames.length}명 (미리보기)</span>
           <h2 class="newcomer-auto-title">${escapeHtml(nTitle)}</h2>
           <p class="newcomer-auto-desc">${escapeHtml(nDesc)}</p>
         </div>
