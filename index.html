@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=230" />
+  <link rel="manifest" href="./manifest.json?v=231" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=230" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=230" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=231" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=231" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -492,6 +492,88 @@
       background: #111827;
       border-color: #111827;
       color: #FDE68A;
+    }
+
+    /* 통합 탭 좌우 슬라이드(배너형) 컨트롤 바 */
+    .tab-slide-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 2px 0 10px;
+      user-select: none;
+    }
+    .tab-slide-controls.in-subbox {
+      margin: 8px 0 0;
+    }
+    .tab-slide-controls.after-body {
+      margin: 6px 0 2px;
+    }
+    .tab-slide-arrow {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+      flex-shrink: 0;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+      transition: background 0.14s ease, transform 0.12s ease;
+    }
+    .tab-slide-arrow:active {
+      background: #F1F5F9;
+      transform: scale(0.92);
+    }
+    .tab-slide-dots {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 5px;
+      max-width: 64%;
+    }
+    .tab-slide-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      border: none;
+      padding: 0;
+      background: #CBD5E1;
+      cursor: pointer;
+      transition: width 0.2s ease, background 0.2s ease;
+    }
+    .tab-slide-dot.active {
+      width: 18px;
+      background: #111827;
+    }
+    .tab-slide-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #334155;
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .tab-slide-count {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: #64748B;
+      min-width: 28px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .ts-swipe-body {
+      will-change: transform;
+      touch-action: pan-y;
     }
     .hero-badge {
       display: inline-block; background: rgba(245, 158, 11, 0.24); color: #FDE68A;
@@ -3918,7 +4000,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=230" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=231" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3954,8 +4036,8 @@
         <p class="login-sub">구미제일감리교회 청년부</p>
       </div>
 
-      <div class="login-card">
-        <div id="authTabs" class="auth-tabs" role="tablist">
+      <div class="login-card" data-ts-zone="auth_tabs">
+        <div id="authTabs" class="auth-tabs" role="tablist" data-ts-bar="auth_tabs">
           <button id="tabBtnLogin" class="auth-tab-btn active" type="button" onclick="switchAuthTab('login')">로그인</button>
           <button id="tabBtnSignup" class="auth-tab-btn" type="button" onclick="switchAuthTab('signup')">회원가입</button>
           <button id="tabBtnAdmin" class="auth-tab-btn" type="button" onclick="switchAuthTab('admin')">관리자</button>
@@ -4077,7 +4159,7 @@
 
         <!-- (2) 설교 화면 (하단 탭) -->
         <section id="viewSermon" class="hidden">
-          <div class="sermon-hero">
+          <div class="sermon-hero" data-ts-zone="sermon_cat">
             <div class="hero-top-row">
               <div class="hero-top-text">
                 <div id="sermonViewTitle" class="hero-top-title">🎙️ 설교</div>
@@ -4094,15 +4176,15 @@
             <input id="sermonSearchInput" class="search-input" type="search" placeholder="설교 제목·세부 탭·교회·추천글 검색..." oninput="onSermonSearchInput(this.value)" />
             <button id="sermonSearchClear" class="search-clear hidden" type="button" onclick="clearSermonSearch()">✕</button>
           </div>
-          <div id="sermonCatChips" class="filter-row"></div>
-          <div id="sermonSubTabsBox" class="sermon-subtabs-box"></div>
-          <div id="sermonListArea"></div>
+          <div id="sermonCatChips" class="filter-row" data-ts-bar="sermon_cat" data-ts-body="#sermonListArea"></div>
+          <div id="sermonSubTabsBox" class="sermon-subtabs-box" data-ts-zone="sermon_sub"></div>
+          <div id="sermonListArea" class="ts-swipe-body" data-ts-zone="sermon_sub"></div>
           <div id="mySubmittedSermonArea"></div>
         </section>
 
         <!-- (3) CCM 화면 (하단 탭) -->
         <section id="viewCcm" class="hidden">
-          <div class="ccm-hero">
+          <div class="ccm-hero" data-ts-zone="ccm_team">
             <div class="hero-top-row">
               <div class="hero-top-text">
                 <div id="ccmViewTitle" class="hero-top-title">🎵 CCM</div>
@@ -4119,9 +4201,9 @@
             <input id="ccmSearchInput" class="search-input" type="search" placeholder="CCM 제목·세부 탭·찬양팀·추천글 검색..." oninput="onCcmSearchInput(this.value)" />
             <button id="ccmSearchClear" class="search-clear hidden" type="button" onclick="clearCcmSearch()">✕</button>
           </div>
-          <div id="ccmTeamChips" class="filter-row"></div>
-          <div id="ccmSubTabsBox" class="ccm-subtabs-box"></div>
-          <div id="ccmListArea"></div>
+          <div id="ccmTeamChips" class="filter-row" data-ts-bar="ccm_team" data-ts-body="#ccmListArea"></div>
+          <div id="ccmSubTabsBox" class="ccm-subtabs-box" data-ts-zone="ccm_sub"></div>
+          <div id="ccmListArea" class="ts-swipe-body" data-ts-zone="ccm_sub"></div>
           <div id="mySubmittedCcmArea"></div>
         </section>
 
@@ -4156,9 +4238,9 @@
             <button class="quick-tag" type="button" onclick="quickSearchBylaw('회칙개정')">#회칙개정</button>
           </div>
 
-          <div id="bylawChapterChips" class="filter-row"></div>
+          <div id="bylawChapterChips" class="filter-row" data-ts-bar="bylaws_ch" data-ts-body="#bylawsResults"></div>
           <div id="bylawSummaryBar" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
-          <div id="bylawsResults"></div>
+          <div id="bylawsResults" class="ts-swipe-body" data-ts-zone="bylaws_ch"></div>
         </section>
 
         <!-- (5) 이용자 사용방법 설명서 화면 (설정 안에서 진입) -->
@@ -4226,8 +4308,8 @@
             <input id="videoSearchInput" class="search-input" type="search" placeholder="영상 제목·채널·추천글 검색..." oninput="onVideoSearchInput(this.value)" />
             <button id="videoSearchClear" class="search-clear hidden" type="button" onclick="clearVideoSearch()">✕</button>
           </div>
-          <div id="videoCatChips" class="filter-row"></div>
-          <div id="videosListArea"></div>
+          <div id="videoCatChips" class="filter-row" data-ts-bar="videos_cat" data-ts-body="#videosListArea"></div>
+          <div id="videosListArea" class="ts-swipe-body" data-ts-zone="videos_cat"></div>
           <div id="mySubmittedVideosArea"></div>
         </section>
 
@@ -4237,8 +4319,8 @@
         <!-- (7) 관리 센터 (관리자 · 구경 역할) -->
         <section id="viewManage" class="hidden">
           <div id="observerReadOnlyBanner" class="observer-readonly-banner hidden"></div>
-          <div id="manageSubTabs" class="sub-tabs"></div>
-          <div id="manageContent"></div>
+          <div id="manageSubTabs" class="sub-tabs" data-ts-bar="manage_subtabs" data-ts-body="#manageContent"></div>
+          <div id="manageContent" class="ts-swipe-body"></div>
         </section>
       </main>
 
@@ -4309,13 +4391,13 @@
       <div id="accountSummaryBox" class="status-meta" style="margin-bottom:10px;"></div>
       <div id="accountAttendanceBox" class="att-history-box"></div>
       <div id="accountRenameBox" class="form-group" style="background:#F8FAFC; border:1px solid var(--border); border-radius:12px; padding:11px 12px; margin-bottom:12px;"></div>
-      <div class="modal-tabs-2">
+      <div class="modal-tabs-2" data-ts-bar="account_tabs">
         <button id="accTabPw" class="modal-tab-btn active" type="button" onclick="switchAccountTab('pw')">비밀번호 변경</button>
         <button id="accTabDelete" class="modal-tab-btn" type="button" onclick="switchAccountTab('delete')">계정 삭제</button>
       </div>
 
       <!-- (1) 비밀번호 변경 -->
-      <div id="accPanelPw">
+      <div id="accPanelPw" class="ts-swipe-body" data-ts-zone="account_tabs">
         <div class="form-group">
           <label class="form-label">현재 비밀번호</label>
           <input id="accCurPwInput" type="password" class="form-input" placeholder="현재 비밀번호 입력" />
@@ -4333,7 +4415,7 @@
       </div>
 
       <!-- (2) 본인 계정 삭제 (회원 탈퇴) -->
-      <div id="accPanelDelete" class="hidden">
+      <div id="accPanelDelete" class="hidden ts-swipe-body" data-ts-zone="account_tabs">
         <div class="info-box warn" style="margin-top:0; margin-bottom:12px;">
           ⚠️ <b>회원 탈퇴(계정 삭제) 안내</b><br>
           계정을 삭제하면 로그인 정보와 회원 기록이 즉시 영구 삭제됩니다. 다시 이용하려면 회원가입 신청이 필요합니다.
@@ -5007,13 +5089,13 @@
         <label class="form-label">🎨 새가족 환영 배너 배경 색상</label>
         <div id="celebColorPalette" class="color-palette"></div>
       </div>
-      <div id="celebPreviewModeRow" class="filter-row" style="margin-bottom:8px;">
+      <div id="celebPreviewModeRow" class="filter-row" style="margin-bottom:8px;" data-ts-bar="celeb_preview_mode" data-ts-body="#celebNewcomerPreview">
         <button id="celebPrevBtnLive" class="filter-chip active" type="button" onclick="setCelebPreviewMode('live')">현재 명단</button>
         <button id="celebPrevBtn1" class="filter-chip" type="button" onclick="setCelebPreviewMode('1')">1명 예시</button>
         <button id="celebPrevBtn2" class="filter-chip" type="button" onclick="setCelebPreviewMode('2')">2명 예시</button>
         <button id="celebPrevBtn3" class="filter-chip" type="button" onclick="setCelebPreviewMode('3')">3명 예시</button>
       </div>
-      <div id="celebNewcomerPreview" class="celeb-preview-box newcomer"></div>
+      <div id="celebNewcomerPreview" class="celeb-preview-box newcomer ts-swipe-body" data-ts-zone="celeb_preview_mode"></div>
 
       <div style="display:flex; gap:8px; margin-top:10px;">
         <button class="btn-outline" type="button" onclick="resetCelebrationMsgsDefaults()">기본값 복원</button>
@@ -5644,7 +5726,7 @@
         <h3 id="diagSimModalTitle" class="modal-title">🧪 기능 시뮬레이션</h3>
         <button class="close-btn" data-close="diagSimModal">✕</button>
       </div>
-      <div id="diagSimModalBody"></div>
+      <div id="diagSimModalBody" class="ts-swipe-body" data-ts-zone="diag_sim_tabs"></div>
     </div>
   </div>
 
@@ -5744,7 +5826,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 31;
-    const APP_CLIENT_BUILD = 230;
+    const APP_CLIENT_BUILD = 231;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -6742,7 +6824,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=230" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=231" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6766,8 +6848,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=230', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=230', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=231', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=231', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -7470,6 +7552,7 @@
     let currentMainTab = 'home';
     let currentManageSubTab = 'content';
     let currentFilter = '전체';
+    let homeVideoFilter = '전체';
     let currentDetailId = null;
     let selectedRoleColor = ROLE_COLORS[0];
     let selectedBlockTheme = 'dark';
@@ -11457,7 +11540,8 @@
         if (t.clientX < 20 || t.clientX > window.innerWidth - 20) return;
 
         const target = e.target;
-        if (target && target.closest && target.closest('.top-banner-carousel, input, textarea, select, option, iframe, .switch, [contenteditable="true"]')) return;
+        if (target && target.closest && target.closest('.top-banner-carousel, .tab-slide-controls, input, textarea, select, option, iframe, .switch, [contenteditable="true"]')) return;
+        if (typeof findTabSlideBarForTarget === 'function' && findTabSlideBarForTarget(target)) return;
         if (isInsideHorizontalScroller(target)) return;
 
         activeEl = getActiveMainSectionEl();
@@ -12201,7 +12285,7 @@
           </div>
         </div>
 
-        <div id="adminGuideCatChips" class="filter-row" style="margin-bottom:8px;">
+        <div id="adminGuideCatChips" class="filter-row" style="margin-bottom:8px;" data-ts-bar="manage_guide_cat" data-ts-body="#adminGuideListArea">
           ${cats.map(c => `
             <button class="filter-chip ${adminGuideCategoryFilter === c.id ? 'active' : ''}" data-guide-cat="${escapeHtml(c.id)}" type="button" onclick="setAdminGuideCategory('${escapeJsAttr(c.id)}')">
               ${escapeHtml(c.label)}
@@ -12215,7 +12299,7 @@
           <button id="adminGuideSearchClear" class="search-clear ${adminGuideSearchQuery ? '' : 'hidden'}" type="button" onclick="clearAdminGuideSearch()">✕</button>
         </div>
         <div id="adminGuideSummaryText" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
-        <div id="adminGuideListArea"></div>
+        <div id="adminGuideListArea" class="ts-swipe-body" data-ts-zone="manage_guide_cat"></div>
       `;
       renderAdminGuideListOnly();
     }
@@ -12819,37 +12903,40 @@
             }
           });
           return `
-            <div class="home-block">
+            <div class="home-block" data-ts-zone="home_notice">
               <div class="section-head">
                 <h2 class="section-title">${escapeHtml(b.title || '📢 공지 · 광고 · 소식')}</h2>
                 ${perms.canManageNotices ? `<button class="btn-sm primary" onclick="openUnifiedContentModal('notice')">+ 글쓰기</button>` : ''}
               </div>
-              <div class="filter-row">
+              <div class="filter-row" data-ts-bar="home_notice" data-ts-body="home_notice" data-ts-pos="after-body">
                 ${Array.from(new Set(['전체', '공지', '광고', '소식', '행사', ...visibleNotices.map(n => n.category).filter(Boolean)])).map(cat => {
                   const uCnt = cat === '전체' ? totalUnreadNotices : (unreadCatMap.get(cat) || 0);
                   return `<button class="filter-chip ${currentFilter === cat ? 'active' : ''} ${uCnt > 0 ? 'has-badge' : ''}" data-cat="${escapeHtml(cat)}" onclick="setFilter(this.dataset.cat)"><span>${escapeHtml(cat)}</span>${buildSubTabBadgeHtml(uCnt)}</button>`;
                 }).join('')}
               </div>
-              ${filtered.length === 0
-                ? '<div class="card" style="text-align:center;color:#64748B;">해당 구분의 글이 없습니다.</div>'
-                : filtered.map(n => {
-                    const isNewN = isNoticeUnread(n, user);
-                    return `
-                      <div class="card clickable" onclick="openDetail('${escapeJsAttr(n.id)}')">
-                        <div class="card-top">
-                          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-                            ${isNewN ? '<span class="new-badge">NEW</span>' : ''}
-                            <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
-                            ${n.pinned ? '<span class="tag green">배너고정</span>' : ''}
-                            ${getPublishState(n) === 'scheduled' ? getPublishStateBadgeHtml(n) : ''}
-                            ${getAudienceBadgeHtml(n)}
+              <div class="ts-swipe-body" data-ts-body="home_notice">
+                ${filtered.length === 0
+                  ? '<div class="card" style="text-align:center;color:#64748B;">해당 구분의 글이 없습니다.</div>'
+                  : filtered.map(n => {
+                      const isNewN = isNoticeUnread(n, user);
+                      return `
+                        <div class="card clickable" onclick="openDetail('${escapeJsAttr(n.id)}')">
+                          <div class="card-top">
+                            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                              ${isNewN ? '<span class="new-badge">NEW</span>' : ''}
+                              <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
+                              ${n.pinned ? '<span class="tag green">배너고정</span>' : ''}
+                              ${getPublishState(n) === 'scheduled' ? getPublishStateBadgeHtml(n) : ''}
+                              ${getAudienceBadgeHtml(n)}
+                            </div>
+                            <span class="card-date">${escapeHtml(n.date)}</span>
                           </div>
-                          <span class="card-date">${escapeHtml(n.date)}</span>
+                          <h3 class="card-title" style="margin-bottom:0;">${escapeHtml(n.title)}</h3>
                         </div>
-                        <h3 class="card-title" style="margin-bottom:0;">${escapeHtml(n.title)}</h3>
-                      </div>
-                    `;
-                  }).join('')}
+                      `;
+                    }).join('')}
+              </div>
+              <div data-ts-ctrl-slot="home_notice"></div>
             </div>
           `;
         }
@@ -12927,7 +13014,7 @@
     };
 
     // ==================== 12. 관리 센터 ====================
-    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|openSecSimModal|selectSecSimVariant|runAllSecSimulations|runLiveSheetSchemaInspect|switchMainTab)\s*\(/;
+    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|openSecSimModal|selectSecSimVariant|runAllSecSimulations|runLiveSheetSchemaInspect|switchMainTab|stepTabSlideBar|goToTabSlideBar)\s*\(/;
     const OBSERVER_ALLOWED_INPUT_IDS = new Set([
       'roleMemberSearchInput', 'adminLogSearchInput', 'adminGuideSearchInput', 'attRosterSearchInput', 'attRosterQuickJumpInput'
     ]);
@@ -12951,7 +13038,9 @@
           el.classList.contains('role-member-tab') ||
           el.classList.contains('quick-tag') ||
           el.classList.contains('search-clear') ||
-          el.classList.contains('acc-fold-footer-btn')
+          el.classList.contains('acc-fold-footer-btn') ||
+          el.classList.contains('tab-slide-arrow') ||
+          el.classList.contains('tab-slide-dot')
         ) return true;
         const oc = String(el.getAttribute('onclick') || '').trim();
         return !!oc && OBSERVER_ALLOWED_ONCLICK_RE.test(oc);
@@ -13287,7 +13376,7 @@
               <div style="font-size:13px; font-weight:800; color:#0F172A;">⏱️ 상단 배너 자동 전환 간격</div>
               <span class="tag ${bannerAutoSlideSec > 0 ? 'green' : 'slate'}">${bannerAutoSlideSec > 0 ? `${bannerAutoSlideSec}초마다 자동 순환` : '자동 전환 꺼짐'}</span>
             </div>
-            <div class="filter-row" style="margin-bottom:4px;">
+            <div class="filter-row" style="margin-bottom:4px;" data-ts-skip="1">
               ${ALLOWED_BANNER_AUTO_SLIDE_SECS.map(s => `
                 <button class="filter-chip ${bannerAutoSlideSec === s ? 'active' : ''}" type="button" onclick="handleSetBannerAutoSlideSec(${s})">${s === 0 ? '꺼짐' : (s === DEFAULT_BANNER_AUTO_SLIDE_SEC ? `${s}초 (기본)` : `${s}초`)}</button>
               `).join('')}
@@ -13309,17 +13398,19 @@
               <button class="btn-full btn-dark" type="button" style="padding:11px 12px; font-size:13.5px; border-radius:12px;" onclick="openUnifiedContentModal()">+ 새 배너 · 공지 · 광고 등록</button>
             </div>
 
-            <div class="filter-row" style="margin-bottom:10px;">
+            <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_content_filter" data-ts-body="#manageContentCardsBody">
               <button class="filter-chip ${manageContentFilter === 'all' ? 'active' : ''}" type="button" onclick="setManageContentFilter('all')">전체 (${totalCount})</button>
               ${canLayout ? `<button class="filter-chip ${manageContentFilter === 'blocks' ? 'active' : ''}" type="button" onclick="setManageContentFilter('blocks')">🎨 배너·칸 (${blocks.length})</button>` : ''}
               ${canNotices ? `<button class="filter-chip ${manageContentFilter === 'notices' ? 'active' : ''}" type="button" onclick="setManageContentFilter('notices')">📝 공지·광고 (${notices.length})</button>` : ''}
               ${pendingOrDraftCount > 0 ? `<button class="filter-chip ${manageContentFilter === 'pending' ? 'active' : ''}" type="button" onclick="setManageContentFilter('pending')">⏳ 임시·예약 (${pendingOrDraftCount})</button>` : ''}
             </div>
 
-            ${emptyBlocksHintHtml}
-            ${blockCardsHtml}
-            ${noticeCardsHtml}
-            ${emptyAllHtml}
+            <div id="manageContentCardsBody" class="ts-swipe-body" data-ts-zone="manage_content_filter">
+              ${emptyBlocksHintHtml}
+              ${blockCardsHtml}
+              ${noticeCardsHtml}
+              ${emptyAllHtml}
+            </div>
             ${renderedCount >= 5 ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('content_unified', true)">▲ 배너·공지·광고 목록 접기</button>` : ''}
           </div>
         ` : ''}
@@ -14852,7 +14943,7 @@
           </div>
         </div>
 
-        <div class="filter-row" style="margin-bottom:10px;">
+        <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_admins_filter" data-ts-body="#manageContent">
           <button class="filter-chip ${f === 'all' ? 'active' : ''}" type="button" onclick="setManageAdminsFilter('all')">전체 (${activeAdmins.length + removedAdmins.length + pendingAdmins.length})</button>
           <button class="filter-chip ${f === 'active' ? 'active' : ''}" type="button" onclick="setManageAdminsFilter('active')">✅ 현재 관리자 (${activeAdmins.length})</button>
           <button class="filter-chip ${f === 'removed' ? 'active' : ''}" type="button" onclick="setManageAdminsFilter('removed')">🚫 해제된 관리자 (${removedAdmins.length})</button>
@@ -15103,7 +15194,7 @@
       const withdrawnOpen = isManageSectionOpen('members_withdrawn', withdrawnDefaultOpen);
 
       el.innerHTML = `
-        <div class="filter-row" style="margin-bottom:10px;">
+        <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_members_filter" data-ts-body="#manageContent">
           <button class="filter-chip ${f === 'all' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('all')">전체 (${totalWaitingCount})</button>
           <button class="filter-chip ${f === 'new' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('new')"><span>🆕 신규 가입</span>${newPending.length > 0 ? buildSubTabBadgeHtml(newPending.length) : '<span>(0)</span>'}</button>
           <button class="filter-chip ${f === 'rejoin' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('rejoin')"><span>🔄 재가입</span>${rejoinPending.length > 0 ? buildSubTabBadgeHtml(rejoinPending.length) : '<span>(0)</span>'}</button>
@@ -16261,7 +16352,7 @@
             아래 역할 탭을 누르면 해당 역할의 <b>회원 명단 조회·역할 변경·비번 초기화·삭제</b>와 <b>역할 수정·순서·삭제</b>를 한곳에서 바로 처리할 수 있습니다.
           </div>
 
-          <div id="roleMemberTabBar" class="role-member-tabs">
+          <div id="roleMemberTabBar" class="role-member-tabs" data-ts-bar="manage_roles_tab" data-ts-body="#roleMembersListArea">
             <button class="role-member-tab ${selectedRoleMemberTab === 'all' ? 'active' : ''}" data-role-tab="all" type="button" onclick="selectRoleMemberTab('all')">
               <span>전체</span>
               <span class="role-tab-cnt">${approved.length}</span>
@@ -16287,7 +16378,7 @@
             <button id="roleMemberSearchClear" class="search-clear ${roleMemberSearchQuery ? '' : 'hidden'}" type="button" onclick="clearRoleMemberSearch()">✕</button>
           </div>
           <div id="roleMembersSummaryText" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 8px;"></div>
-          <div id="roleMembersListArea" class="card"></div>
+          <div id="roleMembersListArea" class="card ts-swipe-body" data-ts-zone="manage_roles_tab"></div>
         </div>
       `;
 
@@ -16332,7 +16423,7 @@
           코드를 변경하면 관리자 로그인 비밀번호와 공유용 코드가 함께 업데이트됩니다.
         </div>
 
-        <div class="filter-row" style="margin-bottom:10px;">
+        <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_admincode_filter" data-ts-body="#manageContent">
           <button class="filter-chip ${acf === 'all' ? 'active' : ''}" type="button" onclick="setManageAdminCodeFilter('all')">전체</button>
           <button class="filter-chip ${acf === 'current' ? 'active' : ''}" type="button" onclick="setManageAdminCodeFilter('current')">🔑 현재 코드 확인</button>
           ${user && user.isSuperAdmin ? `<button class="filter-chip ${acf === 'change' ? 'active' : ''}" type="button" onclick="setManageAdminCodeFilter('change')">🔄 새 코드 변경</button>` : ''}
@@ -17357,7 +17448,7 @@
           입력하거나 순서를 바꾸면 상단·하단 탭에 바로 미리보기되며, 아래 저장 버튼을 누르면 즉시 저장·반영됩니다.
         </div>
 
-        <div class="filter-row" style="margin-bottom:10px;">
+        <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_labels_filter" data-ts-body="#manageContent">
           <button class="filter-chip ${lf === 'all' ? 'active' : ''}" type="button" onclick="setManageLabelsFilter('all')">전체</button>
           <button class="filter-chip ${lf === 'header' ? 'active' : ''}" type="button" onclick="setManageLabelsFilter('header')">📌 상단 바로가기 (${dhsActiveCnt})</button>
           <button class="filter-chip ${lf === 'bottom' ? 'active' : ''}" type="button" onclick="setManageLabelsFilter('bottom')">📱 하단 메뉴 (${draftTabOrder.length})</button>
@@ -21318,7 +21409,7 @@
           • <b>미기록(프라이버시 보호):</b> 이용자 비밀번호 변경, 전체 글자 크기·알림 설정, ${escapeHtml(getQuickSheetLabel())} 이동, 공지·소식 단순 조회
         </div>
 
-        <div id="adminLogFilterChips" class="filter-row" style="margin-bottom:8px;">
+        <div id="adminLogFilterChips" class="filter-row" style="margin-bottom:8px;" data-ts-bar="manage_logs_filter" data-ts-body="#adminLogsListArea">
           <button class="filter-chip ${adminLogFilterType === 'all' ? 'active' : ''}" data-log-filter="all" type="button" onclick="setAdminLogFilter('all')">전체 (${allLogs.length})</button>
           <button class="filter-chip ${adminLogFilterType === 'admin' ? 'active' : ''}" data-log-filter="admin" type="button" onclick="setAdminLogFilter('admin')">🔐 관리자 (${adminCnt})</button>
           <button class="filter-chip ${adminLogFilterType === 'member' ? 'active' : ''}" data-log-filter="member" type="button" onclick="setAdminLogFilter('member')">👤 이용자 (${memberCnt})</button>
@@ -21341,7 +21432,7 @@
           </div>
         </div>
         <div id="adminLogsSummaryText" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 10px;"></div>
-        <div id="adminLogsListArea"></div>
+        <div id="adminLogsListArea" class="ts-swipe-body" data-ts-zone="manage_logs_filter"></div>
         </div>
       `;
 
@@ -21461,7 +21552,7 @@
           rightHtml: `<span id="manageQrRemainPill" class="tag ${qrReady ? 'green' : 'warm'}">${qrReady ? (modeMin > 0 ? `⏱️ ${formatCountdownMmSs(remainMs)} 남음` : `${todayInfo.dot} 활성`) : '갱신 대기'}</span>`
         })}
 
-        <div class="filter-row" style="margin-bottom:10px;">
+        <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_qr_filter" data-ts-body="#manageContent">
           <button class="filter-chip ${qf === 'all' ? 'active' : ''}" type="button" onclick="setManageQrFilter('all')">전체</button>
           <button class="filter-chip ${qf === 'settings' ? 'active' : ''}" type="button" onclick="setManageQrFilter('settings')">⏱️ QR 설정 · 발급</button>
           <button class="filter-chip ${qf === 'guide' ? 'active' : ''}" type="button" onclick="setManageQrFilter('guide')">ℹ️ 보안 운영 안내</button>
@@ -21678,7 +21769,7 @@
       const evCount = (cfg.specialEvents || []).length;
 
       el.innerHTML = `
-        <div class="filter-row" style="margin-bottom:10px;">
+        <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_worship_filter" data-ts-body="#manageContent">
           <button class="filter-chip ${wf === 'all' ? 'active' : ''}" type="button" onclick="setManageWorshipFilter('all')">전체</button>
           <button class="filter-chip ${wf === 'regular' ? 'active' : ''}" type="button" onclick="setManageWorshipFilter('regular')">${escapeHtml(getTabIcon('manageWorship'))} 정기 예배 설정</button>
           <button class="filter-chip ${wf === 'events' ? 'active' : ''}" type="button" onclick="setManageWorshipFilter('events')">📅 특별 행사 (${evCount})</button>
@@ -22409,7 +22500,7 @@
           </div>
 
           ${daySessions.length > 1 ? `
-            <div class="filter-row" style="margin:6px 0 8px;">
+            <div class="filter-row" style="margin:6px 0 8px;" data-ts-bar="manage_att_session" data-ts-body="#attRosterListsArea">
               ${daySessions.map(s => `
                 <button class="filter-chip ${curSess && s.sessionId === curSess.sessionId ? 'active' : ''}" type="button" onclick="selectAttRosterSession('${escapeJsAttr(s.sessionId)}')">
                   ${s.isSpecial ? '📅' : '⛪'} ${escapeHtml(s.label)}
@@ -22440,7 +22531,7 @@
               </button>
             </div>
 
-            <div class="filter-row" style="margin-bottom:8px;">
+            <div class="filter-row" style="margin-bottom:8px;" data-ts-bar="manage_att_filter" data-ts-body="#attRosterListsArea">
               <button class="filter-chip ${f === 'all' ? 'active' : ''}" type="button" onclick="setAttRosterFilter('all')">전체 분리 보기</button>
               <button class="filter-chip ${f === 'present' ? 'active' : ''}" type="button" onclick="setAttRosterFilter('present')">✅ 출석O (${part.presentRecs.length})</button>
               <button class="filter-chip ${f === 'absent' ? 'active' : ''}" type="button" onclick="setAttRosterFilter('absent')">❌ 출석X (${part.absentRecs.length})</button>
@@ -22455,7 +22546,7 @@
           `}
         </div>
 
-        ${curSess ? '<div id="attRosterListsArea"></div>' : ''}
+        ${curSess ? '<div id="attRosterListsArea" class="ts-swipe-body" data-ts-zone="manage_att_filter"></div>' : ''}
       `;
 
       renderAttRosterQuickJumpListOnly();
@@ -23397,7 +23488,7 @@
           </div>
         </div>
 
-        <div class="filter-row" style="margin-bottom:10px;">
+        <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_sheet_filter" data-ts-body="#manageContent">
           <button class="filter-chip ${sf === 'all' ? 'active' : ''}" type="button" onclick="setManageSheetFilter('all')">전체</button>
           <button class="filter-chip ${sf === 'auto' ? 'active' : ''} ${isAutoPaused ? 'has-badge' : ''}" type="button" onclick="setManageSheetFilter('auto')"><span>🤖 실시간 자동화</span>${isAutoPaused ? buildSubTabBadgeHtml(1) : ''}</button>
           <button class="filter-chip ${sf === 'schema' ? 'active' : ''} ${diff && diff.actionNeededCount > 0 ? 'has-badge' : ''}" type="button" onclick="setManageSheetFilter('schema')"><span>📋 시트 현황·변경</span>${diff && diff.actionNeededCount > 0 ? buildSubTabBadgeHtml(diff.actionNeededCount) : ''}</button>
@@ -25030,7 +25121,7 @@
           </div>
         </div>
 
-        <div class="filter-row" style="margin-bottom:10px;">
+        <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_diag_filter" data-ts-body="#manageContent">
           <button class="filter-chip ${df === 'all' ? 'active' : ''}" type="button" onclick="setManageDiagnosticsFilter('all')">전체</button>
           <button class="filter-chip ${df === 'maint' ? 'active' : ''}" type="button" onclick="setManageDiagnosticsFilter('maint')">🔧 서버 점검 모드</button>
           <button class="filter-chip ${df === 'auto' ? 'active' : ''}" type="button" onclick="setManageDiagnosticsFilter('auto')">🔍 자동 진단 (${DIAG_ITEMS.length})</button>
@@ -26129,7 +26220,7 @@
       const sessTitle = isEv ? '겨울 수련회 (평일 특별 행사)' : (cfg.regularLabel || '주일 청년부 예배');
       const sessTime = isEv ? '09:00~21:00' : `${cfg.regularStart || '14:00'}~${cfg.regularEnd || '15:30'}`;
       const tabBar = `
-        <div class="modal-tabs-2" style="margin-bottom:12px;">
+        <div class="modal-tabs-2" style="margin-bottom:12px;" data-ts-bar="diag_sim_tabs" data-ts-body="#diagSimModalBody">
           <button class="modal-tab-btn ${!isEv ? 'active' : ''}" type="button" onclick="openDiagSimAttendance('sunday')">⛪ 주일 정기 예배</button>
           <button class="modal-tab-btn ${isEv ? 'active' : ''}" type="button" onclick="openDiagSimAttendance('event')">📅 평일 특별 행사</button>
         </div>
@@ -26238,7 +26329,7 @@
       };
       const cur = contentMap[m];
       document.getElementById('diagSimModalBody').innerHTML = `
-        <div class="filter-row" style="margin-bottom:12px;">
+        <div class="filter-row" style="margin-bottom:12px;" data-ts-bar="diag_sim_tabs" data-ts-body="#diagSimModalBody">
           <button class="filter-chip ${m === 'pending' ? 'active' : ''}" type="button" onclick="openDiagSimAuthStatus('pending')">⏳ 승인 대기</button>
           <button class="filter-chip ${m === 'rejected' ? 'active' : ''}" type="button" onclick="openDiagSimAuthStatus('rejected')">🚫 가입 보류</button>
           <button class="filter-chip ${m === 'removed' ? 'active' : ''}" type="button" onclick="openDiagSimAuthStatus('removed')">🚪 내보내기</button>
@@ -26281,7 +26372,7 @@
           `);
 
       document.getElementById('diagSimModalBody').innerHTML = `
-        <div class="auth-tabs" style="margin-bottom:12px;">
+        <div class="auth-tabs" style="margin-bottom:12px;" data-ts-bar="diag_sim_tabs" data-ts-body="#diagSimModalBody">
           <button class="auth-tab-btn ${m === 'official' ? 'active' : ''}" style="font-size:11.5px; padding:9px 3px;" type="button" onclick="openDiagSimVideoInspect('official')">⚡ 공식 자동게시</button>
           <button class="auth-tab-btn ${m === 'pending' ? 'active' : ''}" style="font-size:11.5px; padding:9px 3px;" type="button" onclick="openDiagSimVideoInspect('pending')">⏳ 검토 대기</button>
           <button class="auth-tab-btn ${m === 'blocked' ? 'active' : ''}" style="font-size:11.5px; padding:9px 3px;" type="button" onclick="openDiagSimVideoInspect('blocked')">🚨 위험 차단</button>
@@ -26300,7 +26391,7 @@
       document.getElementById('diagSimModalTitle').textContent = '📲 초대 QR 가입/변경·만료 화면 체험';
       const curMode = ['valid', 'grace', 'changed'].includes(mode) ? mode : 'valid';
       document.getElementById('diagSimModalBody').innerHTML = `
-        <div class="auth-tabs" style="margin-bottom:14px;">
+        <div class="auth-tabs" style="margin-bottom:14px;" data-ts-bar="diag_sim_tabs" data-ts-body="#diagSimModalBody">
           <button class="auth-tab-btn ${curMode === 'valid' ? 'active' : ''}" style="font-size:12px; padding:9px 4px;" type="button" onclick="openDiagSimQrGate('valid')">✅ 유효 QR</button>
           <button class="auth-tab-btn ${curMode === 'grace' ? 'active' : ''}" style="font-size:12px; padding:9px 4px;" type="button" onclick="openDiagSimQrGate('grace')">⏳ 직전 유예</button>
           <button class="auth-tab-btn ${curMode === 'changed' ? 'active' : ''}" style="font-size:12px; padding:9px 4px;" type="button" onclick="openDiagSimQrGate('changed')">🔄 변경·만료</button>
@@ -27123,7 +27214,7 @@
           </div>
         </div>
 
-        <div class="filter-row" style="margin-bottom:10px;">
+        <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_sec_filter" data-ts-body="#manageContent">
           <button class="filter-chip ${secf === 'all' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('all')">전체</button>
           <button class="filter-chip ${secf === 'checks' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('checks')">🔍 ${SEC_CHECK_ITEMS.length}개 보안 진단</button>
           <button class="filter-chip ${secf === 'defense' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('defense')">🚧 실시간 방어</button>
@@ -28754,7 +28845,7 @@
 
         <div style="margin-bottom:9px;">
           <div style="font-size:11.5px; font-weight:800; color:#334155; margin-bottom:5px;">⚔️ 모의 공격 유형 선택</div>
-          <div class="filter-row" style="margin-bottom:0;">
+          <div class="filter-row" style="margin-bottom:0;" data-ts-bar="diag_sim_tabs" data-ts-body="#diagSimModalBody">
             ${sc.variants.map((v, idx) => `
               <button class="filter-chip ${idx === vIdx ? 'active' : ''}" type="button" onclick="selectSecSimVariant('${escapeJsAttr(sc.id)}', ${idx})">${escapeHtml(v.label)}</button>
             `).join('')}
@@ -29725,7 +29816,7 @@
           </div>
         ` : ''}
 
-        <div class="filter-row" style="margin-bottom:10px;">
+        <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_inq_filter" data-ts-body="#manageContent">
           <button class="filter-chip ${f === 'all' ? 'active' : ''}" type="button" onclick="setAdminInquiryFilter('all')">전체 (${inquiries.length})</button>
           <button class="filter-chip ${f === 'unresolved' ? 'active' : ''} ${unresolvedCnt > 0 ? 'has-badge' : ''}" type="button" onclick="setAdminInquiryFilter('unresolved')">🔴 미해결 (${unresolvedCnt})</button>
           <button class="filter-chip ${f === 'resolved' ? 'active' : ''}" type="button" onclick="setAdminInquiryFilter('resolved')">✅ 해결됨 (${resolvedCnt})</button>
@@ -31783,6 +31874,12 @@ ${handleUrl}`);
       return c;
     }
 
+    window.setHomeVideoFilter = (cat) => {
+      homeVideoFilter = ['전체', '설교', 'CCM'].includes(String(cat)) ? String(cat) : '전체';
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'home') renderHomeView(u);
+    };
+
     function buildHomeVideosSectionHtml(user) {
       if (!videoSettings || videoSettings.showOnHome === false) return '';
       const approved = (videoItems || []).filter(v => v.status === 'approved');
@@ -31790,43 +31887,65 @@ ${handleUrl}`);
       if (approved.length === 0 && !canSubmit) return '';
       const secTitle = getUiText('videosHeroTitle');
       const secIcon = getTabIcon('manageVideos');
-      const latest = approved.slice(0, 3);
-      const unreadSermonCnt = approved.filter(v => isSermonVideo(v) && isVideoUnread(v)).length;
-      const unreadCcmCnt = approved.filter(v => isCcmVideo(v) && isVideoUnread(v)).length;
+      const sermonList = approved.filter(v => isSermonVideo(v));
+      const ccmList = approved.filter(v => isCcmVideo(v));
+      const unreadAllCnt = approved.filter(v => isVideoUnread(v)).length;
+      const unreadSermonCnt = sermonList.filter(v => isVideoUnread(v)).length;
+      const unreadCcmCnt = ccmList.filter(v => isVideoUnread(v)).length;
+      if (!['전체', '설교', 'CCM'].includes(homeVideoFilter)) homeVideoFilter = '전체';
+      const scopedList = homeVideoFilter === '설교'
+        ? sermonList
+        : (homeVideoFilter === 'CCM' ? ccmList : approved);
+      const latest = scopedList.slice(0, 3);
+      const sLbl = getTabLabel('sermon');
+      const cLbl = getTabLabel('ccm');
+      const sIcn = getTabIcon('sermon');
+      const cIcn = getTabIcon('ccm');
+      const homeVideoTabs = [
+        { key: '전체', label: `전체 (${approved.length})`, unread: unreadAllCnt },
+        { key: '설교', label: `${sIcn} ${sLbl} (${sermonList.length})`, unread: unreadSermonCnt },
+        { key: 'CCM', label: `${cIcn} ${cLbl} (${ccmList.length})`, unread: unreadCcmCnt }
+      ];
       return `
-        <div class="home-block">
+        <div class="home-block" data-ts-zone="home_videos">
           <div class="section-head">
             <h2 class="section-title">${escapeHtml(secIcon)} ${escapeHtml(secTitle)}</h2>
             <div style="display:flex; gap:5px; align-items:center; flex-wrap:wrap;">
-              <button class="btn-sm ${unreadSermonCnt > 0 ? 'has-badge' : ''}" type="button" onclick="switchMainTab('sermon')"><span>${escapeHtml(getTabIcon('sermon'))} ${escapeHtml(getTabLabel('sermon'))}</span>${buildSubTabBadgeHtml(unreadSermonCnt)}</button>
-              <button class="btn-sm ${unreadCcmCnt > 0 ? 'has-badge' : ''}" type="button" onclick="switchMainTab('ccm')"><span>${escapeHtml(getTabIcon('ccm'))} ${escapeHtml(getTabLabel('ccm'))}</span>${buildSubTabBadgeHtml(unreadCcmCnt)}</button>
+              <button class="btn-sm ${unreadSermonCnt > 0 ? 'has-badge' : ''}" type="button" onclick="switchMainTab('sermon')"><span>${escapeHtml(sIcn)} ${escapeHtml(sLbl)}</span>${buildSubTabBadgeHtml(unreadSermonCnt)}</button>
+              <button class="btn-sm ${unreadCcmCnt > 0 ? 'has-badge' : ''}" type="button" onclick="switchMainTab('ccm')"><span>${escapeHtml(cIcn)} ${escapeHtml(cLbl)}</span>${buildSubTabBadgeHtml(unreadCcmCnt)}</button>
               ${canSubmit ? `<button class="btn-sm primary" type="button" onclick="openVideoSubmitModal()">+ 추천</button>` : ''}
             </div>
           </div>
-          ${latest.length === 0
-            ? `<div class="card" style="text-align:center; color:#64748B; font-size:12.5px; padding:18px 12px;">아직 등록된 설교·CCM 영상이 없습니다.${canSubmit ? '<br>오른쪽 위 <b>[+ 추천]</b> 버튼으로 공식 채널 영상을 올려 보세요!' : ''}</div>`
-            : latest.map(v => {
-                const grp = getVideoAutoGroupLabel(v);
-                const ccm = isCcmVideo(v);
-                const vidNew = isVideoUnread(v);
-                return `
-                <div class="card" style="padding:11px 12px; margin-bottom:9px;">
-                  <div class="video-compact-row" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">
-                    <img class="video-compact-thumb" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="썸네일" loading="lazy" />
-                    <div style="min-width:0; flex:1;">
-                      <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap; margin-bottom:3px;">
-                        ${vidNew ? '<span class="new-badge">NEW</span>' : ''}
-                        <span class="tag slate" style="font-size:10px; padding:2px 6px;">${ccm ? '🎵' : (grp === '라이트 청년부' ? '✨' : '⛪')} ${escapeHtml(grp)}</span>
-                        ${(!ccm && getSermonSubTabLabel(v) && getSermonSubTabLabel(v) !== '기타 설교') ? `<span class="tag" style="font-size:10px; padding:2px 6px;">📂 ${escapeHtml(getSermonSubTabLabel(v))}</span>` : ''}
-                        ${(ccm && getCcmSubTabLabel(v) && getCcmSubTabLabel(v) !== '기타 CCM') ? `<span class="tag" style="font-size:10px; padding:2px 6px; background:#F3E8FF; color:#7E22CE;">📂 ${escapeHtml(getCcmSubTabLabel(v))}</span>` : ''}
-                        ${v.officialVerified ? '<span class="tag green" style="font-size:10px; padding:2px 6px;">✅ 공식 채널</span>' : '<span class="tag" style="font-size:10px; padding:2px 6px;">🛡️ 관리자 검증</span>'}
+          <div class="filter-row" data-ts-bar="home_videos" data-ts-body="home_videos" data-ts-pos="after-body">
+            ${homeVideoTabs.map(t => `<button class="filter-chip ${homeVideoFilter === t.key ? 'active' : ''} ${t.unread > 0 ? 'has-badge' : ''}" type="button" onclick="setHomeVideoFilter('${escapeJsAttr(t.key)}')"><span>${escapeHtml(t.label)}</span>${buildSubTabBadgeHtml(t.unread)}</button>`).join('')}
+          </div>
+          <div class="ts-swipe-body" data-ts-body="home_videos">
+            ${latest.length === 0
+              ? `<div class="card" style="text-align:center; color:#64748B; font-size:12.5px; padding:18px 12px;">${homeVideoFilter === '전체' ? '아직 등록된 설교·CCM 영상이 없습니다.' : `등록된 ${escapeHtml(homeVideoFilter === '설교' ? sLbl : cLbl)} 영상이 아직 없습니다.`}${canSubmit ? '<br>오른쪽 위 <b>[+ 추천]</b> 버튼으로 공식 채널 영상을 올려 보세요!' : ''}</div>`
+              : latest.map(v => {
+                  const grp = getVideoAutoGroupLabel(v);
+                  const ccm = isCcmVideo(v);
+                  const vidNew = isVideoUnread(v);
+                  return `
+                  <div class="card" style="padding:11px 12px; margin-bottom:9px;">
+                    <div class="video-compact-row" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">
+                      <img class="video-compact-thumb" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="썸네일" loading="lazy" />
+                      <div style="min-width:0; flex:1;">
+                        <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap; margin-bottom:3px;">
+                          ${vidNew ? '<span class="new-badge">NEW</span>' : ''}
+                          <span class="tag slate" style="font-size:10px; padding:2px 6px;">${ccm ? '🎵' : (grp === '라이트 청년부' ? '✨' : '⛪')} ${escapeHtml(grp)}</span>
+                          ${(!ccm && getSermonSubTabLabel(v) && getSermonSubTabLabel(v) !== '기타 설교') ? `<span class="tag" style="font-size:10px; padding:2px 6px;">📂 ${escapeHtml(getSermonSubTabLabel(v))}</span>` : ''}
+                          ${(ccm && getCcmSubTabLabel(v) && getCcmSubTabLabel(v) !== '기타 CCM') ? `<span class="tag" style="font-size:10px; padding:2px 6px; background:#F3E8FF; color:#7E22CE;">📂 ${escapeHtml(getCcmSubTabLabel(v))}</span>` : ''}
+                          ${v.officialVerified ? '<span class="tag green" style="font-size:10px; padding:2px 6px;">✅ 공식 채널</span>' : '<span class="tag" style="font-size:10px; padding:2px 6px;">🛡️ 관리자 검증</span>'}
+                        </div>
+                        <div style="font-size:13.5px; font-weight:800; color:#0F172A; line-height:1.35; margin-bottom:3px;">${escapeHtml(v.title || '')}</div>
+                        <div style="font-size:11.5px; color:#64748B;">📺 ${escapeHtml(v.channelName || '유튜브')} · ${escapeHtml(v.createdAt ? String(v.createdAt).slice(0, 10) : '')}</div>
                       </div>
-                      <div style="font-size:13.5px; font-weight:800; color:#0F172A; line-height:1.35; margin-bottom:3px;">${escapeHtml(v.title || '')}</div>
-                      <div style="font-size:11.5px; color:#64748B;">📺 ${escapeHtml(v.channelName || '유튜브')} · ${escapeHtml(v.createdAt ? String(v.createdAt).slice(0, 10) : '')}</div>
                     </div>
                   </div>
-                </div>
-              `; }).join('')}
+                `; }).join('')}
+          </div>
+          <div data-ts-ctrl-slot="home_videos"></div>
         </div>
       `;
     }
@@ -32106,7 +32225,7 @@ ${handleUrl}`);
             <span class="sermon-subtabs-label">📂 ${escapeHtml(scopeName)} 세부 탭</span>
             ${user.isSuperAdmin ? '<button class="btn-sm" type="button" style="padding:2.5px 7px; font-size:10.5px;" onclick="openSermonTabsModal()">+ 탭 편집</button>' : ''}
           </div>
-          <div class="sermon-subtab-row">
+          <div class="sermon-subtab-row" data-ts-bar="sermon_sub" data-ts-body="#sermonListArea">
             ${subTabs.map(tabName => {
               const cnt = tabName === '전체' ? churchScoped.length : (subCountMap.get(tabName) || 0);
               const uCnt = tabName === '전체' ? scopedUnreadTotal : (subUnreadMap.get(tabName) || 0);
@@ -32249,7 +32368,7 @@ ${handleUrl}`);
             <span class="ccm-subtabs-label">📂 ${escapeHtml(scopeName)} 세부 탭</span>
             ${user.isSuperAdmin ? '<button class="btn-sm" type="button" style="padding:2.5px 7px; font-size:10.5px;" onclick="openCcmTabsModal()">+ 탭 편집</button>' : ''}
           </div>
-          <div class="sermon-subtab-row">
+          <div class="sermon-subtab-row" data-ts-bar="ccm_sub" data-ts-body="#ccmListArea">
             ${subTabs.map(tabName => {
               const cnt = tabName === '전체' ? teamScoped.length : (subCountMap.get(tabName) || 0);
               const uCnt = tabName === '전체' ? scopedUnreadTotal : (subUnreadMap.get(tabName) || 0);
@@ -32984,7 +33103,7 @@ ${handleUrl}`);
           </div>
         ` : ''}
 
-        <div class="filter-row" style="margin-bottom:10px;">
+        <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_vid_filter" data-ts-body="#manageContent">
           <button class="filter-chip ${vf === 'all' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('all')">전체</button>
           <button class="filter-chip ${vf === 'pending' ? 'active' : ''} ${pending.length > 0 ? 'has-badge' : ''}" type="button" onclick="setManageVideosFilter('pending')">🔴 검토 대기 (${pending.length})</button>
           <button class="filter-chip ${vf === 'sermontabs' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('sermontabs')">🗂️ 설교 세부 탭 (${sermonSubTabsList.length})</button>
@@ -33532,9 +33651,447 @@ ${handleUrl}`);
       }
     };
 
+
+    // ==================== 24. 통합 탭 좌우 슬라이드 엔진 (전 화면 공통 · 수동 스와이프 + 배너형 인디케이터) ====================
+    const TAB_SLIDE_BAR_SELECTOR = '.filter-row:not([data-ts-skip="1"]), .sub-tabs:not([data-ts-skip="1"]), .role-member-tabs:not([data-ts-skip="1"]), .sermon-subtab-row:not([data-ts-skip="1"]), .auth-tabs:not([data-ts-skip="1"]), .modal-tabs-2:not([data-ts-skip="1"])';
+    let tabSlideSyncQueued = false;
+    let tabSlideSyncingDom = false;
+    let pendingTabSlideAnim = null;
+    let tabSlideAutoUidSeq = 1;
+
+    function isTabSlideBarVisible(barEl) {
+      if (!barEl || !barEl.isConnected) return false;
+      if (barEl.classList.contains('hidden')) return false;
+      if (barEl.closest('.hidden')) return false;
+      return barEl.offsetParent !== null;
+    }
+
+    function getTabSlideButtons(barEl) {
+      if (!barEl) return [];
+      return Array.from(barEl.children).filter(el =>
+        el && el.tagName === 'BUTTON' && !el.classList.contains('hidden') && !el.disabled
+      );
+    }
+
+    function isTabSlideBtnActive(btn) {
+      if (!btn || !btn.classList) return false;
+      return btn.classList.contains('active')
+        || btn.classList.contains('signup-active')
+        || btn.classList.contains('admin-active');
+    }
+
+    function getTabSlideBarKey(barEl) {
+      if (!barEl) return '';
+      if (barEl.dataset.tsBar) return barEl.dataset.tsBar;
+      if (barEl.id) return barEl.id;
+      if (!barEl.dataset.tsUid) {
+        barEl.dataset.tsUid = `ts_auto_${tabSlideAutoUidSeq++}`;
+      }
+      return barEl.dataset.tsUid;
+    }
+
+    function findTabSlideBarByKey(key) {
+      if (!key) return null;
+      const bars = document.querySelectorAll(TAB_SLIDE_BAR_SELECTOR);
+      for (const b of bars) {
+        if (getTabSlideBarKey(b) === key && isTabSlideBarVisible(b)) return b;
+      }
+      for (const b of bars) {
+        if (getTabSlideBarKey(b) === key) return b;
+      }
+      return null;
+    }
+
+    function getTabSlideBodyEl(barEl) {
+      if (!barEl) return null;
+      const key = getTabSlideBarKey(barEl);
+      if (key === 'auth_tabs') {
+        const panels = ['panelLogin', 'panelSignup', 'panelAdmin'];
+        for (const pid of panels) {
+          const el = document.getElementById(pid);
+          if (el && !el.classList.contains('hidden')) return el;
+        }
+        return document.querySelector('#loginScreen .login-card');
+      }
+      if (key === 'account_tabs') {
+        const p1 = document.getElementById('accPanelPw');
+        if (p1 && !p1.classList.contains('hidden')) return p1;
+        const p2 = document.getElementById('accPanelDelete');
+        if (p2 && !p2.classList.contains('hidden')) return p2;
+        return null;
+      }
+      const spec = barEl.dataset.tsBody;
+      if (spec) {
+        if (spec.startsWith('#') || spec.startsWith('.') || spec.startsWith('[')) {
+          const found = document.querySelector(spec);
+          if (found) return found;
+        }
+        const byAttr = document.querySelector(`[data-ts-body="${spec}"]`);
+        if (byAttr) return byAttr;
+      }
+      const zone = barEl.closest('[data-ts-zone]');
+      if (zone) {
+        const innerBody = zone.querySelector('.ts-swipe-body');
+        if (innerBody) return innerBody;
+        return zone;
+      }
+      return barEl.parentElement;
+    }
+
+    function getTabSlideBtnLabel(btn) {
+      if (!btn) return '';
+      const clone = btn.cloneNode(true);
+      clone.querySelectorAll('.sub-tab-badge, .tab-badge, .new-badge').forEach(x => x.remove());
+      return String(clone.textContent || '').replace(/\s+/g, ' ').trim();
+    }
+
+    function playTabSlideEnterAnim(bodyEl, dir) {
+      if (!bodyEl || (dir !== 'next' && dir !== 'prev')) return;
+      const cls = dir === 'next' ? 'swipe-enter-right' : 'swipe-enter-left';
+      bodyEl.classList.remove('swipe-enter-right', 'swipe-enter-left');
+      void bodyEl.offsetWidth;
+      bodyEl.classList.add(cls);
+      setTimeout(() => {
+        if (bodyEl && bodyEl.classList) bodyEl.classList.remove(cls);
+      }, 240);
+    }
+
+    function renderControlBarForTabBar(barEl) {
+      const key = getTabSlideBarKey(barEl);
+      const btns = isTabSlideBarVisible(barEl) ? getTabSlideButtons(barEl) : [];
+      const total = btns.length;
+      const slotEl = document.querySelector(`[data-ts-ctrl-slot="${key}"]`);
+      const nextSib = barEl.nextElementSibling;
+      const existingCtrl = slotEl
+        ? slotEl.querySelector(`.tab-slide-controls[data-ts-for="${key}"]`)
+        : ((nextSib && nextSib.classList && nextSib.classList.contains('tab-slide-controls') && nextSib.dataset.tsFor === key) ? nextSib : null);
+
+      if (total <= 1) {
+        if (existingCtrl) existingCtrl.remove();
+        return;
+      }
+
+      let activeIdx = btns.findIndex(isTabSlideBtnActive);
+      if (activeIdx < 0) activeIdx = 0;
+      const activeLabel = getTabSlideBtnLabel(btns[activeIdx]);
+      const useCompactLabel = total >= 9;
+      const sig = `${total}|${activeIdx}|${useCompactLabel ? activeLabel : ''}`;
+
+      if (!existingCtrl || existingCtrl.dataset.tsSig !== sig) {
+        const ctrl = existingCtrl || document.createElement('div');
+        const extraCls = slotEl
+          ? ' after-body'
+          : (barEl.classList.contains('sermon-subtab-row') ? ' in-subbox' : '');
+        ctrl.className = `tab-slide-controls${extraCls}`;
+        ctrl.dataset.tsFor = key;
+        ctrl.dataset.tsSig = sig;
+
+        const middleHtml = useCompactLabel
+          ? `<span class="tab-slide-label">${escapeHtml(activeLabel)}</span>`
+          : `<div class="tab-slide-dots">${btns.map((b, i) => `
+              <button class="tab-slide-dot ${i === activeIdx ? 'active' : ''}" type="button" aria-label="${escapeHtml(getTabSlideBtnLabel(b))} (${i + 1}/${total})" onclick="goToTabSlideBar('${escapeJsAttr(key)}', ${i})"></button>
+            `).join('')}</div>`;
+
+        ctrl.innerHTML = `
+          <button class="tab-slide-arrow" type="button" aria-label="이전 탭" onclick="stepTabSlideBar('${escapeJsAttr(key)}', -1)">‹</button>
+          ${middleHtml}
+          <span class="tab-slide-count">${activeIdx + 1} / ${total}</span>
+          <button class="tab-slide-arrow" type="button" aria-label="다음 탭" onclick="stepTabSlideBar('${escapeJsAttr(key)}', 1)">›</button>
+        `;
+
+        if (!existingCtrl) {
+          if (slotEl) slotEl.appendChild(ctrl);
+          else barEl.insertAdjacentElement('afterend', ctrl);
+        }
+      }
+
+      if (pendingTabSlideAnim && pendingTabSlideAnim.uid === key && (Date.now() - pendingTabSlideAnim.ts) < 900) {
+        const dir = pendingTabSlideAnim.dir;
+        pendingTabSlideAnim = null;
+        const bodyEl = getTabSlideBodyEl(barEl);
+        playTabSlideEnterAnim(bodyEl, dir);
+      }
+    }
+
+    function syncAllTabSlideControls() {
+      tabSlideSyncQueued = false;
+      if (tabSlideSyncingDom) return;
+      tabSlideSyncingDom = true;
+      try {
+        // 사라진 탭 바에 연결된 고아 컨트롤 바 정리
+        document.querySelectorAll('.tab-slide-controls[data-ts-for]').forEach(ctrl => {
+          const k = ctrl.dataset.tsFor;
+          const bar = findTabSlideBarByKey(k);
+          if (!bar || !isTabSlideBarVisible(bar) || getTabSlideButtons(bar).length <= 1) {
+            ctrl.remove();
+          }
+        });
+        document.querySelectorAll(TAB_SLIDE_BAR_SELECTOR).forEach(barEl => {
+          renderControlBarForTabBar(barEl);
+        });
+      } finally {
+        tabSlideSyncingDom = false;
+      }
+    }
+
+    function queueTabSlideSync() {
+      if (tabSlideSyncQueued || tabSlideSyncingDom) return;
+      tabSlideSyncQueued = true;
+      requestAnimationFrame(syncAllTabSlideControls);
+    }
+
+    window.stepTabSlideBar = (key, delta) => {
+      const bar = findTabSlideBarByKey(key);
+      if (!bar || !isTabSlideBarVisible(bar)) return;
+      const btns = getTabSlideButtons(bar);
+      if (btns.length <= 1) return;
+      let curIdx = btns.findIndex(isTabSlideBtnActive);
+      if (curIdx < 0) curIdx = 0;
+      const step = Number(delta || 0) >= 0 ? 1 : -1;
+      const nextIdx = (curIdx + step + btns.length) % btns.length;
+      pendingTabSlideAnim = { uid: key, dir: step >= 0 ? 'next' : 'prev', ts: Date.now() };
+      btns[nextIdx].click();
+      queueTabSlideSync();
+    };
+
+    window.goToTabSlideBar = (key, idx) => {
+      const bar = findTabSlideBarByKey(key);
+      if (!bar || !isTabSlideBarVisible(bar)) return;
+      const btns = getTabSlideButtons(bar);
+      if (btns.length <= 1) return;
+      let curIdx = btns.findIndex(isTabSlideBtnActive);
+      if (curIdx < 0) curIdx = 0;
+      const targetIdx = Math.max(0, Math.min(btns.length - 1, Number(idx || 0)));
+      if (targetIdx === curIdx) return;
+      pendingTabSlideAnim = { uid: key, dir: targetIdx > curIdx ? 'next' : 'prev', ts: Date.now() };
+      btns[targetIdx].click();
+      queueTabSlideSync();
+    };
+
+    function findTabSlideBarForTarget(target) {
+      if (!target || !target.closest) return null;
+      if (target.closest('.top-banner-carousel, input, textarea, select, option, iframe, .switch, [contenteditable="true"]')) {
+        return null;
+      }
+      // 1) 탭 바 또는 컨트롤 바 자체를 직접 스와이프한 경우
+      const directCtrl = target.closest('.tab-slide-controls[data-ts-for]');
+      if (directCtrl) {
+        const b = findTabSlideBarByKey(directCtrl.dataset.tsFor);
+        if (b && isTabSlideBarVisible(b) && getTabSlideButtons(b).length > 1) return b;
+      }
+      const directBar = target.closest(TAB_SLIDE_BAR_SELECTOR);
+      if (directBar && isTabSlideBarVisible(directBar) && getTabSlideButtons(directBar).length > 1) {
+        return directBar;
+      }
+      // 2) 명시적 data-ts-zone 내부에서 스와이프한 경우 (가장 안쪽 존 우선)
+      let curZone = target.closest('[data-ts-zone]');
+      while (curZone) {
+        const zk = curZone.dataset.tsZone;
+        const bar = findTabSlideBarByKey(zk);
+        if (bar && isTabSlideBarVisible(bar) && getTabSlideButtons(bar).length > 1) {
+          return bar;
+        }
+        curZone = curZone.parentElement ? curZone.parentElement.closest('[data-ts-zone]') : null;
+      }
+      // 3) 관리 센터(#manageContent) 내부에서는 현재 서브탭의 메인 필터 바 우선, 없으면 상단 관리 서브탭
+      const inManageContent = target.closest('#manageContent');
+      if (inManageContent && isTabSlideBarVisible(inManageContent)) {
+        const innerBars = Array.from(inManageContent.querySelectorAll(TAB_SLIDE_BAR_SELECTOR))
+          .filter(b => isTabSlideBarVisible(b) && getTabSlideButtons(b).length > 1);
+        if (innerBars.length > 0) {
+          const preferred = innerBars.find(b => b.dataset.tsBar !== 'manage_att_session') || innerBars[0];
+          return preferred;
+        }
+        const subTabsBar = document.getElementById('manageSubTabs');
+        if (subTabsBar && isTabSlideBarVisible(subTabsBar) && getTabSlideButtons(subTabsBar).length > 1) {
+          return subTabsBar;
+        }
+      }
+      return null;
+    }
+
+    function initUnifiedTabSlideEngine() {
+      if (window.__UNIFIED_TAB_SLIDE_BOUND__) return;
+      window.__UNIFIED_TAB_SLIDE_BOUND__ = true;
+
+      let tracking = false;
+      let locked = '';
+      let startX = 0;
+      let startY = 0;
+      let lastDx = 0;
+      let lastDy = 0;
+      let startTs = 0;
+      let activeBar = null;
+      let activeBody = null;
+
+      function isInsideOtherHorizScroller(target, stopEl) {
+        let cur = target;
+        while (cur && cur !== stopEl && cur !== document.body) {
+          if (cur.nodeType === 1 && !cur.matches(TAB_SLIDE_BAR_SELECTOR)) {
+            if (cur.scrollWidth > cur.clientWidth + 6) {
+              const ox = window.getComputedStyle(cur).overflowX;
+              if (ox === 'auto' || ox === 'scroll') return true;
+            }
+          }
+          cur = cur.parentElement;
+        }
+        return false;
+      }
+
+      function resetBodyTransform(smooth = false) {
+        const el = activeBody;
+        if (!el) return;
+        if (smooth) {
+          el.style.transition = 'transform 0.18s cubic-bezier(0.22, 1, 0.36, 1)';
+          el.style.transform = 'translateX(0px)';
+          setTimeout(() => {
+            if (el) {
+              el.style.transition = '';
+              el.style.transform = '';
+            }
+          }, 190);
+        } else {
+          el.style.transition = '';
+          el.style.transform = '';
+        }
+      }
+
+      document.addEventListener('touchstart', (e) => {
+        tracking = false;
+        locked = '';
+        lastDx = 0;
+        lastDy = 0;
+        activeBar = null;
+        activeBody = null;
+
+        if (!e.touches || e.touches.length !== 1) return;
+        const t = e.touches[0];
+        if (t.clientX < 18 || t.clientX > window.innerWidth - 18) return;
+
+        const bar = findTabSlideBarForTarget(e.target);
+        if (!bar) return;
+
+        // 모달이 열려 있으면 모달 내부 탭 바만 허용
+        const openModal = document.querySelector('.modal-backdrop.open');
+        if (openModal && !openModal.contains(bar)) return;
+
+        const body = getTabSlideBodyEl(bar);
+        if (isInsideOtherHorizScroller(e.target, body || document.body)) return;
+
+        activeBar = bar;
+        activeBody = body;
+        tracking = true;
+        startX = t.clientX;
+        startY = t.clientY;
+        startTs = Date.now();
+      }, { passive: true });
+
+      document.addEventListener('touchmove', (e) => {
+        if (!tracking || !e.touches || e.touches.length !== 1) return;
+        const t = e.touches[0];
+        const dx = t.clientX - startX;
+        const dy = t.clientY - startY;
+        lastDx = dx;
+        lastDy = dy;
+
+        if (!locked) {
+          if (Math.hypot(dx, dy) < 12) return;
+          if (Math.abs(dx) > Math.abs(dy) * 1.35) {
+            locked = 'h';
+          } else {
+            locked = 'v';
+            tracking = false;
+            return;
+          }
+        }
+
+        if (locked === 'h' && activeBody) {
+          const offset = Math.max(-68, Math.min(68, dx * 0.32));
+          activeBody.style.transition = 'none';
+          activeBody.style.transform = `translateX(${offset}px)`;
+        }
+      }, { passive: true });
+
+      const finishTabSwipe = (cancelled = false) => {
+        if (!tracking) return;
+        const wasHorizontal = locked === 'h';
+        const dx = lastDx;
+        const dy = lastDy;
+        const elapsed = Date.now() - startTs;
+        const bar = activeBar;
+        tracking = false;
+        locked = '';
+
+        if (!wasHorizontal || cancelled || !bar || !bar.isConnected) {
+          resetBodyTransform(true);
+          activeBar = null;
+          activeBody = null;
+          return;
+        }
+
+        const passedDist = Math.abs(dx) >= 48 || (Math.abs(dx) >= 28 && elapsed <= 260);
+        const horizontalDominant = Math.abs(dx) > Math.abs(dy) * 1.25;
+
+        if (passedDist && horizontalDominant) {
+          const delta = dx < 0 ? 1 : -1;
+          const key = getTabSlideBarKey(bar);
+          resetBodyTransform(false);
+          activeBar = null;
+          activeBody = null;
+          stepTabSlideBar(key, delta);
+          return;
+        }
+
+        resetBodyTransform(true);
+        activeBar = null;
+        activeBody = null;
+      };
+
+      document.addEventListener('touchend', () => finishTabSwipe(false), { passive: true });
+      document.addEventListener('touchcancel', () => finishTabSwipe(true), { passive: true });
+
+      // 탭 버튼 직접 클릭 시에도 컨트롤 바 즉시 동기화
+      document.addEventListener('click', (e) => {
+        const btn = e.target && e.target.closest ? e.target.closest('button') : null;
+        if (!btn) return;
+        if (btn.closest(TAB_SLIDE_BAR_SELECTOR) || btn.closest('.tab-slide-controls')) {
+          queueTabSlideSync();
+        }
+      });
+
+      // DOM 변경(렌더링·모달 오픈·필터 전환) 자동 감지하여 컨트롤 바 일괄 동기화
+      if (typeof MutationObserver !== 'undefined') {
+        const obs = new MutationObserver((mutations) => {
+          if (tabSlideSyncingDom) return;
+          for (const m of mutations) {
+            if (m.type === 'childList') {
+              queueTabSlideSync();
+              return;
+            }
+            if (m.type === 'attributes' && m.target && m.target.nodeType === 1) {
+              const t = m.target;
+              if (t.classList.contains('modal-backdrop') || t.id === 'authTabs' || t.id === 'loginScreen' || t.id === 'mainApp' || t.closest(TAB_SLIDE_BAR_SELECTOR)) {
+                queueTabSlideSync();
+                return;
+              }
+            }
+          }
+        });
+        obs.observe(document.body, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['class']
+        });
+      }
+
+      queueTabSlideSync();
+    }
+
     // 초기 로드 시 공식 도메인 · HTTPS 즉시 검증 + 화면 좌우 스와이프 활성화
     checkCloneDomainWarning();
     initMainScreenSwipe();
+    initUnifiedTabSlideEngine();
   </script>
 </body>
 </html>
