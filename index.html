@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=202" />
+  <link rel="manifest" href="./manifest.json?v=203" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=202" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=202" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=203" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=203" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2936,18 +2936,6 @@
       word-break: break-all;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
-    .sec-test-result {
-      margin-top: 10px;
-      border-radius: 12px;
-      padding: 11px 12px;
-      font-size: 12.5px;
-      line-height: 1.55;
-      border: 1px solid var(--border);
-      background: #F8FAFC;
-    }
-    .sec-test-result.ok { background: #ECFDF5; border-color: #6EE7B7; color: #065F46; }
-    .sec-test-result.warn { background: #FFFBEB; border-color: #FCD34D; color: #92400E; }
-    .sec-test-result.err { background: #FEF2F2; border-color: #FCA5A5; color: #991B1B; }
 
     /* ==================== v10.53 점검 주의/경고 원인·해결 안내 박스 스타일 ==================== */
     .check-advice-box {
@@ -3551,7 +3539,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=202" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=203" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4858,7 +4846,7 @@
       <div class="info-box" style="margin-top:0; margin-bottom:10px;">
         <b>2. 공동체 보호를 위한 자동 보안 방어</b><br>
         • 전 구간 HTTPS 암호화 통신 및 외부 스크립트 차단(CSP) 적용<br>
-        • 악성 스크립트·피싱 링크 자동 차단 및 외부 이동 전 주소 확인<br>
+        • 악성 스크립트·피싱·위험 링크 자동 차단<br>
         • 설치 파일(.apk/.exe) 없는 웹 앱 구조로 기기 파일 접근 원천 차단
       </div>
       <div class="info-box warn" style="margin-top:0; margin-bottom:14px;">
@@ -5226,7 +5214,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 202;
+    const APP_CLIENT_BUILD = 203;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_SEEN_ADMIN_IDS = 'right_youth_seen_admin_ids_v1';
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
@@ -5284,7 +5272,6 @@
     const DEFAULT_SECURITY_CONFIG = {
       blockMaliciousInput: true,
       blockSuspiciousLinks: true,
-      confirmExternalLinks: false,
       detectCloneDomain: true,
       alertAdminOnSecurityEvent: true,
       officialHost: 'kyutaek5347.github.io'
@@ -6144,7 +6131,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=202" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=203" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6168,8 +6155,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=202', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=202', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=203', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=203', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -8675,8 +8662,7 @@
             if (d.securityConfig && typeof d.securityConfig === 'object') {
               securityConfig = {
                 ...DEFAULT_SECURITY_CONFIG,
-                ...d.securityConfig,
-                confirmExternalLinks: d.securityConfig.confirmExternalLinksV59 ? !!d.securityConfig.confirmExternalLinks : false
+                ...d.securityConfig
               };
             } else {
               securityConfig = structuredClone(DEFAULT_SECURITY_CONFIG);
@@ -10712,14 +10698,14 @@
           category: catMap.sec_log,
           icon: getTabIcon('manageSecurity'),
           title: `8. ${getTabLabel('manageSecurity')} (해킹 · 피싱 · 악성 링크 점검 및 실시간 방어)`,
-          sub: '피싱 링크 차단, 복제 도메인 감지, XSS 차단, 7개 보안 진단 및 의심 링크 검사기',
-          keywords: `${getTabLabel('manageSecurity')} 보안 점검 해킹 피싱 스미싱 악성 링크 단축 URL 복제 도메인 XSS 도배 차단 외부 링크 확인`,
+          sub: '피싱 링크 차단, 복제 도메인 감지, XSS 차단, 11개 보안 진단 및 실시간 자동 감시',
+          keywords: `${getTabLabel('manageSecurity')} 보안 점검 해킹 피싱 스미싱 악성 링크 단축 URL 복제 도메인 XSS 도배 차단 자동 점검 개인정보`,
           targetTab: 'security',
           targetLabel: `${getTabIcon('manageSecurity')} ${getTabLabel('manageSecurity')} 탭 열기`,
           steps: [
-            `<b>7개 항목 보안 일괄 점검 ([${secIcn} ${secLbl}]):</b> 공식 HTTPS 도메인, CSP·로컬 SDK 무결성, 앱 내 전체 링크 피싱 스캔, 악성 스크립트(XSS) 흔적 스캔, 관리자 잠금·비밀 격리, QR·비번 초기화 만료, 최근 7일 차단 위협을 한 번에 점검합니다.`,
-            '<b>실시간 방어 스위치 & 관리자 전용 보안 알림:</b> 악성 스크립트·피싱 링크 차단, 외부 사이트 이동 전 도메인 확인창, 복제 사이트 경고와 <b>🚨 보안 문제 발생 시 관리자 실시간 알림</b>을 켜고 끌 수 있습니다. (보안 알림은 최고 관리자에게만 표시)',
-            '<b>의심 링크·문구 즉시 검사기:</b> 카카오톡이나 문자로 받은 의심스러운 링크·문구를 붙여넣어 피싱·위장 주소·악성 코드 포함 여부를 즉시 분석해 볼 수 있습니다.',
+            `<b>11개 항목 수동·자동 보안 일괄 점검 ([${secIcn} ${secLbl}]):</b> 공식 HTTPS 도메인, CSP·로컬 SDK 무결성, 전체 링크·XSS·개인정보 노출 스캔, 관리자 잠금·비공개 서버 격리·참관자 권한, QR·비번 초기화 만료, 유튜브 채널·방어 정책·저장소 보안을 한 번에 점검합니다.`,
+            '<b>실시간 자동 보안 점검:</b> 원하는 주기(초)를 설정해 두면 백그라운드에서 자동 점검하다가 문제 감지 시 즉시 멈추고 최고 관리자에게 알림을 보내며, 해결되면 자동으로 재개합니다.',
+            '<b>실시간 방어 스위치 & 관리자 전용 보안 알림:</b> 악성 스크립트(XSS) 차단, 피싱·위험 링크 자동 차단, 복제 사이트 경고와 <b>🚨 보안 문제 발생 시 관리자 실시간 알림</b>을 켜고 끌 수 있습니다. (보안 알림은 최고 관리자에게만 표시)',
             `<b>기능 점검과 역할 분리:</b> 앱 오류·연동·화면 체험은 <b>[${diagIcn} ${diagLbl}]</b>에서, 해킹·피싱·보안 방어는 <b>[${secIcn} ${secLbl}]</b>에서 각각 전문적으로 점검합니다.`
           ],
           tip: `악성 스크립트나 피싱 링크 입력이 차단되면 실행자·시각·시도 내용이 [${getTabIcon('manageLogs')} ${getTabLabel('manageLogs')}]에 자동 기록되어 추적할 수 있습니다.`
@@ -15643,7 +15629,7 @@
         if (safeUrl) {
           const qlNew = isQuickLinkUnread(ql);
           const linkRisk = analyzeUrlRisk(safeUrl);
-          const needGuardModal = (linkRisk.riskLevel !== 'safe') || (securityConfig && securityConfig.confirmExternalLinks === true);
+          const needGuardModal = (linkRisk.riskLevel !== 'safe');
           if (needGuardModal) {
             return `
               <button class="quick-link-btn ${textCls}" type="button" style="background:${theme.css};"
@@ -21148,8 +21134,7 @@
           blockMaliciousInput: true,
           blockSuspiciousLinks: true,
           detectCloneDomain: true,
-          alertAdminOnSecurityEvent: true,
-          confirmExternalLinksV59: true
+          alertAdminOnSecurityEvent: true
         };
         try {
           await db.collection('config').doc('layout').set({ securityConfig: nextCfg }, { merge: true });
@@ -22690,7 +22675,7 @@
         return;
       }
 
-      if (!(securityConfig && securityConfig.confirmExternalLinks === true) && risk.riskLevel === 'safe') {
+      if (risk.riskLevel === 'safe') {
         window.open(safeUrl, '_blank', 'noopener,noreferrer');
         return;
       }
@@ -22848,7 +22833,7 @@
           <span class="sec-pill ok">✅ 안전 ${okCnt}</span>
           <span class="sec-pill warn">⚠️ 주의 ${warnCnt}</span>
           <span class="sec-pill err">🚨 위험 ${errCnt}</span>
-          <span class="sec-pill">🔒 실시간 방어 ${[cfg.blockMaliciousInput, cfg.blockSuspiciousLinks, cfg.confirmExternalLinks, cfg.detectCloneDomain].filter(Boolean).length}/4 ON</span>
+          <span class="sec-pill">🔒 실시간 방어 ${[cfg.blockMaliciousInput !== false, cfg.blockSuspiciousLinks !== false, cfg.detectCloneDomain !== false].filter(Boolean).length}/3 ON</span>
           <span class="sec-pill ${cfg.alertAdminOnSecurityEvent !== false ? 'ok' : ''}">🚨 관리자 알림 ${cfg.alertAdminOnSecurityEvent !== false ? 'ON' : 'OFF'}</span>
         `;
       }
@@ -22898,8 +22883,8 @@
     }
 
     window.setManageSecurityFilter = (f) => {
-      manageSecurityFilter = ['all', 'checks', 'defense', 'tester', 'threats'].includes(f) ? f : 'all';
-      const accMap = { checks: 'sec_check_list', defense: 'sec_defense_cfg', tester: 'sec_url_tester', threats: 'sec_threat_feed' };
+      manageSecurityFilter = ['all', 'checks', 'defense', 'threats'].includes(f) ? f : 'all';
+      const accMap = { checks: 'sec_check_list', defense: 'sec_defense_cfg', threats: 'sec_threat_feed' };
       if (accMap[manageSecurityFilter]) manageSectionOpen[accMap[manageSecurityFilter]] = true;
       const u = getCurrentUser();
       if (u && currentMainTab === 'manage' && currentManageSubTab === 'security') {
@@ -22917,10 +22902,8 @@
       const secf = manageSecurityFilter || 'all';
       const showChecks = secf === 'all' || secf === 'checks';
       const showDefense = secf === 'all' || secf === 'defense';
-      const showTester = secf === 'all' || secf === 'tester';
       const showThreats = secf === 'all' || secf === 'threats';
       const defenseOpen = isManageSectionOpen('sec_defense_cfg', true);
-      const testerOpen = isManageSectionOpen('sec_url_tester', secf === 'tester');
       const checksOpen = isManageSectionOpen('sec_check_list', true);
       const threatsOpen = isManageSectionOpen('sec_threat_feed', (threatLogs.length > 0 && threatLogs.length <= 5) || secf === 'threats');
 
@@ -22942,7 +22925,7 @@
             <span class="sec-pill ok">✅ 안전 ${okCnt}</span>
             <span class="sec-pill warn">⚠️ 주의 ${warnCnt}</span>
             <span class="sec-pill err">🚨 위험 ${errCnt}</span>
-            <span class="sec-pill">🔒 실시간 방어 ${[cfg.blockMaliciousInput, cfg.blockSuspiciousLinks, cfg.confirmExternalLinks, cfg.detectCloneDomain].filter(Boolean).length}/4 ON</span>
+            <span class="sec-pill">🔒 실시간 방어 ${[cfg.blockMaliciousInput !== false, cfg.blockSuspiciousLinks !== false, cfg.detectCloneDomain !== false].filter(Boolean).length}/3 ON</span>
             <span class="sec-pill ${cfg.alertAdminOnSecurityEvent !== false ? 'ok' : ''}">🚨 관리자 알림 ${cfg.alertAdminOnSecurityEvent !== false ? 'ON' : 'OFF'}</span>
           </div>
           <button id="runAllSecBtn" class="btn-full btn-amber" type="button" style="padding:12px; font-size:14px;" ${secCheckRunningAll ? 'disabled' : ''} onclick="runAllSecurityChecks()">
@@ -23004,7 +22987,6 @@
           <button class="filter-chip ${secf === 'all' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('all')">전체</button>
           <button class="filter-chip ${secf === 'checks' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('checks')">🔍 ${SEC_CHECK_ITEMS.length}개 보안 진단</button>
           <button class="filter-chip ${secf === 'defense' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('defense')">🚧 실시간 방어</button>
-          <button class="filter-chip ${secf === 'tester' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('tester')">🔎 링크 검사기</button>
           <button class="filter-chip ${secf === 'threats' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('threats')">🚨 위협 기록 (${threatLogs.length})</button>
         </div>
 
@@ -23066,16 +23048,6 @@
             </div>
             <div class="setting-row">
               <div>
-                <div class="setting-title" style="font-size:13.5px;">🔗 외부 사이트 이동 전 도메인 확인창</div>
-                <div class="setting-sub" style="font-size:11.5px;">끄면 안전한 HTTPS 사이트는 바로 이동합니다. (위험·피싱 링크는 꺼도 항상 차단)</div>
-              </div>
-              <label class="switch">
-                <input type="checkbox" id="cfgSecConfirmExt" ${cfg.confirmExternalLinks === true ? 'checked' : ''} />
-                <span class="slider"></span>
-              </label>
-            </div>
-            <div class="setting-row">
-              <div>
                 <div class="setting-title" style="font-size:13.5px;">🚨 복제 · 피싱 도메인 접속 경고</div>
                 <div class="setting-sub" style="font-size:11.5px;">공식 주소(${escapeHtml(cfg.officialHost || 'kyutaek5347.github.io')})가 아닌 복제 주소 접속 시 상단에 경고 배너를 띄웁니다.</div>
               </div>
@@ -23090,36 +23062,11 @@
 
         ` : ''}
 
-        ${showTester ? `
-        <!-- 3) 의심 링크 · 악성 문구 즉시 검사기 -->
-        ${buildManageAccordionBar({
-          key: 'sec_url_tester',
-          marginTop: (showChecks || showDefense) ? '10px' : '',
-          titleHtml: '🔎 의심 링크 · 문구 즉시 검사기',
-          badgeHtml: '<span class="tag slate">안전 모의검사</span>',
-          defaultOpen: false
-        })}
-        <div data-acc-body="sec_url_tester" class="${testerOpen ? '' : 'hidden'}">
-          <div class="card">
-            <div style="font-size:12px; color:#64748B; line-height:1.5; margin-bottom:9px;">
-              외부에서 받은 의심 링크나 문구(카톡 스미싱·단축 URL·스크립트 등)를 붙여넣으면 실제 접속하지 않고 위험 요소를 즉시 분석합니다.
-            </div>
-            <textarea id="secTesterInput" class="form-textarea" style="min-height:76px; margin-bottom:8px;" placeholder="검사할 링크 또는 문구를 붙여넣으세요 (예: http://123.45.67.89/login 또는 bit.ly/...)"></textarea>
-            <div style="display:flex; gap:6px;">
-              <button class="btn-full btn-dark" type="button" style="flex:1; padding:10px; font-size:13px;" onclick="runSecurityInputTester()">🔍 위험도 즉시 분석</button>
-              <button class="btn-outline" type="button" onclick="clearSecurityInputTester()">지우기</button>
-            </div>
-            <div id="secTesterOutput" class="hidden"></div>
-          </div>
-        </div>
-
-        ` : ''}
-
         ${showThreats ? `
-        <!-- 4) 최근 보안 위협 · 차단 이벤트 -->
+        <!-- 3) 최근 보안 위협 · 차단 이벤트 -->
         ${buildManageAccordionBar({
           key: 'sec_threat_feed',
-          marginTop: (showChecks || showDefense || showTester) ? '10px' : '',
+          marginTop: (showChecks || showDefense) ? '10px' : '',
           titleHtml: '🚨 최근 보안 위협 · 차단 기록',
           badgeHtml: `<span class="tag ${threatLogs.length > 0 ? 'warm' : 'green'}">${threatLogs.length}건</span>`,
           actionHtml: `<button class="btn-sm primary" type="button" onclick="switchManageSubTab('logs')">${escapeHtml(getTabLabel('manageLogs'))} 보기</button>`,
@@ -23910,8 +23857,6 @@
       const next = {
         blockMaliciousInput: !!(document.getElementById('cfgSecBlockXss') && document.getElementById('cfgSecBlockXss').checked),
         blockSuspiciousLinks: !!(document.getElementById('cfgSecBlockLinks') && document.getElementById('cfgSecBlockLinks').checked),
-        confirmExternalLinks: !!(document.getElementById('cfgSecConfirmExt') && document.getElementById('cfgSecConfirmExt').checked),
-        confirmExternalLinksV59: true,
         detectCloneDomain: !!(document.getElementById('cfgSecDetectClone') && document.getElementById('cfgSecDetectClone').checked),
         alertAdminOnSecurityEvent: !!(document.getElementById('cfgSecAdminAlert') ? document.getElementById('cfgSecAdminAlert').checked : (securityConfig.alertAdminOnSecurityEvent !== false)),
         officialHost: (securityConfig && securityConfig.officialHost) || DEFAULT_SECURITY_CONFIG.officialHost
@@ -23927,74 +23872,15 @@
           category: '보안·설정',
           action: '보안 방어 설정 변경',
           target: '실시간 보안 방어',
-          detail: `XSS차단:${next.blockMaliciousInput ? 'ON' : 'OFF'} · 피싱차단:${next.blockSuspiciousLinks ? 'ON' : 'OFF'} · 외부확인:${next.confirmExternalLinks ? 'ON' : 'OFF'}`
+          detail: `XSS차단:${next.blockMaliciousInput ? 'ON' : 'OFF'} · 피싱차단:${next.blockSuspiciousLinks ? 'ON' : 'OFF'} · 복제도메인경고:${next.detectCloneDomain ? 'ON' : 'OFF'}`
         });
+        refreshSecurityLiveUI();
         showToast('🛡️ 보안 방어 설정이 저장 및 즉시 적용되었습니다!');
       } catch (err) {
         handleDbError(err, '보안 방어 설정 저장');
       } finally {
         if (btn) btn.disabled = false;
       }
-    };
-
-    window.runSecurityInputTester = () => {
-      const inp = document.getElementById('secTesterInput');
-      const out = document.getElementById('secTesterOutput');
-      if (!inp || !out) return;
-      const raw = inp.value.trim();
-      if (!raw) return showToast('검사할 링크나 문구를 먼저 입력해 주세요.');
-
-      const xss = detectMaliciousCode(raw);
-      let links = scanTextForSuspiciousLinks(raw);
-      // 사용자가 http 없이 단일 도메인만 입력한 경우도 검사
-      if (links.length === 0 && /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\/.*)?$/.test(raw) && !/\s/.test(raw)) {
-        const direct = analyzeUrlRisk(raw);
-        if (direct.riskLevel !== 'safe') links = [direct];
-      }
-
-      const pii = detectSensitivePii(raw);
-      const rawLower = raw.toLowerCase();
-      const ytRiskHits = YOUTUBE_RISK_KEYWORDS.filter(k => rawLower.includes(k.toLowerCase()));
-
-      const reasons = [];
-      let level = 'ok';
-      if (!xss.safe) {
-        level = 'err';
-        xss.reasons.forEach(r => reasons.push(`[해킹/XSS] ${r}`));
-      }
-      links.forEach(l => {
-        if (l.riskLevel === 'danger') level = 'err';
-        else if (l.riskLevel === 'warn' && level === 'ok') level = 'warn';
-        reasons.push(`[피싱/링크] ${l.url} → ${l.reasons.join(', ')}`);
-      });
-      if (pii.found) {
-        if (pii.reasons.some(r => r.includes('주민등록번호') || r.includes('카드번호'))) level = 'err';
-        else if (level === 'ok') level = 'warn';
-        reasons.push(`[개인정보 노출] ${pii.reasons.join(', ')} 포함됨`);
-      }
-      if (ytRiskHits.length > 0) {
-        if (level === 'ok') level = 'warn';
-        reasons.push(`[저작권·위험 키워드] ${ytRiskHits.join(', ')}`);
-      }
-
-      out.classList.remove('hidden');
-      if (level === 'ok') {
-        out.className = 'sec-test-result ok';
-        out.innerHTML = '<b>✅ 안전 판정</b><br>악성 스크립트(XSS), 피싱·위험 링크, 민감 개인정보, 저작권 위험 키워드가 감지되지 않았습니다.';
-      } else if (level === 'warn') {
-        out.className = 'sec-test-result warn';
-        out.innerHTML = `<b>⚠️ 주의 필요 (의심 요소 ${reasons.length}건)</b><br>• ${reasons.map(escapeHtml).join('<br>• ')}`;
-      } else {
-        out.className = 'sec-test-result err';
-        out.innerHTML = `<b>🚨 위험 · 즉시 차단 대상 (${reasons.length}건)</b><br>• ${reasons.map(escapeHtml).join('<br>• ')}`;
-      }
-    };
-
-    window.clearSecurityInputTester = () => {
-      const inp = document.getElementById('secTesterInput');
-      const out = document.getElementById('secTesterOutput');
-      if (inp) { inp.value = ''; inp.focus(); }
-      if (out) { out.innerHTML = ''; out.classList.add('hidden'); }
     };
 
 
