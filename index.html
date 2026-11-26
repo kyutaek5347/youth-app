@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=184" />
+  <link rel="manifest" href="./manifest.json?v=185" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=184" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=184" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=185" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=185" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -579,6 +579,35 @@
       background: #EF4444; color: #FFFFFF;
       font-size: 10.5px; font-weight: 900; letter-spacing: 0.5px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.38); pointer-events: none;
+    }
+    .reason-note-box {
+      margin-top: 7px;
+      padding: 8px 10px;
+      border-radius: 9px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-left: 3px solid #94A3B8;
+      font-size: 12px;
+      color: #334155;
+      line-height: 1.5;
+      white-space: pre-line;
+      word-break: keep-all;
+    }
+    .reason-note-box.admin-removed {
+      background: #FEF2F2;
+      border-color: #FECACA;
+      border-left-color: #EF4444;
+      color: #7F1D1D;
+    }
+    .reason-note-box.self-withdrawn {
+      background: #FFFBEB;
+      border-color: #FDE68A;
+      border-left-color: #F59E0B;
+      color: #78350F;
+    }
+    .reason-note-box.empty {
+      color: #94A3B8;
+      font-style: normal;
     }
 
     .card {
@@ -3134,7 +3163,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=184" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=185" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3544,6 +3573,16 @@
         <div class="info-box warn" style="margin-top:0; margin-bottom:12px;">
           ⚠️ <b>회원 탈퇴(계정 삭제) 안내</b><br>
           계정을 삭제하면 로그인 정보와 회원 기록이 즉시 영구 삭제됩니다. 다시 이용하려면 회원가입 신청이 필요합니다.
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="accDeleteReasonInput">탈퇴 사유 (선택 · 적지 않아도 탈퇴 가능)</label>
+          <div class="quick-preset-row" style="margin-bottom:7px;">
+            <button class="quick-preset-chip" type="button" onclick="fillSelfDeleteReason('교회 이동 · 타 지역 이사')">교회 이동 · 이사</button>
+            <button class="quick-preset-chip" type="button" onclick="fillSelfDeleteReason('학업 · 직장 사정')">학업 · 직장 사정</button>
+            <button class="quick-preset-chip" type="button" onclick="fillSelfDeleteReason('개인 사정')">개인 사정</button>
+            <button class="quick-preset-chip" type="button" onclick="fillSelfDeleteReason('앱 사용 빈도 낮음')">앱 사용 빈도 낮음</button>
+          </div>
+          <textarea id="accDeleteReasonInput" class="form-textarea" style="min-height:70px;" maxlength="200" placeholder="탈퇴 사유가 있다면 편하게 적어주세요. (선택 사항 · 비워두셔도 탈퇴됩니다)"></textarea>
         </div>
         <div class="form-group">
           <label class="form-label">현재 비밀번호 확인</label>
@@ -4612,6 +4651,28 @@
     </div>
   </div>
 
+  <!-- 관리자: 관리자 해제 · 회원 내보내기 사유 입력/수정 모달 -->
+  <div id="removeReasonModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="removeReasonModalTitle" class="modal-title">🚫 해제 사유 입력</h3>
+        <button class="close-btn" data-close="removeReasonModal">✕</button>
+      </div>
+      <input type="hidden" id="removeReasonMode" />
+      <input type="hidden" id="removeReasonTargetId" />
+      <div id="removeReasonDescBox" class="info-box warn" style="margin-top:0; margin-bottom:12px;"></div>
+      <div class="form-group">
+        <label class="form-label" id="removeReasonLabel" for="removeReasonInput">해제 사유 (선택)</label>
+        <div id="removeReasonPresets" class="quick-preset-row" style="margin-bottom:7px;"></div>
+        <textarea id="removeReasonInput" class="form-textarea" style="min-height:84px;" maxlength="200" placeholder="사유를 입력해 주세요. (선택 사항)"></textarea>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:8px;">
+        <button id="submitRemoveReasonBtn" class="btn-full" style="flex:1; padding:12px; background:#EF4444; color:#fff;" type="button" onclick="handleSubmitRemoveReason()">확인</button>
+        <button class="btn-outline" type="button" data-close="removeReasonModal">취소</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 관리자: 관리 화면 섹션 명칭 즉시 수정 모달 -->
   <div id="sectionTitleEditModal" class="modal-backdrop">
     <div class="modal">
@@ -4685,7 +4746,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 29;
-    const APP_CLIENT_BUILD = 184;
+    const APP_CLIENT_BUILD = 185;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_READ_ITEMS = 'right_youth_read_items_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
@@ -5567,7 +5628,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=184" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=185" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5591,8 +5652,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=184', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=184', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=185', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=185', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -6010,6 +6071,7 @@
     let adminInquiryFilter = 'all';
     let manageContentFilter = 'all';
     let manageMembersFilter = 'all';
+    let manageAdminsFilter = 'all';
     let lastInquirySubmitTs = 0;
     let videoItems = [];
     let myVideoItems = [];
@@ -7274,7 +7336,7 @@
           if (adminSheetUrl) {
             syncUnsyncedAuditLogsToSheet().catch(() => {});
           }
-          if (currentMainTab === 'manage' && (currentManageSubTab === 'logs' || currentManageSubTab === 'security' || currentManageSubTab === 'sheet')) {
+          if (currentMainTab === 'manage' && (currentManageSubTab === 'logs' || currentManageSubTab === 'security' || currentManageSubTab === 'sheet' || currentManageSubTab === 'members')) {
             applyScreen();
           }
         }, () => {});
@@ -11612,17 +11674,38 @@
       } catch (err) { handleDbError(err, '공지 삭제'); }
     };
 
-    // (C-0) 관리자 명단 · 재입장 승인 (독립 탭)
+    window.setManageAdminsFilter = (filterKey) => {
+      const allowed = ['all', 'active', 'removed', 'pending'];
+      manageAdminsFilter = allowed.includes(filterKey) ? filterKey : 'all';
+      if (manageAdminsFilter === 'active') manageSectionOpen.admins_active = true;
+      else if (manageAdminsFilter === 'removed') manageSectionOpen.admins_removed = true;
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'admins') {
+        renderManageAdmins(document.getElementById('manageContent'));
+      }
+    };
+
+    // (C-0) 관리자 명단 · 재입장 승인 (독립 탭 · 현재/해제 관리자 분리 + 해제 사유)
     function renderManageAdmins(el) {
       const pendingAdmins = (adminRegistry.items || []).filter(a => a.status === 'pending');
       const activeAdmins = (adminRegistry.items || []).filter(a => a.status === 'active');
-      const removedAdmins = (adminRegistry.items || []).filter(a => a.status === 'removed');
+      const removedAdmins = (adminRegistry.items || []).filter(a => a.status === 'removed')
+        .sort((a, b) => Number(b.removedTs || 0) - Number(a.removedTs || 0));
+
+      const f = manageAdminsFilter || 'all';
+      const showPending = (f === 'all' || f === 'pending') && (pendingAdmins.length > 0 || f === 'pending');
+      const showActive = f === 'all' || f === 'active';
+      const showRemoved = f === 'all' || f === 'removed';
+
+      const activeOpen = isManageSectionOpen('admins_active', true);
+      const removedDefaultOpen = removedAdmins.length > 0;
+      const removedOpen = isManageSectionOpen('admins_removed', removedDefaultOpen);
 
       el.innerHTML = `
         ${buildManageSectionHead({
           key: 'members_admins',
           defaultTitle: '🔐 관리자 명단 · 재입장 승인',
-          rightHtml: `<div style="display:flex; gap:5px; flex-wrap:wrap;"><span class="tag warm">활성 ${activeAdmins.length}명</span>${pendingAdmins.length > 0 ? `<span class="tag red">대기 ${pendingAdmins.length}</span>` : ''}</div>`
+          rightHtml: `<div style="display:flex; gap:5px; flex-wrap:wrap;"><span class="tag warm">현재 ${activeAdmins.length}명</span><span class="tag slate">해제 ${removedAdmins.length}명</span>${pendingAdmins.length > 0 ? `<span class="tag red">대기 ${pendingAdmins.length}</span>` : ''}</div>`
         })}
 
         <div class="card" style="background:#FFFBEB; border-color:#FDE68A; margin-bottom:10px; padding:12px 13px;">
@@ -11635,7 +11718,7 @@
           </div>
         </div>
 
-        <div class="card" style="background:#F8FAFC; margin-bottom:10px;">
+        <div class="card" style="background:#F8FAFC; margin-bottom:12px;">
           <div class="setting-row" style="padding:2px 0;">
             <div>
               <div class="setting-title" style="font-size:13.5px;">🔒 신규 관리자 자동 등록 잠금</div>
@@ -11648,74 +11731,135 @@
           </div>
         </div>
 
-        ${pendingAdmins.length > 0 ? `
-          ${pendingAdmins.map(a => `
-            <div class="card highlight-pending">
-              <div class="card-top">
-                <div class="member-name">
-                  <span>${escapeHtml(a.name)}</span>
-                  <span class="tag ${a.isReentry ? 'red' : 'warm'}">${a.isReentry ? '🔄 삭제된 관리자 재입장 요청' : '🆕 신규 관리자 요청'}</span>
+        <div class="filter-row" style="margin-bottom:10px;">
+          <button class="filter-chip ${f === 'all' ? 'active' : ''}" type="button" onclick="setManageAdminsFilter('all')">전체 (${activeAdmins.length + removedAdmins.length + pendingAdmins.length})</button>
+          <button class="filter-chip ${f === 'active' ? 'active' : ''}" type="button" onclick="setManageAdminsFilter('active')">✅ 현재 관리자 (${activeAdmins.length})</button>
+          <button class="filter-chip ${f === 'removed' ? 'active' : ''}" type="button" onclick="setManageAdminsFilter('removed')">🚫 해제된 관리자 (${removedAdmins.length})</button>
+          <button class="filter-chip ${f === 'pending' ? 'active' : ''} ${pendingAdmins.length > 0 ? 'has-badge' : ''}" type="button" onclick="setManageAdminsFilter('pending')"><span>⏳ 승인 대기</span>${pendingAdmins.length > 0 ? buildSubTabBadgeHtml(pendingAdmins.length) : '<span>(0)</span>'}</button>
+        </div>
+
+        ${showPending ? `
+          ${pendingAdmins.length === 0
+            ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;margin-bottom:10px;">현재 입장 승인 대기 중인 관리자가 없습니다.</div>'
+            : pendingAdmins.map(a => `
+              <div class="card highlight-pending">
+                <div class="card-top">
+                  <div class="member-name">
+                    <span>${escapeHtml(a.name)}</span>
+                    <span class="tag ${a.isReentry ? 'red' : 'warm'}">${a.isReentry ? '🔄 삭제된 관리자 재입장 요청' : '🆕 신규 관리자 요청'}</span>
+                  </div>
+                  <span class="card-date">${escapeHtml(a.requestedAt || a.registeredAt || '')}</span>
                 </div>
-                <span class="card-date">${escapeHtml(a.requestedAt || a.registeredAt || '')}</span>
+                <div style="font-size:12px; color:#92400E; margin-bottom:7px;">
+                  ${a.isReentry
+                    ? '이전에 관리자 목록에서 해제되었던 분이 다시 입장을 요청했습니다. 승인 시 구글 시트에 재입장 기록이 남습니다.'
+                    : '신규 관리자 등록 잠금 상태에서 입장을 요청했습니다.'}
+                </div>
+                ${a.isReentry && a.removeReason ? `
+                  <div class="reason-note-box admin-removed" style="margin-bottom:9px;">
+                    <b>이전 해제 사유:</b> ${escapeHtml(a.removeReason)}
+                  </div>
+                ` : ''}
+                <div style="display:flex; gap:6px;">
+                  <button class="btn-sm approve" style="flex:1; padding:8px;" onclick="approveAdminEntry('${escapeJsAttr(a.id)}')">✅ 관리자 입장 승인</button>
+                  <button class="btn-sm danger" style="padding:8px 12px;" onclick="rejectAdminEntry('${escapeJsAttr(a.id)}')">거절</button>
+                </div>
               </div>
-              <div style="font-size:12px; color:#92400E; margin-bottom:9px;">
-                ${a.isReentry
-                  ? '이전에 관리자 목록에서 삭제되었던 분이 다시 입장을 요청했습니다. 승인 시 구글 시트에 재입장 기록이 남습니다.'
-                  : '신규 관리자 등록 잠금 상태에서 입장을 요청했습니다.'}
-              </div>
-              <div style="display:flex; gap:6px;">
-                <button class="btn-sm approve" style="flex:1; padding:8px;" onclick="approveAdminEntry('${escapeJsAttr(a.id)}')">✅ 관리자 입장 승인</button>
-                <button class="btn-sm danger" style="padding:8px 12px;" onclick="rejectAdminEntry('${escapeJsAttr(a.id)}')">거절</button>
-              </div>
-            </div>
-          `).join('')}
+            `).join('')}
         ` : ''}
 
-        <div class="card" style="margin-bottom:14px;">
-          ${activeAdmins.length === 0
-            ? '<div style="text-align:center;color:#64748B;font-size:12.5px;padding:6px 0;">등록된 관리자가 없습니다.</div>'
-            : activeAdmins.map(a => {
-                const isMe = String(a.name || '').trim() === currentAdminName;
-                return `
-                  <div class="member-row">
-                    <div>
-                      <div class="member-name">
-                        <span>${escapeHtml(a.name)}</span>
-                        <span class="role-pill" style="background:#D97706;">관리자</span>
-                        ${isMe ? '<span class="tag green" style="font-size:10px; padding:2px 6px;">나</span>' : ''}
-                        ${a.reentryCount ? `<span class="tag slate" style="font-size:10px; padding:2px 6px;">재입장 ${a.reentryCount}회</span>` : ''}
-                        ${a.renameCount ? `<span class="tag" style="font-size:10px; padding:2px 6px;">변경 ${a.renameCount}회</span>` : ''}
+        ${showActive ? `
+          ${buildManageAccordionBar({
+            key: 'admins_active',
+            titleHtml: '✅ 현재 관리자',
+            badgeHtml: `<span class="tag warm">${activeAdmins.length}명</span>`,
+            defaultOpen: true
+          })}
+          <div data-acc-body="admins_active" class="${activeOpen ? '' : 'hidden'}">
+            <div class="card" style="margin-bottom:12px;">
+              ${activeAdmins.length === 0
+                ? '<div style="text-align:center;color:#64748B;font-size:12.5px;padding:6px 0;">현재 등록된 관리자가 없습니다.</div>'
+                : activeAdmins.map(a => {
+                    const isMe = String(a.name || '').trim() === currentAdminName;
+                    return `
+                      <div class="member-row">
+                        <div>
+                          <div class="member-name">
+                            <span>${escapeHtml(a.name)}</span>
+                            <span class="role-pill" style="background:#D97706;">관리자</span>
+                            ${isMe ? '<span class="tag green" style="font-size:10px; padding:2px 6px;">나</span>' : ''}
+                            ${a.reentryCount ? `<span class="tag slate" style="font-size:10px; padding:2px 6px;">재입장 ${a.reentryCount}회</span>` : ''}
+                            ${a.renameCount ? `<span class="tag" style="font-size:10px; padding:2px 6px;">변경 ${a.renameCount}회</span>` : ''}
+                          </div>
+                          <div class="member-meta">등록 ${escapeHtml(a.registeredAt || '-')} · 최근접속 ${escapeHtml(a.lastLoginAt || '-')}${a.prevName ? ` · 이전 이름: ${escapeHtml(a.prevName)}` : ''}</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+                          <button class="btn-sm" type="button" onclick="openAdminRenameModal('${escapeJsAttr(a.id)}')">✏️ 이름 변경</button>
+                          ${(!isMe && activeAdmins.length > 1)
+                            ? `<button class="btn-sm danger" onclick="removeAdminEntry('${escapeJsAttr(a.id)}')">관리자 해제</button>`
+                            : (!isMe ? '<span style="font-size:11px; color:#94A3B8; font-weight:700;">최소 1인 유지</span>' : '')}
+                        </div>
                       </div>
-                      <div class="member-meta">등록 ${escapeHtml(a.registeredAt || '-')} · 최근접속 ${escapeHtml(a.lastLoginAt || '-')}${a.prevName ? ` · 이전 이름: ${escapeHtml(a.prevName)}` : ''}</div>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                      <button class="btn-sm" type="button" onclick="openAdminRenameModal('${escapeJsAttr(a.id)}')">✏️ 이름 변경</button>
-                      ${(!isMe && activeAdmins.length > 1)
-                        ? `<button class="btn-sm danger" onclick="removeAdminEntry('${escapeJsAttr(a.id)}')">관리자 해제</button>`
-                        : (!isMe ? '<span style="font-size:11px; color:#94A3B8; font-weight:700;">최소 1인 유지</span>' : '')}
-                    </div>
-                  </div>
-                `;
-              }).join('')}
-          ${removedAdmins.length > 0 ? `
-            <div style="margin-top:10px; padding-top:10px; border-top:1px dashed #E2E8F0; font-size:11.5px; color:#64748B;">
-              <b>해제된 관리자 (${removedAdmins.length}명):</b> ${removedAdmins.map(a => escapeHtml(a.name)).join(', ')}
-              <div style="margin-top:2px; font-size:11px;">해제된 관리자가 같은 성명으로 다시 로그인하면 위 승인 대기 칸에 표시됩니다.</div>
+                    `;
+                  }).join('')}
             </div>
-          ` : ''}
-        </div>
+          </div>
+        ` : ''}
+
+        ${showRemoved ? `
+          ${buildManageAccordionBar({
+            key: 'admins_removed',
+            titleHtml: '🚫 해제된 관리자',
+            badgeHtml: `<span class="tag ${removedAdmins.length > 0 ? 'red' : 'slate'}">${removedAdmins.length}명</span>`,
+            defaultOpen: removedDefaultOpen,
+            marginTop: f === 'all' ? '10px' : ''
+          })}
+          <div data-acc-body="admins_removed" class="${removedOpen ? '' : 'hidden'}">
+            ${removedAdmins.length === 0
+              ? '<div class="card" style="text-align:center;color:#64748B;font-size:12.5px;">해제된 관리자가 없습니다.</div>'
+              : removedAdmins.map(a => {
+                  const reasonTxt = String(a.removeReason || '').trim();
+                  return `
+                    <div class="card" style="margin-bottom:9px;">
+                      <div class="card-top" style="margin-bottom:5px;">
+                        <div class="member-name">
+                          <span>${escapeHtml(a.name)}</span>
+                          <span class="tag red" style="font-size:10.5px;">해제됨</span>
+                          ${a.reentryCount ? `<span class="tag slate" style="font-size:10px; padding:2px 6px;">과거 재입장 ${a.reentryCount}회</span>` : ''}
+                        </div>
+                        <button class="btn-sm" type="button" onclick="openEditAdminRemoveReasonModal('${escapeJsAttr(a.id)}')">✏️ ${reasonTxt ? '사유 수정' : '사유 적기'}</button>
+                      </div>
+                      <div class="member-meta">
+                        해제일시: ${escapeHtml(a.removedAt || '-')} · 처리자: ${escapeHtml(a.removedBy || '-')}
+                        ${a.registeredAt ? ` · 등록 ${escapeHtml(a.registeredAt)}` : ''}
+                      </div>
+                      <div class="reason-note-box ${reasonTxt ? 'admin-removed' : 'empty'}">
+                        ${reasonTxt ? `<b>📝 해제 사유:</b> ${escapeHtml(reasonTxt)}` : '📝 해제 사유가 입력되지 않았습니다. 오른쪽 위 [사유 적기]로 기록할 수 있습니다.'}
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+            ${removedAdmins.length > 0 ? `
+              <div style="font-size:11.5px; color:#64748B; padding:2px 4px 8px; line-height:1.45;">
+                ℹ️ 해제된 관리자가 같은 성명으로 다시 로그인하면 상단 <b>[⏳ 승인 대기]</b>에 표시되며, 기존 관리자의 승인이 필요합니다.
+              </div>
+            ` : ''}
+          </div>
+        ` : ''}
       `;
     }
 
     window.setManageMembersFilter = (filterKey) => {
-      const allowed = ['all', 'new', 'rejoin', 'rename', 'reset', 'rejected'];
+      const allowed = ['all', 'new', 'rejoin', 'rename', 'reset', 'rejected', 'removed', 'withdrawn'];
       manageMembersFilter = allowed.includes(filterKey) ? filterKey : 'all';
       const secKeyMap = {
         new: 'members_new_pending',
         rejoin: 'members_rejoin_pending',
         rename: 'members_rename',
         reset: 'members_reset',
-        rejected: 'members_rejected'
+        rejected: 'members_rejected',
+        removed: 'members_removed',
+        withdrawn: 'members_withdrawn'
       };
       if (secKeyMap[manageMembersFilter]) {
         manageSectionOpen[secKeyMap[manageMembersFilter]] = true;
@@ -11726,7 +11870,17 @@
       }
     };
 
-    // (C) 회원 승인 · 역할 부여 · 비밀번호 초기화 (승인 종류별 구분)
+    function parseSelfWithdrawReason(logEntry) {
+      if (!logEntry) return '';
+      if (logEntry.withdrawReason && String(logEntry.withdrawReason).trim()) {
+        return String(logEntry.withdrawReason).trim();
+      }
+      const detail = String(logEntry.detail || '').trim();
+      const m = detail.match(/사유\s*:\s*(.+)$/);
+      return m ? m[1].trim() : '';
+    }
+
+    // (C) 회원 승인 · 역할 부여 · 비밀번호 초기화 · 내보낸/탈퇴 이력
     function renderManageMembers(el) {
       const pendingAll = members.filter(m => m.status === 'pending');
       const newPending = pendingAll.filter(m => !memberHistoryMap.has(nameToHex(m.name)));
@@ -11735,7 +11889,16 @@
         .sort((a, b) => Number(b.pendingNameTs || 0) - Number(a.pendingNameTs || 0));
       const resetPending = members.filter(m => m.status === 'reset_pending');
       const approved = members.filter(m => m.status === 'approved');
+      const approvedNameHexSet = new Set(approved.map(m => nameToHex(m.name)));
       const rejected = members.filter(m => m.status === 'rejected');
+
+      const removedMembers = Array.from(memberHistoryMap.values())
+        .filter(h => h && (h.lastStatus === '삭제' || h.removedType === 'admin'))
+        .sort((a, b) => Number(b.removedTs || 0) - Number(a.removedTs || 0) || String(b.lastUpdatedAt || '').localeCompare(String(a.lastUpdatedAt || '')));
+
+      const withdrawnLogs = (auditLogs || [])
+        .filter(l => l && l.action === '회원 탈퇴(계정 삭제)')
+        .sort((a, b) => Number(b.ts || 0) - Number(a.ts || 0));
 
       const totalWaitingCount = newPending.length + rejoinPending.length + renamePending.length + resetPending.length + rejected.length;
 
@@ -11784,6 +11947,8 @@
       const showRename = f === 'all' || f === 'rename';
       const showReset = f === 'all' || f === 'reset';
       const showRejected = f === 'all' || f === 'rejected';
+      const showRemoved = f === 'all' || f === 'removed';
+      const showWithdrawn = f === 'all' || f === 'withdrawn';
 
       const newDefaultOpen = newPending.length > 0;
       const newOpen = isManageSectionOpen('members_new_pending', newDefaultOpen);
@@ -11795,6 +11960,10 @@
       const resetOpen = isManageSectionOpen('members_reset', resetDefaultOpen);
       const rejectedDefaultOpen = false;
       const rejectedOpen = isManageSectionOpen('members_rejected', rejectedDefaultOpen);
+      const removedDefaultOpen = false;
+      const removedOpen = isManageSectionOpen('members_removed', removedDefaultOpen);
+      const withdrawnDefaultOpen = false;
+      const withdrawnOpen = isManageSectionOpen('members_withdrawn', withdrawnDefaultOpen);
 
       el.innerHTML = `
         <div class="filter-row" style="margin-bottom:10px;">
@@ -11804,6 +11973,8 @@
           <button class="filter-chip ${f === 'rename' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('rename')"><span>✏️ 이름 변경</span>${renamePending.length > 0 ? buildSubTabBadgeHtml(renamePending.length) : '<span>(0)</span>'}</button>
           <button class="filter-chip ${f === 'reset' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('reset')">🔑 비밀번호 초기화 (${resetPending.length})</button>
           <button class="filter-chip ${f === 'rejected' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('rejected')">🚫 보류 (${rejected.length})</button>
+          <button class="filter-chip ${f === 'removed' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('removed')">🚪 내보낸 회원 (${removedMembers.length})</button>
+          <button class="filter-chip ${f === 'withdrawn' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('withdrawn')">👋 자진 탈퇴 (${withdrawnLogs.length})</button>
         </div>
 
         ${showNew ? `
@@ -11943,6 +12114,78 @@
                     </div>
                   `).join('')}
                 </div>`}
+          </div>
+        ` : ''}
+
+        ${showRemoved ? `
+          ${buildManageAccordionBar({
+            key: 'members_removed',
+            titleHtml: '🚪 관리자가 내보낸 회원',
+            badgeHtml: `<span class="tag ${removedMembers.length > 0 ? 'red' : 'slate'}">${removedMembers.length}명</span>`,
+            defaultOpen: removedDefaultOpen,
+            marginTop: f === 'all' ? '10px' : ''
+          })}
+          <div data-acc-body="members_removed" class="${removedOpen ? '' : 'hidden'}">
+            ${removedMembers.length === 0
+              ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">관리자가 내보낸 회원 기록이 없습니다.</div>'
+              : removedMembers.map(h => {
+                  const reasonTxt = String(h.removeReason || '').trim();
+                  const isRejoinedNow = approvedNameHexSet.has(nameToHex(h.name));
+                  return `
+                    <div class="card" style="margin-bottom:9px;">
+                      <div class="card-top" style="margin-bottom:5px;">
+                        <div class="member-name">
+                          <span>${escapeHtml(h.name || '회원')}</span>
+                          <span class="tag red" style="font-size:10.5px;">내보냄</span>
+                          ${h.role ? `<span class="tag slate" style="font-size:10px; padding:2px 6px;">${escapeHtml(h.role)}</span>` : ''}
+                          ${isRejoinedNow ? '<span class="tag green" style="font-size:10px; padding:2px 6px;">현재 재가입</span>' : ''}
+                        </div>
+                        <button class="btn-sm" type="button" onclick="openEditMemberRemoveReasonModal('${escapeJsAttr(h.id)}')">✏️ ${reasonTxt ? '사유 수정' : '사유 적기'}</button>
+                      </div>
+                      <div class="member-meta">
+                        처리일시: ${escapeHtml(h.removedAt || h.lastUpdatedAt || '-')} · 처리자: ${escapeHtml(h.removedBy || '관리자')}
+                      </div>
+                      <div class="reason-note-box ${reasonTxt ? 'admin-removed' : 'empty'}">
+                        ${reasonTxt ? `<b>📝 내보내기(해제) 사유:</b> ${escapeHtml(reasonTxt)}` : '📝 해제 사유가 입력되지 않았습니다. 오른쪽 위 [사유 적기]로 기록할 수 있습니다.'}
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+          </div>
+        ` : ''}
+
+        ${showWithdrawn ? `
+          ${buildManageAccordionBar({
+            key: 'members_withdrawn',
+            titleHtml: '👋 자진 탈퇴 회원',
+            badgeHtml: `<span class="tag ${withdrawnLogs.length > 0 ? 'warm' : 'slate'}">${withdrawnLogs.length}건</span>`,
+            defaultOpen: withdrawnDefaultOpen,
+            marginTop: f === 'all' ? '10px' : ''
+          })}
+          <div data-acc-body="members_withdrawn" class="${withdrawnOpen ? '' : 'hidden'}">
+            ${withdrawnLogs.length === 0
+              ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">자진 탈퇴한 회원 기록이 없습니다.</div>'
+              : withdrawnLogs.map(l => {
+                  const wName = String(l.target || l.actorName || '회원').trim();
+                  const reasonTxt = parseSelfWithdrawReason(l);
+                  const isRejoinedNow = approvedNameHexSet.has(nameToHex(wName));
+                  return `
+                    <div class="card" style="margin-bottom:9px;">
+                      <div class="card-top" style="margin-bottom:5px;">
+                        <div class="member-name">
+                          <span>${escapeHtml(wName)}</span>
+                          <span class="tag warm" style="font-size:10.5px;">본인 탈퇴</span>
+                          ${l.roleName ? `<span class="tag slate" style="font-size:10px; padding:2px 6px;">${escapeHtml(l.roleName)}</span>` : ''}
+                          ${isRejoinedNow ? '<span class="tag green" style="font-size:10px; padding:2px 6px;">현재 재가입</span>' : ''}
+                        </div>
+                        <span class="card-date">${escapeHtml(l.dateTime || l.dateWithDow || '')}</span>
+                      </div>
+                      <div class="reason-note-box ${reasonTxt ? 'self-withdrawn' : 'empty'}">
+                        ${reasonTxt ? `<b>💬 회원 탈퇴 사유:</b> ${escapeHtml(reasonTxt)}` : '💬 탈퇴 사유 미입력 (선택 항목)'}
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
           </div>
         ` : ''}
 
@@ -12247,12 +12490,139 @@
       }
     };
 
-    window.deleteMember = async (id) => {
+    const ADMIN_REMOVE_REASON_PRESETS = ['임기 만료 · 인수인계', '사임 · 개인 사정', '직책 변경', '장기 미접속', '테스트 계정 정리'];
+    const MEMBER_REMOVE_REASON_PRESETS = ['교회 이동 · 전출', '졸업 · 등반', '장기 미출석', '본인 요청', '중복 · 테스트 계정'];
+
+    window.applyRemoveReasonPreset = (txt) => {
+      const inp = document.getElementById('removeReasonInput');
+      if (!inp) return;
+      inp.value = txt;
+      inp.focus();
+    };
+
+    function openRemoveReasonModal({ mode, targetId, title, descHtml, label, presets, initialValue, submitLabel, dangerBtn }) {
+      document.getElementById('removeReasonMode').value = mode;
+      document.getElementById('removeReasonTargetId').value = String(targetId || '');
+      document.getElementById('removeReasonModalTitle').textContent = title;
+      const descBox = document.getElementById('removeReasonDescBox');
+      descBox.className = dangerBtn ? 'info-box warn' : 'info-box';
+      descBox.innerHTML = descHtml;
+      document.getElementById('removeReasonLabel').textContent = label;
+      document.getElementById('removeReasonPresets').innerHTML = (presets || []).map(p => `
+        <button class="quick-preset-chip" type="button" onclick="applyRemoveReasonPreset('${escapeJsAttr(p)}')">${escapeHtml(p)}</button>
+      `).join('');
+      const inp = document.getElementById('removeReasonInput');
+      inp.value = String(initialValue || '');
+      const btn = document.getElementById('submitRemoveReasonBtn');
+      btn.textContent = submitLabel;
+      btn.style.background = dangerBtn ? '#EF4444' : '#111827';
+      btn.disabled = false;
+      document.getElementById('removeReasonModal').classList.add('open');
+      setTimeout(() => inp.focus(), 50);
+    }
+
+    window.openEditAdminRemoveReasonModal = (admId) => {
+      const target = (adminRegistry.items || []).find(a => String(a.id) === String(admId));
+      if (!target) return;
+      openRemoveReasonModal({
+        mode: 'edit_admin_reason',
+        targetId: target.id,
+        title: `✏️ [${target.name}] 관리자 해제 사유`,
+        descHtml: `해제된 관리자 <b>${escapeHtml(target.name)}</b>님의 해제 사유를 기록하거나 수정합니다.`,
+        label: '관리자 해제 사유 (선택)',
+        presets: ADMIN_REMOVE_REASON_PRESETS,
+        initialValue: target.removeReason || '',
+        submitLabel: '💾 해제 사유 저장',
+        dangerBtn: false
+      });
+    };
+
+    window.openEditMemberRemoveReasonModal = (histId) => {
+      const h = memberHistoryMap.get(String(histId));
+      if (!h) return;
+      openRemoveReasonModal({
+        mode: 'edit_member_reason',
+        targetId: h.id,
+        title: `✏️ [${h.name}] 내보내기(해제) 사유`,
+        descHtml: `내보낸 회원 <b>${escapeHtml(h.name)}</b>님의 해제 사유를 기록하거나 수정합니다.`,
+        label: '회원 내보내기(해제) 사유 (선택)',
+        presets: MEMBER_REMOVE_REASON_PRESETS,
+        initialValue: h.removeReason || '',
+        submitLabel: '💾 사유 저장',
+        dangerBtn: false
+      });
+    };
+
+    window.handleSubmitRemoveReason = async () => {
+      const mode = document.getElementById('removeReasonMode').value;
+      const targetId = document.getElementById('removeReasonTargetId').value;
+      const reason = (document.getElementById('removeReasonInput').value || '').trim();
+      if (reason && typeof enforceInputSecurity === 'function' && !enforceInputSecurity(reason, '해제 사유', true)) return;
+
+      const btn = document.getElementById('submitRemoveReasonBtn');
+      if (btn) btn.disabled = true;
+      try {
+        if (mode === 'remove_admin') {
+          await executeRemoveAdminEntry(targetId, reason);
+        } else if (mode === 'edit_admin_reason') {
+          await executeUpdateAdminRemoveReason(targetId, reason);
+        } else if (mode === 'remove_member') {
+          await executeDeleteMember(targetId, reason);
+        } else if (mode === 'edit_member_reason') {
+          await executeUpdateMemberRemoveReason(targetId, reason);
+        }
+        document.getElementById('removeReasonModal').classList.remove('open');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    };
+
+    async function executeUpdateMemberRemoveReason(histId, reason) {
+      const h = memberHistoryMap.get(String(histId));
+      if (!h) return;
+      try {
+        await db.collection('memberHistory').doc(String(histId)).set({
+          removeReason: reason,
+          reasonUpdatedAt: formatKstDateTime(),
+          reasonUpdatedBy: currentAdminName || '관리자'
+        }, { merge: true });
+        recordAuditLog({
+          actorType: 'admin',
+          category: '회원',
+          action: '내보낸 회원 사유 수정',
+          target: h.name || String(histId),
+          beforeVal: h.removeReason || '미입력',
+          afterVal: reason || '미입력'
+        });
+        showToast(`[${h.name}]님의 해제 사유를 저장했습니다.`);
+      } catch (err) { handleDbError(err, '회원 해제 사유 저장'); }
+    }
+
+    window.deleteMember = (id) => {
       const m = members.find(x => String(x.id) === String(id));
-      if (!m || !confirm(`${m.name}님을 회원 목록에서 삭제할까요?\n삭제 시 해당 계정의 앱 접근이 차단되며, 추후 같은 이름으로 재가입할 수 있습니다.`)) return;
+      if (!m) return;
+      openRemoveReasonModal({
+        mode: 'remove_member',
+        targetId: m.id,
+        title: `🚫 [${m.name}] 회원 내보내기`,
+        descHtml: `<b>${escapeHtml(m.name)}</b>님을 회원 목록에서 내보냅니다.<br>해당 계정의 앱 접근이 즉시 차단되며, 추후 같은 이름으로 재가입 시 관리자 승인이 필요합니다.`,
+        label: '내보내기(해제) 사유 (선택 · 입력하지 않아도 진행 가능)',
+        presets: MEMBER_REMOVE_REASON_PRESETS,
+        initialValue: '',
+        submitLabel: '🚫 회원 내보내기 (삭제)',
+        dangerBtn: true
+      });
+    };
+
+    async function executeDeleteMember(id, reason = '') {
+      const m = members.find(x => String(x.id) === String(id));
+      if (!m) return;
       try {
         const nameHex = nameToHex(m.name);
         const curVer = Math.max(await getAuthVerForHex(nameHex), Number(m.authVer || 0));
+        const roleLabel = m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미승인');
+        const nowStr = formatKstDateTime();
+        const nowTs = Date.now();
         const batch = db.batch();
         batch.delete(db.collection('members').doc(String(id)));
         batch.delete(db.collection('newcomers').doc(String(id)));
@@ -12262,14 +12632,19 @@
         batch.set(db.collection('authIndex').doc(nameHex), {
           v: curVer + 1,
           loginEmail: FieldValue.delete(),
-          updatedAt: Date.now()
+          updatedAt: nowTs
         }, { merge: true });
         batch.set(db.collection('memberHistory').doc(nameHex), {
           name: m.name,
+          role: roleLabel,
           totalJoins: Number((memberHistoryMap.get(nameHex) && memberHistoryMap.get(nameHex).totalJoins) || 1),
           lastStatus: '삭제',
-          lastUpdatedAt: formatKstDateTime(),
-          removedBy: currentAdminName || '관리자'
+          lastUpdatedAt: nowStr,
+          removedAt: nowStr,
+          removedTs: nowTs,
+          removedBy: currentAdminName || '관리자',
+          removeReason: reason,
+          removedType: 'admin'
         }, { merge: true });
         await batch.commit();
         recordAuditLog({
@@ -12277,17 +12652,17 @@
           category: '회원',
           action: '회원 삭제',
           target: m.name,
-          detail: `역할: ${m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미승인')}`
+          detail: `역할: ${roleLabel}${reason ? ` · 사유: ${reason}` : ''}`
         });
         syncMemberEventToSheet({
           name: m.name,
-          role: m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미승인'),
-          joinedAt: m.createdAt || formatKstDateTime(),
-          status: '삭제'
+          role: roleLabel,
+          joinedAt: m.createdAt || nowStr,
+          status: reason ? `삭제 (${reason})` : '삭제'
         });
-        showToast('회원을 삭제했습니다. 추후 같은 이름으로 재가입 시 관리자 승인으로 재입장 가능합니다.');
+        showToast(`${m.name}님을 내보냈습니다.${reason ? ' (사유 기록됨)' : ''}`);
       } catch (err) { handleDbError(err, '회원 삭제'); }
-    };
+    }
 
     // (D) 역할 설정 + 역할별 승인 회원 명단 · 역할 변경
     function renderRoleMembersListOnly() {
@@ -12986,6 +13361,8 @@
       if (!user || user.isSuperAdmin) return;
       document.getElementById('accPwError').classList.remove('show');
       document.getElementById('accDeleteError').classList.remove('show');
+      const drInp = document.getElementById('accDeleteReasonInput');
+      if (drInp) drInp.value = '';
       refreshAccountModalContent();
       switchAccountTab(tab);
       document.getElementById('accountModal').classList.add('open');
@@ -13128,10 +13505,19 @@
       }
     };
 
+    window.fillSelfDeleteReason = (txt) => {
+      const inp = document.getElementById('accDeleteReasonInput');
+      if (!inp) return;
+      inp.value = txt;
+      inp.focus();
+    };
+
     window.handleSelfDelete = async () => {
       document.getElementById('accDeleteError').classList.remove('show');
       if (!fbUser) return;
       const curPw = document.getElementById('accDeletePwInput').value.trim();
+      const withdrawReason = ((document.getElementById('accDeleteReasonInput') || {}).value || '').trim();
+      if (withdrawReason && typeof enforceInputSecurity === 'function' && !enforceInputSecurity(withdrawReason, '탈퇴 사유', true)) return;
       if (!curPw) return showError('accDeleteError', '본인 확인을 위해 현재 비밀번호를 입력해 주세요.');
       if (!confirm('정말로 계정을 삭제(탈퇴)할까요?\n삭제된 계정은 복구할 수 없습니다.')) return;
 
@@ -13143,19 +13529,24 @@
         const cred = firebase.auth.EmailAuthProvider.credential(fbUser.email, curPw);
         await auth.currentUser.reauthenticateWithCredential(cred);
         const selfName = (myMemberDoc && myMemberDoc.name) ? myMemberDoc.name : '회원';
+        const selfRoleName = myMemberDoc ? getRoleById(myMemberDoc.roleId).name : '';
         await recordAuditLog({
           actorType: 'member',
           actorName: selfName,
           category: '회원',
           action: '회원 탈퇴(계정 삭제)',
           target: selfName,
-          detail: '본인 직접 계정 삭제'
+          detail: withdrawReason ? `본인 직접 탈퇴 · 사유: ${withdrawReason}` : '본인 직접 계정 삭제 (사유 미입력)',
+          withdrawReason,
+          roleName: selfRoleName
         });
         await db.collection('newcomers').doc(uid).delete().catch(() => {});
         await db.collection('members').doc(uid).delete();
         await auth.currentUser.delete();
 
         document.getElementById('accDeletePwInput').value = '';
+        const drInp = document.getElementById('accDeleteReasonInput');
+        if (drInp) drInp.value = '';
         document.getElementById('accountModal').classList.remove('open');
         clearSubscriptions();
         clearCachedMember();
@@ -15331,18 +15722,38 @@
       } catch (err) { handleDbError(err, '관리자 거절'); }
     };
 
-    window.removeAdminEntry = async (admId) => {
+    window.removeAdminEntry = (admId) => {
+      const items = adminRegistry.items || [];
+      const activeList = items.filter(a => a.status === 'active');
+      const target = items.find(a => String(a.id) === String(admId));
+      if (!target) return;
+      if (activeList.length <= 1) return showToast('최소 1명의 활성 관리자는 남아 있어야 합니다.');
+      openRemoveReasonModal({
+        mode: 'remove_admin',
+        targetId: target.id,
+        title: `🚫 [${target.name}] 관리자 해제`,
+        descHtml: `<b>${escapeHtml(target.name)}</b>님을 관리자 목록에서 해제합니다.<br>해제 시 해당 관리자는 즉시 자동 로그아웃되며, 추후 재입장 시 기존 관리자의 승인이 필요합니다.`,
+        label: '관리자 해제 사유 (선택 · 입력하지 않아도 해제 가능)',
+        presets: ADMIN_REMOVE_REASON_PRESETS,
+        initialValue: '',
+        submitLabel: '🚫 관리자 해제하기',
+        dangerBtn: true
+      });
+    };
+
+    async function executeRemoveAdminEntry(admId, reason = '') {
       const items = structuredClone(adminRegistry.items || []);
       const activeList = items.filter(a => a.status === 'active');
       const target = items.find(a => String(a.id) === String(admId));
       if (!target) return;
       if (activeList.length <= 1) return showToast('최소 1명의 활성 관리자는 남아 있어야 합니다.');
-      if (!confirm(`${target.name}님을 관리자 목록에서 해제할까요?\n해제 시 해당 관리자는 자동 로그아웃되며, 추후 재입장 시 기존 관리자의 승인이 필요합니다.`)) return;
 
       const nowStr = formatKstDateTime();
       target.status = 'removed';
       target.removedBy = currentAdminName || '관리자';
       target.removedAt = nowStr;
+      target.removedTs = Date.now();
+      target.removeReason = reason;
       try {
         await db.collection('config').doc('adminRegistry').set({
           lockAutoRegister: !!adminRegistry.lockAutoRegister,
@@ -15357,18 +15768,54 @@
           reentryCount: Number(target.reentryCount || 0),
           renameCount: Number(target.renameCount || 0),
           prevName: target.prevName || '',
-          note: `해제자: ${currentAdminName || '관리자'}`
+          note: `해제자: ${currentAdminName || '관리자'}${reason ? ` · 사유: ${reason}` : ''}`
         }).catch(() => {});
         recordAuditLog({
           actorType: 'admin',
           category: '보안·설정',
           action: '관리자 해제',
           target: target.name,
-          detail: `해제자: ${currentAdminName || '관리자'}`
+          detail: `해제자: ${currentAdminName || '관리자'}${reason ? ` · 사유: ${reason}` : ''}`
         });
-        showToast(`${target.name}님을 관리자에서 해제했습니다.`);
+        showToast(`${target.name}님을 관리자에서 해제했습니다.${reason ? ' (사유 기록됨)' : ''}`);
       } catch (err) { handleDbError(err, '관리자 해제'); }
-    };
+    }
+
+    async function executeUpdateAdminRemoveReason(admId, reason = '') {
+      const items = structuredClone(adminRegistry.items || []);
+      const target = items.find(a => String(a.id) === String(admId));
+      if (!target) return;
+      const prevReason = String(target.removeReason || '').trim();
+      target.removeReason = reason;
+      target.reasonUpdatedAt = formatKstDateTime();
+      target.reasonUpdatedBy = currentAdminName || '관리자';
+      try {
+        await db.collection('config').doc('adminRegistry').set({
+          lockAutoRegister: !!adminRegistry.lockAutoRegister,
+          items
+        }, { merge: true });
+        postToGoogleSheet({
+          action: 'admin_upsert',
+          name: target.name,
+          status: '해제',
+          registeredAt: target.registeredAt || '-',
+          lastLoginAt: target.lastLoginAt || '-',
+          reentryCount: Number(target.reentryCount || 0),
+          renameCount: Number(target.renameCount || 0),
+          prevName: target.prevName || '',
+          note: `해제자: ${target.removedBy || currentAdminName || '관리자'}${reason ? ` · 사유: ${reason}` : ''}`
+        }).catch(() => {});
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '관리자 해제 사유 수정',
+          target: target.name,
+          beforeVal: prevReason || '미입력',
+          afterVal: reason || '미입력'
+        });
+        showToast(`[${target.name}]님의 해제 사유를 저장했습니다.`);
+      } catch (err) { handleDbError(err, '관리자 해제 사유 저장'); }
+    }
 
     // --- 통합 보안 감사 로그 (auditLogs · 관리자 전체 활동 + 이용자 악용 가능 활동 · 삭제 불가 · 구글 시트 자동 연동) ---
     function truncateLogText(str, maxLen = 140) {
@@ -15503,7 +15950,9 @@
       beforeVal = '',
       afterVal = '',
       detail = '',
-      decision = ''
+      decision = '',
+      withdrawReason = '',
+      roleName = ''
     }) {
       try {
         if (!fbUser || !action) return null;
@@ -15538,6 +15987,8 @@
           ts: nowTs,
           sheetSynced: false
         };
+        if (withdrawReason) entry.withdrawReason = truncateLogText(withdrawReason, 220);
+        if (roleName) entry.roleName = String(roleName).slice(0, 30);
 
         await db.collection('auditLogs').doc(id).set(entry);
 
@@ -16758,6 +17209,7 @@
         time: a.lastLoginAt || a.registeredAt || formatKstDateTime(),
         note: [
           a.approvedBy ? `승인자: ${a.approvedBy}` : (a.removedBy ? `해제자: ${a.removedBy}` : '등록'),
+          a.removeReason ? `사유: ${a.removeReason}` : '',
           a.prevName ? `이전 이름: ${a.prevName}` : ''
         ].filter(Boolean).join(' · ')
       }));
