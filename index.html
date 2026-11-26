@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=220" />
+  <link rel="manifest" href="./manifest.json?v=221" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=220" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=220" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=221" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=221" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3715,7 +3715,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=220" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=221" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5472,7 +5472,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 220;
+    const APP_CLIENT_BUILD = 221;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -6461,7 +6461,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=220" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=221" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6485,8 +6485,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=220', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=220', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=221', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=221', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -13413,7 +13413,7 @@
           batch.delete(db.collection('adminNotices').doc(targetId));
         }
         await batch.commit();
-        syncNoticeToSheet(nextNotice);
+        syncNoticeToSheet(nextDoc);
 
         recordAuditLog({
           actorType: 'admin',
@@ -17700,15 +17700,17 @@
     }
 
     function syncInquiryToSheet(q) {
-      const url = getAdminSheetUrl();
-      const row = buildInquirySheetRow(q);
-      if (!url || !row || !row.id) return;
-      const sig = computeInquirySheetSig(q);
-      postToGoogleSheet({ action: 'inquiry_upsert', ...row }, url, true).then(res => {
-        if (res && res.ok) {
-          db.collection('inquiries').doc(row.id).update({ sheetSyncedSig: sig }).catch(() => {});
-        }
-      }).catch(() => {});
+      try {
+        const url = getAdminSheetUrl();
+        const row = buildInquirySheetRow(q);
+        if (!url || !row || !row.id) return;
+        const sig = computeInquirySheetSig(q);
+        postToGoogleSheet({ action: 'inquiry_upsert', ...row }, url, true).then(res => {
+          if (res && res.ok) {
+            db.collection('inquiries').doc(row.id).update({ sheetSyncedSig: sig }).catch(() => {});
+          }
+        }).catch(() => {});
+      } catch (e) { console.warn('syncInquiryToSheet skipped:', e); }
     }
 
     function deleteInquiryFromSheet(id) {
@@ -17780,15 +17782,17 @@
     }
 
     function syncVideoToSheet(v) {
-      const url = getAdminSheetUrl();
-      const row = buildVideoSheetRow(v);
-      if (!url || !row || !row.id) return;
-      const sig = computeVideoSheetSig(v);
-      postToGoogleSheet({ action: 'video_upsert', ...row }, url, true).then(res => {
-        if (res && res.ok) {
-          db.collection('videos').doc(row.id).update({ sheetSyncedSig: sig }).catch(() => {});
-        }
-      }).catch(() => {});
+      try {
+        const url = getAdminSheetUrl();
+        const row = buildVideoSheetRow(v);
+        if (!url || !row || !row.id) return;
+        const sig = computeVideoSheetSig(v);
+        postToGoogleSheet({ action: 'video_upsert', ...row }, url, true).then(res => {
+          if (res && res.ok) {
+            db.collection('videos').doc(row.id).update({ sheetSyncedSig: sig }).catch(() => {});
+          }
+        }).catch(() => {});
+      } catch (e) { console.warn('syncVideoToSheet skipped:', e); }
     }
 
     function deleteVideoFromSheet(id) {
@@ -17865,16 +17869,18 @@
     }
 
     function syncNoticeToSheet(n) {
-      const url = getAdminSheetUrl();
-      const row = buildNoticeSheetRow(n);
-      if (!url || !row || !row.id) return;
-      const sig = computeNoticeSheetSig(n);
-      const colName = n._col || (isServerRestrictedItem(n) ? 'adminNotices' : 'notices');
-      postToGoogleSheet({ action: 'notice_upsert', ...row }, url, true).then(res => {
-        if (res && res.ok) {
-          db.collection(colName).doc(row.id).update({ sheetSyncedSig: sig }).catch(() => {});
-        }
-      }).catch(() => {});
+      try {
+        const url = getAdminSheetUrl();
+        const row = buildNoticeSheetRow(n);
+        if (!url || !row || !row.id) return;
+        const sig = computeNoticeSheetSig(n);
+        const colName = n._col || (isServerRestrictedItem(n) ? 'adminNotices' : 'notices');
+        postToGoogleSheet({ action: 'notice_upsert', ...row }, url, true).then(res => {
+          if (res && res.ok) {
+            db.collection(colName).doc(row.id).update({ sheetSyncedSig: sig }).catch(() => {});
+          }
+        }).catch(() => {});
+      } catch (e) { console.warn('syncNoticeToSheet skipped:', e); }
     }
 
     function deleteNoticeFromSheet(id) {
