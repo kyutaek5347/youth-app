@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=224" />
+  <link rel="manifest" href="./manifest.json?v=225" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=224" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=224" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=225" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=225" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3818,7 +3818,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=224" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=225" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5579,7 +5579,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 31;
-    const APP_CLIENT_BUILD = 224;
+    const APP_CLIENT_BUILD = 225;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -5637,6 +5637,9 @@
     const KEY_READ_ITEMS = 'right_youth_read_items_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
     const KEY_HEADER_SHORTCUTS_LOCAL = 'right_youth_header_shortcuts_v1';
+    const KEY_TAB_LABELS_CACHE = 'right_youth_tab_labels_cache_v1';
+    const KEY_CELEB_MSGS_CACHE = 'right_youth_celeb_msgs_cache_v1';
+    const KEY_QUICK_LINKS_CACHE = 'right_youth_quick_links_cache_v1';
 
     const KEY_NOTIF_PREFS = 'right_youth_notif_prefs_v103';
     const KEY_MEMBER_CACHE = 'right_youth_member_cache_v1';
@@ -6568,7 +6571,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=224" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=225" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6592,8 +6595,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=224', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=224', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=225', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=225', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -6772,10 +6775,88 @@
     let homeBlocksLoaded = false;
     let homeNoticesLoaded = false;
     let homeContentPermError = false;
-    let quickLinks = structuredClone(DEFAULT_QUICK_LINKS);
+    function normalizeTabLabelsPayload(raw) {
+      const d = (raw && typeof raw === 'object') ? raw : {};
+      return {
+        ...DEFAULT_TAB_LABELS,
+        ...d,
+        tabOrder: getValidTabOrder(d.tabOrder),
+        manageSubTabOrder: getValidManageSubTabOrder(d.manageSubTabOrder),
+        settingsItemOrder: getValidSettingsItemOrder(d.settingsItemOrder),
+        icons: { ...DEFAULT_TAB_ICONS, ...(d.icons && typeof d.icons === 'object' ? d.icons : {}) },
+        uiTexts: { ...DEFAULT_UI_TEXTS, ...(d.uiTexts && typeof d.uiTexts === 'object' ? d.uiTexts : {}) },
+        sectionTitles: (d.sectionTitles && typeof d.sectionTitles === 'object') ? { ...d.sectionTitles } : {},
+        headerShortcuts: normalizeHeaderShortcutsConfig(d.headerShortcuts)
+      };
+    }
+
+    function loadCachedTabLabels() {
+      try {
+        const raw = localStorage.getItem(KEY_TAB_LABELS_CACHE);
+        if (!raw) return structuredClone(DEFAULT_TAB_LABELS);
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') return normalizeTabLabelsPayload(parsed);
+      } catch {}
+      return structuredClone(DEFAULT_TAB_LABELS);
+    }
+
+    function saveCachedTabLabels(val) {
+      try {
+        localStorage.setItem(KEY_TAB_LABELS_CACHE, JSON.stringify(normalizeTabLabelsPayload(val)));
+      } catch {}
+    }
+
+    function loadCachedCelebrationMsgs() {
+      try {
+        const raw = localStorage.getItem(KEY_CELEB_MSGS_CACHE);
+        if (!raw) return structuredClone(DEFAULT_CELEBRATION_MSGS);
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          return { ...DEFAULT_CELEBRATION_MSGS, ...parsed };
+        }
+      } catch {}
+      return structuredClone(DEFAULT_CELEBRATION_MSGS);
+    }
+
+    function saveCachedCelebrationMsgs(val) {
+      try {
+        if (val && typeof val === 'object') {
+          localStorage.setItem(KEY_CELEB_MSGS_CACHE, JSON.stringify({ ...DEFAULT_CELEBRATION_MSGS, ...val }));
+        }
+      } catch {}
+    }
+
+    function loadCachedQuickLinks() {
+      try {
+        const raw = localStorage.getItem(KEY_QUICK_LINKS_CACHE);
+        if (!raw) return structuredClone(DEFAULT_QUICK_LINKS);
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed;
+      } catch {}
+      return structuredClone(DEFAULT_QUICK_LINKS);
+    }
+
+    function saveCachedQuickLinks(list) {
+      try {
+        if (Array.isArray(list)) {
+          localStorage.setItem(KEY_QUICK_LINKS_CACHE, JSON.stringify(list));
+        }
+      } catch {}
+    }
+
+    let quickLinks = loadCachedQuickLinks();
     let selectedQuickLinkTheme = 'instagram';
-    let tabLabels = structuredClone(DEFAULT_TAB_LABELS);
-    let celebrationMsgs = structuredClone(DEFAULT_CELEBRATION_MSGS);
+    let tabLabels = loadCachedTabLabels();
+    let celebrationMsgs = loadCachedCelebrationMsgs();
+    let coreRetryTimers = new Map();
+    let coreConfigSynced = { labels: false, layout: false, quickLinks: false, newcomers: false };
+    let lastLabelsServerSyncTs = 0;
+    let publicBlocksReady = false;
+    let secondaryBlocksReady = false;
+    let publicNoticesReady = false;
+    let secondaryNoticesReady = false;
+    let scopedReadySafetyTimer = null;
+    let scopedRetryTimers = new Map();
     let notices = [];
     let lastSeenLayoutAlertTs = 0;
     let knownNoticeAlertMap = new Map();
@@ -6955,6 +7036,7 @@
           }, { merge: true });
         }
         tabLabels.sectionTitles = nextMap;
+        saveCachedTabLabels(tabLabels);
         recordAuditLog({
           actorType: 'admin',
           category: '역할·메뉴',
@@ -7210,6 +7292,10 @@
       if (memberProfileRetryTimer) { clearTimeout(memberProfileRetryTimer); memberProfileRetryTimer = null; }
       unsubCore.forEach(fn => { try { fn(); } catch {} });
       unsubCore = [];
+      coreRetryTimers.forEach(t => clearTimeout(t));
+      coreRetryTimers.clear();
+      coreConfigSynced = { labels: false, layout: false, quickLinks: false, newcomers: false };
+      lastLabelsServerSyncTs = 0;
       clearScopedContentSubscriptions();
       coreDataSubscribed = false;
       if (unsubMembersAll) { unsubMembersAll(); unsubMembersAll = null; }
@@ -8889,6 +8975,16 @@
       homeBlocksLoaded = false;
       homeNoticesLoaded = false;
       homeContentPermError = false;
+      publicBlocksReady = false;
+      secondaryBlocksReady = false;
+      publicNoticesReady = false;
+      secondaryNoticesReady = false;
+      if (scopedReadySafetyTimer) {
+        clearTimeout(scopedReadySafetyTimer);
+        scopedReadySafetyTimer = null;
+      }
+      scopedRetryTimers.forEach(t => clearTimeout(t));
+      scopedRetryTimers.clear();
       publicNoticesMap = new Map();
       roleOrAdminNoticesMap = new Map();
       publicBlocksMap = new Map();
@@ -8945,11 +9041,15 @@
       }
 
       notices = nextNotices;
-      homeNoticesLoaded = true;
+      if (publicNoticesReady && secondaryNoticesReady) {
+        homeNoticesLoaded = true;
+      }
       homeContentPermError = false;
-      applyScreen();
-      if (currentDetailId && document.getElementById('detailModal').classList.contains('open')) {
-        openDetail(currentDetailId);
+      if (homeNoticesLoaded) {
+        applyScreen();
+        if (currentDetailId && document.getElementById('detailModal').classList.contains('open')) {
+          openDetail(currentDetailId);
+        }
       }
     }
 
@@ -8991,9 +9091,13 @@
       }
 
       blocks = nextBlocks;
-      homeBlocksLoaded = true;
+      if (publicBlocksReady && secondaryBlocksReady) {
+        homeBlocksLoaded = true;
+      }
       homeContentPermError = false;
-      applyScreen();
+      if (homeBlocksLoaded) {
+        applyScreen();
+      }
     }
 
     async function checkAndPromoteDueScheduledItems() {
@@ -9099,56 +9203,110 @@
       clearScopedContentSubscriptions();
       scopedSubMode = desiredMode;
 
+      const activeMode = desiredMode;
+      const attachScopedQuery = (slotKey, queryRef, onSnap, onErrCb, retryCount = 0) => {
+        if (scopedSubMode !== activeMode) return;
+        let currentUnsub = null;
+        const wrapUnsub = () => {
+          if (currentUnsub) { try { currentUnsub(); } catch {} currentUnsub = null; }
+        };
+        currentUnsub = queryRef.onSnapshot(snap => {
+          const prevT = scopedRetryTimers.get(slotKey);
+          if (prevT) { clearTimeout(prevT); scopedRetryTimers.delete(slotKey); }
+          onSnap(snap);
+        }, err => {
+          if (scopedSubMode !== activeMode) return;
+          const isPerm = !!(err && err.code === 'permission-denied');
+          const delays = [1200, 2500, 5000, 9000];
+          if (!isPerm && retryCount < delays.length && auth.currentUser) {
+            console.warn(`Scoped listener transient retry (${slotKey}):`, err);
+            const t = setTimeout(async () => {
+              scopedRetryTimers.delete(slotKey);
+              if (scopedSubMode !== activeMode || !auth.currentUser) return;
+              try { await auth.currentUser.getIdToken(true); } catch {}
+              attachScopedQuery(slotKey, queryRef, onSnap, onErrCb, retryCount + 1);
+            }, delays[retryCount]);
+            scopedRetryTimers.set(slotKey, t);
+            return;
+          }
+          if (typeof onErrCb === 'function') onErrCb(err);
+        });
+        unsubScopedContent.push(wrapUnsub);
+      };
+
+      // 보조 쿼리가 지연되어도 2.2초 후에는 수신된 기본 데이터를 화면에 표시
+      scopedReadySafetyTimer = setTimeout(() => {
+        scopedReadySafetyTimer = null;
+        if (scopedSubMode !== activeMode) return;
+        let forced = false;
+        if (publicBlocksReady && !homeBlocksLoaded) {
+          secondaryBlocksReady = true;
+          homeBlocksLoaded = true;
+          forced = true;
+        }
+        if (publicNoticesReady && !homeNoticesLoaded) {
+          secondaryNoticesReady = true;
+          homeNoticesLoaded = true;
+          forced = true;
+        }
+        if (forced) applyScreen();
+      }, 2200);
+
       if (isActualAdmin || isObserver) {
-        unsubScopedContent.push(
-          db.collection('notices').onSnapshot(snap => {
-            const mp = new Map();
-            snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'notices' }));
-            publicNoticesMap = mp;
-            rebuildMergedNotices(true);
-          }, err => handleDbError(err, '공개 공지 동기화'))
-        );
-        const onAdminScopedErr = (err, label) => {
+        const onAdminScopedErr = (err, label, markFlag) => {
+          if (markFlag === 'secNotices') { secondaryNoticesReady = true; if (publicNoticesReady) { homeNoticesLoaded = true; } }
+          if (markFlag === 'secBlocks') { secondaryBlocksReady = true; if (publicBlocksReady) { homeBlocksLoaded = true; } }
           if (err && err.code === 'permission-denied' && isObserver) {
             observerPermError = true;
-            if (currentMainTab === 'manage') applyScreen();
+            applyScreen();
             return;
           }
           handleDbError(err, label);
+          applyScreen();
         };
-        unsubScopedContent.push(
-          db.collection('adminNotices').onSnapshot(snap => {
-            const mp = new Map();
-            snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'adminNotices' }));
-            roleOrAdminNoticesMap = mp;
-            rebuildMergedNotices(false);
-            if (isActualAdmin) checkAndPromoteDueScheduledItems();
-          }, err => onAdminScopedErr(err, '비공개 공지 동기화'))
-        );
-        unsubScopedContent.push(
-          db.collection('homeBlocks').onSnapshot(snap => {
-            const mp = new Map();
-            snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'homeBlocks' }));
-            publicBlocksMap = mp;
-            rebuildMergedBlocks(true);
-          }, err => onAdminScopedErr(err, '공개 배너 동기화'))
-        );
-        unsubScopedContent.push(
-          db.collection('adminBlocks').onSnapshot(snap => {
-            const mp = new Map();
-            snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'adminBlocks' }));
-            roleOrAdminBlocksMap = mp;
-            rebuildMergedBlocks(false);
-            if (isActualAdmin) checkAndPromoteDueScheduledItems();
-          }, err => onAdminScopedErr(err, '비공개 배너 동기화'))
-        );
+        attachScopedQuery('adm_notices', db.collection('notices'), snap => {
+          const mp = new Map();
+          snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'notices' }));
+          publicNoticesMap = mp;
+          publicNoticesReady = true;
+          rebuildMergedNotices(true);
+        }, err => handleDbError(err, '공개 공지 동기화'));
+
+        attachScopedQuery('adm_adminNotices', db.collection('adminNotices'), snap => {
+          const mp = new Map();
+          snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'adminNotices' }));
+          roleOrAdminNoticesMap = mp;
+          secondaryNoticesReady = true;
+          rebuildMergedNotices(false);
+          if (isActualAdmin) checkAndPromoteDueScheduledItems();
+        }, err => onAdminScopedErr(err, '비공개 공지 동기화', 'secNotices'));
+
+        attachScopedQuery('adm_homeBlocks', db.collection('homeBlocks'), snap => {
+          const mp = new Map();
+          snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'homeBlocks' }));
+          publicBlocksMap = mp;
+          publicBlocksReady = true;
+          rebuildMergedBlocks(true);
+        }, err => onAdminScopedErr(err, '공개 배너 동기화', ''));
+
+        attachScopedQuery('adm_adminBlocks', db.collection('adminBlocks'), snap => {
+          const mp = new Map();
+          snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'adminBlocks' }));
+          roleOrAdminBlocksMap = mp;
+          secondaryBlocksReady = true;
+          rebuildMergedBlocks(false);
+          if (isActualAdmin) checkAndPromoteDueScheduledItems();
+        }, err => onAdminScopedErr(err, '비공개 배너 동기화', 'secBlocks'));
+
         if (isActualAdmin) {
           scheduledPromoteTimer = setInterval(() => {
             checkAndPromoteDueScheduledItems();
           }, 30000);
         }
       } else {
-        const onMemberScopedErr = (err, label) => {
+        const onMemberScopedErr = (err, label, markFlag) => {
+          if (markFlag === 'secNotices') { secondaryNoticesReady = true; if (publicNoticesReady) homeNoticesLoaded = true; }
+          if (markFlag === 'secBlocks') { secondaryBlocksReady = true; if (publicBlocksReady) homeBlocksLoaded = true; }
           if (err && err.code === 'permission-denied') {
             homeContentPermError = true;
             applyScreen();
@@ -9156,38 +9314,37 @@
           handleDbError(err, label);
         };
         // 일반 승인 회원: 서버 규칙으로 검증된 본인 허용 문서만 쿼리 (임시저장·예약·타역할 문서 원천 차단)
-        unsubScopedContent.push(
-          db.collection('notices').where('visibleTo', 'array-contains', '__all__').onSnapshot(snap => {
-            const mp = new Map();
-            snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'notices' }));
-            publicNoticesMap = mp;
-            rebuildMergedNotices(true);
-          }, err => onMemberScopedErr(err, '전체 공지 동기화'))
-        );
-        unsubScopedContent.push(
-          db.collection('notices').where('visibleTo', 'array-contains', myRoleId).onSnapshot(snap => {
-            const mp = new Map();
-            snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'notices' }));
-            roleOrAdminNoticesMap = mp;
-            rebuildMergedNotices(true);
-          }, err => onMemberScopedErr(err, '역할 공지 동기화'))
-        );
-        unsubScopedContent.push(
-          db.collection('homeBlocks').where('visibleTo', 'array-contains', '__all__').onSnapshot(snap => {
-            const mp = new Map();
-            snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'homeBlocks' }));
-            publicBlocksMap = mp;
-            rebuildMergedBlocks(true);
-          }, err => onMemberScopedErr(err, '전체 화면 동기화'))
-        );
-        unsubScopedContent.push(
-          db.collection('homeBlocks').where('visibleTo', 'array-contains', myRoleId).onSnapshot(snap => {
-            const mp = new Map();
-            snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'homeBlocks' }));
-            roleOrAdminBlocksMap = mp;
-            rebuildMergedBlocks(true);
-          }, err => onMemberScopedErr(err, '역할 화면 동기화'))
-        );
+        attachScopedQuery('mem_notices_all', db.collection('notices').where('visibleTo', 'array-contains', '__all__'), snap => {
+          const mp = new Map();
+          snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'notices' }));
+          publicNoticesMap = mp;
+          publicNoticesReady = true;
+          rebuildMergedNotices(true);
+        }, err => onMemberScopedErr(err, '전체 공지 동기화', ''));
+
+        attachScopedQuery('mem_notices_role', db.collection('notices').where('visibleTo', 'array-contains', myRoleId), snap => {
+          const mp = new Map();
+          snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'notices' }));
+          roleOrAdminNoticesMap = mp;
+          secondaryNoticesReady = true;
+          rebuildMergedNotices(true);
+        }, err => onMemberScopedErr(err, '역할 공지 동기화', 'secNotices'));
+
+        attachScopedQuery('mem_blocks_all', db.collection('homeBlocks').where('visibleTo', 'array-contains', '__all__'), snap => {
+          const mp = new Map();
+          snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'homeBlocks' }));
+          publicBlocksMap = mp;
+          publicBlocksReady = true;
+          rebuildMergedBlocks(true);
+        }, err => onMemberScopedErr(err, '전체 화면 동기화', ''));
+
+        attachScopedQuery('mem_blocks_role', db.collection('homeBlocks').where('visibleTo', 'array-contains', myRoleId), snap => {
+          const mp = new Map();
+          snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'homeBlocks' }));
+          roleOrAdminBlocksMap = mp;
+          secondaryBlocksReady = true;
+          rebuildMergedBlocks(true);
+        }, err => onMemberScopedErr(err, '역할 화면 동기화', 'secBlocks'));
       }
     }
 
@@ -9331,159 +9488,216 @@
           }, () => {});
       }
 
-      unsubCore.push(
-        db.collection('newcomers').onSnapshot(snap => {
-          newcomerList = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
-            .sort((a, b) => Number(b.addedTs || 0) - Number(a.addedTs || 0));
-          checkAndNotifyNewcomers();
-          if (currentMainTab === 'home') {
-            const u = getCurrentUser();
-            if (u) renderHomeView(u);
+      const attachResilientCoreListener = (key, ref, onSnapshotFn, onFinalError = null, retryCount = 0) => {
+        if (!coreDataSubscribed) return;
+        let activeUnsub = null;
+        const wrapUnsub = () => {
+          if (activeUnsub) { try { activeUnsub(); } catch {} activeUnsub = null; }
+        };
+        activeUnsub = ref.onSnapshot(snap => {
+          const prevT = coreRetryTimers.get(key);
+          if (prevT) { clearTimeout(prevT); coreRetryTimers.delete(key); }
+          onSnapshotFn(snap);
+        }, err => {
+          if (!coreDataSubscribed) return;
+          const delays = [1200, 2500, 5000, 9000, 15000];
+          if (retryCount < delays.length && auth.currentUser) {
+            console.warn(`Core listener transient retry (${key}, #${retryCount + 1}):`, err);
+            const t = setTimeout(async () => {
+              coreRetryTimers.delete(key);
+              if (!coreDataSubscribed || !auth.currentUser) return;
+              try { await auth.currentUser.getIdToken(true); } catch {}
+              attachResilientCoreListener(key, ref, onSnapshotFn, onFinalError, retryCount + 1);
+            }, delays[retryCount]);
+            coreRetryTimers.set(key, t);
+            return;
           }
-        }, () => {})
-      );
+          console.warn(`Core listener error (${key}):`, err);
+          if (typeof onFinalError === 'function') onFinalError(err);
+        });
+        unsubCore.push(wrapUnsub);
+      };
+
+      attachResilientCoreListener('newcomers', db.collection('newcomers'), snap => {
+        coreConfigSynced.newcomers = true;
+        newcomerList = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
+          .sort((a, b) => Number(b.addedTs || 0) - Number(a.addedTs || 0));
+        checkAndNotifyNewcomers();
+        if (currentMainTab === 'home') {
+          const u = getCurrentUser();
+          if (u) renderHomeView(u);
+        }
+      });
 
       let quickLinksDedicatedLoaded = false;
-      unsubCore.push(
-        db.collection('config').doc('quickLinks').onSnapshot(doc => {
-          if (doc.exists && Array.isArray(doc.data().items)) {
-            quickLinksDedicatedLoaded = true;
-            quickLinks = doc.data().items;
-            applyScreen();
-            if (document.getElementById('quickLinksSheet').classList.contains('open')) {
-              renderQuickLinksSheetContent();
-            }
-          }
-        }, () => {})
-      );
-
-      unsubCore.push(
-        db.collection('config').doc('layout').onSnapshot(doc => {
-          if (doc.exists) {
-            const d = doc.data();
-            if (!quickLinksDedicatedLoaded && Array.isArray(d.quickLinks)) {
-              quickLinks = d.quickLinks;
-            }
-            if (d.celebrationMsgs && typeof d.celebrationMsgs === 'object') {
-              celebrationMsgs = { ...DEFAULT_CELEBRATION_MSGS, ...d.celebrationMsgs };
-            } else {
-              celebrationMsgs = structuredClone(DEFAULT_CELEBRATION_MSGS);
-            }
-            customTermsArticles = Array.isArray(d.customTerms) ? d.customTerms : null;
-            customBylawsArticles = Array.isArray(d.customBylaws) ? d.customBylaws : null;
-            hiddenDefaultYtChannelIds = Array.isArray(d.hiddenDefaultYtChannelIds) ? d.hiddenDefaultYtChannelIds.map(String) : [];
-            officialYtChannels = buildMergedOfficialYtChannels(d.officialYtChannels, hiddenDefaultYtChannelIds);
-            if (d.videoSettings && typeof d.videoSettings === 'object') {
-              videoSettings = {
-                ...DEFAULT_VIDEO_SETTINGS,
-                ...d.videoSettings,
-                submitTargetRoles: Array.isArray(d.videoSettings.submitTargetRoles)
-                  ? d.videoSettings.submitTargetRoles.map(String)
-                  : [...DEFAULT_VIDEO_SETTINGS.submitTargetRoles],
-                sermonTabs: Array.isArray(d.videoSettings.sermonTabs)
-                  ? Array.from(new Set(d.videoSettings.sermonTabs.map(x => String(x || '').trim()).filter(Boolean)))
-                  : [...DEFAULT_SERMON_SUB_TABS],
-                ccmTabs: Array.isArray(d.videoSettings.ccmTabs)
-                  ? Array.from(new Set(d.videoSettings.ccmTabs.map(x => String(x || '').trim()).filter(Boolean)))
-                  : [...DEFAULT_CCM_SUB_TABS]
-              };
-            } else {
-              videoSettings = structuredClone(DEFAULT_VIDEO_SETTINGS);
-            }
-            if (d.securityConfig && typeof d.securityConfig === 'object') {
-              securityConfig = {
-                ...DEFAULT_SECURITY_CONFIG,
-                ...d.securityConfig
-              };
-            } else {
-              securityConfig = structuredClone(DEFAULT_SECURITY_CONFIG);
-            }
-            if (d.autoDiagConfig && typeof d.autoDiagConfig === 'object') {
-              const rawSec = Number(d.autoDiagConfig.intervalSec);
-              autoDiagConfig = {
-                enabled: !!d.autoDiagConfig.enabled,
-                intervalSec: (Number.isFinite(rawSec) && rawSec >= 5 && rawSec <= 600) ? Math.round(rawSec) : 30,
-                stopOnWarn: !!d.autoDiagConfig.stopOnWarn
-              };
-            } else {
-              autoDiagConfig = structuredClone(DEFAULT_AUTO_DIAG_CONFIG);
-            }
-            if (typeof syncAutoDiagRunner === 'function') syncAutoDiagRunner();
-            if (d.autoSecConfig && typeof d.autoSecConfig === 'object') {
-              const rawSec2 = Number(d.autoSecConfig.intervalSec);
-              autoSecConfig = {
-                enabled: !!d.autoSecConfig.enabled,
-                intervalSec: (Number.isFinite(rawSec2) && rawSec2 >= 5 && rawSec2 <= 600) ? Math.round(rawSec2) : 30,
-                stopOnWarn: !!d.autoSecConfig.stopOnWarn
-              };
-            } else {
-              autoSecConfig = structuredClone(DEFAULT_AUTO_SEC_CONFIG);
-            }
-            if (typeof syncAutoSecRunner === 'function') syncAutoSecRunner();
-            if (d.autoSheetConfig && typeof d.autoSheetConfig === 'object') {
-              const rawSec3 = Number(d.autoSheetConfig.intervalSec);
-              const rawFail = Number(d.autoSheetConfig.failThreshold);
-              const rawCool = Number(d.autoSheetConfig.alertCooldownMin);
-              autoSheetConfig = {
-                enabled: !!d.autoSheetConfig.enabled,
-                intervalSec: (Number.isFinite(rawSec3) && rawSec3 >= 5 && rawSec3 <= 600) ? Math.round(rawSec3) : 30,
-                stopOnWarn: d.autoSheetConfig.stopOnWarn !== undefined ? !!d.autoSheetConfig.stopOnWarn : true,
-                autoSyncOnCycle: d.autoSheetConfig.autoSyncOnCycle !== undefined ? !!d.autoSheetConfig.autoSyncOnCycle : true,
-                failThreshold: (Number.isFinite(rawFail) && rawFail >= 1 && rawFail <= 5) ? Math.round(rawFail) : 2,
-                alertCooldownMin: (Number.isFinite(rawCool) && rawCool >= 1 && rawCool <= 60) ? Math.round(rawCool) : 10
-              };
-            } else {
-              autoSheetConfig = structuredClone(DEFAULT_AUTO_SHEET_CONFIG);
-            }
-            if (d.sheetNewAckMap && typeof d.sheetNewAckMap === 'object') {
-              const mergedAck = { ...(sheetNewAckMap || {}) };
-              Object.keys(d.sheetNewAckMap).forEach(k => {
-                const sv = d.sheetNewAckMap[k];
-                if (sv === 'done' || !mergedAck[k]) mergedAck[k] = sv;
-              });
-              sheetNewAckMap = mergedAck;
-              try { localStorage.setItem(KEY_SHEET_NEW_ACK_MAP, JSON.stringify(sheetNewAckMap)); } catch {}
-            }
-            if (typeof syncAutoSheetRunner === 'function') syncAutoSheetRunner();
-            if (typeof d.latestBuild === 'number' && d.latestBuild > serverLatestBuild) {
-              serverLatestBuild = d.latestBuild;
-              notifyPendingAppUpdateIfNeeded();
-            }
-            checkCloneDomainWarning();
-          }
+      attachResilientCoreListener('quickLinks', db.collection('config').doc('quickLinks'), doc => {
+        if (doc.exists && Array.isArray(doc.data().items)) {
+          quickLinksDedicatedLoaded = true;
+          coreConfigSynced.quickLinks = true;
+          quickLinks = doc.data().items;
+          saveCachedQuickLinks(quickLinks);
           applyScreen();
           if (document.getElementById('quickLinksSheet').classList.contains('open')) {
             renderQuickLinksSheetContent();
           }
-        }, err => handleDbError(err, '화면 설정 동기화'))
-      );
+        }
+      });
+
+      attachResilientCoreListener('layout', db.collection('config').doc('layout'), doc => {
+        if (doc.exists) {
+          coreConfigSynced.layout = true;
+          const d = doc.data();
+          if (!quickLinksDedicatedLoaded && Array.isArray(d.quickLinks)) {
+            quickLinks = d.quickLinks;
+            saveCachedQuickLinks(quickLinks);
+          }
+          if (d.celebrationMsgs && typeof d.celebrationMsgs === 'object') {
+            celebrationMsgs = { ...DEFAULT_CELEBRATION_MSGS, ...d.celebrationMsgs };
+            saveCachedCelebrationMsgs(celebrationMsgs);
+          } else if (!(doc.metadata && doc.metadata.fromCache)) {
+            celebrationMsgs = structuredClone(DEFAULT_CELEBRATION_MSGS);
+            saveCachedCelebrationMsgs(celebrationMsgs);
+          }
+          customTermsArticles = Array.isArray(d.customTerms) ? d.customTerms : null;
+          customBylawsArticles = Array.isArray(d.customBylaws) ? d.customBylaws : null;
+          hiddenDefaultYtChannelIds = Array.isArray(d.hiddenDefaultYtChannelIds) ? d.hiddenDefaultYtChannelIds.map(String) : [];
+          officialYtChannels = buildMergedOfficialYtChannels(d.officialYtChannels, hiddenDefaultYtChannelIds);
+          if (d.videoSettings && typeof d.videoSettings === 'object') {
+            videoSettings = {
+              ...DEFAULT_VIDEO_SETTINGS,
+              ...d.videoSettings,
+              submitTargetRoles: Array.isArray(d.videoSettings.submitTargetRoles)
+                ? d.videoSettings.submitTargetRoles.map(String)
+                : [...DEFAULT_VIDEO_SETTINGS.submitTargetRoles],
+              sermonTabs: Array.isArray(d.videoSettings.sermonTabs)
+                ? Array.from(new Set(d.videoSettings.sermonTabs.map(x => String(x || '').trim()).filter(Boolean)))
+                : [...DEFAULT_SERMON_SUB_TABS],
+              ccmTabs: Array.isArray(d.videoSettings.ccmTabs)
+                ? Array.from(new Set(d.videoSettings.ccmTabs.map(x => String(x || '').trim()).filter(Boolean)))
+                : [...DEFAULT_CCM_SUB_TABS]
+            };
+          } else {
+            videoSettings = structuredClone(DEFAULT_VIDEO_SETTINGS);
+          }
+          if (d.securityConfig && typeof d.securityConfig === 'object') {
+            securityConfig = {
+              ...DEFAULT_SECURITY_CONFIG,
+              ...d.securityConfig
+            };
+          } else {
+            securityConfig = structuredClone(DEFAULT_SECURITY_CONFIG);
+          }
+          if (d.autoDiagConfig && typeof d.autoDiagConfig === 'object') {
+            const rawSec = Number(d.autoDiagConfig.intervalSec);
+            autoDiagConfig = {
+              enabled: !!d.autoDiagConfig.enabled,
+              intervalSec: (Number.isFinite(rawSec) && rawSec >= 5 && rawSec <= 600) ? Math.round(rawSec) : 30,
+              stopOnWarn: !!d.autoDiagConfig.stopOnWarn
+            };
+          } else {
+            autoDiagConfig = structuredClone(DEFAULT_AUTO_DIAG_CONFIG);
+          }
+          if (typeof syncAutoDiagRunner === 'function') syncAutoDiagRunner();
+          if (d.autoSecConfig && typeof d.autoSecConfig === 'object') {
+            const rawSec2 = Number(d.autoSecConfig.intervalSec);
+            autoSecConfig = {
+              enabled: !!d.autoSecConfig.enabled,
+              intervalSec: (Number.isFinite(rawSec2) && rawSec2 >= 5 && rawSec2 <= 600) ? Math.round(rawSec2) : 30,
+              stopOnWarn: !!d.autoSecConfig.stopOnWarn
+            };
+          } else {
+            autoSecConfig = structuredClone(DEFAULT_AUTO_SEC_CONFIG);
+          }
+          if (typeof syncAutoSecRunner === 'function') syncAutoSecRunner();
+          if (d.autoSheetConfig && typeof d.autoSheetConfig === 'object') {
+            const rawSec3 = Number(d.autoSheetConfig.intervalSec);
+            const rawFail = Number(d.autoSheetConfig.failThreshold);
+            const rawCool = Number(d.autoSheetConfig.alertCooldownMin);
+            autoSheetConfig = {
+              enabled: !!d.autoSheetConfig.enabled,
+              intervalSec: (Number.isFinite(rawSec3) && rawSec3 >= 5 && rawSec3 <= 600) ? Math.round(rawSec3) : 30,
+              stopOnWarn: d.autoSheetConfig.stopOnWarn !== undefined ? !!d.autoSheetConfig.stopOnWarn : true,
+              autoSyncOnCycle: d.autoSheetConfig.autoSyncOnCycle !== undefined ? !!d.autoSheetConfig.autoSyncOnCycle : true,
+              failThreshold: (Number.isFinite(rawFail) && rawFail >= 1 && rawFail <= 5) ? Math.round(rawFail) : 2,
+              alertCooldownMin: (Number.isFinite(rawCool) && rawCool >= 1 && rawCool <= 60) ? Math.round(rawCool) : 10
+            };
+          } else {
+            autoSheetConfig = structuredClone(DEFAULT_AUTO_SHEET_CONFIG);
+          }
+          if (d.sheetNewAckMap && typeof d.sheetNewAckMap === 'object') {
+            const mergedAck = { ...(sheetNewAckMap || {}) };
+            Object.keys(d.sheetNewAckMap).forEach(k => {
+              const sv = d.sheetNewAckMap[k];
+              if (sv === 'done' || !mergedAck[k]) mergedAck[k] = sv;
+            });
+            sheetNewAckMap = mergedAck;
+            try { localStorage.setItem(KEY_SHEET_NEW_ACK_MAP, JSON.stringify(sheetNewAckMap)); } catch {}
+          }
+          if (typeof syncAutoSheetRunner === 'function') syncAutoSheetRunner();
+          if (typeof d.latestBuild === 'number' && d.latestBuild > serverLatestBuild) {
+            serverLatestBuild = d.latestBuild;
+            notifyPendingAppUpdateIfNeeded();
+          }
+          checkCloneDomainWarning();
+        }
+        applyScreen();
+        if (document.getElementById('quickLinksSheet').classList.contains('open')) {
+          renderQuickLinksSheetContent();
+        }
+      }, err => handleDbError(err, '화면 설정 동기화'));
 
       syncScopedContentSubscriptions();
 
-      unsubCore.push(
-        db.collection('config').doc('labels').onSnapshot(doc => {
-          if (doc.exists) {
-            const d = doc.data() || {};
-            tabLabels = {
-              ...DEFAULT_TAB_LABELS,
-              ...d,
-              icons: { ...DEFAULT_TAB_ICONS, ...(d.icons || {}) },
-              uiTexts: { ...DEFAULT_UI_TEXTS, ...(d.uiTexts || {}) },
-              sectionTitles: (d.sectionTitles && typeof d.sectionTitles === 'object') ? { ...d.sectionTitles } : {},
-              headerShortcuts: normalizeHeaderShortcutsConfig(d.headerShortcuts)
-            };
-          } else {
-            tabLabels = structuredClone(DEFAULT_TAB_LABELS);
-          }
+      attachResilientCoreListener('labels', db.collection('config').doc('labels'), doc => {
+        if (doc.exists) {
+          tabLabels = normalizeTabLabelsPayload(doc.data() || {});
+          saveCachedTabLabels(tabLabels);
+          coreConfigSynced.labels = true;
+          lastLabelsServerSyncTs = Date.now();
+        } else {
+          // 캐시 미스로 인한 일시적 빈 스냅샷은 기존 배치(캐시) 유지
+          if (doc.metadata && doc.metadata.fromCache) return;
+          tabLabels = structuredClone(DEFAULT_TAB_LABELS);
+          saveCachedTabLabels(tabLabels);
+          coreConfigSynced.labels = true;
+          lastLabelsServerSyncTs = Date.now();
+        }
+        const activeEl = document.activeElement;
+        const isEditingLabels = !!(activeEl && (activeEl.hasAttribute('data-tab-name-key') || activeEl.hasAttribute('data-tab-icon-key')));
+        if (!isEditingLabels) {
+          draftTabInitialized = false;
+          applyScreen();
+        }
+      }, () => {
+        verifyCoreUiConfigFromServer(true);
+      });
+
+    }
+
+    async function verifyCoreUiConfigFromServer(force = false) {
+      if (!auth.currentUser || !coreDataSubscribed) return;
+      const now = Date.now();
+      if (!force && coreConfigSynced.labels && (now - lastLabelsServerSyncTs) < 60000) return;
+      try {
+        const snap = await db.collection('config').doc('labels').get({ source: 'server' });
+        if (snap.exists) {
+          const nextLabels = normalizeTabLabelsPayload(snap.data() || {});
+          const prevStr = JSON.stringify(tabLabels);
+          const nextStr = JSON.stringify(nextLabels);
+          tabLabels = nextLabels;
+          saveCachedTabLabels(tabLabels);
+          coreConfigSynced.labels = true;
+          lastLabelsServerSyncTs = Date.now();
           const activeEl = document.activeElement;
           const isEditingLabels = !!(activeEl && (activeEl.hasAttribute('data-tab-name-key') || activeEl.hasAttribute('data-tab-icon-key')));
-          if (!isEditingLabels) {
+          if (!isEditingLabels && prevStr !== nextStr) {
             draftTabInitialized = false;
             applyScreen();
           }
-        }, () => {})
-      );
-
+        }
+      } catch (err) {
+        console.warn('verifyCoreUiConfigFromServer skipped:', err);
+      }
     }
 
     function scheduleMemberProfileRetry(uid, retryCount = 0) {
@@ -11788,6 +12002,7 @@
         handleKstDayRolloverCheck();
         checkAndPromoteDueScheduledItems();
         checkAndNotifyNewcomers();
+        verifyCoreUiConfigFromServer(false);
         if (typeof onAutoDiagVisibilityVisible === 'function') onAutoDiagVisibilityVisible();
         if (typeof onAutoSecVisibilityVisible === 'function') onAutoSecVisibilityVisible();
         if (typeof onAutoSheetVisibilityVisible === 'function') onAutoSheetVisibilityVisible();
@@ -11797,6 +12012,9 @@
           else if (currentMainTab === 'manage') renderManageView(u);
         }
       }
+    });
+    window.addEventListener('online', () => {
+      verifyCoreUiConfigFromServer(true);
     });
 
     function checkAndNotifyNewcomers() {
@@ -16808,14 +17026,8 @@
       if (btn) { btn.disabled = true; btn.textContent = '⏳ 저장 중...'; }
       setInlineSaveStatus('tab_labels', 'loading', '⏳ 전체 메뉴 · 이모지 · 이름 · 순서를 저장하는 중입니다...');
       try {
-        tabLabels = {
-          ...DEFAULT_TAB_LABELS,
-          ...next,
-          icons: { ...DEFAULT_TAB_ICONS, ...next.icons },
-          uiTexts: { ...DEFAULT_UI_TEXTS, ...next.uiTexts },
-          sectionTitles: { ...(next.sectionTitles || {}) },
-          headerShortcuts: normalizeHeaderShortcutsConfig(next.headerShortcuts)
-        };
+        tabLabels = normalizeTabLabelsPayload(next);
+        saveCachedTabLabels(tabLabels);
         try { localStorage.removeItem(KEY_HEADER_SHORTCUTS_LOCAL); } catch {}
         draftResetSectionTitles = false;
         draftTabInitialized = false;
@@ -17073,6 +17285,8 @@
     async function saveQuickLinksToCloud(nextLinks, msg) {
       try {
         await db.collection('config').doc('quickLinks').set({ items: nextLinks }, { merge: true });
+        quickLinks = nextLinks;
+        saveCachedQuickLinks(nextLinks);
         if (msg) showToast(msg);
       } catch (err) {
         handleDbError(err, '사이트 바로가기 저장');
@@ -17236,6 +17450,7 @@
       try {
         await db.collection('config').doc('layout').set({ celebrationMsgs: next }, { merge: true });
         celebrationMsgs = { ...DEFAULT_CELEBRATION_MSGS, ...next };
+        saveCachedCelebrationMsgs(celebrationMsgs);
         recordAuditLog({
           actorType: 'admin',
           category: '공지·배너',
