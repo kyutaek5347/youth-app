@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=236" />
+  <link rel="manifest" href="./manifest.json?v=237" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=236" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=236" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=237" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=237" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4000,7 +4000,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=236" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=237" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5826,9 +5826,9 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 31;
-    const APP_CLIENT_BUILD = 236;
+    const APP_CLIENT_BUILD = 237;
     const APP_BOOT_TS = Date.now();
-    const SHEET_SCHEMA_VERSION = 'v10.136-10tab-fast-split';
+    const SHEET_SCHEMA_VERSION = 'v10.137-10tab-fast-split';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
       { id: 'members', name: '회원 명단', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '성명·역할·가입일·상태·이전이름 (생일 열 폐기)' },
@@ -6832,7 +6832,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=236" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=237" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6856,8 +6856,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=236', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=236', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=237', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=237', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -24328,9 +24328,10 @@
 
     function isSheetResponseMultiTab(data) {
       if (!data || typeof data !== 'object') return false;
-      if (data.multiTab === true) return true;
+      if (data.multiTab === true || data.supportsAttendanceSplit === true || data.supportsSchemaInspect === true || data.supportsBatchSync === true) return true;
       if (Number(data.tabCount || 0) >= 3) return true;
       if (String(data.message || '').includes('탭')) return true;
+      if (String(data.version || '').includes('v10.136') || String(data.version || '').includes('v10.137')) return true;
       if (data.result && typeof data.result === 'object') return true;
       return false;
     }
@@ -24338,10 +24339,13 @@
     function isSheetResponseLatestTab(data) {
       if (!data || typeof data !== 'object') return false;
       return data.supportsSchemaInspect === true
+        || data.supportsAttendanceSplit === true
         || Number(data.tabCount || 0) >= 10
         || String(data.version || '').includes('10tab')
         || String(data.version || '').includes('v10.109')
-        || String(data.version || '').includes('v10.112');
+        || String(data.version || '').includes('v10.112')
+        || String(data.version || '').includes('v10.136')
+        || String(data.version || '').includes('v10.137');
     }
 
     function isSheetResponseFastBatch(data) {
@@ -26402,11 +26406,14 @@
       if (!confirm('구글 시트 [출석부]에서 출석이 0인 날짜 열과 0명 행을 모두 깔끔하게 삭제할까요?')) return;
       const res = await postToGoogleSheet({ action: 'cleanup_zeros' }, url, true);
       if (warnIfOldAppsScript(res)) return;
-      if (res.ok && res.readable && res.data && res.data.result) {
-        const dc = Number(res.data.result.deletedCols || 0);
-        const dr = Number(res.data.result.deletedRows || 0);
+      const statsObj = (res && res.ok && res.readable && res.data)
+        ? ((res.data.result && typeof res.data.result === 'object') ? res.data.result : res.data)
+        : null;
+      if (statsObj && (statsObj.deletedCols !== undefined || statsObj.deletedRows !== undefined)) {
+        const dc = Number(statsObj.deletedCols || 0);
+        const dr = Number(statsObj.deletedRows || 0);
         if (dc === 0 && dr === 0) {
-          showToast('정리할 출석 0 기록이 없습니다. (Apps Script v10.26 배포 필요)');
+          showToast('✅ 정리할 출석 0인 빈 열·행이 없습니다. (최신 상태)');
         } else {
           showToast(`🧹 출석 0인 날짜 ${dc}열 · 인원 ${dr}행을 시트에서 깔끔하게 삭제했습니다!`);
         }
