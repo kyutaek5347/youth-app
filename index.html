@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=218" />
+  <link rel="manifest" href="./manifest.json?v=219" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=218" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=218" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=219" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=219" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3715,7 +3715,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=218" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=219" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5472,7 +5472,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 218;
+    const APP_CLIENT_BUILD = 219;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -5637,7 +5637,8 @@
         'right_youth_bible_memos_v107',
         'right_youth_bible_font_v103',
         'right_youth_bday_notified_v1',
-        'right_youth_celeb_date_notified_v1'
+        'right_youth_celeb_date_notified_v1',
+        'right_youth_header_shortcuts_v1'
       ];
       legacyKeys.forEach(k => { try { localStorage.removeItem(k); } catch {} });
       try {
@@ -5669,11 +5670,9 @@
       { key: 'setAccount', group: '내 정보 · 화면', defaultIcon: '👤', defaultLabel: '내 계정 관리', roleHint: '설정 · 내 정보/비밀번호' },
       { key: 'setNotif', group: '내 정보 · 화면', defaultIcon: '🔔', defaultLabel: '알림 설정', roleHint: '설정 · 알림 켜기/끄기' },
       { key: 'setFont', group: '내 정보 · 화면', defaultIcon: '🔤', defaultLabel: '전체 글자 크기', roleHint: '설정 · 글자 크기 조절' },
-      { key: 'setHeaderPin', group: '내 정보 · 화면', defaultIcon: '📌', defaultLabel: '상단 오른쪽 바로가기', roleHint: '설정 · 알림/QR 상단 배치' },
       { key: 'setQr', group: '청년부 안내 · 소통', defaultIcon: '📲', defaultLabel: '오늘의 초대 QR', roleHint: '설정 · 초대 QR 공유' },
       { key: 'bylaws', group: '청년부 안내 · 소통', defaultIcon: '📜', defaultLabel: '회칙', roleHint: '설정 · 청년부 회칙' },
       { key: 'guide', group: '청년부 안내 · 소통', defaultIcon: '📘', defaultLabel: '가이드', roleHint: '설정 · 앱 사용 설명서' },
-      { key: 'setVideos', group: '청년부 안내 · 소통', defaultIcon: '🎬', defaultLabel: '설교 · 찬양 영상', roleHint: '설정 · 유튜브 영상 보기/추천' },
       { key: 'setInquiry', group: '청년부 안내 · 소통', defaultIcon: '💬', defaultLabel: '문의 사항', roleHint: '설정 · 불편/개선/의견 전달' },
       { key: 'setInstall', group: '앱 이용 · 보안', defaultIcon: '📱', defaultLabel: '앱 설치 방법', roleHint: '설정 · 홈 화면 추가 안내' },
       { key: 'setTerms', group: '앱 이용 · 보안', defaultIcon: '📄', defaultLabel: '이용약관', roleHint: '설정 · 서비스 이용약관' },
@@ -6462,7 +6461,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=218" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=219" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6486,8 +6485,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=218', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=218', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=219', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=219', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -6998,7 +6997,6 @@
     let customBylawsArticles = null;
     let termsSearchQuery = '';
     let settingsFontOpen = false;
-    let settingsHeaderPinOpen = false;
     let inquiries = [];
     let myInquiries = [];
     let unsubInquiriesAdmin = null;
@@ -7425,7 +7423,7 @@
       const vBack = document.getElementById('videosBackBtn');
       if (vBack) vBack.textContent = `← ${lbl('home')}으로 돌아가기`;
       const vTitle = document.getElementById('videosViewTitle');
-      if (vTitle) vTitle.textContent = `${icn('setVideos')} ${ut('videosHeroTitle')}`;
+      if (vTitle) vTitle.textContent = `${icn('manageVideos')} ${ut('videosHeroTitle')}`;
       const vSub = document.getElementById('videosViewSub');
       if (vSub) vSub.textContent = ut('videosHeroSub');
     }
@@ -7510,13 +7508,7 @@
         if (DEFAULT_SETTINGS_ITEM_ORDER.includes(k) && !valid.includes(k)) valid.push(k);
       });
       DEFAULT_SETTINGS_ITEM_ORDER.forEach(k => {
-        if (!valid.includes(k)) {
-          if (k === 'setHeaderPin' && valid.includes('setFont')) {
-            valid.splice(valid.indexOf('setFont') + 1, 0, 'setHeaderPin');
-          } else {
-            valid.push(k);
-          }
-        }
+        if (!valid.includes(k)) valid.push(k);
       });
       return valid;
     }
@@ -7543,22 +7535,10 @@
       return normalizeHeaderShortcutsConfig(tabLabels && tabLabels.headerShortcuts);
     }
 
-    function getLocalHeaderShortcutsOverride() {
-      try {
-        const raw = localStorage.getItem(KEY_HEADER_SHORTCUTS_LOCAL);
-        if (!raw) return null;
-        const parsed = JSON.parse(raw);
-        if (parsed && typeof parsed === 'object') return normalizeHeaderShortcutsConfig(parsed);
-      } catch {}
-      return null;
-    }
-
     function getEffectiveHeaderShortcuts(overrideCfg = null) {
       if (overrideCfg && typeof overrideCfg === 'object') {
         return normalizeHeaderShortcutsConfig(overrideCfg);
       }
-      const localOv = getLocalHeaderShortcutsOverride();
-      if (localOv) return localOv;
       return getGlobalHeaderShortcuts();
     }
 
@@ -27400,49 +27380,6 @@
       if (u && currentMainTab === 'settings') renderSettingsView(u);
     };
 
-    window.toggleSettingsHeaderPinAccordion = () => {
-      settingsHeaderPinOpen = !settingsHeaderPinOpen;
-      const u = getCurrentUser();
-      if (u && currentMainTab === 'settings') renderSettingsView(u);
-    };
-
-    window.togglePersonalHeaderShortcut = (field, checked) => {
-      const cur = getEffectiveHeaderShortcuts();
-      const next = normalizeHeaderShortcutsConfig({ ...cur, [field]: !!checked });
-      try { localStorage.setItem(KEY_HEADER_SHORTCUTS_LOCAL, JSON.stringify(next)); } catch {}
-      renderHeaderActions(currentMainTab === 'manage');
-      const u = getCurrentUser();
-      if (u && currentMainTab === 'settings') renderSettingsView(u);
-      if (field === 'showNotif') {
-        showToast(checked ? '✅ 알림 설정을 화면 최상단 오른쪽에 배치했습니다.' : '알림 설정 상단 바로가기를 숨겼습니다.');
-      } else if (field === 'showQr') {
-        showToast(checked ? '✅ 오늘의 초대 QR을 화면 최상단 오른쪽에 배치했습니다.' : '오늘의 초대 QR 상단 바로가기를 숨겼습니다.');
-      } else if (field === 'hideInSettings') {
-        showToast(checked ? '상단에 배치한 항목을 설정 목록에서 숨겼습니다.' : '설정 목록에도 함께 표시합니다.');
-      }
-    };
-
-    window.setPersonalHeaderShortcutOrder = (mode) => {
-      const cur = getEffectiveHeaderShortcuts();
-      const next = normalizeHeaderShortcutsConfig({
-        ...cur,
-        order: mode === 'notif_first' ? ['setNotif', 'setQr'] : ['setQr', 'setNotif']
-      });
-      try { localStorage.setItem(KEY_HEADER_SHORTCUTS_LOCAL, JSON.stringify(next)); } catch {}
-      renderHeaderActions(currentMainTab === 'manage');
-      const u = getCurrentUser();
-      if (u && currentMainTab === 'settings') renderSettingsView(u);
-      showToast('✅ 상단 오른쪽 버튼 순서를 변경했습니다.');
-    };
-
-    window.resetPersonalHeaderShortcuts = () => {
-      try { localStorage.removeItem(KEY_HEADER_SHORTCUTS_LOCAL); } catch {}
-      renderHeaderActions(currentMainTab === 'manage');
-      const u = getCurrentUser();
-      if (u && currentMainTab === 'settings') renderSettingsView(u);
-      showToast('🔄 앱 기본 상단 배치로 복원했습니다.');
-    };
-
     function renderSettingsView(user) {
       const el = document.getElementById('viewSettings');
       if (!el || !user) return;
@@ -27464,10 +27401,6 @@
       const visibleItems = [];
 
       const hdrCfg = getEffectiveHeaderShortcuts();
-      const hasLocalHdrOv = !!getLocalHeaderShortcutsOverride();
-      const hdrStatusLabel = (hdrCfg.showNotif && hdrCfg.showQr)
-        ? '알림·QR 배치'
-        : (hdrCfg.showNotif ? '알림만 배치' : (hdrCfg.showQr ? 'QR만 배치' : '꺼짐'));
 
       orderedKeys.forEach(key => {
         if (key === 'setAccount' && (isAdmin || isPreview)) return;
@@ -27533,75 +27466,6 @@
               </div>
             ` : ''}
           `;
-        } else if (key === 'setHeaderPin') {
-          const notifIconDisp = getTabIcon('setNotif');
-          const notifLabelDisp = getTabLabel('setNotif');
-          const qrIconDisp = getTabIcon('setQr');
-          const qrLabelDisp = getTabLabel('setQr');
-          const qrFirst = hdrCfg.order[0] === 'setQr';
-          rowHtml = `
-            <button class="settings-row-btn" type="button" onclick="toggleSettingsHeaderPinAccordion()">
-              <span class="settings-row-left">
-                <span class="settings-row-icon">${escapeHtml(ic)}</span>
-                <span style="min-width:0;">
-                  <div class="settings-row-title">${escapeHtml(lb)}</div>
-                  <div class="settings-row-sub">알림 설정 · 오늘의 초대 QR을 화면 최상단 오른쪽에 배치합니다</div>
-                </span>
-              </span>
-              <span class="settings-row-right">
-                <span class="tag ${(hdrCfg.showNotif || hdrCfg.showQr) ? 'green' : 'slate'}">${escapeHtml(hdrStatusLabel)}</span>
-                <span>${settingsHeaderPinOpen ? '▲' : '▼'}</span>
-              </span>
-            </button>
-            ${settingsHeaderPinOpen ? `
-              <div class="settings-font-body">
-                <div class="setting-row" style="padding:10px 0;">
-                  <div>
-                    <div class="setting-title" style="font-size:13px;">${escapeHtml(notifIconDisp)} ${escapeHtml(notifLabelDisp)} 상단 오른쪽 배치</div>
-                    <div class="setting-sub" style="font-size:11.5px;">어느 화면에서나 우측 상단에서 바로 알림을 켜고 끌 수 있습니다</div>
-                  </div>
-                  <label class="switch">
-                    <input type="checkbox" ${hdrCfg.showNotif ? 'checked' : ''} onchange="togglePersonalHeaderShortcut('showNotif', this.checked)" />
-                    <span class="slider"></span>
-                  </label>
-                </div>
-                <div class="setting-row" style="padding:10px 0;">
-                  <div>
-                    <div class="setting-title" style="font-size:13px;">${escapeHtml(qrIconDisp)} ${escapeHtml(qrLabelDisp)} 상단 오른쪽 배치</div>
-                    <div class="setting-sub" style="font-size:11.5px;">어느 화면에서나 우측 상단에서 바로 초대 QR을 띄울 수 있습니다</div>
-                  </div>
-                  <label class="switch">
-                    <input type="checkbox" ${hdrCfg.showQr ? 'checked' : ''} onchange="togglePersonalHeaderShortcut('showQr', this.checked)" />
-                    <span class="slider"></span>
-                  </label>
-                </div>
-                <div class="setting-row" style="padding:10px 0;">
-                  <div>
-                    <div class="setting-title" style="font-size:13px;">상단 배치 항목은 설정 목록에서 숨기기</div>
-                    <div class="setting-sub" style="font-size:11.5px;">중복 없이 깔끔하게 보고 싶을 때 켜세요 (끄면 다시 표시됩니다)</div>
-                  </div>
-                  <label class="switch">
-                    <input type="checkbox" ${hdrCfg.hideInSettings ? 'checked' : ''} onchange="togglePersonalHeaderShortcut('hideInSettings', this.checked)" />
-                    <span class="slider"></span>
-                  </label>
-                </div>
-                ${(hdrCfg.showNotif && hdrCfg.showQr) ? `
-                  <div style="padding-top:8px; border-top:1px solid #E2E8F0;">
-                    <div style="font-size:11.5px; font-weight:800; color:#475569; margin-bottom:6px;">↔️ 상단 오른쪽 버튼 순서</div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-                      <button class="font-scale-btn ${qrFirst ? 'active' : ''}" type="button" onclick="setPersonalHeaderShortcutOrder('qr_first')">${escapeHtml(qrIconDisp)} QR → ${escapeHtml(notifIconDisp)} 알림</button>
-                      <button class="font-scale-btn ${!qrFirst ? 'active' : ''}" type="button" onclick="setPersonalHeaderShortcutOrder('notif_first')">${escapeHtml(notifIconDisp)} 알림 → ${escapeHtml(qrIconDisp)} QR</button>
-                    </div>
-                  </div>
-                ` : ''}
-                ${hasLocalHdrOv ? `
-                  <div style="margin-top:8px; text-align:right;">
-                    <button class="btn-sm" type="button" onclick="resetPersonalHeaderShortcuts()">🔄 앱 기본 배치로 복원</button>
-                  </div>
-                ` : ''}
-              </div>
-            ` : ''}
-          `;
         } else if (key === 'setQr') {
           rowHtml = `
             <button class="settings-row-btn" type="button" onclick="openInviteQrModal()">
@@ -27639,24 +27503,6 @@
                 </span>
               </span>
               <span class="settings-row-right">▸</span>
-            </button>
-          `;
-        } else if (key === 'setVideos') {
-          const approvedVidCnt = (videoItems || []).filter(v => v.status === 'approved').length;
-          const unreadVidCnt = (videoItems || []).filter(v => isVideoUnread(v)).length;
-          rowHtml = `
-            <button class="settings-row-btn" type="button" onclick="openFromSettingsTab('videos')">
-              <span class="settings-row-left">
-                <span class="settings-row-icon">${escapeHtml(ic)}</span>
-                <span style="min-width:0;">
-                  <div class="settings-row-title" style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;"><span>${escapeHtml(lb)}</span>${unreadVidCnt > 0 ? '<span class="new-badge">NEW</span>' : ''}</div>
-                  <div class="settings-row-sub">교회 공식 설교·찬양 유튜브 영상 보기 및 추천</div>
-                </span>
-              </span>
-              <span class="settings-row-right">
-                ${unreadVidCnt > 0 ? buildSubTabBadgeHtml(unreadVidCnt) : (approvedVidCnt > 0 ? `<span class="tag slate">${approvedVidCnt}</span>` : '')}
-                <span>▸</span>
-              </span>
             </button>
           `;
         } else if (key === 'setInquiry') {
@@ -30399,7 +30245,7 @@ ${handleUrl}`);
       const canSubmit = canUserSubmitVideo(user);
       if (approved.length === 0 && !canSubmit) return '';
       const secTitle = getUiText('videosHeroTitle');
-      const secIcon = getTabIcon('setVideos');
+      const secIcon = getTabIcon('manageVideos');
       const latest = approved.slice(0, 3);
       const unreadSermonCnt = approved.filter(v => isSermonVideo(v) && isVideoUnread(v)).length;
       const unreadCcmCnt = approved.filter(v => isCcmVideo(v) && isVideoUnread(v)).length;
@@ -31764,7 +31610,7 @@ ${handleUrl}`);
             <div class="setting-row" style="padding-top:0;">
               <div>
                 <div class="setting-title" style="font-size:13.5px;">메인 홈 화면에 최신 영상 섹션 표시</div>
-                <div class="setting-sub" style="font-size:11.5px;">꺼도 [설정 → 설교 · 찬양 영상]에서 전체 영상을 볼 수 있습니다.</div>
+                <div class="setting-sub" style="font-size:11.5px;">꺼도 하단 [설교] · [CCM] 탭에서 전체 영상을 볼 수 있습니다.</div>
               </div>
               <label class="switch">
                 <input type="checkbox" id="cfgVidShowHome" ${cfg.showOnHome !== false ? 'checked' : ''} />
