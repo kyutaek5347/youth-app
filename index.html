@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=197" />
+  <link rel="manifest" href="./manifest.json?v=198" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=197" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=197" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=198" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=198" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3503,7 +3503,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=197" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=198" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5178,7 +5178,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 197;
+    const APP_CLIENT_BUILD = 198;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_SEEN_ADMIN_IDS = 'right_youth_seen_admin_ids_v1';
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
@@ -6086,7 +6086,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=197" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=198" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6110,8 +6110,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=197', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=197', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=198', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=198', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -6572,6 +6572,14 @@
     let manageContentFilter = 'all';
     let manageMembersFilter = 'all';
     let manageAdminsFilter = 'all';
+    let manageVideosFilter = 'all';
+    let manageWorshipFilter = 'all';
+    let manageSheetFilter = 'all';
+    let manageSecurityFilter = 'all';
+    let manageDiagnosticsFilter = 'all';
+    let manageQrFilter = 'all';
+    let manageAdminCodeFilter = 'all';
+    let manageLabelsFilter = 'all';
     let lastInquirySubmitTs = 0;
     let videoItems = [];
     let myVideoItems = [];
@@ -11063,7 +11071,7 @@
     };
 
     // ==================== 12. 관리 센터 ====================
-    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|switchMainTab)\s*\(/;
+    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|switchMainTab)\s*\(/;
     const OBSERVER_ALLOWED_INPUT_IDS = new Set([
       'roleMemberSearchInput', 'adminLogSearchInput', 'adminGuideSearchInput', 'attRosterSearchInput', 'attRosterQuickJumpInput'
     ]);
@@ -14175,6 +14183,16 @@
       renderRoleMembersListOnly();
     }
 
+    window.setManageAdminCodeFilter = (f) => {
+      manageAdminCodeFilter = ['all', 'current', 'change'].includes(f) ? f : 'all';
+      if (manageAdminCodeFilter === 'current') manageSectionOpen['admincode_current'] = true;
+      if (manageAdminCodeFilter === 'change') manageSectionOpen['admincode_change'] = true;
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'admincode') {
+        renderManageAdminCode(document.getElementById('manageContent'), u);
+      }
+    };
+
     // (D-2) 최고 관리자 코드 관리 (독립 탭)
     function renderManageAdminCode(el, user) {
       const prevCurEl = document.getElementById('curAdminPwInput');
@@ -14182,54 +14200,78 @@
       const prevCur = prevCurEl ? prevCurEl.value : '';
       const prevNew = prevNewEl ? prevNewEl.value : '';
 
+      const acf = manageAdminCodeFilter || 'all';
+      const showCurrent = acf === 'all' || acf === 'current';
+      const showChange = (user && user.isSuperAdmin) && (acf === 'all' || acf === 'change');
+      const curOpen = isManageSectionOpen('admincode_current', true);
+      const chgOpen = isManageSectionOpen('admincode_change', true);
+
       el.innerHTML = `
         ${buildManageSectionHead({
           key: 'admincode_main',
           defaultTitle: `${getTabIcon('manageAdminCode')} ${getTabLabel('manageAdminCode')}`,
           rightHtml: sharedAdminCodeUpdatedAt ? `<span class="tag slate">${escapeHtml(sharedAdminCodeUpdatedAt)} 업데이트</span>` : ''
         })}
-        <div class="info-box" style="margin-top:0; margin-bottom:12px;">
+        <div class="info-box" style="margin-top:0; margin-bottom:10px;">
           최고 관리자 계정으로 로그인했을 때만 현재 관리자 코드를 확인·복사하고 새 코드로 생성·변경할 수 있습니다.<br>
           코드를 변경하면 관리자 로그인 비밀번호와 공유용 코드가 함께 업데이트됩니다.
         </div>
 
-        <div class="card" style="border-color:#CBD5E1;">
-          <div class="card-top">
-            <strong style="font-size:14.5px;">🔑 현재 최고 관리자 코드</strong>
-          </div>
-          ${sharedAdminCode ? `
-            <div class="secret-code-row" style="margin-bottom:0;">
-              <span class="secret-code-val">${showSharedAdminCode ? escapeHtml(sharedAdminCode) : '••••••••'}</span>
-              <div style="display:flex; gap:5px; flex-shrink:0;">
-                <button class="btn-sm" type="button" onclick="toggleSharedAdminCodeView()">${showSharedAdminCode ? '숨기기' : '👁️ 보기'}</button>
-                <button class="btn-sm primary" type="button" onclick="copySharedAdminCode()">복사</button>
-              </div>
-            </div>
-          ` : `
-            <div class="info-box" style="margin-top:0;">
-              아직 공유용 코드가 등록되지 않았습니다. 최고 관리자가 한 번 로그아웃 후 다시 로그인하거나 아래에서 새 코드를 생성·변경하면 자동으로 표시됩니다.
-            </div>
-          `}
+        <div class="filter-row" style="margin-bottom:10px;">
+          <button class="filter-chip ${acf === 'all' ? 'active' : ''}" type="button" onclick="setManageAdminCodeFilter('all')">전체</button>
+          <button class="filter-chip ${acf === 'current' ? 'active' : ''}" type="button" onclick="setManageAdminCodeFilter('current')">🔑 현재 코드 확인</button>
+          ${user && user.isSuperAdmin ? `<button class="filter-chip ${acf === 'change' ? 'active' : ''}" type="button" onclick="setManageAdminCodeFilter('change')">🔄 새 코드 변경</button>` : ''}
         </div>
 
-        ${user && user.isSuperAdmin ? `
-          <div class="card" style="border-color:#CBD5E1;">
-            <div class="card-top">
-              <strong style="font-size:14.5px;">🔄 새 최고 관리자 코드 생성 · 변경</strong>
-              <button class="btn-sm" type="button" onclick="fillRandomAdminCode()">🎲 자동 생성</button>
+        ${showCurrent ? `
+          ${buildManageAccordionBar({
+            key: 'admincode_current',
+            titleHtml: '🔑 현재 최고 관리자 코드',
+            badgeHtml: `<span class="tag ${sharedAdminCode ? 'green' : 'slate'}">${sharedAdminCode ? '등록됨' : '미등록'}</span>`,
+            defaultOpen: true
+          })}
+          <div data-acc-body="admincode_current" class="${curOpen ? '' : 'hidden'}">
+            <div class="card" style="border-color:#CBD5E1;">
+              ${sharedAdminCode ? `
+                <div class="secret-code-row" style="margin-bottom:0;">
+                  <span class="secret-code-val">${showSharedAdminCode ? escapeHtml(sharedAdminCode) : '••••••••'}</span>
+                  <div style="display:flex; gap:5px; flex-shrink:0;">
+                    <button class="btn-sm" type="button" onclick="toggleSharedAdminCodeView()">${showSharedAdminCode ? '숨기기' : '👁️ 보기'}</button>
+                    <button class="btn-sm primary" type="button" onclick="copySharedAdminCode()">복사</button>
+                  </div>
+                </div>
+              ` : `
+                <div class="info-box" style="margin-top:0;">
+                  아직 공유용 코드가 등록되지 않았습니다. 최고 관리자가 한 번 로그아웃 후 다시 로그인하거나 아래에서 새 코드를 생성·변경하면 자동으로 표시됩니다.
+                </div>
+              `}
             </div>
-            <div class="form-group" style="margin-bottom:8px;">
-              <label class="form-label" for="curAdminPwInput">현재 관리자 코드</label>
-              <input id="curAdminPwInput" type="password" class="form-input" placeholder="현재 관리자 코드 입력" />
-            </div>
-            <div class="form-group" style="margin-bottom:10px;">
-              <label class="form-label" for="newAdminPwInput">새 관리자 코드 (6자리 이상)</label>
-              <div style="display:flex; gap:6px;">
-                <input id="newAdminPwInput" type="password" class="form-input" placeholder="새 코드 입력 (6자리 이상)" style="flex:1;" />
-                <button id="toggleNewAdminPwBtn" class="btn-sm" type="button" style="white-space:nowrap;" onclick="toggleNewAdminPwVisibility()">👁️ 보기</button>
+          </div>
+        ` : ''}
+
+        ${showChange ? `
+          ${buildManageAccordionBar({
+            key: 'admincode_change',
+            titleHtml: '🔄 새 최고 관리자 코드 생성 · 변경',
+            actionHtml: '<button class="btn-sm" type="button" onclick="fillRandomAdminCode()">🎲 자동 생성</button>',
+            defaultOpen: true,
+            marginTop: showCurrent ? '10px' : ''
+          })}
+          <div data-acc-body="admincode_change" class="${chgOpen ? '' : 'hidden'}">
+            <div class="card" style="border-color:#CBD5E1;">
+              <div class="form-group" style="margin-bottom:8px;">
+                <label class="form-label" for="curAdminPwInput">현재 관리자 코드</label>
+                <input id="curAdminPwInput" type="password" class="form-input" placeholder="현재 관리자 코드 입력" />
               </div>
+              <div class="form-group" style="margin-bottom:10px;">
+                <label class="form-label" for="newAdminPwInput">새 관리자 코드 (6자리 이상)</label>
+                <div style="display:flex; gap:6px;">
+                  <input id="newAdminPwInput" type="password" class="form-input" placeholder="새 코드 입력 (6자리 이상)" style="flex:1;" />
+                  <button id="toggleNewAdminPwBtn" class="btn-sm" type="button" style="white-space:nowrap;" onclick="toggleNewAdminPwVisibility()">👁️ 보기</button>
+                </div>
+              </div>
+              <button class="btn-full btn-dark" type="button" style="padding:12px; font-size:14px;" onclick="changeAdminPassword()">💾 새 관리자 코드로 변경</button>
             </div>
-            <button class="btn-full btn-dark" type="button" style="padding:12px; font-size:14px;" onclick="changeAdminPassword()">💾 새 관리자 코드로 변경</button>
           </div>
         ` : ''}
       `;
@@ -15061,10 +15103,25 @@
       syncAllDynamicLabelsUI(draftTabNames, draftTabIcons, draftUiTexts);
     }
 
+    window.setManageLabelsFilter = (f) => {
+      manageLabelsFilter = ['all', 'bottom', 'settings', 'manage'].includes(f) ? f : 'all';
+      const accMap = { bottom: 'labels_bottom', settings: 'labels_settings_items', manage: 'labels_manage' };
+      if (accMap[manageLabelsFilter]) manageSectionOpen[accMap[manageLabelsFilter]] = true;
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'labels') {
+        renderManageLabels(document.getElementById('manageContent'), u);
+      }
+    };
+
     function renderManageLabels(el, user) {
       initDraftTabEditorFromCurrent(false);
       const curManageName = String(draftTabNames.manage ?? '').trim() || getTabLabel('manage');
       const curManageIcon = String(draftTabIcons.manage ?? '').trim() || getTabIcon('manage');
+      const lf = manageLabelsFilter || 'all';
+      const showBottom = lf === 'all' || lf === 'bottom';
+      const showSettings = lf === 'all' || lf === 'settings';
+      const showManage = lf === 'all' || lf === 'manage';
+
       el.innerHTML = `
         ${buildManageSectionHead({
           key: 'labels_main',
@@ -15072,11 +15129,19 @@
           defaultTitle: formatManageLabelsHeading(),
           rightHtml: '<button class="btn-sm" type="button" onclick="resetTabLabelsDefaults()">기본값 복원</button>'
         })}
-        <div class="info-box" style="margin-top:0; margin-bottom:14px;">
+        <div class="info-box" style="margin-top:0; margin-bottom:10px;">
           하단 메뉴와 <b>${escapeHtml(curManageName)} 상단 탭</b>의 이모지·이름·순서(▲/▼)를 자유롭게 바꿀 수 있습니다.<br>
           입력하거나 순서를 바꾸면 상단·하단 탭에 바로 미리보기되며, 아래 저장 버튼을 누르면 즉시 저장·반영됩니다.
         </div>
 
+        <div class="filter-row" style="margin-bottom:10px;">
+          <button class="filter-chip ${lf === 'all' ? 'active' : ''}" type="button" onclick="setManageLabelsFilter('all')">전체</button>
+          <button class="filter-chip ${lf === 'bottom' ? 'active' : ''}" type="button" onclick="setManageLabelsFilter('bottom')">📱 하단 메뉴 (${draftTabOrder.length})</button>
+          <button class="filter-chip ${lf === 'settings' ? 'active' : ''}" type="button" onclick="setManageLabelsFilter('settings')">${escapeHtml(getTabIcon('settings'))} ${escapeHtml(getTabLabel('settings'))} 메뉴 (${draftSettingsItemOrder.length})</button>
+          <button class="filter-chip ${lf === 'manage' ? 'active' : ''}" type="button" onclick="setManageLabelsFilter('manage')">${escapeHtml(curManageIcon)} ${escapeHtml(curManageName)} 탭 (${draftManageSubTabOrder.length})</button>
+        </div>
+
+        ${showBottom ? `
         ${buildManageAccordionBar({
           key: 'labels_bottom',
           titleHtml: '📱 하단 메뉴 칸 (왼쪽 → 오른쪽 순)',
@@ -15114,12 +15179,15 @@
         </div>
         </div>
 
+        ` : ''}
+
+        ${showSettings ? `
         ${buildManageAccordionBar({
           key: 'labels_settings_items',
           titleHtml: `${escapeHtml(getTabIcon('settings'))} ${escapeHtml(getTabLabel('settings'))} 안 메뉴 순서 · 명칭 (위 → 아래 순)`,
           badgeHtml: `<span class="tag slate">${draftSettingsItemOrder.length}개</span>`,
-          defaultOpen: false,
-          marginTop: '10px'
+          defaultOpen: lf === 'settings',
+          marginTop: showBottom ? '10px' : ''
         })}
         <div data-acc-body="labels_settings_items" class="${isManageSectionOpen('labels_settings_items', false) ? '' : 'hidden'}">
         <div class="card">
@@ -15151,13 +15219,16 @@
         </div>
         </div>
 
+        ` : ''}
+
+        ${showManage ? `
         ${buildManageAccordionBar({
           key: 'labels_manage',
           titleIdAttr: 'manageSubTabCardHeading',
           titleHtml: `${escapeHtml(curManageIcon)} ${escapeHtml(curManageName)} 상단 탭 (왼쪽 → 오른쪽 순)`,
           badgeHtml: `<span class="tag slate">${draftManageSubTabOrder.length}개</span>`,
-          defaultOpen: false,
-          marginTop: '10px'
+          defaultOpen: lf === 'manage',
+          marginTop: (showBottom || showSettings) ? '10px' : ''
         })}
         <div data-acc-body="labels_manage" class="${isManageSectionOpen('labels_manage', false) ? '' : 'hidden'}">
         <div class="card">
@@ -15190,6 +15261,7 @@
           </div>
         </div>
         </div>
+        ` : ''}
 
         <button id="saveTabLabelsInlineBtn" class="btn-full btn-dark" type="button" style="margin-top:10px;" onclick="handleSaveTabLabels()">💾 전체 메뉴 · 이름 · 순서 저장하기</button>
       `;
@@ -18458,6 +18530,16 @@
       return Array.from(map.values()).sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
     }
 
+    window.setManageQrFilter = (f) => {
+      manageQrFilter = ['all', 'settings', 'guide'].includes(f) ? f : 'all';
+      if (manageQrFilter === 'settings') manageSectionOpen['qr_settings'] = true;
+      if (manageQrFilter === 'guide') manageSectionOpen['qr_guide'] = true;
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'qr') {
+        renderManageQr(document.getElementById('manageContent'), u);
+      }
+    };
+
     function renderManageQr(el, user) {
       const todayInfo = getKstNowInfo();
       const todayLabel = `${todayInfo.dot} (${DAY_SHORT_KO[todayInfo.dow]})`;
@@ -18477,6 +18559,12 @@
         });
       }
 
+      const qf = manageQrFilter || 'all';
+      const showSettings = qf === 'all' || qf === 'settings';
+      const showGuide = qf === 'all' || qf === 'guide';
+      const qrSettingsOpen = isManageSectionOpen('qr_settings', true);
+      const qrGuideOpen = isManageSectionOpen('qr_guide', qf === 'guide');
+
       el.innerHTML = `
         ${buildManageSectionHead({
           key: 'qr_main',
@@ -18484,38 +18572,63 @@
           rightHtml: `<span id="manageQrRemainPill" class="tag ${qrReady ? 'green' : 'warm'}">${qrReady ? (modeMin > 0 ? `⏱️ ${formatCountdownMmSs(remainMs)} 남음` : `${todayInfo.dot} 활성`) : '갱신 대기'}</span>`
         })}
 
-        <div class="card">
-          <div style="font-size:13px; font-weight:800; color:#0F172A; margin-bottom:4px;">⏱️ 초대 QR 자동 갱신 주기 선택</div>
-          <div style="font-size:11.5px; color:#64748B; line-height:1.5; margin-bottom:6px;">
-            • <b>오늘 하루 (기본):</b> 카톡 링크·이미지 공유에 적합 (매일 00:00 갱신)<br>
-            • <b>5분 · 10분 현장 모드:</b> 주일 현장에서 화면을 띄워 가입 받을 때 권장 (자동 갱신 시 <b>직전 QR 3~5분 유예</b> + 화면 복귀 시 즉시 갱신)
-          </div>
-          <div class="qr-mode-grid">
-            ${buildQrModeButtonsHtml(modeMin)}
-          </div>
-          <div style="font-size:13px; color:#334155; line-height:1.65; margin:10px 0 12px; padding-top:10px; border-top:1px solid #F1F5F9;">
-            <div>📅 <b>현재 모드:</b> ${modeMin > 0 ? `<b style="color:#15803D;">현장 ${modeMin}분 자동 갱신</b> (직전 QR ${graceMin}분 유예)` : `<b>오늘 하루</b> (${escapeHtml(todayLabel)} 23:59까지)`}</div>
-            ${inviteQrDoc && inviteQrDoc.updatedAt ? `<div>🔄 <b>최근 발급:</b> ${escapeHtml(inviteQrDoc.updatedAt)}${inviteQrDoc.updatedBy ? ` (${escapeHtml(inviteQrDoc.updatedBy)})` : ''}</div>` : ''}
-            <div id="manageQrGraceLine" class="${graceRemainMs > 0 ? '' : 'hidden'}" style="color:#B45309; font-size:12px; margin-top:2px;">
-              ${graceRemainMs > 0 ? `⏳ <b>직전 QR 유예 중:</b> 방금 변경된 이전 QR도 <b>${formatCountdownMmSs(graceRemainMs)}</b> 동안 가입 완료 가능` : ''}
-            </div>
-          </div>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button class="btn-sm primary" type="button" style="flex:1; padding:10px;" onclick="openInviteQrModal()">📲 QR 보기 · 공유</button>
-            <button class="btn-sm" type="button" style="padding:10px 12px;" onclick="copyInviteQrLink()">🔗 링크 복사</button>
-            <button class="btn-sm warn" type="button" style="width:100%; padding:10px; margin-top:2px;" onclick="regenerateInviteQrByAdmin()">🔄 새 QR 즉시 재발급 (기존 QR 유예 없이 즉시 폐기)</button>
-          </div>
+        <div class="filter-row" style="margin-bottom:10px;">
+          <button class="filter-chip ${qf === 'all' ? 'active' : ''}" type="button" onclick="setManageQrFilter('all')">전체</button>
+          <button class="filter-chip ${qf === 'settings' ? 'active' : ''}" type="button" onclick="setManageQrFilter('settings')">⏱️ QR 설정 · 발급</button>
+          <button class="filter-chip ${qf === 'guide' ? 'active' : ''}" type="button" onclick="setManageQrFilter('guide')">ℹ️ 보안 운영 안내</button>
         </div>
 
-        <div class="card" style="background:#F8FAFC;">
-          <div style="font-size:13.5px; font-weight:800; color:#0F172A; margin-bottom:7px;">ℹ️ 초대 QR 보안 운영 안내</div>
-          <div style="font-size:12px; color:#475569; line-height:1.65;">
-            • <b>이전 QR 접속 시 자동 안내:</b> 이미 변경·만료된 이전 QR을 스캔하면 <b>"초대 QR이 변경되었습니다 · 새 QR을 사용해 주세요"</b> 안내 화면이 표시됩니다.<br>
-            • <b>직전 QR 유예 시간:</b> 5분·10분 모드에서 자동 갱신 직전에 QR을 찍고 입력 중이던 지체는 <b>유예 시간(3~5분)</b> 안에 끊김 없이 가입을 마칠 수 있습니다.<br>
-            • <b>화면 복귀 시 즉시 갱신:</b> 휴대폰 화면을 껐다 켜거나 다른 앱에서 돌아오면 만료된 QR이 남지 않도록 즉시 최신 QR로 갱신됩니다.<br>
-            • <b>긴급 폐기:</b> 외부 유출이 의심될 때 <b>[🔄 새 QR 즉시 재발급]</b>을 누르면 유예 시간 없이 이전 QR이 그 즉시 차단됩니다.
+        ${showSettings ? `
+          ${buildManageAccordionBar({
+            key: 'qr_settings',
+            titleHtml: '⏱️ 초대 QR 자동 갱신 · 발급',
+            badgeHtml: `<span class="tag ${modeMin > 0 ? 'green' : 'slate'}">${modeMin > 0 ? `${modeMin}분 현장 모드` : '오늘 하루'}</span>`,
+            defaultOpen: true
+          })}
+          <div data-acc-body="qr_settings" class="${qrSettingsOpen ? '' : 'hidden'}">
+            <div class="card">
+              <div style="font-size:11.5px; color:#64748B; line-height:1.5; margin-bottom:6px;">
+                • <b>오늘 하루 (기본):</b> 카톡 링크·이미지 공유에 적합 (매일 00:00 갱신)<br>
+                • <b>5분 · 10분 현장 모드:</b> 주일 현장에서 화면을 띄워 가입 받을 때 권장 (자동 갱신 시 <b>직전 QR 3~5분 유예</b> + 화면 복귀 시 즉시 갱신)
+              </div>
+              <div class="qr-mode-grid">
+                ${buildQrModeButtonsHtml(modeMin)}
+              </div>
+              <div style="font-size:13px; color:#334155; line-height:1.65; margin:10px 0 12px; padding-top:10px; border-top:1px solid #F1F5F9;">
+                <div>📅 <b>현재 모드:</b> ${modeMin > 0 ? `<b style="color:#15803D;">현장 ${modeMin}분 자동 갱신</b> (직전 QR ${graceMin}분 유예)` : `<b>오늘 하루</b> (${escapeHtml(todayLabel)} 23:59까지)`}</div>
+                ${inviteQrDoc && inviteQrDoc.updatedAt ? `<div>🔄 <b>최근 발급:</b> ${escapeHtml(inviteQrDoc.updatedAt)}${inviteQrDoc.updatedBy ? ` (${escapeHtml(inviteQrDoc.updatedBy)})` : ''}</div>` : ''}
+                <div id="manageQrGraceLine" class="${graceRemainMs > 0 ? '' : 'hidden'}" style="color:#B45309; font-size:12px; margin-top:2px;">
+                  ${graceRemainMs > 0 ? `⏳ <b>직전 QR 유예 중:</b> 방금 변경된 이전 QR도 <b>${formatCountdownMmSs(graceRemainMs)}</b> 동안 가입 완료 가능` : ''}
+                </div>
+              </div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button class="btn-sm primary" type="button" style="flex:1; padding:10px;" onclick="openInviteQrModal()">📲 QR 보기 · 공유</button>
+                <button class="btn-sm" type="button" style="padding:10px 12px;" onclick="copyInviteQrLink()">🔗 링크 복사</button>
+                <button class="btn-sm warn" type="button" style="width:100%; padding:10px; margin-top:2px;" onclick="regenerateInviteQrByAdmin()">🔄 새 QR 즉시 재발급 (기존 QR 유예 없이 즉시 폐기)</button>
+              </div>
+            </div>
           </div>
-        </div>
+        ` : ''}
+
+        ${showGuide ? `
+          ${buildManageAccordionBar({
+            key: 'qr_guide',
+            titleHtml: 'ℹ️ 초대 QR 보안 운영 안내',
+            badgeHtml: '<span class="tag slate">보안 가이드</span>',
+            defaultOpen: qf === 'guide',
+            marginTop: showSettings ? '10px' : ''
+          })}
+          <div data-acc-body="qr_guide" class="${qrGuideOpen ? '' : 'hidden'}">
+            <div class="card" style="background:#F8FAFC;">
+              <div style="font-size:12px; color:#475569; line-height:1.65;">
+                • <b>이전 QR 접속 시 자동 안내:</b> 이미 변경·만료된 이전 QR을 스캔하면 <b>"초대 QR이 변경되었습니다 · 새 QR을 사용해 주세요"</b> 안내 화면이 표시됩니다.<br>
+                • <b>직전 QR 유예 시간:</b> 5분·10분 모드에서 자동 갱신 직전에 QR을 찍고 입력 중이던 지체는 <b>유예 시간(3~5분)</b> 안에 끊김 없이 가입을 마칠 수 있습니다.<br>
+                • <b>화면 복귀 시 즉시 갱신:</b> 휴대폰 화면을 껐다 켜거나 다른 앱에서 돌아오면 만료된 QR이 남지 않도록 즉시 최신 QR로 갱신됩니다.<br>
+                • <b>긴급 폐기:</b> 외부 유출이 의심될 때 <b>[🔄 새 QR 즉시 재발급]</b>을 누르면 유예 시간 없이 이전 QR이 그 즉시 차단됩니다.
+              </div>
+            </div>
+          </div>
+        ` : ''}
       `;
     }
 
@@ -18642,6 +18755,16 @@
       }
     }
 
+    window.setManageWorshipFilter = (f) => {
+      manageWorshipFilter = ['all', 'regular', 'events'].includes(f) ? f : 'all';
+      if (manageWorshipFilter === 'regular') manageSectionOpen['worship_att'] = true;
+      if (manageWorshipFilter === 'events') manageSectionOpen['worship_special_events_sec'] = true;
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'worship') {
+        renderManageWorship(document.getElementById('manageContent'), u);
+      }
+    };
+
     function renderManageWorship(el, user) {
       const cfg = attendanceConfig || DEFAULT_ATTENDANCE_CONFIG;
       const now = getKstNowInfo();
@@ -18656,12 +18779,23 @@
         .filter(d => d >= todayDot)
         .sort();
 
+      const wf = manageWorshipFilter || 'all';
+      const showRegular = wf === 'all' || wf === 'regular';
+      const showEvents = wf === 'all' || wf === 'events';
       const worshipAttOpen = isManageSectionOpen('worship_att', true);
       const specialEvOpen = isManageSectionOpen('worship_special_events_sec', true);
       const attTabIcon = getTabIcon('manageAttendance');
       const attTabLabel = getTabLabel('manageAttendance');
+      const evCount = (cfg.specialEvents || []).length;
 
       el.innerHTML = `
+        <div class="filter-row" style="margin-bottom:10px;">
+          <button class="filter-chip ${wf === 'all' ? 'active' : ''}" type="button" onclick="setManageWorshipFilter('all')">전체</button>
+          <button class="filter-chip ${wf === 'regular' ? 'active' : ''}" type="button" onclick="setManageWorshipFilter('regular')">${escapeHtml(getTabIcon('manageWorship'))} 정기 예배 설정</button>
+          <button class="filter-chip ${wf === 'events' ? 'active' : ''}" type="button" onclick="setManageWorshipFilter('events')">📅 특별 행사 (${evCount})</button>
+        </div>
+
+        ${showRegular ? `
         <!-- 1) 매주 일요일 정기 예배 설정 -->
         ${buildManageAccordionBar({
           key: 'worship_att',
@@ -18726,14 +18860,17 @@
           </div>
         </div>
 
+        ` : ''}
+
+        ${showEvents ? `
         <!-- 2) 특별 행사 출석 (수련회 · 성탄절 등 달력 기간 지정) -->
         ${buildManageAccordionBar({
           key: 'worship_special_events_sec',
           titleHtml: '📅 특별 행사 출석 (수련회 · 성탄절 등)',
-          badgeHtml: `<span class="tag slate">${(cfg.specialEvents || []).length}건</span>`,
+          badgeHtml: `<span class="tag slate">${evCount}건</span>`,
           actionHtml: `<button class="btn-admin" type="button" style="padding:6px 10px; font-size:11.5px;" onclick="openSpecialEventModal()">+ 행사 추가</button>`,
           defaultOpen: true,
-          marginTop: '10px'
+          marginTop: showRegular ? '10px' : ''
         })}
         <div data-acc-body="worship_special_events_sec" class="${specialEvOpen ? '' : 'hidden'}">
           <div class="card">
@@ -18756,6 +18893,7 @@
                 `).join('')}
           </div>
         </div>
+        ` : ''}
       `;
     }
 
@@ -19435,6 +19573,16 @@
     }
 
     // --- Admin Manage Sub-Tab: 📊 구글 시트 연동 · 동기화 · 재정비 · 테스트 전용 탭 ---
+    window.setManageSheetFilter = (f) => {
+      manageSheetFilter = ['all', 'cfg', 'sync', 'rebuild', 'test'].includes(f) ? f : 'all';
+      const accMap = { cfg: 'sheet_main_cfg', sync: 'sheet_sync_ops', rebuild: 'sheet_rebuild_ops', test: 'sheet_live_test' };
+      if (accMap[manageSheetFilter]) manageSectionOpen[accMap[manageSheetFilter]] = true;
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'sheet') {
+        renderManageSheet(document.getElementById('manageContent'), u);
+      }
+    };
+
     function renderManageSheet(el, user) {
       const sheetUrl = getAdminSheetUrl();
       const isLinked = !!sheetUrl;
@@ -19443,10 +19591,15 @@
       const unsyncedAtt = attendanceRecords.filter(r => r && r.sheetSynced !== true).length;
       const totalUnsynced = unsyncedLogs + unsyncedAtt;
 
+      const sf = manageSheetFilter || 'all';
+      const showCfg = sf === 'all' || sf === 'cfg';
+      const showSync = sf === 'all' || sf === 'sync';
+      const showRebuild = sf === 'all' || sf === 'rebuild';
+      const showTest = sf === 'all' || sf === 'test';
       const sheetMainOpen = isManageSectionOpen('sheet_main_cfg', true);
       const sheetSyncOpen = isManageSectionOpen('sheet_sync_ops', true);
-      const sheetRebuildOpen = isManageSectionOpen('sheet_rebuild_ops', false);
-      const sheetLiveTestOpen = isManageSectionOpen('sheet_live_test', false);
+      const sheetRebuildOpen = isManageSectionOpen('sheet_rebuild_ops', sf === 'rebuild');
+      const sheetLiveTestOpen = isManageSectionOpen('sheet_live_test', sf === 'test');
 
       el.innerHTML = `
         <div class="stats-grid-3">
@@ -19464,6 +19617,15 @@
           </div>
         </div>
 
+        <div class="filter-row" style="margin-bottom:10px;">
+          <button class="filter-chip ${sf === 'all' ? 'active' : ''}" type="button" onclick="setManageSheetFilter('all')">전체</button>
+          <button class="filter-chip ${sf === 'cfg' ? 'active' : ''}" type="button" onclick="setManageSheetFilter('cfg')">📊 주소 설정</button>
+          <button class="filter-chip ${sf === 'sync' ? 'active' : ''}" type="button" onclick="setManageSheetFilter('sync')">🔄 데이터 동기화</button>
+          <button class="filter-chip ${sf === 'rebuild' ? 'active' : ''}" type="button" onclick="setManageSheetFilter('rebuild')">🛠️ 양식 재정비</button>
+          <button class="filter-chip ${sf === 'test' ? 'active' : ''}" type="button" onclick="setManageSheetFilter('test')">🧪 실전 테스트</button>
+        </div>
+
+        ${showCfg ? `
         <!-- 1) 구글 시트 연동 주소 · 연결 확인 -->
         ${buildManageAccordionBar({
           key: 'sheet_main_cfg',
@@ -19488,13 +19650,16 @@
           </div>
         </div>
 
+        ` : ''}
+
+        ${showSync ? `
         <!-- 2) 구글 시트 전체 동기화 · 미반영 로그 동기화 -->
         ${buildManageAccordionBar({
           key: 'sheet_sync_ops',
           titleHtml: '🔄 데이터 · 보안 로그 시트 동기화',
           badgeHtml: `<span class="tag ${totalUnsynced > 0 ? 'warm' : 'green'}">${totalUnsynced > 0 ? `미반영 ${totalUnsynced}건` : '최신 상태'}</span>`,
           defaultOpen: true,
-          marginTop: '10px'
+          marginTop: showCfg ? '10px' : ''
         })}
         <div data-acc-body="sheet_sync_ops" class="${sheetSyncOpen ? '' : 'hidden'}">
           <div class="card">
@@ -19509,13 +19674,16 @@
           </div>
         </div>
 
+        ` : ''}
+
+        ${showRebuild ? `
         <!-- 3) 시트 양식 재정비 · 출석 0 기록 정리 -->
         ${buildManageAccordionBar({
           key: 'sheet_rebuild_ops',
           titleHtml: '🛠️ 시트 양식 재정비 · 빈 기록 정리',
           badgeHtml: '<span class="tag slate">현황 3개 탭</span>',
-          defaultOpen: false,
-          marginTop: '10px'
+          defaultOpen: sf === 'rebuild',
+          marginTop: (showCfg || showSync) ? '10px' : ''
         })}
         <div data-acc-body="sheet_rebuild_ops" class="${sheetRebuildOpen ? '' : 'hidden'}">
           <div class="card">
@@ -19533,13 +19701,16 @@
           </div>
         </div>
 
+        ` : ''}
+
+        ${showTest ? `
         <!-- 4) 구글 시트 실전 쓰기 · 삭제 테스트 -->
         ${buildManageAccordionBar({
           key: 'sheet_live_test',
           titleHtml: '🧪 구글 시트 실전 쓰기 · 삭제 테스트',
           badgeHtml: '<span class="tag slate">점검용</span>',
-          defaultOpen: false,
-          marginTop: '10px'
+          defaultOpen: sf === 'test',
+          marginTop: (showCfg || showSync || showRebuild) ? '10px' : ''
         })}
         <div data-acc-body="sheet_live_test" class="${sheetLiveTestOpen ? '' : 'hidden'}">
           <div class="card" style="background:#F8FAFC;">
@@ -19552,6 +19723,7 @@
             </div>
           </div>
         </div>
+        ` : ''}
       `;
     }
 
@@ -20516,29 +20688,66 @@
       { id: 'config', title: '5. 핵심 설정 데이터 무결성 점검', desc: '역할, 메인 배치, 바로가기, 메뉴 이름, 출석 일정, 관리자 명단을 점검합니다.' }
     ];
 
+    window.setManageDiagnosticsFilter = (f) => {
+      manageDiagnosticsFilter = ['all', 'maint', 'auto', 'sim'].includes(f) ? f : 'all';
+      const accMap = { maint: 'diag_maint', auto: 'diag_auto', sim: 'diag_sim' };
+      if (accMap[manageDiagnosticsFilter]) manageSectionOpen[accMap[manageDiagnosticsFilter]] = true;
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'diagnostics') {
+        renderManageDiagnostics(document.getElementById('manageContent'), u);
+      }
+    };
+
     function renderManageDiagnostics(el, user) {
       const okCnt = DIAG_ITEMS.filter(it => diagResults[it.id] && diagResults[it.id].status === 'ok').length;
       const warnCnt = DIAG_ITEMS.filter(it => diagResults[it.id] && diagResults[it.id].status === 'warn').length;
       const errCnt = DIAG_ITEMS.filter(it => diagResults[it.id] && diagResults[it.id].status === 'err').length;
 
+      const df = manageDiagnosticsFilter || 'all';
+      const showMaint = df === 'all' || df === 'maint';
+      const showAuto = df === 'all' || df === 'auto';
+      const showSim = df === 'all' || df === 'sim';
+
+      const mCfg = maintenanceConfig || DEFAULT_MAINTENANCE_CONFIG;
+      const mActive = isMaintenanceActiveNow();
+      const defSched = getDefaultScheduleKst();
+      const sp = mCfg.startTs ? tsToKstParts(mCfg.startTs) : null;
+      const ep = mCfg.endTs ? tsToKstParts(mCfg.endTs) : null;
+      const startDateVal = sp ? sp.dot : defSched.dot;
+      const startTimeVal = sp ? sp.hhmm : defSched.hhmm;
+      const endDef = tsToKstParts(Date.now() + 2 * 60 * 60 * 1000);
+      const endDateVal = ep ? ep.dot : endDef.dot;
+      const endTimeVal = ep ? ep.hhmm : `${endDef.hhmm.slice(0, 2)}:00`;
+
+      const maintOpen = isManageSectionOpen('diag_maint', mActive || mCfg.scheduled || df === 'maint');
+      const autoOpen = isManageSectionOpen('diag_auto', true);
+      const simOpen = isManageSectionOpen('diag_sim', df === 'sim');
+
       el.innerHTML = `
-        ${(() => {
-          const mCfg = maintenanceConfig || DEFAULT_MAINTENANCE_CONFIG;
-          const mActive = isMaintenanceActiveNow();
-          const defSched = getDefaultScheduleKst();
-          const sp = mCfg.startTs ? tsToKstParts(mCfg.startTs) : null;
-          const ep = mCfg.endTs ? tsToKstParts(mCfg.endTs) : null;
-          const startDateVal = sp ? sp.dot : defSched.dot;
-          const startTimeVal = sp ? sp.hhmm : defSched.hhmm;
-          const endDef = tsToKstParts(Date.now() + 2 * 60 * 60 * 1000);
-          const endDateVal = ep ? ep.dot : endDef.dot;
-          const endTimeVal = ep ? ep.hhmm : `${endDef.hhmm.slice(0, 2)}:00`;
-          return `
-            ${buildManageSectionHead({
-              key: 'diag_maint',
-              defaultTitle: '🔧 정기 서버 점검 모드',
-              rightHtml: `<span class="tag ${mActive ? 'red' : (mCfg.scheduled ? 'warm' : 'green')}">${mActive ? '🔴 점검 작동 중' : (mCfg.scheduled ? '⏰ 예약 대기' : '🟢 정상 운영 중')}</span>`
-            })}
+        <div class="card" style="background:#ECFDF5; border-color:#6EE7B7; margin-bottom:10px; padding:11px 13px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+            <div style="font-size:12px; color:#065F46; line-height:1.45; flex:1; min-width:180px;">
+              <b>${escapeHtml(getTabIcon('manageSecurity'))} 해킹 · 피싱 · 악성 링크 방어 점검</b>은 전용 <b>[${escapeHtml(getTabIcon('manageSecurity'))} ${escapeHtml(getTabLabel('manageSecurity'))}]</b> 탭에서 분리 관리합니다.
+            </div>
+            <button class="btn-sm approve" type="button" onclick="switchManageSubTab('security')">${escapeHtml(getTabIcon('manageSecurity'))} 이동</button>
+          </div>
+        </div>
+
+        <div class="filter-row" style="margin-bottom:10px;">
+          <button class="filter-chip ${df === 'all' ? 'active' : ''}" type="button" onclick="setManageDiagnosticsFilter('all')">전체</button>
+          <button class="filter-chip ${df === 'maint' ? 'active' : ''}" type="button" onclick="setManageDiagnosticsFilter('maint')">🔧 서버 점검 모드</button>
+          <button class="filter-chip ${df === 'auto' ? 'active' : ''}" type="button" onclick="setManageDiagnosticsFilter('auto')">🔍 자동 진단 (${DIAG_ITEMS.length})</button>
+          <button class="filter-chip ${df === 'sim' ? 'active' : ''}" type="button" onclick="setManageDiagnosticsFilter('sim')">🎭 시뮬레이션</button>
+        </div>
+
+        ${showMaint ? `
+          ${buildManageAccordionBar({
+            key: 'diag_maint',
+            titleHtml: '🔧 정기 서버 점검 모드',
+            badgeHtml: `<span class="tag ${mActive ? 'red' : (mCfg.scheduled ? 'warm' : 'green')}">${mActive ? '🔴 점검 작동 중' : (mCfg.scheduled ? '⏰ 예약 대기' : '🟢 정상 운영 중')}</span>`,
+            defaultOpen: mActive || mCfg.scheduled || df === 'maint'
+          })}
+          <div data-acc-body="diag_maint" class="${maintOpen ? '' : 'hidden'}">
             <div class="card" style="${mActive ? 'border-color:#FCA5A5; background:#FEF2F2;' : ''}">
               <div class="setting-row" style="padding-top:0;">
                 <div>
@@ -20608,100 +20817,90 @@
               </div>
               <button id="saveMaintCfgBtn" class="btn-full btn-dark" type="button" style="padding:11px; font-size:13.5px;" onclick="handleSaveMaintenanceConfig()">💾 점검 설정 저장</button>
             </div>
-            <div class="manage-divider"></div>
-          `;
-        })()}
-
-        <div class="card" style="background:#ECFDF5; border-color:#6EE7B7; margin-bottom:12px; padding:11px 13px;">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
-            <div style="font-size:12px; color:#065F46; line-height:1.45; flex:1; min-width:180px;">
-              <b>${escapeHtml(getTabIcon('manageSecurity'))} 해킹 · 피싱 · 악성 링크 방어 점검</b>은 전용 <b>[${escapeHtml(getTabIcon('manageSecurity'))} ${escapeHtml(getTabLabel('manageSecurity'))}]</b> 탭에서 분리 관리합니다.
-            </div>
-            <button class="btn-sm approve" type="button" onclick="switchManageSubTab('security')">${escapeHtml(getTabIcon('manageSecurity'))} 이동</button>
           </div>
-        </div>
+        ` : ''}
 
-        ${buildManageSectionHead({
-          key: 'diag_center',
-          defaultTitle: `${getTabIcon('manageDiagnostics')} ${getTabLabel('manageDiagnostics')} 센터`,
-          rightHtml: `<span class="tag ${errCnt > 0 ? 'red' : (okCnt === DIAG_ITEMS.length ? 'green' : 'slate')}">정상 ${okCnt} · 주의 ${warnCnt} · 오류 ${errCnt}</span>`
-        })}
-
-        <div class="card" style="background:#0F172A; color:#fff; border-color:#1E293B;">
-          <div style="font-size:14.5px; font-weight:800; color:#FDE68A; margin-bottom:5px;">🚀 통합 일괄 점검 & 항목별 개별 테스트</div>
-          <div style="font-size:12px; color:#CBD5E1; line-height:1.5; margin-bottom:12px;">
-            전체 일괄 점검으로 앱 상태를 한 번에 확인하고, 문제가 발견된 항목은 아래 <b>개별 테스트</b> 버튼으로 원인을 바로 재확인할 수 있습니다.
-          </div>
-          <button id="runAllDiagBtn" class="btn-full btn-amber" type="button" style="padding:12px; font-size:14px;" ${diagRunningAll ? 'disabled' : ''} onclick="runAllDiagnostics()">
-            ${diagRunningAll ? '⏳ 전체 기능 일괄 점검 중...' : '🚀 전체 일괄 점검 실행 (5개 항목)'}
-          </button>
-        </div>
-
-        ${buildManageSectionHead({
-          key: 'diag_auto',
-          defaultTitle: '🔍 항목별 자동 진단',
-          rightHtml: '<span style="font-size:11.5px; color:#64748B;">개별 실행 가능</span>',
-          marginTop: '14px'
-        })}
-
-        ${DIAG_ITEMS.map(item => {
-          const res = diagResults[item.id] || { status: 'idle', msg: item.desc, ts: '' };
-          const badgeMap = {
-            idle: '<span class="tag slate">대기</span>',
-            running: '<span class="tag warm">점검 중...</span>',
-            ok: '<span class="tag green">✅ 정상</span>',
-            warn: '<span class="tag warm">⚠️ 주의</span>',
-            err: '<span class="tag red">❌ 오류</span>'
-          };
-          return `
-            <div class="diag-card ${res.status}">
-              <div class="layout-item-head">
-                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; min-width:0;">
-                  <strong style="font-size:13.5px; color:#0F172A;">${escapeHtml(item.title)}</strong>
-                  ${badgeMap[res.status] || badgeMap.idle}
-                </div>
-                <button class="btn-sm primary" type="button" style="white-space:nowrap;" onclick="runSingleDiagnostic('${item.id}')">개별 테스트</button>
+        ${showAuto ? `
+          ${buildManageAccordionBar({
+            key: 'diag_auto',
+            titleHtml: '🔍 통합 · 항목별 자동 진단',
+            badgeHtml: `<span class="tag ${errCnt > 0 ? 'red' : (okCnt === DIAG_ITEMS.length ? 'green' : 'slate')}">정상 ${okCnt} · 주의 ${warnCnt} · 오류 ${errCnt}</span>`,
+            defaultOpen: true,
+            marginTop: showMaint ? '10px' : ''
+          })}
+          <div data-acc-body="diag_auto" class="${autoOpen ? '' : 'hidden'}">
+            <div class="card" style="background:#0F172A; color:#fff; border-color:#1E293B;">
+              <div style="font-size:14.5px; font-weight:800; color:#FDE68A; margin-bottom:5px;">🚀 통합 일괄 점검 & 항목별 개별 테스트</div>
+              <div style="font-size:12px; color:#CBD5E1; line-height:1.5; margin-bottom:12px;">
+                전체 일괄 점검으로 앱 상태를 한 번에 확인하고, 문제가 발견된 항목은 아래 <b>개별 테스트</b> 버튼으로 원인을 바로 재확인할 수 있습니다.
               </div>
-              <div class="diag-msg">${escapeHtml(res.msg)}</div>
-              ${buildCheckAdviceHtml(res)}
-              ${res.ts ? `<div style="font-size:10.5px; color:#94A3B8; margin-top:4px;">최근 점검: ${escapeHtml(res.ts)}</div>` : ''}
+              <button id="runAllDiagBtn" class="btn-full btn-amber" type="button" style="padding:12px; font-size:14px;" ${diagRunningAll ? 'disabled' : ''} onclick="runAllDiagnostics()">
+                ${diagRunningAll ? '⏳ 전체 기능 일괄 점검 중...' : '🚀 전체 일괄 점검 실행 (5개 항목)'}
+              </button>
             </div>
-          `;
-        }).join('')}
+            ${DIAG_ITEMS.map(item => {
+              const res = diagResults[item.id] || { status: 'idle', msg: item.desc, ts: '' };
+              const badgeMap = {
+                idle: '<span class="tag slate">대기</span>',
+                running: '<span class="tag warm">점검 중...</span>',
+                ok: '<span class="tag green">✅ 정상</span>',
+                warn: '<span class="tag warm">⚠️ 주의</span>',
+                err: '<span class="tag red">❌ 오류</span>'
+              };
+              return `
+                <div class="diag-card ${res.status}">
+                  <div class="layout-item-head">
+                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; min-width:0;">
+                      <strong style="font-size:13.5px; color:#0F172A;">${escapeHtml(item.title)}</strong>
+                      ${badgeMap[res.status] || badgeMap.idle}
+                    </div>
+                    <button class="btn-sm primary" type="button" style="white-space:nowrap;" onclick="runSingleDiagnostic('${item.id}')">개별 테스트</button>
+                  </div>
+                  <div class="diag-msg">${escapeHtml(res.msg)}</div>
+                  ${buildCheckAdviceHtml(res)}
+                  ${res.ts ? `<div style="font-size:10.5px; color:#94A3B8; margin-top:4px;">최근 점검: ${escapeHtml(res.ts)}</div>` : ''}
+                </div>
+              `;
+            }).join('')}
+          </div>
+        ` : ''}
 
-        <div class="manage-divider"></div>
-
-        ${buildManageSectionHead({
-          key: 'diag_sim',
-          defaultTitle: '🎭 안전 화면 · 흐름 시뮬레이션',
-          rightHtml: '<span class="tag green">실제 데이터 무영향</span>'
-        })}
-        <div class="info-box" style="margin-top:0; margin-bottom:10px;">
-          아래 체험 테스트는 <b>내 화면에서만 안전하게 실행</b>되며, 실제 청년부원에게 알림이 가거나 DB 기록이 오염되지 않습니다.
-        </div>
-        <div class="diag-sim-grid" style="margin-bottom:12px;">
-          <button class="diag-sim-btn" type="button" onclick="toggleMemberPreviewMode(true)">
-            <div style="font-size:18px; margin-bottom:4px;">👁️</div>
-            <div style="font-size:13px; font-weight:800;">일반 회원 시점 미리보기</div>
-            <div style="font-size:11px; color:#64748B; margin-top:2px;">관리자 전용 칸·관리 탭 숨김 확인</div>
-          </button>
-          <button class="diag-sim-btn" type="button" onclick="openDiagSimAttendance()">
-            <div style="font-size:18px; margin-bottom:4px;">✅</div>
-            <div style="font-size:13px; font-weight:800;">출석 · 중복 차단 체험</div>
-            <div style="font-size:11px; color:#64748B; margin-top:2px;">완료 안내·숨김·중복 경고 확인</div>
-          </button>
-          <button class="diag-sim-btn" type="button" onclick="openDiagSimQrGate()">
-            <div style="font-size:18px; margin-bottom:4px;">📲</div>
-            <div style="font-size:13px; font-weight:800;">QR 가입/만료 화면 체험</div>
-            <div style="font-size:11px; color:#64748B; margin-top:2px;">유효 QR vs 만료 차단 화면 확인</div>
-          </button>
-          <button class="diag-sim-btn" type="button" onclick="openDiagSimCelebration()">
-            <div style="font-size:18px; margin-bottom:4px;">💐</div>
-            <div style="font-size:13px; font-weight:800;">새신자 배너 체험</div>
-            <div style="font-size:11px; color:#64748B; margin-top:2px;">환영 배너·팝업 알림 미리보기</div>
-          </button>
-        </div>
-
+        ${showSim ? `
+          ${buildManageAccordionBar({
+            key: 'diag_sim',
+            titleHtml: '🎭 안전 화면 · 흐름 시뮬레이션',
+            badgeHtml: '<span class="tag green">실제 데이터 무영향</span>',
+            defaultOpen: df === 'sim',
+            marginTop: (showMaint || showAuto) ? '10px' : ''
+          })}
+          <div data-acc-body="diag_sim" class="${simOpen ? '' : 'hidden'}">
+            <div class="info-box" style="margin-top:0; margin-bottom:10px;">
+              아래 체험 테스트는 <b>내 화면에서만 안전하게 실행</b>되며, 실제 청년부원에게 알림이 가거나 DB 기록이 오염되지 않습니다.
+            </div>
+            <div class="diag-sim-grid" style="margin-bottom:12px;">
+              <button class="diag-sim-btn" type="button" onclick="toggleMemberPreviewMode(true)">
+                <div style="font-size:18px; margin-bottom:4px;">👁️</div>
+                <div style="font-size:13px; font-weight:800;">일반 회원 시점 미리보기</div>
+                <div style="font-size:11px; color:#64748B; margin-top:2px;">관리자 전용 칸·관리 탭 숨김 확인</div>
+              </button>
+              <button class="diag-sim-btn" type="button" onclick="openDiagSimAttendance()">
+                <div style="font-size:18px; margin-bottom:4px;">✅</div>
+                <div style="font-size:13px; font-weight:800;">출석 · 중복 차단 체험</div>
+                <div style="font-size:11px; color:#64748B; margin-top:2px;">완료 안내·숨김·중복 경고 확인</div>
+              </button>
+              <button class="diag-sim-btn" type="button" onclick="openDiagSimQrGate()">
+                <div style="font-size:18px; margin-bottom:4px;">📲</div>
+                <div style="font-size:13px; font-weight:800;">QR 가입/만료 화면 체험</div>
+                <div style="font-size:11px; color:#64748B; margin-top:2px;">유효 QR vs 만료 차단 화면 확인</div>
+              </button>
+              <button class="diag-sim-btn" type="button" onclick="openDiagSimCelebration()">
+                <div style="font-size:18px; margin-bottom:4px;">💐</div>
+                <div style="font-size:13px; font-weight:800;">새신자 배너 체험</div>
+                <div style="font-size:11px; color:#64748B; margin-top:2px;">환영 배너·팝업 알림 미리보기</div>
+              </button>
+            </div>
+          </div>
+        ` : ''}
       `;
     }
 
@@ -21573,6 +21772,16 @@
       });
     }
 
+    window.setManageSecurityFilter = (f) => {
+      manageSecurityFilter = ['all', 'checks', 'defense', 'tester', 'threats'].includes(f) ? f : 'all';
+      const accMap = { checks: 'sec_check_list', defense: 'sec_defense_cfg', tester: 'sec_url_tester', threats: 'sec_threat_feed' };
+      if (accMap[manageSecurityFilter]) manageSectionOpen[accMap[manageSecurityFilter]] = true;
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'security') {
+        renderManageSecurity(document.getElementById('manageContent'), u);
+      }
+    };
+
     function renderManageSecurity(el, user) {
       const cfg = securityConfig || DEFAULT_SECURITY_CONFIG;
       const okCnt = SEC_CHECK_ITEMS.filter(it => secCheckResults[it.id] && secCheckResults[it.id].status === 'ok').length;
@@ -21580,10 +21789,15 @@
       const errCnt = SEC_CHECK_ITEMS.filter(it => secCheckResults[it.id] && secCheckResults[it.id].status === 'err').length;
 
       const threatLogs = getRecentSecurityThreatLogs();
+      const secf = manageSecurityFilter || 'all';
+      const showChecks = secf === 'all' || secf === 'checks';
+      const showDefense = secf === 'all' || secf === 'defense';
+      const showTester = secf === 'all' || secf === 'tester';
+      const showThreats = secf === 'all' || secf === 'threats';
       const defenseOpen = isManageSectionOpen('sec_defense_cfg', true);
-      const testerOpen = isManageSectionOpen('sec_url_tester', false);
+      const testerOpen = isManageSectionOpen('sec_url_tester', secf === 'tester');
       const checksOpen = isManageSectionOpen('sec_check_list', true);
-      const threatsOpen = isManageSectionOpen('sec_threat_feed', threatLogs.length > 0 && threatLogs.length <= 5);
+      const threatsOpen = isManageSectionOpen('sec_threat_feed', (threatLogs.length > 0 && threatLogs.length <= 5) || secf === 'threats');
 
       el.innerHTML = `
         <div class="sec-hero-card">
@@ -21620,6 +21834,15 @@
           </div>
         </div>
 
+        <div class="filter-row" style="margin-bottom:10px;">
+          <button class="filter-chip ${secf === 'all' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('all')">전체</button>
+          <button class="filter-chip ${secf === 'checks' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('checks')">🔍 7개 보안 진단</button>
+          <button class="filter-chip ${secf === 'defense' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('defense')">🚧 실시간 방어</button>
+          <button class="filter-chip ${secf === 'tester' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('tester')">🔎 링크 검사기</button>
+          <button class="filter-chip ${secf === 'threats' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('threats')">🚨 위협 기록 (${threatLogs.length})</button>
+        </div>
+
+        ${showChecks ? `
         <!-- 1) 7개 보안 항목 점검 -->
         ${buildManageAccordionBar({
           key: 'sec_check_list',
@@ -21654,11 +21877,13 @@
           }).join('')}
         </div>
 
-        <div class="manage-divider"></div>
+        ` : ''}
 
+        ${showDefense ? `
         <!-- 2) 실시간 차단 · 방어 정책 스위치 -->
         ${buildManageAccordionBar({
           key: 'sec_defense_cfg',
+          marginTop: showChecks ? '10px' : '',
           titleHtml: '🚧 실시간 공격 차단 · 방어 설정',
           badgeHtml: '<span class="tag green">실시간 적용</span>',
           defaultOpen: true
@@ -21720,11 +21945,13 @@
           </div>
         </div>
 
-        <div class="manage-divider"></div>
+        ` : ''}
 
+        ${showTester ? `
         <!-- 3) 의심 링크 · 악성 문구 즉시 검사기 -->
         ${buildManageAccordionBar({
           key: 'sec_url_tester',
+          marginTop: (showChecks || showDefense) ? '10px' : '',
           titleHtml: '🔎 의심 링크 · 문구 즉시 검사기',
           badgeHtml: '<span class="tag slate">안전 모의검사</span>',
           defaultOpen: false
@@ -21743,11 +21970,13 @@
           </div>
         </div>
 
-        <div class="manage-divider"></div>
+        ` : ''}
 
+        ${showThreats ? `
         <!-- 4) 최근 보안 위협 · 차단 이벤트 -->
         ${buildManageAccordionBar({
           key: 'sec_threat_feed',
+          marginTop: (showChecks || showDefense || showTester) ? '10px' : '',
           titleHtml: '🚨 최근 보안 위협 · 차단 기록',
           badgeHtml: `<span class="tag ${threatLogs.length > 0 ? 'warm' : 'green'}">${threatLogs.length}건</span>`,
           actionHtml: `<button class="btn-sm primary" type="button" onclick="switchManageSubTab('logs')">${escapeHtml(getTabLabel('manageLogs'))} 보기</button>`,
@@ -21770,8 +21999,9 @@
                 </div>
               `).join('')}
         </div>
+        ` : ''}
 
-        <div class="info-box" style="margin-top:8px;">
+        <div class="info-box" style="margin-top:10px;">
           ℹ️ <b>웹 앱 보안 범위 안내:</b> 본 앱은 설치 파일(.apk/.exe)과 첨부파일 업로드가 없는 브라우저 격리(PWA) 방식으로 바이러스 유입 경로가 원천 차단되어 있습니다. 기기 자체 파일의 백신 검사는 스마트폰 기본 보안 기능을 함께 활용해 주세요.
         </div>
       `;
@@ -22967,7 +23197,9 @@
     };
 
     window.setAdminInquiryFilter = (f) => {
-      adminInquiryFilter = f;
+      adminInquiryFilter = ['all', 'unresolved', 'resolved'].includes(f) ? f : 'all';
+      if (adminInquiryFilter === 'unresolved') manageSectionOpen['inq_unresolved'] = true;
+      if (adminInquiryFilter === 'resolved') manageSectionOpen['inq_resolved'] = true;
       const u = getCurrentUser();
       if (u && currentMainTab === 'manage' && currentManageSubTab === 'inquiries') {
         renderManageInquiries(document.getElementById('manageContent'), u);
@@ -22975,13 +23207,60 @@
     };
 
     function renderManageInquiries(el, user) {
-      const unresolvedCnt = inquiries.filter(q => !isInquiryResolved(q)).length;
-      const resolvedCnt = inquiries.filter(q => isInquiryResolved(q)).length;
-      const filtered = inquiries.filter(q => {
-        if (adminInquiryFilter === 'unresolved') return !isInquiryResolved(q);
-        if (adminInquiryFilter === 'resolved') return isInquiryResolved(q);
-        return true;
-      });
+      const unresolvedList = inquiries.filter(q => !isInquiryResolved(q));
+      const resolvedList = inquiries.filter(q => isInquiryResolved(q));
+      const unresolvedCnt = unresolvedList.length;
+      const resolvedCnt = resolvedList.length;
+      const f = adminInquiryFilter || 'all';
+      const showUnresolved = f === 'all' || f === 'unresolved';
+      const showResolved = f === 'all' || f === 'resolved';
+      const unresolvedOpen = isManageSectionOpen('inq_unresolved', unresolvedCnt > 0 || f === 'unresolved');
+      const resolvedOpen = isManageSectionOpen('inq_resolved', resolvedCnt > 0 && unresolvedCnt === 0 || f === 'resolved');
+
+      const buildInquiryCardHtml = (q) => {
+        const isNew = q.status === 'new';
+        const resolved = isInquiryResolved(q);
+        return `
+          <div class="card ${!resolved ? 'highlight-pending' : ''}">
+            <div class="card-top">
+              <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+                <span class="tag slate">${escapeHtml(q.category || '의견')}</span>
+                ${resolved ? '<span class="tag green">✅ 해결됨</span>' : (isNew ? '<span class="tag red">🆕 미확인 · 미해결</span>' : '<span class="tag warm">👀 확인됨 · 미해결</span>')}
+                ${q.edited ? '<span class="tag slate" style="font-size:10px;">수정됨</span>' : ''}
+              </div>
+            </div>
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:8px 10px; margin-bottom:8px; font-size:12px; color:#334155; line-height:1.55;">
+              <div>👤 <b>작성자:</b> ${escapeHtml(q.authorName || '회원')} <span style="color:#64748B;">(${escapeHtml(q.roleName || '청년')})</span></div>
+              <div>🕒 <b>접수 일시:</b> ${escapeHtml(q.createdAt || '-')}</div>
+              ${q.edited && q.updatedAt ? `<div>✏️ <b>수정 일시:</b> ${escapeHtml(q.updatedAt)}</div>` : ''}
+            </div>
+            <div style="font-size:14.5px; font-weight:800; color:#0F172A; margin-bottom:5px;">${escapeHtml(q.title || '')}</div>
+            <div class="card-body">${escapeHtml(q.body || '')}</div>
+            ${q.reply ? `
+              <div class="inquiry-reply-box">
+                <div style="font-weight:800; margin-bottom:3px;">💬 관리자 답변 (${escapeHtml(q.replyBy || '관리자')} · ${escapeHtml(q.replyAt || '')})</div>
+                <div>${escapeHtml(q.reply)}</div>
+              </div>
+            ` : (resolved ? `
+              <div class="inquiry-reply-box">
+                <div style="font-weight:800;">✅ 해결 완료 처리됨 (${escapeHtml(q.resolvedBy || '관리자')} · ${escapeHtml(q.resolvedAt || '')})</div>
+              </div>
+            ` : '')}
+            <div class="card-footer">
+              <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                ${isNew ? `<button class="btn-sm" type="button" onclick="markInquiryRead('${escapeJsAttr(q.id)}')">👀 읽음</button>` : ''}
+                <button class="btn-sm primary" type="button" onclick="openAdminInquiryReplyModal('${escapeJsAttr(q.id)}')">✍️ ${q.reply ? '답변 수정' : '답변 달기'}</button>
+                ${!resolved
+                  ? `<button class="btn-sm approve" type="button" onclick="toggleInquiryResolvedByAdmin('${escapeJsAttr(q.id)}', true)">✅ 해결 완료</button>`
+                  : `<button class="btn-sm" type="button" onclick="toggleInquiryResolvedByAdmin('${escapeJsAttr(q.id)}', false)">↩️ 미해결로</button>`}
+              </div>
+              ${resolved
+                ? `<button class="btn-sm danger" type="button" onclick="deleteInquiryByAdmin('${escapeJsAttr(q.id)}')">삭제</button>`
+                : `<button class="btn-sm" type="button" disabled title="해결 완료된 문의만 삭제할 수 있습니다">해결 후 삭제</button>`}
+            </div>
+          </div>
+        `;
+      };
 
       el.innerHTML = `
         ${buildManageSectionHead({
@@ -23005,57 +23284,39 @@
         ` : ''}
 
         <div class="filter-row" style="margin-bottom:10px;">
-          <button class="filter-chip ${adminInquiryFilter === 'all' ? 'active' : ''}" type="button" onclick="setAdminInquiryFilter('all')">전체 (${inquiries.length})</button>
-          <button class="filter-chip ${adminInquiryFilter === 'unresolved' ? 'active' : ''}" type="button" onclick="setAdminInquiryFilter('unresolved')">🔴 미해결 (${unresolvedCnt})</button>
-          <button class="filter-chip ${adminInquiryFilter === 'resolved' ? 'active' : ''}" type="button" onclick="setAdminInquiryFilter('resolved')">✅ 해결됨 (${resolvedCnt})</button>
+          <button class="filter-chip ${f === 'all' ? 'active' : ''}" type="button" onclick="setAdminInquiryFilter('all')">전체 (${inquiries.length})</button>
+          <button class="filter-chip ${f === 'unresolved' ? 'active' : ''} ${unresolvedCnt > 0 ? 'has-badge' : ''}" type="button" onclick="setAdminInquiryFilter('unresolved')">🔴 미해결 (${unresolvedCnt})</button>
+          <button class="filter-chip ${f === 'resolved' ? 'active' : ''}" type="button" onclick="setAdminInquiryFilter('resolved')">✅ 해결됨 (${resolvedCnt})</button>
         </div>
 
-        ${filtered.length === 0
-          ? '<div class="card" style="text-align:center; color:#64748B; font-size:13px; padding:26px 12px;">표시할 문의 사항이 없습니다.</div>'
-          : filtered.map(q => {
-              const isNew = q.status === 'new';
-              const resolved = isInquiryResolved(q);
-              return `
-                <div class="card ${!resolved ? 'highlight-pending' : ''}">
-                  <div class="card-top">
-                    <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                      <span class="tag slate">${escapeHtml(q.category || '의견')}</span>
-                      ${resolved ? '<span class="tag green">✅ 해결됨</span>' : (isNew ? '<span class="tag red">🆕 미확인 · 미해결</span>' : '<span class="tag warm">👀 확인됨 · 미해결</span>')}
-                      ${q.edited ? '<span class="tag slate" style="font-size:10px;">수정됨</span>' : ''}
-                    </div>
-                  </div>
-                  <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:8px 10px; margin-bottom:8px; font-size:12px; color:#334155; line-height:1.55;">
-                    <div>👤 <b>작성자:</b> ${escapeHtml(q.authorName || '회원')} <span style="color:#64748B;">(${escapeHtml(q.roleName || '청년')})</span></div>
-                    <div>🕒 <b>접수 일시:</b> ${escapeHtml(q.createdAt || '-')}</div>
-                    ${q.edited && q.updatedAt ? `<div>✏️ <b>수정 일시:</b> ${escapeHtml(q.updatedAt)}</div>` : ''}
-                  </div>
-                  <div style="font-size:14.5px; font-weight:800; color:#0F172A; margin-bottom:5px;">${escapeHtml(q.title || '')}</div>
-                  <div class="card-body">${escapeHtml(q.body || '')}</div>
-                  ${q.reply ? `
-                    <div class="inquiry-reply-box">
-                      <div style="font-weight:800; margin-bottom:3px;">💬 관리자 답변 (${escapeHtml(q.replyBy || '관리자')} · ${escapeHtml(q.replyAt || '')})</div>
-                      <div>${escapeHtml(q.reply)}</div>
-                    </div>
-                  ` : (resolved ? `
-                    <div class="inquiry-reply-box">
-                      <div style="font-weight:800;">✅ 해결 완료 처리됨 (${escapeHtml(q.resolvedBy || '관리자')} · ${escapeHtml(q.resolvedAt || '')})</div>
-                    </div>
-                  ` : '')}
-                  <div class="card-footer">
-                    <div style="display:flex; gap:5px; flex-wrap:wrap;">
-                      ${isNew ? `<button class="btn-sm" type="button" onclick="markInquiryRead('${escapeJsAttr(q.id)}')">👀 읽음</button>` : ''}
-                      <button class="btn-sm primary" type="button" onclick="openAdminInquiryReplyModal('${escapeJsAttr(q.id)}')">✍️ ${q.reply ? '답변 수정' : '답변 달기'}</button>
-                      ${!resolved
-                        ? `<button class="btn-sm approve" type="button" onclick="toggleInquiryResolvedByAdmin('${escapeJsAttr(q.id)}', true)">✅ 해결 완료</button>`
-                        : `<button class="btn-sm" type="button" onclick="toggleInquiryResolvedByAdmin('${escapeJsAttr(q.id)}', false)">↩️ 미해결로</button>`}
-                    </div>
-                    ${resolved
-                      ? `<button class="btn-sm danger" type="button" onclick="deleteInquiryByAdmin('${escapeJsAttr(q.id)}')">삭제</button>`
-                      : `<button class="btn-sm" type="button" disabled title="해결 완료된 문의만 삭제할 수 있습니다">해결 후 삭제</button>`}
-                  </div>
-                </div>
-              `;
-            }).join('')}
+        ${showUnresolved ? `
+          ${buildManageAccordionBar({
+            key: 'inq_unresolved',
+            titleHtml: '🔴 미해결 문의',
+            badgeHtml: `<span class="tag ${unresolvedCnt > 0 ? 'red' : 'slate'}">${unresolvedCnt}건</span>`,
+            defaultOpen: unresolvedCnt > 0 || f === 'unresolved'
+          })}
+          <div data-acc-body="inq_unresolved" class="${unresolvedOpen ? '' : 'hidden'}">
+            ${unresolvedList.length === 0
+              ? '<div class="card" style="text-align:center; color:#64748B; font-size:12.5px; padding:18px 12px;">미해결 문의 사항이 없습니다.</div>'
+              : unresolvedList.map(buildInquiryCardHtml).join('')}
+          </div>
+        ` : ''}
+
+        ${showResolved ? `
+          ${buildManageAccordionBar({
+            key: 'inq_resolved',
+            titleHtml: '✅ 해결된 문의',
+            badgeHtml: `<span class="tag green">${resolvedCnt}건</span>`,
+            defaultOpen: (resolvedCnt > 0 && unresolvedCnt === 0) || f === 'resolved',
+            marginTop: showUnresolved ? '10px' : ''
+          })}
+          <div data-acc-body="inq_resolved" class="${resolvedOpen ? '' : 'hidden'}">
+            ${resolvedList.length === 0
+              ? '<div class="card" style="text-align:center; color:#64748B; font-size:12.5px; padding:18px 12px;">해결 완료된 문의 사항이 없습니다.</div>'
+              : resolvedList.map(buildInquiryCardHtml).join('')}
+          </div>
+        ` : ''}
       `;
     }
 
@@ -25519,15 +25780,31 @@ ${handleUrl}`);
       }
     };
 
+    window.setManageVideosFilter = (f) => {
+      manageVideosFilter = ['all', 'pending', 'channels', 'perm', 'approved'].includes(f) ? f : 'all';
+      const accMap = { pending: 'vid_pending', channels: 'vid_channels', perm: 'vid_perm', approved: 'vid_approved' };
+      if (accMap[manageVideosFilter]) manageSectionOpen[accMap[manageVideosFilter]] = true;
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'videos') {
+        renderManageVideos(document.getElementById('manageContent'), u);
+      }
+    };
+
     // --- 관리자 [🎬 영상 관리] 탭 ---
     function renderManageVideos(el, user) {
       const pending = (videoItems || []).filter(v => v.status === 'pending');
       const approved = (videoItems || []).filter(v => v.status === 'approved');
       const cfg = videoSettings || DEFAULT_VIDEO_SETTINGS;
       const hiddenDefs = DEFAULT_OFFICIAL_YT_CHANNELS.filter(d => (hiddenDefaultYtChannelIds || []).includes(String(d.id)));
-      const permOpen = isManageSectionOpen('vid_perm', false);
+      const vf = manageVideosFilter || 'all';
+      const showPending = vf === 'all' || vf === 'pending';
+      const showChannels = vf === 'all' || vf === 'channels';
+      const showPerm = vf === 'all' || vf === 'perm';
+      const showApproved = vf === 'all' || vf === 'approved';
+      const pendingOpen = isManageSectionOpen('vid_pending', pending.length > 0 || vf === 'pending');
+      const permOpen = isManageSectionOpen('vid_perm', vf === 'perm');
       const chOpen = isManageSectionOpen('vid_channels', true);
-      const approvedOpen = isManageSectionOpen('vid_approved', approved.length <= 5);
+      const approvedOpen = isManageSectionOpen('vid_approved', approved.length <= 5 || vf === 'approved');
 
       el.innerHTML = `
         ${buildManageSectionHead({
@@ -25535,7 +25812,7 @@ ${handleUrl}`);
           defaultTitle: `${getTabIcon('manageVideos')} ${getTabLabel('manageVideos')}`,
           rightHtml: '<button class="btn-admin" type="button" onclick="openVideoSubmitModal()">+ 영상 등록</button>'
         })}
-        <div class="info-box" style="margin-top:0; margin-bottom:12px;">
+        <div class="info-box" style="margin-top:0; margin-bottom:10px;">
           • <b>구미제일감리교회 유튜브</b>와 <b>라이트 청년부</b> 채널이 공식 채널로 자동 등록되어 있습니다.<br>
           • <b>모든 영상은 공식 채널이라도 등록 전 4단계 보안·실존·위험 문구 검사를 똑같이 거칩니다.</b><br>
           • 미등록 채널 영상이 접수되면 아래 검토 대기 목록에 올라오며, <b>[⭐ 승인 + 공식 채널 추가]</b>를 누르면 다음부터 자동 게시됩니다.
@@ -25550,14 +25827,23 @@ ${handleUrl}`);
           </div>
         ` : ''}
 
+        <div class="filter-row" style="margin-bottom:10px;">
+          <button class="filter-chip ${vf === 'all' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('all')">전체</button>
+          <button class="filter-chip ${vf === 'pending' ? 'active' : ''} ${pending.length > 0 ? 'has-badge' : ''}" type="button" onclick="setManageVideosFilter('pending')">🔴 검토 대기 (${pending.length})</button>
+          <button class="filter-chip ${vf === 'channels' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('channels')">✅ 공식 채널 (${officialYtChannels.length})</button>
+          <button class="filter-chip ${vf === 'perm' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('perm')">⚙️ 권한 · 표시</button>
+          <button class="filter-chip ${vf === 'approved' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('approved')">🎬 게시된 영상 (${approved.length})</button>
+        </div>
+
+        ${showPending ? `
         <!-- 1) 미등록 채널 검토 대기 영상 -->
-        ${buildManageSectionHead({
+        ${buildManageAccordionBar({
           key: 'vid_pending',
-          tag: 'h3',
-          defaultTitle: '🔴 검토 대기 영상',
-          rightHtml: `<span class="tag ${pending.length > 0 ? 'red' : 'green'}">${pending.length > 0 ? `${pending.length}건 대기중` : '대기 없음'}</span>`,
-          marginTop: '4px'
+          titleHtml: '🔴 검토 대기 영상',
+          badgeHtml: `<span class="tag ${pending.length > 0 ? 'red' : 'green'}">${pending.length > 0 ? `${pending.length}건 대기중` : '대기 없음'}</span>`,
+          defaultOpen: pending.length > 0 || vf === 'pending'
         })}
+        <div data-acc-body="vid_pending" class="${pendingOpen ? '' : 'hidden'}">
         ${pending.length === 0
           ? '<div class="card" style="text-align:center; color:#64748B; font-size:12.5px; padding:18px 12px;">검토 대기 중인 미등록 채널 영상이 없습니다.</div>'
           : pending.map(v => `
@@ -25595,11 +25881,14 @@ ${handleUrl}`);
               </div>
             `).join('')}
 
-        <div class="manage-divider"></div>
+        </div>
+        ` : ''}
 
+        ${showChannels ? `
         <!-- 2) 공식 채널 화이트리스트 관리 -->
         ${buildManageAccordionBar({
           key: 'vid_channels',
+          marginTop: showPending ? '10px' : '',
           titleHtml: '✅ 공식 유튜브 채널 목록 (자동 게시 화이트리스트)',
           badgeHtml: `<span class="tag green">${officialYtChannels.length}곳</span>`,
           actionHtml: '<button class="btn-admin" type="button" style="padding:6px 10px; font-size:11.5px;" onclick="openOfficialChannelModal()">+ 채널 추가</button>',
@@ -25636,11 +25925,13 @@ ${handleUrl}`);
           `).join('')}
         </div>
 
-        <div class="manage-divider"></div>
+        ` : ''}
 
+        ${showPerm ? `
         <!-- 3) 영상 추천 권한 & 홈 화면 표시 설정 -->
         ${buildManageAccordionBar({
           key: 'vid_perm',
+          marginTop: (showPending || showChannels) ? '10px' : '',
           titleHtml: '⚙️ 영상 추천 권한 · 홈 표시 설정',
           badgeHtml: `<span class="tag slate">${cfg.submitAudience === 'all' ? '전체 회원' : (cfg.submitAudience === 'admin' ? '관리자만' : `선택 역할 ${(cfg.submitTargetRoles || []).length}개`)}</span>`,
           defaultOpen: false
@@ -25683,11 +25974,13 @@ ${handleUrl}`);
           </div>
         </div>
 
-        <div class="manage-divider"></div>
+        ` : ''}
 
+        ${showApproved ? `
         <!-- 4) 게시된 영상 목록 -->
         ${buildManageAccordionBar({
           key: 'vid_approved',
+          marginTop: (showPending || showChannels || showPerm) ? '10px' : '',
           titleHtml: '🎬 게시된 설교 · 찬양 영상 목록',
           badgeHtml: `<span class="tag slate">${approved.length}건</span>`,
           defaultOpen: approved.length <= 5
@@ -25718,6 +26011,7 @@ ${handleUrl}`);
                 </div>
               `).join('')}
         </div>
+        ` : ''}
       `;
     }
 
