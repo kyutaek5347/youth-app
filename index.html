@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=232" />
+  <link rel="manifest" href="./manifest.json?v=233" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=232" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=232" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=233" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=233" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4000,7 +4000,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=232" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=233" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5826,7 +5826,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 31;
-    const APP_CLIENT_BUILD = 232;
+    const APP_CLIENT_BUILD = 233;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -6824,7 +6824,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=232" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=233" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6848,8 +6848,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=232', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=232', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=233', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=233', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -33464,8 +33464,16 @@ ${handleUrl}`);
     };
 
 
-    // ==================== 24. 통합 탭 좌우 슬라이드 엔진 (전 화면 공통 · 수동 스와이프 + 배너형 인디케이터) ====================
+    // ==================== 24. 통합 탭 좌우 슬라이드 엔진 (전 화면 수동 스와이프 · 핵심 콘텐츠 6곳만 배너형 인디케이터 표시) ====================
     const TAB_SLIDE_BAR_SELECTOR = '.filter-row:not([data-ts-skip="1"]), .sub-tabs:not([data-ts-skip="1"]), .role-member-tabs:not([data-ts-skip="1"]), .sermon-subtab-row:not([data-ts-skip="1"]), .auth-tabs:not([data-ts-skip="1"]), .modal-tabs-2:not([data-ts-skip="1"])';
+    const TAB_SLIDE_SHOW_CTRL_KEYS = new Set([
+      'home_notice',
+      'home_videos',
+      'sermon_sub',
+      'ccm_sub',
+      'videos_cat',
+      'bylaws_ch'
+    ]);
     let tabSlideSyncQueued = false;
     let tabSlideSyncingDom = false;
     let pendingTabSlideAnim = null;
@@ -33578,8 +33586,15 @@ ${handleUrl}`);
         ? slotEl.querySelector(`.tab-slide-controls[data-ts-for="${key}"]`)
         : ((nextSib && nextSib.classList && nextSib.classList.contains('tab-slide-controls') && nextSib.dataset.tsFor === key) ? nextSib : null);
 
-      if (total <= 1) {
+      const showCtrlBar = TAB_SLIDE_SHOW_CTRL_KEYS.has(key);
+      if (total <= 1 || !showCtrlBar) {
         if (existingCtrl) existingCtrl.remove();
+        if (pendingTabSlideAnim && pendingTabSlideAnim.uid === key && (Date.now() - pendingTabSlideAnim.ts) < 900) {
+          const dir = pendingTabSlideAnim.dir;
+          pendingTabSlideAnim = null;
+          const bodyEl = getTabSlideBodyEl(barEl);
+          playTabSlideEnterAnim(bodyEl, dir);
+        }
         return;
       }
 
@@ -33634,7 +33649,7 @@ ${handleUrl}`);
         document.querySelectorAll('.tab-slide-controls[data-ts-for]').forEach(ctrl => {
           const k = ctrl.dataset.tsFor;
           const bar = findTabSlideBarByKey(k);
-          if (!bar || !isTabSlideBarVisible(bar) || getTabSlideButtons(bar).length <= 1) {
+          if (!TAB_SLIDE_SHOW_CTRL_KEYS.has(k) || !bar || !isTabSlideBarVisible(bar) || getTabSlideButtons(bar).length <= 1) {
             ctrl.remove();
           }
         });
