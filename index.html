@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=211" />
+  <link rel="manifest" href="./manifest.json?v=212" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=211" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=211" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=212" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=212" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3617,7 +3617,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=211" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=212" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5291,8 +5291,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 211;
-    const SHEET_SCHEMA_VERSION = 'v10.109-10tab';
+    const APP_CLIENT_BUILD = 212;
+    const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
       { id: 'members', name: '회원 명단', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '성명·역할·가입일·상태·이전이름 (생일 열 폐기)' },
@@ -5309,6 +5309,13 @@
       { name: '생일 변경 로그', removedIn: 'v10.69', reason: '생년월일 기능 폐기 및 개인정보 최소화 (회원 명단 생년월일 열 포함)' }
     ];
     const SHEET_SCHEMA_CHANGELOG = [
+      {
+        version: 'v10.112',
+        date: '2026.11.26',
+        added: [],
+        removed: [],
+        changed: ['Apps Script 일괄 처리(배치) 고속 최적화로 20초 시간 초과 해결', '연동 주소 저장 시 경량 연결 검증 + 미반영분만 전송하도록 개선', '수동 전체 동기화·재정비 대기 시간 60초 확대 및 잠금 충돌 제거']
+      },
       {
         version: 'v10.109',
         date: '2026.11.26',
@@ -6257,7 +6264,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=211" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=212" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6281,8 +6288,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=211', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=211', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=212', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=212', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -18675,8 +18682,19 @@
       let syncedCount = 0;
       try {
         const ordered = [...toSync].sort((a, b) => Number(a.ts || 0) - Number(b.ts || 0));
+        if (ordered.length > 1) {
+          const payloads = ordered.map(item => buildAuditLogSheetPayload(sanitizeAuditLogEntry(item)));
+          const batchRes = await postToGoogleSheet({ action: 'sync_all', auditLogs: payloads }, url, true, 55000);
+          if (batchRes && batchRes.ok) {
+            for (const item of ordered) {
+              await db.collection('auditLogs').doc(String(item.id)).update({ sheetSynced: true }).catch(() => {});
+              syncedCount++;
+            }
+            return syncedCount;
+          }
+        }
         for (const item of ordered) {
-          const ok = await postToGoogleSheet(buildAuditLogSheetPayload(sanitizeAuditLogEntry(item)), url);
+          const ok = await postToGoogleSheet(buildAuditLogSheetPayload(sanitizeAuditLogEntry(item)), url, false, 25000);
           if (ok) {
             await db.collection('auditLogs').doc(String(item.id)).update({ sheetSynced: true }).catch(() => {});
             syncedCount++;
@@ -18701,11 +18719,20 @@
       try {
         const syncedIds = new Set();
         const ordered = [...toSync].sort((a, b) => Number(a.ts || 0) - Number(b.ts || 0));
-        for (const item of ordered) {
-          const ok = await postToGoogleSheet(buildRenameSheetPayload(item), url);
-          if (ok) {
-            syncedIds.add(String(item.id));
-            syncedCount++;
+        if (ordered.length > 1) {
+          const payloads = ordered.map(item => buildRenameSheetPayload(item));
+          const batchRes = await postToGoogleSheet({ action: 'sync_all', auditLogs: payloads }, url, true, 55000);
+          if (batchRes && batchRes.ok) {
+            ordered.forEach(item => { syncedIds.add(String(item.id)); syncedCount++; });
+          }
+        }
+        if (syncedIds.size === 0) {
+          for (const item of ordered) {
+            const ok = await postToGoogleSheet(buildRenameSheetPayload(item), url, false, 25000);
+            if (ok) {
+              syncedIds.add(String(item.id));
+              syncedCount++;
+            }
           }
         }
         if (syncedIds.size > 0) {
@@ -18741,18 +18768,22 @@
         const merged = getMergedAuditLogs();
         const unsynced = merged.filter(l => l && l.sheetSynced !== true);
         if (unsynced.length === 0) {
-          setInlineSaveStatus('sheet_sync', 'loading', '⏳ 로그 동기화 상태를 확인하는 중입니다...');
-          const res = await postToGoogleSheet(buildFullSheetSyncPayload(), url, true);
+          setInlineSaveStatus('sheet_sync', 'loading', '⏳ 구글 시트 연결 및 로그 상태를 가볍게 확인하는 중입니다...');
+          const res = await postToGoogleSheet({ action: 'inspect_schema', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url, true, 25000);
           if (res && res.ok) {
-            setInlineSaveStatus('sheet_sync', 'ok', '✅ 모든 보안 감사 로그가 이미 구글 시트에 반영되어 있습니다.');
+            if (res.readable && res.data) {
+              sheetLiveInspection = { ok: true, readable: true, data: res.data, checkedAt: formatKstDateTime() };
+            }
+            setInlineSaveStatus('sheet_sync', 'ok', '✅ 미반영 로그 0건 · 모든 보안 감사 로그가 이미 구글 시트에 반영되어 있습니다.');
             showToast('✅ 모든 로그가 이미 구글 시트와 동기화되어 있습니다.', 'ok');
           } else {
-            setInlineSaveStatus('sheet_sync', 'err', '❌ 구글 시트 로그 동기화에 실패했습니다. URL과 배포 상태를 확인해 주세요.');
-            showToast('❌ 구글 시트 동기화에 실패했습니다. URL과 배포 상태를 확인해 주세요.', 'err');
+            const reason = (res && res.reason === 'timeout') ? '응답 시간 초과' : 'URL과 배포 상태를 확인해 주세요.';
+            setInlineSaveStatus('sheet_sync', 'err', `❌ 구글 시트 연결 확인 실패: ${reason}`);
+            showToast(`❌ 구글 시트 연결 실패: ${reason}`, 'err');
           }
           return;
         }
-        setInlineSaveStatus('sheet_sync', 'loading', `⏳ 미전송 로그 ${unsynced.length}건을 구글 시트로 전송 중입니다...`);
+        setInlineSaveStatus('sheet_sync', 'loading', `⏳ 미전송 로그 ${unsynced.length}건을 구글 시트로 일괄 전송 중입니다...`);
         showToast(`⏳ 미전송 로그 ${unsynced.length}건을 구글 시트로 전송 중...`);
         const c1 = await syncUnsyncedRenameLogsToSheet();
         const c2 = await syncUnsyncedAuditLogsToSheet();
@@ -20874,13 +20905,14 @@
           return;
         }
 
-        // 2단계: 미반영 데이터·로그 자동 동기화
+        // 2단계: 미반영 데이터·로그 고속 일괄 자동 동기화 (이미 반영된 과거 로그는 재전송하지 않음)
         if (canRunSync) {
           const pending = getSheetUnsyncedBreakdown();
-          if (hasMissingOnLatest || pending.total > 15) {
-            const syncRes = await postToGoogleSheet(buildFullSheetSyncPayload(), url, true, 25000);
+          if (hasMissingOnLatest || pending.total > 0) {
+            const deltaPayload = buildUnsyncedSheetSyncPayload(hasMissingOnLatest ? diff.missingTabs : []);
+            const syncRes = await postToGoogleSheet(deltaPayload, url, true, 55000);
             if (!syncRes || !syncRes.ok) {
-              syncFailReason = (syncRes && syncRes.reason === 'timeout') ? '응답 시간 초과' : '일괄 동기화 전송 실패';
+              syncFailReason = (syncRes && syncRes.reason === 'timeout') ? '응답 시간 초과(55초)' : '일괄 동기화 전송 실패';
             } else {
               const s10 = !!(syncRes.readable && syncRes.data && isSheetResponseLatestTab(syncRes.data));
               const sMulti = !!(syncRes.readable && syncRes.data && isSheetResponseEightTab(syncRes.data));
@@ -20889,25 +20921,6 @@
                 sheetLiveInspection = { ok: true, readable: true, data: syncRes.data, checkedAt: formatKstDateTime() };
               }
               syncedThisCycle = Math.max(pending.total, hasMissingOnLatest ? diff.missingTabs.length : 0);
-            }
-          } else if (pending.total > 0) {
-            let totalFailed = 0;
-            const rAtt = await syncUnsyncedAttendanceToSheet(attendanceRecords) || { synced: 0, failed: 0 };
-            const rMem = await syncUnsyncedMembersToSheet(members) || { synced: 0, failed: 0 };
-            let rInq = { synced: 0, failed: 0 };
-            let rVid = { synced: 0, failed: 0 };
-            let rNot = { synced: 0, failed: 0 };
-            if (isTenTab || !res.readable) {
-              rInq = await syncUnsyncedInquiriesToSheet(inquiries) || { synced: 0, failed: 0 };
-              rVid = await syncUnsyncedVideosToSheet(videoItems) || { synced: 0, failed: 0 };
-              rNot = await syncUnsyncedNoticesToSheet(notices) || { synced: 0, failed: 0 };
-            }
-            const cRename = await syncUnsyncedRenameLogsToSheet().catch(() => 0);
-            const cAudit = await syncUnsyncedAuditLogsToSheet().catch(() => 0);
-            syncedThisCycle = (rAtt.synced || 0) + (rMem.synced || 0) + (rInq.synced || 0) + (rVid.synced || 0) + (rNot.synced || 0) + Number(cRename || 0) + Number(cAudit || 0);
-            totalFailed = (rAtt.failed || 0) + (rMem.failed || 0) + (rInq.failed || 0) + (rVid.failed || 0) + (rNot.failed || 0);
-            if (totalFailed > 0) {
-              syncFailReason = `미반영 항목 ${totalFailed}건 전송 실패`;
             }
           }
         }
@@ -21285,6 +21298,9 @@
               </div>
               <div style="font-size:12px; color:#475569;">
                 배포된 스크립트: <b style="color:${diff && diff.needsScriptUpdate ? '#DC2626' : '#15803D'};">${escapeHtml(diff ? diff.scriptVersion : (isLinked ? '대조 전' : '미연동'))}</b>
+                ${diff && diff.connected && diff.readable && sheetLiveInspection && sheetLiveInspection.data && isSheetResponseFastBatch(sheetLiveInspection.data)
+                  ? '<span class="tag green" style="margin-left:4px; font-size:10px;">⚡ 고속 배치</span>'
+                  : (diff && diff.connected && diff.readable && !diff.needsScriptUpdate ? '<span class="tag warm" style="margin-left:4px; font-size:10px;">v10.112 고속화 권장</span>' : '')}
               </div>
             </div>
 
@@ -21292,7 +21308,7 @@
               <div class="info-box warn" style="margin-top:0; margin-bottom:10px;">
                 ⚠️ <b>구버전 Apps Script(${escapeHtml(diff.scriptVersion)})가 배포되어 있습니다!</b><br>
                 이번 업데이트로 새로 추가된 시트(<b>${escapeHtml(diff.addedNeedScriptTabs.join(', ') || '문의 내역, 설교·CCM 영상, 공지·광고 목록')}</b>)를 연동하려면:<br>
-                1) 구글 시트 → <b>확장 프로그램 → Apps Script</b>에 최신 <b><code>google-apps-script-v10.109.txt</code></b> 코드를 덮어쓰고 저장(Ctrl+S)<br>
+                1) 구글 시트 → <b>확장 프로그램 → Apps Script</b>에 최신 <b><code>google-apps-script-v10.112.js</code></b> 코드를 덮어쓰고 저장(Ctrl+S)<br>
                 2) 오른쪽 위 <b>[배포 → 배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]</b> 클릭 후 위 <b>[🔍 지금 대조]</b>를 눌러 주세요.
               </div>
             ` : (diff && diff.missingTabs.length > 0 ? `
@@ -21895,6 +21911,105 @@
       };
     }
 
+    function buildUnsyncedSheetSyncPayload(missingTabNames = []) {
+      const missingSet = new Set(Array.isArray(missingTabNames) ? missingTabNames.map(String) : []);
+      const needAllAtt = missingSet.has('출석부');
+      const needAllMem = missingSet.has('회원 명단');
+      const needAllAdm = missingSet.has('관리자 명단');
+      const needAllInq = missingSet.has('문의 내역');
+      const needAllVid = missingSet.has('설교·CCM 영상');
+      const needAllNot = missingSet.has('공지·광고 목록');
+
+      const attPayload = attendanceRecords
+        .filter(r => r && (needAllAtt || r.sheetSynced !== true))
+        .map(r => ({
+          colTitle: r.colTitle || r.date,
+          date: r.date,
+          name: r.name,
+          role: r.roleName || '',
+          time: isAbsentAttendanceRecord(r) ? `X (불참 ${r.time || ''})`.trim() : (r.time || ''),
+          modifiedBy: r.modifiedBy || '',
+          forceUpdate: true
+        }));
+
+      const memberPayload = members
+        .filter(m => {
+          if (!m || m.status === 'removed') return false;
+          if (needAllMem) return true;
+          const isRe = !!m.isRejoin || memberHistoryMap.has(nameToHex(m.name));
+          const st = m.status === 'pending'
+            ? (isRe ? '재가입 대기' : '가입 대기')
+            : (m.status === 'approved' ? (isRe ? '재가입 승인' : '승인') : (m.status === 'rejected' ? '보류' : m.status));
+          const roleLabel = m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미정');
+          const sig = computeMemberSheetSig(m, roleLabel, st);
+          return m.sheetSyncedSig ? (m.sheetSyncedSig !== sig) : (m.sheetSyncedStatus !== st);
+        })
+        .map(m => {
+          const isRe = !!m.isRejoin || memberHistoryMap.has(nameToHex(m.name));
+          const st = m.status === 'pending'
+            ? (isRe ? '재가입 대기' : '가입 대기')
+            : (m.status === 'approved' ? (isRe ? '재가입 승인' : '승인') : (m.status === 'rejected' ? '보류' : m.status));
+          return {
+            name: m.name,
+            role: m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미정'),
+            joinedAt: m.createdAt || formatKstDateTime(),
+            status: st,
+            prevName: m.prevName || '',
+            updatedAt: formatKstDateTime()
+          };
+        });
+
+      const adminPayload = needAllAdm
+        ? (adminRegistry.items || []).map(a => ({
+            name: a.name,
+            status: a.status === 'active' ? '활성' : (a.status === 'pending' ? '승인 대기' : '해제'),
+            registeredAt: a.registeredAt || '-',
+            lastLoginAt: a.lastLoginAt || a.registeredAt || '-',
+            reentryCount: Number(a.reentryCount || 0),
+            renameCount: Number(a.renameCount || 0),
+            prevName: a.prevName || '',
+            time: a.lastLoginAt || a.registeredAt || formatKstDateTime(),
+            note: [
+              a.approvedBy ? `승인자: ${a.approvedBy}` : (a.removedBy ? `해제자: ${a.removedBy}` : '등록'),
+              a.removeReason ? `해제사유: ${a.removeReason}` : '',
+              a.restoreReason ? `복구사유: ${a.restoreReason}` : '',
+              a.prevName ? `이전 이름: ${a.prevName}` : ''
+            ].filter(Boolean).join(' · ')
+          }))
+        : [];
+
+      const inquiryPayload = inquiries
+        .filter(q => q && q.id && (needAllInq || q.sheetSyncedSig !== computeInquirySheetSig(q)))
+        .map(q => buildInquirySheetRow(q))
+        .filter(Boolean);
+
+      const videoPayload = videoItems
+        .filter(v => v && v.id && (needAllVid || v.sheetSyncedSig !== computeVideoSheetSig(v)))
+        .map(v => buildVideoSheetRow(v))
+        .filter(Boolean);
+
+      const noticePayload = notices
+        .filter(n => n && n.id && (needAllNot || n.sheetSyncedSig !== computeNoticeSheetSig(n)))
+        .map(n => buildNoticeSheetRow(n))
+        .filter(Boolean);
+
+      const unsyncedLogs = getMergedAuditLogs()
+        .filter(l => l && l.sheetSynced !== true)
+        .sort((a, b) => Number(a.ts || 0) - Number(b.ts || 0))
+        .map(l => buildAuditLogSheetPayload(l));
+
+      return {
+        action: 'sync_all',
+        attendance: attPayload,
+        members: memberPayload,
+        admins: adminPayload,
+        inquiries: inquiryPayload,
+        videos: videoPayload,
+        notices: noticePayload,
+        auditLogs: unsyncedLogs
+      };
+    }
+
     function markAllLocalSheetSyncFlags(isTenTab = false, isMultiLog = false) {
       for (const m of members.filter(x => x.status !== 'removed')) {
         const isRe = !!m.isRejoin || memberHistoryMap.has(nameToHex(m.name));
@@ -21961,7 +22076,15 @@
       return data.supportsSchemaInspect === true
         || Number(data.tabCount || 0) >= 10
         || String(data.version || '').includes('10tab')
-        || String(data.version || '').includes('v10.109');
+        || String(data.version || '').includes('v10.109')
+        || String(data.version || '').includes('v10.112');
+    }
+
+    function isSheetResponseFastBatch(data) {
+      if (!data || typeof data !== 'object') return false;
+      return data.supportsBatchSync === true
+        || String(data.version || '').includes('fast')
+        || String(data.version || '').includes('v10.112');
     }
 
     function isSheetResponseSevenTab(data) {
@@ -21976,7 +22099,7 @@
 
     function isSheetResponseRebuildCapable(data) {
       if (!data || typeof data !== 'object') return false;
-      return data.supportsRebuild === true || String(data.version || '').includes('v10.48') || String(data.version || '').includes('v10.69') || String(data.version || '').includes('v10.109');
+      return data.supportsRebuild === true || String(data.version || '').includes('v10.48') || String(data.version || '').includes('v10.69') || String(data.version || '').includes('v10.109') || String(data.version || '').includes('v10.112');
     }
 
     function warnIfOldAppsScript(res) {
@@ -22019,47 +22142,75 @@
         await batch.commit();
         adminSheetUrl = url;
         sheetAutoInspectedUrl = url;
-        recordAuditLog({
-          actorType: 'admin',
-          category: '보안·설정',
-          action: url ? '구글 시트 연동 주소 저장' : '구글 시트 연동 해제',
-          target: '구글 시트 연동'
-        });
         if (url) {
-          setInlineSaveStatus('sheet_url', 'loading', '✅ 서버에 연동 주소 저장 완료 · 구글 시트 동기화를 진행하는 중입니다...');
-          const res = await postToGoogleSheet(buildFullSheetSyncPayload(), url, true, 20000);
-          const isOldSingleTab = !!(res && res.readable && res.data && !isSheetResponseMultiTab(res.data));
+          setInlineSaveStatus('sheet_url', 'loading', '✅ 서버에 연동 주소 저장 완료 · 구글 시트 연결을 확인하는 중입니다...');
+          const inspRes = await postToGoogleSheet({ action: 'inspect_schema', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url, true, 25000);
+          const isOldSingleTab = !!(inspRes && inspRes.readable && inspRes.data && !isSheetResponseMultiTab(inspRes.data));
           if (isOldSingleTab) {
             setInlineSaveStatus('sheet_url', 'warn', `⚠️ 연동 주소는 서버에 저장 완료! 단 구글 시트 스크립트가 구버전(1탭)입니다. 최신 ${SHEET_SCHEMA_VERSION} 코드를 새 버전으로 배포해 주세요.`);
             showToast('⚠️ 연동 주소 저장 완료! (구버전 Apps Script 업데이트 필요)', 'warn');
-            warnIfOldAppsScript(res);
-          } else if (res && res.ok) {
-            const is10 = !!(res.readable && res.data && isSheetResponseLatestTab(res.data));
-            const isMultiLog = !!(res.readable && res.data && isSheetResponseEightTab(res.data));
-            markAllLocalSheetSyncFlags(is10, isMultiLog);
-            sheetLiveInspection = { ok: true, readable: !!res.readable, data: res.data || null, checkedAt: formatKstDateTime() };
-            if (is10) {
-              setInlineSaveStatus('sheet_url', 'ok', '✅ 연동 주소 저장 및 10개 시트 동기화 완료!');
-              showToast('✅ 연동 주소 저장 및 10개 시트 동기화가 완료되었습니다!', 'ok');
-            } else if (res.readable && res.data) {
-              setInlineSaveStatus('sheet_url', 'warn', `⚠️ 연동 주소 저장 완료! 단 배포된 스크립트(${res.data.version || '구버전'})를 최신 ${SHEET_SCHEMA_VERSION}으로 배포하면 신규 3탭까지 연동됩니다.`);
+            warnIfOldAppsScript(inspRes);
+          } else if (inspRes && inspRes.ok) {
+            sheetLiveInspection = { ok: true, readable: !!inspRes.readable, data: inspRes.data || null, checkedAt: formatKstDateTime() };
+            const is10 = !!(inspRes.readable && inspRes.data && isSheetResponseLatestTab(inspRes.data));
+            const isMultiLog = !!(inspRes.readable && inspRes.data && isSheetResponseEightTab(inspRes.data));
+            const diffNow = evaluateSheetSchemaDiff(sheetLiveInspection);
+            const missingNow = (is10 && diffNow && Array.isArray(diffNow.missingTabs)) ? diffNow.missingTabs : [];
+            const pendingNow = getSheetUnsyncedBreakdown();
+
+            let syncOk = true;
+            let syncErrTxt = '';
+            if (missingNow.length > 0 || pendingNow.total > 0) {
+              setInlineSaveStatus('sheet_url', 'loading', `✅ 시트 연결 확인 완료 · 미반영 ${pendingNow.total}건${missingNow.length > 0 ? ` 및 미생성 ${missingNow.length}개 탭` : ''} 동기화 중...`);
+              const deltaPayload = buildUnsyncedSheetSyncPayload(missingNow);
+              const syncRes = await postToGoogleSheet(deltaPayload, url, true, 60000);
+              if (syncRes && syncRes.ok) {
+                markAllLocalSheetSyncFlags(is10, isMultiLog);
+                if (syncRes.readable && syncRes.data) {
+                  sheetLiveInspection = { ok: true, readable: true, data: syncRes.data, checkedAt: formatKstDateTime() };
+                }
+              } else {
+                syncOk = false;
+                syncErrTxt = (syncRes && syncRes.reason === 'timeout')
+                  ? '시트 동기화 응답 시간 초과(60초)'
+                  : ((syncRes && syncRes.data && syncRes.data.error) ? syncRes.data.error : '시트 전송 실패');
+              }
+            }
+
+            if (!syncOk) {
+              setInlineSaveStatus('sheet_url', 'warn', `⚠️ 연동 주소 저장 및 연결 확인 완료! 단 미반영 동기화 실패 (${syncErrTxt}) · 최신 ${SHEET_SCHEMA_VERSION} 배포를 권장합니다.`);
+              showToast(`⚠️ 주소 저장 완료! 미반영 동기화 실패: ${syncErrTxt}`, 'warn');
+            } else if (is10) {
+              const fastTag = isSheetResponseFastBatch(sheetLiveInspection.data) ? ' · ⚡ 고속 배치 지원' : '';
+              const deltaInfo = (pendingNow.total > 0 || missingNow.length > 0) ? ` + 미반영 ${pendingNow.total}건 동기화 완료` : ' (미반영 0건)';
+              setInlineSaveStatus('sheet_url', 'ok', `✅ 연동 주소 저장 및 10개 시트 연결 완료${deltaInfo}${fastTag}!`);
+              showToast(`✅ 연동 주소 저장 및 시트 연결 완료${deltaInfo}!`, 'ok');
+            } else if (inspRes.readable && inspRes.data) {
+              setInlineSaveStatus('sheet_url', 'warn', `⚠️ 연동 주소 저장 완료! 단 배포된 스크립트(${inspRes.data.version || '구버전'})를 최신 ${SHEET_SCHEMA_VERSION}으로 배포하면 신규 3탭까지 고속 연동됩니다.`);
               showToast('✅ 연동 주소 저장 완료! (신규 3탭은 최신 Apps Script 배포 필요)', 'warn');
             } else {
-              setInlineSaveStatus('sheet_url', 'ok', '✅ 연동 주소 저장 완료 · 구글 시트로 동기화 신호를 전송했습니다!');
-              showToast('✅ 연동 주소가 안전하게 저장되었고 시트 동기화 요청을 보냈습니다!', 'ok');
+              setInlineSaveStatus('sheet_url', 'ok', '✅ 연동 주소 저장 완료 · 구글 시트 연결을 확인했습니다!');
+              showToast('✅ 연동 주소가 안전하게 저장되었습니다!', 'ok');
             }
           } else {
-            const reasonTxt = (res && res.reason === 'timeout')
-              ? '시트 응답 시간 초과(20초)'
-              : ((res && res.data && res.data.error) ? res.data.error : 'URL 또는 배포 권한(모든 사용자) 확인 필요');
-            setInlineSaveStatus('sheet_url', 'warn', `⚠️ 연동 주소는 서버에 저장되었으나 시트 동기화에 실패했습니다. (${reasonTxt})`);
-            showToast(`⚠️ 주소는 저장되었으나 시트 전송 실패: ${reasonTxt}`, 'warn');
+            const reasonTxt = (inspRes && inspRes.reason === 'timeout')
+              ? '시트 연결 응답 시간 초과(25초)'
+              : ((inspRes && inspRes.data && inspRes.data.error) ? inspRes.data.error : 'URL 오타 또는 배포 권한(모든 사용자) 확인 필요');
+            setInlineSaveStatus('sheet_url', 'warn', `⚠️ 연동 주소는 서버에 저장되었으나 시트 연결 확인에 실패했습니다. (${reasonTxt})`);
+            showToast(`⚠️ 주소는 저장되었으나 시트 연결 실패: ${reasonTxt}`, 'warn');
           }
         } else {
           sheetLiveInspection = null;
           setInlineSaveStatus('sheet_url', 'ok', '✅ 구글 시트 연동 주소가 해제(삭제)되었습니다.');
           showToast('✅ 구글 시트 연동이 해제되었습니다.', 'ok');
         }
+        // 시트 연결/동기화가 모두 끝난 뒤에 감사 로그를 기록해 Apps Script Lock 충돌을 원천 방지
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: url ? '구글 시트 연동 주소 저장' : '구글 시트 연동 해제',
+          target: '구글 시트 연동'
+        });
         if (typeof evaluateAutoSheetAfterManualAction === 'function') evaluateAutoSheetAfterManualAction();
         const u = getCurrentUser();
         if (u && currentMainTab === 'manage' && currentManageSubTab === 'sheet') renderManageSheet(document.getElementById('manageContent'), u);
@@ -22120,7 +22271,7 @@
         notices: validTargets.includes('notices') ? full.notices : []
       };
 
-      const res = await postToGoogleSheet(payload, url, true);
+      const res = await postToGoogleSheet(payload, url, true, 60000);
       if (warnIfOldAppsScript(res)) return;
 
       const needsNew3 = validTargets.some(t => ['inquiries', 'videos', 'notices'].includes(t));
@@ -22213,7 +22364,7 @@
       setInlineSaveStatus('sheet_sync', 'loading', '⏳ 10개 세부 탭(출석·회원·관리자·문의·영상·공지·4종 로그)을 구글 시트에 동기화하는 중입니다...');
       showToast('⏳ 10개 세부 탭을 동기화 중입니다...');
       try {
-        const res = await postToGoogleSheet(buildFullSheetSyncPayload(), url, true, 25000);
+        const res = await postToGoogleSheet(buildFullSheetSyncPayload(), url, true, 60000);
         if (warnIfOldAppsScript(res)) {
           setInlineSaveStatus('sheet_sync', 'warn', `⚠️ 구버전 1탭 Apps Script입니다. 최신 ${SHEET_SCHEMA_VERSION} 배포가 필요합니다.`);
           return;
@@ -22249,7 +22400,7 @@
           const u = getCurrentUser();
           if (u && currentMainTab === 'manage' && currentManageSubTab === 'sheet') renderManageSheet(document.getElementById('manageContent'), u);
         } else {
-          const reason = (res && res.reason === 'timeout') ? '응답 시간 초과' : 'URL 또는 배포 상태 확인 필요';
+          const reason = (res && res.reason === 'timeout') ? '응답 시간 초과(60초 · 최신 v10.112 고속 스크립트 배포 권장)' : 'URL 또는 배포 상태 확인 필요';
           setInlineSaveStatus('sheet_sync', 'err', `❌ 전체 동기화 실패: ${reason}`);
           showToast(`❌ 동기화 실패: ${reason}`, 'err');
         }
