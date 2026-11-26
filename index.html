@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=242" />
+  <link rel="manifest" href="./manifest.json?v=243" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=242" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=242" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=243" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=243" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4061,7 +4061,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=242" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=243" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5905,7 +5905,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 242;
+    const APP_CLIENT_BUILD = 243;
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.142-10tab-fast-split';
     const SHEET_SCHEMA_TABS = [
@@ -6911,7 +6911,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=242" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=243" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6935,8 +6935,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=242', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=242', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=243', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=243', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -10411,11 +10411,11 @@
       if (!lockBox || !formBody) return;
       const st = getInviteTokenStatus();
       const valid = st.valid;
-      const wasFormVisible = !formBody.classList.contains('hidden');
+      const gateBox = document.getElementById('signupTermsGateBox');
+      const wasFormVisible = !formBody.classList.contains('hidden') || !!(gateBox && !gateBox.classList.contains('hidden'));
       lockBox.classList.toggle('hidden', valid);
       if (!valid) {
         formBody.classList.add('hidden');
-        const gateBox = document.getElementById('signupTermsGateBox');
         if (gateBox) gateBox.classList.add('hidden');
       } else {
         syncSignupTermsGateUi();
@@ -10994,6 +10994,9 @@
         document.getElementById('signupRoleSelect').value = '';
         document.getElementById('signupPwInput').value = '';
         document.getElementById('signupPwConfirmInput').value = '';
+        signupTermsAgreed = false;
+        const _termsChkAfterSignup = document.getElementById('signupTermsAgreeCheckbox');
+        if (_termsChkAfterSignup) _termsChkAfterSignup.checked = false;
         showToast('회원가입 신청이 접수되었습니다!');
         isSigningUp = false;
         attachMemberProfileListener(uid);
@@ -30314,13 +30317,21 @@
     }
 
     let signupTermsAgreed = false;
+    let lastRenderedSignupTermsSig = '';
 
-    function renderSignupTermsGateList() {
+    function renderSignupTermsGateList(force = false) {
       const box = document.getElementById('signupTermsScrollBox');
       if (!box) return;
       const list = (typeof getActiveTermsArticles === 'function')
         ? getActiveTermsArticles()
         : (typeof buildDynamicTermsArticles === 'function' ? buildDynamicTermsArticles() : []);
+      const sig = Array.isArray(list)
+        ? JSON.stringify(list.map(a => [a.id || '', a.title || '', a.body || '']))
+        : '__empty__';
+      if (!force && box.innerHTML.trim() && lastRenderedSignupTermsSig === sig) {
+        return;
+      }
+      lastRenderedSignupTermsSig = sig;
       if (!Array.isArray(list) || list.length === 0) {
         box.innerHTML = '<div class="signup-terms-art-title">라이트 청년부 앱 이용약관</div><div>구미제일감리교회 라이트 청년부 회칙에 따라 운영됩니다.</div>';
         return;
@@ -30333,7 +30344,8 @@
       `).join('');
     }
 
-    function syncSignupTermsGateUi() {
+    function syncSignupTermsGateUi(options = {}) {
+      const resetCheckbox = !!(options && options.resetCheckbox);
       const gateBox = document.getElementById('signupTermsGateBox');
       const formBody = document.getElementById('signupFormBody');
       const lockBox = document.getElementById('signupQrLockBox');
@@ -30353,9 +30365,11 @@
         formBody.classList.remove('hidden');
         if (errEl) { errEl.textContent = ''; errEl.classList.remove('show'); }
       } else {
-        renderSignupTermsGateList();
-        if (chk) chk.checked = false;
-        if (errEl) { errEl.textContent = ''; errEl.classList.remove('show'); }
+        renderSignupTermsGateList(false);
+        if (resetCheckbox) {
+          if (chk) chk.checked = false;
+          if (errEl) { errEl.textContent = ''; errEl.classList.remove('show'); }
+        }
         gateBox.classList.remove('hidden');
         formBody.classList.add('hidden');
       }
@@ -30387,7 +30401,7 @@
 
     window.reopenSignupTermsGate = () => {
       signupTermsAgreed = false;
-      syncSignupTermsGateUi();
+      syncSignupTermsGateUi({ resetCheckbox: true });
     };
 
     function renderTermsView() {
