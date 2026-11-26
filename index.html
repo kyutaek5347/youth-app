@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=196" />
+  <link rel="manifest" href="./manifest.json?v=197" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=196" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=196" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=197" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=197" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3503,7 +3503,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=196" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=197" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5178,7 +5178,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 196;
+    const APP_CLIENT_BUILD = 197;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_SEEN_ADMIN_IDS = 'right_youth_seen_admin_ids_v1';
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
@@ -6086,7 +6086,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=196" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=197" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6110,8 +6110,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=196', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=196', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=197', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=197', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -6339,6 +6339,7 @@
     let adminLogFilterCategory = 'all';
     let selectedRoleMemberTab = 'all';
     let roleMemberSearchQuery = '';
+    let allRolesEditorOpen = false;
     let manageSectionOpen = {};
 
     function isManageSectionOpen(key, defaultOpen = true) {
@@ -11062,7 +11063,7 @@
     };
 
     // ==================== 12. 관리 센터 ====================
-    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|selectRoleMemberTab|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|switchMainTab)\s*\(/;
+    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|switchMainTab)\s*\(/;
     const OBSERVER_ALLOWED_INPUT_IDS = new Set([
       'roleMemberSearchInput', 'adminLogSearchInput', 'adminGuideSearchInput', 'attRosterSearchInput', 'attRosterQuickJumpInput'
     ]);
@@ -13930,12 +13931,92 @@
       } catch (err) { handleDbError(err, '차단 이력 해제'); }
     }
 
-    // (D) 역할 설정 + 역할별 승인 회원 명단 · 역할 변경
+    // (D) 통합 회원 역할 관리 (역할 생성·수정·순서·삭제 + 승인 회원 명단·역할 변경 일원화)
+    function renderSelectedRoleControlBar(approved) {
+      const ctrlEl = document.getElementById('selectedRoleControlArea');
+      if (!ctrlEl) return;
+
+      const countByRoleId = (rid) => approved.filter(m => String(getRoleById(m.roleId).id) === String(rid)).length;
+      const selectedIdx = selectedRoleMemberTab === 'all'
+        ? -1
+        : roles.findIndex(r => String(r.id) === String(selectedRoleMemberTab));
+
+      if (selectedIdx >= 0) {
+        const r = roles[selectedIdx];
+        const cnt = countByRoleId(r.id);
+        ctrlEl.innerHTML = `
+          <div class="card" style="padding:11px 12px; margin-bottom:10px; background:#F8FAFC; border-color:#CBD5E1;">
+            <div class="layout-item-head" style="flex-wrap:wrap; gap:6px;">
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <strong style="font-size:12px; color:#64748B;">${selectedIdx + 1}번</strong>
+                <span class="role-pill" style="background:${sanitizeHexColor(r.color)}; font-size:12px; padding:4px 10px;">${escapeHtml(r.name)}</span>
+                <span style="font-size:12px; color:#475569; font-weight:700;">소속 ${cnt}명</span>
+                ${isNewcomerRoleObj(r) ? '<span class="tag" style="font-size:10.5px;">💐 새신자 자동 환영</span>' : ''}
+                ${isObserverRoleObj(r) ? '<span class="tag" style="font-size:10.5px; background:#ECFEFF; color:#0E7490;">👁️ 관리 구경(읽기전용)</span>' : ''}
+              </div>
+              <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;">
+                <button class="order-btn" type="button" title="앞으로 이동" onclick="moveRole(${selectedIdx}, -1)" ${selectedIdx === 0 ? 'disabled' : ''}>◀</button>
+                <button class="order-btn" type="button" title="뒤로 이동" onclick="moveRole(${selectedIdx}, 1)" ${selectedIdx === roles.length - 1 ? 'disabled' : ''}>▶</button>
+                <button class="btn-sm" type="button" onclick="openEditRoleModal('${escapeJsAttr(r.id)}')">✏️ 수정</button>
+                <button class="btn-sm danger" type="button" onclick="deleteRole('${escapeJsAttr(r.id)}')" ${roles.length <= 1 ? 'disabled' : ''}>삭제</button>
+              </div>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      ctrlEl.innerHTML = `
+        <div class="card" style="padding:10px 12px; margin-bottom:10px; background:#F8FAFC;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+            <span style="font-size:12px; font-weight:700; color:#475569;">⚙️ 역할 순서 · 이름 · 색상 편집 (${roles.length}개)</span>
+            <button class="btn-sm ${allRolesEditorOpen ? 'primary' : ''}" type="button" onclick="toggleAllRolesEditor()">
+              ${allRolesEditorOpen ? '목록 접기 ▲' : '전체 역할 편집 ▼'}
+            </button>
+          </div>
+          ${allRolesEditorOpen ? `
+            <div style="margin-top:9px; padding-top:8px; border-top:1px dashed #CBD5E1;">
+              ${roles.map((r, idx) => {
+                const cnt = countByRoleId(r.id);
+                return `
+                  <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; padding:7px 0; border-bottom:1px solid #E2E8F0; flex-wrap:wrap;">
+                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; min-width:0;">
+                      <strong style="font-size:12px; color:#64748B;">${idx + 1}.</strong>
+                      <button type="button" style="border:none; background:transparent; padding:0; cursor:pointer;" onclick="selectRoleMemberTab('${escapeJsAttr(r.id)}')">
+                        <span class="role-pill" style="background:${sanitizeHexColor(r.color)}; font-size:11.5px; padding:3px 9px;">${escapeHtml(r.name)}</span>
+                      </button>
+                      <span style="font-size:11.5px; color:#64748B; font-weight:700;">${cnt}명</span>
+                      ${isNewcomerRoleObj(r) ? '<span class="tag" style="font-size:10px; padding:2px 6px;">💐 환영</span>' : ''}
+                      ${isObserverRoleObj(r) ? '<span class="tag" style="font-size:10px; padding:2px 6px; background:#ECFEFF; color:#0E7490;">👁️ 구경</span>' : ''}
+                    </div>
+                    <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
+                      <button class="order-btn" type="button" style="width:27px; height:27px;" onclick="moveRole(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                      <button class="order-btn" type="button" style="width:27px; height:27px;" onclick="moveRole(${idx}, 1)" ${idx === roles.length - 1 ? 'disabled' : ''}>▼</button>
+                      <button class="btn-sm" type="button" style="padding:5px 8px;" onclick="openEditRoleModal('${escapeJsAttr(r.id)}')">수정</button>
+                      <button class="btn-sm danger" type="button" style="padding:5px 8px;" onclick="deleteRole('${escapeJsAttr(r.id)}')" ${roles.length <= 1 ? 'disabled' : ''}>삭제</button>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    window.toggleAllRolesEditor = () => {
+      allRolesEditorOpen = !allRolesEditorOpen;
+      const approved = members.filter(m => m.status === 'approved');
+      renderSelectedRoleControlBar(approved);
+    };
+
     function renderRoleMembersListOnly() {
       const listEl = document.getElementById('roleMembersListArea');
       if (!listEl) return;
 
       const approved = members.filter(m => m.status === 'approved');
+      renderSelectedRoleControlBar(approved);
+
       const roleOptionsHtml = (selectedId) => roles.map(r => `
         <option value="${escapeHtml(r.id)}" ${String(r.id) === String(selectedId) ? 'selected' : ''}>${escapeHtml(r.name)}${isObserverRoleObj(r) ? ' (👁️ 구경·관리자 부여)' : ''}</option>
       `).join('');
@@ -14004,14 +14085,14 @@
           </div>
         `;
       }).join('') + (filtered.length >= 4
-        ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('roles_members', false)">▲ 회원 명단 접기</button>`
+        ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('roles_unified', true)">▲ ${escapeHtml(getTabLabel('manageRoles'))} 접기</button>`
         : '');
     }
 
     window.selectRoleMemberTab = (roleId, shouldScroll = false) => {
       selectedRoleMemberTab = roleId || 'all';
       if (shouldScroll) {
-        toggleManageSection('roles_members', false, true);
+        toggleManageSection('roles_unified', true, true);
       }
       const bar = document.getElementById('roleMemberTabBar');
       if (bar) {
@@ -14045,21 +14126,20 @@
       }
 
       const countByRoleId = (rid) => approved.filter(m => String(getRoleById(m.roleId).id) === String(rid)).length;
-
-      const rolesMembersOpen = isManageSectionOpen('roles_members', false);
-      const rolesListOpen = isManageSectionOpen('roles_list', true);
+      const unifiedOpen = isManageSectionOpen('roles_unified', true);
 
       el.innerHTML = `
         ${buildManageAccordionBar({
-          key: 'roles_members',
+          key: 'roles_unified',
           idAttr: 'roleMembersSectionHead',
-          titleHtml: '👥 승인된 회원 명단 · 역할 변경',
-          badgeHtml: `<span class="tag green">총 ${approved.length}명</span>`,
-          defaultOpen: false
+          titleHtml: `${escapeHtml(getTabIcon('manageRoles'))} ${escapeHtml(getTabLabel('manageRoles'))}`,
+          badgeHtml: `<span class="tag green">회원 ${approved.length}명</span><span class="tag slate">역할 ${roles.length}개</span>`,
+          actionHtml: `<button class="btn-admin" type="button" style="padding:6px 10px; font-size:11.5px;" onclick="openAddRoleModal()">+ 새 역할</button>`,
+          defaultOpen: true
         })}
-        <div data-acc-body="roles_members" class="${rolesMembersOpen ? '' : 'hidden'}">
+        <div data-acc-body="roles_unified" class="${unifiedOpen ? '' : 'hidden'}">
           <div class="info-box" style="margin-top:0; margin-bottom:10px;">
-            아래 역할 탭(예: 목사, 부장, 교사 등)을 누르면 해당 역할에 속한 회원 명단을 바로 확인할 수 있으며, 이곳에서 역할 변경·비밀번호 초기화·삭제를 처리할 수 있습니다.
+            아래 역할 탭을 누르면 해당 역할의 <b>회원 명단 조회·역할 변경·비번 초기화·삭제</b>와 <b>역할 수정·순서·삭제</b>를 한곳에서 바로 처리할 수 있습니다.
           </div>
 
           <div id="roleMemberTabBar" class="role-member-tabs">
@@ -14080,62 +14160,15 @@
             }).join('')}
           </div>
 
+          <div id="selectedRoleControlArea"></div>
+
           <div class="search-box" style="margin-bottom:8px;">
             <span class="search-icon">🔍</span>
-            <input id="roleMemberSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13.5px;" type="search" value="${escapeHtml(roleMemberSearchQuery)}" placeholder="회원 이름 검색..." oninput="onRoleMemberSearchInput(this.value)" />
+            <input id="roleMemberSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13.5px;" type="search" value="${escapeHtml(roleMemberSearchQuery)}" placeholder="회원 이름·역할 검색..." oninput="onRoleMemberSearchInput(this.value)" />
             <button id="roleMemberSearchClear" class="search-clear ${roleMemberSearchQuery ? '' : 'hidden'}" type="button" onclick="clearRoleMemberSearch()">✕</button>
           </div>
           <div id="roleMembersSummaryText" style="font-size:12px; color:#64748B; font-weight:700; margin:2px 2px 8px;"></div>
           <div id="roleMembersListArea" class="card"></div>
-        </div>
-
-        <div class="manage-divider"></div>
-
-        ${buildManageAccordionBar({
-          key: 'roles_list',
-          titleHtml: `${escapeHtml(getTabIcon('manageRoles'))} ${escapeHtml(getTabLabel('manageRoles'))}`,
-          badgeHtml: `<span class="tag slate">${roles.length}개</span>`,
-          actionHtml: `<button class="btn-admin" type="button" style="padding:6px 10px; font-size:11.5px;" onclick="openAddRoleModal()">+ 새 역할</button>`,
-          defaultOpen: true
-        })}
-        <div data-acc-body="roles_list" class="${rolesListOpen ? '' : 'hidden'}">
-          <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-            역할은 회원 이름 옆에 표시되는 직분 배지입니다.<br>
-            특정 역할에게만 보여주는 설정은 <b>공지·광고·배너 작성 화면</b>에서 원하는 역할을 직접 선택해 지정할 수 있습니다.
-          </div>
-          ${roles.map((r, idx) => {
-            const count = countByRoleId(r.id);
-            return `
-              <div class="card">
-                <div class="layout-item-head">
-                  <div style="display:flex; align-items:center; gap:8px; min-width:0; flex-wrap:wrap;">
-                    <strong style="font-size:13px; color:#64748B;">${idx + 1}.</strong>
-                    <span class="role-pill" style="background:${sanitizeHexColor(r.color)}; font-size:12px; padding:4px 10px;">${escapeHtml(r.name)}</span>
-                    <span style="font-size:12px; color:#64748B; font-weight:600;">소속 ${count}명</span>
-                  </div>
-                  <div class="order-btns">
-                    <button class="order-btn" type="button" onclick="moveRole(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
-                    <button class="order-btn" type="button" onclick="moveRole(${idx}, 1)" ${idx === roles.length - 1 ? 'disabled' : ''}>▼</button>
-                  </div>
-                </div>
-                <div class="card-footer">
-                  <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                    <button class="btn-sm" type="button" onclick="selectRoleMemberTab('${escapeJsAttr(r.id)}', true)">👥 명단 보기 (${count})</button>
-                    ${isNewcomerRoleObj(r)
-                      ? '<span class="tag" style="font-size:10.5px;">💐 새신자 자동 환영</span>'
-                      : ''}
-                    ${isObserverRoleObj(r)
-                      ? '<span class="tag" style="font-size:10.5px; background:#ECFEFF; color:#0E7490;">👁️ 관리 구경(읽기전용) · 관리자만 부여</span>'
-                      : ''}
-                  </div>
-                  <div style="display:flex; gap:6px;">
-                    <button class="btn-sm" onclick="openEditRoleModal('${escapeJsAttr(r.id)}')">수정</button>
-                    <button class="btn-sm danger" onclick="deleteRole('${escapeJsAttr(r.id)}')" ${roles.length <= 1 ? 'disabled' : ''}>삭제</button>
-                  </div>
-                </div>
-              </div>
-            `;
-          }).join('')}
         </div>
       `;
 
