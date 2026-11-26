@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=208" />
+  <link rel="manifest" href="./manifest.json?v=209" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=208" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=208" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=209" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=209" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3597,7 +3597,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=208" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=209" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5271,7 +5271,46 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 208;
+    const APP_CLIENT_BUILD = 209;
+    const SHEET_SCHEMA_VERSION = 'v10.109-10tab';
+    const SHEET_SCHEMA_TABS = [
+      { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
+      { id: 'members', name: '회원 명단', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '성명·역할·가입일·상태·이전이름 (생일 열 폐기)' },
+      { id: 'admins', name: '관리자 명단', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '활성/해제/회원전환 관리자 현황·접속일·횟수' },
+      { id: 'inquiries', name: '문의 내역', kind: 'state', addedIn: 'v10.109', isNew: true, rebuildable: true, desc: '이용자 문의 분류·제목·내용·처리상태·관리자 답변' },
+      { id: 'videos', name: '설교·CCM 영상', kind: 'state', addedIn: 'v10.109', isNew: true, rebuildable: true, desc: '설교/라이트청년부/CCM 분류·교회/찬양팀·제목·채널·URL·승인상태' },
+      { id: 'notices', name: '공지·광고 목록', kind: 'state', addedIn: 'v10.109', isNew: true, rebuildable: true, desc: '구분·제목·내용·공개대상·게시상태·상단고정·등록일' },
+      { id: 'admin_entry_logs', name: '관리자 입퇴장 로그', kind: 'log', addedIn: 'v10.42', rebuildable: false, desc: '관리자 등록·승인·거절·해제·재입장 (삭제 불가)' },
+      { id: 'rename_logs', name: '이름 변경 로그', kind: 'log', addedIn: 'v10.42', rebuildable: false, desc: '관리자·회원 이름 변경 신청/승인/거절 (삭제 불가)' },
+      { id: 'admin_audit_logs', name: '관리자 활동 로그', kind: 'log', addedIn: 'v10.48', rebuildable: false, desc: '공지·배너·영상·역할·메뉴·설정 전체 기록 (삭제 불가)' },
+      { id: 'member_audit_logs', name: '이용자 활동 로그', kind: 'log', addedIn: 'v10.48', rebuildable: false, desc: '영상 추천·문의·가입/탈퇴·출석 이력 (삭제 불가)' }
+    ];
+    const SHEET_REMOVED_TABS = [
+      { name: '생일 변경 로그', removedIn: 'v10.69', reason: '생년월일 기능 폐기 및 개인정보 최소화 (회원 명단 생년월일 열 포함)' }
+    ];
+    const SHEET_SCHEMA_CHANGELOG = [
+      {
+        version: 'v10.109',
+        date: '2026.11.26',
+        added: ['문의 내역', '설교·CCM 영상', '공지·광고 목록'],
+        removed: [],
+        changed: ['웹 앱 내 실시간 시트 변경·누락·삭제 자동 감지판 추가', '현황·운영 6개 탭 양식 재정비 확장', '기존 7탭 동기화 누락 방지 버그 수정']
+      },
+      {
+        version: 'v10.69',
+        date: '2026.11.20',
+        added: [],
+        removed: ['생일 변경 로그'],
+        changed: ['회원 명단에서 생년월일 열 영구 제거 (8탭 → 7탭)']
+      },
+      {
+        version: 'v10.48',
+        date: '2026.11.15',
+        added: ['관리자 활동 로그', '이용자 활동 로그'],
+        removed: [],
+        changed: ['시트 현황 탭 양식 재정비 기능 추가 (4탭 → 8탭)']
+      }
+    ];
     const KEY_LAST_SEC_WATCH_SIG = 'right_youth_sec_watch_sig_v1';
     const KEY_AUTO_SEC_LAST_ALERT_SIG = 'right_youth_auto_sec_alert_sig_v1';
     const KEY_AUTO_DIAG_LAST_ALERT_SIG = 'right_youth_auto_diag_alert_sig_v1';
@@ -6191,7 +6230,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=208" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=209" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6215,8 +6254,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=208', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=208', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=209', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=209', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -6750,6 +6789,12 @@
     let unsubSheetSecret = null;
     let adminSheetUrl = '';
     let isSyncingUnsyncedAtt = false;
+    let isSyncingUnsyncedInq = false;
+    let isSyncingUnsyncedVid = false;
+    let isSyncingUnsyncedNot = false;
+    let sheetLiveInspection = null;
+    let sheetInspectLoading = false;
+    let sheetAutoInspectedUrl = '';
     let coreDataSubscribed = false;
     let isCompletingReset = false;
     let sharedAdminCode = '';
@@ -6792,6 +6837,12 @@
       if (unsubSheetSecret) { unsubSheetSecret(); unsubSheetSecret = null; }
       adminSheetUrl = '';
       isSyncingUnsyncedAtt = false;
+      isSyncingUnsyncedInq = false;
+      isSyncingUnsyncedVid = false;
+      isSyncingUnsyncedNot = false;
+      sheetLiveInspection = null;
+      sheetInspectLoading = false;
+      sheetAutoInspectedUrl = '';
       sharedAdminCode = '';
       sharedAdminCodeUpdatedAt = '';
       showSharedAdminCode = false;
@@ -7225,6 +7276,11 @@
           ? Math.max(1, (autoSecState.issueIds || []).length)
           : 0;
       }
+      if (subId === 'sheet') {
+        if (!getAdminSheetUrl() || !sheetLiveInspection) return 0;
+        const diff = evaluateSheetSchemaDiff(sheetLiveInspection);
+        return diff ? diff.actionNeededCount : 0;
+      }
       return 0;
     }
 
@@ -7233,6 +7289,7 @@
         + getManageSubTabBadgeCount('admins')
         + getManageSubTabBadgeCount('inquiries')
         + getManageSubTabBadgeCount('videos')
+        + getManageSubTabBadgeCount('sheet')
         + getManageSubTabBadgeCount('diagnostics')
         + getManageSubTabBadgeCount('security');
     }
@@ -7992,14 +8049,24 @@
         unsubSheetSecret = db.collection('config').doc('sheetSecret').onSnapshot(doc => {
           adminSheetUrl = (doc.exists && doc.data().url) ? String(doc.data().url).trim() : '';
           if (adminSheetUrl) {
+            if (sheetAutoInspectedUrl !== adminSheetUrl) {
+              sheetAutoInspectedUrl = adminSheetUrl;
+              runLiveSheetSchemaInspect(true).catch(() => {});
+            }
             if (members.length > 0) syncUnsyncedMembersToSheet(members).catch(() => {});
             if (attendanceRecords.length > 0) syncUnsyncedAttendanceToSheet(attendanceRecords).catch(() => {});
+            if (inquiries.length > 0) syncUnsyncedInquiriesToSheet(inquiries).catch(() => {});
+            if (videoItems.length > 0) syncUnsyncedVideosToSheet(videoItems).catch(() => {});
+            if (notices.length > 0) syncUnsyncedNoticesToSheet(notices).catch(() => {});
             if (Array.isArray(adminRegistry.renameLogs) && adminRegistry.renameLogs.length > 0) {
               syncUnsyncedRenameLogsToSheet().catch(() => {});
             }
             if (auditLogs.length > 0) {
               syncUnsyncedAuditLogsToSheet().catch(() => {});
             }
+          } else {
+            sheetLiveInspection = null;
+            sheetAutoInspectedUrl = '';
           }
           if (currentMainTab === 'manage' && (currentManageSubTab === 'sheet' || currentManageSubTab === 'worship' || currentManageSubTab === 'diagnostics' || currentManageSubTab === 'logs')) {
             applyScreen();
@@ -8136,6 +8203,7 @@
             inquiriesFirstSnap = false;
           }
           inquiries = next;
+          if (isAdminUser && adminSheetUrl) syncUnsyncedInquiriesToSheet(next).catch(() => {});
           applyScreen();
         }, err => {
           if (err && err.code === 'permission-denied') {
@@ -8201,6 +8269,7 @@
             videosFirstSnap = false;
           }
           videoItems = next;
+          if (isAdminUser && adminSheetUrl) syncUnsyncedVideosToSheet(next).catch(() => {});
           applyScreen();
         }, err => {
           if (err && err.code === 'permission-denied') {
@@ -8404,6 +8473,7 @@
 
         if (promotedCount > 0) {
           await batch.commit();
+          dueNotices.forEach(n => syncNoticeToSheet({ ...n, publishMode: 'now', publishAtTs: 0 }));
           const titles = [...dueNotices.map(n => n.title), ...dueBlocks.map(b => getBlockDisplayLabel(b))].filter(Boolean);
           recordAuditLog({
             actorType: 'admin',
@@ -10672,26 +10742,18 @@
           catId: 'worship_sheet',
           category: catMap.worship_sheet,
           icon: getTabIcon('manageSheet'),
-          title: `5. ${getTabLabel('manageWorship')} & ${getTabLabel('manageSheet')} (구글 시트 7개 세부 탭)`,
-          sub: '예배·행사 출석 관리와 별도 분리된 구글 시트 연동·동기화·재정비 사용법',
-          keywords: `${getTabLabel('manageWorship')} ${getTabLabel('manageSheet')} 예배 출석 정기 특별 행사 수련회 구글 시트 Apps Script 7개 탭 동기화 재정비 출석 0 정리`,
+          title: `5. ${getTabLabel('manageWorship')} & ${getTabLabel('manageSheet')} (구글 시트 10개 세부 탭 · 자동 변경 감지)`,
+          sub: '예배·행사 출석 관리와 구글 시트 10개 탭 연동·누락/변경 자동 감지·재정비 사용법',
+          keywords: `${getTabLabel('manageWorship')} ${getTabLabel('manageSheet')} 예배 출석 정기 특별 행사 수련회 구글 시트 Apps Script 10개 탭 문의 영상 공지 동기화 재정비 변경 감지 출석 0 정리`,
           targetTab: 'sheet',
           targetLabel: `${getTabIcon('manageSheet')} ${getTabLabel('manageSheet')} 열기`,
           steps: [
             `<b>출석 명단 · 일정 관리 ([${wIcn} ${wLbl}]):</b> 날짜/예배별 출석 인원을 확인하고 <b>[+ 출석 추가]</b>·<b>[수정]</b>·<b>[삭제]</b>·<b>[✏️ 예배명 변경]</b>을 처리합니다. 정기 예배 요일·시간(기본 주일 14:00~15:30)과 특별 행사 일정도 이 탭에서 설정합니다.`,
-            `<b>구글 시트 연동 설정 ([${shIcn} ${shLbl}]):</b> 별도 보관한 최신 7탭 Apps Script를 구글 시트 <b>[확장 프로그램 → Apps Script → 배포 관리 → 새 버전 배포]</b>한 뒤, 웹 앱 URL을 <b>[${shIcn} ${shLbl}]</b>에 입력하고 저장합니다.`,
-            `<b>전체 동기화 · 미반영 로그 동기화:</b> <b>[${shIcn} ${shLbl}]</b>에서 <b>[🔄 전체 시트 동기화]</b>, <b>[📋 미반영 로그 동기화]</b>, <b>[🔔 연동 테스트]</b>, <b>[🧪 시트 실전 쓰기·삭제 테스트]</b>를 한곳에서 관리합니다.`,
-            `<b>버전 전환 시트 재정비:</b> 시트 양식이 꼬였거나 테스트 흔적이 남았을 때는 <b>[${shIcn} ${shLbl} → 🛠️ 시트 재정비]</b> 버튼으로 <b>출석부·회원 명단·관리자 명단</b>을 최신 양식으로 안전하게 재생성합니다. (4개 감사 로그 탭은 삭제 불가 유지)`
+            `<b>시트 변경·누락 자동 감지 ([${shIcn} ${shLbl} → 📋 현황·변경]):</b> 앱이 업데이트될 때마다 새로 추가된 시트, 누락된 시트, 삭제된 구버전 시트(예: 생일 변경 로그), Apps Script 버전 차이를 앱이 자동 대조해 배지와 상태 표로 바로 알려줍니다.`,
+            `<b>구글 시트 연동 설정 ([${shIcn} ${shLbl}]):</b> 최신 10탭 Apps Script(<code>${SHEET_SCHEMA_VERSION}</code>)를 구글 시트 <b>[확장 프로그램 → Apps Script → 배포 관리 → 새 버전 배포]</b>한 뒤, 웹 앱 URL을 <b>[${shIcn} ${shLbl}]</b>에 입력하고 저장합니다.`,
+            `<b>버전 전환 시트 재정비:</b> 시트 양식이 꼬였거나 테스트 흔적이 남았을 때는 <b>[${shIcn} ${shLbl} → 🛠️ 양식 재정비]</b> 버튼으로 <b>현황·운영 6개 탭(출석부·회원·관리자·문의·영상·공지)</b>을 최신 양식으로 재생성합니다. (4개 보안 감사 로그 탭은 위변조 방지를 위해 보존)`
           ],
-          sheetTabs: [
-            { name: '1. 출석부', desc: '예배·행사별 출석 시각 & 누적 출석' },
-            { name: '2. 회원 명단', desc: '성명·역할·가입일·상태·이전이름' },
-            { name: '3. 관리자 명단', desc: '활성/해제 관리자 현황·접속일·횟수' },
-            { name: '4. 관리자 입퇴장 로그', desc: '관리자 등록·승인·거절·해제·재입장' },
-            { name: '5. 이름 변경 로그', desc: '관리자·회원 이름 변경(신청/승인/거절)' },
-            { name: '6. 관리자 활동 로그', desc: '공지·배너·영상·역할·메뉴·설정 전체' },
-            { name: '7. 이용자 활동 로그', desc: '영상 추천·문의·가입/탈퇴·출석 이력' }
-          ],
+          sheetTabs: SHEET_SCHEMA_TABS.map((t, idx) => ({ name: `${idx + 1}. ${t.name}${t.isNew ? ' (NEW)' : ''}`, desc: t.desc })),
           tip: '구글 시트 URL은 관리자 전용 문서(config/sheetSecret)에 격리되어 있어 일반 회원은 절대 볼 수 없습니다.'
         },
         {
@@ -10724,7 +10786,7 @@
           targetLabel: `${getTabIcon('manageDiagnostics')} ${getTabLabel('manageDiagnostics')} 탭 열기`,
           steps: [
             `<b>${lblLbl} 편집 ([${lblIcn} ${lblLbl}]):</b> 하단 탭과 <b>${mngLbl}</b> 서브탭의 이모지, 이름, 표시 순서를 자유롭게 바꿀 수 있습니다. 저장 시 모든 회원 앱과 사용 설명서의 명칭까지 즉시 자동 반영됩니다.`,
-            `<b>전체 기능 점검 ([${diagIcn} ${diagLbl}]):</b> <b>[🚀 전체 5개 항목 한 번에 점검하기]</b>로 Firebase, 구글 시트 8개 탭, 초대 QR, 알림, 설정 무결성을 한 번에 진단합니다.`,
+            `<b>전체 기능 점검 ([${diagIcn} ${diagLbl}]):</b> <b>[🚀 수동 전체 기능 일괄 점검 실행]</b>으로 Firebase, 구글 시트 10개 탭(버전·누락·삭제 대조), 초대 QR, 알림, 설정·영상·예배·문의·PWA 상태를 한 번에 진단합니다.`,
             `<b>일반 회원 시점 미리보기:</b> <b>[👁️ 일반 회원 화면 미리보기]</b>를 누르면 관리자 전용 칸과 <b>${mngLbl}</b>가 숨겨진 실제 일반 회원 화면을 안전하게 확인해 볼 수 있습니다.`,
             '<b>서버 점검 모드:</b> 앱 업데이트나 대규모 정비 시 <b>[즉시 서버 점검 모드 켜기]</b>를 켜면 일반 회원에게는 점검 안내 화면만 표시되고 최고 관리자는 정상 작업할 수 있습니다.'
           ],
@@ -11245,7 +11307,7 @@
     };
 
     // ==================== 12. 관리 센터 ====================
-    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|openSecSimModal|selectSecSimVariant|runAllSecSimulations|switchMainTab)\s*\(/;
+    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|openSecSimModal|selectSecSimVariant|runAllSecSimulations|runLiveSheetSchemaInspect|switchMainTab)\s*\(/;
     const OBSERVER_ALLOWED_INPUT_IDS = new Set([
       'roleMemberSearchInput', 'adminLogSearchInput', 'adminGuideSearchInput', 'attRosterSearchInput', 'attRosterQuickJumpInput'
     ]);
@@ -12270,6 +12332,7 @@
           }
           await batch.commit();
 
+          syncNoticeToSheet(nextNotice);
           if (mode === 'notice' && publishMode === 'now') {
             await ensureHomeBlocksExistForTypes(pinned ? ['hero_notice', 'notice_list'] : ['notice_list']);
           }
@@ -12503,6 +12566,7 @@
           batch.delete(db.collection('adminNotices').doc(String(id)));
         }
         await batch.commit();
+        syncNoticeToSheet(updated);
         await ensureHomeBlocksExistForTypes(['notice_list']);
         recordAuditLog({ actorType: 'admin', category: '공지·배너', action: '공지 즉시 게시', target: n.title, detail: n.category || '' });
         showToast(`[${n.title}] 공지를 지금 바로 게시했습니다!`);
@@ -12543,6 +12607,7 @@
           batch.delete(db.collection('adminNotices').doc(String(id)));
         }
         await batch.commit();
+        syncNoticeToSheet(updated);
         await ensureHomeBlocksExistForTypes(['hero_notice', 'notice_list']);
         recordAuditLog({ actorType: 'admin', category: '공지·배너', action: '공지 상단 배너 고정', target: n.title });
         showToast('메인 화면 상단 배너에 바로 띄웠습니다!');
@@ -12811,6 +12876,7 @@
           batch.delete(db.collection('adminNotices').doc(targetId));
         }
         await batch.commit();
+        syncNoticeToSheet(nextNotice);
 
         recordAuditLog({
           actorType: 'admin',
@@ -12842,6 +12908,7 @@
         batch.delete(db.collection('notices').doc(String(id)));
         batch.delete(db.collection('adminNotices').doc(String(id)));
         await batch.commit();
+        deleteNoticeFromSheet(String(id));
         recordAuditLog({
           actorType: 'admin',
           category: '공지·배너',
@@ -16883,7 +16950,7 @@
       return String(adminSheetUrl || '').trim();
     }
 
-    // --- Google Sheet Apps Script POST Helper (관리자 전용 격리 URL 사용 · 응답 확인 + no-cors 자동 폴백) ---
+    // --- Google Sheet Apps Script POST Helper (관리자 전용 격리 URL 사용 · 스크립트 오류 검증 + no-cors 폴백) ---
     async function postToGoogleSheet(payload, overrideUrl = '', returnDetail = false) {
       const url = String(overrideUrl || getAdminSheetUrl() || '').trim();
       if (!url || !/^https:\/\/script\.google\.com\//i.test(url)) {
@@ -16899,6 +16966,9 @@
         if (res.ok) {
           let data = null;
           try { data = await res.json(); } catch {}
+          if (data && data.ok === false) {
+            return returnDetail ? { ok: false, readable: true, data, reason: 'script_error' } : false;
+          }
           return returnDetail ? { ok: true, readable: true, data } : true;
         }
       } catch (corsErr) {
@@ -16932,6 +17002,221 @@
       }, url).catch(() => {});
     }
 
+    function buildInquirySheetRow(q) {
+      if (!q) return null;
+      const resolved = isInquiryResolved(q);
+      const statusLabel = q.reply ? '답변·해결됨' : (resolved ? '해결됨' : (q.status === 'read' ? '확인됨(미해결)' : '신규 접수'));
+      return {
+        id: String(q.id || ''),
+        category: String(q.category || '의견'),
+        status: String(q.status || 'new'),
+        statusLabel,
+        authorName: String(q.authorName || '회원'),
+        roleName: String(q.roleName || '청년'),
+        title: String(q.title || ''),
+        body: String(q.body || ''),
+        createdAt: String(q.createdAt || ''),
+        updatedAt: String(q.updatedAt || ''),
+        reply: String(q.reply || ''),
+        replyBy: String(q.replyBy || q.resolvedBy || ''),
+        replyAt: String(q.replyAt || q.resolvedAt || '')
+      };
+    }
+
+    function computeInquirySheetSig(q) {
+      return `${q.category || ''}|${q.status || ''}|${q.title || ''}|${(q.body || '').length}|${q.updatedTs || 0}|${q.replyTs || 0}|${q.resolvedAt || ''}`;
+    }
+
+    function syncInquiryToSheet(q) {
+      const url = getAdminSheetUrl();
+      const row = buildInquirySheetRow(q);
+      if (!url || !row || !row.id) return;
+      const sig = computeInquirySheetSig(q);
+      postToGoogleSheet({ action: 'inquiry_upsert', ...row }, url, true).then(res => {
+        if (res && res.ok) {
+          db.collection('inquiries').doc(row.id).update({ sheetSyncedSig: sig }).catch(() => {});
+        }
+      }).catch(() => {});
+    }
+
+    function deleteInquiryFromSheet(id) {
+      const url = getAdminSheetUrl();
+      if (!url || !id) return;
+      postToGoogleSheet({ action: 'inquiry_delete', id: String(id) }, url).catch(() => {});
+    }
+
+    async function syncUnsyncedInquiriesToSheet(list) {
+      const user = getCurrentUser();
+      const url = getAdminSheetUrl();
+      if (!user || !user.isSuperAdmin || !url || isSyncingUnsyncedInq) return;
+      const toSync = (Array.isArray(list) ? list : []).filter(q => q && q.id && q.sheetSyncedSig !== computeInquirySheetSig(q));
+      if (toSync.length === 0) return;
+
+      isSyncingUnsyncedInq = true;
+      try {
+        for (const q of toSync) {
+          const row = buildInquirySheetRow(q);
+          if (!row) continue;
+          const ok = await postToGoogleSheet({ action: 'inquiry_upsert', ...row }, url);
+          if (ok) {
+            await db.collection('inquiries').doc(row.id).update({ sheetSyncedSig: computeInquirySheetSig(q) }).catch(() => {});
+          }
+        }
+      } finally {
+        isSyncingUnsyncedInq = false;
+      }
+    }
+
+    function buildVideoSheetRow(v) {
+      if (!v) return null;
+      const catLabel = getVideoCategoryDisplayLabel(v.category);
+      const grpLabel = getVideoAutoGroupLabel(v);
+      const stLabel = v.status === 'approved' ? '게시 완료' : (v.status === 'pending' ? '검토 대기' : '반려됨');
+      const approvedInfo = v.status === 'approved'
+        ? `${v.approvedBy || '자동'}${v.approvedAt ? ` (${v.approvedAt})` : ''}`
+        : (v.status === 'rejected' ? `반려: ${v.rejectReason || '-'}` : '승인 대기');
+      return {
+        id: String(v.id || ''),
+        category: catLabel,
+        groupLabel: grpLabel,
+        title: String(v.title || ''),
+        channelName: String(v.channelName || ''),
+        officialVerified: !!v.officialVerified,
+        status: String(v.status || ''),
+        statusLabel: stLabel,
+        authorName: String(v.authorName || ''),
+        createdAt: String(v.createdAt || ''),
+        approvedInfo,
+        note: String(v.note || ''),
+        url: String(v.url || (v.videoId ? `https://youtu.be/${v.videoId}` : ''))
+      };
+    }
+
+    function computeVideoSheetSig(v) {
+      return `${v.category || ''}|${v.title || ''}|${v.status || ''}|${v.officialVerified ? 1 : 0}|${v.updatedTs || 0}|${v.approvedTs || 0}|${v.rejectReason || ''}`;
+    }
+
+    function syncVideoToSheet(v) {
+      const url = getAdminSheetUrl();
+      const row = buildVideoSheetRow(v);
+      if (!url || !row || !row.id) return;
+      const sig = computeVideoSheetSig(v);
+      postToGoogleSheet({ action: 'video_upsert', ...row }, url, true).then(res => {
+        if (res && res.ok) {
+          db.collection('videos').doc(row.id).update({ sheetSyncedSig: sig }).catch(() => {});
+        }
+      }).catch(() => {});
+    }
+
+    function deleteVideoFromSheet(id) {
+      const url = getAdminSheetUrl();
+      if (!url || !id) return;
+      postToGoogleSheet({ action: 'video_delete', id: String(id) }, url).catch(() => {});
+    }
+
+    async function syncUnsyncedVideosToSheet(list) {
+      const user = getCurrentUser();
+      const url = getAdminSheetUrl();
+      if (!user || !user.isSuperAdmin || !url || isSyncingUnsyncedVid) return;
+      const toSync = (Array.isArray(list) ? list : []).filter(v => v && v.id && v.sheetSyncedSig !== computeVideoSheetSig(v));
+      if (toSync.length === 0) return;
+
+      isSyncingUnsyncedVid = true;
+      try {
+        for (const v of toSync) {
+          const row = buildVideoSheetRow(v);
+          if (!row) continue;
+          const ok = await postToGoogleSheet({ action: 'video_upsert', ...row }, url);
+          if (ok) {
+            await db.collection('videos').doc(row.id).update({ sheetSyncedSig: computeVideoSheetSig(v) }).catch(() => {});
+          }
+        }
+      } finally {
+        isSyncingUnsyncedVid = false;
+      }
+    }
+
+    function getNoticeAudiencePlainText(n) {
+      if (!n) return '전체 회원';
+      const aud = n.audience || 'all';
+      if (aud === 'admin') return '최고 관리자 전용';
+      if (aud === 'roles') {
+        const targets = Array.isArray(n.targetRoles) ? n.targetRoles.map(String) : [];
+        const names = targets.map(tid => {
+          const r = roles.find(x => String(x.id) === tid);
+          return r ? r.name : '';
+        }).filter(Boolean);
+        return names.length > 0 ? `지정 역할 (${names.join(', ')})` : '최고 관리자 전용';
+      }
+      return '전체 회원';
+    }
+
+    function buildNoticeSheetRow(n) {
+      if (!n) return null;
+      const st = getPublishState(n);
+      const stLabel = st === 'draft'
+        ? '임시저장(숨김)'
+        : (st === 'scheduled' ? `예약 (${(tsToKstParts(n.publishAtTs) || {}).shortLabel || ''})` : '게시 중');
+      return {
+        id: String(n.id || ''),
+        category: String(n.category || '공지'),
+        publishState: stLabel,
+        audienceLabel: getNoticeAudiencePlainText(n),
+        pinned: !!n.pinned,
+        title: String(n.title || ''),
+        body: String(n.body || ''),
+        date: String(n.date || formatToday()),
+        updatedAt: formatKstDateTime()
+      };
+    }
+
+    function computeNoticeSheetSig(n) {
+      const targets = Array.isArray(n.targetRoles) ? n.targetRoles.join(',') : '';
+      return `${n.category || ''}|${n.title || ''}|${(n.body || '').length}|${n.pinned ? 1 : 0}|${n.publishMode || 'now'}|${n.publishAtTs || 0}|${n.audience || 'all'}|${targets}`;
+    }
+
+    function syncNoticeToSheet(n) {
+      const url = getAdminSheetUrl();
+      const row = buildNoticeSheetRow(n);
+      if (!url || !row || !row.id) return;
+      const sig = computeNoticeSheetSig(n);
+      const colName = n._col || (isServerRestrictedItem(n) ? 'adminNotices' : 'notices');
+      postToGoogleSheet({ action: 'notice_upsert', ...row }, url, true).then(res => {
+        if (res && res.ok) {
+          db.collection(colName).doc(row.id).update({ sheetSyncedSig: sig }).catch(() => {});
+        }
+      }).catch(() => {});
+    }
+
+    function deleteNoticeFromSheet(id) {
+      const url = getAdminSheetUrl();
+      if (!url || !id) return;
+      postToGoogleSheet({ action: 'notice_delete', id: String(id) }, url).catch(() => {});
+    }
+
+    async function syncUnsyncedNoticesToSheet(list) {
+      const user = getCurrentUser();
+      const url = getAdminSheetUrl();
+      if (!user || !user.isSuperAdmin || !url || isSyncingUnsyncedNot) return;
+      const toSync = (Array.isArray(list) ? list : []).filter(n => n && n.id && n.sheetSyncedSig !== computeNoticeSheetSig(n));
+      if (toSync.length === 0) return;
+
+      isSyncingUnsyncedNot = true;
+      try {
+        for (const n of toSync) {
+          const row = buildNoticeSheetRow(n);
+          if (!row) continue;
+          const ok = await postToGoogleSheet({ action: 'notice_upsert', ...row }, url);
+          if (ok) {
+            const colName = n._col || (isServerRestrictedItem(n) ? 'adminNotices' : 'notices');
+            await db.collection(colName).doc(row.id).update({ sheetSyncedSig: computeNoticeSheetSig(n) }).catch(() => {});
+          }
+        }
+      } finally {
+        isSyncingUnsyncedNot = false;
+      }
+    }
+
     async function syncUnsyncedAttendanceToSheet(attList) {
       const user = getCurrentUser();
       const url = getAdminSheetUrl();
@@ -16949,7 +17234,8 @@
             name: rec.name,
             role: rec.roleName || '',
             time: isAbsentAttendanceRecord(rec) ? `X (불참 ${rec.time || ''})`.trim() : (rec.time || ''),
-            modifiedBy: rec.modifiedBy ? `${rec.modifiedBy}${rec.modifiedAt ? ` (${rec.modifiedAt})` : ''}` : ''
+            modifiedBy: rec.modifiedBy ? `${rec.modifiedBy}${rec.modifiedAt ? ` (${rec.modifiedAt})` : ''}` : '',
+            forceUpdate: true
           }, url);
           if (ok) {
             await db.collection('attendance').doc(String(rec.id)).update({ sheetSynced: true }).catch(() => {});
@@ -16960,16 +17246,23 @@
       }
     }
 
+    function computeMemberSheetSig(m, roleLabel, statusLabel) {
+      return `${m.name || ''}|${roleLabel || ''}|${statusLabel || ''}|${m.prevName || ''}`;
+    }
+
     async function syncUnsyncedMembersToSheet(memberList) {
       const user = getCurrentUser();
       const url = getAdminSheetUrl();
       if (!user || !user.isSuperAdmin || !url) return;
       const toSync = memberList.filter(m => {
         if (m.status === 'removed') return false;
+        const isRe = !!m.isRejoin || memberHistoryMap.has(nameToHex(m.name));
         const curStatusLabel = m.status === 'pending'
-          ? (memberHistoryMap.has(nameToHex(m.name)) ? '재가입 대기' : '가입 대기')
-          : (m.status === 'approved' ? (m.isRejoin ? '재가입 승인' : '승인') : (m.status === 'rejected' ? '보류' : m.status));
-        return m.sheetSyncedStatus !== curStatusLabel;
+          ? (isRe ? '재가입 대기' : '가입 대기')
+          : (m.status === 'approved' ? (isRe ? '재가입 승인' : '승인') : (m.status === 'rejected' ? '보류' : m.status));
+        const roleLabel = m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미정');
+        const sig = computeMemberSheetSig(m, roleLabel, curStatusLabel);
+        return m.sheetSyncedSig ? (m.sheetSyncedSig !== sig) : (m.sheetSyncedStatus !== curStatusLabel);
       });
       if (toSync.length === 0) return;
 
@@ -16979,7 +17272,8 @@
           ? (isRe ? '재가입 대기' : '가입 대기')
           : (m.status === 'approved' ? (isRe ? '재가입 승인' : '승인') : (m.status === 'rejected' ? '보류' : m.status));
         const roleLabel = m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미정');
-        await postToGoogleSheet({
+        const sig = computeMemberSheetSig(m, roleLabel, curStatusLabel);
+        const ok = await postToGoogleSheet({
           action: 'member_upsert',
           name: m.name,
           role: roleLabel,
@@ -16988,7 +17282,12 @@
           prevName: m.prevName || '',
           updatedAt: formatKstDateTime()
         }, url);
-        await db.collection('members').doc(String(m.id)).update({ sheetSyncedStatus: curStatusLabel }).catch(() => {});
+        if (ok) {
+          await db.collection('members').doc(String(m.id)).update({
+            sheetSyncedStatus: curStatusLabel,
+            sheetSyncedSig: sig
+          }).catch(() => {});
+        }
       }
     }
 
@@ -19474,7 +19773,7 @@
           source: 'admin_add',
           modifiedBy: adminActor,
           modifiedAt: nowStr,
-          sheetSynced: !!getAdminSheetUrl()
+          sheetSynced: false
         };
         await db.collection('attendance').doc(docId).set(newRec);
         postToGoogleSheet({
@@ -19486,6 +19785,8 @@
           time: sheetTimeVal,
           modifiedBy: `추가: ${adminActor} (${nowStr})`,
           forceUpdate: true
+        }, '', true).then(res => {
+          if (res && res.ok) db.collection('attendance').doc(docId).update({ sheetSynced: true }).catch(() => {});
         }).catch(() => {});
         recordAuditLog({
           actorType: 'admin',
@@ -19838,10 +20139,172 @@
       }
     }
 
-    // --- Admin Manage Sub-Tab: 📊 구글 시트 연동 · 동기화 · 재정비 · 테스트 전용 탭 ---
+    // --- 구글 시트 스키마 자동 대조 엔진 (추가·누락·삭제·구버전 스크립트 실시간 판별) ---
+    function evaluateSheetSchemaDiff(insp) {
+      if (!insp || !insp.checkedAt) return null;
+      if (!insp.ok) {
+        return {
+          status: 'err',
+          needsScriptUpdate: false,
+          connected: false,
+          scriptVersion: '연결 실패',
+          missingTabs: [],
+          addedNeedScriptTabs: [],
+          deprecatedPresent: [],
+          legacyDetected: [],
+          tabStatuses: SHEET_SCHEMA_TABS.map(t => ({ ...t, state: 'unknown', label: '확인 불가', rowCount: null })),
+          actionNeededCount: 1
+        };
+      }
+
+      const data = insp.data || {};
+      const readable = !!insp.readable;
+      const scriptVersion = String(data.version || (isSheetResponseLatestTab(data) ? SHEET_SCHEMA_VERSION : (isSheetResponseSevenTab(data) ? 'v10.69-7tab' : (isSheetResponseEightTab(data) ? 'v10.48-8tab' : (isSheetResponseMultiTab(data) ? '구버전 멀티탭' : '구버전 1탭')))));
+      const isLatest10 = readable && isSheetResponseLatestTab(data);
+      const needsScriptUpdate = readable && !isLatest10;
+
+      const existingTabs = Array.isArray(data.existingTabs) ? data.existingTabs.map(String) : null;
+      const tabRowCounts = (data.tabRowCounts && typeof data.tabRowCounts === 'object') ? data.tabRowCounts : {};
+      const legacyDetected = Array.isArray(data.legacyDetected) ? data.legacyDetected.map(String) : [];
+      const birthdayRemnants = Array.isArray(data.birthdayRemnants) ? data.birthdayRemnants.map(String) : [];
+
+      const deprecatedPresent = [];
+      SHEET_REMOVED_TABS.forEach(rem => {
+        if ((existingTabs && existingTabs.includes(rem.name)) || birthdayRemnants.some(x => x.includes(rem.name))) {
+          deprecatedPresent.push(rem.name);
+        }
+      });
+      birthdayRemnants.forEach(r => {
+        if (!deprecatedPresent.some(x => r.includes(x))) deprecatedPresent.push(r);
+      });
+
+      const missingTabs = [];
+      const addedNeedScriptTabs = [];
+      const tabStatuses = SHEET_SCHEMA_TABS.map(t => {
+        if (!readable) {
+          return { ...t, state: 'opaque', label: '연결됨 (응답 비공개)', rowCount: null };
+        }
+        if (needsScriptUpdate && t.isNew) {
+          addedNeedScriptTabs.push(t.name);
+          return { ...t, state: 'need_script', label: `🆕 ${t.addedIn} 추가 · 스크립트 업데이트 필요`, rowCount: null };
+        }
+        if (existingTabs) {
+          if (existingTabs.includes(t.name)) {
+            const rc = Number(tabRowCounts[t.name] || 0);
+            const hasLegacy = legacyDetected.includes(t.name);
+            return {
+              ...t,
+              state: hasLegacy ? 'legacy' : 'ok',
+              label: hasLegacy ? `⚠️ 구버전 양식 (${rc}행)` : `✅ 연동 완료 (${rc}행)`,
+              rowCount: rc
+            };
+          } else {
+            missingTabs.push(t.name);
+            return { ...t, state: 'missing', label: '⚠️ 시트 미생성 · 동기화 필요', rowCount: 0 };
+          }
+        }
+        return {
+          ...t,
+          state: needsScriptUpdate ? 'legacy' : 'ok',
+          label: needsScriptUpdate ? '기존 연동 중 (구버전 스크립트)' : '✅ 연동 지원됨',
+          rowCount: null
+        };
+      });
+
+      const actionNeededCount = (needsScriptUpdate ? 1 : 0) + missingTabs.length + deprecatedPresent.length + legacyDetected.length;
+      const status = actionNeededCount > 0 ? 'warn' : 'ok';
+      return {
+        status,
+        needsScriptUpdate,
+        connected: true,
+        readable,
+        scriptVersion,
+        missingTabs,
+        addedNeedScriptTabs,
+        deprecatedPresent,
+        legacyDetected,
+        tabStatuses,
+        actionNeededCount
+      };
+    }
+
+    window.runLiveSheetSchemaInspect = async (silent = false) => {
+      const url = (document.getElementById('cfgSheetUrlInput') ? document.getElementById('cfgSheetUrlInput').value.trim() : '') || getAdminSheetUrl();
+      if (!url) {
+        if (!silent) showToast('먼저 Apps Script 웹 앱 URL을 입력해 주세요.');
+        return null;
+      }
+      sheetInspectLoading = true;
+      if (!silent && currentMainTab === 'manage' && currentManageSubTab === 'sheet') {
+        const u = getCurrentUser();
+        if (u) renderManageSheet(document.getElementById('manageContent'), u);
+      }
+      try {
+        const res = await postToGoogleSheet({ action: 'inspect_schema', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url, true);
+        sheetLiveInspection = {
+          ok: !!(res && res.ok),
+          readable: !!(res && res.readable),
+          data: (res && res.data) || null,
+          reason: (res && res.reason) || '',
+          checkedAt: formatKstDateTime()
+        };
+        const diff = evaluateSheetSchemaDiff(sheetLiveInspection);
+        if (!silent) {
+          if (!sheetLiveInspection.ok) {
+            showToast('🚨 시트 연결에 실패했습니다. URL과 Apps Script 배포 상태를 확인해 주세요.');
+          } else if (diff && diff.needsScriptUpdate) {
+            showToast(`⚠️ 구버전 스크립트(${diff.scriptVersion}) 감지 · 신규 3개 탭 연동을 위해 최신 ${SHEET_SCHEMA_VERSION} 배포가 필요합니다.`);
+          } else if (diff && diff.missingTabs.length > 0) {
+            showToast(`⚠️ 누락 시트 ${diff.missingTabs.length}개(${diff.missingTabs.join(', ')}) 발견 · [🔄 전체 시트 동기화]를 눌러 생성하세요.`);
+          } else if (diff && diff.deprecatedPresent.length > 0) {
+            showToast(`🗑️ 삭제된 구버전 시트(${diff.deprecatedPresent.join(', ')})가 남아 있습니다. 아래 버튼으로 정리할 수 있습니다.`);
+          } else {
+            showToast(`✅ 구글 시트 ${SHEET_SCHEMA_TABS.length}개 세부 탭 모두 최신 상태입니다!`);
+          }
+        }
+        return sheetLiveInspection;
+      } finally {
+        sheetInspectLoading = false;
+        const u = getCurrentUser();
+        if (u) {
+          if (currentMainTab === 'manage' && currentManageSubTab === 'sheet') {
+            renderManageSheet(document.getElementById('manageContent'), u);
+          }
+          renderTabbar(u);
+          if (currentMainTab === 'manage') renderManageSubTabsBar(u);
+        }
+      }
+    };
+
+    window.handleCleanupDeprecatedSheetTabs = async () => {
+      const url = (document.getElementById('cfgSheetUrlInput') ? document.getElementById('cfgSheetUrlInput').value.trim() : '') || getAdminSheetUrl();
+      if (!url) return showToast('먼저 Apps Script 웹 앱 URL을 저장해 주세요.');
+      if (!confirm('앱에서 폐기된 구버전 시트(예: 생일 변경 로그)와 생년월일 열을 구글 시트에서 깔끔하게 삭제할까요?\n(현재 사용 중인 10개 탭과 4개 보안 감사 로그는 그대로 유지됩니다.)')) return;
+      const res = await postToGoogleSheet({ action: 'cleanup_deprecated_tabs' }, url, true);
+      if (warnIfOldAppsScript(res)) return;
+      if (res.ok && res.readable && res.data && res.data.result) {
+        const dt = Array.isArray(res.data.result.deletedTabs) ? res.data.result.deletedTabs : [];
+        const dc = Array.isArray(res.data.result.deletedCols) ? res.data.result.deletedCols : [];
+        sheetLiveInspection = { ok: true, readable: true, data: res.data, checkedAt: formatKstDateTime() };
+        const items = [...dt, ...dc];
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '구버전 폐기 시트·열 정리',
+          target: items.length > 0 ? items.join(', ') : '정리 대상 없음'
+        });
+        showToast(items.length > 0 ? `🧹 폐기 시트·열 정리 완료: ${items.join(', ')}` : '이미 삭제된 구버전 시트·열이 없습니다.');
+        const u = getCurrentUser();
+        if (u && currentMainTab === 'manage' && currentManageSubTab === 'sheet') renderManageSheet(document.getElementById('manageContent'), u);
+      } else {
+        showToast('정리 실패: 최신 v10.109 Apps Script가 배포되어 있는지 확인해 주세요.');
+      }
+    };
+
+    // --- Admin Manage Sub-Tab: 📊 구글 시트 연동 · 스키마 변경 자동 감지 · 동기화 · 재정비 전용 탭 ---
     window.setManageSheetFilter = (f) => {
-      manageSheetFilter = ['all', 'cfg', 'sync', 'rebuild', 'test'].includes(f) ? f : 'all';
-      const accMap = { cfg: 'sheet_main_cfg', sync: 'sheet_sync_ops', rebuild: 'sheet_rebuild_ops', test: 'sheet_live_test' };
+      manageSheetFilter = ['all', 'schema', 'cfg', 'sync', 'rebuild', 'test'].includes(f) ? f : 'all';
+      const accMap = { schema: 'sheet_schema_board', cfg: 'sheet_main_cfg', sync: 'sheet_sync_ops', rebuild: 'sheet_rebuild_ops', test: 'sheet_live_test' };
       if (accMap[manageSheetFilter]) manageSectionOpen[accMap[manageSheetFilter]] = true;
       const u = getCurrentUser();
       if (u && currentMainTab === 'manage' && currentManageSubTab === 'sheet') {
@@ -19855,41 +20318,154 @@
       const allLogs = getMergedAuditLogs();
       const unsyncedLogs = allLogs.filter(l => l && l.sheetSynced !== true).length;
       const unsyncedAtt = attendanceRecords.filter(r => r && r.sheetSynced !== true).length;
-      const totalUnsynced = unsyncedLogs + unsyncedAtt;
+      const unsyncedInq = inquiries.filter(q => q && q.id && q.sheetSyncedSig !== computeInquirySheetSig(q)).length;
+      const unsyncedVid = videoItems.filter(v => v && v.id && v.sheetSyncedSig !== computeVideoSheetSig(v)).length;
+      const unsyncedNot = notices.filter(n => n && n.id && n.sheetSyncedSig !== computeNoticeSheetSig(n)).length;
+      const totalUnsynced = unsyncedLogs + unsyncedAtt + unsyncedInq + unsyncedVid + unsyncedNot;
+      const diff = isLinked ? evaluateSheetSchemaDiff(sheetLiveInspection) : null;
 
       const sf = manageSheetFilter || 'all';
+      const showSchema = sf === 'all' || sf === 'schema';
       const showCfg = sf === 'all' || sf === 'cfg';
       const showSync = sf === 'all' || sf === 'sync';
       const showRebuild = sf === 'all' || sf === 'rebuild';
       const showTest = sf === 'all' || sf === 'test';
-      const sheetMainOpen = isManageSectionOpen('sheet_main_cfg', true);
+      const sheetSchemaOpen = isManageSectionOpen('sheet_schema_board', true);
+      const sheetMainOpen = isManageSectionOpen('sheet_main_cfg', !isLinked || sf === 'cfg');
       const sheetSyncOpen = isManageSectionOpen('sheet_sync_ops', true);
       const sheetRebuildOpen = isManageSectionOpen('sheet_rebuild_ops', sf === 'rebuild');
       const sheetLiveTestOpen = isManageSectionOpen('sheet_live_test', sf === 'test');
 
+      const schemaBadgeHtml = !isLinked
+        ? '<span class="tag slate">URL 미연동</span>'
+        : (sheetInspectLoading
+          ? '<span class="tag warm">🔍 대조 중...</span>'
+          : (!diff
+            ? '<span class="tag slate">대조 대기</span>'
+            : (diff.actionNeededCount > 0
+              ? `<span class="tag red">⚠️ 조치 필요 ${diff.actionNeededCount}건</span>`
+              : `<span class="tag green">✅ ${SHEET_SCHEMA_TABS.length}개 탭 최신 일치</span>`)));
+
       el.innerHTML = `
         <div class="stats-grid-3">
-          <div class="stat-box" onclick="handleTestSheetConnection()">
-            <div class="stat-num" style="font-size:15px;">${isLinked ? '✅ 연동됨' : '미연동'}</div>
-            <div class="stat-label">시트 연결 상태</div>
-          </div>
-          <div class="stat-box" onclick="handleSyncRenameLogsToSheet()">
-            <div class="stat-num">${unsyncedLogs}</div>
-            <div class="stat-label">미반영 로그</div>
+          <div class="stat-box" onclick="runLiveSheetSchemaInspect(false)">
+            <div class="stat-num" style="font-size:14.5px;">${!isLinked ? '미연동' : (diff && diff.actionNeededCount > 0 ? `⚠️ 점검 ${diff.actionNeededCount}` : '✅ 10탭 정상')}</div>
+            <div class="stat-label">시트 연동 현황</div>
           </div>
           <div class="stat-box" onclick="handleSyncAllToGoogleSheet()">
-            <div class="stat-num">${attendanceRecords.length}</div>
-            <div class="stat-label">누적 출석 기록</div>
+            <div class="stat-num">${totalUnsynced}</div>
+            <div class="stat-label">미반영 데이터·로그</div>
+          </div>
+          <div class="stat-box" onclick="setManageSheetFilter('schema')">
+            <div class="stat-num">${SHEET_SCHEMA_TABS.length}</div>
+            <div class="stat-label">필수 연동 시트</div>
           </div>
         </div>
 
         <div class="filter-row" style="margin-bottom:10px;">
           <button class="filter-chip ${sf === 'all' ? 'active' : ''}" type="button" onclick="setManageSheetFilter('all')">전체</button>
+          <button class="filter-chip ${sf === 'schema' ? 'active' : ''} ${diff && diff.actionNeededCount > 0 ? 'has-badge' : ''}" type="button" onclick="setManageSheetFilter('schema')"><span>📋 시트 현황·변경</span>${diff && diff.actionNeededCount > 0 ? buildSubTabBadgeHtml(diff.actionNeededCount) : ''}</button>
           <button class="filter-chip ${sf === 'cfg' ? 'active' : ''}" type="button" onclick="setManageSheetFilter('cfg')">📊 주소 설정</button>
           <button class="filter-chip ${sf === 'sync' ? 'active' : ''}" type="button" onclick="setManageSheetFilter('sync')">🔄 데이터 동기화</button>
           <button class="filter-chip ${sf === 'rebuild' ? 'active' : ''}" type="button" onclick="setManageSheetFilter('rebuild')">🛠️ 양식 재정비</button>
           <button class="filter-chip ${sf === 'test' ? 'active' : ''}" type="button" onclick="setManageSheetFilter('test')">🧪 실전 테스트</button>
         </div>
+
+        ${showSchema ? `
+        <!-- 0) 앱 업데이트 시트 변경 · 누락 · 삭제 자동 감지판 -->
+        ${buildManageAccordionBar({
+          key: 'sheet_schema_board',
+          titleHtml: '📋 시트 연동 현황 · 업데이트 변경 자동 감지',
+          badgeHtml: schemaBadgeHtml,
+          actionHtml: isLinked ? `<button class="btn-sm primary" type="button" onclick="runLiveSheetSchemaInspect(false)" ${sheetInspectLoading ? 'disabled' : ''}>🔍 지금 대조</button>` : '',
+          defaultOpen: true
+        })}
+        <div data-acc-body="sheet_schema_board" class="${sheetSchemaOpen ? '' : 'hidden'}">
+          <div class="card" style="${diff && diff.actionNeededCount > 0 ? 'border-color:#FCD34D; background:#FFFDF5;' : ''}">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+              <div style="font-size:12.5px; font-weight:800; color:#0F172A;">
+                앱 요구 스크립트: <span class="tag slate">${escapeHtml(SHEET_SCHEMA_VERSION)}</span>
+              </div>
+              <div style="font-size:12px; color:#475569;">
+                배포된 스크립트: <b style="color:${diff && diff.needsScriptUpdate ? '#DC2626' : '#15803D'};">${escapeHtml(diff ? diff.scriptVersion : (isLinked ? '대조 전' : '미연동'))}</b>
+              </div>
+            </div>
+
+            ${diff && diff.needsScriptUpdate ? `
+              <div class="info-box warn" style="margin-top:0; margin-bottom:10px;">
+                ⚠️ <b>구버전 Apps Script(${escapeHtml(diff.scriptVersion)})가 배포되어 있습니다!</b><br>
+                이번 업데이트로 새로 추가된 시트(<b>${escapeHtml(diff.addedNeedScriptTabs.join(', ') || '문의 내역, 설교·CCM 영상, 공지·광고 목록')}</b>)를 연동하려면:<br>
+                1) 구글 시트 → <b>확장 프로그램 → Apps Script</b>에 최신 <b><code>google-apps-script-v10.109.txt</code></b> 코드를 덮어쓰고 저장(Ctrl+S)<br>
+                2) 오른쪽 위 <b>[배포 → 배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]</b> 클릭 후 위 <b>[🔍 지금 대조]</b>를 눌러 주세요.
+              </div>
+            ` : (diff && diff.missingTabs.length > 0 ? `
+              <div class="info-box warn" style="margin-top:0; margin-bottom:10px;">
+                ⚠️ <b>아직 생성되지 않은 시트 ${diff.missingTabs.length}개:</b> ${escapeHtml(diff.missingTabs.join(', '))}<br>
+                아래 <b>[🔄 전체 시트 동기화 (10개 탭)]</b> 버튼을 누르면 누락된 시트 탭이 자동으로 생성되고 현재 데이터가 채워집니다.
+              </div>
+            ` : (!isLinked ? `
+              <div class="info-box" style="margin-top:0; margin-bottom:10px;">
+                아래 <b>[📊 주소 설정]</b>에 Apps Script 웹 앱 URL을 저장하면, 이 영역에서 <b>추가·누락·삭제된 시트</b>를 실시간으로 자동 대조해 알려줍니다.
+              </div>
+            ` : `
+              <div style="font-size:11.5px; color:#15803D; font-weight:700; margin-bottom:8px;">
+                ✅ 앱 요구 시트(${SHEET_SCHEMA_TABS.length}개)와 구글 시트 상태가 실시간 대조되고 있습니다.${sheetLiveInspection && sheetLiveInspection.checkedAt ? ` (최근 대조: ${escapeHtml(sheetLiveInspection.checkedAt)})` : ''}
+              </div>
+            `))}
+
+            <div style="font-size:12px; font-weight:800; color:#334155; margin:6px 0 6px;">📌 필수 연동 시트 목록 (${SHEET_SCHEMA_TABS.length}개 탭)</div>
+            <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:10px;">
+              ${(diff ? diff.tabStatuses : SHEET_SCHEMA_TABS.map(t => ({ ...t, state: 'idle', label: t.isNew ? `🆕 ${t.addedIn} 추가` : '대기' }))).map((t, idx) => {
+                const badgeCls = t.state === 'ok' ? 'green' : (t.state === 'need_script' || t.state === 'missing' ? 'red' : (t.state === 'legacy' ? 'warm' : 'slate'));
+                return `
+                  <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px; padding:7px 9px; border-radius:9px; background:#F8FAFC; border:1px solid ${t.state === 'need_script' || t.state === 'missing' ? '#FECACA' : '#E2E8F0'};">
+                    <div style="min-width:0; flex:1;">
+                      <div style="font-size:12.5px; font-weight:800; color:#0F172A;">
+                        ${idx + 1}. ${escapeHtml(t.name)}
+                        ${t.kind === 'log' ? '<span style="font-size:10.5px; color:#64748B; font-weight:700;"> · 🔒 로그</span>' : ''}
+                        ${t.isNew ? '<span class="new-badge" style="margin-left:3px;">NEW</span>' : ''}
+                      </div>
+                      <div style="font-size:11px; color:#64748B; margin-top:2px;">${escapeHtml(t.desc)}</div>
+                    </div>
+                    <span class="tag ${badgeCls}" style="font-size:10.5px;">${escapeHtml(t.label)}</span>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+            <div style="font-size:12px; font-weight:800; color:#334155; margin:8px 0 5px;">🗑️ 앱에서 삭제(폐기)된 구버전 시트</div>
+            ${SHEET_REMOVED_TABS.map(rem => {
+              const stillThere = diff && diff.deprecatedPresent.some(x => x.includes(rem.name) || x.includes('생년월일'));
+              return `
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; padding:8px 10px; border-radius:9px; background:${stillThere ? '#FEF2F2' : '#F8FAFC'}; border:1px solid ${stillThere ? '#FECACA' : '#E2E8F0'}; margin-bottom:8px;">
+                  <div style="min-width:0; flex:1;">
+                    <div style="font-size:12px; font-weight:800; color:${stillThere ? '#991B1B' : '#475569'};">${escapeHtml(rem.name)} <span style="font-weight:600; font-size:11px;">(${escapeHtml(rem.removedIn)} 삭제)</span></div>
+                    <div style="font-size:11px; color:#64748B; margin-top:2px;">${escapeHtml(rem.reason)}</div>
+                  </div>
+                  ${stillThere
+                    ? '<button class="btn-sm danger" type="button" onclick="handleCleanupDeprecatedSheetTabs()">🧹 시트에서 삭제 정리</button>'
+                    : '<span class="tag green" style="font-size:10.5px;">✅ 정리 완료</span>'}
+                </div>
+              `;
+            }).join('')}
+
+            <details style="margin-top:6px; background:#F8FAFC; border:1px solid var(--border); border-radius:10px; padding:8px 10px;">
+              <summary style="cursor:pointer; font-size:12px; font-weight:800; color:#1E293B;">📜 버전별 시트 추가 · 삭제 · 변경 이력 보기</summary>
+              <div style="margin-top:8px; display:flex; flex-direction:column; gap:7px;">
+                ${SHEET_SCHEMA_CHANGELOG.map(ch => `
+                  <div style="font-size:11.5px; line-height:1.5; padding:7px 9px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px;">
+                    <div style="font-weight:800; color:#0F172A; margin-bottom:2px;">${escapeHtml(ch.version)} <span style="color:#64748B; font-weight:600;">(${escapeHtml(ch.date)})</span></div>
+                    ${ch.added.length > 0 ? `<div style="color:#15803D;"><b>+ 추가된 시트:</b> ${escapeHtml(ch.added.join(', '))}</div>` : ''}
+                    ${ch.removed.length > 0 ? `<div style="color:#DC2626;"><b>- 삭제된 시트:</b> ${escapeHtml(ch.removed.join(', '))}</div>` : ''}
+                    ${ch.changed.length > 0 ? `<div style="color:#334155;"><b>• 변경 사항:</b> ${escapeHtml(ch.changed.join(' / '))}</div>` : ''}
+                  </div>
+                `).join('')}
+              </div>
+            </details>
+          </div>
+        </div>
+
+        ` : ''}
 
         ${showCfg ? `
         <!-- 1) 구글 시트 연동 주소 · 연결 확인 -->
@@ -19897,7 +20473,8 @@
           key: 'sheet_main_cfg',
           titleHtml: `${escapeHtml(getTabIcon('manageSheet'))} ${escapeHtml(getTabLabel('manageSheet'))} · 주소 설정`,
           badgeHtml: `<span class="tag ${isLinked ? 'green' : 'slate'}">${isLinked ? '연동됨' : '미연동'}</span>`,
-          defaultOpen: true
+          defaultOpen: !isLinked || sf === 'cfg',
+          marginTop: showSchema ? '10px' : ''
         })}
         <div data-acc-body="sheet_main_cfg" class="${sheetMainOpen ? '' : 'hidden'}">
           <div class="card">
@@ -19907,7 +20484,7 @@
             </div>
             <div style="font-size:11.5px; color:#64748B; line-height:1.55; margin-bottom:10px;">
               • 보안 강화를 위해 연동 주소는 <b>최고 관리자 전용 서버(config/sheetSecret)</b>에만 격리 보관되며 일반 회원에게는 노출되지 않습니다.<br>
-              • <b>7개 세부 탭 자동 분리 저장:</b> <b>출석부 · 회원 명단 · 관리자 명단 · 관리자 입퇴장 로그 · 이름 변경 로그 · 관리자 활동 로그 · 이용자 활동 로그</b>가 각각 별도 탭에 자동 기록됩니다.
+              • <b>10개 세부 탭 자동 분리 저장:</b> 현황·운영 6개 탭(<b>출석부·회원·관리자·문의·영상·공지</b>)과 보안 감사 로그 4개 탭이 각각 자동 기록됩니다.
             </div>
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
               <button id="saveSheetUrlBtn" class="btn-sm primary" type="button" style="flex:1; padding:9px;" onclick="handleSaveSheetUrl()">💾 연동 주소 저장</button>
@@ -19925,16 +20502,17 @@
           titleHtml: '🔄 데이터 · 보안 로그 시트 동기화',
           badgeHtml: `<span class="tag ${totalUnsynced > 0 ? 'warm' : 'green'}">${totalUnsynced > 0 ? `미반영 ${totalUnsynced}건` : '최신 상태'}</span>`,
           defaultOpen: true,
-          marginTop: showCfg ? '10px' : ''
+          marginTop: (showSchema || showCfg) ? '10px' : ''
         })}
         <div data-acc-body="sheet_sync_ops" class="${sheetSyncOpen ? '' : 'hidden'}">
           <div class="card">
-            <div style="font-size:12px; color:#334155; line-height:1.55; margin-bottom:10px;">
+            <div style="font-size:12px; color:#334155; line-height:1.6; margin-bottom:10px;">
               • <b>회원 명단:</b> ${members.filter(m => m.status !== 'removed').length}명 · <b>출석 기록:</b> ${attendanceRecords.length}건 (미반영 ${unsyncedAtt}건)<br>
+              • <b>문의 내역:</b> ${inquiries.length}건 (미반영 ${unsyncedInq}) · <b>영상:</b> ${videoItems.length}건 (미반영 ${unsyncedVid}) · <b>공지·광고:</b> ${notices.length}건 (미반영 ${unsyncedNot})<br>
               • <b>보안 감사 로그:</b> 총 ${allLogs.length}건 (${unsyncedLogs > 0 ? `<b style="color:#B45309;">미반영 ${unsyncedLogs}건</b>` : '<b style="color:#15803D;">전체 반영 완료</b>'})
             </div>
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
-              <button class="btn-sm approve" type="button" style="flex:1; padding:10px 8px;" onclick="handleSyncAllToGoogleSheet()">🔄 전체 시트 동기화 (7개 탭)</button>
+              <button class="btn-sm approve" type="button" style="flex:1; padding:10px 8px;" onclick="handleSyncAllToGoogleSheet()">🔄 전체 시트 동기화 (10개 탭)</button>
               <button class="btn-sm primary" type="button" style="flex:1; padding:10px 8px;" onclick="handleSyncRenameLogsToSheet()">📋 미반영 로그 동기화</button>
             </div>
           </div>
@@ -19947,9 +20525,9 @@
         ${buildManageAccordionBar({
           key: 'sheet_rebuild_ops',
           titleHtml: '🛠️ 시트 양식 재정비 · 빈 기록 정리',
-          badgeHtml: '<span class="tag slate">현황 3개 탭</span>',
+          badgeHtml: '<span class="tag slate">현황·운영 6개 탭</span>',
           defaultOpen: sf === 'rebuild',
-          marginTop: (showCfg || showSync) ? '10px' : ''
+          marginTop: (showSchema || showCfg || showSync) ? '10px' : ''
         })}
         <div data-acc-body="sheet_rebuild_ops" class="${sheetRebuildOpen ? '' : 'hidden'}">
           <div class="card">
@@ -19961,8 +20539,11 @@
               <button class="btn-sm warn" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['attendance'])">🔄 출석부 재정비</button>
               <button class="btn-sm warn" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['members'])">🔄 회원 명단 재정비</button>
               <button class="btn-sm warn" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['admins'])">🔄 관리자 명단 재정비</button>
-              <button class="btn-sm primary" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['attendance','members','admins'])">✨ 현황 3개 탭 일괄 재정비</button>
+              <button class="btn-sm warn" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['inquiries'])">🔄 문의 내역 재정비</button>
+              <button class="btn-sm warn" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['videos'])">🔄 설교·CCM 영상 재정비</button>
+              <button class="btn-sm warn" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['notices'])">🔄 공지·광고 재정비</button>
             </div>
+            <button class="btn-sm primary" type="button" style="width:100%; padding:10px; margin-bottom:6px;" onclick="handleRebuildSheetTabs(['attendance','members','admins','inquiries','videos','notices'])">✨ 현황·운영 6개 탭 일괄 재정비</button>
             <button class="btn-sm danger" type="button" style="width:100%; padding:9px;" onclick="handleCleanupZeroSheetEntries()">🧹 출석 0인 날짜·인원(테스트 흔적) 시트에서 정리</button>
           </div>
         </div>
@@ -19976,7 +20557,7 @@
           titleHtml: '🧪 구글 시트 실전 쓰기 · 삭제 테스트',
           badgeHtml: '<span class="tag slate">점검용</span>',
           defaultOpen: sf === 'test',
-          marginTop: (showCfg || showSync || showRebuild) ? '10px' : ''
+          marginTop: (showSchema || showCfg || showSync || showRebuild) ? '10px' : ''
         })}
         <div data-acc-body="sheet_live_test" class="${sheetLiveTestOpen ? '' : 'hidden'}">
           <div class="card" style="background:#F8FAFC;">
@@ -20035,7 +20616,7 @@
           const newColTitle = `${dotDate}${dowPart} ${newLabel}`;
           const batch = db.batch();
           existingRecs.forEach(r => {
-            batch.update(db.collection('attendance').doc(String(r.id)), { label: newLabel, colTitle: newColTitle });
+            batch.update(db.collection('attendance').doc(String(r.id)), { label: newLabel, colTitle: newColTitle, sheetSynced: false });
           });
           await batch.commit();
         }
@@ -20391,6 +20972,9 @@
           a.prevName ? `이전 이름: ${a.prevName}` : ''
         ].filter(Boolean).join(' · ')
       }));
+      const inquiryPayload = inquiries.map(q => buildInquirySheetRow(q)).filter(Boolean);
+      const videoPayload = videoItems.map(v => buildVideoSheetRow(v)).filter(Boolean);
+      const noticePayload = notices.map(n => buildNoticeSheetRow(n)).filter(Boolean);
       const allOrderedLogs = getMergedAuditLogs()
         .slice()
         .sort((a, b) => Number(a.ts || 0) - Number(b.ts || 0))
@@ -20400,8 +20984,63 @@
         attendance: attPayload,
         members: memberPayload,
         admins: adminPayload,
+        inquiries: inquiryPayload,
+        videos: videoPayload,
+        notices: noticePayload,
         auditLogs: allOrderedLogs
       };
+    }
+
+    function markAllLocalSheetSyncFlags(isTenTab = false, isMultiLog = false) {
+      for (const m of members.filter(x => x.status !== 'removed')) {
+        const isRe = !!m.isRejoin || memberHistoryMap.has(nameToHex(m.name));
+        const st = m.status === 'pending'
+          ? (isRe ? '재가입 대기' : '가입 대기')
+          : (m.status === 'approved' ? (isRe ? '재가입 승인' : '승인') : (m.status === 'rejected' ? '보류' : m.status));
+        const roleLabel = m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미정');
+        const sig = computeMemberSheetSig(m, roleLabel, st);
+        if (m.sheetSyncedStatus !== st || m.sheetSyncedSig !== sig) {
+          db.collection('members').doc(String(m.id)).update({ sheetSyncedStatus: st, sheetSyncedSig: sig }).catch(() => {});
+        }
+      }
+      for (const r of attendanceRecords) {
+        if (r.sheetSynced !== true) {
+          db.collection('attendance').doc(String(r.id)).update({ sheetSynced: true }).catch(() => {});
+        }
+      }
+      if (isTenTab) {
+        for (const q of inquiries) {
+          const sig = computeInquirySheetSig(q);
+          if (q && q.id && q.sheetSyncedSig !== sig) {
+            db.collection('inquiries').doc(String(q.id)).update({ sheetSyncedSig: sig }).catch(() => {});
+          }
+        }
+        for (const v of videoItems) {
+          const sig = computeVideoSheetSig(v);
+          if (v && v.id && v.sheetSyncedSig !== sig) {
+            db.collection('videos').doc(String(v.id)).update({ sheetSyncedSig: sig }).catch(() => {});
+          }
+        }
+        for (const n of notices) {
+          const sig = computeNoticeSheetSig(n);
+          if (n && n.id && n.sheetSyncedSig !== sig) {
+            const colName = n._col || (isServerRestrictedItem(n) ? 'adminNotices' : 'notices');
+            db.collection(colName).doc(String(n.id)).update({ sheetSyncedSig: sig }).catch(() => {});
+          }
+        }
+      }
+      if (isMultiLog) {
+        for (const l of auditLogs) {
+          if (l && l.sheetSynced !== true) {
+            db.collection('auditLogs').doc(String(l.id)).update({ sheetSynced: true }).catch(() => {});
+          }
+        }
+        const latestRenameLogs = structuredClone(adminRegistry.renameLogs || []);
+        if (latestRenameLogs.some(l => l && l.sheetSynced !== true)) {
+          latestRenameLogs.forEach(l => { if (l) l.sheetSynced = true; });
+          db.collection('config').doc('adminRegistry').set({ renameLogs: latestRenameLogs }, { merge: true }).catch(() => {});
+        }
+      }
     }
 
     function isSheetResponseMultiTab(data) {
@@ -20415,22 +21054,30 @@
 
     function isSheetResponseLatestTab(data) {
       if (!data || typeof data !== 'object') return false;
-      return data.supportsBirthdayPurge === true || Number(data.tabCount || 0) === 7 || String(data.version || '').includes('7tab');
+      return data.supportsSchemaInspect === true
+        || Number(data.tabCount || 0) >= 10
+        || String(data.version || '').includes('10tab')
+        || String(data.version || '').includes('v10.109');
+    }
+
+    function isSheetResponseSevenTab(data) {
+      if (!data || typeof data !== 'object') return false;
+      return !isSheetResponseLatestTab(data) && (data.supportsBirthdayPurge === true || Number(data.tabCount || 0) === 7 || String(data.version || '').includes('7tab'));
     }
 
     function isSheetResponseEightTab(data) {
       if (!data || typeof data !== 'object') return false;
-      return isSheetResponseLatestTab(data) || Number(data.tabCount || 0) >= 8 || String(data.version || '').includes('8tab');
+      return isSheetResponseLatestTab(data) || isSheetResponseSevenTab(data) || Number(data.tabCount || 0) >= 8 || String(data.version || '').includes('8tab');
     }
 
     function isSheetResponseRebuildCapable(data) {
       if (!data || typeof data !== 'object') return false;
-      return data.supportsRebuild === true || String(data.version || '').includes('v10.48') || String(data.version || '').includes('v10.69');
+      return data.supportsRebuild === true || String(data.version || '').includes('v10.48') || String(data.version || '').includes('v10.69') || String(data.version || '').includes('v10.109');
     }
 
     function warnIfOldAppsScript(res) {
       if (res && res.readable && res.data && !isSheetResponseMultiTab(res.data)) {
-        alert('⚠️ 구글 시트의 Apps Script가 아직 예전 버전으로 배포되어 있습니다!\n\n구글 시트 → 확장 프로그램 → Apps Script에서:\n1) 최신 7개 세부 탭(v10.69) 코드를 붙여넣고 저장한 뒤\n2) 오른쪽 위 [배포 → 배포 관리 → ✏️(수정) → 버전: 새 버전 → 배포]를 꼭 눌러주세요.\n(저장만 해서는 새 버전이 반영되지 않습니다.)');
+        alert(`⚠️ 구글 시트의 Apps Script가 아직 예전 버전으로 배포되어 있습니다!\n\n구글 시트 → 확장 프로그램 → Apps Script에서:\n1) 최신 10개 세부 탭(${SHEET_SCHEMA_VERSION}) 코드를 붙여넣고 저장한 뒤\n2) 오른쪽 위 [배포 → 배포 관리 → ✏️(수정) → 버전: 새 버전 → 배포]를 꼭 눌러주세요.\n(저장만 해서는 새 버전이 반영되지 않습니다.)`);
         return true;
       }
       return false;
@@ -20457,6 +21104,7 @@
         }, { merge: true });
         await batch.commit();
         adminSheetUrl = url;
+        sheetAutoInspectedUrl = url;
         recordAuditLog({
           actorType: 'admin',
           category: '보안·설정',
@@ -20467,17 +21115,19 @@
           const res = await postToGoogleSheet(buildFullSheetSyncPayload(), url, true);
           if (!warnIfOldAppsScript(res)) {
             if (res.ok) {
-              attendanceRecords.forEach(r => {
-                if (r.sheetSynced !== true) {
-                  db.collection('attendance').doc(String(r.id)).update({ sheetSynced: true }).catch(() => {});
-                }
-              });
+              const is10 = !!(res.readable && res.data && isSheetResponseLatestTab(res.data));
+              const isMultiLog = !!(res.readable && res.data && isSheetResponseEightTab(res.data));
+              markAllLocalSheetSyncFlags(is10, isMultiLog);
+              sheetLiveInspection = { ok: true, readable: !!res.readable, data: res.data || null, checkedAt: formatKstDateTime() };
             }
             showToast(res.ok ? '연동 주소를 관리자 전용 서버에 안전 저장하고 시트를 동기화했습니다!' : '주소는 저장되었으나 시트 전송을 확인해 주세요.');
           }
         } else {
+          sheetLiveInspection = null;
           showToast('구글 시트 연동이 해제되었습니다.');
         }
+        const u = getCurrentUser();
+        if (u && currentMainTab === 'manage' && currentManageSubTab === 'sheet') renderManageSheet(document.getElementById('manageContent'), u);
       } catch (err) {
         handleDbError(err, '연동 주소 저장');
       } finally {
@@ -20486,37 +21136,24 @@
     };
 
     window.handleTestSheetConnection = async () => {
-      const url = (document.getElementById('cfgSheetUrlInput') ? document.getElementById('cfgSheetUrlInput').value.trim() : '') || getAdminSheetUrl();
-      if (!url) return showToast('먼저 Apps Script 웹 앱 URL을 입력해 주세요.');
-      const res = await postToGoogleSheet({ action: 'test', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url, true);
-      if (warnIfOldAppsScript(res)) return;
-      if (res.ok && res.readable && res.data && isSheetResponseLatestTab(res.data)) {
-        const legacy = Array.isArray(res.data.legacyDetected) ? res.data.legacyDetected : [];
-        const bRem = Array.isArray(res.data.birthdayRemnants) ? res.data.birthdayRemnants : [];
-        if (bRem.length > 0) {
-          showToast(`⚠️ 7탭 연동 정상! 단 구글 시트에 [${bRem.join(', ')}]이 남아 있습니다. 시트에서 정리하거나 아래 재정비를 실행해 주세요.`);
-        } else if (legacy.length > 0) {
-          showToast(`⚠️ 7탭 연동 정상! 단 [${legacy.join(', ')}]에 구버전 양식이 남아 있어 아래 재정비 버튼을 눌러 주세요.`);
-        } else {
-          showToast('✅ 구글 시트 7개 세부 탭 + 앱 내 재정비 기능 모두 정상!');
-        }
-      } else if (res.ok && res.readable && res.data && isSheetResponseEightTab(res.data)) {
-        showToast('⚠️ 구버전 8탭 스크립트입니다. 별도 보관한 최신 7탭 Apps Script를 배포 관리에서 새 버전으로 배포해 주세요.');
-      } else if (res.ok && res.readable && res.data && isSheetResponseMultiTab(res.data)) {
-        showToast('✅ 연동 정상 (구버전 스크립트 · 최신 v10.69 7탭 Apps Script 배포를 권장합니다)');
-      } else {
-        showToast(res.ok ? '구글 시트로 테스트 신호를 보냈습니다! 시트 하단 탭을 확인해 보세요.' : '전송에 실패했습니다. URL을 확인해 주세요.');
-      }
+      await runLiveSheetSchemaInspect(false);
     };
 
     window.handleRebuildSheetTabs = async (targets) => {
       const url = (document.getElementById('cfgSheetUrlInput') ? document.getElementById('cfgSheetUrlInput').value.trim() : '') || getAdminSheetUrl();
       if (!url) return showToast('먼저 Apps Script 웹 앱 URL을 입력하고 저장해 주세요.');
 
-      const validTargets = (Array.isArray(targets) ? targets : []).filter(t => ['attendance', 'members', 'admins'].includes(t));
+      const validTargets = (Array.isArray(targets) ? targets : []).filter(t => ['attendance', 'members', 'admins', 'inquiries', 'videos', 'notices'].includes(t));
       if (validTargets.length === 0) return;
 
-      const labelMap = { attendance: '출석부', members: '회원 명단', admins: '관리자 명단' };
+      const labelMap = {
+        attendance: '출석부',
+        members: '회원 명단',
+        admins: '관리자 명단',
+        inquiries: '문의 내역',
+        videos: '설교·CCM 영상',
+        notices: '공지·광고 목록'
+      };
       const targetNames = validTargets.map(t => labelMap[t]).join(' · ');
 
       const ok1 = confirm(
@@ -20533,28 +21170,31 @@
         targets: validTargets,
         attendance: validTargets.includes('attendance') ? full.attendance : [],
         members: validTargets.includes('members') ? full.members : [],
-        admins: validTargets.includes('admins') ? full.admins : []
+        admins: validTargets.includes('admins') ? full.admins : [],
+        inquiries: validTargets.includes('inquiries') ? full.inquiries : [],
+        videos: validTargets.includes('videos') ? full.videos : [],
+        notices: validTargets.includes('notices') ? full.notices : []
       };
 
       const res = await postToGoogleSheet(payload, url, true);
       if (warnIfOldAppsScript(res)) return;
 
-      if (res.readable && res.data && !isSheetResponseRebuildCapable(res.data)) {
+      const needsNew3 = validTargets.some(t => ['inquiries', 'videos', 'notices'].includes(t));
+      if (res.readable && res.data && (!isSheetResponseRebuildCapable(res.data) || (needsNew3 && !isSheetResponseLatestTab(res.data)))) {
         alert(
-          '⚠️ 구글 시트의 Apps Script가 아직 재정비 기능 이전 버전입니다!\n\n' +
-          '구글 시트 → 확장 프로그램 → Apps Script에서:\n' +
-          '1) 최신 v10.69 (7탭) 스크립트 코드를 붙여넣고 저장한 뒤\n' +
-          '2) 오른쪽 위 [배포 → 배포 관리 → ✏️(수정) → 버전: 새 버전 → 배포]를 완료해 주세요.'
+          `⚠️ 구글 시트의 Apps Script가 아직 최신 10탭(${SHEET_SCHEMA_VERSION}) 이전 버전입니다!\n\n` +
+          `구글 시트 → 확장 프로그램 → Apps Script에서:\n` +
+          `1) 최신 ${SHEET_SCHEMA_VERSION} 스크립트 코드를 붙여넣고 저장한 뒤\n` +
+          `2) 오른쪽 위 [배포 → 배포 관리 → ✏️(수정) → 버전: 새 버전 → 배포]를 완료해 주세요.`
         );
         return;
       }
 
       if (res.ok) {
+        const is10 = !!(res.readable && res.data && isSheetResponseLatestTab(res.data));
         if (validTargets.includes('attendance')) {
           for (const r of attendanceRecords) {
-            if (r.sheetSynced !== true) {
-              db.collection('attendance').doc(String(r.id)).update({ sheetSynced: true }).catch(() => {});
-            }
+            if (r.sheetSynced !== true) db.collection('attendance').doc(String(r.id)).update({ sheetSynced: true }).catch(() => {});
           }
         }
         if (validTargets.includes('members')) {
@@ -20563,11 +21203,38 @@
             const st = m.status === 'pending'
               ? (isRe ? '재가입 대기' : '가입 대기')
               : (m.status === 'approved' ? (isRe ? '재가입 승인' : '승인') : (m.status === 'rejected' ? '보류' : m.status));
-            if (m.sheetSyncedStatus !== st) {
-              db.collection('members').doc(String(m.id)).update({ sheetSyncedStatus: st }).catch(() => {});
+            const roleLabel = m.status === 'approved' ? getRoleById(m.roleId).name : (m.requestedRole || '미정');
+            const sig = computeMemberSheetSig(m, roleLabel, st);
+            if (m.sheetSyncedStatus !== st || m.sheetSyncedSig !== sig) {
+              db.collection('members').doc(String(m.id)).update({ sheetSyncedStatus: st, sheetSyncedSig: sig }).catch(() => {});
             }
           }
         }
+        if (is10 && validTargets.includes('inquiries')) {
+          for (const q of inquiries) {
+            const sig = computeInquirySheetSig(q);
+            if (q && q.id && q.sheetSyncedSig !== sig) db.collection('inquiries').doc(String(q.id)).update({ sheetSyncedSig: sig }).catch(() => {});
+          }
+        }
+        if (is10 && validTargets.includes('videos')) {
+          for (const v of videoItems) {
+            const sig = computeVideoSheetSig(v);
+            if (v && v.id && v.sheetSyncedSig !== sig) db.collection('videos').doc(String(v.id)).update({ sheetSyncedSig: sig }).catch(() => {});
+          }
+        }
+        if (is10 && validTargets.includes('notices')) {
+          for (const n of notices) {
+            const sig = computeNoticeSheetSig(n);
+            if (n && n.id && n.sheetSyncedSig !== sig) {
+              const colName = n._col || (isServerRestrictedItem(n) ? 'adminNotices' : 'notices');
+              db.collection(colName).doc(String(n.id)).update({ sheetSyncedSig: sig }).catch(() => {});
+            }
+          }
+        }
+        if (res.readable && res.data && res.data.existingTabs) {
+          sheetLiveInspection = { ok: true, readable: true, data: res.data, checkedAt: formatKstDateTime() };
+        }
+
         const rebuiltCounts = (res.data && res.data.result && res.data.result.counts) ? res.data.result.counts : null;
         const countSummary = rebuiltCounts
           ? validTargets.map(t => `${labelMap[t]} ${Number(rebuiltCounts[t] || 0)}건`).join(' · ')
@@ -20576,11 +21243,13 @@
         recordAuditLog({
           actorType: 'admin',
           category: '보안·설정',
-          action: '구글 시트 현황 탭 재정비',
+          action: '구글 시트 현황·운영 탭 재정비',
           target: targetNames,
           detail: `최신 양식 초기화 후 재작성 (${countSummary})`
         });
         showToast(`✅ [${targetNames}] 재정비 완료! (${countSummary})`);
+        const u = getCurrentUser();
+        if (u && currentMainTab === 'manage' && currentManageSubTab === 'sheet') renderManageSheet(document.getElementById('manageContent'), u);
       } else {
         showToast('시트 재정비 요청에 실패했습니다. URL과 Apps Script 배포 상태를 확인해 주세요.');
       }
@@ -20589,44 +21258,35 @@
     window.handleSyncAllToGoogleSheet = async () => {
       const url = (document.getElementById('cfgSheetUrlInput') ? document.getElementById('cfgSheetUrlInput').value.trim() : '') || getAdminSheetUrl();
       if (!url) return showToast('먼저 Apps Script 웹 앱 URL을 입력하고 저장해 주세요.');
-      showToast('7개 세부 탭(출석부·회원·관리자·각종 로그)을 동기화 중...');
+      showToast('10개 세부 탭(출석·회원·관리자·문의·영상·공지·4종 로그)을 동기화 중...');
       const res = await postToGoogleSheet(buildFullSheetSyncPayload(), url, true);
       if (warnIfOldAppsScript(res)) return;
       if (res.ok) {
-        // 모든 회원·출석 기록 동기화 완료 상태 반영
-        for (const m of members.filter(x => x.status !== 'removed')) {
-          const isRe = !!m.isRejoin || memberHistoryMap.has(nameToHex(m.name));
-          const st = m.status === 'pending'
-            ? (isRe ? '재가입 대기' : '가입 대기')
-            : (m.status === 'approved' ? (isRe ? '재가입 승인' : '승인') : (m.status === 'rejected' ? '보류' : m.status));
-          if (m.sheetSyncedStatus !== st) {
-            db.collection('members').doc(String(m.id)).update({ sheetSyncedStatus: st }).catch(() => {});
-          }
+        const is10 = !!(res.readable && res.data && isSheetResponseLatestTab(res.data));
+        const isMultiLog = !!(res.readable && res.data && isSheetResponseEightTab(res.data));
+        markAllLocalSheetSyncFlags(is10, isMultiLog);
+        if (res.readable && res.data) {
+          sheetLiveInspection = { ok: true, readable: true, data: res.data, checkedAt: formatKstDateTime() };
         }
-        for (const r of attendanceRecords) {
-          if (r.sheetSynced !== true) {
-            db.collection('attendance').doc(String(r.id)).update({ sheetSynced: true }).catch(() => {});
-          }
-        }
-        if (res.readable && res.data && isSheetResponseEightTab(res.data)) {
-          // sync_all에서 이미 8개 탭(로그 포함) 일괄 반영됨 → 미동기화 플래그만 완료 처리
-          for (const l of auditLogs) {
-            if (l && l.sheetSynced !== true) {
-              db.collection('auditLogs').doc(String(l.id)).update({ sheetSynced: true }).catch(() => {});
-            }
-          }
-          const latestRenameLogs = structuredClone(adminRegistry.renameLogs || []);
-          if (latestRenameLogs.some(l => l && l.sheetSynced !== true)) {
-            latestRenameLogs.forEach(l => { if (l) l.sheetSynced = true; });
-            db.collection('config').doc('adminRegistry').set({ renameLogs: latestRenameLogs }, { merge: true }).catch(() => {});
-          }
-          recordAuditLog({ actorType: 'admin', category: '보안·설정', action: '구글 시트 전체 동기화', target: '7개 세부 탭', detail: `회원 ${members.filter(x => x.status !== 'removed').length}명 · 출석 ${attendanceRecords.length}건 · 로그 ${auditLogs.length}건` });
-          showToast('✅ 구글 시트 7개 세부 탭 전체 동기화 완료!');
+        if (is10) {
+          recordAuditLog({
+            actorType: 'admin',
+            category: '보안·설정',
+            action: '구글 시트 전체 동기화',
+            target: '10개 세부 탭',
+            detail: `회원 ${members.filter(x => x.status !== 'removed').length}명 · 출석 ${attendanceRecords.length}건 · 문의 ${inquiries.length}건 · 영상 ${videoItems.length}건 · 공지 ${notices.length}건 · 로그 ${auditLogs.length}건`
+          });
+          showToast('✅ 구글 시트 10개 세부 탭 전체 동기화 완료!');
+        } else if (isMultiLog) {
+          recordAuditLog({ actorType: 'admin', category: '보안·설정', action: '구글 시트 전체 동기화', target: '기존 7개 탭 (구버전 스크립트)', detail: `신규 3탭(문의·영상·공지) 연동을 위해 ${SHEET_SCHEMA_VERSION} 배포 권장` });
+          showToast(`✅ 기존 7개 탭 동기화 완료! (신규 3탭 연동을 위해 최신 ${SHEET_SCHEMA_VERSION} Apps Script를 배포해 주세요)`);
         } else {
           await syncUnsyncedRenameLogsToSheet().catch(() => {});
           await syncUnsyncedAuditLogsToSheet().catch(() => {});
-          showToast('✅ 전체 동기화 완료! (최신 v10.69 7탭 Apps Script 배포 시 로그가 탭별로 분리 저장됩니다)');
+          showToast(`✅ 전체 동기화 완료! (최신 ${SHEET_SCHEMA_VERSION} 10탭 Apps Script 배포 시 모든 시트가 분리 저장됩니다)`);
         }
+        const u = getCurrentUser();
+        if (u && currentMainTab === 'manage' && currentManageSubTab === 'sheet') renderManageSheet(document.getElementById('manageContent'), u);
       } else {
         showToast('동기화에 실패했습니다. URL과 Apps Script 배포 상태를 확인해 주세요.');
       }
@@ -20713,7 +21373,7 @@
             source: 'admin_edit',
             modifiedBy: adminActor,
             modifiedAt: nowStr,
-            sheetSynced: !!getAdminSheetUrl()
+            sheetSynced: false
           });
           postToGoogleSheet({
             action: 'attendance_upsert',
@@ -20724,6 +21384,8 @@
             time: sheetTimeVal,
             modifiedBy: `수정: ${adminActor} (${nowStr})`,
             forceUpdate: true
+          }, '', true).then(res => {
+            if (res && res.ok) db.collection('attendance').doc(String(editDocId)).update({ sheetSynced: true }).catch(() => {});
           }).catch(() => {});
           recordAuditLog({
             actorType: 'admin',
@@ -20755,7 +21417,7 @@
             source: 'admin_add',
             modifiedBy: adminActor,
             modifiedAt: nowStr,
-            sheetSynced: !!getAdminSheetUrl()
+            sheetSynced: false
           };
           await db.collection('attendance').doc(newDocId).set(newRec);
           postToGoogleSheet({
@@ -20767,6 +21429,8 @@
             time: sheetTimeVal,
             modifiedBy: `추가: ${adminActor} (${nowStr})`,
             forceUpdate: true
+          }, '', true).then(res => {
+            if (res && res.ok) db.collection('attendance').doc(newDocId).update({ sheetSynced: true }).catch(() => {});
           }).catch(() => {});
           recordAuditLog({
             actorType: 'admin',
@@ -20948,7 +21612,7 @@
     // ==================== 21. 관리 센터 [🧪 기능 점검] (일괄 + 개별 + 안전 시뮬레이션) ====================
     const DIAG_ITEMS = [
       { id: 'firebase', title: '1. Firebase 서버 연결 · 관리자 인증', desc: 'DB 연결, 최고 관리자 인증 상태, 스키마 버전을 점검합니다.' },
-      { id: 'sheet', title: '2. 구글 시트 7개 세부 탭 연동 상태', desc: 'Apps Script 웹 앱 URL 연결 및 7개 세부 탭(출석부·명단·분리 로그) 배포 여부를 점검합니다.' },
+      { id: 'sheet', title: '2. 구글 시트 10개 세부 탭 연동 · 변경 상태', desc: 'Apps Script 최신 버전(v10.109), 신규 추가/누락/삭제 시트 및 자동 대조 상태를 점검합니다.' },
       { id: 'qr', title: '3. 오늘의 초대 QR 유효성 · 생성 점검', desc: '한국시간 오늘 날짜 토큰 존재 여부와 QR 이미지 생성을 점검합니다.' },
       { id: 'notif', title: '4. 알림 설정 · 앱 내 팝업 점검', desc: '기기 알림 권한 상태와 앱 내 상단 팝업 알림 작동을 점검합니다.' },
       { id: 'config', title: '5. 핵심 설정 데이터 무결성 점검', desc: '역할, 메인 배치, 바로가기, 메뉴 이름, 출석 일정, 관리자 명단을 점검합니다.' },
@@ -21410,7 +22074,9 @@
             setDiagResult(id, 'ok', diagResults.sheet.msg, null, silent);
           } else {
             autoDiagState.lastSheetNetCheckTs = Date.now();
-            const res = await postToGoogleSheet({ action: 'test', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url, true);
+            const res = await postToGoogleSheet({ action: 'inspect_schema', admin: currentAdminName || '관리자', time: formatKstDateTime() }, url, true);
+            sheetLiveInspection = { ok: !!(res && res.ok), readable: !!(res && res.readable), data: (res && res.data) || null, checkedAt: formatKstDateTime() };
+            const diff = evaluateSheetSchemaDiff(sheetLiveInspection);
             if (!res.ok) {
               setDiagResult(id, 'err', '구글 시트 전송 실패: URL 오타 또는 네트워크 오류를 확인해 주세요.', {
                 reason: '저장된 Apps Script URL로 테스트 요청을 보냈지만 응답을 받지 못했습니다. URL 오타, 배포 삭제, 또는 액세스 권한 설정("모든 사용자") 누락일 수 있습니다.',
@@ -21422,41 +22088,39 @@
               });
             } else if (res.readable && res.data && !isSheetResponseMultiTab(res.data)) {
               setDiagResult(id, 'err', 'Apps Script가 예전 1탭 버전입니다.', {
-                reason: '구글 시트 스크립트에 코드를 붙여넣고 저장만 했거나, 아직 최신 7탭 버전(v10.69)으로 [새 버전 배포]를 하지 않아 구버전 코드가 실행 중입니다.',
-                solution: '구글 시트 → 확장 프로그램 → Apps Script에 별도 보관한 최신 7탭 코드를 저장하고, 오른쪽 위 [배포 → 배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]를 눌러 주세요.',
+                reason: `구글 시트 스크립트에 코드를 붙여넣고 저장만 했거나, 아직 최신 10탭 버전(${SHEET_SCHEMA_VERSION})으로 [새 버전 배포]를 하지 않아 구버전 코드가 실행 중입니다.`,
+                solution: `구글 시트 → 확장 프로그램 → Apps Script에 최신 ${SHEET_SCHEMA_VERSION} 코드를 저장하고, 오른쪽 위 [배포 → 배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]를 눌러 주세요.`,
                 actions: [
                   { label: `${shIcn} ${shLbl}로 이동`, type: 'subtab', param: 'sheet', primary: true },
                   { label: '🔄 재테스트', type: 'retest_diag', param: 'sheet' }
                 ]
               });
             } else if (res.readable && res.data && isSheetResponseLatestTab(res.data)) {
-              const legacy = Array.isArray(res.data.legacyDetected) ? res.data.legacyDetected : [];
-              const bRem = Array.isArray(res.data.birthdayRemnants) ? res.data.birthdayRemnants : [];
-              if (bRem.length > 0) {
-                setDiagResult(id, 'warn', `7탭 연동 정상(${res.data.version}) · 단 [${bRem.join(', ')}]이 아직 시트에 남아 있습니다.`, {
-                  reason: '폐기된 생년월일 관련 열 또는 탭이 구글 시트에 남아 있습니다.',
-                  solution: `[${shLbl}] → [🛠️ 시트 양식 재정비]를 실행하거나 구글 시트에서 해당 열·탭을 삭제해 주세요.`,
+              if (diff && diff.deprecatedPresent.length > 0) {
+                setDiagResult(id, 'warn', `10탭 스크립트 정상(${res.data.version}) · 단 폐기 시트 [${diff.deprecatedPresent.join(', ')}] 잔존`, {
+                  reason: '앱에서 삭제된 구버전 생년월일 관련 시트 또는 열이 구글 시트에 아직 남아 있습니다.',
+                  solution: `[${shLbl}] → [📋 시트 현황·변경]에서 [🧹 시트에서 삭제 정리] 버튼을 눌러 정리해 주세요.`,
                   actions: [{ label: `${shIcn} ${shLbl}로 이동`, type: 'subtab', param: 'sheet', primary: true }]
                 });
-              } else if (legacy.length > 0) {
-                setDiagResult(id, 'warn', `7탭 연동 정상(${res.data.version}) · 단 [${legacy.join(', ')}]에 구버전 양식이 감지되었습니다.`, {
-                  reason: `구버전 시트에서 사용하던 헤더가 [${legacy.join(', ')}] 탭에 남아 있습니다.`,
-                  solution: `[${shLbl}] → [🛠️ 시트 양식 재정비]에서 [✨ 현황 3개 탭 일괄 재정비]를 누르면 4개 감사 로그는 보존한 채 최신 양식으로 정리됩니다.`,
+              } else if (diff && diff.missingTabs.length > 0) {
+                setDiagResult(id, 'warn', `10탭 스크립트 정상(${res.data.version}) · 미생성 시트 ${diff.missingTabs.length}개 (${diff.missingTabs.join(', ')})`, {
+                  reason: `새로 추가된 시트 [${diff.missingTabs.join(', ')}]가 아직 구글 시트에 생성되지 않았습니다.`,
+                  solution: `[${shLbl}]에서 [🔄 전체 시트 동기화 (10개 탭)]을 누르면 누락된 탭이 자동 생성됩니다.`,
+                  actions: [{ label: `${shIcn} ${shLbl}로 이동`, type: 'subtab', param: 'sheet', primary: true }]
+                });
+              } else if (diff && diff.legacyDetected.length > 0) {
+                setDiagResult(id, 'warn', `10탭 연동 정상(${res.data.version}) · 단 [${diff.legacyDetected.join(', ')}]에 구버전 양식 감지`, {
+                  reason: `구버전 시트 헤더가 [${diff.legacyDetected.join(', ')}] 탭에 남아 있습니다.`,
+                  solution: `[${shLbl}] → [🛠️ 양식 재정비]에서 해당 탭을 재정비하면 4개 감사 로그는 보존한 채 최신 양식으로 정리됩니다.`,
                   actions: [{ label: `${shIcn} ${shLbl}로 이동`, type: 'subtab', param: 'sheet', primary: true }]
                 });
               } else {
-                setDiagResult(id, 'ok', `🔐 관리자 전용 URL 격리 정상 · 7개 세부 탭 자동 분리 + 앱 내 시트 재정비 지원 확인 (${res.data.version})`);
+                setDiagResult(id, 'ok', `🔐 관리자 전용 URL 격리 정상 · 10개 세부 탭 모두 일치 + 자동 스키마 대조 정상 (${res.data.version})`);
               }
-            } else if (res.readable && res.data && isSheetResponseEightTab(res.data)) {
-              setDiagResult(id, 'warn', `구버전 8탭(생일 포함) 스크립트(${res.data.version || '8탭'})가 실행 중입니다.`, {
-                reason: '아직 [생일 변경 로그] 탭과 생일 열이 포함된 구버전 8탭 Apps Script가 배포되어 있습니다.',
-                solution: '구글 시트 → 확장 프로그램 → Apps Script에 별도 보관한 최신 7탭 코드를 저장하고 [배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]를 완료해 주세요.',
-                actions: [{ label: `${shIcn} ${shLbl}로 이동`, type: 'subtab', param: 'sheet', primary: true }]
-              });
-            } else if (res.readable && res.data && isSheetResponseMultiTab(res.data)) {
-              setDiagResult(id, 'warn', `연동은 정상이나 구버전 스크립트(${res.data.version || '3탭'})입니다.`, {
-                reason: '구버전 스크립트가 실행 중이어서 7개 세부 탭 분리 및 생일 폐기 정리가 지원되지 않습니다.',
-                solution: '구글 시트 → 확장 프로그램 → Apps Script에 별도 보관한 최신 7탭 코드를 저장하고 [배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]를 진행해 주세요.',
+            } else if (res.readable && res.data && (isSheetResponseSevenTab(res.data) || isSheetResponseEightTab(res.data) || isSheetResponseMultiTab(res.data))) {
+              setDiagResult(id, 'warn', `구버전 스크립트(${res.data.version || '구버전'}) 실행 중 · 신규 3탭(문의·영상·공지) 미반영`, {
+                reason: `현재 배포된 Apps Script(${res.data.version || '구버전'})는 v10.109에서 추가된 [문의 내역 · 설교·CCM 영상 · 공지·광고 목록] 3개 시트를 지원하지 않습니다.`,
+                solution: `구글 시트 → 확장 프로그램 → Apps Script에 최신 ${SHEET_SCHEMA_VERSION} 코드를 저장하고 [배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]를 완료해 주세요.`,
                 actions: [{ label: `${shIcn} ${shLbl}로 이동`, type: 'subtab', param: 'sheet', primary: true }]
               });
             } else {
@@ -25751,6 +26415,7 @@
           resolvedBy: resolveNow ? (currentAdminName || '관리자') : '',
           resolvedAt: resolveNow ? nowFull : ''
         });
+        syncInquiryToSheet({ ...q, status: nextStatus, resolvedBy: resolveNow ? (currentAdminName || '관리자') : '', resolvedAt: resolveNow ? nowFull : '' });
         recordAuditLog({
           actorType: 'admin',
           category: '문의',
@@ -25791,15 +26456,17 @@
         const q = inquiries.find(x => String(x.id) === String(id));
         const hadReply = !!(q && q.reply);
         const nowFull = getKstNowInfo().dateTimeFull;
+        const replyTsNow = Date.now();
         await db.collection('inquiries').doc(String(id)).update({
           status: 'replied',
           reply,
           replyBy: currentAdminName || '관리자',
           replyAt: nowFull,
-          replyTs: Date.now(),
+          replyTs: replyTsNow,
           resolvedBy: currentAdminName || '관리자',
           resolvedAt: nowFull
         });
+        if (q) syncInquiryToSheet({ ...q, status: 'replied', reply, replyBy: currentAdminName || '관리자', replyAt: nowFull, replyTs: replyTsNow, resolvedBy: currentAdminName || '관리자', resolvedAt: nowFull });
         recordAuditLog({
           actorType: 'admin',
           category: '문의',
@@ -25827,6 +26494,7 @@
       if (!confirm(`해결된 문의 [${q.title || '문의'}]를 삭제할까요?\n(삭제 기록은 보안 로그에 영구 보존됩니다.)`)) return;
       try {
         await db.collection('inquiries').doc(String(id)).delete();
+        deleteInquiryFromSheet(String(id));
         recordAuditLog({
           actorType: 'admin',
           category: '문의',
@@ -28194,6 +28862,7 @@ ${handleUrl}`);
       if (!confirm(`[${v.title || '영상'}]을 삭제할까요?`)) return;
       try {
         await db.collection('videos').doc(String(id)).delete();
+        if (user.isSuperAdmin) deleteVideoFromSheet(String(id));
         recordAuditLog({
           actorType: user.isSuperAdmin ? 'admin' : 'member',
           actorName: user.name,
@@ -28494,6 +29163,7 @@ ${handleUrl}`);
         if (addToOfficial) {
           await upsertOfficialChannelFromVideoData(v, currentAdminName || '관리자');
         }
+        syncVideoToSheet({ ...v, status: 'approved', officialVerified: addToOfficial ? true : !!v.officialVerified, approvedBy: currentAdminName || '관리자', approvedAt: nowFull, approvedTs: nowTs, rejectReason: '' });
         recordAuditLog({
           actorType: 'admin',
           category: '영상',
@@ -28515,12 +29185,14 @@ ${handleUrl}`);
       const reason = prompt(`[${v.title || '영상'}] 반려 사유를 입력하세요 (선택 · 취소 시 거절 중단):`, '공식 채널 확인 불가 또는 저작권 우려');
       if (reason === null) return;
       try {
+        const cleanRej = String(reason || '').trim().slice(0, 120);
         await db.collection('videos').doc(String(id)).update({
           status: 'rejected',
-          rejectReason: String(reason || '').trim().slice(0, 120),
+          rejectReason: cleanRej,
           reviewedBy: currentAdminName || '관리자',
           reviewedAt: getKstNowInfo().dateTimeFull
         });
+        syncVideoToSheet({ ...v, status: 'rejected', rejectReason: cleanRej });
         recordAuditLog({
           actorType: 'admin',
           category: '영상',
