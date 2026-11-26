@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=243" />
+  <link rel="manifest" href="./manifest.json?v=244" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=243" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=243" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=244" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=244" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4061,7 +4061,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=243" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=244" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4155,9 +4155,8 @@
             <div class="login-input-wrap">
               <input id="signupNameInput" class="login-input blue-focus" placeholder="본인 성명을 입력하세요" />
             </div>
-            <label class="login-field-label" for="signupRoleSelect">역할 선택 (필수 · 검색 입력 또는 목록 선택)</label>
+            <label class="login-field-label" for="signupRoleSelect">역할 선택 (필수)</label>
             <div class="login-input-wrap">
-              <input id="signupRoleSearchInput" type="text" class="login-input blue-focus" style="margin-bottom:6px; padding:9px 12px; font-size:13.5px;" placeholder="역할 검색 (예: 청년, 새신자, 셀장)" oninput="filterSignupRoleOptions(this.value)" />
               <select id="signupRoleSelect" class="login-input blue-focus">
                 <option value="">역할을 선택해 주세요</option>
               </select>
@@ -5905,7 +5904,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 243;
+    const APP_CLIENT_BUILD = 244;
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.142-10tab-fast-split';
     const SHEET_SCHEMA_TABS = [
@@ -6911,7 +6910,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=243" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=244" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6935,8 +6934,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=243', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=243', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=244', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=244', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -25125,19 +25124,6 @@
       }
     };
 
-    window.filterSignupRoleOptions = (query) => {
-      const sel = document.getElementById('signupRoleSelect');
-      if (!sel) return;
-      const q = String(query || '').trim().toLowerCase();
-      const list = getSignupSelectableRoles();
-      const filtered = q ? list.filter(r => r.name.toLowerCase().includes(q)) : list;
-      sel.innerHTML = '<option value="">역할을 선택해 주세요</option>' + filtered.map(r => `
-        <option value="${escapeHtml(r.id)}">${escapeHtml(r.name)}</option>
-      `).join('');
-      const exact = filtered.find(r => r.name.toLowerCase() === q);
-      if (exact) sel.value = exact.id;
-      else if (filtered.length === 1 && q) sel.value = filtered[0].id;
-    };
 
 
 
