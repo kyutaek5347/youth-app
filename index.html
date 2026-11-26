@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=203" />
+  <link rel="manifest" href="./manifest.json?v=204" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=203" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=203" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=204" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=204" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3539,7 +3539,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=203" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=204" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5214,7 +5214,10 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 203;
+    const APP_CLIENT_BUILD = 204;
+    const KEY_LAST_SEC_WATCH_SIG = 'right_youth_sec_watch_sig_v1';
+    const KEY_AUTO_SEC_LAST_ALERT_SIG = 'right_youth_auto_sec_alert_sig_v1';
+    const KEY_AUTO_DIAG_LAST_ALERT_SIG = 'right_youth_auto_diag_alert_sig_v1';
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_SEEN_ADMIN_IDS = 'right_youth_seen_admin_ids_v1';
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
@@ -5274,7 +5277,9 @@
       blockSuspiciousLinks: true,
       detectCloneDomain: true,
       alertAdminOnSecurityEvent: true,
-      officialHost: 'kyutaek5347.github.io'
+      officialHost: 'kyutaek5347.github.io',
+      threatAckTs: 0,
+      piiAckSig: ''
     };
     const DEFAULT_AUTO_DIAG_CONFIG = {
       enabled: false,
@@ -6108,6 +6113,7 @@
     let inAppNotifAction = null;
     let lastSelfLayoutEditTs = 0;
     let lastSelfNoticeEditTs = 0;
+    let lastSelfSecBlockTs = 0;
 
     function saveNotifPrefs() {
       localStorage.setItem(KEY_NOTIF_PREFS, JSON.stringify(notifPrefs));
@@ -6131,7 +6137,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=203" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=204" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6153,21 +6159,24 @@
       if (typeof fn === 'function') fn();
     };
 
-    async function sendDeviceNotification(title, body) {
+    async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=203', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=203', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=204', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=204', window.location.href).href;
+      const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
-          await swRegistration.showNotification(title, {
+          const opts = {
             body,
             icon: iconUrl,
             badge: badgeUrl,
-            tag: 'right-youth-' + Date.now()
-          });
+            tag: notifTag
+          };
+          if (fixedTag) opts.renotify = true;
+          await swRegistration.showNotification(title, opts);
           return true;
         }
-        new Notification(title, { body, icon: iconUrl, badge: badgeUrl });
+        new Notification(title, { body, icon: iconUrl, badge: badgeUrl, tag: notifTag });
         return true;
       } catch (err) {
         console.warn('Device notification fallback error:', err);
@@ -7996,11 +8005,17 @@
               setTimeout(() => runSilentAdminSecurityWatch(), 1400);
             } else {
               const newThreatEvents = [];
+              const nowMs = Date.now();
               nextLogs.forEach(l => {
                 if (!knownAuditLogIds.has(l.id)) {
                   knownAuditLogIds.add(l.id);
                   if (isSecurityThreatAuditEntry(l)) {
-                    newThreatEvents.push(l);
+                    const isSelfImmediateEcho = l.actorType === 'admin'
+                      && l.actorName === currentAdminName
+                      && (nowMs - Number(lastSelfSecBlockTs || 0)) < 12000;
+                    if (!isSelfImmediateEcho) {
+                      newThreatEvents.push(l);
+                    }
                   }
                 }
               });
@@ -8009,7 +8024,9 @@
                 const latest = newThreatEvents[0];
                 dispatchAdminSecurityAlert(
                   `🚨 보안 위협 감지 · ${latest.action || '악성 행동 차단'}`,
-                  `${latest.actorName || '이용자'} · ${latest.target || '앱'} (${latest.detail || '보안 점검 탭에서 확인하세요'})`
+                  `${latest.actorName || '이용자'} · ${latest.target || '앱'} (${latest.detail || '보안 점검 탭에서 확인하세요'})`,
+                  false,
+                  'sec-live-threat'
                 );
               }
             }
@@ -17998,6 +18015,9 @@
         const nowInfo = getKstNowInfo();
         const nowTs = Date.now();
         const id = 'alog_' + nowTs + '_' + Math.random().toString(36).slice(2, 7);
+        if (resolvedActorType === 'admin' && typeof isSecurityThreatAuditEntry === 'function' && isSecurityThreatAuditEntry({ action })) {
+          lastSelfSecBlockTs = nowTs;
+        }
 
         const entry = {
           id,
@@ -21152,6 +21172,10 @@
         } catch (err) {
           handleDbError(err, '핵심 방어 설정 켜기');
         }
+      } else if (type === 'ack_threat_logs') {
+        await handleAcknowledgeSecurityThreats();
+      } else if (type === 'ack_pii_warn') {
+        await handleAcknowledgePiiWarning(param || '');
       } else if (type === 'retest_diag' && param) {
         await runSingleDiagnostic(param);
       } else if (type === 'retest_sec' && param) {
@@ -21514,7 +21538,8 @@
             const e = String(ev.end || '23:59');
             return !startIso || !endIso || startIso > endIso || s >= e;
           });
-          const unsyncedAtt = (attendanceRecords || []).filter(r => r && r.sheetSynced !== true).length;
+          const nowAttTs = Date.now();
+          const unsyncedAtt = (attendanceRecords || []).filter(r => r && r.sheetSynced !== true && (nowAttTs - Number(r.ts || 0)) > 15000).length;
           const activeNow = getActiveAttendanceSessions();
 
           if (rStart >= rEnd || badSpEvents.length > 0) {
@@ -21543,7 +21568,7 @@
           const nowTs = Date.now();
           const overdueNotices = notices.filter(n => n.publishMode === 'scheduled' && Number(n.publishAtTs || 0) > 0 && Number(n.publishAtTs) <= nowTs).length;
           const overdueBlocks = blocks.filter(b => b.publishMode === 'scheduled' && Number(b.publishAtTs || 0) > 0 && Number(b.publishAtTs) <= nowTs).length;
-          const unsyncedLogs = getMergedAuditLogs().filter(l => l && l.sheetSynced !== true).length;
+          const unsyncedLogs = getMergedAuditLogs().filter(l => l && l.sheetSynced !== true && (nowTs - Number(l.ts || 0)) > 15000).length;
 
           if (inquiriesPermError) {
             setDiagResult(id, 'err', '문의 사항(inquiries) 컬렉션 권한 오류가 감지되었습니다.', {
@@ -21701,6 +21726,13 @@
     function dispatchAutoDiagIssueAlert(problemItems) {
       const u = getCurrentUser();
       if (!u || !u.isSuperAdmin) return;
+      const issueSig = problemItems.map(x => `${x.id}:${(diagResults[x.id] && diagResults[x.id].status) || ''}`).sort().join('|');
+      try {
+        if (localStorage.getItem(KEY_AUTO_DIAG_LAST_ALERT_SIG) === issueSig) {
+          return;
+        }
+        localStorage.setItem(KEY_AUTO_DIAG_LAST_ALERT_SIG, issueSig);
+      } catch {}
       const firstTitle = problemItems[0] ? problemItems[0].title : '점검 항목';
       const summary = problemItems.length === 1
         ? `${firstTitle}에서 문제가 감지되어 자동 점검을 멈췄습니다.`
@@ -21718,7 +21750,7 @@
         },
         'sec-alert'
       );
-      sendDeviceNotification(title, summary);
+      sendDeviceNotification(title, summary, 'auto-diag-issue');
       recordAuditLog({
         actorType: 'admin',
         category: '보안·설정',
@@ -21729,6 +21761,7 @@
     }
 
     function dispatchAutoDiagResumedAlert() {
+      try { localStorage.removeItem(KEY_AUTO_DIAG_LAST_ALERT_SIG); } catch {}
       const u = getCurrentUser();
       if (!u || !u.isSuperAdmin) return;
       const sec = Math.max(5, Number(autoDiagConfig.intervalSec || 30));
@@ -21812,6 +21845,7 @@
           const recIntervalMs = Math.max(10000, Number(autoDiagConfig.intervalSec || 30) * 1000);
           scheduleNextAutoDiagTick(recIntervalMs);
         } else {
+          try { localStorage.removeItem(KEY_AUTO_DIAG_LAST_ALERT_SIG); } catch {}
           autoDiagState.phase = 'watching';
           autoDiagState.issueIds = [];
           autoDiagState.pausedAt = '';
@@ -22876,9 +22910,16 @@
 
     function getRecentSecurityThreatLogs() {
       const all = getMergedAuditLogs();
-      return all.filter(l => {
-        const act = String((l && l.action) || '');
-        return act.includes('차단') || act.includes('위협') || act.includes('보안 방어') || act.includes('관리자 해제') || act.includes('QR 재발급') || act.includes('관리자 코드 변경');
+      return all.filter(l => isSecurityThreatAuditEntry(l));
+    }
+
+    function getUnackedSecurityThreatLogs(days = 7) {
+      const cfg = securityConfig || DEFAULT_SECURITY_CONFIG;
+      const ackTs = Number(cfg.threatAckTs || 0);
+      const sinceTs = days > 0 ? (Date.now() - days * 24 * 60 * 60 * 1000) : 0;
+      return getRecentSecurityThreatLogs().filter(l => {
+        const ts = Number(l.ts || 0);
+        return ts >= sinceTs && ts > ackTs;
       });
     }
 
@@ -22899,13 +22940,15 @@
       const errCnt = SEC_CHECK_ITEMS.filter(it => secCheckResults[it.id] && secCheckResults[it.id].status === 'err').length;
 
       const threatLogs = getRecentSecurityThreatLogs();
+      const threatAckTs = Number(cfg.threatAckTs || 0);
+      const unackedThreatLogs = threatLogs.filter(l => Number(l.ts || 0) > threatAckTs);
       const secf = manageSecurityFilter || 'all';
       const showChecks = secf === 'all' || secf === 'checks';
       const showDefense = secf === 'all' || secf === 'defense';
       const showThreats = secf === 'all' || secf === 'threats';
       const defenseOpen = isManageSectionOpen('sec_defense_cfg', true);
       const checksOpen = isManageSectionOpen('sec_check_list', true);
-      const threatsOpen = isManageSectionOpen('sec_threat_feed', (threatLogs.length > 0 && threatLogs.length <= 5) || secf === 'threats');
+      const threatsOpen = isManageSectionOpen('sec_threat_feed', (unackedThreatLogs.length > 0 && unackedThreatLogs.length <= 5) || secf === 'threats');
 
       el.innerHTML = `
         <div class="sec-hero-card">
@@ -22987,7 +23030,7 @@
           <button class="filter-chip ${secf === 'all' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('all')">전체</button>
           <button class="filter-chip ${secf === 'checks' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('checks')">🔍 ${SEC_CHECK_ITEMS.length}개 보안 진단</button>
           <button class="filter-chip ${secf === 'defense' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('defense')">🚧 실시간 방어</button>
-          <button class="filter-chip ${secf === 'threats' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('threats')">🚨 위협 기록 (${threatLogs.length})</button>
+          <button class="filter-chip ${secf === 'threats' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('threats')">🚨 위협 기록 (${unackedThreatLogs.length > 0 ? `미확인 ${unackedThreatLogs.length}` : threatLogs.length})</button>
         </div>
 
         ${showChecks ? `
@@ -23068,17 +23111,22 @@
           key: 'sec_threat_feed',
           marginTop: (showChecks || showDefense) ? '10px' : '',
           titleHtml: '🚨 최근 보안 위협 · 차단 기록',
-          badgeHtml: `<span class="tag ${threatLogs.length > 0 ? 'warm' : 'green'}">${threatLogs.length}건</span>`,
-          actionHtml: `<button class="btn-sm primary" type="button" onclick="switchManageSubTab('logs')">${escapeHtml(getTabLabel('manageLogs'))} 보기</button>`,
-          defaultOpen: threatLogs.length > 0 && threatLogs.length <= 5
+          badgeHtml: `<span class="tag ${unackedThreatLogs.length > 0 ? 'red' : 'green'}">${unackedThreatLogs.length > 0 ? `미확인 ${unackedThreatLogs.length}건` : (threatLogs.length > 0 ? `모두 확인됨 (${threatLogs.length}건)` : '0건')}</span>`,
+          actionHtml: `${unackedThreatLogs.length > 0 ? '<button class="btn-sm approve" type="button" onclick="handleAcknowledgeSecurityThreats()">✅ 모두 확인 완료</button> ' : ''}<button class="btn-sm primary" type="button" onclick="switchManageSubTab('logs')">${escapeHtml(getTabLabel('manageLogs'))} 보기</button>`,
+          defaultOpen: unackedThreatLogs.length > 0 && unackedThreatLogs.length <= 5
         })}
         <div data-acc-body="sec_threat_feed" class="${threatsOpen ? '' : 'hidden'}">
           ${threatLogs.length === 0
             ? '<div class="card" style="text-align:center; color:#15803D; font-size:13px; padding:18px 10px;">✅ 최근 감지되거나 차단된 악성 공격·보안 위협 기록이 없습니다.</div>'
-            : threatLogs.slice(0, 15).map(item => `
-                <div class="card">
+            : threatLogs.slice(0, 15).map(item => {
+                const isUnacked = Number(item.ts || 0) > threatAckTs;
+                return `
+                <div class="card" style="${isUnacked ? 'border-color:#FCA5A5; background:#FFF5F5;' : 'opacity:0.86;'}">
                   <div class="card-top">
-                    <span class="tag ${/차단|위협|해제/.test(String(item.action || '')) ? 'red' : 'warm'}">${escapeHtml(item.action || '보안 이벤트')}</span>
+                    <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+                      <span class="tag ${isUnacked ? 'red' : 'slate'}">${escapeHtml(item.action || '보안 위협')}</span>
+                      <span class="tag ${isUnacked ? 'warm' : 'green'}">${isUnacked ? '🆕 미확인' : '✅ 확인됨'}</span>
+                    </div>
                     <span class="card-date">${escapeHtml(item.dateWithDow || item.date || '')} ${escapeHtml(item.time || '')}</span>
                   </div>
                   <div class="log-meta-lines">
@@ -23087,7 +23135,8 @@
                     ${item.detail ? `<div>📝 <b>상세:</b> ${escapeHtml(item.detail)}</div>` : ''}
                   </div>
                 </div>
-              `).join('')}
+              `;
+              }).join('')}
         </div>
         ` : ''}
 
@@ -23361,17 +23410,31 @@
           }
         } else if (id === 'threat_logs') {
           const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+          const ackTs = Number(cfg.threatAckTs || 0);
           const recent = getMergedAuditLogs().filter(l => Number(l.ts || 0) >= sevenDaysAgo);
-          const blocked = recent.filter(l => String(l.action || '').includes('차단'));
-          const deletes = recent.filter(l => { return /삭제|해제|탈퇴/.test(String(l.action || '')); });
-          if (blocked.length > 0) {
-            setSecCheckResult(id, 'warn', `최근 7일간 악성 입력·피싱 링크·도배 차단 ${blocked.length}건 감지됨 · 삭제/해제 이벤트 ${deletes.length}건`, {
-              reason: '최근 7일 이내에 악성 스크립트 입력이나 피싱·단축 URL 등록 시도가 감지되어 실시간 방어 기능이 차단했습니다.',
-              solution: `아래 [🚨 최근 보안 위협 · 차단 기록] 또는 [${logLbl}] 탭에서 실행자와 시도 내용을 확인하세요. 악의적 계정이 반복 시도할 경우 계정 삭제 또는 관리자 코드 변경을 권장합니다.`,
-              actions: [{ label: `${logIcn} ${logLbl} 확인`, type: 'subtab', param: 'logs', primary: true }]
+          const recentThreats = recent.filter(l => isSecurityThreatAuditEntry(l));
+          const unacked = recentThreats.filter(l => Number(l.ts || 0) > ackTs);
+          const ackedCnt = recentThreats.length - unacked.length;
+
+          if (unacked.length > 0) {
+            const detailLines = unacked.slice(0, 4).map(l => {
+              const dt = `${l.date || ''} ${l.time || ''}`.trim();
+              const who = `${l.actorName || '-'}(${l.actorType === 'member' ? '이용자' : '관리자'})`;
+              const loc = l.target ? ` · ${l.target}` : '';
+              const dtl = l.detail ? ` (${String(l.detail).slice(0, 48)}${String(l.detail).length > 48 ? '…' : ''})` : '';
+              return `[${dt}] ${who} · ${l.action}${loc}${dtl}`;
             });
+            setSecCheckResult(id, 'warn', `미확인 보안 위협·차단 ${unacked.length}건 감지 (최근 7일):\n• ${detailLines.join('\n• ')}${unacked.length > 4 ? `\n외 ${unacked.length - 4}건` : ''}`, {
+              reason: '위 기록에서 악성 스크립트 입력, 피싱·위험 링크 등록 시도, 또는 비공식 도메인 접속이 감지되어 실시간 방어가 차단했습니다. (관리자 본인 테스트 중 발생한 차단도 포함됩니다.)',
+              solution: `위 항목을 확인하신 뒤 정상 테스트였거나 조치를 마치셨다면 [✅ 확인 완료 처리 (주의 해제)]를 눌러 주세요. (감사 로그 원본은 [${logLbl}]에 계속 안전하게 보존됩니다.)`,
+              actions: [
+                { label: '✅ 확인 완료 처리 (주의 해제)', type: 'ack_threat_logs', primary: true },
+                { label: `${logIcn} ${logLbl} 확인`, type: 'subtab', param: 'logs' }
+              ]
+            }, silent);
           } else {
-            setSecCheckResult(id, 'ok', `최근 7일간 차단된 공격 시도 0건 · 전체 감사 로그 ${recent.length}건 정상 추적 중 (삭제 불가 보호)`);
+            const ackNote = ackedCnt > 0 ? ` · 확인 완료된 과거 기록 ${ackedCnt}건 보관 중` : '';
+            setSecCheckResult(id, 'ok', `미확인 보안 위협 0건 (최근 7일${ackNote}) · 전체 감사 로그 ${recent.length}건 정상 추적 중`, null, silent);
           }
         } else if (id === 'pii_scan') {
           const piiHits = [];
@@ -23395,20 +23458,30 @@
           }
 
           if (piiHits.length === 0) {
-            setSecCheckResult(id, 'ok', '문의·공지·배너·영상글 민감 개인정보(전화번호·주민번호·카드·이메일) 0건 · 폐기된 생일 필드 잔존 0명');
+            setSecCheckResult(id, 'ok', '문의·공지·배너·영상글 민감 개인정보(전화번호·주민번호·카드·이메일) 0건 · 폐기된 생일 필드 잔존 0명', null, silent);
           } else {
-            const hasHighRisk = piiHits.some(h => h.includes('주민등록번호') || h.includes('카드번호'));
-            const actions = [];
-            if (piiAreas.has('inquiries')) actions.push({ label: `${getTabIcon('manageInquiries')} ${getTabLabel('manageInquiries')}`, type: 'subtab', param: 'inquiries', primary: true });
-            if (piiAreas.has('content')) actions.push({ label: `${cIcn} ${cLbl}`, type: 'subtab', param: 'content', primary: actions.length === 0 });
-            if (piiAreas.has('videos')) actions.push({ label: `${getTabIcon('manageVideos')} ${getTabLabel('manageVideos')}`, type: 'subtab', param: 'videos', primary: actions.length === 0 });
-            if (piiAreas.has('members')) actions.push({ label: `${mIcn} ${mLbl}`, type: 'subtab', param: 'members', primary: actions.length === 0 });
+            const hasHighRisk = piiHits.some(h => h.includes('주민등록번호') || h.includes('카드번호')) || bdayRemMembers.length > 0;
+            const curPiiSig = piiHits.slice().sort().join('|');
+            if (!hasHighRisk && cfg.piiAckSig && cfg.piiAckSig === curPiiSig) {
+              setSecCheckResult(id, 'ok', `확인 완료된 공식 연락처·이메일 ${piiHits.length}건 제외 · 신규 민감 개인정보 노출 0건 · 폐기된 생일 필드 잔존 0명`, null, silent);
+            } else {
+              const actions = [];
+              if (!hasHighRisk) {
+                actions.push({ label: '✅ 공식 연락처 확인 완료 (주의 해제)', type: 'ack_pii_warn', param: curPiiSig, primary: true });
+              }
+              if (piiAreas.has('inquiries')) actions.push({ label: `${getTabIcon('manageInquiries')} ${getTabLabel('manageInquiries')}`, type: 'subtab', param: 'inquiries', primary: actions.length === 0 });
+              if (piiAreas.has('content')) actions.push({ label: `${cIcn} ${cLbl}`, type: 'subtab', param: 'content', primary: actions.length === 0 });
+              if (piiAreas.has('videos')) actions.push({ label: `${getTabIcon('manageVideos')} ${getTabLabel('manageVideos')}`, type: 'subtab', param: 'videos', primary: actions.length === 0 });
+              if (piiAreas.has('members')) actions.push({ label: `${mIcn} ${mLbl}`, type: 'subtab', param: 'members', primary: actions.length === 0 });
 
-            setSecCheckResult(id, hasHighRisk ? 'err' : 'warn', `개인정보 노출·잔존 ${piiHits.length}건 감지:\n• ${piiHits.slice(0, 4).join('\n• ')}${piiHits.length > 4 ? `\n외 ${piiHits.length - 4}건` : ''}`, {
-              reason: '문의 사항이나 게시물에 휴대전화번호·이메일·주민번호 등 개인정보가 그대로 적혀 있으면 불필요한 개인정보 노출 위험이 있습니다.',
-              solution: '아래 해당 탭에서 민감한 개인정보가 포함된 내용을 수정하거나 삭제(해결 후 삭제)해 주세요. 부득이한 공식 대표 연락처라면 확인 후 넘어가셔도 됩니다.',
-              actions
-            });
+              setSecCheckResult(id, hasHighRisk ? 'err' : 'warn', `개인정보 노출·잔존 ${piiHits.length}건 감지:\n• ${piiHits.slice(0, 4).join('\n• ')}${piiHits.length > 4 ? `\n외 ${piiHits.length - 4}건` : ''}`, {
+                reason: '문의 사항이나 게시물에 휴대전화번호·이메일·주민번호 등 개인정보가 그대로 적혀 있으면 불필요한 개인정보 노출 위험이 있습니다.',
+                solution: hasHighRisk
+                  ? '고위험 개인정보(주민번호·카드번호) 또는 폐기된 생일 필드가 감지되었습니다. 즉시 해당 탭에서 삭제해 주세요.'
+                  : '불필요한 개인정보라면 해당 탭에서 수정·삭제해 주세요. 교회 공식 대표 연락처나 이메일 등 의도된 정보라면 [✅ 공식 연락처 확인 완료]를 눌러 주의를 해제할 수 있습니다.',
+                actions
+              }, silent);
+            }
           }
         } else if (id === 'isolation_rbac') {
           const leakedNotices = Array.from(publicNoticesMap.values()).filter(n => isServerRestrictedItem(n));
@@ -23473,13 +23546,19 @@
             });
           } else if (riskyApprovedVideos.length > 0 || unverifiedChannels.length > 0) {
             const warns = [];
-            if (riskyApprovedVideos.length > 0) warns.push(`주의·저작권 키워드 포함 게시 영상 ${riskyApprovedVideos.length}건`);
-            if (unverifiedChannels.length > 0) warns.push(`고유 ID·핸들 미연결 공식 채널 ${unverifiedChannels.length}곳`);
-            setSecCheckResult(id, 'warn', `점검 필요: ${warns.join(' · ')}`, {
+            if (riskyApprovedVideos.length > 0) {
+              const vNames = riskyApprovedVideos.slice(0, 3).map(v => v.title || v.id).join(', ');
+              warns.push(`주의·저작권 키워드 게시 영상 ${riskyApprovedVideos.length}건 (${vNames}${riskyApprovedVideos.length > 3 ? ' 외' : ''})`);
+            }
+            if (unverifiedChannels.length > 0) {
+              const cNames = unverifiedChannels.slice(0, 3).map(ch => ch.name || ch.id).join(', ');
+              warns.push(`고유 ID·핸들 미연결 공식 채널 ${unverifiedChannels.length}곳 (${cNames}${unverifiedChannels.length > 3 ? ' 외' : ''})`);
+            }
+            setSecCheckResult(id, 'warn', `점검 필요:\n• ${warns.join('\n• ')}`, {
               reason: '저작권 주의 키워드(무단·음원 추출·연속듣기 등)가 감지된 영상이 게시되어 있거나, 고유 ID 없이 이름만 등록된 채널이 있습니다.',
-              solution: `[${vLbl}]에서 해당 영상과 공식 채널을 확인하고 [🔍 자동검사]로 고유 ID를 연결해 주세요.`,
+              solution: `[${vLbl}]에서 위 영상과 공식 채널을 확인하고 [🔍 자동검사]로 고유 ID를 연결해 주세요.`,
               actions: [{ label: `${vIcn} ${vLbl} 열기`, type: 'subtab', param: 'videos', primary: true }]
-            });
+            }, silent);
           } else {
             setSecCheckResult(id, 'ok', `공식 유튜브 채널 ${officialYtChannels.length}곳 도메인·ID 무결성 정상 · 게시 영상 저작권/위험 문구 0건`);
           }
@@ -23616,6 +23695,13 @@
     function dispatchAutoSecIssueAlert(problemItems) {
       const u = getCurrentUser();
       if (!u || !u.isSuperAdmin) return;
+      const issueSig = problemItems.map(x => `${x.id}:${(secCheckResults[x.id] && secCheckResults[x.id].status) || ''}`).sort().join('|');
+      try {
+        if (localStorage.getItem(KEY_AUTO_SEC_LAST_ALERT_SIG) === issueSig) {
+          return;
+        }
+        localStorage.setItem(KEY_AUTO_SEC_LAST_ALERT_SIG, issueSig);
+      } catch {}
       const firstTitle = problemItems[0] ? problemItems[0].title : '보안 항목';
       const summary = problemItems.length === 1
         ? `${firstTitle}에서 보안 문제가 감지되어 자동 점검을 멈췄습니다.`
@@ -23633,7 +23719,7 @@
         },
         'sec-alert'
       );
-      sendDeviceNotification(title, summary);
+      sendDeviceNotification(title, summary, 'auto-sec-issue');
       recordAuditLog({
         actorType: 'admin',
         category: '보안·설정',
@@ -23644,6 +23730,7 @@
     }
 
     function dispatchAutoSecResumedAlert() {
+      try { localStorage.removeItem(KEY_AUTO_SEC_LAST_ALERT_SIG); } catch {}
       const u = getCurrentUser();
       if (!u || !u.isSuperAdmin) return;
       const sec = Math.max(5, Number(autoSecConfig.intervalSec || 30));
@@ -23724,6 +23811,7 @@
           const recIntervalMs = Math.max(10000, Number(autoSecConfig.intervalSec || 30) * 1000);
           scheduleNextAutoSecTick(recIntervalMs);
         } else {
+          try { localStorage.removeItem(KEY_AUTO_SEC_LAST_ALERT_SIG); } catch {}
           autoSecState.phase = 'watching';
           autoSecState.issueIds = [];
           autoSecState.pausedAt = '';
@@ -23853,8 +23941,69 @@
       await executeAutoSecTick();
     };
 
+    window.handleAcknowledgeSecurityThreats = async () => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const nowTs = Date.now();
+      const next = {
+        ...DEFAULT_SECURITY_CONFIG,
+        ...(securityConfig || {}),
+        threatAckTs: nowTs
+      };
+      try {
+        await db.collection('config').doc('layout').set({ securityConfig: next }, { merge: true });
+        securityConfig = next;
+        try {
+          localStorage.removeItem(KEY_LAST_SEC_WATCH_SIG);
+          localStorage.removeItem(KEY_AUTO_SEC_LAST_ALERT_SIG);
+        } catch {}
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '보안 위협 기록 확인 완료 처리',
+          target: '최근 7일 보안 위협 점검',
+          detail: `${formatKstDateTime()} 이전 기록 확인 완료 (감사 로그 원본 보존)`
+        });
+        await runSingleSecurityCheck('threat_logs');
+        const curU = getCurrentUser();
+        if (curU && currentMainTab === 'manage' && currentManageSubTab === 'security') {
+          renderManageSecurity(document.getElementById('manageContent'), curU);
+        }
+        showToast('✅ 최근 보안 위협 기록을 확인 완료 처리했습니다. (주의 해제됨)');
+      } catch (err) {
+        handleDbError(err, '보안 위협 확인 완료 처리');
+      }
+    };
+
+    window.handleAcknowledgePiiWarning = async (sig = '') => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const next = {
+        ...DEFAULT_SECURITY_CONFIG,
+        ...(securityConfig || {}),
+        piiAckSig: String(sig || '')
+      };
+      try {
+        await db.collection('config').doc('layout').set({ securityConfig: next }, { merge: true });
+        securityConfig = next;
+        try { localStorage.removeItem(KEY_AUTO_SEC_LAST_ALERT_SIG); } catch {}
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '공식 연락처·이메일 노출 확인 완료 처리',
+          target: '개인정보 노출 스캔'
+        });
+        await runSingleSecurityCheck('pii_scan');
+        showToast('✅ 확인 완료 처리되었습니다. (신규 개인정보 발견 시 다시 경고합니다)');
+      } catch (err) {
+        handleDbError(err, '개인정보 주의 해제');
+      }
+    };
+
     window.handleSaveSecurityConfig = async () => {
       const next = {
+        ...DEFAULT_SECURITY_CONFIG,
+        ...(securityConfig || {}),
         blockMaliciousInput: !!(document.getElementById('cfgSecBlockXss') && document.getElementById('cfgSecBlockXss').checked),
         blockSuspiciousLinks: !!(document.getElementById('cfgSecBlockLinks') && document.getElementById('cfgSecBlockLinks').checked),
         detectCloneDomain: !!(document.getElementById('cfgSecDetectClone') && document.getElementById('cfgSecDetectClone').checked),
@@ -24958,11 +25107,14 @@
     // ==================== 관리자 전용 보안 문제 실시간 알림 엔진 ====================
     function isSecurityThreatAuditEntry(entry) {
       if (!entry) return false;
-      const act = String(entry.action || '');
-      return /차단|위협|비공식 도메인|보안 경고|공격/.test(act);
+      const act = String(entry.action || '').trim();
+      if (!act) return false;
+      // 일반 관리 작업(회원/관리자 차단 해제·복구, 확인 완료 처리, 설정 변경, 자동 점검 상태 로그)은 보안 위협에서 제외
+      if (/해제|복구|확인 완료|설정 변경|자동 기능 점검|자동 보안 점검/.test(act)) return false;
+      return /(악성 입력 시도 차단|피싱·위험 링크 차단|피싱·의심 링크 차단|유튜브 위험 링크 차단|유튜브 위험 입력 차단|공식 채널 위험 링크 차단|비공식 도메인 접속 감지|도배 차단|공격 차단|보안 경고)/.test(act);
     }
 
-    function dispatchAdminSecurityAlert(title, body, forceTest = false) {
+    function dispatchAdminSecurityAlert(title, body, forceTest = false, fixedTag = 'sec-alert') {
       const u = getCurrentUser();
       // 1차적으로 최고 관리자에게만 표시 (일반 회원 및 일반 회원 미리보기 모드에서는 절대 표시 안 됨)
       if (!u || !u.isSuperAdmin) return false;
@@ -24980,7 +25132,7 @@
         },
         'sec-alert'
       );
-      sendDeviceNotification(title, body);
+      sendDeviceNotification(title, body, forceTest ? 'sec-test' : fixedTag);
       return true;
     }
 
@@ -25030,35 +25182,57 @@
       if (cfg.alertAdminOnSecurityEvent === false) return;
 
       const alerts = [];
+      const sigParts = [];
       const host = (window.location.hostname || '').toLowerCase();
       const proto = (window.location.protocol || '').toLowerCase();
       const officialHost = String(cfg.officialHost || 'kyutaek5347.github.io').trim().toLowerCase();
       const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
       if (!isLocal && (proto !== 'https:' || host !== officialHost)) {
         alerts.push('비공식·비암호화 접속 감지');
+        sigParts.push(`domain:${proto}//${host}`);
       }
 
-      // 최근 24시간 내 차단된 공격 시도 확인
+      // 최근 24시간 내 "미확인" 실제 보안 위협·차단만 집계 (확인 완료 처리된 과거 기록·정상 관리 작업 제외)
       const dayAgo = Date.now() - 24 * 60 * 60 * 1000;
-      const recentBlocked = (auditLogs || []).filter(l => Number(l.ts || 0) >= dayAgo && isSecurityThreatAuditEntry(l));
+      const ackTs = Number(cfg.threatAckTs || 0);
+      const recentBlocked = (auditLogs || []).filter(l => {
+        const ts = Number(l.ts || 0);
+        return ts >= dayAgo && ts > ackTs && isSecurityThreatAuditEntry(l);
+      });
       if (recentBlocked.length > 0) {
-        alerts.push(`최근 24시간 보안 위협·차단 ${recentBlocked.length}건`);
+        alerts.push(`미확인 보안 위협·차단 ${recentBlocked.length}건`);
+        sigParts.push(`threats:${recentBlocked[0].id}:${recentBlocked.length}`);
       }
 
       // 저장된 콘텐츠 내 XSS 흔적 빠른 검사 (공지·영상·문의 포함)
-      const hasXss = (notices || []).some(n => !detectMaliciousCode(`${n.title || ''} ${n.body || ''}`).safe)
-        || (videoItems || []).some(v => !detectMaliciousCode(`${v.title || ''} ${v.note || ''}`).safe)
-        || (inquiries || []).some(q => !detectMaliciousCode(`${q.title || ''} ${q.body || ''}`).safe);
-      if (hasXss) {
-        alerts.push('게시물·영상 내 악성 스크립트 흔적 발견');
+      const xssNotice = (notices || []).find(n => !detectMaliciousCode(`${n.title || ''} ${n.body || ''}`).safe);
+      const xssVideo = (videoItems || []).find(v => !detectMaliciousCode(`${v.title || ''} ${v.note || ''}`).safe);
+      const xssInq = (inquiries || []).find(q => !detectMaliciousCode(`${q.title || ''} ${q.body || ''}`).safe);
+      if (xssNotice || xssVideo || xssInq) {
+        alerts.push('게시물·영상·문의 내 악성 스크립트 흔적 발견');
+        sigParts.push(`xss:${xssNotice ? xssNotice.id : ''}:${xssVideo ? xssVideo.id : ''}:${xssInq ? xssInq.id : ''}`);
       }
 
-      if (alerts.length > 0) {
-        dispatchAdminSecurityAlert(
-          '🚨 보안 이상 징후 감지 (관리자 전용)',
-          `${alerts.join(' · ')} — 눌러서 [${getTabLabel('manageSecurity')}]에서 확인하세요.`
-        );
+      if (alerts.length === 0) {
+        try { localStorage.removeItem(KEY_LAST_SEC_WATCH_SIG); } catch {}
+        return;
       }
+
+      // 새로고침·업데이트 재접속 시 이미 안내한 동일 이상 징후는 중복 알림 발송 방지
+      const watchSig = sigParts.join('|');
+      try {
+        if (localStorage.getItem(KEY_LAST_SEC_WATCH_SIG) === watchSig) {
+          return;
+        }
+        localStorage.setItem(KEY_LAST_SEC_WATCH_SIG, watchSig);
+      } catch {}
+
+      dispatchAdminSecurityAlert(
+        '🚨 보안 이상 징후 감지 (관리자 전용)',
+        `${alerts.join(' · ')} — 눌러서 [${getTabLabel('manageSecurity')}]에서 확인하세요.`,
+        false,
+        'sec-watch'
+      );
     }
 
 
