@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=235" />
+  <link rel="manifest" href="./manifest.json?v=236" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=235" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=235" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=236" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=236" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4000,7 +4000,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=235" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=236" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5826,9 +5826,9 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 31;
-    const APP_CLIENT_BUILD = 235;
+    const APP_CLIENT_BUILD = 236;
     const APP_BOOT_TS = Date.now();
-    const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
+    const SHEET_SCHEMA_VERSION = 'v10.136-10tab-fast-split';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
       { id: 'members', name: '회원 명단', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '성명·역할·가입일·상태·이전이름 (생일 열 폐기)' },
@@ -5845,6 +5845,13 @@
       { name: '생일 변경 로그', removedIn: 'v10.69', reason: '생년월일 기능 폐기 및 개인정보 최소화 (회원 명단 생년월일 열 포함)' }
     ];
     const SHEET_SCHEMA_CHANGELOG = [
+      {
+        version: 'v10.136',
+        date: '2026.11.26',
+        added: [],
+        removed: [],
+        changed: ['출석부 전용 구글 시트 완전 분리 지원 (기존 통합 시트에서 출석부 자동 제외, 새 시트에만 단독 기록)', '새 출석부 시트의 빈 기본 탭(시트1) 자동 정리']
+      },
       {
         version: 'v10.112',
         date: '2026.11.26',
@@ -6825,7 +6832,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=235" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=236" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6849,8 +6856,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=235', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=235', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=236', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=236', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -7524,6 +7531,7 @@
     let unsubAdminSecret = null;
     let unsubSheetSecret = null;
     let adminSheetUrl = '';
+    let adminAttendanceSheetUrl = '';
     let isSyncingUnsyncedAtt = false;
     let isSyncingUnsyncedInq = false;
     let isSyncingUnsyncedVid = false;
@@ -7587,6 +7595,7 @@
       if (unsubAdminSecret) { unsubAdminSecret(); unsubAdminSecret = null; }
       if (unsubSheetSecret) { unsubSheetSecret(); unsubSheetSecret = null; }
       adminSheetUrl = '';
+      adminAttendanceSheetUrl = '';
       isSyncingUnsyncedAtt = false;
       isSyncingUnsyncedInq = false;
       isSyncingUnsyncedVid = false;
@@ -9024,6 +9033,7 @@
       if (needsAllMembers && !unsubSheetSecret) {
         unsubSheetSecret = db.collection('config').doc('sheetSecret').onSnapshot(doc => {
           adminSheetUrl = (doc.exists && doc.data().url) ? String(doc.data().url).trim() : '';
+          adminAttendanceSheetUrl = (doc.exists && doc.data().attendanceSheetUrl) ? String(doc.data().attendanceSheetUrl).trim() : '';
           if (adminSheetUrl) {
             if (sheetAutoInspectedUrl !== adminSheetUrl) {
               sheetAutoInspectedUrl = adminSheetUrl;
@@ -9053,6 +9063,7 @@
         unsubSheetSecret();
         unsubSheetSecret = null;
         adminSheetUrl = '';
+        adminAttendanceSheetUrl = '';
       }
 
       if (canReadManage && !unsubAttendanceAdmin) {
@@ -19144,12 +19155,22 @@
       return String(adminSheetUrl || '').trim();
     }
 
-    // --- Google Sheet Apps Script POST Helper (관리자 전용 격리 URL 사용 · 20초 타임아웃 · 스크립트 오류 검증 + no-cors 폴백) ---
+    function getAdminAttendanceSheetUrl() {
+      return String(adminAttendanceSheetUrl || '').trim();
+    }
+
+    // --- Google Sheet Apps Script POST Helper (관리자 전용 격리 URL 사용 · 출석부 전용 시트 자동 분기 · 20초 타임아웃) ---
     async function postToGoogleSheet(payload, overrideUrl = '', returnDetail = false, timeoutMs = 20000) {
       const url = String(overrideUrl || getAdminSheetUrl() || '').trim();
       if (!url || !/^https:\/\/script\.google\.com\//i.test(url)) {
         return returnDetail ? { ok: false, reason: 'invalid_url' } : false;
       }
+      const sendPayload = (payload && typeof payload === 'object' && !Array.isArray(payload))
+        ? Object.assign(
+            { attendanceSheetUrl: getAdminAttendanceSheetUrl(), attendanceExclusive: true },
+            payload
+          )
+        : payload;
       let timerId = null;
       let controller = null;
       try {
@@ -19161,7 +19182,7 @@
           method: 'POST',
           redirect: 'follow',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(sendPayload)
         };
         if (controller) fetchOpts.signal = controller.signal;
         const res = await fetch(url, fetchOpts);
@@ -19191,7 +19212,7 @@
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(sendPayload)
           };
           if (fbCtrl) fbOpts.signal = fbCtrl.signal;
           await fetch(url, fbOpts);
@@ -23628,9 +23649,19 @@
               <label class="form-label" for="cfgSheetUrlInput">Google Apps Script 웹 앱 URL (일반 회원 비공개)</label>
               <input id="cfgSheetUrlInput" type="url" class="form-input" value="${escapeHtml(isManageReadOnlyUser(user) ? '' : sheetUrl)}" placeholder="${isManageReadOnlyUser(user) ? '최고 관리자 전용 비공개 (구경 모드에서는 연동 주소 미표시)' : '구글 앱스 스크립트 웹앱 URL 입력'}" />
             </div>
+            <div class="form-group" style="margin-top:10px; padding-top:10px; border-top:1px dashed var(--border);">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:5px; flex-wrap:wrap;">
+                <label class="form-label" for="cfgAttSheetUrlInput" style="margin-bottom:0;">📋 출석부 전용 구글 시트 주소 (완전 분리 · 엑셀 저장용)</label>
+                <span class="tag ${getAdminAttendanceSheetUrl() ? 'green' : 'slate'}" style="font-size:10.5px;">${getAdminAttendanceSheetUrl() ? '✅ 출석부 분리됨' : '기존 시트 통합'}</span>
+              </div>
+              <input id="cfgAttSheetUrlInput" type="url" class="form-input" value="${escapeHtml(isManageReadOnlyUser(user) ? '' : getAdminAttendanceSheetUrl())}" placeholder="${isManageReadOnlyUser(user) ? '최고 관리자 전용 비공개' : 'https://docs.google.com/spreadsheets/d/... (비워두면 기존 시트에 기록)'}" />
+              <div style="font-size:11px; color:#64748B; margin-top:4px; line-height:1.45;">
+                • 새 구글 시트(예: <b>라이트 청년부 출석부</b>) 주소를 넣으면 <b>출석부만 새 시트에 단독 기록</b>되고, 기존 관리 시트의 출석부 탭은 자동 제외됩니다.
+              </div>
+            </div>
             <div style="font-size:11.5px; color:#64748B; line-height:1.55; margin-bottom:10px;">
               • 보안 강화를 위해 연동 주소는 <b>최고 관리자 전용 서버(config/sheetSecret)</b>에만 격리 보관되며 일반 회원에게는 노출되지 않습니다.<br>
-              • <b>10개 세부 탭 자동 분리 저장:</b> 현황·운영 6개 탭(<b>출석부·회원·관리자·문의·영상·공지</b>)과 보안 감사 로그 4개 탭이 각각 자동 기록됩니다.
+              • <b>10개 세부 탭 자동 저장:</b> 현황·운영 6개 탭(<b>출석부·회원·관리자·문의·영상·공지</b>)과 보안 감사 로그 4개 탭이 각각 자동 기록됩니다.
             </div>
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
               <button id="saveSheetUrlBtn" class="btn-sm primary" type="button" style="flex:1; padding:9px;" onclick="handleSaveSheetUrl()">💾 연동 주소 저장</button>
@@ -24345,12 +24376,18 @@
 
     window.handleSaveSheetUrl = async () => {
       const inpEl = document.getElementById('cfgSheetUrlInput');
+      const attInpEl = document.getElementById('cfgAttSheetUrlInput');
       const url = inpEl ? inpEl.value.trim() : getAdminSheetUrl();
+      const attUrl = attInpEl ? attInpEl.value.trim() : getAdminAttendanceSheetUrl();
       manageSectionOpen['sheet_main_cfg'] = true;
 
       if (url && !/^https:\/\/script\.google\.com\/macros\/s\//i.test(url)) {
         setInlineSaveStatus('sheet_url', 'err', '❌ 저장 실패: 올바른 Google Apps Script 웹 앱 주소(https://script.google.com/macros/s/...)를 입력해 주세요.');
         return showToast('❌ 올바른 Google Apps Script 웹 앱 주소(https://script.google.com/macros/s/...)를 입력해 주세요.', 'err');
+      }
+      if (attUrl && !/\/spreadsheets\/d\/[a-zA-Z0-9-_]{20,}/.test(attUrl) && !/^[a-zA-Z0-9-_]{20,}$/.test(attUrl)) {
+        setInlineSaveStatus('sheet_url', 'err', '❌ 저장 실패: 올바른 출석부 구글 시트 주소(https://docs.google.com/spreadsheets/d/...)를 입력해 주세요.');
+        return showToast('❌ 올바른 출석부 구글 시트 주소(https://docs.google.com/spreadsheets/d/...)를 입력해 주세요.', 'err');
       }
 
       const btn = document.getElementById('saveSheetUrlBtn');
@@ -24365,6 +24402,7 @@
         const batch = db.batch();
         batch.set(db.collection('config').doc('sheetSecret'), {
           url,
+          attendanceSheetUrl: attUrl,
           updatedAt: formatKstDateTime(),
           updatedTs: Date.now(),
           updatedBy: currentAdminName || '관리자'
@@ -24374,6 +24412,7 @@
         }, { merge: true });
         await batch.commit();
         adminSheetUrl = url;
+        adminAttendanceSheetUrl = attUrl;
         sheetAutoInspectedUrl = url;
         if (url) {
           setInlineSaveStatus('sheet_url', 'loading', '✅ 서버에 연동 주소 저장 완료 · 구글 시트 연결을 확인하는 중입니다...');
