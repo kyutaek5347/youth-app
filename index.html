@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=192" />
+  <link rel="manifest" href="./manifest.json?v=193" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=192" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=192" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=193" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=193" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -1504,6 +1504,37 @@
       font-size: 11px;
       font-weight: 700;
       margin-top: 3px;
+    }
+    .att-quick-jump-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin: 6px 0 10px;
+      padding: 8px;
+      border-radius: 11px;
+      background: #F8FAFC;
+      border: 1px solid #CBD5E1;
+    }
+    .att-quick-jump-item {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      color: #0F172A;
+      border-radius: 9px;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      font-family: inherit;
+    }
+    .att-quick-jump-item:active {
+      background: #EFF6FF;
+      border-color: #93C5FD;
     }
     .qr-canvas-card {
       background: #F8FAFC;
@@ -3410,7 +3441,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=192" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=193" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5068,7 +5099,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 192;
+    const APP_CLIENT_BUILD = 193;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_SEEN_ADMIN_IDS = 'right_youth_seen_admin_ids_v1';
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
@@ -5976,7 +6007,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=192" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=193" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6000,8 +6031,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=192', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=192', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=193', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=193', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -6213,6 +6244,8 @@
     let attRosterSelectedSessionId = '';
     let attRosterFilter = 'all';
     let attRosterSearchQuery = '';
+    let attRosterLastTodayIso = '';
+    let attRosterQuickJumpQuery = '';
     let adminRegistry = { lockAutoRegister: false, items: [], renameLogs: [] };
     let currentAdminName = '';
     let isRenamingAdmin = false;
@@ -7645,6 +7678,8 @@
             renderRoleMembersListOnly();
           } else if (activeEl && activeEl.id === 'attRosterSearchInput' && currentMainTab === 'manage' && currentManageSubTab === 'attendance') {
             renderAttRosterListsOnly();
+          } else if (activeEl && activeEl.id === 'attRosterQuickJumpInput' && currentMainTab === 'manage' && currentManageSubTab === 'attendance') {
+            renderAttRosterQuickJumpListOnly();
           } else {
             applyScreen();
           }
@@ -10943,9 +10978,9 @@
     };
 
     // ==================== 12. 관리 센터 ====================
-    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|selectRoleMemberTab|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterFilter|clearAttRosterSearch|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|switchMainTab)\s*\(/;
+    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|selectRoleMemberTab|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|switchMainTab)\s*\(/;
     const OBSERVER_ALLOWED_INPUT_IDS = new Set([
-      'roleMemberSearchInput', 'adminLogSearchInput', 'adminGuideSearchInput', 'adminAttSessionSearchInput', 'adminAttSessionSelect', 'attRosterSearchInput'
+      'roleMemberSearchInput', 'adminLogSearchInput', 'adminGuideSearchInput', 'attRosterSearchInput', 'attRosterQuickJumpInput'
     ]);
     let observerReadOnlyGuardBound = false;
     let observerApplyingLock = false;
@@ -11093,6 +11128,16 @@
     window.switchManageSubTab = (sub) => {
       if (currentManageSubTab === 'labels' && sub !== 'labels') {
         draftTabInitialized = false;
+      }
+      if (sub === 'attendance' && currentManageSubTab !== 'attendance') {
+        const todayIso = getKstNowInfo().iso;
+        const [ty, tm] = todayIso.split('-').map(Number);
+        attRosterCalYear = ty;
+        attRosterCalMonth = tm;
+        attRosterSelectedIso = todayIso;
+        attRosterLastTodayIso = todayIso;
+        attRosterSelectedSessionId = '';
+        attRosterQuickJumpQuery = '';
       }
       currentManageSubTab = sub;
       applyScreen();
@@ -16802,6 +16847,17 @@
         renderHomeView(u);
       } else if (currentMainTab === 'manage' && currentManageSubTab === 'content') {
         renderManageContent(document.getElementById('manageContent'), u);
+      } else if (currentMainTab === 'manage' && currentManageSubTab === 'attendance') {
+        const nowIso = getKstNowInfo().iso;
+        if (attRosterLastTodayIso && attRosterLastTodayIso !== nowIso) {
+          const [ny, nm] = nowIso.split('-').map(Number);
+          attRosterCalYear = ny;
+          attRosterCalMonth = nm;
+          attRosterSelectedIso = nowIso;
+          attRosterLastTodayIso = nowIso;
+          attRosterSelectedSessionId = '';
+          renderManageAttendance(document.getElementById('manageContent'), u);
+        }
       }
     }, 30000);
 
@@ -18379,171 +18435,67 @@
 
     function renderManageWorship(el, user) {
       const cfg = attendanceConfig || DEFAULT_ATTENDANCE_CONFIG;
-      const sessions = getAllAttendanceSessionOptions();
       const todayDot = getKstNowInfo().dot;
-      if (!selectedAdminAttSessionKey || !sessions.some(s => s.sessionId === selectedAdminAttSessionKey)) {
-        const todayMatch = sessions.find(s => s.date === todayDot);
-        const upcomingSoon = sessions.slice().reverse().find(s => s.date >= todayDot);
-        const pastOrToday = sessions.find(s => s.date <= todayDot);
-        selectedAdminAttSessionKey = (todayMatch || upcomingSoon || pastOrToday || sessions[0] || {}).sessionId || '';
-      }
-      const curSess = sessions.find(s => s.sessionId === selectedAdminAttSessionKey) || sessions[0];
-      const sessRecords = curSess
-        ? attendanceRecords.filter(r => String(r.sessionId) === String(curSess.sessionId))
-            .sort((a, b) => String(a.time || '').localeCompare(String(b.time || '')))
-        : [];
-      const presentRecs = sessRecords.filter(r => !isAbsentAttendanceRecord(r));
-      const absentRecs = sessRecords.filter(r => isAbsentAttendanceRecord(r));
-      const shownRecords = worshipAttStatusFilter === 'present'
-        ? presentRecs
-        : (worshipAttStatusFilter === 'absent' ? absentRecs : sessRecords);
-
-      const filteredSessions = sessions.filter(s => {
-        if (!adminAttSessionSearchQuery) return true;
-        const q = adminAttSessionSearchQuery.toLowerCase();
-        return (s.displayTitle || s.colTitle || '').toLowerCase().includes(q);
-      });
-
-      const curIsSundayRegular = !!(curSess && !curSess.isSpecial);
-      const curIsSkipped = !!(curIsSundayRegular && isSundayWorshipSkipped(curSess.date, cfg));
       const upcomingSkipped = (Array.isArray(cfg.skippedSundays) ? cfg.skippedSundays : [])
         .map(normalizeDateDotKey)
         .filter(d => d >= todayDot)
         .sort();
 
       const worshipAttOpen = isManageSectionOpen('worship_att', true);
-      const worshipAttListDefault = sessRecords.length <= 5;
-      const worshipAttListOpen = isManageSectionOpen('worship_att_list', worshipAttListDefault);
       const specialEvOpen = isManageSectionOpen('worship_special_events_sec', true);
+      const attTabIcon = getTabIcon('manageAttendance');
+      const attTabLabel = getTabLabel('manageAttendance');
 
       el.innerHTML = `
-        <!-- 1) 통합: 매주 일요일 정기 예배 설정 + 예배X 관리 + 출석 현황 -->
+        <!-- 1) 매주 일요일 정기 예배 설정 -->
         ${buildManageAccordionBar({
           key: 'worship_att',
-          titleHtml: `${escapeHtml(getTabIcon('manageWorship'))} ${escapeHtml(getTabLabel('manageWorship'))} · 정기 예배 설정 및 현황`,
-          badgeHtml: `<span class="tag green">출석O ${presentRecs.length}</span>${absentRecs.length > 0 ? `<span class="tag red">출석X ${absentRecs.length}</span>` : ''}`,
-          actionHtml: curSess ? `<button class="btn-admin" type="button" style="padding:6px 10px; font-size:11.5px;" onclick="openAddAdminAttendanceModal()">+ 출석</button>` : '',
+          titleHtml: `${escapeHtml(getTabIcon('manageWorship'))} 매주 일요일 정기 예배 설정`,
+          badgeHtml: `<span class="tag green">매주 일요일 · ${escapeHtml(cfg.regularStart || '14:00')}~${escapeHtml(cfg.regularEnd || '15:30')}</span>`,
           defaultOpen: true
         })}
         <div data-acc-body="worship_att" class="${worshipAttOpen ? '' : 'hidden'}">
           <div class="card">
-            <!-- (a) 매주 일요일 정기 예배 시간 설정 -->
-            <div class="worship-regular-box">
-              <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
-                <strong style="font-size:13.5px; color:#0F172A;">⏰ 매주 일요일 정기 예배 설정</strong>
-                <span class="tag green" style="font-size:10.5px;">매주 일요일 자동 · ${escapeHtml(cfg.regularStart || '14:00')}~${escapeHtml(cfg.regularEnd || '15:30')}</span>
-              </div>
-              <div style="font-size:11.5px; color:#64748B; line-height:1.45; margin-bottom:9px;">
-                • 아래 <b>[🚫 이 주 예배X]</b>를 누르지 않으면 매주 일요일 설정 시간에 출석체크(출석O/출석X)가 자동으로 열립니다. <b>(알림 미발송)</b>
-              </div>
-              <div class="form-group" style="margin-bottom:8px;">
-                <label class="form-label" for="cfgAttRegularLabel" style="font-size:11.5px; margin-bottom:4px;">주일 예배 명칭</label>
-                <input id="cfgAttRegularLabel" class="form-input" style="background:#fff;" maxlength="16" value="${escapeHtml(cfg.regularLabel || '청년부 예배')}" placeholder="예: 청년부 예배" />
-              </div>
-              <div class="form-grid-2" style="margin-bottom:9px;">
-                <div>
-                  <label class="form-label" for="cfgAttRegularStart" style="font-size:11.5px; margin-bottom:4px;">시작 시간 (KST)</label>
-                  <div class="combo-input-row">
-                    <input id="cfgAttRegularStart" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1; background:#fff;" value="${escapeHtml(cfg.regularStart || '14:00')}" placeholder="14:00" oninput="formatTimeTyping(this)" />
-                    <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('cfgAttRegularStartPicker', 'cfgAttRegularStart', 'time')">🕒</button>
-                    <input id="cfgAttRegularStartPicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('cfgAttRegularStartPicker', 'cfgAttRegularStart', 'time')" />
-                  </div>
-                </div>
-                <div>
-                  <label class="form-label" for="cfgAttRegularEnd" style="font-size:11.5px; margin-bottom:4px;">종료 시간 (KST)</label>
-                  <div class="combo-input-row">
-                    <input id="cfgAttRegularEnd" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1; background:#fff;" value="${escapeHtml(cfg.regularEnd || '15:30')}" placeholder="15:30" oninput="formatTimeTyping(this)" />
-                    <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('cfgAttRegularEndPicker', 'cfgAttRegularEnd', 'time')">🕒</button>
-                    <input id="cfgAttRegularEndPicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('cfgAttRegularEndPicker', 'cfgAttRegularEnd', 'time')" />
-                  </div>
-                </div>
-              </div>
-              <button id="saveAttScheduleBtn" class="btn-full btn-dark" type="button" style="padding:10px; font-size:13px;" onclick="handleSaveAttendanceSchedule()">💾 주일 예배 시간 저장 · 수정</button>
-              ${upcomingSkipped.length > 0 ? `
-                <div style="margin-top:9px; padding-top:8px; border-top:1px dashed #CBD5E1; font-size:11.5px; color:#991B1B; line-height:1.6;">
-                  <b>🚫 예배X(휴무) 지정된 주일:</b>
-                  <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px;">
-                    ${upcomingSkipped.map(d => `
-                      <button class="btn-sm danger" type="button" style="padding:3px 8px; font-size:11px;" onclick="toggleSkipSundayWorship('${escapeJsAttr(d)}')">${escapeHtml(formatDateWithDowKo(d))} 예배X 해제 ✕</button>
-                    `).join('')}
-                  </div>
-                </div>
-              ` : ''}
+            <div style="font-size:12px; color:#475569; line-height:1.52; margin-bottom:11px; background:#F8FAFC; border:1px solid var(--border); border-radius:11px; padding:9px 11px;">
+              • 매주 일요일 설정된 시간에 회원 홈 화면에 출석체크(출석O/출석X)가 자동으로 열립니다. <b>(알림 미발송)</b><br>
+              • 특정 주에 예배가 없거나 이름 변경·출석 명단 확인이 필요할 때는 <b>[${escapeHtml(attTabIcon)} ${escapeHtml(attTabLabel)}]</b> 달력에서 해당 날짜를 클릭해 바로 처리할 수 있습니다.
             </div>
-
-            <!-- (b) 주차별 예배·행사 선택 & 이 주 예배X 토글 -->
-            <div class="form-group" style="margin-bottom:10px;">
-              <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap; margin-bottom:6px;">
-                <label class="form-label" for="adminAttSessionSelect" style="margin-bottom:0;">예배·행사 선택 (한국시간 기준)</label>
-                <div style="display:flex; gap:5px; flex-wrap:wrap;">
-                  ${curIsSundayRegular ? `
-                    <button class="btn-sm ${curIsSkipped ? 'approve' : 'danger'}" type="button" style="padding:4px 9px; font-size:11px;" onclick="toggleSkipSundayWorship('${escapeJsAttr(curSess.date)}')">
-                      ${curIsSkipped ? '✅ 예배O로 복구' : '🚫 이 주 예배X'}
-                    </button>
-                  ` : ''}
-                  ${curSess ? `<button class="btn-sm" type="button" style="padding:4px 8px; font-size:11px;" onclick="renameSelectedWorshipSession()">✏️ 예배명 변경</button>` : ''}
+            <div class="form-group" style="margin-bottom:9px;">
+              <label class="form-label" for="cfgAttRegularLabel" style="font-size:12px; margin-bottom:4px;">주일 예배 명칭</label>
+              <input id="cfgAttRegularLabel" class="form-input" style="background:#fff;" maxlength="16" value="${escapeHtml(cfg.regularLabel || '청년부 예배')}" placeholder="예: 주일 청년부 예배" />
+            </div>
+            <div class="form-grid-2" style="margin-bottom:10px;">
+              <div>
+                <label class="form-label" for="cfgAttRegularStart" style="font-size:12px; margin-bottom:4px;">시작 시간 (KST)</label>
+                <div class="combo-input-row">
+                  <input id="cfgAttRegularStart" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1; background:#fff;" value="${escapeHtml(cfg.regularStart || '14:00')}" placeholder="14:00" oninput="formatTimeTyping(this)" />
+                  <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('cfgAttRegularStartPicker', 'cfgAttRegularStart', 'time')">🕒</button>
+                  <input id="cfgAttRegularStartPicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('cfgAttRegularStartPicker', 'cfgAttRegularStart', 'time')" />
                 </div>
               </div>
-              <input id="adminAttSessionSearchInput" class="form-input" style="margin-bottom:6px; padding:8px 11px; font-size:13px;" value="${escapeHtml(adminAttSessionSearchQuery)}" placeholder="날짜·예배·행사명 검색..." oninput="onAdminAttSessionSearchInput(this.value)" />
-              <select id="adminAttSessionSelect" class="form-select" onchange="onSelectAdminAttSession(this.value)">
-                ${filteredSessions.map(s => `
-                  <option value="${escapeHtml(s.sessionId)}" ${s.sessionId === selectedAdminAttSessionKey ? 'selected' : ''}>${escapeHtml(s.displayTitle || s.colTitle)}</option>
-                `).join('')}
-              </select>
+              <div>
+                <label class="form-label" for="cfgAttRegularEnd" style="font-size:12px; margin-bottom:4px;">종료 시간 (KST)</label>
+                <div class="combo-input-row">
+                  <input id="cfgAttRegularEnd" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1; background:#fff;" value="${escapeHtml(cfg.regularEnd || '15:30')}" placeholder="15:30" oninput="formatTimeTyping(this)" />
+                  <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('cfgAttRegularEndPicker', 'cfgAttRegularEnd', 'time')">🕒</button>
+                  <input id="cfgAttRegularEndPicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('cfgAttRegularEndPicker', 'cfgAttRegularEnd', 'time')" />
+                </div>
+              </div>
             </div>
-
-            ${curIsSkipped ? `
-              <div class="worship-skip-banner">
-                <b>🚫 [${escapeHtml(formatDateWithDowKo(curSess.date))}] 예배X (휴무) 상태입니다.</b><br>
-                해당 일요일에는 회원 화면에 출석체크가 뜨지 않습니다. 다시 열려면 위 <b>[✅ 예배O로 복구]</b> 버튼을 눌러 주세요.
+            <button id="saveAttScheduleBtn" class="btn-full btn-dark" type="button" style="padding:10.5px; font-size:13.5px;" onclick="handleSaveAttendanceSchedule()">💾 주일 예배 시간 저장 · 수정</button>
+            <div style="display:flex; gap:6px; margin-top:8px;">
+              <button class="btn-sm" type="button" style="flex:1; padding:8px;" onclick="switchManageSubTab('attendance')">${escapeHtml(attTabIcon)} ${escapeHtml(attTabLabel)} 달력에서 출석 확인 · 예배X 설정 ↗</button>
+            </div>
+            ${upcomingSkipped.length > 0 ? `
+              <div style="margin-top:10px; padding-top:9px; border-top:1px dashed #CBD5E1; font-size:11.5px; color:#991B1B; line-height:1.6;">
+                <b>🚫 예배X(휴무) 지정된 주일:</b>
+                <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px;">
+                  ${upcomingSkipped.map(d => `
+                    <button class="btn-sm danger" type="button" style="padding:3px 8px; font-size:11px;" onclick="toggleSkipSundayWorship('${escapeJsAttr(d)}')">${escapeHtml(formatDateWithDowKo(d))} 예배X 해제 ✕</button>
+                  `).join('')}
+                </div>
               </div>
             ` : ''}
-
-            <!-- (c) 출석O / 출석X 현황 명단 -->
-            ${sessRecords.length === 0
-              ? '<div style="text-align:center; padding:18px 8px; color:#64748B; font-size:13px;">해당 예배·행사에 기록된 출석·불참 내역이 없습니다.</div>'
-              : `
-                <div class="filter-row" style="margin-bottom:8px;">
-                  <button class="filter-chip ${worshipAttStatusFilter === 'all' ? 'active' : ''}" type="button" onclick="setWorshipAttStatusFilter('all')">전체 (${sessRecords.length})</button>
-                  <button class="filter-chip ${worshipAttStatusFilter === 'present' ? 'active' : ''}" type="button" onclick="setWorshipAttStatusFilter('present')">✅ 출석O (${presentRecs.length})</button>
-                  <button class="filter-chip ${worshipAttStatusFilter === 'absent' ? 'active' : ''}" type="button" onclick="setWorshipAttStatusFilter('absent')">❌ 출석X (${absentRecs.length})</button>
-                </div>
-                <div class="acc-sub-bar ${worshipAttListOpen ? 'open' : ''}" data-acc-bar="worship_att_list" onclick="toggleManageSection('worship_att_list', ${worshipAttListDefault ? 'true' : 'false'})">
-                  <div class="sec-head-title-wrap">
-                    <span style="font-size:12.5px; font-weight:800; color:#0F172A;">${escapeHtml(getManageSectionTitle('worship_att_list', '👥 출석 현황 명단'))} (${shownRecords.length}명)</span>
-                    ${buildSectionEditBtnHtml('worship_att_list', '👥 출석 현황 명단')}
-                  </div>
-                  <span class="acc-toggle-pill" data-acc-pill="worship_att_list">${worshipAttListOpen ? '접기 ▲' : '열기 ▼'}</span>
-                </div>
-                <div data-acc-body="worship_att_list" class="${worshipAttListOpen ? '' : 'hidden'}">
-                  ${shownRecords.length === 0
-                    ? '<div style="text-align:center; padding:12px 6px; color:#64748B; font-size:12.5px;">해당 조건의 인원이 없습니다.</div>'
-                    : shownRecords.map(r => {
-                        const isAbs = isAbsentAttendanceRecord(r);
-                        return `
-                          <div class="att-record-row">
-                            <div>
-                              <div class="member-name">
-                                <span>${escapeHtml(r.name)}</span>
-                                ${r.roleName ? `<span class="tag slate" style="font-size:10.5px;">${escapeHtml(r.roleName)}</span>` : ''}
-                                <span class="tag ${isAbs ? 'red' : 'green'}" style="font-size:10.5px;">${isAbs ? '❌ 출석X' : '✅ 출석O'} · ${escapeHtml(r.time || '-')}</span>
-                              </div>
-                              <div class="member-meta">
-                                ${r.modifiedBy
-                                  ? `✍️ 관리자 처리: <b>${escapeHtml(r.modifiedBy)}</b>${r.modifiedAt ? ` (${escapeHtml(r.modifiedAt)})` : ''}`
-                                  : (isAbs ? '본인 앱 출석X(불참) 선택' : '본인 앱 출석O 체크')}
-                              </div>
-                            </div>
-                            <div style="display:flex; gap:5px;">
-                              <button class="btn-sm" type="button" onclick="openEditAdminAttendanceModal('${escapeJsAttr(r.id)}')">수정</button>
-                              <button class="btn-sm danger" type="button" onclick="deleteAdminAttendance('${escapeJsAttr(r.id)}')">삭제</button>
-                            </div>
-                          </div>
-                        `;
-                      }).join('')}
-                  ${shownRecords.length >= 4 ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('worship_att_list', ${worshipAttListDefault ? 'true' : 'false'})">▲ 출석 명단 접기</button>` : ''}
-                </div>
-              `}
           </div>
         </div>
 
@@ -18917,12 +18869,125 @@
       }
     };
 
+    function parseQuickDateToIso(rawQuery) {
+      const s = String(rawQuery || '').trim();
+      if (!s) return '';
+      const full = normalizeDateAnyInput(s);
+      if (full) return full;
+      const md = s.match(/^(\d{1,2})[.\-\/\s]+(\d{1,2})$/);
+      if (md) {
+        const y = attRosterCalYear || Number(getKstNowInfo().iso.slice(0, 4));
+        const cand = `${y}-${String(Number(md[1])).padStart(2, '0')}-${String(Number(md[2])).padStart(2, '0')}`;
+        return normalizeDateAnyInput(cand);
+      }
+      return '';
+    }
+
+    function renderAttRosterQuickJumpListOnly() {
+      const box = document.getElementById('attRosterQuickJumpResults');
+      const clearBtn = document.getElementById('attRosterQuickJumpClear');
+      if (clearBtn) clearBtn.classList.toggle('hidden', !attRosterQuickJumpQuery);
+      if (!box) return;
+
+      const rawQ = String(attRosterQuickJumpQuery || '').trim();
+      if (!rawQ) {
+        box.classList.add('hidden');
+        box.innerHTML = '';
+        return;
+      }
+
+      const q = rawQ.toLowerCase();
+      const allOpts = getAllAttendanceSessionOptions();
+      const matched = allOpts.filter(s => {
+        const hay = `${s.date || ''} ${s.label || ''} ${s.displayTitle || ''} ${s.colTitle || ''}`.toLowerCase();
+        return hay.includes(q);
+      }).slice(0, 8);
+
+      const directIso = parseQuickDateToIso(rawQ);
+      const rows = [];
+      if (directIso && !matched.some(s => normalizeDateAnyInput(s.date) === directIso)) {
+        const dDot = directIso.replace(/-/g, '.');
+        rows.push(`
+          <button type="button" class="att-quick-jump-item" onclick="jumpAttRosterToIso('${directIso}', '')">
+            <span>📅 ${escapeHtml(formatDateWithDowKo(dDot))} 날짜로 바로 이동</span>
+            <span class="tag" style="font-size:10.5px;">이동 ↗</span>
+          </button>
+        `);
+      }
+
+      matched.forEach(s => {
+        const iso = normalizeDateAnyInput(s.date);
+        if (!iso) return;
+        const cnt = attendanceRecords.filter(r => String(r.sessionId) === String(s.sessionId)).length;
+        rows.push(`
+          <button type="button" class="att-quick-jump-item" onclick="jumpAttRosterToIso('${iso}', '${escapeJsAttr(s.sessionId)}')">
+            <span style="min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+              ${s.isSpecial ? '📅' : '⛪'} ${escapeHtml(formatDateWithDowKo(s.date))} · ${escapeHtml(s.label)}
+            </span>
+            <span class="tag ${s.isSkipped ? 'red' : (cnt > 0 ? 'green' : 'slate')}" style="font-size:10.5px;">
+              ${s.isSkipped ? '🚫 예배X' : (cnt > 0 ? `${cnt}명` : '보기')}
+            </span>
+          </button>
+        `);
+      });
+
+      box.classList.remove('hidden');
+      box.innerHTML = rows.length > 0
+        ? rows.join('')
+        : '<div style="font-size:12px; color:#64748B; text-align:center; padding:6px 4px;">일치하는 예배·행사가 없습니다. (예: 11.29, 수련회, 주일)</div>';
+    }
+
+    window.onAttRosterQuickJumpInput = (val) => {
+      attRosterQuickJumpQuery = String(val || '');
+      renderAttRosterQuickJumpListOnly();
+    };
+
+    window.clearAttRosterQuickJump = () => {
+      attRosterQuickJumpQuery = '';
+      const inp = document.getElementById('attRosterQuickJumpInput');
+      if (inp) { inp.value = ''; inp.focus(); }
+      renderAttRosterQuickJumpListOnly();
+    };
+
+    window.jumpAttRosterToIso = (isoDate, sessionId = '') => {
+      const iso = normalizeDateAnyInput(isoDate);
+      if (!iso) return;
+      const [y, m] = iso.split('-').map(Number);
+      attRosterCalYear = y;
+      attRosterCalMonth = m;
+      attRosterSelectedIso = iso;
+      attRosterSelectedSessionId = String(sessionId || '');
+      attRosterQuickJumpQuery = '';
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'attendance') {
+        renderManageAttendance(document.getElementById('manageContent'), u);
+      }
+    };
+
+    window.renameAttRosterSession = async () => {
+      const sessions = getSessionsForIsoDate(attRosterSelectedIso);
+      const curSess = sessions.find(s => String(s.sessionId) === String(attRosterSelectedSessionId)) || sessions[0];
+      if (!curSess) return;
+      const input = prompt(`[${formatDateWithDowKo(curSess.date)}] 예배·행사 이름을 입력해 주세요.
+(예: 성탄 감사예배, 청년부 헌신예배, 송구영신예배)`, curSess.label);
+      if (input === null) return;
+      const newLabel = input.trim();
+      if (!newLabel) return showToast('예배·행사 이름을 입력해 주세요.');
+      await applyWorshipSessionRename(curSess.sessionId, curSess.date, newLabel, curSess.isSpecial);
+    };
+
     function renderManageAttendance(el, user) {
       const now = getKstNowInfo();
       const cfg = attendanceConfig || DEFAULT_ATTENDANCE_CONFIG;
-      if (!attRosterSelectedIso) {
+      // 최초 진입 또는 날짜가 다음 날로 바뀌었을 때 자동으로 현재 한국시간(오늘) 날짜 위치로 이동
+      if (!attRosterSelectedIso || (attRosterLastTodayIso && attRosterLastTodayIso !== now.iso)) {
         attRosterSelectedIso = now.iso;
+        const [ny, nm] = now.iso.split('-').map(Number);
+        attRosterCalYear = ny;
+        attRosterCalMonth = nm;
+        attRosterSelectedSessionId = '';
       }
+      attRosterLastTodayIso = now.iso;
       if (!attRosterCalYear || !attRosterCalMonth) {
         const [y, m] = attRosterSelectedIso.split('-').map(Number);
         attRosterCalYear = y;
@@ -18978,6 +19043,7 @@
 
       const selDot = attRosterSelectedIso.replace(/-/g, '.');
       const selDateLabel = formatDateWithDowKo(selDot);
+      const selIsToday = attRosterSelectedIso === now.iso;
       const selIsSun = getDowForDateStr(selDot) === 0;
       const selIsSkipped = selIsSun && isSundayWorshipSkipped(selDot, cfg);
       const daySessions = getSessionsForIsoDate(attRosterSelectedIso);
@@ -18995,13 +19061,20 @@
           rightHtml: `<span class="tag slate">승인 회원 ${part.approvedMembers.length}명</span>`
         })}
 
-        <!-- 1) 월별 달력 -->
+        <!-- 1) 월별 달력 + 날짜·예배·행사명 빠른 찾기 -->
         <div class="card" style="padding:12px;">
+          <div class="search-box" style="margin-bottom:8px;">
+            <span class="search-icon">🔍</span>
+            <input id="attRosterQuickJumpInput" class="search-input" style="padding-top:8px; padding-bottom:8px; font-size:13px;" type="search" value="${escapeHtml(attRosterQuickJumpQuery)}" placeholder="날짜·예배·행사명 빠른 이동 (예: 11.29, 수련회)" oninput="onAttRosterQuickJumpInput(this.value)" />
+            <button id="attRosterQuickJumpClear" class="search-clear ${attRosterQuickJumpQuery ? '' : 'hidden'}" type="button" onclick="clearAttRosterQuickJump()">✕</button>
+          </div>
+          <div id="attRosterQuickJumpResults" class="att-quick-jump-list hidden"></div>
+
           <div class="sp-cal-head" style="margin-bottom:9px;">
             <button type="button" class="sp-cal-nav-btn" onclick="shiftAttRosterCalMonth(-1)">◀</button>
-            <div style="display:flex; align-items:center; gap:6px;">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:center;">
               <span class="sp-cal-month-title">${attRosterCalYear}년 ${attRosterCalMonth}월</span>
-              <button type="button" class="btn-sm" style="padding:3px 8px; font-size:11px;" onclick="jumpAttRosterToday()">오늘</button>
+              <button type="button" class="btn-sm ${selIsToday ? 'primary' : ''}" style="padding:3px 8px; font-size:11px;" onclick="jumpAttRosterToday()">오늘 (${escapeHtml(now.dot.slice(5))})</button>
             </div>
             <button type="button" class="sp-cal-nav-btn" onclick="shiftAttRosterCalMonth(1)">▶</button>
           </div>
@@ -19016,14 +19089,29 @@
           </div>
         </div>
 
-        <!-- 2) 선택한 날짜 상세 현황 -->
+        <!-- 2) 선택한 날짜 상세 현황 + 예배X / 예배명 변경 / 수동 추가 -->
         <div class="card" style="padding:13px 14px; margin-bottom:10px;">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap; margin-bottom:6px;">
-            <strong style="font-size:14.5px; color:#0F172A;">📅 ${escapeHtml(selDateLabel)}</strong>
+            <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+              <strong style="font-size:14.5px; color:#0F172A;">📅 ${escapeHtml(selDateLabel)}</strong>
+              ${selIsToday ? '<span class="tag" style="font-size:10px; padding:2px 6px;">오늘</span>' : ''}
+            </div>
             ${curSess
               ? `<span class="tag ${curSess.isSpecial ? 'warm' : 'green'}">${escapeHtml(curSess.label)}${curSess.start && curSess.end ? ` · ${escapeHtml(curSess.start)}~${escapeHtml(curSess.end)}` : ''}</span>`
               : (selIsSkipped ? '<span class="tag red">🚫 예배X (휴무)</span>' : '<span class="tag slate">일정 없음</span>')}
           </div>
+
+          ${(selIsSun || curSess) ? `
+            <div style="display:flex; gap:5px; flex-wrap:wrap; margin:6px 0 8px;">
+              ${selIsSun ? `
+                <button class="btn-sm ${selIsSkipped ? 'approve' : 'danger'}" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="toggleSkipSundayWorship('${escapeJsAttr(selDot)}')">
+                  ${selIsSkipped ? '✅ 예배O로 복구' : '🚫 이 주 예배X'}
+                </button>
+              ` : ''}
+              ${curSess ? `<button class="btn-sm" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="renameAttRosterSession()">✏️ 예배명 변경</button>` : ''}
+              ${curSess ? `<button class="btn-sm primary" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="openAddAdminAttendanceModal()">+ 출석 추가</button>` : ''}
+            </div>
+          ` : ''}
 
           ${daySessions.length > 1 ? `
             <div class="filter-row" style="margin:6px 0 8px;">
@@ -19036,13 +19124,13 @@
           ` : ''}
 
           ${!curSess ? `
-            <div style="text-align:center; padding:16px 8px; color:#64748B; font-size:12.5px; line-height:1.55;">
+            <div style="text-align:center; padding:14px 8px; color:#64748B; font-size:12.5px; line-height:1.55;">
               ${selIsSkipped
-                ? '이 날짜의 주일 예배는 <b>[예배X (휴무)]</b>로 설정되어 출석체크가 진행되지 않았습니다.'
-                : '이 날짜에는 예정된 예배·행사나 출석 기록이 없습니다.<br>달력에서 파란 점(예배·행사) 또는 초록 점(기록 있음) 날짜를 눌러 확인해 주세요.'}
+                ? '이 날짜의 주일 예배는 <b>[🚫 예배X (휴무)]</b>로 설정되어 출석체크가 진행되지 않았습니다.<br>다시 열려면 위 <b>[✅ 예배O로 복구]</b> 버튼을 눌러 주세요.'
+                : '이 날짜에는 예정된 예배·행사나 출석 기록이 없습니다.<br>달력에서 파란 점(예배·행사) 또는 초록 점(기록 있음) 날짜를 클릭하거나 위 검색창에서 빠르게 찾아보세요.'}
             </div>
           ` : `
-            <div class="att-roster-stat-grid" style="margin-top:8px;">
+            <div class="att-roster-stat-grid" style="margin-top:6px;">
               <button type="button" class="att-roster-stat-card present ${f === 'present' ? 'active' : ''}" onclick="setAttRosterFilter('${f === 'present' ? 'all' : 'present'}')">
                 <div class="att-roster-stat-num">${part.presentRecs.length}</div>
                 <div class="att-roster-stat-lbl">✅ 출석O</div>
@@ -19075,6 +19163,7 @@
         ${curSess ? '<div id="attRosterListsArea"></div>' : ''}
       `;
 
+      renderAttRosterQuickJumpListOnly();
       if (curSess) {
         renderAttRosterListsOnly();
       }
@@ -19834,9 +19923,16 @@
 
     // --- Admin Attendance Add / Edit / Delete (+ Google Sheet Real-time Sync) ---
     window.openAddAdminAttendanceModal = () => {
-      const sessions = getAllAttendanceSessionOptions();
-      const curSess = sessions.find(s => s.sessionId === selectedAdminAttSessionKey) || sessions[0];
-      if (!curSess) return;
+      let curSess = null;
+      if (currentMainTab === 'manage' && currentManageSubTab === 'attendance' && attRosterSelectedIso) {
+        const daySessions = getSessionsForIsoDate(attRosterSelectedIso);
+        curSess = daySessions.find(s => String(s.sessionId) === String(attRosterSelectedSessionId)) || daySessions[0] || null;
+      }
+      if (!curSess) {
+        const sessions = getAllAttendanceSessionOptions();
+        curSess = sessions.find(s => s.sessionId === selectedAdminAttSessionKey) || sessions[0];
+      }
+      if (!curSess) return showToast('추가할 예배·행사 일정을 먼저 선택해 주세요.');
       const approvedMembers = members.filter(m => m.status === 'approved');
       const alreadyUids = new Set(attendanceRecords.filter(r => String(r.sessionId) === curSess.sessionId).map(r => String(r.uid)));
       const candidates = approvedMembers.filter(m => !alreadyUids.has(String(m.id)));
@@ -20083,23 +20179,7 @@
       else if (filtered.length === 1 && q) sel.value = filtered[0].id;
     };
 
-    window.onAdminAttSessionSearchInput = (val) => {
-      adminAttSessionSearchQuery = String(val || '');
-      const sel = document.getElementById('adminAttSessionSelect');
-      if (!sel) return;
-      const sessions = getAllAttendanceSessionOptions();
-      const q = adminAttSessionSearchQuery.trim().toLowerCase();
-      const filtered = q ? sessions.filter(s => s.colTitle.toLowerCase().includes(q)) : sessions;
-      sel.innerHTML = filtered.length === 0
-        ? '<option value="">검색 결과 없음</option>'
-        : filtered.map(s => `<option value="${escapeHtml(s.sessionId)}" ${s.sessionId === selectedAdminAttSessionKey ? 'selected' : ''}>${escapeHtml(s.colTitle)}</option>`).join('');
-      if (filtered.length > 0 && !filtered.some(s => s.sessionId === selectedAdminAttSessionKey)) {
-        selectedAdminAttSessionKey = filtered[0].sessionId;
-        sel.value = selectedAdminAttSessionKey;
-        const u = getCurrentUser();
-        if (u) renderManageView(u);
-      }
-    };
+
 
     window.filterAdminAttMemberSelect = (query) => {
       const sel = document.getElementById('adminAttMemberSelect');
