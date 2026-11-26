@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=189" />
+  <link rel="manifest" href="./manifest.json?v=190" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=189" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=189" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=190" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=190" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3193,7 +3193,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=189" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=190" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4375,6 +4375,37 @@
     </div>
   </div>
 
+  <!-- 관리자: 관리자 역할 변경 → 일반 회원 전환 모달 -->
+  <div id="adminChangeRoleModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="adminChangeRoleModalTitle" class="modal-title">🏷️ 관리자 역할 변경 (회원 전환)</h3>
+        <button class="close-btn" data-close="adminChangeRoleModal">✕</button>
+      </div>
+      <input type="hidden" id="changeRoleAdminTargetId" />
+      <div id="adminChangeRoleTargetInfo" class="info-box" style="margin-top:0; margin-bottom:10px;"></div>
+      <div id="adminChangeRoleMemberStatusBox" class="info-box warn" style="margin-top:0; margin-bottom:12px;"></div>
+      <div class="form-group">
+        <label class="form-label" for="adminToMemberRoleSelect">전환할 회원 역할 선택 (참관자 포함 · 선택 또는 직접 입력)</label>
+        <select id="adminToMemberRoleSelect" class="form-select" style="margin-bottom:6px;"></select>
+        <input id="adminToMemberCustomRoleInput" class="form-input" maxlength="16" placeholder="목록에 없으면 새 역할 이름 직접 입력 (선택)" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="adminToMemberReasonInput">변경 사유 (선택 · 로그 및 시트에 기록)</label>
+        <div class="quick-preset-row" style="margin-bottom:7px;">
+          <button class="quick-preset-chip" type="button" onclick="applyAdminDemoteReasonPreset('임기 만료 · 일반 회원 전환')">임기 만료 · 회원 전환</button>
+          <button class="quick-preset-chip" type="button" onclick="applyAdminDemoteReasonPreset('인수인계 완료 · 참관자 전환')">인수인계 · 참관자 전환</button>
+          <button class="quick-preset-chip" type="button" onclick="applyAdminDemoteReasonPreset('직책·사역 변경')">직책·사역 변경</button>
+        </div>
+        <input id="adminToMemberReasonInput" class="form-input" maxlength="120" placeholder="사유가 있다면 간단히 입력해 주세요 (선택)" />
+      </div>
+      <div style="display:flex; gap:8px; margin-top:8px;">
+        <button id="submitAdminChangeRoleBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSubmitAdminChangeToMember()">🔄 역할 변경 및 회원 전환</button>
+        <button class="btn-outline" type="button" data-close="adminChangeRoleModal">취소</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 외부 사이트 이동 피싱 방어 확인 모달 -->
   <div id="externalLinkGuardModal" class="modal-backdrop">
     <div class="modal">
@@ -4796,7 +4827,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 189;
+    const APP_CLIENT_BUILD = 190;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_SEEN_ADMIN_IDS = 'right_youth_seen_admin_ids_v1';
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
@@ -5702,7 +5733,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=189" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=190" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5726,8 +5757,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=189', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=189', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=190', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=190', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -8322,11 +8353,15 @@
       });
     }
 
+    function getSignupSelectableRoles() {
+      return sanitizeRolesList(roles).filter(r => !isObserverRoleObj(r));
+    }
+
     function renderSignupRoleOptions() {
       const sel = document.getElementById('signupRoleSelect');
       if (!sel) return;
       const prevVal = sel.value;
-      const list = sanitizeRolesList(roles);
+      const list = getSignupSelectableRoles();
       sel.innerHTML = '<option value="">역할을 선택해 주세요</option>' + list.map(r => `
         <option value="${escapeHtml(r.id)}">${escapeHtml(r.name)}</option>
       `).join('');
@@ -8641,9 +8676,11 @@
               }, { merge: true }).catch(() => {});
               return;
             }
+            const demotedRole = (me && me.demotedToRoleName) ? String(me.demotedToRoleName).trim() : '';
             const removedNotice = {
-              type: 'admin',
+              type: demotedRole ? 'admin_demoted' : 'admin',
               name: (me && me.name) || currentAdminName || '관리자',
+              roleName: demotedRole,
               reason: (me && me.removeReason) ? String(me.removeReason).trim() : '',
               removedBy: (me && me.removedBy) ? String(me.removedBy).trim() : '관리자',
               removedAt: (me && me.removedAt) ? String(me.removedAt).trim() : formatKstDateTime()
@@ -8968,6 +9005,9 @@
       }
       if (!selectedRoleObj) {
         return showError('signupError', '역할 선택 칸에서 본인의 역할을 선택해 주세요.');
+      }
+      if (isObserverRoleObj(selectedRoleObj)) {
+        return showError('signupError', `[${selectedRoleObj.name}] 역할은 관리자만 부여할 수 있습니다. 다른 역할을 선택해 주세요.`);
       }
       if (pw.length < 6) {
         return showError('signupError', '비밀번호는 보안을 위해 6자리 이상 입력해 주세요.');
@@ -9300,6 +9340,66 @@
       const switchBtn = document.getElementById('switchAccountBtn');
 
       const reasonTxt = String(notice.reason || '').trim();
+      if (notice.type === 'admin_demoted') {
+        const roleTxt = String(notice.roleName || '회원').trim();
+        const setupCode = String(notice.setupCode || '').trim();
+        emoji.className = 'status-emoji pending';
+        emoji.textContent = '🏷️';
+        title.textContent = `[${roleTxt}] 회원으로 전환되었습니다`;
+        desc.innerHTML = `<b>${escapeHtml(notice.name || '관리자')}</b>님의 역할이 <b>[${escapeHtml(roleTxt)}]</b>(으)로 변경되어 관리자 세션이 종료되고 일반 회원으로 전환되었습니다.`;
+        meta.innerHTML = `
+          <div><b>성명:</b> ${escapeHtml(notice.name || '-')}</div>
+          <div><b>변경된 역할:</b> <span class="tag" style="margin-left:2px;">${escapeHtml(roleTxt)}</span></div>
+          <div><b>변경 일시:</b> ${escapeHtml(notice.removedAt || '-')}</div>
+          <div><b>처리 관리자:</b> ${escapeHtml(notice.removedBy || '관리자')}</div>
+          ${reasonTxt ? `<div class="reason-note-box" style="margin-top:8px;"><b>📝 변경 안내</b><br>${escapeHtml(reasonTxt)}</div>` : ''}
+          ${setupCode ? `
+            <div class="reason-note-box self-withdrawn" style="margin-top:8px;">
+              <b>🔑 회원 비밀번호 설정 코드 (24시간 유효):</b> <b style="font-size:14px; letter-spacing:1.5px;">${escapeHtml(setupCode)}</b><br>
+              아래 버튼을 눌러 회원 비밀번호를 설정하면 바로 [${escapeHtml(roleTxt)}] 회원으로 로그인됩니다.
+            </div>
+          ` : `
+            <div style="font-size:11.5px; color:#64748B; margin-top:8px; line-height:1.45;">
+              기존 회원 계정이 있으시면 <b>[로그인]</b> 탭에서 바로 로그인하실 수 있으며, 비밀번호를 아직 설정하지 않으셨다면 관리자에게 받은 8자리 코드로 <b>[새 비밀번호 설정]</b>을 이용해 주세요.
+            </div>
+          `}
+        `;
+        if (recheckBtn) {
+          recheckBtn.classList.remove('hidden');
+          if (setupCode) {
+            recheckBtn.textContent = '🔑 새 비밀번호 설정하고 회원 입장';
+            recheckBtn.onclick = () => {
+              const nm = notice.name || '';
+              const cd = setupCode;
+              setPendingRemovalNotice(null);
+              switchAuthTab('login');
+              openResetPwModal(nm, cd);
+            };
+          } else {
+            recheckBtn.textContent = '👤 회원 로그인 화면으로 이동';
+            recheckBtn.onclick = () => {
+              const nm = notice.name || '';
+              setPendingRemovalNotice(null);
+              switchAuthTab('login');
+              const inp = document.getElementById('loginNameInput');
+              if (inp && nm) inp.value = nm;
+            };
+          }
+        }
+        if (switchBtn) {
+          switchBtn.classList.remove('hidden');
+          switchBtn.textContent = '🔑 8자리 코드로 새 비밀번호 설정';
+          switchBtn.onclick = () => {
+            const nm = notice.name || '';
+            const cd = setupCode;
+            setPendingRemovalNotice(null);
+            switchAuthTab('login');
+            openResetPwModal(nm, cd);
+          };
+        }
+        return;
+      }
+
       emoji.className = 'status-emoji rejected';
       emoji.textContent = '🚫';
       title.textContent = '관리자 권한이 해제되었습니다';
@@ -12268,9 +12368,12 @@
                         </div>
                         <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
                           <button class="btn-sm" type="button" onclick="openAdminRenameModal('${escapeJsAttr(a.id)}')">✏️ 이름 변경</button>
+                          ${activeAdmins.length > 1
+                            ? `<button class="btn-sm primary" type="button" onclick="openAdminChangeRoleModal('${escapeJsAttr(a.id)}')">🏷️ 역할 변경</button>`
+                            : ''}
                           ${(!isMe && activeAdmins.length > 1)
                             ? `<button class="btn-sm danger" onclick="removeAdminEntry('${escapeJsAttr(a.id)}')">관리자 해제</button>`
-                            : (!isMe ? '<span style="font-size:11px; color:#94A3B8; font-weight:700;">최소 1인 유지</span>' : '')}
+                            : (activeAdmins.length <= 1 ? '<span style="font-size:11px; color:#94A3B8; font-weight:700;">최소 1인 유지</span>' : '')}
                         </div>
                       </div>
                     `;
@@ -12297,7 +12400,7 @@
                       <div class="card-top" style="margin-bottom:5px;">
                         <div class="member-name">
                           <span>${escapeHtml(a.name)}</span>
-                          <span class="tag red" style="font-size:10.5px;">해제됨</span>
+                          <span class="tag ${a.demotedToRoleName ? 'slate' : 'red'}" style="font-size:10.5px;">${a.demotedToRoleName ? `회원 전환 (${escapeHtml(a.demotedToRoleName)})` : '해제됨'}</span>
                           ${a.reentryCount ? `<span class="tag slate" style="font-size:10px; padding:2px 6px;">과거 재입장 ${a.reentryCount}회</span>` : ''}
                         </div>
                         <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
@@ -12418,7 +12521,7 @@
       const totalWaitingCount = newPending.length + rejoinPending.length + renamePending.length + resetPending.length + rejected.length;
 
       const roleOptionsHtml = (selectedId) => roles.map(r => `
-        <option value="${r.id}" ${r.id === selectedId ? 'selected' : ''}>${escapeHtml(r.name)}</option>
+        <option value="${escapeHtml(r.id)}" ${String(r.id) === String(selectedId) ? 'selected' : ''}>${escapeHtml(r.name)}${isObserverRoleObj(r) ? ' (👁️ 구경·관리자 부여)' : ''}</option>
       `).join('');
 
       const renderPendingSignupCard = (m, isRejoin) => {
@@ -12967,9 +13070,13 @@
       }
     };
 
-    function openIssuedResetModalUI(name, code) {
-      lastIssuedResetInfo = { name, code };
-      document.getElementById('issuedResetDesc').innerHTML = `<b>${escapeHtml(name)}</b>님의 1회용 비밀번호 초기화 코드가 발급되었습니다.`;
+    function openIssuedResetModalUI(name, code, opts = {}) {
+      const isConvert = !!opts.isMemberConvert;
+      const roleName = String(opts.roleName || '').trim();
+      lastIssuedResetInfo = { name, code, isMemberConvert: isConvert, roleName };
+      document.getElementById('issuedResetDesc').innerHTML = isConvert
+        ? `<b>${escapeHtml(name)}</b>님이 <b>[${escapeHtml(roleName || '회원')}]</b> 회원으로 전환되었습니다.<br>아직 일반 회원 계정이 없어 1회용 <b>비밀번호 설정 코드</b>가 발급되었습니다. 아래 코드를 전달해 주시면 본인 비밀번호 설정 후 바로 로그인할 수 있습니다.`
+        : `<b>${escapeHtml(name)}</b>님의 1회용 비밀번호 초기화 코드가 발급되었습니다.`;
       document.getElementById('issuedResetCodeDisplay').textContent = code;
       document.getElementById('adminResetIssuedModal').classList.add('open');
     }
@@ -12977,28 +13084,41 @@
     window.showIssuedResetModal = (id) => {
       const m = members.find(x => String(x.id) === String(id));
       if (!m || !m.resetCode) return;
-      openIssuedResetModalUI(m.name, m.resetCode);
+      openIssuedResetModalUI(m.name, m.resetCode, {
+        isMemberConvert: !!m.isNewMemberSetup,
+        roleName: getRoleById(m.roleId).name
+      });
     };
 
     window.copyIssuedResetMessage = async () => {
-      const { name, code } = lastIssuedResetInfo;
+      const { name, code, isMemberConvert, roleName } = lastIssuedResetInfo;
       if (!name || !code) return;
-      const text = `[라이트 청년부] ${name}님 비밀번호가 초기화되었습니다.
+      const text = isMemberConvert
+        ? `[라이트 청년부] ${name}님의 역할이 [${roleName || '회원'}] 회원으로 전환되었습니다.
+로그인 화면 아래 '비밀번호가 초기화되셨나요? 새 비밀번호 설정'을 눌러 아래 8자리 코드를 입력하고 회원 비밀번호를 설정해 주세요. (24시간 유효)
+
+• 성명: ${name}
+• 설정 코드: ${code}`
+        : `[라이트 청년부] ${name}님 비밀번호가 초기화되었습니다.
 로그인 화면 아래 '비밀번호가 초기화되셨나요? 새 비밀번호 설정'을 눌러 아래 8자리 코드를 입력하고 새 비밀번호를 설정해 주세요. (24시간 유효)
 
 • 성명: ${name}
 • 초기화 코드: ${code}`;
       try {
         await navigator.clipboard.writeText(text);
-        showToast('초기화 안내 문구가 복사되었습니다!');
+        showToast('안내 문구가 복사되었습니다!');
       } catch {
-        showToast(`초기화 코드: ${code}`);
+        showToast(`코드: ${code}`);
       }
     };
 
     window.cancelMemberPasswordReset = async (id) => {
       const m = members.find(x => String(x.id) === String(id));
-      if (!m || !confirm(`${m.name}님의 비밀번호 초기화를 취소할까요?\n기존 비밀번호로 다시 로그인할 수 있게 됩니다.`)) return;
+      if (!m) return;
+      if (m.isNewMemberSetup) {
+        return showToast('관리자에서 회원 전환된 신규 계정은 비밀번호 설정 전 취소할 수 없습니다. [삭제] 또는 [코드 재발급]을 이용해 주세요.');
+      }
+      if (!confirm(`${m.name}님의 비밀번호 초기화를 취소할까요?\n기존 비밀번호로 다시 로그인할 수 있게 됩니다.`)) return;
       try {
         const batch = db.batch();
         if (m.resetKey) {
@@ -13418,7 +13538,7 @@
 
       const approved = members.filter(m => m.status === 'approved');
       const roleOptionsHtml = (selectedId) => roles.map(r => `
-        <option value="${escapeHtml(r.id)}" ${String(r.id) === String(selectedId) ? 'selected' : ''}>${escapeHtml(r.name)}</option>
+        <option value="${escapeHtml(r.id)}" ${String(r.id) === String(selectedId) ? 'selected' : ''}>${escapeHtml(r.name)}${isObserverRoleObj(r) ? ' (👁️ 구경·관리자 부여)' : ''}</option>
       `).join('');
 
       const q = String(roleMemberSearchQuery || '').trim().toLowerCase();
@@ -13606,7 +13726,7 @@
                       ? '<span class="tag" style="font-size:10.5px;">💐 새신자 자동 환영</span>'
                       : ''}
                     ${isObserverRoleObj(r)
-                      ? '<span class="tag" style="font-size:10.5px; background:#ECFEFF; color:#0E7490;">👁️ 관리 구경(읽기전용)</span>'
+                      ? '<span class="tag" style="font-size:10.5px; background:#ECFEFF; color:#0E7490;">👁️ 관리 구경(읽기전용) · 관리자만 부여</span>'
                       : ''}
                   </div>
                   <div style="display:flex; gap:6px;">
@@ -13915,10 +14035,10 @@
       }
     };
 
-    window.openResetPwModal = (prefillName = '') => {
+    window.openResetPwModal = (prefillName = '', prefillCode = '') => {
       document.getElementById('resetPwError').classList.remove('show');
       if (prefillName) document.getElementById('resetNameInput').value = prefillName;
-      document.getElementById('resetCodeInput').value = '';
+      document.getElementById('resetCodeInput').value = prefillCode ? String(prefillCode).toUpperCase() : '';
       document.getElementById('resetNewPwInput').value = '';
       document.getElementById('resetNewPwConfirmInput').value = '';
       document.getElementById('resetPwModal').classList.add('open');
@@ -13993,6 +14113,7 @@
         batch.set(db.collection('members').doc(newUid), newMember);
         batch.set(db.collection('authIndex').doc(nameHex), {
           v: nextVer,
+          loginEmail: newEmail,
           resetKey,
           updatedAt: Date.now()
         });
@@ -16436,6 +16557,8 @@
         if (target.removeReason) target.lastRemoveReason = target.removeReason;
         delete target.removeReason;
       }
+      delete target.demotedToRoleId;
+      delete target.demotedToRoleName;
 
       try {
         markAdminIdSeenLocally(target.id);
@@ -16642,6 +16765,8 @@
       target.reentryCount = Number(target.reentryCount || 0) + 1;
       if (prevReason) target.lastRemoveReason = prevReason;
       delete target.removeReason;
+      delete target.demotedToRoleId;
+      delete target.demotedToRoleName;
 
       try {
         markAdminIdSeenLocally(target.id);
@@ -16673,6 +16798,307 @@
         showToast(`✅ ${target.name}님의 관리자 차단을 해제하고 복구했습니다!${cleanReason ? ' (사유 기록됨)' : ''}`);
       } catch (err) { handleDbError(err, '관리자 차단 해제'); }
     }
+
+    window.applyAdminDemoteReasonPreset = (txt) => {
+      const inp = document.getElementById('adminToMemberReasonInput');
+      if (!inp) return;
+      inp.value = txt;
+      inp.focus();
+    };
+
+    window.openAdminChangeRoleModal = (admId) => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const items = adminRegistry.items || [];
+      const activeList = items.filter(a => a.status === 'active');
+      if (activeList.length <= 1) {
+        return showToast('최소 1명의 활성 관리자는 남아 있어야 합니다.');
+      }
+      const target = items.find(a => String(a.id) === String(admId) && a.status === 'active');
+      if (!target) return;
+
+      const isMe = String(target.name || '').trim() === currentAdminName;
+      const nameHex = nameToHex(target.name);
+      const sameNameMembers = members.filter(m => nameToHex(m.name) === nameHex);
+      const approvedMem = sameNameMembers.find(m => m.status === 'approved');
+      const otherMem = sameNameMembers.find(m => m.status === 'pending' || m.status === 'rejected' || m.status === 'removed');
+
+      document.getElementById('changeRoleAdminTargetId').value = String(target.id);
+      document.getElementById('adminChangeRoleModalTitle').textContent = `🏷️ [${target.name}] 역할 변경 (회원 전환)`;
+      document.getElementById('adminChangeRoleTargetInfo').innerHTML =
+        `<b>${escapeHtml(target.name)}</b>님${isMe ? ' (본인)' : ''}을 <b>관리자에서 해제</b>하고 아래 선택한 역할의 <b>일반 회원</b>으로 전환합니다.${isMe ? '<br><span style="color:#B45309;">※ 본인 역할을 변경하면 즉시 관리자 세션에서 로그아웃되고 회원 로그인 화면으로 이동합니다.</span>' : ''}`;
+
+      const statusBox = document.getElementById('adminChangeRoleMemberStatusBox');
+      if (approvedMem) {
+        const curR = getRoleById(approvedMem.roleId);
+        statusBox.className = 'info-box';
+        statusBox.innerHTML = `✅ <b>기존 승인 회원 계정 확인됨</b> (현재 역할: <b>${escapeHtml(curR.name)}</b>)<br>역할 변경 시 즉시 해당 역할로 반영되며, 기존 회원 아이디·비밀번호로 바로 로그인할 수 있습니다.`;
+      } else if (otherMem) {
+        statusBox.className = 'info-box';
+        statusBox.innerHTML = `🔄 <b>기존 회원 기록 확인됨</b> (현재 상태: ${otherMem.status === 'removed' ? '내보냄' : (otherMem.status === 'pending' ? '승인 대기' : '보류')})<br>역할 변경 시 즉시 <b>승인 회원</b>으로 복구·전환됩니다.`;
+      } else {
+        statusBox.className = 'info-box warn';
+        statusBox.innerHTML = `🔑 <b>아직 일반 회원 계정이 없습니다.</b><br>역할 변경 시 선택한 역할의 회원 계정을 미리 만들고, <b>24시간 유효한 8자리 비밀번호 설정 코드</b>를 자동 발급합니다. 로그인 화면의 <b>[새 비밀번호 설정]</b>에서 본인 비밀번호를 정하면 바로 입장할 수 있습니다.`;
+      }
+
+      const sel = document.getElementById('adminToMemberRoleSelect');
+      const defaultRole = roles.find(r => isObserverRoleObj(r)) || roles.find(r => r.id === 'role_youth') || roles[0];
+      sel.innerHTML = roles.map(r => `
+        <option value="${escapeHtml(r.id)}" ${defaultRole && r.id === defaultRole.id ? 'selected' : ''}>${escapeHtml(r.name)}${isObserverRoleObj(r) ? ' (👁️ 관리 구경·읽기전용)' : ''}</option>
+      `).join('');
+      document.getElementById('adminToMemberCustomRoleInput').value = '';
+      document.getElementById('adminToMemberReasonInput').value = '';
+      const btn = document.getElementById('submitAdminChangeRoleBtn');
+      if (btn) btn.disabled = false;
+      document.getElementById('adminChangeRoleModal').classList.add('open');
+    };
+
+    window.handleSubmitAdminChangeToMember = async () => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const admId = (document.getElementById('changeRoleAdminTargetId').value || '').trim();
+      const customName = (document.getElementById('adminToMemberCustomRoleInput').value || '').trim();
+      const cleanReason = (document.getElementById('adminToMemberReasonInput').value || '').trim();
+      if (cleanReason && typeof enforceInputSecurity === 'function' && !enforceInputSecurity(cleanReason, '역할 변경 사유', true)) return;
+
+      const items = structuredClone(adminRegistry.items || []);
+      const activeList = items.filter(a => a.status === 'active');
+      if (activeList.length <= 1) {
+        return showToast('최소 1명의 활성 관리자는 남아 있어야 합니다.');
+      }
+      const target = items.find(a => String(a.id) === admId && a.status === 'active');
+      if (!target) return;
+
+      let roleId = (document.getElementById('adminToMemberRoleSelect').value || '').trim();
+      if (customName) {
+        if (typeof enforceInputSecurity === 'function' && !enforceInputSecurity(customName, '역할 이름', true)) return;
+        const createdId = await findOrCreateRoleByName(customName);
+        if (!createdId) return;
+        roleId = createdId;
+      }
+      const targetRole = roles.find(r => String(r.id) === String(roleId));
+      if (!targetRole) return showToast('전환할 회원 역할을 선택해 주세요.');
+
+      const isMe = String(target.name || '').trim() === currentAdminName;
+      if (!confirm(`${target.name}님을 관리자에서 해제하고 [${targetRole.name}] 회원으로 전환할까요?${isMe ? '\n(본인 계정이므로 처리 즉시 관리자에서 로그아웃됩니다.)' : ''}`)) return;
+
+      const btn = document.getElementById('submitAdminChangeRoleBtn');
+      if (btn) btn.disabled = true;
+
+      try {
+        const nowStr = formatKstDateTime();
+        const nowTs = Date.now();
+        const nameHex = nameToHex(target.name);
+        const reasonSummary = cleanReason
+          ? `역할 변경 (${targetRole.name} 회원 전환 · ${cleanReason})`
+          : `역할 변경 (${targetRole.name} 회원 전환)`;
+
+        target.status = 'removed';
+        target.removedBy = currentAdminName || '관리자';
+        target.removedAt = nowStr;
+        target.removedTs = nowTs;
+        target.removeReason = reasonSummary;
+        target.demotedToRoleId = targetRole.id;
+        target.demotedToRoleName = targetRole.name;
+
+        const sameNameMembers = members.filter(m => nameToHex(m.name) === nameHex);
+        const approvedMem = sameNameMembers.find(m => m.status === 'approved');
+        const otherMem = sameNameMembers.find(m => m.status === 'pending' || m.status === 'rejected' || m.status === 'removed');
+        const resetPendMem = sameNameMembers.find(m => m.status === 'reset_pending');
+
+        const batch = db.batch();
+        let issuedSetupCode = '';
+        let modeDesc = '';
+
+        if (approvedMem) {
+          modeDesc = '기존 회원 계정 역할 변경';
+          batch.update(db.collection('members').doc(String(approvedMem.id)), {
+            roleId: targetRole.id,
+            sheetSyncedStatus: '승인',
+            fromAdminRoleChangeAt: nowStr,
+            fromAdminRoleChangeBy: currentAdminName || '관리자'
+          });
+          if (isNewcomerRoleId(targetRole.id)) {
+            batch.set(db.collection('newcomers').doc(String(approvedMem.id)), {
+              uid: String(approvedMem.id),
+              name: target.name,
+              joinedAt: formatToday(),
+              addedTs: nowTs
+            });
+          } else {
+            batch.delete(db.collection('newcomers').doc(String(approvedMem.id)));
+          }
+          batch.set(db.collection('memberHistory').doc(nameHex), {
+            name: target.name,
+            role: targetRole.name,
+            lastRole: targetRole.name,
+            lastStatus: '승인 (관리자→회원 전환)',
+            lastUpdatedAt: nowStr,
+            removedType: FieldValue.delete()
+          }, { merge: true });
+        } else if (otherMem) {
+          modeDesc = '기존 회원 계정 승인·전환';
+          const memAuthEmail = otherMem.authEmail || hexToAuthEmail(nameHex, Number(otherMem.authVer || 0));
+          batch.update(db.collection('members').doc(String(otherMem.id)), {
+            status: 'approved',
+            roleId: targetRole.id,
+            restoredAt: nowStr,
+            restoredTs: nowTs,
+            restoredBy: currentAdminName || '관리자',
+            fromAdminRoleChangeAt: nowStr,
+            fromAdminRoleChangeBy: currentAdminName || '관리자',
+            sheetSyncedStatus: '승인',
+            removedAt: FieldValue.delete(),
+            removedTs: FieldValue.delete(),
+            removedBy: FieldValue.delete(),
+            removeReason: FieldValue.delete()
+          });
+          batch.set(db.collection('authIndex').doc(nameHex), {
+            loginEmail: memAuthEmail,
+            lastRemovedEmail: FieldValue.delete(),
+            updatedAt: nowTs
+          }, { merge: true });
+          if (isNewcomerRoleId(targetRole.id)) {
+            batch.set(db.collection('newcomers').doc(String(otherMem.id)), {
+              uid: String(otherMem.id),
+              name: target.name,
+              joinedAt: formatToday(),
+              addedTs: nowTs
+            });
+          } else {
+            batch.delete(db.collection('newcomers').doc(String(otherMem.id)));
+          }
+          batch.set(db.collection('memberHistory').doc(nameHex), {
+            name: target.name,
+            role: targetRole.name,
+            lastRole: targetRole.name,
+            lastStatus: '승인 (관리자→회원 전환)',
+            lastUpdatedAt: nowStr,
+            removedType: FieldValue.delete()
+          }, { merge: true });
+        } else {
+          modeDesc = '신규 회원 계정 생성 (비밀번호 설정 코드 발급)';
+          const curVer = Math.max(await getAuthVerForHex(nameHex), Number((resetPendMem && resetPendMem.authVer) || 0));
+          const nextVer = curVer + 1;
+          const code = generateResetCode();
+          const resetKey = `${nameHex}_${code}`;
+          const expiresAt = nowTs + RESET_CODE_TTL_MS;
+          const docId = resetPendMem ? String(resetPendMem.id) : `demoted_${nameHex}_${nowTs}`;
+          issuedSetupCode = code;
+
+          if (resetPendMem && resetPendMem.resetKey) {
+            batch.delete(db.collection('passwordResets').doc(String(resetPendMem.resetKey)));
+          }
+          batch.set(db.collection('passwordResets').doc(resetKey), {
+            oldUid: docId,
+            name: target.name,
+            nameHex,
+            roleId: targetRole.id,
+            requestedRole: targetRole.name,
+            origStatus: 'approved',
+            createdAt: nowStr,
+            nextVer,
+            used: false,
+            issuedAt: nowTs,
+            expiresAt
+          });
+          batch.set(db.collection('members').doc(docId), {
+            id: docId,
+            name: target.name,
+            roleId: targetRole.id,
+            requestedRole: targetRole.name,
+            status: 'reset_pending',
+            origStatus: 'approved',
+            isNewMemberSetup: true,
+            fromAdminRoleChangeAt: nowStr,
+            fromAdminRoleChangeBy: currentAdminName || '관리자',
+            authVer: nextVer,
+            resetCode: code,
+            resetKey,
+            resetExpiresAt: expiresAt,
+            createdAt: nowStr,
+            createdTs: nowTs,
+            sheetSyncedStatus: '회원 전환 (비밀번호 설정 대기)'
+          });
+          batch.set(db.collection('memberHistory').doc(nameHex), {
+            name: target.name,
+            role: targetRole.name,
+            lastRole: targetRole.name,
+            lastStatus: '회원 전환 (비밀번호 설정 대기)',
+            lastUpdatedAt: nowStr,
+            removedType: FieldValue.delete()
+          }, { merge: true });
+        }
+
+        if (isMe) {
+          isRenamingAdmin = true;
+          setPendingRemovalNotice({
+            type: 'admin_demoted',
+            name: target.name,
+            roleName: targetRole.name,
+            reason: cleanReason,
+            removedBy: currentAdminName || '관리자',
+            removedAt: nowStr,
+            setupCode: issuedSetupCode
+          });
+        }
+
+        batch.set(db.collection('config').doc('adminRegistry'), {
+          lockAutoRegister: !!adminRegistry.lockAutoRegister,
+          items
+        }, { merge: true });
+
+        await batch.commit();
+
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '관리자 역할 변경 (회원 전환)',
+          target: target.name,
+          beforeVal: '관리자',
+          afterVal: `${targetRole.name} (회원)`,
+          detail: `처리자: ${currentAdminName || '관리자'} · ${modeDesc}${cleanReason ? ` · 사유: ${cleanReason}` : ''}`
+        });
+        postToGoogleSheet({
+          action: 'admin_upsert',
+          name: target.name,
+          status: '회원 전환',
+          registeredAt: target.registeredAt || nowStr,
+          lastLoginAt: target.lastLoginAt || '-',
+          reentryCount: Number(target.reentryCount || 0),
+          renameCount: Number(target.renameCount || 0),
+          prevName: target.prevName || '',
+          note: `회원 전환(${targetRole.name}) · 처리자: ${currentAdminName || '관리자'}${cleanReason ? ` · 사유: ${cleanReason}` : ''}`
+        }).catch(() => {});
+        syncMemberEventToSheet({
+          name: target.name,
+          role: targetRole.name,
+          joinedAt: nowStr,
+          status: issuedSetupCode ? '회원 전환 (비밀번호 설정 대기)' : '승인 (관리자→회원 전환)'
+        });
+
+        document.getElementById('adminChangeRoleModal').classList.remove('open');
+
+        if (isMe) {
+          isRenamingAdmin = false;
+          await logout(true);
+          return;
+        }
+
+        if (issuedSetupCode) {
+          openIssuedResetModalUI(target.name, issuedSetupCode, {
+            isMemberConvert: true,
+            roleName: targetRole.name
+          });
+        }
+        showToast(`✅ ${target.name}님을 [${targetRole.name}] 회원으로 전환했습니다!`);
+      } catch (err) {
+        isRenamingAdmin = false;
+        handleDbError(err, '관리자 역할 변경');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    };
 
     // --- 통합 보안 감사 로그 (auditLogs · 관리자 전체 활동 + 이용자 악용 가능 활동 · 삭제 불가 · 구글 시트 자동 연동) ---
     function truncateLogText(str, maxLen = 140) {
@@ -18543,7 +18969,7 @@
       const sel = document.getElementById('signupRoleSelect');
       if (!sel) return;
       const q = String(query || '').trim().toLowerCase();
-      const list = sanitizeRolesList(roles);
+      const list = getSignupSelectableRoles();
       const filtered = q ? list.filter(r => r.name.toLowerCase().includes(q)) : list;
       sel.innerHTML = '<option value="">역할을 선택해 주세요</option>' + filtered.map(r => `
         <option value="${escapeHtml(r.id)}">${escapeHtml(r.name)}</option>
