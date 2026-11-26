@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=225" />
+  <link rel="manifest" href="./manifest.json?v=226" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=225" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=225" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=226" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=226" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -401,7 +401,10 @@
       display: flex;
     }
     .top-banner-slide > .newcomer-auto-banner,
-    .top-banner-slide > .hero-banner {
+    .top-banner-slide > .hero-banner,
+    .top-banner-slide > .newcomer-card,
+    .top-banner-slide > .leader-card,
+    .top-banner-slide > .custom-banner-card {
       width: 100%;
       border-radius: 20px;
       box-shadow: none;
@@ -441,7 +444,10 @@
     .top-banner-dots {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
       gap: 6px;
+      max-width: 68%;
     }
     .top-banner-dot {
       width: 7px;
@@ -472,16 +478,19 @@
     .hero-desc { font-size: 13px; color: rgba(255,255,255,0.88); margin: 0; line-height: 1.48; white-space: pre-line; }
 
     .newcomer-card {
+      position: relative;
       background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%);
       color: #fff; border-radius: 18px; padding: 18px;
       box-shadow: 0 6px 18px rgba(139, 92, 246, 0.22);
     }
     .leader-card {
+      position: relative;
       background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
       color: #fff; border-radius: 18px; padding: 18px;
       border: 1px solid rgba(245, 158, 11, 0.4);
     }
     .custom-banner-card {
+      position: relative;
       color: #fff; border-radius: 16px; padding: 16px 18px;
       box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
     }
@@ -3818,7 +3827,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=225" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=226" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5579,7 +5588,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 31;
-    const APP_CLIENT_BUILD = 225;
+    const APP_CLIENT_BUILD = 226;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -6571,7 +6580,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=225" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=226" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6595,8 +6604,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=225', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=225', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=226', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=226', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -11737,7 +11746,7 @@
           targetLabel: `${getTabIcon('manageContent')} ${getTabLabel('manageContent')} 열기`,
           steps: [
             `<b>${hLbl} 배너·공지·광고 통합 등록·관리:</b> <b>[+ 새 배너 · 공지 · 광고 등록]</b> 버튼 하나로 <b>공지·광고만 / 배너·칸만 / 둘 다 동시 등록</b>을 선택해 올릴 수 있으며, 통합 목록에서 필터와 <b>▲/▼</b> 순서를 한눈에 관리합니다.`,
-            `<b>공지 상단 배너 고정:</b> 공지 작성 시 <b>[📌 상단 고정 공지 배너에도 함께 띄우기]</b>를 체크하거나 목록의 <b>[📌 배너 고정]</b>을 누르면 ${hLbl} 최상단 배너에 자동 연동됩니다.`,
+            `<b>다중 배너 · 복수 공지 고정:</b> 공지 여러 개를 동시에 <b>[📌 배너 고정]</b>하거나 광고·홍보 배너를 제한 없이 추가하면 ${hLbl} 최상단 슬라이더에서 옆으로 넘기며 모두 볼 수 있습니다. (개별 <b>[📌 고정 해제]</b> 가능)`,
             '<b>특정 역할에게만 보여주기 (서버 보안 분리):</b> 공개 대상에서 <b>[🎯 선택한 역할만 보기]</b>를 고르고 원하는 역할(예: 목사·부장·회장·팀장·셀장 등 중복 선택 가능)을 체크하면 해당 역할 회원에게만 표시됩니다.',
             '<b>임시저장 & 예약 게시:</b> <b>[📝 임시저장]</b>은 관리자만 볼 수 있고, <b>[⏰ 예약 게시]</b>는 지정한 한국시간(KST)이 지나면 자동으로 공개됩니다.',
             '<b>새가족 환영 멘트 수정:</b> 상단 노란색 카드의 <b>[✏️ 멘트 수정]</b>에서 상단 배지와 <b>{이름}</b> 변수를 넣어 새가족 자동 배너와 알림 문구를 자유롭게 바꿀 수 있습니다.'
@@ -12141,10 +12150,8 @@
       return inner ? `<div class="home-block">${inner}</div>` : '';
     }
 
-    function buildHeroNoticeCardInner(b, visibleNotices, user) {
-      if (!b) return '';
-      const pinned = visibleNotices.find(n => n.pinned) || visibleNotices[0];
-      if (!pinned) return '';
+    function buildHeroNoticeCardInner(b, pinned, user) {
+      if (!b || !pinned) return '';
       const pinnedNew = isNoticeUnread(pinned, user);
       const rawHeroBadge = String(b.badge || '').trim();
       const heroBadgeText = (!rawHeroBadge || (!b.badgeCustomized && rawHeroBadge === '📌 중요 공지'))
@@ -12161,6 +12168,58 @@
             ${pinnedNew ? '<span class="new-badge">NEW</span>' : ''}
           </div>
           <h2 class="hero-title" style="margin-bottom:0;">${escapeHtml(pinned.title)}</h2>
+        </div>
+      `;
+    }
+
+    function buildHomeBannerBlockInner(b, user, getAdminSchedPillFn) {
+      if (!b) return '';
+      const blkNew = isBlockUnread(b, user);
+      const hasDesc = !!String(b.desc || '').trim();
+      const clickable = hasDesc || blkNew;
+      const adminEditBtn = (user && user.isSuperAdmin)
+        ? `<button class="banner-quick-edit-btn" type="button" onclick="event.stopPropagation(); openEditBlockModal('${escapeJsAttr(b.id)}')">✏️ 수정</button>`
+        : '';
+      const schedHtml = typeof getAdminSchedPillFn === 'function' ? getAdminSchedPillFn(b) : '';
+      const lightCls = isBannerThemeLight(b.theme) ? 'light-banner-text' : '';
+      const clickAttr = clickable ? `onclick="openBlockDetail('${escapeJsAttr(b.id)}')"` : '';
+      const cursorStyle = clickable ? 'cursor:pointer;' : '';
+
+      if (b.type === 'newcomer_card') {
+        return `
+          <div class="newcomer-card ${lightCls}" style="background:${getThemeCss(b.theme)}; ${cursorStyle}" ${clickAttr}>
+            ${adminEditBtn}
+            ${schedHtml}
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:${(b.badge || blkNew) ? '8px' : '0'}; ${adminEditBtn ? 'padding-right:64px;' : ''}">
+              ${b.badge ? `<span class="hero-badge" style="background:rgba(255,255,255,0.22);color:#fff;margin-bottom:0;">${escapeHtml(b.badge)}</span>` : ''}
+              ${blkNew ? '<span class="new-badge">NEW</span>' : ''}
+            </div>
+            <h3 class="hero-title" style="font-size:17px; margin-bottom:0;">${escapeHtml(b.title)}</h3>
+          </div>
+        `;
+      }
+      if (b.type === 'leader_card') {
+        return `
+          <div class="leader-card ${lightCls}" style="background:${getThemeCss(b.theme)}; ${cursorStyle}" ${clickAttr}>
+            ${adminEditBtn}
+            ${schedHtml}
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:${(b.badge || blkNew) ? '8px' : '0'}; ${adminEditBtn ? 'padding-right:64px;' : ''}">
+              ${b.badge ? `<span class="hero-badge" style="margin-bottom:0;">${escapeHtml(b.badge)}</span>` : ''}
+              ${blkNew ? '<span class="new-badge">NEW</span>' : ''}
+            </div>
+            <h3 class="hero-title" style="font-size:16.5px; margin-bottom:0;">${escapeHtml(b.title)}</h3>
+          </div>
+        `;
+      }
+      return `
+        <div class="custom-banner-card ${lightCls}" style="background:${getThemeCss(b.theme)}; ${cursorStyle}" ${clickAttr}>
+          ${adminEditBtn}
+          ${schedHtml}
+          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:${(b.badge || blkNew) ? '7px' : '0'}; ${adminEditBtn ? 'padding-right:64px;' : ''}">
+            ${b.badge ? `<span class="hero-badge" style="margin-bottom:0;">${escapeHtml(b.badge)}</span>` : ''}
+            ${blkNew ? '<span class="new-badge">NEW</span>' : ''}
+          </div>
+          <h3 class="hero-title" style="font-size:16.5px; margin-bottom:0;">${escapeHtml(b.title)}</h3>
         </div>
       `;
     }
@@ -12310,76 +12369,41 @@
         return;
       }
 
-      const firstHeroBlock = visibleBlocks.find(b => b.type === 'hero_notice');
-      const firstHeroInner = firstHeroBlock ? buildHeroNoticeCardInner(firstHeroBlock, visibleNotices, user) : '';
-      const useTopCarousel = !!(newcomerInner && firstHeroInner);
+      const topBannerSlides = [];
+      if (newcomerInner) {
+        topBannerSlides.push({ label: '새가족 환영 배너', html: newcomerInner });
+      }
+      let heroNoticesExpanded = false;
+      visibleBlocks.forEach(b => {
+        if (b.type === 'hero_notice') {
+          if (heroNoticesExpanded) return;
+          heroNoticesExpanded = true;
+          const pinnedList = visibleNotices.filter(n => n.pinned);
+          const heroTargets = pinnedList.length > 0
+            ? pinnedList
+            : (visibleNotices[0] ? [visibleNotices[0]] : []);
+          heroTargets.forEach(pn => {
+            const slideHtml = buildHeroNoticeCardInner(b, pn, user);
+            if (slideHtml) {
+              topBannerSlides.push({ label: pn.title || '중요 배너', html: slideHtml });
+            }
+          });
+        } else if (b.type === 'newcomer_card' || b.type === 'leader_card' || b.type === 'custom_ad') {
+          const slideHtml = buildHomeBannerBlockInner(b, user, getAdminSchedPill);
+          if (slideHtml) {
+            topBannerSlides.push({ label: getBlockDisplayLabel(b), html: slideHtml });
+          }
+        }
+      });
+
+      const useTopCarousel = topBannerSlides.length >= 2;
       const topBannerAreaHtml = useTopCarousel
-        ? buildTopBannerCarouselHtml([
-            { label: '새가족 환영 배너', html: newcomerInner },
-            { label: '중요 배너', html: firstHeroInner }
-          ])
-        : newcomerHtml;
+        ? buildTopBannerCarouselHtml(topBannerSlides)
+        : (topBannerSlides.length === 1 ? `<div class="home-block">${topBannerSlides[0].html}</div>` : '');
 
       container.innerHTML = attendanceHtml + topBannerAreaHtml + visibleBlocks.map(b => {
-
-        if (b.type === 'hero_notice') {
-          if (useTopCarousel && firstHeroBlock && b.id === firstHeroBlock.id) return '';
-          const heroCardHtml = buildHeroNoticeCardInner(b, visibleNotices, user);
-          return heroCardHtml ? `<div class="home-block">${heroCardHtml}</div>` : '';
-        }
-
-        if (b.type === 'newcomer_card') {
-          const blkNew = isBlockUnread(b, user);
-          const hasDesc = !!String(b.desc || '').trim();
-          const clickable = hasDesc || blkNew;
-          return `
-            <div class="home-block">
-              <div class="newcomer-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)}; ${clickable ? 'cursor:pointer;' : ''}" ${clickable ? `onclick="openBlockDetail('${escapeJsAttr(b.id)}')"` : ''}>
-                ${getAdminSchedPill(b)}
-                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:${(b.badge || blkNew) ? '8px' : '0'};">
-                  ${b.badge ? `<span class="hero-badge" style="background:rgba(255,255,255,0.22);color:#fff;margin-bottom:0;">${escapeHtml(b.badge)}</span>` : ''}
-                  ${blkNew ? '<span class="new-badge">NEW</span>' : ''}
-                </div>
-                <h3 class="hero-title" style="font-size:17px; margin-bottom:0;">${escapeHtml(b.title)}</h3>
-              </div>
-            </div>
-          `;
-        }
-
-        if (b.type === 'leader_card') {
-          const blkNew = isBlockUnread(b, user);
-          const hasDesc = !!String(b.desc || '').trim();
-          const clickable = hasDesc || blkNew;
-          return `
-            <div class="home-block">
-              <div class="leader-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)}; ${clickable ? 'cursor:pointer;' : ''}" ${clickable ? `onclick="openBlockDetail('${escapeJsAttr(b.id)}')"` : ''}>
-                ${getAdminSchedPill(b)}
-                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:${(b.badge || blkNew) ? '8px' : '0'};">
-                  ${b.badge ? `<span class="hero-badge" style="margin-bottom:0;">${escapeHtml(b.badge)}</span>` : ''}
-                  ${blkNew ? '<span class="new-badge">NEW</span>' : ''}
-                </div>
-                <h3 class="hero-title" style="font-size:16.5px; margin-bottom:0;">${escapeHtml(b.title)}</h3>
-              </div>
-            </div>
-          `;
-        }
-
-        if (b.type === 'custom_ad') {
-          const blkNew = isBlockUnread(b, user);
-          const hasDesc = !!String(b.desc || '').trim();
-          const clickable = hasDesc || blkNew;
-          return `
-            <div class="home-block">
-              <div class="custom-banner-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)}; ${clickable ? 'cursor:pointer;' : ''}" ${clickable ? `onclick="openBlockDetail('${escapeJsAttr(b.id)}')"` : ''}>
-                ${getAdminSchedPill(b)}
-                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:${(b.badge || blkNew) ? '7px' : '0'};">
-                  ${b.badge ? `<span class="hero-badge" style="margin-bottom:0;">${escapeHtml(b.badge)}</span>` : ''}
-                  ${blkNew ? '<span class="new-badge">NEW</span>' : ''}
-                </div>
-                <h3 class="hero-title" style="font-size:16.5px; margin-bottom:0;">${escapeHtml(b.title)}</h3>
-              </div>
-            </div>
-          `;
+        if (b.type === 'hero_notice' || b.type === 'newcomer_card' || b.type === 'leader_card' || b.type === 'custom_ad') {
+          return '';
         }
 
         if (b.type === 'notice_list') {
@@ -12761,7 +12785,9 @@
               <div style="display:flex;gap:6px;flex-wrap:wrap;">
                 ${st !== 'live'
                   ? `<button class="btn-sm approve" onclick="publishNoticeNow('${escapeJsAttr(n.id)}')">🚀 지금 바로 게시</button>`
-                  : (!n.pinned ? `<button class="btn-sm primary" onclick="pinNoticeToHomeBanner('${escapeJsAttr(n.id)}')">📌 배너 고정</button>` : '')}
+                  : (n.pinned
+                    ? `<button class="btn-sm warn" onclick="unpinNoticeFromHomeBanner('${escapeJsAttr(n.id)}')">📌 고정 해제</button>`
+                    : `<button class="btn-sm primary" onclick="pinNoticeToHomeBanner('${escapeJsAttr(n.id)}')">📌 배너 고정</button>`)}
                 <button class="btn-sm" onclick="openEditNotice('${escapeJsAttr(n.id)}')">수정</button>
                 <button class="btn-sm danger" onclick="deleteNotice('${escapeJsAttr(n.id)}')">삭제</button>
               </div>
@@ -13505,14 +13531,6 @@
           lastSelfNoticeEditTs = Date.now();
           const batch = db.batch();
           const targetNoticeId = String(nowTs + 1);
-          if (pinned && publishMode === 'now') {
-            notices.forEach(n => {
-              if (n.pinned && String(n.id) !== targetNoticeId) {
-                const col = n._col || (isServerRestrictedItem(n) ? 'adminNotices' : 'notices');
-                batch.update(db.collection(col).doc(String(n.id)), { pinned: false });
-              }
-            });
-          }
 
           const minOrder = notices.length > 0 ? Math.min(...notices.map(n => Number(n.order || 0))) - 1 : 0;
           const nextNotice = {
@@ -13794,12 +13812,6 @@
       if (!n) return;
       try {
         const batch = db.batch();
-        notices.forEach(item => {
-          if (item.pinned && String(item.id) !== String(id)) {
-            const col = item._col || (isServerRestrictedItem(item) ? 'adminNotices' : 'notices');
-            batch.update(db.collection(col).doc(String(item.id)), { pinned: false });
-          }
-        });
         const clean = stripInternalDocFields(n);
         const norm = normalizeAudiencePayload(clean);
         const updated = {
@@ -13824,8 +13836,20 @@
         syncNoticeToSheet(updated);
         await ensureHomeBlocksExistForTypes(['hero_notice', 'notice_list']);
         recordAuditLog({ actorType: 'admin', category: '공지·배너', action: '공지 상단 배너 고정', target: n.title });
-        showToast('메인 화면 상단 배너에 바로 띄웠습니다!');
+        showToast('메인 화면 상단 배너에 추가 고정했습니다! (여러 개 동시 고정 가능)');
       } catch (err) { handleDbError(err, '배너 고정'); }
+    };
+
+    window.unpinNoticeFromHomeBanner = async (id) => {
+      const n = notices.find(x => String(x.id) === String(id));
+      if (!n) return;
+      try {
+        const col = n._col || (isServerRestrictedItem(n) ? 'adminNotices' : 'notices');
+        await db.collection(col).doc(String(id)).update({ pinned: false });
+        syncNoticeToSheet({ ...stripInternalDocFields(n), pinned: false });
+        recordAuditLog({ actorType: 'admin', category: '공지·배너', action: '공지 상단 배너 고정 해제', target: n.title });
+        showToast('상단 배너 고정을 해제했습니다.');
+      } catch (err) { handleDbError(err, '배너 고정 해제'); }
     };
 
     document.getElementById('saveBlockBtn').addEventListener('click', async () => {
@@ -14050,14 +14074,6 @@
       try {
         lastSelfNoticeEditTs = Date.now();
         const batch = db.batch();
-        if (pinned && publishMode === 'now') {
-          notices.forEach(n => {
-            if (n.pinned && String(n.id) !== String(editId)) {
-              const col = n._col || (isServerRestrictedItem(n) ? 'adminNotices' : 'notices');
-              batch.update(db.collection(col).doc(String(n.id)), { pinned: false });
-            }
-          });
-        }
 
         const existingNotice = editId ? notices.find(x => String(x.id) === String(editId)) : null;
         const targetId = editId ? String(editId) : String(Date.now());
