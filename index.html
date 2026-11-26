@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=181" />
+  <link rel="manifest" href="./manifest.json?v=182" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=181" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=181" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=182" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=182" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -558,6 +558,7 @@
 
     .filter-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 10px; }
     .filter-chip {
+      display: inline-flex; align-items: center; gap: 4px;
       border: 1px solid var(--border); background: var(--surface); color: var(--text-sub);
       border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 700; white-space: nowrap; cursor: pointer;
     }
@@ -609,11 +610,20 @@
     /* 관리자 내부 서브탭 */
     .sub-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 14px; }
     .sub-tab-btn {
+      display: inline-flex; align-items: center; gap: 5px;
       border: 1px solid var(--border); background: #fff; color: #475569;
       border-radius: 10px; padding: 8px 12px; font-size: 12.5px; font-weight: 700;
-      white-space: nowrap; cursor: pointer;
+      white-space: nowrap; cursor: pointer; position: relative;
     }
     .sub-tab-btn.active { background: #111827; color: #FDE68A; border-color: #111827; }
+    .sub-tab-btn.has-badge:not(.active) { border-color: #FCA5A5; background: #FFF5F5; color: #991B1B; }
+    .sub-tab-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 17px; height: 17px; padding: 0 5px; border-radius: 999px;
+      background: var(--danger); color: #FFFFFF;
+      font-size: 10.5px; font-weight: 800; line-height: 1;
+      box-shadow: 0 1px 4px rgba(239, 68, 68, 0.38); flex-shrink: 0;
+    }
 
     .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
     .stat-box {
@@ -3107,7 +3117,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=181" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=182" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4655,7 +4665,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 29;
-    const APP_CLIENT_BUILD = 181;
+    const APP_CLIENT_BUILD = 182;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -5536,7 +5546,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=181" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=182" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5560,8 +5570,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=181', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=181', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=182', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=182', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -6421,6 +6431,37 @@
           labelKey: t.labelKey,
           label: `${getTabIcon(t.labelKey)} ${getTabLabel(t.labelKey)}`
         }));
+    }
+
+    function getManageSubTabBadgeCount(subId) {
+      if (subId === 'members') {
+        return (members || []).filter(m => m.status === 'pending').length
+          + (members || []).filter(m => m.status === 'approved' && m.pendingName).length;
+      }
+      if (subId === 'admins') {
+        return (adminRegistry && Array.isArray(adminRegistry.items) ? adminRegistry.items : [])
+          .filter(a => a.status === 'pending').length;
+      }
+      if (subId === 'inquiries') {
+        return (inquiries || []).filter(q => q.status === 'new').length;
+      }
+      if (subId === 'videos') {
+        return (videoItems || []).filter(v => v.status === 'pending').length;
+      }
+      return 0;
+    }
+
+    function getManageTotalBadgeCount() {
+      return getManageSubTabBadgeCount('members')
+        + getManageSubTabBadgeCount('admins')
+        + getManageSubTabBadgeCount('inquiries')
+        + getManageSubTabBadgeCount('videos');
+    }
+
+    function buildSubTabBadgeHtml(cnt) {
+      const n = Number(cnt || 0);
+      if (n <= 0) return '';
+      return `<span class="sub-tab-badge">${n > 99 ? '99+' : n}</span>`;
     }
 
     function showToast(msg) {
@@ -8959,13 +9000,7 @@
       if (currentMainTab === 'sermon') markTabAsSeen('sermon');
       if (currentMainTab === 'ccm') markTabAsSeen('ccm');
 
-      const unreadInqCount = inquiries.filter(q => q.status === 'new').length;
-      const pendingVideoCount = videoItems.filter(v => v.status === 'pending').length;
-      const pendingCount = members.filter(m => m.status === 'pending').length
-        + members.filter(m => m.status === 'approved' && m.pendingName).length
-        + (adminRegistry.items || []).filter(a => a.status === 'pending').length
-        + unreadInqCount
-        + pendingVideoCount;
+      const pendingCount = getManageTotalBadgeCount();
 
       const tabbar = document.getElementById('appTabbar');
       tabbar.className = `tabbar ${isManageMode ? 'dark' : 'light'}`;
@@ -10051,11 +10086,14 @@
         currentManageSubTab = allowed[0].id;
       }
 
-      document.getElementById('manageSubTabs').innerHTML = allowed.map(t => `
-        <button class="sub-tab-btn ${currentManageSubTab === t.id ? 'active' : ''}" onclick="switchManageSubTab('${t.id}')">
-          ${t.label}
-        </button>
-      `).join('');
+      document.getElementById('manageSubTabs').innerHTML = allowed.map(t => {
+        const bCnt = perms.canManageMembers ? getManageSubTabBadgeCount(t.id) : 0;
+        return `
+          <button class="sub-tab-btn ${currentManageSubTab === t.id ? 'active' : ''} ${bCnt > 0 ? 'has-badge' : ''}" onclick="switchManageSubTab('${t.id}')">
+            <span>${escapeHtml(t.label)}</span>${buildSubTabBadgeHtml(bCnt)}
+          </button>
+        `;
+      }).join('');
 
       const content = document.getElementById('manageContent');
       if (currentManageSubTab === 'content') renderManageContent(content, user);
@@ -11708,9 +11746,9 @@
       el.innerHTML = `
         <div class="filter-row" style="margin-bottom:10px;">
           <button class="filter-chip ${f === 'all' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('all')">전체 (${totalWaitingCount})</button>
-          <button class="filter-chip ${f === 'new' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('new')">🆕 신규 가입 (${newPending.length})</button>
-          <button class="filter-chip ${f === 'rejoin' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('rejoin')">🔄 재가입 (${rejoinPending.length})</button>
-          <button class="filter-chip ${f === 'rename' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('rename')">✏️ 이름 변경 (${renamePending.length})</button>
+          <button class="filter-chip ${f === 'new' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('new')"><span>🆕 신규 가입</span>${newPending.length > 0 ? buildSubTabBadgeHtml(newPending.length) : '<span>(0)</span>'}</button>
+          <button class="filter-chip ${f === 'rejoin' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('rejoin')"><span>🔄 재가입</span>${rejoinPending.length > 0 ? buildSubTabBadgeHtml(rejoinPending.length) : '<span>(0)</span>'}</button>
+          <button class="filter-chip ${f === 'rename' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('rename')"><span>✏️ 이름 변경</span>${renamePending.length > 0 ? buildSubTabBadgeHtml(renamePending.length) : '<span>(0)</span>'}</button>
           <button class="filter-chip ${f === 'reset' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('reset')">🔑 비밀번호 초기화 (${resetPending.length})</button>
           <button class="filter-chip ${f === 'rejected' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('rejected')">🚫 보류 (${rejected.length})</button>
         </div>
@@ -13207,9 +13245,10 @@
         subTabsEl.innerHTML = liveAllowed.map(t => {
           const ic = String(draftTabIcons[t.labelKey] ?? '').trim() || t.defaultIcon;
           const nm = String(draftTabNames[t.labelKey] ?? '').trim() || t.defaultLabel;
+          const bCnt = perms.canManageMembers ? getManageSubTabBadgeCount(t.id) : 0;
           return `
-            <button class="sub-tab-btn ${currentManageSubTab === t.id ? 'active' : ''}" onclick="switchManageSubTab('${t.id}')">
-              ${escapeHtml(ic)} ${escapeHtml(nm)}
+            <button class="sub-tab-btn ${currentManageSubTab === t.id ? 'active' : ''} ${bCnt > 0 ? 'has-badge' : ''}" onclick="switchManageSubTab('${t.id}')">
+              <span>${escapeHtml(ic)} ${escapeHtml(nm)}</span>${buildSubTabBadgeHtml(bCnt)}
             </button>
           `;
         }).join('');
@@ -13219,7 +13258,7 @@
       const tabbar = document.getElementById('appTabbar');
       if (tabbar) {
         const canManage = hasAnyManagePerm(perms);
-        const pendingCount = members.filter(m => m.status === 'pending').length + members.filter(m => m.status === 'approved' && m.pendingName).length + (adminRegistry.items || []).filter(a => a.status === 'pending').length;
+        const pendingCount = getManageTotalBadgeCount();
         const orderedTabs = getValidTabOrder(draftTabOrder).filter(k => k !== 'manage' || canManage);
         const isMoreOpen = document.getElementById('quickLinksSheet').classList.contains('open');
         tabbar.innerHTML = orderedTabs.map(key => {
