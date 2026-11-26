@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=212" />
+  <link rel="manifest" href="./manifest.json?v=213" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=212" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=212" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=213" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=213" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -571,6 +571,14 @@
       background: #EF4444; color: #FFFFFF;
       font-size: 10px; font-weight: 900; letter-spacing: 0.4px; line-height: 1.2;
       box-shadow: 0 1px 4px rgba(239, 68, 68, 0.35); flex-shrink: 0;
+      vertical-align: middle;
+    }
+    .update-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 2px 6.5px; border-radius: 999px;
+      background: #D97706; color: #FFFFFF;
+      font-size: 10px; font-weight: 800; letter-spacing: 0.1px; line-height: 1.25;
+      box-shadow: 0 1px 4px rgba(217, 119, 6, 0.35); flex-shrink: 0;
       vertical-align: middle;
     }
     .video-new-corner-badge {
@@ -3617,7 +3625,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=212" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=213" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5291,7 +5299,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 212;
+    const APP_CLIENT_BUILD = 213;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -5342,6 +5350,7 @@
     const KEY_AUTO_SEC_LAST_ALERT_SIG = 'right_youth_auto_sec_alert_sig_v1';
     const KEY_AUTO_DIAG_LAST_ALERT_SIG = 'right_youth_auto_diag_alert_sig_v1';
     const KEY_AUTO_SHEET_LAST_ALERT_SIG = 'right_youth_auto_sheet_alert_sig_v1';
+    const KEY_SHEET_NEW_ACK_MAP = 'right_youth_sheet_new_ack_v1';
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_SEEN_ADMIN_IDS = 'right_youth_seen_admin_ids_v1';
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
@@ -6264,7 +6273,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=212" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=213" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6288,8 +6297,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=212', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=212', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=213', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=213', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -6856,6 +6865,13 @@
     let sheetLiveInspection = null;
     let sheetInspectLoading = false;
     let sheetAutoInspectedUrl = '';
+    let sheetNewAckMap = (function() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(KEY_SHEET_NEW_ACK_MAP) || '{}');
+        return (raw && typeof raw === 'object') ? raw : {};
+      } catch { return {}; }
+    })();
+    let sheetViewedNewKeysInSession = new Set();
     let coreDataSubscribed = false;
     let isCompletingReset = false;
     let sharedAdminCode = '';
@@ -8943,6 +8959,15 @@
             } else {
               autoSheetConfig = structuredClone(DEFAULT_AUTO_SHEET_CONFIG);
             }
+            if (d.sheetNewAckMap && typeof d.sheetNewAckMap === 'object') {
+              const mergedAck = { ...(sheetNewAckMap || {}) };
+              Object.keys(d.sheetNewAckMap).forEach(k => {
+                const sv = d.sheetNewAckMap[k];
+                if (sv === 'done' || !mergedAck[k]) mergedAck[k] = sv;
+              });
+              sheetNewAckMap = mergedAck;
+              try { localStorage.setItem(KEY_SHEET_NEW_ACK_MAP, JSON.stringify(sheetNewAckMap)); } catch {}
+            }
             if (typeof syncAutoSheetRunner === 'function') syncAutoSheetRunner();
             if (typeof d.latestBuild === 'number' && d.latestBuild > serverLatestBuild) {
               serverLatestBuild = d.latestBuild;
@@ -10395,6 +10420,7 @@
     }
 
     window.switchMainTab = (tab) => {
+      if (currentMainTab === 'manage' && currentManageSubTab === 'sheet' && tab !== 'manage' && typeof finalizeViewedLinkedSheetNewTabs === 'function') finalizeViewedLinkedSheetNewTabs();
       document.getElementById('quickLinksSheet').classList.remove('open');
       if (currentMainTab === 'manage' && tab !== 'manage') {
         draftTabInitialized = false;
@@ -10878,7 +10904,7 @@
             `<b>구글 시트 연동 설정 ([${shIcn} ${shLbl}]):</b> 최신 10탭 Apps Script(<code>${SHEET_SCHEMA_VERSION}</code>)를 구글 시트 <b>[확장 프로그램 → Apps Script → 배포 관리 → 새 버전 배포]</b>한 뒤, 웹 앱 URL을 <b>[${shIcn} ${shLbl}]</b>에 입력하고 저장합니다.`,
             `<b>버전 전환 시트 재정비:</b> 시트 양식이 꼬였거나 테스트 흔적이 남았을 때는 <b>[${shIcn} ${shLbl} → 🛠️ 양식 재정비]</b> 버튼으로 <b>현황·운영 6개 탭(출석부·회원·관리자·문의·영상·공지)</b>을 최신 양식으로 재생성합니다. (4개 보안 감사 로그 탭은 위변조 방지를 위해 보존)`
           ],
-          sheetTabs: SHEET_SCHEMA_TABS.map((t, idx) => ({ name: `${idx + 1}. ${t.name}${t.isNew ? ' (NEW)' : ''}`, desc: t.desc })),
+          sheetTabs: SHEET_SCHEMA_TABS.map((t, idx) => ({ name: `${idx + 1}. ${t.name}${(t.isNew && typeof isSheetTabNewCleared === 'function' && !isSheetTabNewCleared(t)) ? ' (NEW)' : ''}`, desc: t.desc })),
           tip: '구글 시트 URL은 관리자 전용 문서(config/sheetSecret)에 격리되어 있어 일반 회원은 절대 볼 수 없습니다.'
         },
         {
@@ -11581,6 +11607,7 @@
     }
 
     window.switchManageSubTab = (sub) => {
+      if (currentManageSubTab === 'sheet' && sub !== 'sheet' && typeof finalizeViewedLinkedSheetNewTabs === 'function') finalizeViewedLinkedSheetNewTabs();
       if (currentManageSubTab === 'labels' && sub !== 'labels') {
         draftTabInitialized = false;
       }
@@ -20387,6 +20414,97 @@
       }
     }
 
+    // --- 신규 시트 NEW 배지 확인 · 연동 완료 연동 관리 (방식1 + 방식2 통합) ---
+    function getSheetTabAckKey(t) {
+      return `${String(t.id || '')}:${String(t.addedIn || 'v1')}`;
+    }
+
+    function isSheetTabNewCleared(t) {
+      if (!t || !t.isNew) return true;
+      return sheetNewAckMap[getSheetTabAckKey(t)] === 'done';
+    }
+
+    function persistSheetNewAckMap(syncToServer = true) {
+      try { localStorage.setItem(KEY_SHEET_NEW_ACK_MAP, JSON.stringify(sheetNewAckMap)); } catch {}
+      const u = getCurrentUser();
+      if (syncToServer && u && u.isSuperAdmin) {
+        db.collection('config').doc('layout').set({ sheetNewAckMap }, { merge: true }).catch(() => {});
+      }
+    }
+
+    function promoteSeenNewSheetTabsIfLinked(diff) {
+      if (!diff || !Array.isArray(diff.tabStatuses)) return;
+      let changed = false;
+      diff.tabStatuses.forEach(t => {
+        if (!t.isNew) return;
+        const k = getSheetTabAckKey(t);
+        if (t.state === 'ok' && sheetNewAckMap[k] === 'seen') {
+          sheetNewAckMap[k] = 'done';
+          sheetViewedNewKeysInSession.delete(k);
+          changed = true;
+        }
+      });
+      if (changed) persistSheetNewAckMap(true);
+    }
+
+    function finalizeViewedLinkedSheetNewTabs() {
+      if (!sheetViewedNewKeysInSession || sheetViewedNewKeysInSession.size === 0) return;
+      const diff = getAdminSheetUrl() ? evaluateSheetSchemaDiff(sheetLiveInspection) : null;
+      let changed = false;
+      sheetViewedNewKeysInSession.forEach(k => {
+        const matched = diff && Array.isArray(diff.tabStatuses)
+          ? diff.tabStatuses.find(t => getSheetTabAckKey(t) === k)
+          : null;
+        if (matched && matched.state === 'ok') {
+          if (sheetNewAckMap[k] !== 'done') {
+            sheetNewAckMap[k] = 'done';
+            changed = true;
+          }
+        } else if (sheetNewAckMap[k] !== 'done' && sheetNewAckMap[k] !== 'seen') {
+          sheetNewAckMap[k] = 'seen';
+          changed = true;
+        }
+      });
+      sheetViewedNewKeysInSession.clear();
+      if (changed) persistSheetNewAckMap(true);
+    }
+
+    window.acknowledgeSheetNewTabs = (targetKey = '') => {
+      const diff = getAdminSheetUrl() ? evaluateSheetSchemaDiff(sheetLiveInspection) : null;
+      const list = (diff && Array.isArray(diff.tabStatuses)) ? diff.tabStatuses : SHEET_SCHEMA_TABS.map(t => ({ ...t, state: 'idle' }));
+      let doneCount = 0;
+      let seenCount = 0;
+
+      list.forEach(t => {
+        if (!t.isNew) return;
+        const k = getSheetTabAckKey(t);
+        if (targetKey && k !== targetKey) return;
+        if (t.state === 'ok') {
+          if (sheetNewAckMap[k] !== 'done') {
+            sheetNewAckMap[k] = 'done';
+            sheetViewedNewKeysInSession.delete(k);
+            doneCount++;
+          }
+        } else if (sheetNewAckMap[k] !== 'done') {
+          sheetNewAckMap[k] = 'seen';
+          seenCount++;
+        }
+      });
+
+      if (doneCount > 0 || seenCount > 0) {
+        persistSheetNewAckMap(true);
+        const u = getCurrentUser();
+        if (u && currentMainTab === 'manage' && currentManageSubTab === 'sheet') {
+          renderManageSheet(document.getElementById('manageContent'), u);
+        }
+        if (doneCount > 0) {
+          showToast(`✅ 신규 연동 시트 ${doneCount}건 확인 완료! NEW 표시를 정리했습니다.`, 'ok');
+        } else {
+          showToast('👀 확인 완료! 해당 시트의 연동이 완료되면 NEW 표시가 자동으로 사라집니다.');
+        }
+      }
+    };
+
     // --- 구글 시트 스키마 자동 대조 엔진 (추가·누락·삭제·구버전 스크립트 실시간 판별) ---
     function evaluateSheetSchemaDiff(insp) {
       if (!insp || !insp.checkedAt) return null;
@@ -20434,7 +20552,7 @@
         }
         if (needsScriptUpdate && t.isNew) {
           addedNeedScriptTabs.push(t.name);
-          return { ...t, state: 'need_script', label: `🆕 ${t.addedIn} 추가 · 스크립트 업데이트 필요`, rowCount: null };
+          return { ...t, state: 'need_script', label: '⚠️ 업데이트 필요 (스크립트)', rowCount: null };
         }
         if (existingTabs) {
           if (existingTabs.includes(t.name)) {
@@ -20443,18 +20561,18 @@
             return {
               ...t,
               state: hasLegacy ? 'legacy' : 'ok',
-              label: hasLegacy ? `⚠️ 구버전 양식 (${rc}행)` : `✅ 연동 완료 (${rc}행)`,
+              label: hasLegacy ? `⚠️ 업데이트 필요 (구버전 양식 · ${rc}행)` : `✅ 연동 완료 (${rc}행)`,
               rowCount: rc
             };
           } else {
             missingTabs.push(t.name);
-            return { ...t, state: 'missing', label: '⚠️ 시트 미생성 · 동기화 필요', rowCount: 0 };
+            return { ...t, state: 'missing', label: '⚠️ 업데이트 필요 (시트 미생성)', rowCount: 0 };
           }
         }
         return {
           ...t,
           state: needsScriptUpdate ? 'legacy' : 'ok',
-          label: needsScriptUpdate ? '기존 연동 중 (구버전 스크립트)' : '✅ 연동 지원됨',
+          label: needsScriptUpdate ? '⚠️ 업데이트 필요 (구버전 스크립트)' : '✅ 연동 지원됨',
           rowCount: null
         };
       });
@@ -21298,9 +21416,11 @@
               </div>
               <div style="font-size:12px; color:#475569;">
                 배포된 스크립트: <b style="color:${diff && diff.needsScriptUpdate ? '#DC2626' : '#15803D'};">${escapeHtml(diff ? diff.scriptVersion : (isLinked ? '대조 전' : '미연동'))}</b>
-                ${diff && diff.connected && diff.readable && sheetLiveInspection && sheetLiveInspection.data && isSheetResponseFastBatch(sheetLiveInspection.data)
-                  ? '<span class="tag green" style="margin-left:4px; font-size:10px;">⚡ 고속 배치</span>'
-                  : (diff && diff.connected && diff.readable && !diff.needsScriptUpdate ? '<span class="tag warm" style="margin-left:4px; font-size:10px;">v10.112 고속화 권장</span>' : '')}
+                ${diff && diff.needsScriptUpdate
+                  ? '<span class="update-badge" style="margin-left:4px;">업데이트 필요</span>'
+                  : (diff && diff.connected && diff.readable && sheetLiveInspection && sheetLiveInspection.data && isSheetResponseFastBatch(sheetLiveInspection.data)
+                    ? '<span class="tag green" style="margin-left:4px; font-size:10px;">⚡ 고속 배치</span>'
+                    : (diff && diff.connected && diff.readable && !diff.needsScriptUpdate ? '<span class="update-badge" style="margin-left:4px;">업데이트 필요 (고속화)</span>' : ''))}
               </div>
             </div>
 
@@ -21326,25 +21446,64 @@
               </div>
             `))}
 
-            <div style="font-size:12px; font-weight:800; color:#334155; margin:6px 0 6px;">📌 필수 연동 시트 목록 (${SHEET_SCHEMA_TABS.length}개 탭)</div>
-            <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:10px;">
-              ${(diff ? diff.tabStatuses : SHEET_SCHEMA_TABS.map(t => ({ ...t, state: 'idle', label: t.isNew ? `🆕 ${t.addedIn} 추가` : '대기' }))).map((t, idx) => {
-                const badgeCls = t.state === 'ok' ? 'green' : (t.state === 'need_script' || t.state === 'missing' ? 'red' : (t.state === 'legacy' ? 'warm' : 'slate'));
-                return `
-                  <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px; padding:7px 9px; border-radius:9px; background:#F8FAFC; border:1px solid ${t.state === 'need_script' || t.state === 'missing' ? '#FECACA' : '#E2E8F0'};">
-                    <div style="min-width:0; flex:1;">
-                      <div style="font-size:12.5px; font-weight:800; color:#0F172A;">
-                        ${idx + 1}. ${escapeHtml(t.name)}
-                        ${t.kind === 'log' ? '<span style="font-size:10.5px; color:#64748B; font-weight:700;"> · 🔒 로그</span>' : ''}
-                        ${t.isNew ? '<span class="new-badge" style="margin-left:3px;">NEW</span>' : ''}
+            ${(() => {
+              if (diff) promoteSeenNewSheetTabsIfLinked(diff);
+              const rowsList = diff
+                ? diff.tabStatuses
+                : SHEET_SCHEMA_TABS.map(t => ({ ...t, state: 'idle', label: isLinked ? '대조 대기' : '미연동' }));
+              let unackedLinkedNewCnt = 0;
+              rowsList.forEach(t => {
+                if (!t.isNew) return;
+                const k = getSheetTabAckKey(t);
+                const needsUpd = t.state === 'need_script' || t.state === 'missing' || t.state === 'legacy';
+                if (needsUpd) {
+                  // 업데이트 필요 상태에서 관리자가 확인했음을 기록 → 추후 연동 완료 시 NEW 자동 숨김
+                  if (sheetNewAckMap[k] !== 'done' && sheetNewAckMap[k] !== 'seen') {
+                    sheetNewAckMap[k] = 'seen';
+                    persistSheetNewAckMap(false);
+                  }
+                } else if (t.state === 'ok' && !isSheetTabNewCleared(t)) {
+                  unackedLinkedNewCnt++;
+                  sheetViewedNewKeysInSession.add(k);
+                }
+              });
+              return `
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap; margin:6px 0 6px;">
+                  <div style="font-size:12px; font-weight:800; color:#334155;">📌 필수 연동 시트 목록 (${SHEET_SCHEMA_TABS.length}개 탭)</div>
+                  ${unackedLinkedNewCnt > 0
+                    ? `<button class="btn-sm approve" type="button" style="padding:3.5px 9px; font-size:11px;" onclick="acknowledgeSheetNewTabs()">✓ 확인 완료 (NEW 지우기)</button>`
+                    : ''}
+                </div>
+                <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:10px;">
+                  ${rowsList.map((t, idx) => {
+                    const needsUpd = t.state === 'need_script' || t.state === 'missing' || t.state === 'legacy';
+                    const showNewBadge = !needsUpd && !!t.isNew && !isSheetTabNewCleared(t);
+                    const k = getSheetTabAckKey(t);
+                    const badgeCls = t.state === 'ok' ? 'green' : (t.state === 'need_script' || t.state === 'missing' ? 'red' : (t.state === 'legacy' ? 'warm' : 'slate'));
+                    const titleBadgeHtml = needsUpd
+                      ? '<span class="update-badge" style="margin-left:4px;">업데이트 필요</span>'
+                      : (showNewBadge
+                        ? (t.state === 'ok'
+                          ? `<button type="button" class="new-badge" style="margin-left:4px; border:none; cursor:pointer;" title="눌러서 확인 완료 처리" onclick="acknowledgeSheetNewTabs('${escapeJsAttr(k)}')">NEW ✓</button>`
+                          : '<span class="new-badge" style="margin-left:4px;">NEW</span>')
+                        : '');
+                    return `
+                      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px; padding:7px 9px; border-radius:9px; background:#F8FAFC; border:1px solid ${needsUpd ? '#FCD34D' : '#E2E8F0'};">
+                        <div style="min-width:0; flex:1;">
+                          <div style="font-size:12.5px; font-weight:800; color:#0F172A;">
+                            ${idx + 1}. ${escapeHtml(t.name)}
+                            ${t.kind === 'log' ? '<span style="font-size:10.5px; color:#64748B; font-weight:700;"> · 🔒 로그</span>' : ''}
+                            ${titleBadgeHtml}
+                          </div>
+                          <div style="font-size:11px; color:#64748B; margin-top:2px;">${escapeHtml(t.desc)}</div>
+                        </div>
+                        <span class="tag ${badgeCls}" style="font-size:10.5px;">${escapeHtml(t.label)}</span>
                       </div>
-                      <div style="font-size:11px; color:#64748B; margin-top:2px;">${escapeHtml(t.desc)}</div>
-                    </div>
-                    <span class="tag ${badgeCls}" style="font-size:10.5px;">${escapeHtml(t.label)}</span>
-                  </div>
-                `;
-              }).join('')}
-            </div>
+                    `;
+                  }).join('')}
+                </div>
+              `;
+            })()}
 
             <div style="font-size:12px; font-weight:800; color:#334155; margin:8px 0 5px;">🗑️ 앱에서 삭제(폐기)된 구버전 시트</div>
             ${SHEET_REMOVED_TABS.map(rem => {
