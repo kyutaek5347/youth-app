@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=215" />
+  <link rel="manifest" href="./manifest.json?v=216" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=215" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=215" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=216" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=216" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3675,7 +3675,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=215" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=216" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5390,7 +5390,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 215;
+    const APP_CLIENT_BUILD = 216;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -6370,7 +6370,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=215" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=216" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6394,8 +6394,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=215', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=215', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=216', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=216', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -11505,12 +11505,11 @@
           return `
             <div class="home-block">
               <div class="hero-banner ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)};" onclick="openDetail('${escapeJsAttr(pinned.id)}')">
-                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:9px;">
                   <span class="hero-badge" style="margin-bottom:0;">${escapeHtml(b.badge || '📌 중요 공지')} · ${escapeHtml(pinned.category)}${pinned.audience && pinned.audience !== 'all' ? ' · 지정대상' : ''}</span>
                   ${pinnedNew ? '<span class="new-badge">NEW</span>' : ''}
                 </div>
-                <h2 class="hero-title">${escapeHtml(pinned.title)}</h2>
-                <p class="hero-desc">${escapeHtml((pinned.body || '').split('\n')[0])}</p>
+                <h2 class="hero-title" style="margin-bottom:0;">${escapeHtml(pinned.title)}</h2>
               </div>
             </div>
           `;
@@ -11518,16 +11517,17 @@
 
         if (b.type === 'newcomer_card') {
           const blkNew = isBlockUnread(b, user);
+          const hasDesc = !!String(b.desc || '').trim();
+          const clickable = hasDesc || blkNew;
           return `
             <div class="home-block">
-              <div class="newcomer-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)}; ${blkNew ? 'cursor:pointer;' : ''}" ${blkNew ? `onclick="markBlockRead('${escapeJsAttr(b.id)}')"` : ''}>
+              <div class="newcomer-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)}; ${clickable ? 'cursor:pointer;' : ''}" ${clickable ? `onclick="openBlockDetail('${escapeJsAttr(b.id)}')"` : ''}>
                 ${getAdminSchedPill(b)}
                 <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:${(b.badge || blkNew) ? '8px' : '0'};">
                   ${b.badge ? `<span class="hero-badge" style="background:rgba(255,255,255,0.22);color:#fff;margin-bottom:0;">${escapeHtml(b.badge)}</span>` : ''}
                   ${blkNew ? '<span class="new-badge">NEW</span>' : ''}
                 </div>
-                <h3 class="hero-title" style="font-size:17px;">${escapeHtml(b.title)}</h3>
-                <p class="hero-desc">${escapeHtml(b.desc)}</p>
+                <h3 class="hero-title" style="font-size:17px; margin-bottom:0;">${escapeHtml(b.title)}</h3>
               </div>
             </div>
           `;
@@ -11535,16 +11535,17 @@
 
         if (b.type === 'leader_card') {
           const blkNew = isBlockUnread(b, user);
+          const hasDesc = !!String(b.desc || '').trim();
+          const clickable = hasDesc || blkNew;
           return `
             <div class="home-block">
-              <div class="leader-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)}; ${blkNew ? 'cursor:pointer;' : ''}" ${blkNew ? `onclick="markBlockRead('${escapeJsAttr(b.id)}')"` : ''}>
+              <div class="leader-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)}; ${clickable ? 'cursor:pointer;' : ''}" ${clickable ? `onclick="openBlockDetail('${escapeJsAttr(b.id)}')"` : ''}>
                 ${getAdminSchedPill(b)}
                 <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:${(b.badge || blkNew) ? '8px' : '0'};">
                   ${b.badge ? `<span class="hero-badge" style="margin-bottom:0;">${escapeHtml(b.badge)}</span>` : ''}
                   ${blkNew ? '<span class="new-badge">NEW</span>' : ''}
                 </div>
-                <h3 class="hero-title" style="font-size:16.5px;">${escapeHtml(b.title)}</h3>
-                <p class="hero-desc">${escapeHtml(b.desc)}</p>
+                <h3 class="hero-title" style="font-size:16.5px; margin-bottom:0;">${escapeHtml(b.title)}</h3>
               </div>
             </div>
           `;
@@ -11552,16 +11553,17 @@
 
         if (b.type === 'custom_ad') {
           const blkNew = isBlockUnread(b, user);
+          const hasDesc = !!String(b.desc || '').trim();
+          const clickable = hasDesc || blkNew;
           return `
             <div class="home-block">
-              <div class="custom-banner-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)}; ${blkNew ? 'cursor:pointer;' : ''}" ${blkNew ? `onclick="markBlockRead('${escapeJsAttr(b.id)}')"` : ''}>
+              <div class="custom-banner-card ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)}; ${clickable ? 'cursor:pointer;' : ''}" ${clickable ? `onclick="openBlockDetail('${escapeJsAttr(b.id)}')"` : ''}>
                 ${getAdminSchedPill(b)}
                 <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:${(b.badge || blkNew) ? '7px' : '0'};">
                   ${b.badge ? `<span class="hero-badge" style="margin-bottom:0;">${escapeHtml(b.badge)}</span>` : ''}
                   ${blkNew ? '<span class="new-badge">NEW</span>' : ''}
                 </div>
-                <h3 class="hero-title" style="font-size:16.5px;">${escapeHtml(b.title)}</h3>
-                <p class="hero-desc">${escapeHtml(b.desc)}</p>
+                <h3 class="hero-title" style="font-size:16.5px; margin-bottom:0;">${escapeHtml(b.title)}</h3>
               </div>
             </div>
           `;
@@ -11606,8 +11608,7 @@
                           </div>
                           <span class="card-date">${escapeHtml(n.date)}</span>
                         </div>
-                        <h3 class="card-title">${escapeHtml(n.title)}</h3>
-                        <p class="card-body clamp">${escapeHtml(n.body)}</p>
+                        <h3 class="card-title" style="margin-bottom:0;">${escapeHtml(n.title)}</h3>
                       </div>
                     `;
                   }).join('')}
@@ -11642,13 +11643,44 @@
       currentDetailId = String(id);
       document.getElementById('detailTag').textContent = n.category;
       document.getElementById('detailTitle').textContent = n.title;
-      document.getElementById('detailDate').textContent = n.date;
-      document.getElementById('detailBody').textContent = n.body;
+      const dateEl = document.getElementById('detailDate');
+      if (dateEl) {
+        dateEl.textContent = n.date || '';
+        dateEl.classList.toggle('hidden', !n.date);
+      }
+      document.getElementById('detailBody').textContent = n.body || '';
       const srcEl = document.getElementById('detailSource');
       if (srcEl) {
         const srcTxt = String(n.source || '').trim();
         srcEl.textContent = srcTxt ? `📌 출처: ${srcTxt}` : '';
         srcEl.classList.toggle('hidden', !srcTxt);
+      }
+      document.getElementById('detailModal').classList.add('open');
+    };
+
+    window.openBlockDetail = (id) => {
+      const b = (blocks || []).find(item => String(item.id) === String(id));
+      const user = getCurrentUser();
+      if (!b || !canUserSeeTarget(user, b) || (!user.isSuperAdmin && getPublishState(b) !== 'live')) return;
+      if (isBlockUnread(b, user)) {
+        markItemRead('blocks', b.id, getBlockItemTs(b));
+        applyScreen();
+      }
+      const descTxt = String(b.desc || '').trim();
+      if (!descTxt) return;
+      currentDetailId = null;
+      document.getElementById('detailTag').textContent = String(b.badge || BLOCK_TYPE_NAMES[b.type] || '안내').trim();
+      document.getElementById('detailTitle').textContent = String(b.title || BLOCK_TYPE_NAMES[b.type] || '안내').trim();
+      const dateEl = document.getElementById('detailDate');
+      if (dateEl) {
+        dateEl.textContent = '';
+        dateEl.classList.add('hidden');
+      }
+      document.getElementById('detailBody').textContent = descTxt;
+      const srcEl = document.getElementById('detailSource');
+      if (srcEl) {
+        srcEl.textContent = '';
+        srcEl.classList.add('hidden');
       }
       document.getElementById('detailModal').classList.add('open');
     };
