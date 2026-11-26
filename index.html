@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=200" />
+  <link rel="manifest" href="./manifest.json?v=201" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=200" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=200" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=201" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=201" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3551,7 +3551,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=200" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=201" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5226,7 +5226,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 200;
+    const APP_CLIENT_BUILD = 201;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_SEEN_ADMIN_IDS = 'right_youth_seen_admin_ids_v1';
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
@@ -6139,7 +6139,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=200" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=201" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6163,8 +6163,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=200', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=200', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=201', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=201', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -21105,6 +21105,32 @@
             await runSingleSecurityCheck('admin_access');
           }
         }
+      } else if (type === 'enable_core_defense') {
+        const nextCfg = {
+          ...DEFAULT_SECURITY_CONFIG,
+          ...(securityConfig || {}),
+          blockMaliciousInput: true,
+          blockSuspiciousLinks: true,
+          detectCloneDomain: true,
+          alertAdminOnSecurityEvent: true,
+          confirmExternalLinksV59: true
+        };
+        try {
+          await db.collection('config').doc('layout').set({ securityConfig: nextCfg }, { merge: true });
+          securityConfig = nextCfg;
+          recordAuditLog({
+            actorType: 'admin',
+            category: '보안·설정',
+            action: '보안 방어 설정 일괄 복구',
+            target: '핵심 방어 4종 ON'
+          });
+          showToast('🛡️ 핵심 실시간 방어 4종이 모두 켜졌습니다.');
+          if (currentMainTab === 'manage' && currentManageSubTab === 'security') {
+            await runSingleSecurityCheck('defense_storage');
+          }
+        } catch (err) {
+          handleDbError(err, '핵심 방어 설정 켜기');
+        }
       } else if (type === 'retest_diag' && param) {
         await runSingleDiagnostic(param);
       } else if (type === 'retest_sec' && param) {
@@ -22403,6 +22429,22 @@
       return { safe: reasons.length === 0, reasons, matched };
     }
 
+    function detectSensitivePii(text) {
+      const s = String(text || '');
+      if (!s) return { found: false, reasons: [] };
+      const rules = [
+        { re: /\b01[016789][-\s.]?\d{3,4}[-\s.]?\d{4}\b/, reason: '휴대전화번호' },
+        { re: /\b\d{6}[-\s]?[1-4]\d{6}\b/, reason: '주민등록번호 패턴' },
+        { re: /\b(?:\d{4}[-\s]?){3}\d{4}\b/, reason: '카드번호 패턴' },
+        { re: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/, reason: '이메일 주소' }
+      ];
+      const reasons = [];
+      for (const r of rules) {
+        if (r.re.test(s)) reasons.push(r.reason);
+      }
+      return { found: reasons.length > 0, reasons };
+    }
+
     function analyzeUrlRisk(rawUrl) {
       const cleaned = String(rawUrl || '').replace(/[\u0000-\u001F\u007F]/g, '').trim();
       if (!cleaned) return { riskLevel: 'safe', host: '', protocol: '', url: '', reasons: [] };
@@ -22650,11 +22692,15 @@
     const SEC_CHECK_ITEMS = [
       { id: 'domain_https', title: '1. 공식 도메인 · HTTPS 암호화 연결', desc: '현재 접속 주소가 공식 도메인이며 전 구간 HTTPS로 암호화되어 있는지 점검합니다.' },
       { id: 'csp_sdk', title: '2. CSP 보안 헤더 · 로컬 SDK 무결성', desc: '외부 악성 스크립트 차단(CSP) 헤더 및 외부 CDN 미사용(로컬 SDK 보관) 여부를 점검합니다.' },
-      { id: 'link_scan', title: '3. 앱 전체 피싱 · 위험 링크 정밀 스캔', desc: '바로가기·공지·배너·영상에 피싱·단축URL·비암호화·IP 링크가 있는지 전수 검사합니다.' },
-      { id: 'xss_scan', title: '4. 악성 스크립트(XSS) 입력 흔적 스캔', desc: '공지·배너·영상·회원명에 스크립트 삽입이나 위험 HTML 태그 흔적이 있는지 검사합니다.' },
+      { id: 'link_scan', title: '3. 앱 전체 피싱 · 위험 링크 정밀 스캔', desc: '바로가기·공지·배너·영상·문의·공식채널·약관에 피싱·단축URL·IP 링크가 있는지 전수 검사합니다.' },
+      { id: 'xss_scan', title: '4. 악성 스크립트(XSS) 입력 흔적 스캔', desc: '공지·배너·영상·문의·회원명·약관에 스크립트 삽입이나 위험 HTML 태그 흔적이 있는지 검사합니다.' },
       { id: 'admin_access', title: '5. 관리자 접근 통제 · 잠금 · 비밀 격리', desc: '신규 관리자 자동 등록 잠금, 관리자 코드 강도, 구글 시트 URL 서버 격리 상태를 점검합니다.' },
       { id: 'qr_reset', title: '6. 초대 QR · 비밀번호 초기화 만료 점검', desc: '오늘의 초대 QR 유효성과 24시간이 지난 만료 비밀번호 초기화 코드 잔존 여부를 점검합니다.' },
-      { id: 'threat_logs', title: '7. 최근 7일 보안 위협 · 차단 활동 감지', desc: '감사 로그에서 악성 입력 차단, 피싱 링크 차단, 도배 시도, 대량 삭제 이상 징후를 분석합니다.' }
+      { id: 'threat_logs', title: '7. 최근 7일 보안 위협 · 차단 활동 감지', desc: '감사 로그에서 악성 입력 차단, 피싱 링크 차단, 도배 시도, 대량 삭제 이상 징후를 분석합니다.' },
+      { id: 'pii_scan', title: '8. 개인정보 노출 · 폐기 필드 잔존 스캔', desc: '문의·공지·배너·영상글에 전화번호·주민번호·이메일 등 민감 개인정보나 폐기된 생일 필드가 있는지 점검합니다.' },
+      { id: 'isolation_rbac', title: '9. 비공개·예약 서버 격리 · 참관자 권한 점검', desc: '임시저장·예약·관리자전용 항목이 공개 컬렉션에 노출되지 않았는지, 참관자(구경) 권한 현황을 점검합니다.' },
+      { id: 'yt_sec', title: '10. 공식 유튜브 채널 · 영상 위험 문구 점검', desc: '공식 채널 주소의 유튜브 도메인·고유 ID 무결성과 게시된 영상의 저작권·위험 키워드를 점검합니다.' },
+      { id: 'defense_storage', title: '11. 실시간 방어 정책 · 기기 저장소 보안 점검', desc: '핵심 실시간 차단 스위치 활성화 상태와 브라우저 저장소 내 민감 정보 미노출 여부를 점검합니다.' }
     ];
 
     function setSecCheckResult(id, status, msg, advice = null) {
@@ -22729,7 +22775,7 @@
             <span class="sec-pill ${cfg.alertAdminOnSecurityEvent !== false ? 'ok' : ''}">🚨 관리자 알림 ${cfg.alertAdminOnSecurityEvent !== false ? 'ON' : 'OFF'}</span>
           </div>
           <button id="runAllSecBtn" class="btn-full btn-amber" type="button" style="padding:12px; font-size:14px;" ${secCheckRunningAll ? 'disabled' : ''} onclick="runAllSecurityChecks()">
-            ${secCheckRunningAll ? '⏳ 전체 보안 정밀 점검 중...' : '🛡️ 전체 보안 일괄 점검 실행 (7개 항목)'}
+            ${secCheckRunningAll ? '⏳ 전체 보안 정밀 점검 중...' : `🛡️ 전체 보안 일괄 점검 실행 (${SEC_CHECK_ITEMS.length}개 항목)`}
           </button>
         </div>
 
@@ -22744,7 +22790,7 @@
 
         <div class="filter-row" style="margin-bottom:10px;">
           <button class="filter-chip ${secf === 'all' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('all')">전체</button>
-          <button class="filter-chip ${secf === 'checks' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('checks')">🔍 7개 보안 진단</button>
+          <button class="filter-chip ${secf === 'checks' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('checks')">🔍 ${SEC_CHECK_ITEMS.length}개 보안 진단</button>
           <button class="filter-chip ${secf === 'defense' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('defense')">🚧 실시간 방어</button>
           <button class="filter-chip ${secf === 'tester' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('tester')">🔎 링크 검사기</button>
           <button class="filter-chip ${secf === 'threats' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('threats')">🚨 위협 기록 (${threatLogs.length})</button>
@@ -22754,7 +22800,7 @@
         <!-- 1) 7개 보안 항목 점검 -->
         ${buildManageAccordionBar({
           key: 'sec_check_list',
-          titleHtml: '🔍 해킹 · 피싱 · 접근 통제 7개 보안 진단',
+          titleHtml: `🔍 해킹 · 피싱 · 접근 통제 ${SEC_CHECK_ITEMS.length}개 보안 진단`,
           badgeHtml: `<span class="tag ${errCnt > 0 ? 'red' : (okCnt === SEC_CHECK_ITEMS.length ? 'green' : 'slate')}">${okCnt}/${SEC_CHECK_ITEMS.length}</span>`,
           defaultOpen: true
         })}
@@ -23025,15 +23071,37 @@
               foundAreas.add('videos');
             });
           });
-          const totalItems = (quickLinks || []).length + (notices || []).length + (blocks || []).length + (videoItems || []).length;
+          (inquiries || []).forEach(q => {
+            scanTextForSuspiciousLinks(`${q.title || ''} ${q.body || ''} ${q.reply || ''}`).forEach(r => {
+              findings.push(`[문의:${q.title || q.authorName || q.id}] ${r.url} (${r.reasons[0]})`);
+              foundAreas.add('inquiries');
+            });
+          });
+          (officialYtChannels || []).forEach(ch => {
+            [ch && ch.url, ch && ch.handleUrl].filter(Boolean).forEach(uStr => {
+              const r = analyzeUrlRisk(uStr);
+              if (r.riskLevel !== 'safe') {
+                findings.push(`[공식채널:${ch.name || ch.id}] ${r.url} (${r.reasons[0]})`);
+                foundAreas.add('videos');
+              }
+            });
+          });
+          const customDocs = [...(Array.isArray(customTermsArticles) ? customTermsArticles : []), ...(Array.isArray(customBylawsArticles) ? customBylawsArticles : [])];
+          customDocs.forEach(docItem => {
+            scanTextForSuspiciousLinks(`${docItem.title || ''} ${docItem.body || ''}`).forEach(r => {
+              findings.push(`[약관·회칙:${docItem.title || '조항'}] ${r.url} (${r.reasons[0]})`);
+            });
+          });
+          const totalItems = (quickLinks || []).length + (notices || []).length + (blocks || []).length + (videoItems || []).length + (inquiries || []).length + (officialYtChannels || []).length + customDocs.length;
           if (findings.length === 0) {
-            setSecCheckResult(id, 'ok', `전체 콘텐츠 ${totalItems}건 정밀 스캔 완료 · 피싱·위험·단축 URL 0건 감지`);
+            setSecCheckResult(id, 'ok', `전체 콘텐츠 ${totalItems}건(바로가기·공지·배너·영상·문의·공식채널·약관) 정밀 스캔 완료 · 피싱·위험·단축 URL 0건 감지`);
           } else {
             const hasDanger = findings.some(f => f.includes('IP') || f.includes('@') || f.includes('퓨니코드') || f.includes('프로토콜'));
             const actions = [];
             if (foundAreas.has('quicklinks')) actions.push({ label: `${qlIcn} ${qlLbl}`, type: 'subtab', param: 'quicklinks', primary: true });
             if (foundAreas.has('content')) actions.push({ label: `${cIcn} ${cLbl}`, type: 'subtab', param: 'content', primary: actions.length === 0 });
             if (foundAreas.has('videos')) actions.push({ label: `${getTabIcon('manageVideos')} ${getTabLabel('manageVideos')}`, type: 'subtab', param: 'videos', primary: actions.length === 0 });
+            if (foundAreas.has('inquiries')) actions.push({ label: `${getTabIcon('manageInquiries')} ${getTabLabel('manageInquiries')}`, type: 'subtab', param: 'inquiries', primary: actions.length === 0 });
 
             setSecCheckResult(id, hasDanger ? 'err' : 'warn', `의심 링크 ${findings.length}건 발견:\n• ${findings.slice(0, 4).join('\n• ')}${findings.length > 4 ? `\n외 ${findings.length - 4}건` : ''}`, {
               reason: hasDanger
@@ -23057,13 +23125,18 @@
           (blocks || []).forEach(b => checkObj(`[배너:${b.title || b.label}]`, `${b.badge || ''} ${b.title || ''} ${b.desc || ''}`, 'content'));
           (members || []).forEach(m => checkObj(`[회원:${m.name}]`, `${m.name || ''} ${m.pendingName || ''}`, 'members'));
           (videoItems || []).forEach(v => checkObj(`[영상:${v.title || v.id}]`, `${v.title || ''} ${v.channelName || ''} ${v.note || ''}`, 'videos'));
+          (inquiries || []).forEach(q => checkObj(`[문의:${q.title || q.authorName || q.id}]`, `${q.title || ''} ${q.body || ''} ${q.reply || ''}`, 'inquiries'));
+          (officialYtChannels || []).forEach(ch => checkObj(`[공식채널:${ch.name || ch.id}]`, `${ch.name || ''} ${ch.url || ''} ${ch.handleUrl || ''}`, 'videos'));
+          [...(Array.isArray(customTermsArticles) ? customTermsArticles : []), ...(Array.isArray(customBylawsArticles) ? customBylawsArticles : [])]
+            .forEach(docItem => checkObj(`[약관·회칙:${docItem.title || '조항'}]`, `${docItem.title || ''} ${docItem.body || ''}`, 'content'));
 
           if (hits.length === 0) {
-            setSecCheckResult(id, 'ok', '공지·배너·영상·회원 데이터 전수 스캔 완료 · 악성 스크립트(XSS) 흔적 0건');
+            setSecCheckResult(id, 'ok', '공지·배너·영상·문의·회원·공식채널·약관 전수 스캔 완료 · 악성 스크립트(XSS) 흔적 0건');
           } else {
             const actions = [];
             if (hitAreas.has('content')) actions.push({ label: `${cIcn} ${cLbl}`, type: 'subtab', param: 'content', primary: true });
             if (hitAreas.has('videos')) actions.push({ label: `${getTabIcon('manageVideos')} ${getTabLabel('manageVideos')}`, type: 'subtab', param: 'videos', primary: actions.length === 0 });
+            if (hitAreas.has('inquiries')) actions.push({ label: `${getTabIcon('manageInquiries')} ${getTabLabel('manageInquiries')}`, type: 'subtab', param: 'inquiries', primary: actions.length === 0 });
             if (hitAreas.has('members')) actions.push({ label: `${mIcn} ${mLbl}`, type: 'subtab', param: 'members' });
 
             setSecCheckResult(id, 'err', `악성 스크립트 흔적 ${hits.length}건 감지:\n• ${hits.slice(0, 4).join('\n• ')}`, {
@@ -23160,6 +23233,156 @@
           } else {
             setSecCheckResult(id, 'ok', `최근 7일간 차단된 공격 시도 0건 · 전체 감사 로그 ${recent.length}건 정상 추적 중 (삭제 불가 보호)`);
           }
+        } else if (id === 'pii_scan') {
+          const piiHits = [];
+          const piiAreas = new Set();
+          const scanPiiItem = (label, text, area) => {
+            const res = detectSensitivePii(text);
+            if (res.found) {
+              piiHits.push(`${label} (${res.reasons.join('·')})`);
+              piiAreas.add(area);
+            }
+          };
+          (inquiries || []).forEach(q => scanPiiItem(`[문의:${q.title || q.authorName || '문의'}]`, `${q.title || ''} ${q.body || ''} ${q.reply || ''}`, 'inquiries'));
+          (notices || []).forEach(n => scanPiiItem(`[공지:${n.title || '공지'}]`, `${n.title || ''} ${n.body || ''}`, 'content'));
+          (blocks || []).forEach(b => scanPiiItem(`[배너:${b.title || b.label || '배너'}]`, `${b.title || ''} ${b.desc || ''}`, 'content'));
+          (videoItems || []).forEach(v => scanPiiItem(`[영상:${v.title || v.id}]`, `${v.title || ''} ${v.note || ''}`, 'videos'));
+
+          const bdayRemMembers = (members || []).filter(m => m && (m.birthday || m.pendingBirthday));
+          if (bdayRemMembers.length > 0) {
+            piiHits.push(`폐기된 생년월일 필드 잔존 회원 ${bdayRemMembers.length}명`);
+            piiAreas.add('members');
+          }
+
+          if (piiHits.length === 0) {
+            setSecCheckResult(id, 'ok', '문의·공지·배너·영상글 민감 개인정보(전화번호·주민번호·카드·이메일) 0건 · 폐기된 생일 필드 잔존 0명');
+          } else {
+            const hasHighRisk = piiHits.some(h => h.includes('주민등록번호') || h.includes('카드번호'));
+            const actions = [];
+            if (piiAreas.has('inquiries')) actions.push({ label: `${getTabIcon('manageInquiries')} ${getTabLabel('manageInquiries')}`, type: 'subtab', param: 'inquiries', primary: true });
+            if (piiAreas.has('content')) actions.push({ label: `${cIcn} ${cLbl}`, type: 'subtab', param: 'content', primary: actions.length === 0 });
+            if (piiAreas.has('videos')) actions.push({ label: `${getTabIcon('manageVideos')} ${getTabLabel('manageVideos')}`, type: 'subtab', param: 'videos', primary: actions.length === 0 });
+            if (piiAreas.has('members')) actions.push({ label: `${mIcn} ${mLbl}`, type: 'subtab', param: 'members', primary: actions.length === 0 });
+
+            setSecCheckResult(id, hasHighRisk ? 'err' : 'warn', `개인정보 노출·잔존 ${piiHits.length}건 감지:\n• ${piiHits.slice(0, 4).join('\n• ')}${piiHits.length > 4 ? `\n외 ${piiHits.length - 4}건` : ''}`, {
+              reason: '문의 사항이나 게시물에 휴대전화번호·이메일·주민번호 등 개인정보가 그대로 적혀 있으면 불필요한 개인정보 노출 위험이 있습니다.',
+              solution: '아래 해당 탭에서 민감한 개인정보가 포함된 내용을 수정하거나 삭제(해결 후 삭제)해 주세요. 부득이한 공식 대표 연락처라면 확인 후 넘어가셔도 됩니다.',
+              actions
+            });
+          }
+        } else if (id === 'isolation_rbac') {
+          const leakedNotices = Array.from(publicNoticesMap.values()).filter(n => isServerRestrictedItem(n));
+          const leakedBlocks = Array.from(publicBlocksMap.values()).filter(b => isServerRestrictedItem(b));
+          const legacyAttSheetExposed = !!(attendanceConfig && attendanceConfig.sheetUrl);
+          const observerRoleIds = new Set((roles || []).filter(isObserverRoleObj).map(r => String(r.id)));
+          const observerMembers = (members || []).filter(m => m.status === 'approved' && observerRoleIds.has(String(m.roleId)));
+
+          const errs = [];
+          const actions = [];
+          if (leakedNotices.length > 0 || leakedBlocks.length > 0) {
+            errs.push(`공개 컬렉션에 비공개·예약 문서 잔존 (공지 ${leakedNotices.length}건 · 배너 ${leakedBlocks.length}건)`);
+            actions.push({ label: `${cIcn} ${cLbl}`, type: 'subtab', param: 'content', primary: true });
+          }
+          if (legacyAttSheetExposed) {
+            errs.push('config/attendance 문서에 구버전 sheetUrl 노출 잔존');
+            actions.push({ label: `${getTabIcon('manageSheet')} ${getTabLabel('manageSheet')}`, type: 'subtab', param: 'sheet', primary: actions.length === 0 });
+          }
+
+          if (errs.length > 0) {
+            setSecCheckResult(id, 'err', `서버 격리 이상 감지:\n• ${errs.join('\n• ')}`, {
+              reason: '임시저장·예약·관리자전용 항목이나 구버전 시트 주소가 일반 회원도 조회 가능한 경로에 남아 있습니다.',
+              solution: '해당 공지/배너를 수정·저장해 비공개 컬렉션으로 재격리하거나, 시트 연동 주소를 다시 저장해 주세요.',
+              actions
+            });
+          } else {
+            const obsNames = observerMembers.length > 0 ? ` (${observerMembers.map(m => m.name).slice(0, 4).join(', ')}${observerMembers.length > 4 ? ' 외' : ''})` : '';
+            setSecCheckResult(id, 'ok', `비공개·예약 서버 격리 정상 (비공개 공지 ${roleOrAdminNoticesMap.size} · 배너 ${roleOrAdminBlocksMap.size}) · 구버전 시트 URL 미노출 · 참관자(구경) 역할 ${observerRoleIds.size}개 / 배정 ${observerMembers.length}명${obsNames}`);
+          }
+        } else if (id === 'yt_sec') {
+          const vLbl = getTabLabel('manageVideos');
+          const vIcn = getTabIcon('manageVideos');
+          const badChannels = [];
+          (officialYtChannels || []).forEach(ch => {
+            if (!ch) return;
+            const urls = [ch.url, ch.handleUrl].filter(Boolean);
+            for (const uStr of urls) {
+              try {
+                const parsed = new URL(uStr);
+                const h = (parsed.hostname || '').toLowerCase();
+                if (parsed.protocol !== 'https:' || !(h === 'youtube.com' || h.endsWith('.youtube.com') || h === 'youtu.be')) {
+                  badChannels.push(`${ch.name || ch.id}: 비공식 도메인(${uStr})`);
+                }
+              } catch {
+                badChannels.push(`${ch.name || ch.id}: 잘못된 URL 형식`);
+              }
+            }
+          });
+          const riskyApprovedVideos = (videoItems || []).filter(v => {
+            if (!v || v.status !== 'approved') return false;
+            if (v.hasRiskWarning) return true;
+            const hay = `${v.title || ''} ${v.note || ''}`.toLowerCase();
+            return YOUTUBE_RISK_KEYWORDS.some(k => hay.includes(k.toLowerCase()));
+          });
+          const unverifiedChannels = (officialYtChannels || []).filter(ch => !ch.channelId && !ch.handleUrl);
+
+          if (badChannels.length > 0) {
+            setSecCheckResult(id, 'err', `공식 유튜브 채널 주소 이상 ${badChannels.length}건:\n• ${badChannels.slice(0, 3).join('\n• ')}`, {
+              reason: '화이트리스트에 유튜브 공식 HTTPS 도메인이 아닌 주소가 등록되어 있으면 자동 게시 보안이 약화됩니다.',
+              solution: `[${vLbl}] → 공식 유튜브 채널 목록에서 해당 채널을 수정하거나 삭제해 주세요.`,
+              actions: [{ label: `${vIcn} ${vLbl} 열기`, type: 'subtab', param: 'videos', primary: true }]
+            });
+          } else if (riskyApprovedVideos.length > 0 || unverifiedChannels.length > 0) {
+            const warns = [];
+            if (riskyApprovedVideos.length > 0) warns.push(`주의·저작권 키워드 포함 게시 영상 ${riskyApprovedVideos.length}건`);
+            if (unverifiedChannels.length > 0) warns.push(`고유 ID·핸들 미연결 공식 채널 ${unverifiedChannels.length}곳`);
+            setSecCheckResult(id, 'warn', `점검 필요: ${warns.join(' · ')}`, {
+              reason: '저작권 주의 키워드(무단·음원 추출·연속듣기 등)가 감지된 영상이 게시되어 있거나, 고유 ID 없이 이름만 등록된 채널이 있습니다.',
+              solution: `[${vLbl}]에서 해당 영상과 공식 채널을 확인하고 [🔍 자동검사]로 고유 ID를 연결해 주세요.`,
+              actions: [{ label: `${vIcn} ${vLbl} 열기`, type: 'subtab', param: 'videos', primary: true }]
+            });
+          } else {
+            setSecCheckResult(id, 'ok', `공식 유튜브 채널 ${officialYtChannels.length}곳 도메인·ID 무결성 정상 · 게시 영상 저작권/위험 문구 0건`);
+          }
+        } else if (id === 'defense_storage') {
+          const disabledCore = [];
+          if (cfg.blockMaliciousInput === false) disabledCore.push('XSS 입력 차단');
+          if (cfg.blockSuspiciousLinks === false) disabledCore.push('피싱 링크 자동 차단');
+          if (cfg.detectCloneDomain === false) disabledCore.push('복제 도메인 경고');
+          if (cfg.alertAdminOnSecurityEvent === false) disabledCore.push('관리자 보안 실시간 알림');
+
+          const leakedStorageKeys = [];
+          try {
+            const checkStore = (store, prefix) => {
+              for (let i = 0; i < store.length; i++) {
+                const k = store.key(i) || '';
+                const v = String(store.getItem(k) || '');
+                if (sharedAdminCode && sharedAdminCode.length >= 6 && v.includes(sharedAdminCode)) {
+                  leakedStorageKeys.push(`${prefix}:${k}(관리자 코드 노출)`);
+                }
+                if (adminSheetUrl && adminSheetUrl.length >= 20 && v.includes(adminSheetUrl)) {
+                  leakedStorageKeys.push(`${prefix}:${k}(시트 URL 노출)`);
+                }
+              }
+            };
+            checkStore(localStorage, 'local');
+            checkStore(sessionStorage, 'session');
+          } catch {}
+
+          if (leakedStorageKeys.length > 0) {
+            setSecCheckResult(id, 'err', `브라우저 저장소 민감 정보 잔존 감지: ${leakedStorageKeys.join(', ')}`, {
+              reason: '기기 로컬/세션 저장소에 관리자 코드 또는 시트 주소 원문이 남아 있습니다.',
+              solution: '로그아웃 후 브라우저 사이트 데이터를 초기화하고 다시 로그인해 주세요.',
+              actions: [{ label: '🔄 앱 새로고침', type: 'reload', primary: true }]
+            });
+          } else if (disabledCore.length > 0) {
+            setSecCheckResult(id, 'warn', `핵심 실시간 방어 기능 ${disabledCore.length}개 꺼짐: ${disabledCore.join(', ')}`, {
+              reason: '핵심 방어 스위치가 꺼져 있으면 악성 입력, 피싱 링크, 복제 도메인 접속을 자동으로 차단·알림하지 못합니다.',
+              solution: '아래 [🛡️ 핵심 방어 4종 일괄 켜기] 버튼을 눌러 즉시 복구해 주세요.',
+              actions: [{ label: '🛡️ 핵심 방어 4종 일괄 켜기', type: 'enable_core_defense', primary: true }]
+            });
+          } else {
+            setSecCheckResult(id, 'ok', '핵심 실시간 방어 4종 모두 ON · 브라우저 저장소 민감정보(코드·시트URL) 노출 0건 확인');
+          }
         }
       } catch (err) {
         setSecCheckResult(id, 'err', `보안 점검 오류: ${(err && err.message) ? err.message : '알 수 없는 오류'}`, {
@@ -23193,7 +23416,7 @@
           `${errItems.map(it => it.title).join(', ')} 항목을 확인하고 조치해 주세요.`
         );
       }
-      showToast('🛡️ 전체 7개 보안 항목 일괄 점검이 완료되었습니다!');
+      showToast(`🛡️ 전체 ${SEC_CHECK_ITEMS.length}개 보안 항목 일괄 점검이 완료되었습니다!`);
     };
 
     window.handleSaveSecurityConfig = async () => {
@@ -23242,6 +23465,10 @@
         if (direct.riskLevel !== 'safe') links = [direct];
       }
 
+      const pii = detectSensitivePii(raw);
+      const rawLower = raw.toLowerCase();
+      const ytRiskHits = YOUTUBE_RISK_KEYWORDS.filter(k => rawLower.includes(k.toLowerCase()));
+
       const reasons = [];
       let level = 'ok';
       if (!xss.safe) {
@@ -23253,11 +23480,20 @@
         else if (l.riskLevel === 'warn' && level === 'ok') level = 'warn';
         reasons.push(`[피싱/링크] ${l.url} → ${l.reasons.join(', ')}`);
       });
+      if (pii.found) {
+        if (pii.reasons.some(r => r.includes('주민등록번호') || r.includes('카드번호'))) level = 'err';
+        else if (level === 'ok') level = 'warn';
+        reasons.push(`[개인정보 노출] ${pii.reasons.join(', ')} 포함됨`);
+      }
+      if (ytRiskHits.length > 0) {
+        if (level === 'ok') level = 'warn';
+        reasons.push(`[저작권·위험 키워드] ${ytRiskHits.join(', ')}`);
+      }
 
       out.classList.remove('hidden');
       if (level === 'ok') {
         out.className = 'sec-test-result ok';
-        out.innerHTML = '<b>✅ 안전 판정</b><br>악성 스크립트(XSS)나 피싱·위험 링크 패턴이 감지되지 않았습니다.';
+        out.innerHTML = '<b>✅ 안전 판정</b><br>악성 스크립트(XSS), 피싱·위험 링크, 민감 개인정보, 저작권 위험 키워드가 감지되지 않았습니다.';
       } else if (level === 'warn') {
         out.className = 'sec-test-result warn';
         out.innerHTML = `<b>⚠️ 주의 필요 (의심 요소 ${reasons.length}건)</b><br>• ${reasons.map(escapeHtml).join('<br>• ')}`;
@@ -24436,9 +24672,10 @@
         alerts.push(`최근 24시간 보안 위협·차단 ${recentBlocked.length}건`);
       }
 
-      // 저장된 콘텐츠 내 XSS 흔적 빠른 검사
+      // 저장된 콘텐츠 내 XSS 흔적 빠른 검사 (공지·영상·문의 포함)
       const hasXss = (notices || []).some(n => !detectMaliciousCode(`${n.title || ''} ${n.body || ''}`).safe)
-        || (videoItems || []).some(v => !detectMaliciousCode(`${v.title || ''} ${v.note || ''}`).safe);
+        || (videoItems || []).some(v => !detectMaliciousCode(`${v.title || ''} ${v.note || ''}`).safe)
+        || (inquiries || []).some(q => !detectMaliciousCode(`${q.title || ''} ${q.body || ''}`).safe);
       if (hasXss) {
         alerts.push('게시물·영상 내 악성 스크립트 흔적 발견');
       }
