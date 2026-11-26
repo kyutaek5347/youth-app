@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=193" />
+  <link rel="manifest" href="./manifest.json?v=194" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=193" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=193" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=194" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=194" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3441,7 +3441,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=193" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=194" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5099,7 +5099,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 193;
+    const APP_CLIENT_BUILD = 194;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_SEEN_ADMIN_IDS = 'right_youth_seen_admin_ids_v1';
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
@@ -6007,7 +6007,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=193" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=194" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6031,8 +6031,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=193', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=193', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=194', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=194', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -11326,53 +11326,59 @@
 
     // (A-2) 사이트 바로가기 관리 (독립 탭)
     function renderManageQuickLinks(el, user) {
+      const qlOpen = isManageSectionOpen('ql_main', true);
       el.innerHTML = `
-        ${buildManageSectionHead({
+        ${buildManageAccordionBar({
           key: 'ql_main',
-          defaultTitle: `${getTabIcon('manageQuickLinks')} ${getTabLabel('manageQuickLinks')}`,
-          rightHtml: '<button class="btn-admin" onclick="openAddQuickLinkModal()">+ 새 사이트</button>'
+          titleHtml: `${escapeHtml(getTabIcon('manageQuickLinks'))} ${escapeHtml(getTabLabel('manageQuickLinks'))}`,
+          badgeHtml: `<span class="tag slate">${quickLinks.length}개</span>`,
+          actionHtml: '<button class="btn-admin" type="button" style="padding:6px 10px; font-size:11.5px;" onclick="openAddQuickLinkModal()">+ 새 사이트</button>',
+          defaultOpen: true
         })}
-        <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-          여기서 추가·수정·순서 변경(▲/▼)한 사이트 목록이 하단 <b>${escapeHtml(getTabIcon('more'))} ${escapeHtml(getTabLabel('more'))}</b> 메뉴에 실시간 반영됩니다.
-        </div>
-        ${quickLinks.length === 0
-          ? `<div class="card" style="text-align:center;color:#64748B;font-size:13px;">등록된 ${escapeHtml(getTabLabel('manageQuickLinks'))} 항목이 없습니다.<br>인스타·유튜브·교회 홈페이지 등을 추가해 보세요.</div>`
-          : quickLinks.map((ql, idx) => {
-              const theme = getQuickLinkTheme(ql.theme);
-              const safeManageUrl = normalizeExternalUrl(ql.url);
-              const hasUrl = !!safeManageUrl;
-              return `
-                <div class="card">
-                  <div class="layout-item-head">
-                    <div style="display:flex; align-items:center; gap:9px; min-width:0; flex:1;">
-                      <span style="width:34px; height:34px; border-radius:10px; background:${theme.css}; color:${theme.darkText ? '#191919' : '#fff'}; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">${theme.svg}</span>
-                      <div style="min-width:0; flex:1;">
-                        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                          <strong style="font-size:14px;">${idx + 1}. ${escapeHtml(ql.label)}</strong>
-                          ${hasUrl ? '<span class="tag green">연결됨</span>' : '<span class="tag warm">주소 미등록</span>'}
-                        </div>
-                        <div style="font-size:11.5px; color:#64748B; margin-top:3px; word-break:break-all; line-height:1.4;">
-                          ${hasUrl ? escapeHtml(ql.url) : '수정 버튼을 눌러 사이트 주소를 입력해 주세요'}
+        <div data-acc-body="ql_main" class="${qlOpen ? '' : 'hidden'}">
+          <div class="info-box" style="margin-top:0; margin-bottom:12px;">
+            여기서 추가·수정·순서 변경(▲/▼)한 사이트 목록이 하단 <b>${escapeHtml(getTabIcon('more'))} ${escapeHtml(getTabLabel('more'))}</b> 메뉴에 실시간 반영됩니다.
+          </div>
+          ${quickLinks.length === 0
+            ? `<div class="card" style="text-align:center;color:#64748B;font-size:13px;">등록된 ${escapeHtml(getTabLabel('manageQuickLinks'))} 항목이 없습니다.<br>인스타·유튜브·교회 홈페이지 등을 추가해 보세요.</div>`
+            : quickLinks.map((ql, idx) => {
+                const theme = getQuickLinkTheme(ql.theme);
+                const safeManageUrl = normalizeExternalUrl(ql.url);
+                const hasUrl = !!safeManageUrl;
+                return `
+                  <div class="card">
+                    <div class="layout-item-head">
+                      <div style="display:flex; align-items:center; gap:9px; min-width:0; flex:1;">
+                        <span style="width:34px; height:34px; border-radius:10px; background:${theme.css}; color:${theme.darkText ? '#191919' : '#fff'}; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">${theme.svg}</span>
+                        <div style="min-width:0; flex:1;">
+                          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                            <strong style="font-size:14px;">${idx + 1}. ${escapeHtml(ql.label)}</strong>
+                            ${hasUrl ? '<span class="tag green">연결됨</span>' : '<span class="tag warm">주소 미등록</span>'}
+                          </div>
+                          <div style="font-size:11.5px; color:#64748B; margin-top:3px; word-break:break-all; line-height:1.4;">
+                            ${hasUrl ? escapeHtml(ql.url) : '수정 버튼을 눌러 사이트 주소를 입력해 주세요'}
+                          </div>
                         </div>
                       </div>
+                      <div class="order-btns">
+                        <button class="order-btn" onclick="moveQuickLink(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                        <button class="order-btn" onclick="moveQuickLink(${idx}, 1)" ${idx === quickLinks.length - 1 ? 'disabled' : ''}>▼</button>
+                      </div>
                     </div>
-                    <div class="order-btns">
-                      <button class="order-btn" onclick="moveQuickLink(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
-                      <button class="order-btn" onclick="moveQuickLink(${idx}, 1)" ${idx === quickLinks.length - 1 ? 'disabled' : ''}>▼</button>
+                    <div class="card-footer">
+                      ${hasUrl
+                        ? `<a href="${escapeHtml(safeManageUrl)}" target="_blank" rel="noopener noreferrer" class="btn-sm" style="text-decoration:none;">열기 테스트 ↗</a>`
+                        : `<button class="btn-sm primary" type="button" onclick="openEditQuickLinkModal('${escapeJsAttr(ql.id)}')">주소 입력하기</button>`}
+                      <div style="display:flex; gap:6px;">
+                        <button class="btn-sm" onclick="openEditQuickLinkModal('${escapeJsAttr(ql.id)}')">수정</button>
+                        <button class="btn-sm danger" onclick="deleteQuickLink('${escapeJsAttr(ql.id)}')">삭제</button>
+                      </div>
                     </div>
                   </div>
-                  <div class="card-footer">
-                    ${hasUrl
-                      ? `<a href="${escapeHtml(safeManageUrl)}" target="_blank" rel="noopener noreferrer" class="btn-sm" style="text-decoration:none;">열기 테스트 ↗</a>`
-                      : `<button class="btn-sm primary" type="button" onclick="openEditQuickLinkModal('${escapeJsAttr(ql.id)}')">주소 입력하기</button>`}
-                    <div style="display:flex; gap:6px;">
-                      <button class="btn-sm" onclick="openEditQuickLinkModal('${escapeJsAttr(ql.id)}')">수정</button>
-                      <button class="btn-sm danger" onclick="deleteQuickLink('${escapeJsAttr(ql.id)}')">삭제</button>
-                    </div>
-                  </div>
-                </div>
-              `;
-            }).join('')}
+                `;
+              }).join('')}
+          ${quickLinks.length >= 4 ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('ql_main', true)">▲ ${escapeHtml(getTabLabel('manageQuickLinks'))} 목록 접기</button>` : ''}
+        </div>
       `;
     }
 
@@ -15506,6 +15512,7 @@
       const btn = document.getElementById('saveQuickLinkBtn');
       btn.disabled = true;
       try {
+        manageSectionOpen.ql_main = true;
         await saveQuickLinksToCloud(next, id ? `${getTabLabel('manageQuickLinks')} 항목이 수정되었습니다!` : `새 ${getTabLabel('manageQuickLinks')} 항목이 추가되었습니다!`);
         recordAuditLog({
           actorType: 'admin',
