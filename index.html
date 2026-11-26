@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=239" />
+  <link rel="manifest" href="./manifest.json?v=240" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=239" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=239" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=240" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=240" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4000,7 +4000,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=239" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=240" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5825,10 +5825,10 @@
     const authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 31;
-    const APP_CLIENT_BUILD = 239;
+    const CURRENT_SCHEMA_VERSION = 32;
+    const APP_CLIENT_BUILD = 240;
     const APP_BOOT_TS = Date.now();
-    const SHEET_SCHEMA_VERSION = 'v10.139-10tab-fast-split';
+    const SHEET_SCHEMA_VERSION = 'v10.140-10tab-fast-split';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
       { id: 'members', name: '회원 명단', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '성명·역할·가입일·상태·이전이름 (생일 열 폐기)' },
@@ -6832,7 +6832,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=239" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=240" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6856,8 +6856,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=239', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=239', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=240', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=240', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -11293,6 +11293,7 @@
     }
 
     function applyScreen() {
+      if (typeof syncTermsAndGuidesAutomatically === 'function') syncTermsAndGuidesAutomatically();
       const loginEl = document.getElementById('loginScreen');
       const mainAppEl = document.getElementById('mainApp');
       const maintEl = document.getElementById('maintenanceScreen');
@@ -11665,9 +11666,9 @@
             `<b>공지 · 광고 · 소식 확인:</b> <b>${hLbl}</b> 상단 고정 배너와 하단 공지 목록에서 청년부 소식을 확인합니다. 구분 칩(전체/공지/광고/소식/행사 등)으로 필터링할 수 있으며, 카드를 누르면 전체 본문이 열립니다.`,
             `<b>새가족 환영 배너:</b> 새로 온 새가족이 있으면 <b>${hLbl}</b> 상단에 환영 배너가 자동으로 표시됩니다.`,
             `<b>예배 · 특별 행사 출석 체크:</b> 설정된 주일 예배 시간(기본 일요일 14:00~15:30) 또는 특별 행사 시간에만 <b>${hLbl}</b> 맨 위에 <b>초록색 출석 카드</b>가 자동으로 나타납니다.`,
-            `<b>1인 1회 출석 확인:</b> <b>[출석하기]</b> 버튼을 누르면 즉시 출석이 기록되고 카드가 자동으로 숨겨집니다. 출석 완료 여부와 최근 출석 기록은 하단 <b>[${stIcn} ${stLbl}] → 👤 내 계정 관리</b>에서 언제든 확인할 수 있습니다.`
+            `<b>출석O / 출석X 선택 및 빈칸 유지:</b> <b>[출석O]</b> 또는 <b>[출석X]</b> 버튼을 누르면 해당 일요일 예배·행사 날짜(요일·행사명 포함) 칸에 <b>출석O</b> 또는 <b>출석X</b>가 즉시 기록되고 카드가 닫힙니다. 버튼을 누르지 않은 사람은 출석부에 <b>빈칸</b>으로 남으며, <b>누적 출석</b>은 <b>출석O</b> 횟수만 합산합니다. 최근 기록은 하단 <b>[${stIcn} ${stLbl}] → 👤 내 계정 관리</b>에서 확인할 수 있습니다.`
           ],
-          tip: '출석 시간이 지났거나 깜빡하고 버튼을 못 누른 경우에는 관리자에게 말씀하시면 출석부에 수동으로 반영해 드립니다.'
+          tip: '출석 진행 날짜(일요일 예배·행사)만 출석부에 열이 생성되며, 누르지 않은 사람은 빈칸으로 유지됩니다. 출석 시간이 지났거나 잘못 누른 경우에는 관리자에게 말씀해 주세요.'
         },
         {
           id: 'ug_sermon_ccm',
@@ -11719,6 +11720,18 @@
             '<b>[기기 알림 허용하기]</b>를 눌러 권한을 허용하면 스마트폰 상단 알림으로도 소식을 받을 수 있으며, <b>[🔔 테스트 알림]</b>으로 정상 작동 여부를 바로 확인할 수 있습니다.'
           ],
           tip: '아이폰에서는 반드시 Safari → 공유 → [홈 화면에 추가]로 설치한 앱에서 열어야 기기 알림 허용 버튼이 활성화됩니다.'
+        },
+        {
+          id: 'ug_auto_sync',
+          icon: '🔄',
+          title: '새 기능·업데이트 자동 반영 안내',
+          sub: '앱 버전 및 메뉴·설정 변경 시 설명서와 약관이 함께 최신화됩니다',
+          keywords: '업데이트 자동 변경 반영 버전 동기화 설명서 이용약관',
+          steps: [
+            `<b>자동 최신화:</b> 새 버전(현재 빌드 <b>b${APP_CLIENT_BUILD}</b>)이나 메뉴 이름·이모지·설정 변경 사항이 적용될 때 사용방법 설명서와 이용약관도 최신 기능 기준으로 자동 반영됩니다.`,
+            '<b>최신 화면 보기:</b> 새 업데이트가 올라오면 앱을 새로고침하거나 서비스 워커 업데이트를 적용해 최신 설명서와 이용약관을 확인하실 수 있습니다.'
+          ],
+          tip: '관리자가 하단 메뉴 이름이나 이모지를 변경하더라도 설명서 안내 문구에 실시간으로 연동됩니다.'
         }
       ];
     }
@@ -24409,7 +24422,7 @@
       if (data.multiTab === true || data.supportsAttendanceSplit === true || data.supportsSchemaInspect === true || data.supportsBatchSync === true) return true;
       if (Number(data.tabCount || 0) >= 3) return true;
       if (String(data.message || '').includes('탭')) return true;
-      if (String(data.version || '').includes('v10.136') || String(data.version || '').includes('v10.137') || String(data.version || '').includes('v10.138') || String(data.version || '').includes('v10.139')) return true;
+      if (String(data.version || '').includes('v10.136') || String(data.version || '').includes('v10.137') || String(data.version || '').includes('v10.138') || String(data.version || '').includes('v10.139') || String(data.version || '').includes('v10.140')) return true;
       if (data.result && typeof data.result === 'object') return true;
       return false;
     }
@@ -24425,7 +24438,8 @@
         || String(data.version || '').includes('v10.136')
         || String(data.version || '').includes('v10.137')
         || String(data.version || '').includes('v10.138')
-        || String(data.version || '').includes('v10.139');
+        || String(data.version || '').includes('v10.139')
+        || String(data.version || '').includes('v10.140');
     }
 
     function isSheetResponseFastBatch(data) {
@@ -30126,54 +30140,86 @@
 
 
     // ==================== 27. 이용약관(회칙 기반) · 회칙 관리자 CRUD ====================
-    // --- (A) 라이트 청년부 앱 이용약관 (회칙 제1장~제7장 참고 기본 8개 조항 + 관리자 추가/수정/삭제) ---
-    const DEFAULT_TERMS_ARTICLES = [
-      {
-        id: 'tos_1',
-        title: '제1조 (목적 및 적용 범위)',
-        body: '① 본 약관은 기독교대한감리회 구미제일교회 라이트 청년부(이하 "본회")가 운영하는 라이트 청년부 웹 앱(이하 "앱")의 이용 조건, 회원 및 관리자의 권리·의무, 운영 기준을 정함을 목적으로 합니다.\n② 본 약관에서 정하지 않은 공동체 조직·회원·회의·운영에 관한 사항은 「구미제일감리교회 라이트 청년부 회칙」(제1조~제28조)을 따릅니다.'
-      },
-      {
-        id: 'tos_2',
-        title: '제2조 (회원 자격 및 가입·승인)',
-        body: '① 앱의 이용 자격은 회칙 제4조에 따라 본회에 등록하여 출석하는 20세 이상 40세 미만의 미혼남녀 청년 및 본회 지도교역자·부장·교사 등 관계자로 합니다.\n② 신규 회원가입은 본회가 발급한 당일 유효 초대 QR 코드를 통해 신청하며, 본인 성명·역할을 정확히 입력한 뒤 관리자의 승인을 거쳐 정식 이용이 가능합니다.\n③ 허위 정보 기재, 타인 사칭 또는 공동체 목적에 반하는 신청은 보류·거절될 수 있습니다.'
-      },
-      {
-        id: 'tos_3',
-        title: '제3조 (회원의 권리와 의무)',
-        body: '① 승인된 회원은 앱에서 공지·소식 열람, 예배·행사 출석 체크, 설교·찬양 영상 시청 및 추천, 회칙 열람, 문의 사항 등록 등의 기능을 이용할 수 있습니다.\n② 회원은 회칙 제6조에 따라 예배와 교육에 성실히 참여하고 교회 질서와 회칙을 준수하며, 앱 내 소통 공간에서 공동체의 덕을 세우는 언어와 태도를 지켜야 합니다.\n③ 타인의 계정을 도용하거나, 악성 코드·피싱 링크 삽입, 도배 행위 등 앱의 정상적인 운영을 방해하는 행위는 금지됩니다.'
-      },
-      {
-        id: 'tos_4',
-        title: '제4조 (개인정보 최소 수집 및 프라이버시 보호)',
-        body: '① 본 앱은 개인정보 피해 가능성을 최소화하기 위해 전화번호·집주소·주민등록번호·생년월일·이메일을 수집하지 않으며, 공동체 운영에 꼭 필요한 [성명]만 수집합니다.\n② 로그인 비밀번호는 암호화되어 저장되며 관리자를 포함한 누구도 열람할 수 없습니다.\n③ 회원의 글자 크기 및 알림 설정은 오직 본인 기기에만 저장되며 관리자에게 공개되거나 로그에 기록되지 않습니다.\n④ 회칙 제18조 제3항의 정신에 따라 개인의 신앙생활 및 상담과 관련된 비밀사항은 철저히 보호합니다.'
-      },
-      {
-        id: 'tos_5',
-        title: '제5조 (영상 추천 · 문의 사항 및 보안 로그)',
-        body: '① 회원이 작성한 설교·찬양 영상 추천과 문의 사항의 책임은 작성자 본인에게 있으며, 본인이 작성한 글은 언제든 직접 수정·삭제할 수 있습니다.\n② 비방·욕설·허위사실 유포·광고성 스팸·악성 링크 등 공동체 질서를 해치는 게시물은 사전 통보 없이 차단 또는 삭제될 수 있습니다.\n③ 건전한 공동체 운영과 보안 사고 예방을 위해 관리자 활동 전반과 회원의 영상 추천(등록·수정·삭제), 문의 사항(작성·수정·삭제), 이름 변경 신청, 가입·탈퇴, 출석 체크 내역은 삭제 불가 보안 로그에 기록됩니다.'
-      },
-      {
-        id: 'tos_6',
-        title: '제6조 (운영 조직 및 관리 권한)',
-        body: '① 앱의 공지·배너 게시, 회원 승인, 역할 배정, 출석부·보안 관리 권한은 회칙 제7조·제8조에 따른 지도교역자·부장·회장 및 위임받은 최고 관리자에게 부여됩니다.\n② 관리자는 회원의 개인정보를 본회 사역 외의 목적으로 외부에 유출하거나 무단 이용해서는 안 되며, 임기 종료·인수인계 시 즉시 관리자 권한을 해제하고 관리자 코드를 변경하여야 합니다.'
-      },
-      {
-        id: 'tos_7',
-        title: '제7조 (저작권 및 출처 준수)',
-        body: '① 앱에 연결되는 설교·찬양 영상은 교회 및 원작자가 운영하는 공식 유튜브 채널 링크를 기준으로 하며, 무단 복제·불법 업로드 영상은 공유하지 않습니다.\n② 관리자 및 회원은 외부 저작물(유료 번역본·도서·기사·음원 등)을 무단 복제하여 게시해서는 안 되며, 허용된 범위 내 인용 시 반드시 출처를 표기하여야 합니다.'
-      },
-      {
-        id: 'tos_8',
-        title: '제8조 (회원 탈퇴, 자격 상실 및 약관 개정)',
-        body: '① 회원은 언제든지 앱 내 [설정 → 내 계정 관리 → 계정 삭제]를 통해 직접 탈퇴할 수 있으며, 탈퇴 시 계정 정보는 즉시 삭제됩니다.\n② 회칙 제4조 제2항에 따라 소속 변경 또는 회원 자격 상실 사유가 발생한 경우 지도교역자·부장·회장의 확인을 거쳐 회원 명부에서 정리될 수 있습니다.\n③ 본 약관은 공동체 운영 필요 또는 회칙 개정에 따라 수정될 수 있으며, 변경 사항은 앱 공지 및 이용약관 화면을 통해 안내합니다.'
+    // --- (A) 라이트 청년부 앱 이용약관 (회칙 제1장~제7장 준거 + 신규 기능·업데이트 자동 최신화 연동) ---
+    function buildDynamicTermsArticles() {
+      const mngLbl = getTabLabel('manage');
+      const attLbl = getTabLabel('manageAttendance');
+      const shLbl = getTabLabel('manageSheet');
+      const vBuild = `b${APP_CLIENT_BUILD}`;
+
+      return [
+        {
+          id: 'tos_1',
+          title: '제1조 (목적 및 적용 범위)',
+          body: '① 본 약관은 기독교대한감리회 구미제일교회 라이트 청년부(이하 "본회")가 운영하는 라이트 청년부 웹 앱(이하 "앱")의 이용 조건, 회원 및 관리자의 권리·의무, 운영 기준을 정함을 목적으로 합니다.\n② 본 약관에서 정하지 않은 공동체 조직·회원·회의·운영에 관한 사항은 「구미제일감리교회 라이트 청년부 회칙」(제1조~제28조)을 따릅니다.'
+        },
+        {
+          id: 'tos_2',
+          title: '제2조 (회원 자격 및 가입·승인)',
+          body: '① 앱의 이용 자격은 회칙 제4조에 따라 본회에 등록하여 출석하는 20세 이상 40세 미만의 미혼남녀 청년 및 본회 지도교역자·부장·교사 등 관계자로 합니다.\n② 신규 회원가입은 본회가 발급한 유효 초대 QR 코드를 통해 신청하며, 본인 성명·역할을 정확히 입력한 뒤 관리자의 승인을 거쳐 정식 이용이 가능합니다.\n③ 허위 정보 기재, 타인 사칭 또는 공동체 목적에 반하는 신청은 보류·거절될 수 있습니다.'
+        },
+        {
+          id: 'tos_3',
+          title: '제3조 (회원의 권리와 의무)',
+          body: '① 승인된 회원은 앱에서 공지·소식 열람, 예배·행사 출석 체크, 설교·찬양 영상 시청 및 추천, 회칙 열람, 문의 사항 등록 등의 기능을 이용할 수 있습니다.\n② 회원은 회칙 제6조에 따라 예배와 교육에 성실히 참여하고 교회 질서와 회칙을 준수하며, 앱 내 소통 공간에서 공동체의 덕을 세우는 언어와 태도를 지켜야 합니다.\n③ 타인의 계정을 도용하거나, 악성 코드·피싱 링크 삽입, 도배 행위 등 앱의 정상적인 운영을 방해하는 행위는 금지됩니다.'
+        },
+        {
+          id: 'tos_4',
+          title: '제4조 (출석부 운영 및 기록 기준)',
+          body: `① 출석 체크는 일요일 정기 예배 및 등록된 특별 행사 등 출석이 진행되는 날에 한해 운영되며, 회원이 [출석O] 또는 [출석X]를 선택하면 해당 날짜(요일·행사명 포함) 열에 즉시 기록됩니다.\n② 출석 버튼을 누르지 않은 인원은 해당 날짜 칸을 빈칸으로 유지하며, 누적 출석은 [출석O] 횟수만 집계합니다.\n③ 출석부 데이터는 [${mngLbl} → ${attLbl} / ${shLbl}] 및 연결된 출석부 시트를 통해 운영·관리됩니다.`
+        },
+        {
+          id: 'tos_5',
+          title: '제5조 (개인정보 최소 수집 및 프라이버시 보호)',
+          body: '① 본 앱은 개인정보 피해 가능성을 최소화하기 위해 전화번호·집주소·주민등록번호·생년월일·이메일을 수집하지 않으며, 공동체 운영에 꼭 필요한 [성명]만 수집합니다.\n② 로그인 비밀번호는 암호화되어 저장되며 관리자를 포함한 누구도 열람할 수 없습니다.\n③ 회원의 글자 크기 및 알림 설정은 오직 본인 기기에만 저장되며 관리자에게 공개되거나 로그에 기록되지 않습니다.\n④ 회칙 제18조 제3항의 정신에 따라 개인의 신앙생활 및 상담과 관련된 비밀사항은 철저히 보호합니다.'
+        },
+        {
+          id: 'tos_6',
+          title: '제6조 (영상 추천 · 문의 사항 및 보안 로그)',
+          body: '① 회원이 작성한 설교·찬양 영상 추천과 문의 사항의 책임은 작성자 본인에게 있으며, 본인이 작성한 글은 언제든 직접 수정·삭제할 수 있습니다.\n② 비방·욕설·허위사실 유포·광고성 스팸·악성 링크 등 공동체 질서를 해치는 게시물은 사전 통보 없이 차단 또는 삭제될 수 있습니다.\n③ 건전한 공동체 운영과 보안 사고 예방을 위해 관리자 활동 전반과 회원의 영상 추천(등록·수정·삭제), 문의 사항(작성·수정·삭제), 이름 변경 신청, 가입·탈퇴, 출석 체크 내역은 삭제 불가 보안 로그에 기록됩니다.'
+        },
+        {
+          id: 'tos_7',
+          title: '제7조 (운영 조직 및 관리 권한)',
+          body: '① 앱의 공지·배너 게시, 회원 승인, 역할 배정, 출석부·보안 관리 권한은 회칙 제7조·제8조에 따른 지도교역자·부장·회장 및 위임받은 최고 관리자에게 부여됩니다.\n② 관리자는 회원의 개인정보를 본회 사역 외의 목적으로 외부에 유출하거나 무단 이용해서는 안 되며, 임기 종료·인수인계 시 즉시 관리자 권한을 해제하고 관리자 코드를 변경하여야 합니다.'
+        },
+        {
+          id: 'tos_8',
+          title: '제8조 (저작권 및 출처 준수)',
+          body: '① 앱에 연결되는 설교·찬양 영상은 교회 및 원작자가 운영하는 공식 유튜브 채널 링크를 기준으로 하며, 무단 복제·불법 업로드 영상은 공유하지 않습니다.\n② 관리자 및 회원은 외부 저작물(유료 번역본·도서·기사·음원 등)을 무단 복제하여 게시해서는 안 되며, 허용된 범위 내 인용 시 반드시 출처를 표기하여야 합니다.'
+        },
+        {
+          id: 'tos_9',
+          title: '제9조 (회원 탈퇴, 자격 상실 및 약관·설명서 자동 최신화)',
+          body: `① 회원은 언제든지 앱 내 [설정 → 내 계정 관리 → 계정 삭제]를 통해 직접 탈퇴할 수 있으며, 탈퇴 시 계정 정보는 즉시 삭제됩니다.\n② 회칙 제4조 제2항에 따라 소속 변경 또는 회원 자격 상실 사유가 발생한 경우 지도교역자·부장·회장의 확인을 거쳐 회원 명부에서 정리될 수 있습니다.\n③ 신규 기능이 추가되거나 시스템 업데이트(${vBuild}) 및 메뉴·설정 변경이 이루어질 때 이용약관과 사용방법 설명서 역시 변경 사항을 반영해 자동으로 최신화됩니다.`
+        }
+      ];
+    }
+
+    const DEFAULT_TERMS_ARTICLES = buildDynamicTermsArticles();
+
+    function syncTermsAndGuidesAutomatically() {
+      const freshDefaultTerms = buildDynamicTermsArticles();
+      DEFAULT_TERMS_ARTICLES.splice(0, DEFAULT_TERMS_ARTICLES.length, ...freshDefaultTerms);
+      if (Array.isArray(customTermsArticles) && customTermsArticles.length > 0) {
+        const defaultMap = new Map(freshDefaultTerms.map(t => [t.id, t]));
+        customTermsArticles = customTermsArticles.map(art => {
+          if (art && art.id && defaultMap.has(art.id) && !art.manuallyEdited) {
+            return { ...defaultMap.get(art.id) };
+          }
+          return art;
+        });
       }
-    ];
+      if (currentMainTab === 'terms') renderTermsView();
+      if (currentMainTab === 'guide') renderUserGuideView();
+      if (currentMainTab === 'manage' && currentManageSubTab === 'guide') renderManageSubTab('guide');
+    }
 
     function getActiveTermsArticles() {
-      return (Array.isArray(customTermsArticles) && customTermsArticles.length > 0)
+      const baseList = (Array.isArray(customTermsArticles) && customTermsArticles.length > 0)
         ? customTermsArticles
-        : DEFAULT_TERMS_ARTICLES;
+        : buildDynamicTermsArticles();
+      return baseList;
     }
 
     function renderTermsView() {
