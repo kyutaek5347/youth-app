@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=231" />
+  <link rel="manifest" href="./manifest.json?v=232" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=231" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=231" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=232" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=232" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4000,7 +4000,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=231" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=232" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5826,7 +5826,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 31;
-    const APP_CLIENT_BUILD = 231;
+    const APP_CLIENT_BUILD = 232;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -6824,7 +6824,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=231" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=232" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6848,8 +6848,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=231', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=231', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=232', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=232', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -11320,8 +11320,7 @@
       if (currentMainTab === 'bible' || currentMainTab === 'qt') currentMainTab = 'home';
       if (currentMainTab === 'manage' && !canManage) currentMainTab = 'home';
 
-      const isManageMode = currentMainTab === 'manage';
-      themeMeta.setAttribute('content', isManageMode ? '#0B0F19' : '#111827');
+      themeMeta.setAttribute('content', '#FFFFFF');
 
       const previewBar = document.getElementById('previewMemberBar');
       const isAnyPreview = previewAsMemberMode || previewAsObserverMode;
@@ -11336,18 +11335,18 @@
       }
 
       const header = document.getElementById('appHeader');
-      header.className = `header ${isManageMode ? 'dark' : 'light'}`;
+      header.className = 'header light';
 
       const badge = document.getElementById('headerRoleBadge');
       badge.textContent = user.role.name;
       badge.style.background = user.role.color;
       document.getElementById('headerSubText').textContent = `${user.name}님`;
-      renderHeaderActions(isManageMode);
+      renderHeaderActions(false);
 
       const pendingCount = getManageTotalBadgeCount();
 
       const tabbar = document.getElementById('appTabbar');
-      tabbar.className = `tabbar ${isManageMode ? 'dark' : 'light'}`;
+      tabbar.className = 'tabbar light';
       const orderedTabs = getValidTabOrder().filter(k => k !== 'manage' || canManage);
       const isMoreOpen = document.getElementById('quickLinksSheet').classList.contains('open');
       const activeVisualTab = (currentMainTab === 'bylaws' || currentMainTab === 'guide' || currentMainTab === 'terms') ? 'settings' : (currentMainTab === 'videos' ? 'home' : currentMainTab);
@@ -11427,205 +11426,18 @@
       manage: 'viewManage'
     };
 
-    function getActiveMainSectionEl() {
-      const id = MAIN_VIEW_ID_MAP[currentMainTab];
-      return id ? document.getElementById(id) : null;
-    }
-
-    function getSwipeableMainTabs(user) {
-      if (!user || !user.role) return [];
-      const canManage = hasAnyManagePerm(user.role.perms);
-      return getValidTabOrder().filter(k => k !== 'more' && (k !== 'manage' || canManage));
-    }
-
-    window.switchMainTab = (tab, swipeDir = '') => {
+    window.switchMainTab = (tab) => {
       if (currentMainTab === 'manage' && currentManageSubTab === 'sheet' && tab !== 'manage' && typeof finalizeViewedLinkedSheetNewTabs === 'function') finalizeViewedLinkedSheetNewTabs();
       document.getElementById('quickLinksSheet').classList.remove('open');
       if (currentMainTab === 'manage' && tab !== 'manage') {
         draftTabInitialized = false;
       }
-      const changed = currentMainTab !== tab;
       if (tab !== 'home' && typeof stopHomeTopBannerAutoSlide === 'function') {
         stopHomeTopBannerAutoSlide();
       }
       currentMainTab = tab;
       applyScreen();
-      if (changed && (swipeDir === 'next' || swipeDir === 'prev')) {
-        try { window.scrollTo({ top: 0, behavior: 'instant' }); } catch { window.scrollTo(0, 0); }
-        const nextEl = getActiveMainSectionEl();
-        if (nextEl) {
-          const animCls = swipeDir === 'next' ? 'swipe-enter-right' : 'swipe-enter-left';
-          nextEl.classList.remove('swipe-enter-right', 'swipe-enter-left');
-          void nextEl.offsetWidth;
-          nextEl.classList.add(animCls);
-          setTimeout(() => nextEl.classList.remove(animCls), 240);
-        }
-      }
     };
-
-    function initMainScreenSwipe() {
-      const mainEl = document.getElementById('appMain');
-      if (!mainEl || mainEl.dataset.swipeBound === '1') return;
-      mainEl.dataset.swipeBound = '1';
-
-      let tracking = false;
-      let locked = ''; // '' | 'h' | 'v'
-      let startX = 0;
-      let startY = 0;
-      let lastDx = 0;
-      let lastDy = 0;
-      let startTs = 0;
-      let activeEl = null;
-
-      function isInsideHorizontalScroller(target) {
-        let cur = target;
-        while (cur && cur !== mainEl && cur !== document.body) {
-          if (cur.nodeType === 1) {
-            if (cur.scrollWidth > cur.clientWidth + 4) {
-              const ox = window.getComputedStyle(cur).overflowX;
-              if (ox === 'auto' || ox === 'scroll') return true;
-            }
-          }
-          cur = cur.parentElement;
-        }
-        return false;
-      }
-
-      function getSwipeTargets(user) {
-        if (currentMainTab === 'bylaws' || currentMainTab === 'guide' || currentMainTab === 'terms') {
-          return { prevTab: 'settings', nextTab: null };
-        }
-        if (currentMainTab === 'videos') {
-          return { prevTab: 'home', nextTab: null };
-        }
-        const tabs = getSwipeableMainTabs(user);
-        const idx = tabs.indexOf(currentMainTab);
-        if (idx < 0) return { prevTab: null, nextTab: null };
-        return {
-          prevTab: idx > 0 ? tabs[idx - 1] : null,
-          nextTab: idx < tabs.length - 1 ? tabs[idx + 1] : null
-        };
-      }
-
-      function resetActiveTransform(smooth = false) {
-        const el = activeEl;
-        if (!el) return;
-        if (smooth) {
-          el.style.transition = 'transform 0.18s cubic-bezier(0.22, 1, 0.36, 1)';
-          el.style.transform = 'translateX(0px)';
-          setTimeout(() => {
-            el.style.transition = '';
-            el.style.transform = '';
-          }, 190);
-        } else {
-          el.style.transition = '';
-          el.style.transform = '';
-        }
-      }
-
-      mainEl.addEventListener('touchstart', (e) => {
-        tracking = false;
-        locked = '';
-        lastDx = 0;
-        lastDy = 0;
-        activeEl = null;
-
-        if (!e.touches || e.touches.length !== 1) return;
-        const user = getCurrentUser();
-        if (!user) return;
-        if (document.getElementById('mainApp').classList.contains('hidden')) return;
-        if (document.querySelector('.modal-backdrop.open')) return;
-
-        const t = e.touches[0];
-        if (t.clientX < 20 || t.clientX > window.innerWidth - 20) return;
-
-        const target = e.target;
-        if (target && target.closest && target.closest('.top-banner-carousel, .tab-slide-controls, input, textarea, select, option, iframe, .switch, [contenteditable="true"]')) return;
-        if (typeof findTabSlideBarForTarget === 'function' && findTabSlideBarForTarget(target)) return;
-        if (isInsideHorizontalScroller(target)) return;
-
-        activeEl = getActiveMainSectionEl();
-        if (!activeEl) return;
-
-        tracking = true;
-        startX = t.clientX;
-        startY = t.clientY;
-        startTs = Date.now();
-      }, { passive: true });
-
-      mainEl.addEventListener('touchmove', (e) => {
-        if (!tracking || !e.touches || e.touches.length !== 1) return;
-        const t = e.touches[0];
-        const dx = t.clientX - startX;
-        const dy = t.clientY - startY;
-        lastDx = dx;
-        lastDy = dy;
-
-        if (!locked) {
-          if (Math.hypot(dx, dy) < 12) return;
-          if (Math.abs(dx) > Math.abs(dy) * 1.35) {
-            locked = 'h';
-          } else {
-            locked = 'v';
-            tracking = false;
-            return;
-          }
-        }
-
-        if (locked === 'h' && activeEl) {
-          const user = getCurrentUser();
-          const { prevTab, nextTab } = getSwipeTargets(user);
-          const hasDirTarget = (dx < 0 && !!nextTab) || (dx > 0 && !!prevTab);
-          const offset = hasDirTarget
-            ? Math.max(-64, Math.min(64, dx * 0.3))
-            : Math.max(-16, Math.min(16, dx * 0.08));
-          activeEl.style.transition = 'none';
-          activeEl.style.transform = `translateX(${offset}px)`;
-        }
-      }, { passive: true });
-
-      const finishSwipe = (cancelled = false) => {
-        if (!tracking) return;
-        const wasHorizontal = locked === 'h';
-        const dx = lastDx;
-        const dy = lastDy;
-        const elapsed = Date.now() - startTs;
-        tracking = false;
-        locked = '';
-
-        if (!wasHorizontal || cancelled) {
-          resetActiveTransform(true);
-          activeEl = null;
-          return;
-        }
-
-        const user = getCurrentUser();
-        const { prevTab, nextTab } = getSwipeTargets(user);
-        const passedDist = Math.abs(dx) >= 56 || (Math.abs(dx) >= 34 && elapsed <= 260);
-        const horizontalDominant = Math.abs(dx) > Math.abs(dy) * 1.25;
-
-        if (passedDist && horizontalDominant) {
-          if (dx < 0 && nextTab) {
-            resetActiveTransform(false);
-            activeEl = null;
-            switchMainTab(nextTab, 'next');
-            return;
-          }
-          if (dx > 0 && prevTab) {
-            resetActiveTransform(false);
-            activeEl = null;
-            switchMainTab(prevTab, 'prev');
-            return;
-          }
-        }
-
-        resetActiveTransform(true);
-        activeEl = null;
-      };
-
-      mainEl.addEventListener('touchend', () => finishSwipe(false), { passive: true });
-      mainEl.addEventListener('touchcancel', () => finishSwipe(true), { passive: true });
-    }
 
     // ==================== 10. 회칙 검색 및 렌더링 ====================
     function highlightText(rawText, query) {
@@ -17410,7 +17222,7 @@
         manageTitleEl.textContent = getManageSectionTitle('labels_manage', `${mIcon} ${mName} 상단 탭 (왼쪽 → 오른쪽 순)`);
       }
       syncAllDynamicLabelsUI(draftTabNames, draftTabIcons, draftUiTexts);
-      renderHeaderActions(currentMainTab === 'manage', draftTabNames, draftTabIcons, draftHeaderShortcuts);
+      renderHeaderActions(false, draftTabNames, draftTabIcons, draftHeaderShortcuts);
     }
 
     window.setManageLabelsFilter = (f) => {
@@ -34088,9 +33900,8 @@ ${handleUrl}`);
       queueTabSlideSync();
     }
 
-    // 초기 로드 시 공식 도메인 · HTTPS 즉시 검증 + 화면 좌우 스와이프 활성화
+    // 초기 로드 시 공식 도메인 · HTTPS 즉시 검증 + 탭 슬라이드 활성화
     checkCloneDomainWarning();
-    initMainScreenSwipe();
     initUnifiedTabSlideEngine();
   </script>
 </body>
