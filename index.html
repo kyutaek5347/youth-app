@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=180" />
+  <link rel="manifest" href="./manifest.json?v=181" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=180" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=180" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=181" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=181" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -3107,7 +3107,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=180" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=181" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4655,7 +4655,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 29;
-    const APP_CLIENT_BUILD = 180;
+    const APP_CLIENT_BUILD = 181;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
 
@@ -5536,7 +5536,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=180" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=181" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5560,8 +5560,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=180', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=180', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=181', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=181', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -5978,6 +5978,7 @@
     let inquiriesPermError = false;
     let adminInquiryFilter = 'all';
     let manageContentFilter = 'all';
+    let manageMembersFilter = 'all';
     let lastInquirySubmitTs = 0;
     let videoItems = [];
     let myVideoItems = [];
@@ -11615,145 +11616,242 @@
       `;
     }
 
-    // (C) 회원 승인 · 역할 부여 · 비밀번호 초기화
+    window.setManageMembersFilter = (filterKey) => {
+      const allowed = ['all', 'new', 'rejoin', 'rename', 'reset', 'rejected'];
+      manageMembersFilter = allowed.includes(filterKey) ? filterKey : 'all';
+      const secKeyMap = {
+        new: 'members_new_pending',
+        rejoin: 'members_rejoin_pending',
+        rename: 'members_rename',
+        reset: 'members_reset',
+        rejected: 'members_rejected'
+      };
+      if (secKeyMap[manageMembersFilter]) {
+        manageSectionOpen[secKeyMap[manageMembersFilter]] = true;
+      }
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'members') {
+        renderManageMembers(document.getElementById('manageContent'));
+      }
+    };
+
+    // (C) 회원 승인 · 역할 부여 · 비밀번호 초기화 (승인 종류별 구분)
     function renderManageMembers(el) {
-      const pending = members.filter(m => m.status === 'pending');
+      const pendingAll = members.filter(m => m.status === 'pending');
+      const newPending = pendingAll.filter(m => !memberHistoryMap.has(nameToHex(m.name)));
+      const rejoinPending = pendingAll.filter(m => memberHistoryMap.has(nameToHex(m.name)));
       const renamePending = members.filter(m => m.status === 'approved' && m.pendingName)
         .sort((a, b) => Number(b.pendingNameTs || 0) - Number(a.pendingNameTs || 0));
       const resetPending = members.filter(m => m.status === 'reset_pending');
       const approved = members.filter(m => m.status === 'approved');
       const rejected = members.filter(m => m.status === 'rejected');
 
+      const totalWaitingCount = newPending.length + rejoinPending.length + renamePending.length + resetPending.length + rejected.length;
+
       const roleOptionsHtml = (selectedId) => roles.map(r => `
         <option value="${r.id}" ${r.id === selectedId ? 'selected' : ''}>${escapeHtml(r.name)}</option>
       `).join('');
 
-      const pendingDefaultOpen = pending.length > 0;
-      const pendingOpen = isManageSectionOpen('members_pending', pendingDefaultOpen);
-      const renameOpen = isManageSectionOpen('members_rename', true);
-      const resetOpen = isManageSectionOpen('members_reset', true);
-      const rejectedOpen = isManageSectionOpen('members_rejected', false);
+      const renderPendingSignupCard = (m, isRejoin) => {
+        const reqRoleById = m.requestedRoleId ? roles.find(r => String(r.id) === String(m.requestedRoleId)) : null;
+        const reqRoleName = String(reqRoleById ? reqRoleById.name : (m.requestedRole || '')).trim();
+        const matchedRole = reqRoleById || (reqRoleName ? roles.find(r => r.name.trim() === reqRoleName) : null);
+        const defaultApproveVal = matchedRole ? matchedRole.id : (m.roleId || (roles[0] ? roles[0].id : 'role_youth'));
+        return `
+          <div class="card highlight-pending">
+            <div class="card-top">
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <strong style="font-size:15px;">${escapeHtml(m.name)}</strong>
+                ${isRejoin
+                  ? '<span class="tag warm">🔄 재가입 신청</span>'
+                  : '<span class="tag">🆕 신규 가입</span>'}
+              </div>
+              <span class="card-date">${escapeHtml(m.createdAt)} 신청</span>
+            </div>
+            <div style="font-size:12.5px; color:#475569; margin-top:4px; line-height:1.55;">
+              ${reqRoleName ? `<div>🏷️ <b>신청 역할:</b> <span class="tag" style="margin-left:2px;">${escapeHtml(reqRoleName)}</span></div>` : ''}
+            </div>
+            <div style="display:flex; align-items:center; gap:6px; margin-top:9px; flex-wrap:wrap;">
+              <span style="font-size:12px; font-weight:700; color:#475569;">부여 역할:</span>
+              <select id="approveRole-${m.id}" class="role-select" style="flex:1; min-width:110px;">
+                ${roleOptionsHtml(defaultApproveVal)}
+              </select>
+              <input id="approveRoleCustom-${m.id}" class="form-input" style="flex:1; min-width:110px; padding:5px 8px; font-size:12px;" maxlength="16" placeholder="또는 새 역할 직접 입력" />
+            </div>
+            <div style="display:flex; gap:6px; margin-top:10px;">
+              <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberWithRole('${escapeJsAttr(m.id)}')">✅ 역할 부여 및 승인</button>
+              <button class="btn-sm" style="padding:9px 11px;" onclick="rejectMember('${escapeJsAttr(m.id)}')">보류</button>
+              <button class="btn-sm danger" style="padding:9px 11px;" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>
+            </div>
+          </div>
+        `;
+      };
+
+      const f = manageMembersFilter || 'all';
+      const showNew = f === 'all' || f === 'new';
+      const showRejoin = f === 'all' || f === 'rejoin';
+      const showRename = f === 'all' || f === 'rename';
+      const showReset = f === 'all' || f === 'reset';
+      const showRejected = f === 'all' || f === 'rejected';
+
+      const newDefaultOpen = newPending.length > 0;
+      const newOpen = isManageSectionOpen('members_new_pending', newDefaultOpen);
+      const rejoinDefaultOpen = rejoinPending.length > 0;
+      const rejoinOpen = isManageSectionOpen('members_rejoin_pending', rejoinDefaultOpen);
+      const renameDefaultOpen = renamePending.length > 0;
+      const renameOpen = isManageSectionOpen('members_rename', renameDefaultOpen);
+      const resetDefaultOpen = resetPending.length > 0;
+      const resetOpen = isManageSectionOpen('members_reset', resetDefaultOpen);
+      const rejectedDefaultOpen = false;
+      const rejectedOpen = isManageSectionOpen('members_rejected', rejectedDefaultOpen);
 
       el.innerHTML = `
-        ${buildManageAccordionBar({
-          key: 'members_pending',
-          titleHtml: '⏳ 가입 승인 대기',
-          badgeHtml: `<span class="tag ${pending.length > 0 ? 'warm' : 'slate'}">${pending.length}명</span>`,
-          defaultOpen: pendingDefaultOpen
-        })}
-        <div data-acc-body="members_pending" class="${pendingOpen ? '' : 'hidden'}">
-          ${pending.length === 0
-            ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">현재 승인 대기 중인 신청자가 없습니다.</div>'
-            : pending.map(m => {
-                const reqRoleById = m.requestedRoleId ? roles.find(r => String(r.id) === String(m.requestedRoleId)) : null;
-                const reqRoleName = String(reqRoleById ? reqRoleById.name : (m.requestedRole || '')).trim();
-                const matchedRole = reqRoleById || (reqRoleName ? roles.find(r => r.name.trim() === reqRoleName) : null);
-                const defaultApproveVal = matchedRole ? matchedRole.id : (m.roleId || (roles[0] ? roles[0].id : 'role_youth'));
-                return `
-                  <div class="card highlight-pending">
-                    <div class="card-top">
-                      <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                        <strong style="font-size:15px;">${escapeHtml(m.name)}</strong>
-                        ${memberHistoryMap.has(nameToHex(m.name)) ? '<span class="tag warm">🔄 재가입 신청</span>' : ''}
-                      </div>
-                      <span class="card-date">${escapeHtml(m.createdAt)} 신청</span>
-                    </div>
-                    <div style="font-size:12.5px; color:#475569; margin-top:4px; line-height:1.55;">
-                      ${reqRoleName ? `<div>🏷️ <b>신청 역할:</b> <span class="tag" style="margin-left:2px;">${escapeHtml(reqRoleName)}</span></div>` : ''}
-                    </div>
-                    <div style="display:flex; align-items:center; gap:6px; margin-top:9px; flex-wrap:wrap;">
-                      <span style="font-size:12px; font-weight:700; color:#475569;">부여 역할:</span>
-                      <select id="approveRole-${m.id}" class="role-select" style="flex:1; min-width:110px;">
-                        ${roleOptionsHtml(defaultApproveVal)}
-                      </select>
-                      <input id="approveRoleCustom-${m.id}" class="form-input" style="flex:1; min-width:110px; padding:5px 8px; font-size:12px;" maxlength="16" placeholder="또는 새 역할 직접 입력" />
-                    </div>
-                    <div style="display:flex; gap:6px; margin-top:10px;">
-                      <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberWithRole('${escapeJsAttr(m.id)}')">✅ 역할 부여 및 승인</button>
-                      <button class="btn-sm" style="padding:9px 11px;" onclick="rejectMember('${escapeJsAttr(m.id)}')">보류</button>
-                      <button class="btn-sm danger" style="padding:9px 11px;" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>
-                    </div>
-                  </div>
-                `;
-              }).join('')}
+        <div class="filter-row" style="margin-bottom:10px;">
+          <button class="filter-chip ${f === 'all' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('all')">전체 (${totalWaitingCount})</button>
+          <button class="filter-chip ${f === 'new' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('new')">🆕 신규 가입 (${newPending.length})</button>
+          <button class="filter-chip ${f === 'rejoin' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('rejoin')">🔄 재가입 (${rejoinPending.length})</button>
+          <button class="filter-chip ${f === 'rename' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('rename')">✏️ 이름 변경 (${renamePending.length})</button>
+          <button class="filter-chip ${f === 'reset' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('reset')">🔑 비밀번호 초기화 (${resetPending.length})</button>
+          <button class="filter-chip ${f === 'rejected' ? 'active' : ''}" type="button" onclick="setManageMembersFilter('rejected')">🚫 보류 (${rejected.length})</button>
         </div>
 
-        ${renamePending.length > 0 ? `
+        ${showNew ? `
           ${buildManageAccordionBar({
-            key: 'members_rename',
-            titleHtml: '✏️ 회원 이름 변경 승인 대기',
-            badgeHtml: `<span class="tag warm">${renamePending.length}건</span>`,
-            defaultOpen: true,
-            marginTop: '14px'
+            key: 'members_new_pending',
+            titleHtml: '🆕 신규 가입 승인 대기',
+            badgeHtml: `<span class="tag ${newPending.length > 0 ? 'warm' : 'slate'}">${newPending.length}명</span>`,
+            defaultOpen: newDefaultOpen
           })}
-          <div data-acc-body="members_rename" class="${renameOpen ? '' : 'hidden'}">
-            ${renamePending.map(m => {
-              const r = getRoleById(m.roleId);
-              const reqNew = String(m.pendingName || '').trim();
-              const isDup = members.some(other => String(other.id) !== String(m.id) && String(other.name || '').trim() === reqNew);
-              return `
-                <div class="card highlight-pending">
-                  <div class="card-top">
-                    <div class="member-name">
-                      <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
-                      <span class="tag warm">✏️ 이름 변경 신청</span>
-                    </div>
-                    <span class="card-date">${escapeHtml(m.pendingNameAt || '')}</span>
-                  </div>
-                  <div class="log-rename-diff" style="background:#FFF;">
-                    <span class="log-name-old">${escapeHtml(m.name)}</span>
-                    <span class="log-name-arrow">→</span>
-                    <span class="log-name-new">${escapeHtml(reqNew)}</span>
-                  </div>
-                  ${isDup ? `<div style="font-size:12px; color:#DC2626; font-weight:700; margin-bottom:8px;">⚠️ 이미 다른 회원이 사용 중인 이름입니다. 거절 후 다른 이름으로 재신청하도록 안내해 주세요.</div>` : ''}
-                  <div style="display:flex; gap:6px; margin-top:8px;">
-                    <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberNameChange('${escapeJsAttr(m.id)}')" ${isDup ? 'disabled' : ''}>✅ 이름 변경 승인</button>
-                    <button class="btn-sm danger" style="padding:9px 12px;" onclick="rejectMemberNameChange('${escapeJsAttr(m.id)}')">❌ 거절 (기존 이름 유지)</button>
-                  </div>
-                </div>
-              `;
-            }).join('')}
+          <div data-acc-body="members_new_pending" class="${newOpen ? '' : 'hidden'}">
+            ${newPending.length === 0
+              ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">현재 신규 가입 승인 대기 중인 신청자가 없습니다.</div>'
+              : newPending.map(m => renderPendingSignupCard(m, false)).join('')}
           </div>
         ` : ''}
 
-        ${resetPending.length > 0 ? `
+        ${showRejoin ? `
+          ${buildManageAccordionBar({
+            key: 'members_rejoin_pending',
+            titleHtml: '🔄 재가입 승인 대기',
+            badgeHtml: `<span class="tag ${rejoinPending.length > 0 ? 'warm' : 'slate'}">${rejoinPending.length}명</span>`,
+            defaultOpen: rejoinDefaultOpen,
+            marginTop: f === 'all' ? '10px' : ''
+          })}
+          <div data-acc-body="members_rejoin_pending" class="${rejoinOpen ? '' : 'hidden'}">
+            ${rejoinPending.length === 0
+              ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">현재 재가입 승인 대기 중인 신청자가 없습니다.</div>'
+              : rejoinPending.map(m => renderPendingSignupCard(m, true)).join('')}
+          </div>
+        ` : ''}
+
+        ${showRename ? `
+          ${buildManageAccordionBar({
+            key: 'members_rename',
+            titleHtml: '✏️ 이름 변경 승인 대기',
+            badgeHtml: `<span class="tag ${renamePending.length > 0 ? 'warm' : 'slate'}">${renamePending.length}건</span>`,
+            defaultOpen: renameDefaultOpen,
+            marginTop: f === 'all' ? '10px' : ''
+          })}
+          <div data-acc-body="members_rename" class="${renameOpen ? '' : 'hidden'}">
+            ${renamePending.length === 0
+              ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">현재 이름 변경 승인 대기 중인 신청이 없습니다.</div>'
+              : renamePending.map(m => {
+                  const r = getRoleById(m.roleId);
+                  const reqNew = String(m.pendingName || '').trim();
+                  const isDup = members.some(other => String(other.id) !== String(m.id) && String(other.name || '').trim() === reqNew);
+                  return `
+                    <div class="card highlight-pending">
+                      <div class="card-top">
+                        <div class="member-name">
+                          <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
+                          <span class="tag warm">✏️ 이름 변경 신청</span>
+                        </div>
+                        <span class="card-date">${escapeHtml(m.pendingNameAt || '')}</span>
+                      </div>
+                      <div class="log-rename-diff" style="background:#FFF;">
+                        <span class="log-name-old">${escapeHtml(m.name)}</span>
+                        <span class="log-name-arrow">→</span>
+                        <span class="log-name-new">${escapeHtml(reqNew)}</span>
+                      </div>
+                      ${isDup ? `<div style="font-size:12px; color:#DC2626; font-weight:700; margin-bottom:8px;">⚠️ 이미 다른 회원이 사용 중인 이름입니다. 거절 후 다른 이름으로 재신청하도록 안내해 주세요.</div>` : ''}
+                      <div style="display:flex; gap:6px; margin-top:8px;">
+                        <button class="btn-sm approve" style="flex:1; padding:9px;" onclick="approveMemberNameChange('${escapeJsAttr(m.id)}')" ${isDup ? 'disabled' : ''}>✅ 이름 변경 승인</button>
+                        <button class="btn-sm danger" style="padding:9px 12px;" onclick="rejectMemberNameChange('${escapeJsAttr(m.id)}')">❌ 거절 (기존 이름 유지)</button>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+          </div>
+        ` : ''}
+
+        ${showReset ? `
           ${buildManageAccordionBar({
             key: 'members_reset',
             titleHtml: '🔑 비밀번호 초기화 대기',
-            badgeHtml: `<span class="tag warm">${resetPending.length}명</span>`,
-            defaultOpen: true,
-            marginTop: '14px'
+            badgeHtml: `<span class="tag ${resetPending.length > 0 ? 'warm' : 'slate'}">${resetPending.length}명</span>`,
+            defaultOpen: resetDefaultOpen,
+            marginTop: f === 'all' ? '10px' : ''
           })}
           <div data-acc-body="members_reset" class="${resetOpen ? '' : 'hidden'}">
-            ${resetPending.map(m => {
-              const r = getRoleById(m.roleId);
-              const expTs = Number(m.resetExpiresAt || 0);
-              const isExpired = expTs > 0 && Date.now() >= expTs;
-              const remainHours = expTs > 0 ? Math.max(1, Math.ceil((expTs - Date.now()) / 3600000)) : null;
-              return `
-                <div class="card highlight-pending">
-                  <div class="card-top">
-                    <div class="member-name">
-                      <span>${escapeHtml(m.name)}</span>
-                      <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
+            ${resetPending.length === 0
+              ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">현재 비밀번호 초기화 대기 중인 회원이 없습니다.</div>'
+              : resetPending.map(m => {
+                  const r = getRoleById(m.roleId);
+                  const expTs = Number(m.resetExpiresAt || 0);
+                  const isExpired = expTs > 0 && Date.now() >= expTs;
+                  const remainHours = expTs > 0 ? Math.max(1, Math.ceil((expTs - Date.now()) / 3600000)) : null;
+                  return `
+                    <div class="card highlight-pending">
+                      <div class="card-top">
+                        <div class="member-name">
+                          <span>${escapeHtml(m.name)}</span>
+                          <span class="role-pill" style="background:${sanitizeHexColor(r.color)};">${escapeHtml(r.name)}</span>
+                        </div>
+                        <span class="tag ${isExpired ? 'red' : 'warm'}">${isExpired ? '만료됨' : `코드: ${escapeHtml(m.resetCode || '-')}`}</span>
+                      </div>
+                      <div style="font-size:12px; color:${isExpired ? '#DC2626' : '#92400E'}; margin-bottom:10px;">
+                        ${isExpired
+                          ? '초기화 코드 유효기간(24시간)이 만료되었습니다. [재발급]을 눌러 새 코드를 발급해 주세요.'
+                          : `이용자가 새 비밀번호를 설정할 때까지 대기 중입니다.${remainHours ? ` (약 ${remainHours}시간 남음)` : ''}`}
+                      </div>
+                      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        ${isExpired
+                          ? `<button class="btn-sm primary" onclick="initMemberPasswordReset('${escapeJsAttr(m.id)}')">🔄 코드 재발급</button>`
+                          : `<button class="btn-sm primary" onclick="showIssuedResetModal('${escapeJsAttr(m.id)}')">📋 안내 복사</button>`}
+                        <button class="btn-sm" onclick="cancelMemberPasswordReset('${escapeJsAttr(m.id)}')">초기화 취소</button>
+                        <button class="btn-sm danger" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>
+                      </div>
                     </div>
-                    <span class="tag ${isExpired ? 'red' : 'warm'}">${isExpired ? '만료됨' : `코드: ${escapeHtml(m.resetCode || '-')}`}</span>
-                  </div>
-                  <div style="font-size:12px; color:${isExpired ? '#DC2626' : '#92400E'}; margin-bottom:10px;">
-                    ${isExpired
-                      ? '초기화 코드 유효기간(24시간)이 만료되었습니다. [재발급]을 눌러 새 코드를 발급해 주세요.'
-                      : `이용자가 새 비밀번호를 설정할 때까지 대기 중입니다.${remainHours ? ` (약 ${remainHours}시간 남음)` : ''}`}
-                  </div>
-                  <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                    ${isExpired
-                      ? `<button class="btn-sm primary" onclick="initMemberPasswordReset('${escapeJsAttr(m.id)}')">🔄 코드 재발급</button>`
-                      : `<button class="btn-sm primary" onclick="showIssuedResetModal('${escapeJsAttr(m.id)}')">📋 안내 복사</button>`}
-                    <button class="btn-sm" onclick="cancelMemberPasswordReset('${escapeJsAttr(m.id)}')">초기화 취소</button>
-                    <button class="btn-sm danger" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>
-                  </div>
-                </div>
-              `;
-            }).join('')}
+                  `;
+                }).join('')}
+          </div>
+        ` : ''}
+
+        ${showRejected ? `
+          ${buildManageAccordionBar({
+            key: 'members_rejected',
+            titleHtml: '🚫 보류된 신청',
+            badgeHtml: `<span class="tag ${rejected.length > 0 ? 'red' : 'slate'}">${rejected.length}명</span>`,
+            defaultOpen: rejectedDefaultOpen,
+            marginTop: f === 'all' ? '10px' : ''
+          })}
+          <div data-acc-body="members_rejected" class="${rejectedOpen ? '' : 'hidden'}">
+            ${rejected.length === 0
+              ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;">현재 보류된 가입 신청이 없습니다.</div>'
+              : `<div class="card">
+                  ${rejected.map(m => `
+                    <div class="member-row">
+                      <div>
+                        <div class="member-name">${escapeHtml(m.name)}</div>
+                        <div class="member-meta">${escapeHtml(m.createdAt)} 신청</div>
+                      </div>
+                      <div style="display:flex; gap:6px;">
+                        <button class="btn-sm approve" onclick="approveMemberWithRole('${escapeJsAttr(m.id)}')">승인</button>
+                        <button class="btn-sm danger" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>`}
           </div>
         ` : ''}
 
@@ -11766,32 +11864,6 @@
             <button class="btn-sm primary" type="button" onclick="switchManageSubTab('roles')">${escapeHtml(getTabIcon('manageRoles'))} 이동하기</button>
           </div>
         </div>
-
-        ${rejected.length > 0 ? `
-          ${buildManageAccordionBar({
-            key: 'members_rejected',
-            titleHtml: '🚫 보류된 신청',
-            badgeHtml: `<span class="tag red">${rejected.length}명</span>`,
-            defaultOpen: false,
-            marginTop: '14px'
-          })}
-          <div data-acc-body="members_rejected" class="${rejectedOpen ? '' : 'hidden'}">
-            <div class="card">
-              ${rejected.map(m => `
-                <div class="member-row">
-                  <div>
-                    <div class="member-name">${escapeHtml(m.name)}</div>
-                    <div class="member-meta">${escapeHtml(m.createdAt)} 신청</div>
-                  </div>
-                  <div style="display:flex; gap:6px;">
-                    <button class="btn-sm approve" onclick="approveMemberWithRole('${escapeJsAttr(m.id)}')">승인</button>
-                    <button class="btn-sm danger" onclick="deleteMember('${escapeJsAttr(m.id)}')">삭제</button>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        ` : ''}
       `;
     }
 
