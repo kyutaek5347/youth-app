@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=234" />
+  <link rel="manifest" href="./manifest.json?v=235" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=234" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=234" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=235" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=235" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4000,7 +4000,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=234" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=235" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5826,7 +5826,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 31;
-    const APP_CLIENT_BUILD = 234;
+    const APP_CLIENT_BUILD = 235;
+    const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -6824,7 +6825,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=234" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=235" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6848,8 +6849,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=234', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=234', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=235', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=235', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -7150,6 +7151,7 @@
     let isPromotingScheduled = false;
     let members = [];
     let newcomerList = [];
+    let newcomersServerSynced = false;
     let adminNewcomerSyncedOnce = false;
     let lastSyncedMemberNewcomerSig = '';
     let celebPreviewMode = 'live';
@@ -7604,6 +7606,7 @@
       knownNoticeAlertMap = new Map();
       lastSeenLayoutAlertTs = 0;
       newcomerList = [];
+      newcomersServerSynced = false;
       adminNewcomerSyncedOnce = false;
       lastSyncedMemberNewcomerSig = '';
       if (unsubAdminRegistry) { unsubAdminRegistry(); unsubAdminRegistry = null; }
@@ -8894,15 +8897,16 @@
           const nextMembers = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
             .sort((a, b) => Number(b.createdTs || 0) - Number(a.createdTs || 0));
 
+          const isMembersCache = !!(snap.metadata && snap.metadata.fromCache);
           if (isAdminUser) {
-            if (membersFirstSnap) {
+            if (membersFirstSnap || isMembersCache) {
               nextMembers.forEach(m => {
                 if (m.status === 'pending') knownPendingMemberIds.add(m.id);
                 if (m.status === 'approved' && m.pendingName) {
                   knownPendingRenameMap.set(m.id, `${m.pendingName}:${m.pendingNameTs || 0}`);
                 }
               });
-              membersFirstSnap = false;
+              if (!isMembersCache) membersFirstSnap = false;
             } else {
               nextMembers.forEach(m => {
                 if (m.status === 'pending' && !knownPendingMemberIds.has(m.id)) {
@@ -9090,12 +9094,15 @@
           const nextLogs = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
             .sort((a, b) => Number(b.ts || 0) - Number(a.ts || 0));
 
+          const isAuditCache = !!(snap.metadata && snap.metadata.fromCache);
           if (isAdminUser) {
-            if (auditLogsFirstSnap) {
+            if (auditLogsFirstSnap || isAuditCache) {
               nextLogs.forEach(l => knownAuditLogIds.add(l.id));
-              auditLogsFirstSnap = false;
               auditLogs = nextLogs;
-              setTimeout(() => runSilentAdminSecurityWatch(), 1400);
+              if (!isAuditCache && auditLogsFirstSnap) {
+                auditLogsFirstSnap = false;
+                setTimeout(() => runSilentAdminSecurityWatch(), 1400);
+              }
             } else {
               const newThreatEvents = [];
               const nowMs = Date.now();
@@ -9150,10 +9157,11 @@
           const next = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
             .sort((a, b) => Number(b.createdTs || 0) - Number(a.createdTs || 0));
           inquiriesPermError = false;
+          const isInqCache = !!(snap.metadata && snap.metadata.fromCache);
           if (isAdminUser) {
-            if (inquiriesFirstSnap) {
+            if (inquiriesFirstSnap || isInqCache) {
               next.forEach(q => knownInquiryIds.add(q.id));
-              inquiriesFirstSnap = false;
+              if (!isInqCache) inquiriesFirstSnap = false;
             } else {
               next.forEach(q => {
                 if (!knownInquiryIds.has(q.id)) {
@@ -9202,13 +9210,14 @@
           const next = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
             .sort((a, b) => Number(b.createdTs || 0) - Number(a.createdTs || 0));
           videosPermError = false;
+          const isVidCache = !!(snap.metadata && snap.metadata.fromCache);
           if (isAdminUser) {
-            if (videosFirstSnap) {
+            if (videosFirstSnap || isVidCache) {
               next.forEach(v => {
                 if (v.status === 'approved') knownApprovedVideoIds.add(v.id);
                 if (v.status === 'pending') knownPendingVideoIds.add(v.id);
               });
-              videosFirstSnap = false;
+              if (!isVidCache) videosFirstSnap = false;
             } else {
               next.forEach(v => {
                 if (v.status === 'pending' && !knownPendingVideoIds.has(v.id)) {
@@ -9293,20 +9302,24 @@
       }
     }
 
-    function rebuildMergedNotices(allowNotify) {
+    function rebuildMergedNotices(allowNotify, isFromCache = false) {
       const mergedMap = new Map();
       publicNoticesMap.forEach((v, k) => mergedMap.set(k, v));
       roleOrAdminNoticesMap.forEach((v, k) => mergedMap.set(k, v));
       const nextNotices = Array.from(mergedMap.values())
         .sort((a, b) => (Number(a.order ?? 9999) - Number(b.order ?? 9999)) || (Number(b.id) - Number(a.id)));
 
-      if (noticesFirstSnap) {
+      const allSourcesReady = !!(publicNoticesReady && secondaryNoticesReady);
+      if (noticesFirstSnap || !allSourcesReady || isFromCache) {
         nextNotices.forEach(n => {
           knownNoticeIds.add(n.id);
           knownNoticeAlertMap.set(n.id, Number(n.alertTs || 0));
         });
-        noticesFirstSnap = false;
+        if (allSourcesReady && !isFromCache) {
+          noticesFirstSnap = false;
+        }
       } else if (allowNotify) {
+        const isSelfEditEcho = (Date.now() - Number(lastSelfNoticeEditTs || 0)) < 6000;
         nextNotices.forEach(n => {
           const prevAlertTs = knownNoticeAlertMap.get(n.id) || 0;
           const curAlertTs = Number(n.alertTs || 0);
@@ -9314,7 +9327,9 @@
           knownNoticeIds.add(n.id);
           knownNoticeAlertMap.set(n.id, curAlertTs);
 
-          if ((isNew && curAlertTs > 0) || (curAlertTs > prevAlertTs && curAlertTs > 0)) {
+          const isFreshNew = isNew && curAlertTs >= (APP_BOOT_TS - 60000);
+          const isLiveUpdate = !isNew && curAlertTs > prevAlertTs && curAlertTs >= (APP_BOOT_TS - 60000);
+          if (!isSelfEditEcho && (isFreshNew || isLiveUpdate)) {
             const curUser = getCurrentUser();
             if (getPublishState(n) === 'live' && canUserSeeTarget(curUser, n)) {
               dispatchAppNotification({
@@ -9333,7 +9348,7 @@
       }
 
       notices = nextNotices;
-      if (publicNoticesReady && secondaryNoticesReady) {
+      if (allSourcesReady) {
         homeNoticesLoaded = true;
       }
       homeContentPermError = false;
@@ -9345,7 +9360,7 @@
       }
     }
 
-    function rebuildMergedBlocks(allowNotify) {
+    function rebuildMergedBlocks(allowNotify, isFromCache = false) {
       const mergedMap = new Map();
       publicBlocksMap.forEach((v, k) => mergedMap.set(k, v));
       roleOrAdminBlocksMap.forEach((v, k) => mergedMap.set(k, v));
@@ -9353,13 +9368,17 @@
         .filter(b => b.type !== 'quick_check' && b.type !== 'today_qt')
         .sort((a, b) => (Number(a.order ?? 9999) - Number(b.order ?? 9999)) || String(a.id).localeCompare(String(b.id)));
 
-      if (blocksFirstSnap) {
+      const allSourcesReady = !!(publicBlocksReady && secondaryBlocksReady);
+      if (blocksFirstSnap || !allSourcesReady || isFromCache) {
         nextBlocks.forEach(b => {
           knownBlockIds.add(b.id);
           knownBlockAlertMap.set(b.id, Number(b.alertTs || 0));
         });
-        blocksFirstSnap = false;
+        if (allSourcesReady && !isFromCache) {
+          blocksFirstSnap = false;
+        }
       } else if (allowNotify) {
+        const isSelfEditEcho = (Date.now() - Number(lastSelfLayoutEditTs || 0)) < 6000;
         nextBlocks.forEach(b => {
           const prevAlertTs = knownBlockAlertMap.get(b.id) || 0;
           const curAlertTs = Number(b.alertTs || 0);
@@ -9367,7 +9386,9 @@
           knownBlockIds.add(b.id);
           knownBlockAlertMap.set(b.id, curAlertTs);
 
-          if ((isNew && curAlertTs > 0) || (curAlertTs > prevAlertTs && curAlertTs > 0)) {
+          const isFreshNew = isNew && curAlertTs >= (APP_BOOT_TS - 60000);
+          const isLiveUpdate = !isNew && curAlertTs > prevAlertTs && curAlertTs >= (APP_BOOT_TS - 60000);
+          if (!isSelfEditEcho && (isFreshNew || isLiveUpdate)) {
             const curUser = getCurrentUser();
             if (getPublishState(b) === 'live' && canUserSeeTarget(curUser, b)) {
               dispatchAppNotification({
@@ -9383,7 +9404,7 @@
       }
 
       blocks = nextBlocks;
-      if (publicBlocksReady && secondaryBlocksReady) {
+      if (allSourcesReady) {
         homeBlocksLoaded = true;
       }
       homeContentPermError = false;
@@ -9561,7 +9582,7 @@
           snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'notices' }));
           publicNoticesMap = mp;
           publicNoticesReady = true;
-          rebuildMergedNotices(true);
+          rebuildMergedNotices(true, !!(snap.metadata && snap.metadata.fromCache));
         }, err => handleDbError(err, '공개 공지 동기화'));
 
         attachScopedQuery('adm_adminNotices', db.collection('adminNotices'), snap => {
@@ -9569,7 +9590,7 @@
           snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'adminNotices' }));
           roleOrAdminNoticesMap = mp;
           secondaryNoticesReady = true;
-          rebuildMergedNotices(false);
+          rebuildMergedNotices(false, !!(snap.metadata && snap.metadata.fromCache));
           if (isActualAdmin) checkAndPromoteDueScheduledItems();
         }, err => onAdminScopedErr(err, '비공개 공지 동기화', 'secNotices'));
 
@@ -9578,7 +9599,7 @@
           snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'homeBlocks' }));
           publicBlocksMap = mp;
           publicBlocksReady = true;
-          rebuildMergedBlocks(true);
+          rebuildMergedBlocks(true, !!(snap.metadata && snap.metadata.fromCache));
         }, err => onAdminScopedErr(err, '공개 배너 동기화', ''));
 
         attachScopedQuery('adm_adminBlocks', db.collection('adminBlocks'), snap => {
@@ -9586,7 +9607,7 @@
           snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'adminBlocks' }));
           roleOrAdminBlocksMap = mp;
           secondaryBlocksReady = true;
-          rebuildMergedBlocks(false);
+          rebuildMergedBlocks(false, !!(snap.metadata && snap.metadata.fromCache));
           if (isActualAdmin) checkAndPromoteDueScheduledItems();
         }, err => onAdminScopedErr(err, '비공개 배너 동기화', 'secBlocks'));
 
@@ -9611,7 +9632,7 @@
           snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'notices' }));
           publicNoticesMap = mp;
           publicNoticesReady = true;
-          rebuildMergedNotices(true);
+          rebuildMergedNotices(true, !!(snap.metadata && snap.metadata.fromCache));
         }, err => onMemberScopedErr(err, '전체 공지 동기화', ''));
 
         attachScopedQuery('mem_notices_role', db.collection('notices').where('visibleTo', 'array-contains', myRoleId), snap => {
@@ -9619,7 +9640,7 @@
           snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'notices' }));
           roleOrAdminNoticesMap = mp;
           secondaryNoticesReady = true;
-          rebuildMergedNotices(true);
+          rebuildMergedNotices(true, !!(snap.metadata && snap.metadata.fromCache));
         }, err => onMemberScopedErr(err, '역할 공지 동기화', 'secNotices'));
 
         attachScopedQuery('mem_blocks_all', db.collection('homeBlocks').where('visibleTo', 'array-contains', '__all__'), snap => {
@@ -9627,7 +9648,7 @@
           snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'homeBlocks' }));
           publicBlocksMap = mp;
           publicBlocksReady = true;
-          rebuildMergedBlocks(true);
+          rebuildMergedBlocks(true, !!(snap.metadata && snap.metadata.fromCache));
         }, err => onMemberScopedErr(err, '전체 화면 동기화', ''));
 
         attachScopedQuery('mem_blocks_role', db.collection('homeBlocks').where('visibleTo', 'array-contains', myRoleId), snap => {
@@ -9635,7 +9656,7 @@
           snap.docs.forEach(d => mp.set(String(d.id), { order: 9999, ...d.data(), id: String(d.id), _col: 'homeBlocks' }));
           roleOrAdminBlocksMap = mp;
           secondaryBlocksReady = true;
-          rebuildMergedBlocks(true);
+          rebuildMergedBlocks(true, !!(snap.metadata && snap.metadata.fromCache));
         }, err => onMemberScopedErr(err, '역할 화면 동기화', 'secBlocks'));
       }
     }
@@ -9811,10 +9832,14 @@
       };
 
       attachResilientCoreListener('newcomers', db.collection('newcomers'), snap => {
+        const isFromCache = !!(snap.metadata && snap.metadata.fromCache);
         coreConfigSynced.newcomers = true;
         newcomerList = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
           .sort((a, b) => (Number(a.addedTs || 0) - Number(b.addedTs || 0)) || String(a.id).localeCompare(String(b.id)));
-        checkAndNotifyNewcomers();
+        if (!isFromCache) {
+          newcomersServerSynced = true;
+          checkAndNotifyNewcomers();
+        }
         if (document.getElementById('celebrationMsgsModal').classList.contains('open')) {
           renderCelebNewcomerManagerList();
           updateCelebrationPreview();
@@ -10426,6 +10451,8 @@
       knownPendingAdminIds = new Set();
       knownActiveAdminIds = new Set();
       unsubAdminRegistry = db.collection('config').doc('adminRegistry').onSnapshot(doc => {
+        const isFromCache = !!(doc.metadata && doc.metadata.fromCache);
+        if (!doc.exists && isFromCache) return;
         const d = doc.exists ? doc.data() : {};
         adminRegistry = {
           lockAutoRegister: !!d.lockAutoRegister,
@@ -10530,7 +10557,11 @@
           else run();
         };
 
-        if (adminRegFirstSnap) {
+        if (isFromCache) {
+          // 오프라인·업데이트 직후 캐시 스냅샷에서는 알림 판정 및 기준선 덮어쓰기를 보류
+          curActiveIds.forEach(id => knownActiveAdminIds.add(id));
+          curPendingIds.forEach(id => knownPendingAdminIds.add(id));
+        } else if (adminRegFirstSnap) {
           const storedSeen = loadSeenAdminRegistryState();
           adminRegFirstSnap = false;
           if (!storedSeen.initialized) {
@@ -10540,6 +10571,7 @@
           } else {
             const seenActiveSet = new Set(storedSeen.active);
             const seenPendingSet = new Set(storedSeen.pending);
+            const recentCutoffTs = Date.now() - 10 * 60 * 1000;
             const missedAlerts = [];
             adminRegistry.items.forEach(a => {
               const aid = String(a.id);
@@ -10548,7 +10580,10 @@
               if (a.status === 'pending' && !seenPendingSet.has(aid)) {
                 missedAlerts.push({ item: a, kind: 'pending' });
               } else if (a.status === 'active' && !seenActiveSet.has(aid)) {
-                missedAlerts.push({ item: a, kind: 'active' });
+                const entryTs = Number(a.approvedTs || a.lastLoginTs || 0);
+                if (entryTs >= recentCutoffTs) {
+                  missedAlerts.push({ item: a, kind: 'active' });
+                }
               }
             });
             knownActiveAdminIds = new Set(curActiveIds);
@@ -12141,31 +12176,73 @@
 
     function checkAndNotifyNewcomers() {
       const user = getCurrentUser();
-      if (!user) return;
+      if (!user || !coreConfigSynced.newcomers || !newcomersServerSynced) return;
       const validList = newcomerList.filter(item => item && String(item.name || '').trim());
       const curIds = validList.map(item => String(item.uid || item.id));
+
+      let initialized = false;
       let notifiedIds = [];
       try {
-        notifiedIds = JSON.parse(localStorage.getItem(KEY_NEWCOMER_NOTIFIED) || '[]');
-        if (!Array.isArray(notifiedIds)) notifiedIds = [];
+        const rawText = localStorage.getItem(KEY_NEWCOMER_NOTIFIED);
+        if (rawText !== null) {
+          const parsed = JSON.parse(rawText);
+          if (Array.isArray(parsed)) {
+            initialized = true;
+            notifiedIds = parsed.map(String);
+          } else if (parsed && typeof parsed === 'object' && Array.isArray(parsed.ids)) {
+            initialized = !!parsed.initialized;
+            notifiedIds = parsed.ids.map(String);
+          }
+        }
       } catch {
+        initialized = false;
         notifiedIds = [];
+      }
+
+      const saveNewcomerNotified = (ids) => {
+        try {
+          localStorage.setItem(KEY_NEWCOMER_NOTIFIED, JSON.stringify({
+            initialized: true,
+            ids: Array.from(new Set(ids.map(String))).slice(-200)
+          }));
+        } catch {}
+      };
+
+      // 최초 실행·업데이트 후 초기화 상태에서는 기존 명단을 조용히 기준선으로 저장 (최근 5분 이내 신규 등록분만 알림)
+      if (!initialized) {
+        saveNewcomerNotified(curIds);
+        const veryRecent = validList.filter(item => Number(item.addedTs || 0) >= (APP_BOOT_TS - 300000));
+        if (veryRecent.length === 0) return;
+        if (notifPrefs.enabled && notifPrefs.homeNews) {
+          const freshNames = veryRecent.map(x => String(x.name).trim()).filter(Boolean);
+          const msgTitle = renderCelebrationText(getCelebrationMsg('newcomerTitle'), freshNames);
+          const msgBody = renderCelebrationText(getCelebrationMsg('newcomerDesc'), freshNames).replace(/\s*\n\s*/g, ' ');
+          dispatchAppNotification({
+            type: 'notice',
+            icon: '💐',
+            title: msgTitle,
+            body: msgBody,
+            onClick: () => { switchMainTab('home'); }
+          });
+        }
+        return;
       }
 
       const notifiedSet = new Set(notifiedIds);
       const freshNewcomers = validList.filter(item => !notifiedSet.has(String(item.uid || item.id)));
 
-      // 현재 목록에 남아 있는 ID만 유지하여 해제 후 재등록 시 다시 알림 가능
+      // 서버 동기화가 완료된 상태에서만 현재 목록에 남아 있는 ID만 유지하여 해제 후 재등록 시 다시 알림 가능
       const pruned = notifiedIds.filter(id => curIds.includes(id));
 
       if (freshNewcomers.length === 0) {
-        try { localStorage.setItem(KEY_NEWCOMER_NOTIFIED, JSON.stringify(pruned)); } catch {}
+        saveNewcomerNotified(pruned);
         return;
       }
 
+      const nextNotified = Array.from(new Set([...pruned, ...freshNewcomers.map(x => String(x.uid || x.id))]));
+      saveNewcomerNotified(nextNotified);
+
       if (notifPrefs.enabled && notifPrefs.homeNews) {
-        const nextNotified = Array.from(new Set([...pruned, ...freshNewcomers.map(x => String(x.uid || x.id))]));
-        try { localStorage.setItem(KEY_NEWCOMER_NOTIFIED, JSON.stringify(nextNotified)); } catch {}
         const freshNames = freshNewcomers.map(x => String(x.name).trim()).filter(Boolean);
         const msgTitle = renderCelebrationText(getCelebrationMsg('newcomerTitle'), freshNames);
         const msgBody = renderCelebrationText(getCelebrationMsg('newcomerDesc'), freshNames).replace(/\s*\n\s*/g, ' ');
