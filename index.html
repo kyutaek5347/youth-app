@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=191" />
+  <link rel="manifest" href="./manifest.json?v=192" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=191" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=191" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=192" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=192" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -1411,6 +1411,99 @@
       color: #991B1B;
       font-size: 12.5px;
       line-height: 1.5;
+    }
+    .att-cal-cell {
+      height: 40px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #0F172A;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-family: inherit;
+      padding: 2px 0;
+    }
+    .att-cal-cell.sun { color: #DC2626; }
+    .att-cal-cell.sat { color: #2563EB; }
+    .att-cal-cell.empty { cursor: default; pointer-events: none; }
+    .att-cal-cell.today { box-shadow: inset 0 0 0 1.5px #F59E0B; }
+    .att-cal-cell.selected {
+      background: #111827 !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.28);
+    }
+    .att-cal-dots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5px;
+      height: 5px;
+    }
+    .att-cal-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .att-cal-dot.rec { background: #16A34A; }
+    .att-cal-dot.sched { background: #2563EB; }
+    .att-cal-dot.skip { background: #EF4444; }
+    .att-cal-cell.selected .att-cal-dot.rec { background: #4ADE80; }
+    .att-cal-cell.selected .att-cal-dot.sched { background: #93C5FD; }
+    .att-cal-cell.selected .att-cal-dot.skip { background: #FCA5A5; }
+    .att-cal-legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 11px;
+      color: #64748B;
+      margin-top: 8px;
+      padding-top: 7px;
+      border-top: 1px dashed #E2E8F0;
+    }
+    .att-cal-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .att-roster-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      margin-bottom: 10px;
+    }
+    .att-roster-stat-card {
+      border-radius: 13px;
+      padding: 11px 6px;
+      text-align: center;
+      border: 1.5px solid var(--border);
+      background: #FFFFFF;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .att-roster-stat-card.present { background: #F0FDF4; border-color: #BBF7D0; color: #166534; }
+    .att-roster-stat-card.absent { background: #FEF2F2; border-color: #FECACA; color: #991B1B; }
+    .att-roster-stat-card.none { background: #F8FAFC; border-color: #CBD5E1; color: #334155; }
+    .att-roster-stat-card.active {
+      box-shadow: 0 0 0 2px #111827;
+    }
+    .att-roster-stat-num {
+      font-size: 19px;
+      font-weight: 900;
+      line-height: 1.15;
+    }
+    .att-roster-stat-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 3px;
     }
     .qr-canvas-card {
       background: #F8FAFC;
@@ -3317,7 +3410,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=191" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=192" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4975,7 +5068,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 191;
+    const APP_CLIENT_BUILD = 192;
     const KEY_TAB_SEEN_TS = 'right_youth_tab_seen_ts_v1';
     const KEY_SEEN_ADMIN_IDS = 'right_youth_seen_admin_ids_v1';
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
@@ -5132,6 +5225,7 @@
       { id: 'quicklinks', labelKey: 'manageQuickLinks', defaultIcon: '🔗', defaultLabel: '사이트 바로가기 관리', permCheck: p => !!(p.canEditLayout || p.canObserveManage) },
       { id: 'videos', labelKey: 'manageVideos', defaultIcon: '🎬', defaultLabel: '영상 관리', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
       { id: 'worship', labelKey: 'manageWorship', defaultIcon: '⛪', defaultLabel: '예배 관리', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'attendance', labelKey: 'manageAttendance', defaultIcon: '✅', defaultLabel: '출석인원', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
       { id: 'sheet', labelKey: 'manageSheet', defaultIcon: '📊', defaultLabel: '시트 연동', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
       { id: 'qr', labelKey: 'manageQr', defaultIcon: '📲', defaultLabel: 'QR 관리', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
       { id: 'members', labelKey: 'manageMembers', defaultIcon: '👥', defaultLabel: '회원 승인', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
@@ -5882,7 +5976,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=191" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=192" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -5906,8 +6000,8 @@
 
     async function sendDeviceNotification(title, body) {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=191', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=191', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=192', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=192', window.location.href).href;
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
           await swRegistration.showNotification(title, {
@@ -6113,6 +6207,12 @@
     let spCalStartIso = '';
     let spCalEndIso = '';
     let spCalPickingEnd = false;
+    let attRosterCalYear = 0;
+    let attRosterCalMonth = 0;
+    let attRosterSelectedIso = '';
+    let attRosterSelectedSessionId = '';
+    let attRosterFilter = 'all';
+    let attRosterSearchQuery = '';
     let adminRegistry = { lockAutoRegister: false, items: [], renameLogs: [] };
     let currentAdminName = '';
     let isRenamingAdmin = false;
@@ -6784,7 +6884,11 @@
       });
       DEFAULT_MANAGE_SUBTAB_ORDER.forEach(id => {
         if (!valid.includes(id)) {
-          if (id === 'sheet' && valid.includes('worship')) {
+          if (id === 'attendance' && valid.includes('worship')) {
+            valid.splice(valid.indexOf('worship') + 1, 0, 'attendance');
+          } else if (id === 'sheet' && valid.includes('attendance')) {
+            valid.splice(valid.indexOf('attendance') + 1, 0, 'sheet');
+          } else if (id === 'sheet' && valid.includes('worship')) {
             valid.splice(valid.indexOf('worship') + 1, 0, 'sheet');
           } else if (id === 'admins' && valid.includes('members')) {
             valid.splice(valid.indexOf('members') + 1, 0, 'admins');
@@ -7539,6 +7643,8 @@
           const activeEl = document.activeElement;
           if (activeEl && activeEl.id === 'roleMemberSearchInput' && currentMainTab === 'manage' && currentManageSubTab === 'roles') {
             renderRoleMembersListOnly();
+          } else if (activeEl && activeEl.id === 'attRosterSearchInput' && currentMainTab === 'manage' && currentManageSubTab === 'attendance') {
+            renderAttRosterListsOnly();
           } else {
             applyScreen();
           }
@@ -7623,7 +7729,7 @@
           if (isAdminUser && adminSheetUrl) {
             syncUnsyncedAttendanceToSheet(attendanceRecords).catch(() => {});
           }
-          if (currentMainTab === 'manage' && (currentManageSubTab === 'worship' || currentManageSubTab === 'sheet')) {
+          if (currentMainTab === 'manage' && (currentManageSubTab === 'worship' || currentManageSubTab === 'attendance' || currentManageSubTab === 'sheet')) {
             applyScreen();
           }
         }, err => onManageReadErr(err, '출석 현황 동기화'));
@@ -8169,7 +8275,7 @@
             attendanceConfig = structuredClone(DEFAULT_ATTENDANCE_CONFIG);
           }
           // sheetUrl은 관리자 전용 문서(config/sheetSecret)에서 별도 격리 동기화
-          if (currentMainTab === 'home' || (currentMainTab === 'manage' && currentManageSubTab === 'worship')) {
+          if (currentMainTab === 'home' || (currentMainTab === 'manage' && (currentManageSubTab === 'worship' || currentManageSubTab === 'attendance'))) {
             applyScreen();
           }
         }, () => {})
@@ -10837,9 +10943,9 @@
     };
 
     // ==================== 12. 관리 센터 ====================
-    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|selectRoleMemberTab|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|switchMainTab)\s*\(/;
+    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|selectRoleMemberTab|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterFilter|clearAttRosterSearch|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|switchMainTab)\s*\(/;
     const OBSERVER_ALLOWED_INPUT_IDS = new Set([
-      'roleMemberSearchInput', 'adminLogSearchInput', 'adminGuideSearchInput', 'adminAttSessionSearchInput', 'adminAttSessionSelect'
+      'roleMemberSearchInput', 'adminLogSearchInput', 'adminGuideSearchInput', 'adminAttSessionSearchInput', 'adminAttSessionSelect', 'attRosterSearchInput'
     ]);
     let observerReadOnlyGuardBound = false;
     let observerApplyingLock = false;
@@ -10967,6 +11073,7 @@
       else if (currentManageSubTab === 'quicklinks') renderManageQuickLinks(content, user);
       else if (currentManageSubTab === 'videos') renderManageVideos(content, user);
       else if (currentManageSubTab === 'worship') renderManageWorship(content, user);
+      else if (currentManageSubTab === 'attendance') renderManageAttendance(content, user);
       else if (currentManageSubTab === 'sheet') renderManageSheet(content, user);
       else if (currentManageSubTab === 'qr') renderManageQr(content, user);
       else if (currentManageSubTab === 'members') renderManageMembers(content);
@@ -16576,7 +16683,11 @@
 
     window.goToAttendanceManage = () => {
       currentMainTab = 'manage';
-      currentManageSubTab = 'worship';
+      currentManageSubTab = 'attendance';
+      attRosterSelectedIso = getKstNowInfo().iso;
+      const [y, m] = attRosterSelectedIso.split('-').map(Number);
+      attRosterCalYear = y;
+      attRosterCalMonth = m;
       applyScreen();
     };
 
@@ -18467,6 +18578,506 @@
           </div>
         </div>
       `;
+    }
+
+    // --- Admin Manage Sub-Tab: ✅ 출석인원 (달력 기반 출석O · 출석X · 미응답 분리 조회) ---
+    function getSessionsForIsoDate(isoDate) {
+      const iso = normalizeDateAnyInput(isoDate);
+      if (!iso) return [];
+      const dotDate = iso.replace(/-/g, '.');
+      const compactDate = iso.replace(/-/g, '');
+      const dow = getDowForDateStr(dotDate);
+      const dowPart = dow >= 0 ? `(${DAY_SHORT_KO[dow]})` : '';
+      const cfg = attendanceConfig || DEFAULT_ATTENDANCE_CONFIG;
+      const map = new Map();
+
+      // 1) 일요일 정기 예배 (예배X가 아닌 경우)
+      if (dow === 0 && !isSundayWorshipSkipped(dotDate, cfg)) {
+        const sessId = `${compactDate}_regular`;
+        const baseLabel = String(cfg.regularLabel || '청년부 예배').trim() || '청년부 예배';
+        const label = getCustomSessionLabel(sessId, baseLabel);
+        map.set(sessId, {
+          sessionId: sessId,
+          date: dotDate,
+          colTitle: `${dotDate}${dowPart} ${label}`,
+          label,
+          start: String(cfg.regularStart || '14:00'),
+          end: String(cfg.regularEnd || '15:30'),
+          isSpecial: false
+        });
+      }
+
+      // 2) 해당 날짜에 걸친 특별 행사
+      (Array.isArray(cfg.specialEvents) ? cfg.specialEvents : []).forEach(ev => {
+        if (!ev || !ev.id) return;
+        const { startIso, endIso } = getEventDateRangeIso(ev);
+        if (!startIso || iso < startIso || iso > endIso) return;
+        const days = enumerateIsoDatesInRange(startIso, endIso);
+        const dayIdx = Math.max(0, days.indexOf(iso));
+        const sess = buildSpecialEventDaySession(ev, iso, dayIdx, days.length);
+        map.set(sess.sessionId, sess);
+      });
+
+      // 3) 해당 날짜에 실제 기록이 남아있는 세션
+      attendanceRecords.forEach(r => {
+        if (!r || !r.sessionId) return;
+        const rDot = normalizeDateDotKey(r.date || '');
+        if (rDot !== dotDate) return;
+        const sid = String(r.sessionId);
+        if (!map.has(sid)) {
+          const label = getCustomSessionLabel(sid, String(r.label || '예배').trim());
+          map.set(sid, {
+            sessionId: sid,
+            date: dotDate,
+            colTitle: r.colTitle || `${dotDate}${dowPart} ${label}`,
+            label,
+            start: '',
+            end: '',
+            isSpecial: !sid.endsWith('_regular')
+          });
+        }
+      });
+
+      return Array.from(map.values());
+    }
+
+    function getAttRosterPartitionForSession(sess) {
+      const approvedMembers = members
+        .filter(m => m.status === 'approved')
+        .slice()
+        .sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), 'ko'));
+      const sessRecs = sess
+        ? attendanceRecords
+            .filter(r => String(r.sessionId) === String(sess.sessionId))
+            .sort((a, b) => String(a.time || '').localeCompare(String(b.time || '')))
+        : [];
+      const presentRecs = sessRecs.filter(r => !isAbsentAttendanceRecord(r));
+      const absentRecs = sessRecs.filter(r => isAbsentAttendanceRecord(r));
+      const respondedUidSet = new Set(sessRecs.map(r => String(r.uid || '')));
+      const respondedNameSet = new Set(sessRecs.map(r => nameToHex(r.name || '')));
+      const nonResponders = approvedMembers.filter(m =>
+        !respondedUidSet.has(String(m.id)) && !respondedNameSet.has(nameToHex(m.name || ''))
+      );
+      return { approvedMembers, sessRecs, presentRecs, absentRecs, nonResponders };
+    }
+
+    function renderAttRosterListsOnly() {
+      const area = document.getElementById('attRosterListsArea');
+      if (!area) return;
+      const clearBtn = document.getElementById('attRosterSearchClear');
+      if (clearBtn) clearBtn.classList.toggle('hidden', !attRosterSearchQuery);
+
+      const sessions = getSessionsForIsoDate(attRosterSelectedIso);
+      const curSess = sessions.find(s => String(s.sessionId) === String(attRosterSelectedSessionId)) || sessions[0] || null;
+      if (!curSess) return;
+
+      const { presentRecs, absentRecs, nonResponders } = getAttRosterPartitionForSession(curSess);
+      const q = String(attRosterSearchQuery || '').trim().toLowerCase();
+      const matchRec = (r) => !q || `${r.name || ''} ${r.roleName || ''}`.toLowerCase().includes(q);
+      const matchMem = (m) => {
+        if (!q) return true;
+        const rName = getRoleById(m.roleId).name;
+        return `${m.name || ''} ${rName}`.toLowerCase().includes(q);
+      };
+
+      const fPresent = presentRecs.filter(matchRec);
+      const fAbsent = absentRecs.filter(matchRec);
+      const fNone = nonResponders.filter(matchMem);
+
+      const f = attRosterFilter || 'all';
+      const showPresent = f === 'all' || f === 'present';
+      const showAbsent = f === 'all' || f === 'absent';
+      const showNone = f === 'all' || f === 'none';
+
+      const presentOpen = isManageSectionOpen('att_roster_present', true);
+      const absentOpen = isManageSectionOpen('att_roster_absent', true);
+      const noneOpen = isManageSectionOpen('att_roster_none', true);
+
+      const buildRecordRow = (r, isAbs) => {
+        const memObj = members.find(m => String(m.id) === String(r.uid));
+        const roleObj = memObj ? getRoleById(memObj.roleId) : null;
+        const roleColor = roleObj ? sanitizeHexColor(roleObj.color) : '#64748B';
+        const roleLabel = r.roleName || (roleObj ? roleObj.name : '');
+        return `
+          <div class="att-record-row">
+            <div>
+              <div class="member-name">
+                <span>${escapeHtml(r.name)}</span>
+                ${roleLabel ? `<span class="role-pill" style="background:${roleColor}; font-size:10px; padding:2px 6px;">${escapeHtml(roleLabel)}</span>` : ''}
+                <span class="tag ${isAbs ? 'red' : 'green'}" style="font-size:10.5px;">${isAbs ? '❌ 출석X' : '✅ 출석O'} · ${escapeHtml(r.time || '-')}</span>
+              </div>
+              <div class="member-meta">
+                ${r.modifiedBy
+                  ? `✍️ 관리자 처리: <b>${escapeHtml(r.modifiedBy)}</b>${r.modifiedAt ? ` (${escapeHtml(r.modifiedAt)})` : ''}`
+                  : (isAbs ? '본인 앱 출석X 버튼 선택' : '본인 앱 출석O 버튼 선택')}
+              </div>
+            </div>
+            <div style="display:flex; gap:5px; flex-wrap:wrap;">
+              <button class="btn-sm" type="button" onclick="openEditAdminAttendanceModal('${escapeJsAttr(r.id)}')">수정</button>
+              <button class="btn-sm danger" type="button" onclick="deleteAdminAttendance('${escapeJsAttr(r.id)}')">삭제</button>
+            </div>
+          </div>
+        `;
+      };
+
+      area.innerHTML = `
+        ${showPresent ? `
+          ${buildManageAccordionBar({
+            key: 'att_roster_present',
+            titleHtml: '✅ 출석O 누른 회원',
+            badgeHtml: `<span class="tag green">${fPresent.length}명</span>`,
+            defaultOpen: true
+          })}
+          <div data-acc-body="att_roster_present" class="${presentOpen ? '' : 'hidden'}">
+            <div class="card" style="margin-bottom:10px; border-color:#BBF7D0;">
+              ${fPresent.length === 0
+                ? `<div style="text-align:center; padding:14px 6px; color:#64748B; font-size:12.5px;">${q ? '검색 조건에 맞는 출석O 회원이 없습니다.' : '출석O 버튼을 누른 회원이 없습니다.'}</div>`
+                : fPresent.map(r => buildRecordRow(r, false)).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        ${showAbsent ? `
+          ${buildManageAccordionBar({
+            key: 'att_roster_absent',
+            titleHtml: '❌ 출석X 누른 회원',
+            badgeHtml: `<span class="tag ${fAbsent.length > 0 ? 'red' : 'slate'}">${fAbsent.length}명</span>`,
+            defaultOpen: true,
+            marginTop: f === 'all' ? '6px' : ''
+          })}
+          <div data-acc-body="att_roster_absent" class="${absentOpen ? '' : 'hidden'}">
+            <div class="card" style="margin-bottom:10px; border-color:${fAbsent.length > 0 ? '#FECACA' : 'var(--border)'};">
+              ${fAbsent.length === 0
+                ? `<div style="text-align:center; padding:14px 6px; color:#64748B; font-size:12.5px;">${q ? '검색 조건에 맞는 출석X 회원이 없습니다.' : '출석X 버튼을 누른 회원이 없습니다.'}</div>`
+                : fAbsent.map(r => buildRecordRow(r, true)).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        ${showNone ? `
+          ${buildManageAccordionBar({
+            key: 'att_roster_none',
+            titleHtml: '⏳ 누르지 않은 회원 (미응답)',
+            badgeHtml: `<span class="tag slate">${fNone.length}명</span>`,
+            defaultOpen: true,
+            marginTop: f === 'all' ? '6px' : ''
+          })}
+          <div data-acc-body="att_roster_none" class="${noneOpen ? '' : 'hidden'}">
+            <div class="card" style="margin-bottom:10px; background:#F8FAFC;">
+              ${fNone.length === 0
+                ? `<div style="text-align:center; padding:14px 6px; color:#15803D; font-size:12.5px; font-weight:700;">${q ? '검색 조건에 맞는 미응답 회원이 없습니다.' : '🎉 모든 승인 회원이 응답했습니다!'}</div>`
+                : fNone.map(m => {
+                    const rObj = getRoleById(m.roleId);
+                    return `
+                      <div class="att-record-row">
+                        <div>
+                          <div class="member-name">
+                            <span>${escapeHtml(m.name)}</span>
+                            <span class="role-pill" style="background:${sanitizeHexColor(rObj.color)}; font-size:10px; padding:2px 6px;">${escapeHtml(rObj.name)}</span>
+                            <span class="tag slate" style="font-size:10px;">미응답</span>
+                          </div>
+                          <div class="member-meta">출석O / 출석X 버튼을 아직 누르지 않음</div>
+                        </div>
+                        <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                          <button class="btn-sm approve" type="button" onclick="quickMarkAttendanceFromRoster('${escapeJsAttr(m.id)}', 'present')">✅ 출석O</button>
+                          <button class="btn-sm danger" type="button" onclick="quickMarkAttendanceFromRoster('${escapeJsAttr(m.id)}', 'absent')">❌ 출석X</button>
+                        </div>
+                      </div>
+                    `;
+                  }).join('')}
+            </div>
+          </div>
+        ` : ''}
+      `;
+      applyManageReadOnlyLock(area);
+    }
+
+    window.shiftAttRosterCalMonth = (delta) => {
+      attRosterCalMonth += Number(delta || 0);
+      if (attRosterCalMonth < 1) { attRosterCalMonth = 12; attRosterCalYear -= 1; }
+      else if (attRosterCalMonth > 12) { attRosterCalMonth = 1; attRosterCalYear += 1; }
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'attendance') {
+        renderManageAttendance(document.getElementById('manageContent'), u);
+      }
+    };
+
+    window.jumpAttRosterToday = () => {
+      const todayIso = getKstNowInfo().iso;
+      const [y, m] = todayIso.split('-').map(Number);
+      attRosterCalYear = y;
+      attRosterCalMonth = m;
+      attRosterSelectedIso = todayIso;
+      attRosterSelectedSessionId = '';
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'attendance') {
+        renderManageAttendance(document.getElementById('manageContent'), u);
+      }
+    };
+
+    window.selectAttRosterDate = (isoDate) => {
+      if (!isoDate) return;
+      attRosterSelectedIso = isoDate;
+      attRosterSelectedSessionId = '';
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'attendance') {
+        renderManageAttendance(document.getElementById('manageContent'), u);
+      }
+    };
+
+    window.selectAttRosterSession = (sessionId) => {
+      attRosterSelectedSessionId = String(sessionId || '');
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'attendance') {
+        renderManageAttendance(document.getElementById('manageContent'), u);
+      }
+    };
+
+    window.setAttRosterFilter = (filterKey) => {
+      attRosterFilter = ['all', 'present', 'absent', 'none'].includes(filterKey) ? filterKey : 'all';
+      if (attRosterFilter === 'present') manageSectionOpen.att_roster_present = true;
+      else if (attRosterFilter === 'absent') manageSectionOpen.att_roster_absent = true;
+      else if (attRosterFilter === 'none') manageSectionOpen.att_roster_none = true;
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'attendance') {
+        renderManageAttendance(document.getElementById('manageContent'), u);
+      }
+    };
+
+    window.onAttRosterSearchInput = (val) => {
+      attRosterSearchQuery = String(val || '');
+      renderAttRosterListsOnly();
+    };
+
+    window.clearAttRosterSearch = () => {
+      attRosterSearchQuery = '';
+      const inp = document.getElementById('attRosterSearchInput');
+      if (inp) { inp.value = ''; inp.focus(); }
+      renderAttRosterListsOnly();
+    };
+
+    window.quickMarkAttendanceFromRoster = async (memberId, statusChoice) => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const sessions = getSessionsForIsoDate(attRosterSelectedIso);
+      const curSess = sessions.find(s => String(s.sessionId) === String(attRosterSelectedSessionId)) || sessions[0];
+      if (!curSess) return showToast('먼저 예배·행사가 있는 날짜를 선택해 주세요.');
+      const m = members.find(x => String(x.id) === String(memberId));
+      if (!m) return;
+
+      const attStatus = statusChoice === 'absent' ? 'absent' : 'present';
+      const statusTxt = attStatus === 'absent' ? '출석X' : '출석O';
+      const nowInfo = getKstNowInfo();
+      const timeVal = nowInfo.hhmm;
+      const nowStr = formatKstDateTime();
+      const adminActor = currentAdminName || '관리자';
+      const roleName = getRoleById(m.roleId).name;
+      const docId = `${curSess.sessionId}_${m.id}`;
+      const sheetTimeVal = attStatus === 'absent' ? `X (불참 ${timeVal})` : timeVal;
+
+      try {
+        const newRec = {
+          id: docId,
+          sessionId: curSess.sessionId,
+          date: curSess.date,
+          colTitle: curSess.colTitle,
+          label: curSess.label,
+          status: attStatus,
+          uid: String(m.id),
+          name: m.name,
+          roleName,
+          time: timeVal,
+          ts: Date.now(),
+          source: 'admin_add',
+          modifiedBy: adminActor,
+          modifiedAt: nowStr,
+          sheetSynced: !!getAdminSheetUrl()
+        };
+        await db.collection('attendance').doc(docId).set(newRec);
+        postToGoogleSheet({
+          action: 'attendance_upsert',
+          colTitle: curSess.colTitle,
+          date: curSess.date,
+          name: m.name,
+          role: roleName,
+          time: sheetTimeVal,
+          modifiedBy: `추가: ${adminActor} (${nowStr})`,
+          forceUpdate: true
+        }).catch(() => {});
+        recordAuditLog({
+          actorType: 'admin',
+          category: '예배·출석',
+          action: `출석인원 수동 ${statusTxt} 처리`,
+          target: `${m.name} (${curSess.colTitle})`,
+          detail: `${statusTxt} · 시각: ${timeVal}`
+        });
+        showToast(`${m.name}님을 [${statusTxt}]로 기록했습니다.`);
+      } catch (err) {
+        handleDbError(err, '출석 수동 처리');
+      }
+    };
+
+    function renderManageAttendance(el, user) {
+      const now = getKstNowInfo();
+      const cfg = attendanceConfig || DEFAULT_ATTENDANCE_CONFIG;
+      if (!attRosterSelectedIso) {
+        attRosterSelectedIso = now.iso;
+      }
+      if (!attRosterCalYear || !attRosterCalMonth) {
+        const [y, m] = attRosterSelectedIso.split('-').map(Number);
+        attRosterCalYear = y;
+        attRosterCalMonth = m;
+      }
+
+      // 달력 표시용 날짜별 기록/행사 인덱스 생성
+      const recDateSet = new Set();
+      attendanceRecords.forEach(r => {
+        const iso = normalizeDateAnyInput(r.date || '');
+        if (iso) recDateSet.add(iso);
+      });
+      const eventDateSet = new Set();
+      (Array.isArray(cfg.specialEvents) ? cfg.specialEvents : []).forEach(ev => {
+        const { startIso, endIso } = getEventDateRangeIso(ev);
+        if (!startIso) return;
+        enumerateIsoDatesInRange(startIso, endIso).forEach(d => eventDateSet.add(d));
+      });
+
+      const firstDow = new Date(Date.UTC(attRosterCalYear, attRosterCalMonth - 1, 1)).getUTCDay();
+      const daysInMonth = new Date(Date.UTC(attRosterCalYear, attRosterCalMonth, 0)).getUTCDate();
+      let cellsHtml = '';
+      for (let i = 0; i < firstDow; i++) {
+        cellsHtml += '<span class="att-cal-cell empty"></span>';
+      }
+      for (let d = 1; d <= daysInMonth; d++) {
+        const iso = `${attRosterCalYear}-${String(attRosterCalMonth).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const dot = iso.replace(/-/g, '.');
+        const dow = (firstDow + d - 1) % 7;
+        const isSun = dow === 0;
+        const isSkipped = isSun && isSundayWorshipSkipped(dot, cfg);
+        const hasRec = recDateSet.has(iso);
+        const hasSched = eventDateSet.has(iso) || (isSun && !isSkipped);
+
+        const cls = ['att-cal-cell'];
+        if (isSun) cls.push('sun');
+        else if (dow === 6) cls.push('sat');
+        if (iso === now.iso) cls.push('today');
+        if (iso === attRosterSelectedIso) cls.push('selected');
+
+        const dots = [];
+        if (hasRec) dots.push('<span class="att-cal-dot rec"></span>');
+        if (hasSched) dots.push('<span class="att-cal-dot sched"></span>');
+        if (isSkipped) dots.push('<span class="att-cal-dot skip"></span>');
+
+        cellsHtml += `
+          <button type="button" class="${cls.join(' ')}" onclick="selectAttRosterDate('${iso}')">
+            <span>${d}</span>
+            <span class="att-cal-dots">${dots.join('')}</span>
+          </button>
+        `;
+      }
+
+      const selDot = attRosterSelectedIso.replace(/-/g, '.');
+      const selDateLabel = formatDateWithDowKo(selDot);
+      const selIsSun = getDowForDateStr(selDot) === 0;
+      const selIsSkipped = selIsSun && isSundayWorshipSkipped(selDot, cfg);
+      const daySessions = getSessionsForIsoDate(attRosterSelectedIso);
+      if (daySessions.length > 0 && !daySessions.some(s => String(s.sessionId) === String(attRosterSelectedSessionId))) {
+        attRosterSelectedSessionId = daySessions[0].sessionId;
+      }
+      const curSess = daySessions.find(s => String(s.sessionId) === String(attRosterSelectedSessionId)) || daySessions[0] || null;
+      const part = getAttRosterPartitionForSession(curSess);
+      const f = attRosterFilter || 'all';
+
+      el.innerHTML = `
+        ${buildManageSectionHead({
+          key: 'att_roster_main',
+          defaultTitle: `${getTabIcon('manageAttendance')} ${getTabLabel('manageAttendance')} · 달력별 출석 현황`,
+          rightHtml: `<span class="tag slate">승인 회원 ${part.approvedMembers.length}명</span>`
+        })}
+
+        <!-- 1) 월별 달력 -->
+        <div class="card" style="padding:12px;">
+          <div class="sp-cal-head" style="margin-bottom:9px;">
+            <button type="button" class="sp-cal-nav-btn" onclick="shiftAttRosterCalMonth(-1)">◀</button>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span class="sp-cal-month-title">${attRosterCalYear}년 ${attRosterCalMonth}월</span>
+              <button type="button" class="btn-sm" style="padding:3px 8px; font-size:11px;" onclick="jumpAttRosterToday()">오늘</button>
+            </div>
+            <button type="button" class="sp-cal-nav-btn" onclick="shiftAttRosterCalMonth(1)">▶</button>
+          </div>
+          <div class="sp-cal-weekdays">
+            <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+          </div>
+          <div class="sp-cal-grid">${cellsHtml}</div>
+          <div class="att-cal-legend">
+            <span><i class="att-cal-dot rec"></i>출석 기록 있음</span>
+            <span><i class="att-cal-dot sched"></i>예배·행사 일정</span>
+            <span><i class="att-cal-dot skip"></i>예배X(휴무)</span>
+          </div>
+        </div>
+
+        <!-- 2) 선택한 날짜 상세 현황 -->
+        <div class="card" style="padding:13px 14px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap; margin-bottom:6px;">
+            <strong style="font-size:14.5px; color:#0F172A;">📅 ${escapeHtml(selDateLabel)}</strong>
+            ${curSess
+              ? `<span class="tag ${curSess.isSpecial ? 'warm' : 'green'}">${escapeHtml(curSess.label)}${curSess.start && curSess.end ? ` · ${escapeHtml(curSess.start)}~${escapeHtml(curSess.end)}` : ''}</span>`
+              : (selIsSkipped ? '<span class="tag red">🚫 예배X (휴무)</span>' : '<span class="tag slate">일정 없음</span>')}
+          </div>
+
+          ${daySessions.length > 1 ? `
+            <div class="filter-row" style="margin:6px 0 8px;">
+              ${daySessions.map(s => `
+                <button class="filter-chip ${curSess && s.sessionId === curSess.sessionId ? 'active' : ''}" type="button" onclick="selectAttRosterSession('${escapeJsAttr(s.sessionId)}')">
+                  ${s.isSpecial ? '📅' : '⛪'} ${escapeHtml(s.label)}
+                </button>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          ${!curSess ? `
+            <div style="text-align:center; padding:16px 8px; color:#64748B; font-size:12.5px; line-height:1.55;">
+              ${selIsSkipped
+                ? '이 날짜의 주일 예배는 <b>[예배X (휴무)]</b>로 설정되어 출석체크가 진행되지 않았습니다.'
+                : '이 날짜에는 예정된 예배·행사나 출석 기록이 없습니다.<br>달력에서 파란 점(예배·행사) 또는 초록 점(기록 있음) 날짜를 눌러 확인해 주세요.'}
+            </div>
+          ` : `
+            <div class="att-roster-stat-grid" style="margin-top:8px;">
+              <button type="button" class="att-roster-stat-card present ${f === 'present' ? 'active' : ''}" onclick="setAttRosterFilter('${f === 'present' ? 'all' : 'present'}')">
+                <div class="att-roster-stat-num">${part.presentRecs.length}</div>
+                <div class="att-roster-stat-lbl">✅ 출석O</div>
+              </button>
+              <button type="button" class="att-roster-stat-card absent ${f === 'absent' ? 'active' : ''}" onclick="setAttRosterFilter('${f === 'absent' ? 'all' : 'absent'}')">
+                <div class="att-roster-stat-num">${part.absentRecs.length}</div>
+                <div class="att-roster-stat-lbl">❌ 출석X</div>
+              </button>
+              <button type="button" class="att-roster-stat-card none ${f === 'none' ? 'active' : ''}" onclick="setAttRosterFilter('${f === 'none' ? 'all' : 'none'}')">
+                <div class="att-roster-stat-num">${part.nonResponders.length}</div>
+                <div class="att-roster-stat-lbl">⏳ 미응답</div>
+              </button>
+            </div>
+
+            <div class="filter-row" style="margin-bottom:8px;">
+              <button class="filter-chip ${f === 'all' ? 'active' : ''}" type="button" onclick="setAttRosterFilter('all')">전체 분리 보기</button>
+              <button class="filter-chip ${f === 'present' ? 'active' : ''}" type="button" onclick="setAttRosterFilter('present')">✅ 출석O (${part.presentRecs.length})</button>
+              <button class="filter-chip ${f === 'absent' ? 'active' : ''}" type="button" onclick="setAttRosterFilter('absent')">❌ 출석X (${part.absentRecs.length})</button>
+              <button class="filter-chip ${f === 'none' ? 'active' : ''}" type="button" onclick="setAttRosterFilter('none')">⏳ 미응답 (${part.nonResponders.length})</button>
+            </div>
+
+            <div class="search-box" style="margin-bottom:2px;">
+              <span class="search-icon">🔍</span>
+              <input id="attRosterSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13px;" type="search" value="${escapeHtml(attRosterSearchQuery)}" placeholder="회원 이름·역할 검색..." oninput="onAttRosterSearchInput(this.value)" />
+              <button id="attRosterSearchClear" class="search-clear ${attRosterSearchQuery ? '' : 'hidden'}" type="button" onclick="clearAttRosterSearch()">✕</button>
+            </div>
+          `}
+        </div>
+
+        ${curSess ? '<div id="attRosterListsArea"></div>' : ''}
+      `;
+
+      if (curSess) {
+        renderAttRosterListsOnly();
+      }
     }
 
     // --- Admin Manage Sub-Tab: 📊 구글 시트 연동 · 동기화 · 재정비 · 테스트 전용 탭 ---
