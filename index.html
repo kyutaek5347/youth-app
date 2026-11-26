@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=217" />
+  <link rel="manifest" href="./manifest.json?v=218" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=217" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=217" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=218" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=218" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -281,15 +281,17 @@
     .header-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
     .icon-btn {
       position: relative;
-      border-radius: 9px;
-      width: 34px;
-      height: 32px;
+      border-radius: 10px;
+      width: 36px;
+      height: 34px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
+      font-size: 16.5px;
       cursor: pointer;
+      transition: transform 0.12s ease, background 0.14s ease;
     }
+    .icon-btn:active { transform: scale(0.94); }
     .icon-btn.light { background: #F1F5F9; color: #334155; border: 1px solid var(--border); }
     .icon-btn.dark { background: #1E293B; color: #E2E8F0; border: 1px solid #334155; }
     .notif-dot {
@@ -3713,7 +3715,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=217" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=218" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -3863,6 +3865,7 @@
             </div>
           </div>
         </div>
+        <div id="headerActions" class="header-actions"></div>
       </header>
 
       <main id="appMain" class="main">
@@ -5469,7 +5472,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 30;
-    const APP_CLIENT_BUILD = 217;
+    const APP_CLIENT_BUILD = 218;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -5526,6 +5529,7 @@
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
     const KEY_READ_ITEMS = 'right_youth_read_items_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
+    const KEY_HEADER_SHORTCUTS_LOCAL = 'right_youth_header_shortcuts_v1';
 
     const KEY_NOTIF_PREFS = 'right_youth_notif_prefs_v103';
     const KEY_MEMBER_CACHE = 'right_youth_member_cache_v1';
@@ -5665,6 +5669,7 @@
       { key: 'setAccount', group: '내 정보 · 화면', defaultIcon: '👤', defaultLabel: '내 계정 관리', roleHint: '설정 · 내 정보/비밀번호' },
       { key: 'setNotif', group: '내 정보 · 화면', defaultIcon: '🔔', defaultLabel: '알림 설정', roleHint: '설정 · 알림 켜기/끄기' },
       { key: 'setFont', group: '내 정보 · 화면', defaultIcon: '🔤', defaultLabel: '전체 글자 크기', roleHint: '설정 · 글자 크기 조절' },
+      { key: 'setHeaderPin', group: '내 정보 · 화면', defaultIcon: '📌', defaultLabel: '상단 오른쪽 바로가기', roleHint: '설정 · 알림/QR 상단 배치' },
       { key: 'setQr', group: '청년부 안내 · 소통', defaultIcon: '📲', defaultLabel: '오늘의 초대 QR', roleHint: '설정 · 초대 QR 공유' },
       { key: 'bylaws', group: '청년부 안내 · 소통', defaultIcon: '📜', defaultLabel: '회칙', roleHint: '설정 · 청년부 회칙' },
       { key: 'guide', group: '청년부 안내 · 소통', defaultIcon: '📘', defaultLabel: '가이드', roleHint: '설정 · 앱 사용 설명서' },
@@ -5722,8 +5727,14 @@
       Object.fromEntries(SETTINGS_ITEM_REGISTRY.map(t => [t.key, t.defaultIcon])),
       Object.fromEntries(MANAGE_SUBTAB_REGISTRY.map(t => [t.labelKey, t.defaultIcon]))
     );
+    const DEFAULT_HEADER_SHORTCUTS = {
+      showNotif: true,
+      showQr: true,
+      hideInSettings: false,
+      order: ['setQr', 'setNotif']
+    };
     const DEFAULT_TAB_LABELS = Object.assign(
-      { tabOrder: DEFAULT_TAB_ORDER, manageSubTabOrder: DEFAULT_MANAGE_SUBTAB_ORDER, settingsItemOrder: DEFAULT_SETTINGS_ITEM_ORDER, icons: DEFAULT_TAB_ICONS, uiTexts: DEFAULT_UI_TEXTS, sectionTitles: {} },
+      { tabOrder: DEFAULT_TAB_ORDER, manageSubTabOrder: DEFAULT_MANAGE_SUBTAB_ORDER, settingsItemOrder: DEFAULT_SETTINGS_ITEM_ORDER, icons: DEFAULT_TAB_ICONS, uiTexts: DEFAULT_UI_TEXTS, sectionTitles: {}, headerShortcuts: structuredClone(DEFAULT_HEADER_SHORTCUTS) },
       Object.fromEntries(BOTTOM_TAB_REGISTRY.map(t => [t.key, t.defaultLabel])),
       Object.fromEntries(SETTINGS_ITEM_REGISTRY.map(t => [t.key, t.defaultLabel])),
       Object.fromEntries(MANAGE_SUBTAB_REGISTRY.map(t => [t.labelKey, t.defaultLabel]))
@@ -6451,7 +6462,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=217" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=218" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6475,8 +6486,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=217', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=217', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=218', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=218', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -6987,6 +6998,7 @@
     let customBylawsArticles = null;
     let termsSearchQuery = '';
     let settingsFontOpen = false;
+    let settingsHeaderPinOpen = false;
     let inquiries = [];
     let myInquiries = [];
     let unsubInquiriesAdmin = null;
@@ -7498,9 +7510,87 @@
         if (DEFAULT_SETTINGS_ITEM_ORDER.includes(k) && !valid.includes(k)) valid.push(k);
       });
       DEFAULT_SETTINGS_ITEM_ORDER.forEach(k => {
-        if (!valid.includes(k)) valid.push(k);
+        if (!valid.includes(k)) {
+          if (k === 'setHeaderPin' && valid.includes('setFont')) {
+            valid.splice(valid.indexOf('setFont') + 1, 0, 'setHeaderPin');
+          } else {
+            valid.push(k);
+          }
+        }
       });
       return valid;
+    }
+
+    function normalizeHeaderShortcutsConfig(raw) {
+      const src = (raw && typeof raw === 'object') ? raw : {};
+      const rawOrder = Array.isArray(src.order) ? src.order.map(String) : DEFAULT_HEADER_SHORTCUTS.order;
+      const validOrder = [];
+      rawOrder.forEach(k => {
+        if ((k === 'setQr' || k === 'setNotif') && !validOrder.includes(k)) validOrder.push(k);
+      });
+      ['setQr', 'setNotif'].forEach(k => {
+        if (!validOrder.includes(k)) validOrder.push(k);
+      });
+      return {
+        showNotif: src.showNotif !== undefined ? !!src.showNotif : DEFAULT_HEADER_SHORTCUTS.showNotif,
+        showQr: src.showQr !== undefined ? !!src.showQr : DEFAULT_HEADER_SHORTCUTS.showQr,
+        hideInSettings: src.hideInSettings !== undefined ? !!src.hideInSettings : DEFAULT_HEADER_SHORTCUTS.hideInSettings,
+        order: validOrder
+      };
+    }
+
+    function getGlobalHeaderShortcuts() {
+      return normalizeHeaderShortcutsConfig(tabLabels && tabLabels.headerShortcuts);
+    }
+
+    function getLocalHeaderShortcutsOverride() {
+      try {
+        const raw = localStorage.getItem(KEY_HEADER_SHORTCUTS_LOCAL);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') return normalizeHeaderShortcutsConfig(parsed);
+      } catch {}
+      return null;
+    }
+
+    function getEffectiveHeaderShortcuts(overrideCfg = null) {
+      if (overrideCfg && typeof overrideCfg === 'object') {
+        return normalizeHeaderShortcutsConfig(overrideCfg);
+      }
+      const localOv = getLocalHeaderShortcutsOverride();
+      if (localOv) return localOv;
+      return getGlobalHeaderShortcuts();
+    }
+
+    function renderHeaderActions(isManageMode = false, overrideNames = null, overrideIcons = null, overrideCfg = null) {
+      const box = document.getElementById('headerActions');
+      if (!box) return;
+      const cfg = getEffectiveHeaderShortcuts(overrideCfg);
+      const themeCls = isManageMode ? 'dark' : 'light';
+      const notifLbl = getEffectiveTabLabel('setNotif', overrideNames);
+      const notifIcn = getEffectiveTabIcon('setNotif', overrideIcons);
+      const qrLbl = getEffectiveTabLabel('setQr', overrideNames);
+      const qrIcn = getEffectiveTabIcon('setQr', overrideIcons);
+
+      const btns = [];
+      cfg.order.forEach(key => {
+        if (key === 'setQr' && cfg.showQr) {
+          btns.push(`
+            <button class="icon-btn ${themeCls}" type="button" title="${escapeHtml(qrLbl)}" aria-label="${escapeHtml(qrLbl)}" onclick="openInviteQrModal()">
+              <span>${escapeHtml(qrIcn)}</span>
+            </button>
+          `);
+        } else if (key === 'setNotif' && cfg.showNotif) {
+          btns.push(`
+            <button class="icon-btn ${themeCls}" type="button" title="${escapeHtml(notifLbl)}" aria-label="${escapeHtml(notifLbl)}" onclick="openNotifModal()">
+              <span>${escapeHtml(notifIcn)}</span>
+              <span id="headerNotifDot" class="notif-dot ${notifPrefs.enabled ? '' : 'hidden'}"></span>
+            </button>
+          `);
+        }
+      });
+      box.innerHTML = btns.join('');
+      box.classList.toggle('hidden', btns.length === 0);
     }
 
     function getAllowedManageSubTabs(perms) {
@@ -9273,7 +9363,8 @@
               ...d,
               icons: { ...DEFAULT_TAB_ICONS, ...(d.icons || {}) },
               uiTexts: { ...DEFAULT_UI_TEXTS, ...(d.uiTexts || {}) },
-              sectionTitles: (d.sectionTitles && typeof d.sectionTitles === 'object') ? { ...d.sectionTitles } : {}
+              sectionTitles: (d.sectionTitles && typeof d.sectionTitles === 'object') ? { ...d.sectionTitles } : {},
+              headerShortcuts: normalizeHeaderShortcutsConfig(d.headerShortcuts)
             };
           } else {
             tabLabels = structuredClone(DEFAULT_TAB_LABELS);
@@ -10627,6 +10718,7 @@
       badge.textContent = user.role.name;
       badge.style.background = user.role.color;
       document.getElementById('headerSubText').textContent = `${user.name}님`;
+      renderHeaderActions(isManageMode);
 
       const pendingCount = getManageTotalBadgeCount();
 
@@ -15799,6 +15891,7 @@
     let draftTabNames = {};
     let draftTabIcons = {};
     let draftUiTexts = {};
+    let draftHeaderShortcuts = structuredClone(DEFAULT_HEADER_SHORTCUTS);
     let draftResetSectionTitles = false;
     let draftTabInitialized = false;
 
@@ -15825,6 +15918,7 @@
       UI_TEXT_REGISTRY.forEach(u => {
         draftUiTexts[u.key] = getUiText(u.key);
       });
+      draftHeaderShortcuts = getGlobalHeaderShortcuts();
       draftTabInitialized = true;
     }
 
@@ -15912,11 +16006,12 @@
         manageTitleEl.textContent = getManageSectionTitle('labels_manage', `${mIcon} ${mName} 상단 탭 (왼쪽 → 오른쪽 순)`);
       }
       syncAllDynamicLabelsUI(draftTabNames, draftTabIcons, draftUiTexts);
+      renderHeaderActions(currentMainTab === 'manage', draftTabNames, draftTabIcons, draftHeaderShortcuts);
     }
 
     window.setManageLabelsFilter = (f) => {
-      manageLabelsFilter = ['all', 'bottom', 'settings', 'manage'].includes(f) ? f : 'all';
-      const accMap = { bottom: 'labels_bottom', settings: 'labels_settings_items', manage: 'labels_manage' };
+      manageLabelsFilter = ['all', 'header', 'bottom', 'settings', 'manage'].includes(f) ? f : 'all';
+      const accMap = { header: 'labels_header_shortcuts', bottom: 'labels_bottom', settings: 'labels_settings_items', manage: 'labels_manage' };
       if (accMap[manageLabelsFilter]) manageSectionOpen[accMap[manageLabelsFilter]] = true;
       const u = getCurrentUser();
       if (u && currentMainTab === 'manage' && currentManageSubTab === 'labels') {
@@ -15929,9 +16024,13 @@
       const curManageName = String(draftTabNames.manage ?? '').trim() || getTabLabel('manage');
       const curManageIcon = String(draftTabIcons.manage ?? '').trim() || getTabIcon('manage');
       const lf = manageLabelsFilter || 'all';
+      const showHeader = lf === 'all' || lf === 'header';
       const showBottom = lf === 'all' || lf === 'bottom';
       const showSettings = lf === 'all' || lf === 'settings';
       const showManage = lf === 'all' || lf === 'manage';
+      const dhs = normalizeHeaderShortcutsConfig(draftHeaderShortcuts);
+      const dhsActiveCnt = (dhs.showNotif ? 1 : 0) + (dhs.showQr ? 1 : 0);
+      const dhsQrFirst = dhs.order[0] === 'setQr';
 
       el.innerHTML = `
         ${buildManageSectionHead({
@@ -15947,14 +16046,71 @@
 
         <div class="filter-row" style="margin-bottom:10px;">
           <button class="filter-chip ${lf === 'all' ? 'active' : ''}" type="button" onclick="setManageLabelsFilter('all')">전체</button>
+          <button class="filter-chip ${lf === 'header' ? 'active' : ''}" type="button" onclick="setManageLabelsFilter('header')">📌 상단 바로가기 (${dhsActiveCnt})</button>
           <button class="filter-chip ${lf === 'bottom' ? 'active' : ''}" type="button" onclick="setManageLabelsFilter('bottom')">📱 하단 메뉴 (${draftTabOrder.length})</button>
           <button class="filter-chip ${lf === 'settings' ? 'active' : ''}" type="button" onclick="setManageLabelsFilter('settings')">${escapeHtml(getTabIcon('settings'))} ${escapeHtml(getTabLabel('settings'))} 메뉴 (${draftSettingsItemOrder.length})</button>
           <button class="filter-chip ${lf === 'manage' ? 'active' : ''}" type="button" onclick="setManageLabelsFilter('manage')">${escapeHtml(curManageIcon)} ${escapeHtml(curManageName)} 탭 (${draftManageSubTabOrder.length})</button>
         </div>
 
+        ${showHeader ? `
+        ${buildManageAccordionBar({
+          key: 'labels_header_shortcuts',
+          titleHtml: '📌 화면 최상단 오른쪽 바로가기 (전체 기본값)',
+          badgeHtml: `<span class="tag ${dhsActiveCnt > 0 ? 'green' : 'slate'}">${dhsActiveCnt > 0 ? `${dhsActiveCnt}개 배치중` : '꺼짐'}</span>`,
+          defaultOpen: true
+        })}
+        <div data-acc-body="labels_header_shortcuts" class="${isManageSectionOpen('labels_header_shortcuts', true) ? '' : 'hidden'}">
+          <div class="card">
+            <div style="font-size:12px; color:#475569; line-height:1.5; margin-bottom:8px;">
+              <b>🔔 알림 설정</b>과 <b>📲 오늘의 초대 QR</b>을 화면 최상단 오른쪽에 바로가기 버튼으로 배치합니다. 저장하면 모든 회원의 기본 화면에 즉시 반영됩니다.
+            </div>
+            <div class="setting-row" style="padding-top:4px;">
+              <div>
+                <div class="setting-title" style="font-size:13.5px;">${escapeHtml(draftTabIcons.setNotif || getTabIcon('setNotif'))} ${escapeHtml(draftTabNames.setNotif || getTabLabel('setNotif'))} 상단 배치</div>
+                <div class="setting-sub" style="font-size:11.5px;">화면 최상단 오른쪽에 알림 설정 아이콘(초록 켜짐 점 포함) 표시</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" ${dhs.showNotif ? 'checked' : ''} onchange="toggleDraftHeaderShortcut('showNotif', this.checked)" />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title" style="font-size:13.5px;">${escapeHtml(draftTabIcons.setQr || getTabIcon('setQr'))} ${escapeHtml(draftTabNames.setQr || getTabLabel('setQr'))} 상단 배치</div>
+                <div class="setting-sub" style="font-size:11.5px;">화면 최상단 오른쪽에 오늘의 초대 QR 공유 아이콘 표시</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" ${dhs.showQr ? 'checked' : ''} onchange="toggleDraftHeaderShortcut('showQr', this.checked)" />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title" style="font-size:13.5px;">상단 배치 항목은 설정 목록에서 숨기기</div>
+                <div class="setting-sub" style="font-size:11.5px;">켜면 최상단에 올라간 버튼이 [설정] 목록에 중복 표시되지 않습니다.</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" ${dhs.hideInSettings ? 'checked' : ''} onchange="toggleDraftHeaderShortcut('hideInSettings', this.checked)" />
+                <span class="slider"></span>
+              </label>
+            </div>
+            ${(dhs.showNotif && dhs.showQr) ? `
+              <div style="margin-top:10px; padding-top:10px; border-top:1px solid #F1F5F9;">
+                <div style="font-size:12px; font-weight:800; color:#334155; margin-bottom:6px;">↔️ 상단 오른쪽 버튼 순서</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+                  <button class="font-scale-btn ${dhsQrFirst ? 'active' : ''}" type="button" onclick="setDraftHeaderShortcutOrder('qr_first')">${escapeHtml(draftTabIcons.setQr || getTabIcon('setQr'))} QR → ${escapeHtml(draftTabIcons.setNotif || getTabIcon('setNotif'))} 알림</button>
+                  <button class="font-scale-btn ${!dhsQrFirst ? 'active' : ''}" type="button" onclick="setDraftHeaderShortcutOrder('notif_first')">${escapeHtml(draftTabIcons.setNotif || getTabIcon('setNotif'))} 알림 → ${escapeHtml(draftTabIcons.setQr || getTabIcon('setQr'))} QR</button>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+        ` : ''}
+
         ${showBottom ? `
         ${buildManageAccordionBar({
           key: 'labels_bottom',
+          marginTop: showHeader ? '10px' : '',
           titleHtml: '📱 하단 메뉴 칸 (왼쪽 → 오른쪽 순)',
           badgeHtml: `<span class="tag slate">${draftTabOrder.length}개</span>`,
           defaultOpen: true
@@ -16115,6 +16271,29 @@
       }
     };
 
+    window.toggleDraftHeaderShortcut = (key, checked) => {
+      syncDraftFromDomInputs();
+      draftHeaderShortcuts = normalizeHeaderShortcutsConfig({ ...draftHeaderShortcuts, [key]: !!checked });
+      syncLiveTabPreview();
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'labels') {
+        renderManageLabels(document.getElementById('manageContent'), u);
+      }
+    };
+
+    window.setDraftHeaderShortcutOrder = (mode) => {
+      syncDraftFromDomInputs();
+      draftHeaderShortcuts = normalizeHeaderShortcutsConfig({
+        ...draftHeaderShortcuts,
+        order: mode === 'notif_first' ? ['setNotif', 'setQr'] : ['setQr', 'setNotif']
+      });
+      syncLiveTabPreview();
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'labels') {
+        renderManageLabels(document.getElementById('manageContent'), u);
+      }
+    };
+
     window.moveDraftSettingsItemOrder = (idx, dir) => {
       syncDraftFromDomInputs();
       const t = idx + dir;
@@ -16155,6 +16334,7 @@
       UI_TEXT_REGISTRY.forEach(u => {
         draftUiTexts[u.key] = u.defaultVal;
       });
+      draftHeaderShortcuts = structuredClone(DEFAULT_HEADER_SHORTCUTS);
       draftResetSectionTitles = true;
       draftTabInitialized = true;
       syncLiveTabPreview();
@@ -16173,7 +16353,8 @@
         settingsItemOrder: getValidSettingsItemOrder(draftSettingsItemOrder),
         icons: {},
         uiTexts: {},
-        sectionTitles: draftResetSectionTitles ? {} : { ...(tabLabels.sectionTitles || {}) }
+        sectionTitles: draftResetSectionTitles ? {} : { ...(tabLabels.sectionTitles || {}) },
+        headerShortcuts: normalizeHeaderShortcutsConfig(draftHeaderShortcuts)
       };
       BOTTOM_TAB_REGISTRY.forEach(t => {
         next[t.key] = String(draftTabNames[t.key] ?? '').trim() || t.defaultLabel;
@@ -16201,8 +16382,10 @@
           ...next,
           icons: { ...DEFAULT_TAB_ICONS, ...next.icons },
           uiTexts: { ...DEFAULT_UI_TEXTS, ...next.uiTexts },
-          sectionTitles: { ...(next.sectionTitles || {}) }
+          sectionTitles: { ...(next.sectionTitles || {}) },
+          headerShortcuts: normalizeHeaderShortcutsConfig(next.headerShortcuts)
         };
+        try { localStorage.removeItem(KEY_HEADER_SHORTCUTS_LOCAL); } catch {}
         draftResetSectionTitles = false;
         draftTabInitialized = false;
         await db.collection('config').doc('labels').set(next);
@@ -27217,6 +27400,49 @@
       if (u && currentMainTab === 'settings') renderSettingsView(u);
     };
 
+    window.toggleSettingsHeaderPinAccordion = () => {
+      settingsHeaderPinOpen = !settingsHeaderPinOpen;
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'settings') renderSettingsView(u);
+    };
+
+    window.togglePersonalHeaderShortcut = (field, checked) => {
+      const cur = getEffectiveHeaderShortcuts();
+      const next = normalizeHeaderShortcutsConfig({ ...cur, [field]: !!checked });
+      try { localStorage.setItem(KEY_HEADER_SHORTCUTS_LOCAL, JSON.stringify(next)); } catch {}
+      renderHeaderActions(currentMainTab === 'manage');
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'settings') renderSettingsView(u);
+      if (field === 'showNotif') {
+        showToast(checked ? '✅ 알림 설정을 화면 최상단 오른쪽에 배치했습니다.' : '알림 설정 상단 바로가기를 숨겼습니다.');
+      } else if (field === 'showQr') {
+        showToast(checked ? '✅ 오늘의 초대 QR을 화면 최상단 오른쪽에 배치했습니다.' : '오늘의 초대 QR 상단 바로가기를 숨겼습니다.');
+      } else if (field === 'hideInSettings') {
+        showToast(checked ? '상단에 배치한 항목을 설정 목록에서 숨겼습니다.' : '설정 목록에도 함께 표시합니다.');
+      }
+    };
+
+    window.setPersonalHeaderShortcutOrder = (mode) => {
+      const cur = getEffectiveHeaderShortcuts();
+      const next = normalizeHeaderShortcutsConfig({
+        ...cur,
+        order: mode === 'notif_first' ? ['setNotif', 'setQr'] : ['setQr', 'setNotif']
+      });
+      try { localStorage.setItem(KEY_HEADER_SHORTCUTS_LOCAL, JSON.stringify(next)); } catch {}
+      renderHeaderActions(currentMainTab === 'manage');
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'settings') renderSettingsView(u);
+      showToast('✅ 상단 오른쪽 버튼 순서를 변경했습니다.');
+    };
+
+    window.resetPersonalHeaderShortcuts = () => {
+      try { localStorage.removeItem(KEY_HEADER_SHORTCUTS_LOCAL); } catch {}
+      renderHeaderActions(currentMainTab === 'manage');
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'settings') renderSettingsView(u);
+      showToast('🔄 앱 기본 상단 배치로 복원했습니다.');
+    };
+
     function renderSettingsView(user) {
       const el = document.getElementById('viewSettings');
       if (!el || !user) return;
@@ -27237,8 +27463,16 @@
       const orderedKeys = getValidSettingsItemOrder();
       const visibleItems = [];
 
+      const hdrCfg = getEffectiveHeaderShortcuts();
+      const hasLocalHdrOv = !!getLocalHeaderShortcutsOverride();
+      const hdrStatusLabel = (hdrCfg.showNotif && hdrCfg.showQr)
+        ? '알림·QR 배치'
+        : (hdrCfg.showNotif ? '알림만 배치' : (hdrCfg.showQr ? 'QR만 배치' : '꺼짐'));
+
       orderedKeys.forEach(key => {
         if (key === 'setAccount' && (isAdmin || isPreview)) return;
+        if (key === 'setNotif' && hdrCfg.hideInSettings && hdrCfg.showNotif) return;
+        if (key === 'setQr' && hdrCfg.hideInSettings && hdrCfg.showQr) return;
         const reg = SETTINGS_ITEM_REGISTRY.find(x => x.key === key);
         if (!reg) return;
         const ic = getTabIcon(key);
@@ -27296,6 +27530,75 @@
                   <button class="font-scale-btn ${appFontScale === 'large' ? 'active' : ''}" type="button" onclick="setAppFontScale('large')">크게</button>
                   <button class="font-scale-btn ${appFontScale === 'xlarge' ? 'active' : ''}" type="button" onclick="setAppFontScale('xlarge')">아주 크게</button>
                 </div>
+              </div>
+            ` : ''}
+          `;
+        } else if (key === 'setHeaderPin') {
+          const notifIconDisp = getTabIcon('setNotif');
+          const notifLabelDisp = getTabLabel('setNotif');
+          const qrIconDisp = getTabIcon('setQr');
+          const qrLabelDisp = getTabLabel('setQr');
+          const qrFirst = hdrCfg.order[0] === 'setQr';
+          rowHtml = `
+            <button class="settings-row-btn" type="button" onclick="toggleSettingsHeaderPinAccordion()">
+              <span class="settings-row-left">
+                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span style="min-width:0;">
+                  <div class="settings-row-title">${escapeHtml(lb)}</div>
+                  <div class="settings-row-sub">알림 설정 · 오늘의 초대 QR을 화면 최상단 오른쪽에 배치합니다</div>
+                </span>
+              </span>
+              <span class="settings-row-right">
+                <span class="tag ${(hdrCfg.showNotif || hdrCfg.showQr) ? 'green' : 'slate'}">${escapeHtml(hdrStatusLabel)}</span>
+                <span>${settingsHeaderPinOpen ? '▲' : '▼'}</span>
+              </span>
+            </button>
+            ${settingsHeaderPinOpen ? `
+              <div class="settings-font-body">
+                <div class="setting-row" style="padding:10px 0;">
+                  <div>
+                    <div class="setting-title" style="font-size:13px;">${escapeHtml(notifIconDisp)} ${escapeHtml(notifLabelDisp)} 상단 오른쪽 배치</div>
+                    <div class="setting-sub" style="font-size:11.5px;">어느 화면에서나 우측 상단에서 바로 알림을 켜고 끌 수 있습니다</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" ${hdrCfg.showNotif ? 'checked' : ''} onchange="togglePersonalHeaderShortcut('showNotif', this.checked)" />
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-row" style="padding:10px 0;">
+                  <div>
+                    <div class="setting-title" style="font-size:13px;">${escapeHtml(qrIconDisp)} ${escapeHtml(qrLabelDisp)} 상단 오른쪽 배치</div>
+                    <div class="setting-sub" style="font-size:11.5px;">어느 화면에서나 우측 상단에서 바로 초대 QR을 띄울 수 있습니다</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" ${hdrCfg.showQr ? 'checked' : ''} onchange="togglePersonalHeaderShortcut('showQr', this.checked)" />
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-row" style="padding:10px 0;">
+                  <div>
+                    <div class="setting-title" style="font-size:13px;">상단 배치 항목은 설정 목록에서 숨기기</div>
+                    <div class="setting-sub" style="font-size:11.5px;">중복 없이 깔끔하게 보고 싶을 때 켜세요 (끄면 다시 표시됩니다)</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" ${hdrCfg.hideInSettings ? 'checked' : ''} onchange="togglePersonalHeaderShortcut('hideInSettings', this.checked)" />
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                ${(hdrCfg.showNotif && hdrCfg.showQr) ? `
+                  <div style="padding-top:8px; border-top:1px solid #E2E8F0;">
+                    <div style="font-size:11.5px; font-weight:800; color:#475569; margin-bottom:6px;">↔️ 상단 오른쪽 버튼 순서</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+                      <button class="font-scale-btn ${qrFirst ? 'active' : ''}" type="button" onclick="setPersonalHeaderShortcutOrder('qr_first')">${escapeHtml(qrIconDisp)} QR → ${escapeHtml(notifIconDisp)} 알림</button>
+                      <button class="font-scale-btn ${!qrFirst ? 'active' : ''}" type="button" onclick="setPersonalHeaderShortcutOrder('notif_first')">${escapeHtml(notifIconDisp)} 알림 → ${escapeHtml(qrIconDisp)} QR</button>
+                    </div>
+                  </div>
+                ` : ''}
+                ${hasLocalHdrOv ? `
+                  <div style="margin-top:8px; text-align:right;">
+                    <button class="btn-sm" type="button" onclick="resetPersonalHeaderShortcuts()">🔄 앱 기본 배치로 복원</button>
+                  </div>
+                ` : ''}
               </div>
             ` : ''}
           `;
