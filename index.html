@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=223" />
+  <link rel="manifest" href="./manifest.json?v=224" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=223" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=223" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=224" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=224" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -372,6 +372,98 @@
     }
     .swipe-enter-right { animation: swipeSlideInRight 0.21s cubic-bezier(0.22, 1, 0.36, 1); }
     .swipe-enter-left { animation: swipeSlideInLeft 0.21s cubic-bezier(0.22, 1, 0.36, 1); }
+
+    /* 홈 상단 배너(새가족 환영 · 중요) 좌우 스와이프 슬라이더 */
+    .top-banner-carousel {
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .top-banner-track {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      border-radius: 20px;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.16);
+      touch-action: pan-x pan-y;
+    }
+    .top-banner-track::-webkit-scrollbar {
+      display: none;
+    }
+    .top-banner-slide {
+      flex: 0 0 100%;
+      width: 100%;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      display: flex;
+    }
+    .top-banner-slide > .newcomer-auto-banner,
+    .top-banner-slide > .hero-banner {
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .top-banner-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .top-banner-arrow {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      color: #334155;
+      font-size: 14px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+      transition: background 0.14s ease, transform 0.12s ease;
+    }
+    .top-banner-arrow:active {
+      background: #F1F5F9;
+      transform: scale(0.92);
+    }
+    .top-banner-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .top-banner-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      border: none;
+      padding: 0;
+      background: #CBD5E1;
+      cursor: pointer;
+      transition: width 0.2s ease, background 0.2s ease;
+    }
+    .top-banner-dot.active {
+      width: 20px;
+      background: #111827;
+    }
+    .top-banner-count {
+      font-size: 11px;
+      font-weight: 800;
+      color: #64748B;
+      min-width: 28px;
+      text-align: center;
+    }
     .hero-badge {
       display: inline-block; background: rgba(245, 158, 11, 0.24); color: #FDE68A;
       font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; margin-bottom: 10px;
@@ -3726,7 +3818,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=223" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=224" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5487,7 +5579,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 31;
-    const APP_CLIENT_BUILD = 223;
+    const APP_CLIENT_BUILD = 224;
     const SHEET_SCHEMA_VERSION = 'v10.112-10tab-fast';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
@@ -6476,7 +6568,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=223" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=224" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6500,8 +6592,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=223', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=223', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=224', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=224', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -10927,7 +11019,7 @@
         if (t.clientX < 20 || t.clientX > window.innerWidth - 20) return;
 
         const target = e.target;
-        if (target && target.closest && target.closest('input, textarea, select, option, iframe, .switch, [contenteditable="true"]')) return;
+        if (target && target.closest && target.closest('.top-banner-carousel, input, textarea, select, option, iframe, .switch, [contenteditable="true"]')) return;
         if (isInsideHorizontalScroller(target)) return;
 
         activeEl = getActiveMainSectionEl();
@@ -11804,7 +11896,9 @@
       return String(template || '').replace(/\{이름\}/g, namesText);
     }
 
-    function buildNewcomerAutoBannerHtml(user) {
+    let homeTopBannerIdx = 0;
+
+    function buildNewcomerAutoBannerCardInner(user) {
       const valid = newcomerList.filter(item => item && String(item.name || '').trim());
       if (valid.length === 0) return '';
       const namesText = valid.map(item => String(item.name).trim()).join(', ');
@@ -11812,18 +11906,129 @@
       const titleText = renderCelebrationText(getCelebrationMsg('newcomerTitle'), namesText);
       const descText = renderCelebrationText(getCelebrationMsg('newcomerDesc'), namesText);
       const adminEditBtn = (user && user.isSuperAdmin)
-        ? `<button class="banner-quick-edit-btn" type="button" onclick="openCelebrationMsgsModal()">✏️ 멘트 수정</button>`
+        ? `<button class="banner-quick-edit-btn" type="button" onclick="event.stopPropagation(); openCelebrationMsgsModal()">✏️ 멘트 수정</button>`
         : '';
       return `
-        <div class="home-block">
-          <div class="newcomer-auto-banner">
-            ${adminEditBtn}
-            <span class="newcomer-auto-badge">${escapeHtml(badgeText)} · ${valid.length}명</span>
-            <h2 class="newcomer-auto-title">${escapeHtml(titleText)}</h2>
-            <p class="newcomer-auto-desc">${escapeHtml(descText)}</p>
+        <div class="newcomer-auto-banner">
+          ${adminEditBtn}
+          <span class="newcomer-auto-badge" style="${adminEditBtn ? 'max-width:calc(100% - 86px);' : ''}">${escapeHtml(badgeText)} · ${valid.length}명</span>
+          <h2 class="newcomer-auto-title">${escapeHtml(titleText)}</h2>
+          <p class="newcomer-auto-desc">${escapeHtml(descText)}</p>
+        </div>
+      `;
+    }
+
+    function buildNewcomerAutoBannerHtml(user) {
+      const inner = buildNewcomerAutoBannerCardInner(user);
+      return inner ? `<div class="home-block">${inner}</div>` : '';
+    }
+
+    function buildHeroNoticeCardInner(b, visibleNotices, user) {
+      if (!b) return '';
+      const pinned = visibleNotices.find(n => n.pinned) || visibleNotices[0];
+      if (!pinned) return '';
+      const pinnedNew = isNoticeUnread(pinned, user);
+      const rawHeroBadge = String(b.badge || '').trim();
+      const heroBadgeText = (!rawHeroBadge || (!b.badgeCustomized && rawHeroBadge === '📌 중요 공지'))
+        ? '📌 중요'
+        : rawHeroBadge;
+      const heroEditBtn = (user && user.isSuperAdmin)
+        ? `<button class="banner-quick-edit-btn" type="button" onclick="event.stopPropagation(); openEditBlockModal('${escapeJsAttr(b.id)}')">✏️ 배지 수정</button>`
+        : '';
+      return `
+        <div class="hero-banner ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)};" onclick="openDetail('${escapeJsAttr(pinned.id)}')">
+          ${heroEditBtn}
+          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:9px; ${heroEditBtn ? 'padding-right:86px;' : ''}">
+            <span class="hero-badge" style="margin-bottom:0;">${escapeHtml(heroBadgeText)}${pinned.audience && pinned.audience !== 'all' ? ' · 지정대상' : ''}</span>
+            ${pinnedNew ? '<span class="new-badge">NEW</span>' : ''}
+          </div>
+          <h2 class="hero-title" style="margin-bottom:0;">${escapeHtml(pinned.title)}</h2>
+        </div>
+      `;
+    }
+
+    function buildTopBannerCarouselHtml(slides) {
+      const total = slides.length;
+      if (total === 0) return '';
+      if (homeTopBannerIdx >= total || homeTopBannerIdx < 0) homeTopBannerIdx = 0;
+      const dotsHtml = slides.map((s, idx) => `
+        <button class="top-banner-dot ${idx === homeTopBannerIdx ? 'active' : ''}" type="button" aria-label="${escapeHtml(s.label)} (${idx + 1}/${total})" onclick="goToHomeTopBanner(${idx})"></button>
+      `).join('');
+      return `
+        <div class="top-banner-carousel" data-total="${total}">
+          <div id="homeTopBannerTrack" class="top-banner-track">
+            ${slides.map(s => `<div class="top-banner-slide">${s.html}</div>`).join('')}
+          </div>
+          <div class="top-banner-controls">
+            <button class="top-banner-arrow" type="button" aria-label="이전 배너" onclick="stepHomeTopBanner(-1)">‹</button>
+            <div id="homeTopBannerDots" class="top-banner-dots">${dotsHtml}</div>
+            <span id="homeTopBannerCount" class="top-banner-count">${homeTopBannerIdx + 1} / ${total}</span>
+            <button class="top-banner-arrow" type="button" aria-label="다음 배너" onclick="stepHomeTopBanner(1)">›</button>
           </div>
         </div>
       `;
+    }
+
+    function updateHomeTopBannerIndicators(idx, total) {
+      const dotsWrap = document.getElementById('homeTopBannerDots');
+      if (dotsWrap) {
+        dotsWrap.querySelectorAll('.top-banner-dot').forEach((dot, i) => {
+          dot.classList.toggle('active', i === idx);
+        });
+      }
+      const countEl = document.getElementById('homeTopBannerCount');
+      if (countEl) countEl.textContent = `${idx + 1} / ${total}`;
+    }
+
+    window.goToHomeTopBanner = (idx) => {
+      const track = document.getElementById('homeTopBannerTrack');
+      if (!track) return;
+      const total = track.children.length;
+      if (total <= 1) return;
+      const clamped = Math.max(0, Math.min(total - 1, Number(idx || 0)));
+      homeTopBannerIdx = clamped;
+      track.scrollTo({ left: clamped * track.clientWidth, behavior: 'smooth' });
+      updateHomeTopBannerIndicators(clamped, total);
+    };
+
+    window.stepHomeTopBanner = (delta) => {
+      const track = document.getElementById('homeTopBannerTrack');
+      if (!track) return;
+      const total = track.children.length;
+      if (total <= 1) return;
+      const next = (homeTopBannerIdx + Number(delta || 0) + total) % total;
+      goToHomeTopBanner(next);
+    };
+
+    function bindHomeTopBannerCarousel() {
+      const track = document.getElementById('homeTopBannerTrack');
+      if (!track) return;
+      const total = track.children.length;
+      if (total <= 1) return;
+      if (homeTopBannerIdx >= total || homeTopBannerIdx < 0) homeTopBannerIdx = 0;
+
+      if (homeTopBannerIdx > 0) {
+        track.style.scrollBehavior = 'auto';
+        track.scrollLeft = homeTopBannerIdx * track.clientWidth;
+        requestAnimationFrame(() => { track.style.scrollBehavior = ''; });
+      }
+      updateHomeTopBannerIndicators(homeTopBannerIdx, total);
+
+      let rafPending = false;
+      track.addEventListener('scroll', () => {
+        if (rafPending) return;
+        rafPending = true;
+        requestAnimationFrame(() => {
+          rafPending = false;
+          const w = track.clientWidth;
+          if (!w) return;
+          const nextIdx = Math.max(0, Math.min(total - 1, Math.round(track.scrollLeft / w)));
+          if (nextIdx !== homeTopBannerIdx) {
+            homeTopBannerIdx = nextIdx;
+            updateHomeTopBannerIndicators(nextIdx, total);
+          }
+        });
+      }, { passive: true });
     }
 
     function renderHomeView(user) {
@@ -11845,7 +12050,8 @@
       }
 
       const attendanceHtml = buildAttendanceHomeCardHtml(user);
-      const newcomerHtml = buildNewcomerAutoBannerHtml(user);
+      const newcomerInner = buildNewcomerAutoBannerCardInner(user);
+      const newcomerHtml = newcomerInner ? `<div class="home-block">${newcomerInner}</div>` : '';
       const homeVideosHtml = buildHomeVideosSectionHtml(user);
 
       if (homeContentPermError && !homeBlocksLoaded) {
@@ -11886,31 +12092,22 @@
         return;
       }
 
-      container.innerHTML = attendanceHtml + newcomerHtml + visibleBlocks.map(b => {
+      const firstHeroBlock = visibleBlocks.find(b => b.type === 'hero_notice');
+      const firstHeroInner = firstHeroBlock ? buildHeroNoticeCardInner(firstHeroBlock, visibleNotices, user) : '';
+      const useTopCarousel = !!(newcomerInner && firstHeroInner);
+      const topBannerAreaHtml = useTopCarousel
+        ? buildTopBannerCarouselHtml([
+            { label: '새가족 환영 배너', html: newcomerInner },
+            { label: '중요 배너', html: firstHeroInner }
+          ])
+        : newcomerHtml;
+
+      container.innerHTML = attendanceHtml + topBannerAreaHtml + visibleBlocks.map(b => {
 
         if (b.type === 'hero_notice') {
-          const pinned = visibleNotices.find(n => n.pinned) || visibleNotices[0];
-          if (!pinned) return '';
-          const pinnedNew = isNoticeUnread(pinned, user);
-          const rawHeroBadge = String(b.badge || '').trim();
-          const heroBadgeText = (!rawHeroBadge || (!b.badgeCustomized && rawHeroBadge === '📌 중요 공지'))
-            ? '📌 중요'
-            : rawHeroBadge;
-          const heroEditBtn = (user && user.isSuperAdmin)
-            ? `<button class="banner-quick-edit-btn" type="button" onclick="event.stopPropagation(); openEditBlockModal('${escapeJsAttr(b.id)}')">✏️ 배지 수정</button>`
-            : '';
-          return `
-            <div class="home-block">
-              <div class="hero-banner ${isBannerThemeLight(b.theme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(b.theme)};" onclick="openDetail('${escapeJsAttr(pinned.id)}')">
-                ${heroEditBtn}
-                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:9px; ${heroEditBtn ? 'padding-right:82px;' : ''}">
-                  <span class="hero-badge" style="margin-bottom:0;">${escapeHtml(heroBadgeText)}${pinned.audience && pinned.audience !== 'all' ? ' · 지정대상' : ''}</span>
-                  ${pinnedNew ? '<span class="new-badge">NEW</span>' : ''}
-                </div>
-                <h2 class="hero-title" style="margin-bottom:0;">${escapeHtml(pinned.title)}</h2>
-              </div>
-            </div>
-          `;
+          if (useTopCarousel && firstHeroBlock && b.id === firstHeroBlock.id) return '';
+          const heroCardHtml = buildHeroNoticeCardInner(b, visibleNotices, user);
+          return heroCardHtml ? `<div class="home-block">${heroCardHtml}</div>` : '';
         }
 
         if (b.type === 'newcomer_card') {
@@ -12015,6 +12212,8 @@
         }
         return '';
       }).join('') + homeVideosHtml;
+
+      if (useTopCarousel) bindHomeTopBannerCarousel();
     }
 
     window.setFilter = (cat) => {
