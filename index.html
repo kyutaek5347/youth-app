@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=265" />
+  <link rel="manifest" href="./manifest.json?v=266" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=265" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=265" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=266" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=266" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4523,7 +4523,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=265" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=266" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -6106,7 +6106,7 @@
   <div id="videoSubmitModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="videoSubmitModalTitle" class="modal-title">🎬 유튜브 영상 등록 · 추천</h3>
+        <h3 id="videoSubmitModalTitle" class="modal-title">🎬 유튜브 영상 게시</h3>
         <button class="close-btn" data-close="videoSubmitModal">✕</button>
       </div>
       <input type="hidden" id="editVideoDocId" />
@@ -6384,8 +6384,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 265;
-    const APP_CACHE_NAME = 'right-youth-app-v10.165';
+    const APP_CLIENT_BUILD = 266;
+    const APP_CACHE_NAME = 'right-youth-app-v10.166';
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.156-log-archive';
     const SHEET_SCHEMA_TABS = [
@@ -6398,7 +6398,7 @@
       { id: 'admin_entry_logs', name: '관리자 입퇴장 로그', kind: 'log', addedIn: 'v10.42', rebuildable: false, desc: '관리자 등록·승인·거절·해제·재입장 (삭제 불가)' },
       { id: 'rename_logs', name: '이름 변경 로그', kind: 'log', addedIn: 'v10.42', rebuildable: false, desc: '관리자·회원 이름 변경 신청/승인/거절 (삭제 불가)' },
       { id: 'admin_audit_logs', name: '관리자 활동 로그', kind: 'log', addedIn: 'v10.48', rebuildable: false, desc: '공지·배너·영상·역할·메뉴·설정 전체 기록 (삭제 불가)' },
-      { id: 'member_audit_logs', name: '이용자 활동 로그', kind: 'log', addedIn: 'v10.48', rebuildable: false, desc: '영상 추천·문의·가입/탈퇴·출석 이력 (삭제 불가)' }
+      { id: 'member_audit_logs', name: '이용자 활동 로그', kind: 'log', addedIn: 'v10.48', rebuildable: false, desc: '영상 게시(추천)·문의·가입/탈퇴·출석 이력 (삭제 불가)' }
     ];
     const SHEET_REMOVED_TABS = [
       { name: '출석부', removedIn: 'v10.151', reason: '날짜별 셀 주간 출석부 탭(예: 26.11.29)으로 전면 전환 (구버전 누적 출석부 탭 자동 삭제)' },
@@ -6754,7 +6754,7 @@
     const MANAGE_SUBTAB_REGISTRY = [
       { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', intro: '홈 화면 배너·칸 순서와 공지·광고 게시(바로·임시저장·예약), 새가족 환영 배너를 관리합니다.', permCheck: p => !!(p.canEditLayout || p.canManageNotices || p.canObserveManage) },
       { id: 'quicklinks', labelKey: 'manageQuickLinks', defaultIcon: '🔗', defaultLabel: '사이트 바로가기 관리', intro: '하단 바로가기 메뉴에 표시되는 인스타그램·유튜브·교회 홈페이지 등 외부 사이트 링크를 관리합니다.', permCheck: p => !!(p.canEditLayout || p.canObserveManage) },
-      { id: 'videos', labelKey: 'manageVideos', defaultIcon: '🎬', defaultLabel: '영상 관리', intro: '추천된 설교·CCM 유튜브 영상을 검토·승인하고, 공식 채널 화이트리스트와 세부 탭을 관리합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'videos', labelKey: 'manageVideos', defaultIcon: '🎬', defaultLabel: '영상 관리', intro: '게시(추천)된 설교·CCM 유튜브 영상을 검토·승인하고, 공식 채널 화이트리스트와 세부 탭을 관리합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
       { id: 'worship', labelKey: 'manageWorship', defaultIcon: '⛪', defaultLabel: '예배 관리', intro: '매주 일요일 정기 예배 출석체크 시간, 예배X(휴무) 지정 및 수련회·특별 행사 일정을 설정합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
       { id: 'attendance', labelKey: 'manageAttendance', defaultIcon: '✅', defaultLabel: '출석인원', intro: '날짜별 출석 현황을 확인·수정하고, 셀별 주간 출석부 시트 생성·A4 인쇄 및 무인 자동 생성을 예약합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
       { id: 'sheet', labelKey: 'manageSheet', defaultIcon: '📊', defaultLabel: '시트 연동', intro: 'Google Apps Script 연동 주소와 출석부·로그 백업 시트 분리, 10개 영역 동기화 및 양식 재정비를 관리합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
@@ -7513,7 +7513,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=265" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=266" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7537,8 +7537,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=265', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=265', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=266', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=266', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -13595,7 +13595,7 @@
           const namesTxt = list.map(a => a.isMe ? `${escapeHtml(a.name)}(나)` : escapeHtml(a.name)).join(', ');
           return `
             <div class="reaction-who-line">
-              <span class="reaction-who-tag">${e.emoji} ${escapeHtml(e.label)} (${list.length}):</span>
+              <span class="reaction-who-tag">${escapeHtml(e.emoji)} ${escapeHtml(e.label)} (${list.length}):</span>
               <span>${namesTxt || '-'}</span>
             </div>
           `;
@@ -22997,7 +22997,7 @@
         <div class="info-box" style="margin-top:0; margin-bottom:12px;">
           🔐 <b>통합 보안 감사 로그 (위변조·삭제 불가)</b><br>
           • <b>관리자:</b> 모든 추가·수정·삭제·승인·설정 변경 자동 기록<br>
-          • <b>이용자:</b> 유튜브 영상 추천/수정/삭제, 문의 사항 작성/수정/삭제, 이름 변경 신청/취소, 가입·탈퇴, 출석 체크만 기록<br>
+          • <b>이용자:</b> 유튜브 영상 게시(추천)/수정/삭제, 문의 사항 작성/수정/삭제, 이름 변경 신청/취소, 가입·탈퇴, 출석 체크만 기록<br>
           • <b>미기록(프라이버시 보호):</b> 이용자 비밀번호 변경, 전체 글자 크기·알림 설정, ${escapeHtml(getQuickSheetLabel())} 이동, 공지·소식 단순 조회
         </div>
 
@@ -37223,13 +37223,13 @@ ${handleUrl}`);
 
     window.openVideoSubmitModal = (defaultCat = '', defaultSermonTab = '') => {
       const user = getCurrentUser();
-      if (!canUserSubmitVideo(user)) return showToast('영상 추천 권한이 없습니다.');
+      if (!canUserSubmitVideo(user)) return showToast('영상 게시 권한이 없습니다.');
       lastVideoInspectResult = null;
       const initCat = defaultCat || (currentMainTab === 'ccm' ? 'CCM' : (currentMainTab === 'sermon' && sermonCatFilter === '라이트 청년부' ? '라이트 청년부' : '설교'));
       const modalCatLabel = initCat === 'CCM' ? getTabLabel('ccm') : (initCat === '라이트 청년부' ? '라이트 청년부' : getTabLabel('sermon'));
       document.getElementById('videoSubmitModalTitle').textContent = user.isSuperAdmin
         ? `🎬 ${modalCatLabel} · 유튜브 영상 등록`
-        : `🎬 ${modalCatLabel} 영상 추천 신청`;
+        : `🎬 ${modalCatLabel} 영상 게시`;
       document.getElementById('editVideoDocId').value = '';
       document.getElementById('videoUrlFieldGroup').classList.remove('hidden');
       document.getElementById('videoUrlInput').value = '';
@@ -37928,7 +37928,7 @@ ${handleUrl}`);
         ${buildManageAccordionBar({
           key: 'vid_perm',
           marginTop: (showPending || showChannels) ? '10px' : '',
-          titleHtml: '⚙️ 영상 추천 권한 · 홈 표시 설정',
+          titleHtml: '⚙️ 영상 게시 권한 · 홈 표시 설정',
           badgeHtml: `<span class="tag slate">${cfg.submitAudience === 'all' ? '전체 회원' : (cfg.submitAudience === 'admin' ? '관리자만' : `선택 역할 ${(cfg.submitTargetRoles || []).length}개`)}</span>`,
           defaultOpen: false
         })}
@@ -37936,7 +37936,7 @@ ${handleUrl}`);
           <div class="card">
             <div class="setting-row" style="padding-top:0;">
               <div>
-                <div class="setting-title" style="font-size:13.5px;">메인 홈 화면에 최신 영상 섹션 표시</div>
+                <div class="setting-title" style="font-size:13.5px;">메인 홈 화면에 인기 추천 영상 섹션 표시</div>
                 <div class="setting-sub" style="font-size:11.5px;">꺼도 하단 [설교] · [CCM] 탭에서 전체 영상을 볼 수 있습니다.</div>
               </div>
               <label class="switch">
@@ -37945,10 +37945,10 @@ ${handleUrl}`);
               </label>
             </div>
             <div class="form-group" style="margin-top:10px;">
-              <label class="form-label" for="cfgVidSubmitAudience">유튜브 영상 추천 가능 대상</label>
+              <label class="form-label" for="cfgVidSubmitAudience">유튜브 영상 게시 가능 대상</label>
               <select id="cfgVidSubmitAudience" class="form-select" onchange="onCfgVidAudienceChange()">
-                <option value="roles" ${cfg.submitAudience === 'roles' ? 'selected' : ''}>🎯 선택한 역할만 추천 가능 (권장)</option>
-                <option value="all" ${cfg.submitAudience === 'all' ? 'selected' : ''}>👥 전체 승인 회원 추천 가능</option>
+                <option value="roles" ${cfg.submitAudience === 'roles' ? 'selected' : ''}>🎯 선택한 역할만 게시 가능 (권장)</option>
+                <option value="all" ${cfg.submitAudience === 'all' ? 'selected' : ''}>👥 전체 승인 회원 게시 가능</option>
                 <option value="admin" ${cfg.submitAudience === 'admin' ? 'selected' : ''}>🔐 최고 관리자만 등록 가능</option>
               </select>
               <div id="cfgVidRoleBox" class="role-target-box ${cfg.submitAudience === 'roles' ? '' : 'hidden'}">
@@ -38025,7 +38025,7 @@ ${handleUrl}`);
       const submitAudience = (document.getElementById('cfgVidSubmitAudience') || {}).value || 'roles';
       const submitTargetRoles = Array.from(document.querySelectorAll('.cfg-vid-role-chk:checked')).map(el => String(el.value));
       if (submitAudience === 'roles' && submitTargetRoles.length === 0) {
-        return showToast('추천 권한을 부여할 역할을 1개 이상 선택해 주세요.');
+        return showToast('게시 권한을 부여할 역할을 1개 이상 선택해 주세요.');
       }
       const next = { showOnHome, submitAudience, submitTargetRoles, sermonTabs: getConfiguredSermonSubTabs(), ccmTabs: getConfiguredCcmSubTabs() };
       const btn = document.getElementById('saveVideoSettingsBtn');
@@ -38037,9 +38037,9 @@ ${handleUrl}`);
         recordAuditLog({
           actorType: 'admin',
           category: '영상',
-          action: '영상 추천 권한·표시 설정 변경',
+          action: '영상 게시 권한·표시 설정 변경',
           target: '설교·찬양 영상',
-          detail: `홈 표시:${showOnHome ? 'ON' : 'OFF'} · 추천대상:${submitAudience}${submitAudience === 'roles' ? `(${submitTargetRoles.length}개 역할)` : ''}`
+          detail: `홈 표시:${showOnHome ? 'ON' : 'OFF'} · 게시대상:${submitAudience}${submitAudience === 'roles' ? `(${submitTargetRoles.length}개 역할)` : ''}`
         });
         setInlineSaveStatus('video_cfg', 'ok', `✅ 영상 설정 저장 완료! (홈 표시: ${showOnHome ? '켜짐' : '꺼짐'})`);
         showToast('💾 영상 권한 및 홈 표시 설정이 저장되었습니다!', 'ok');
