@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=269" />
+  <link rel="manifest" href="./manifest.json?v=275" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=269" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=269" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=275" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=275" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4637,7 +4637,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=269" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=275" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -6498,9 +6498,16 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 269;
-    const APP_CACHE_NAME = 'right-youth-app-v10.169';
+    const APP_CLIENT_BUILD = 275;
+    const APP_CACHE_NAME = 'right-youth-app-v10.175';
     const APP_BOOT_TS = Date.now();
+    try {
+      const _bootUrl = new URL(window.location.href);
+      if (_bootUrl.searchParams.has('_upd')) {
+        _bootUrl.searchParams.delete('_upd');
+        window.history.replaceState({}, '', _bootUrl.pathname + (_bootUrl.search || '') + (_bootUrl.hash || ''));
+      }
+    } catch {}
     const SHEET_SCHEMA_VERSION = 'v10.156-log-archive';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '주간 출석부 (날짜별 탭)', isWeeklyAttendance: true, kind: 'state', addedIn: 'v10.151', rebuildable: true, desc: '예배·행사 날짜별 셀 주간 출석부 탭 (예: 26.11.29 · 구버전 누적 출석부 폐기)' },
@@ -7788,7 +7795,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=269" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=275" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7812,8 +7819,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=269', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=269', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=275', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=275', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -11046,9 +11053,18 @@
             try { localStorage.setItem(KEY_SHEET_NEW_ACK_MAP, JSON.stringify(sheetNewAckMap)); } catch {}
           }
           if (typeof syncAutoSheetRunner === 'function') syncAutoSheetRunner();
-          if (typeof d.latestBuild === 'number' && d.latestBuild > serverLatestBuild) {
+          if (typeof d.latestBuild === 'number' && d.latestBuild !== serverLatestBuild) {
             serverLatestBuild = d.latestBuild;
-            notifyPendingAppUpdateIfNeeded();
+            if (hasPendingAppUpdate()) {
+              notifyPendingAppUpdateIfNeeded();
+            } else {
+              updateNotifDispatched = false;
+              if (typeof hideInAppNotif === 'function') hideInAppNotif();
+              if (currentMainTab === 'settings') {
+                const u = getCurrentUser();
+                if (u) renderSettingsView(u);
+              }
+            }
           }
           if (d.autoOptConfig && typeof d.autoOptConfig === 'object') {
             const rawMin = Number(d.autoOptConfig.intervalMin);
@@ -33696,10 +33712,38 @@
           const keys = await caches.keys();
           await Promise.all(keys.map(k => caches.delete(k).catch(() => {})));
         }
+        try { await fetch('./index.html', { cache: 'reload' }); } catch {}
       } catch {}
       setTimeout(() => {
-        window.location.reload();
+        try {
+          const u = new URL(window.location.href);
+          u.searchParams.set('_upd', String(Date.now()));
+          window.location.replace(u.toString());
+        } catch {
+          window.location.reload();
+        }
       }, 280);
+    };
+
+    window.syncServerBuildToCurrent = async () => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) {
+        showToast('최고 관리자만 서버 기준 버전을 맞출 수 있습니다.');
+        return;
+      }
+      if (!confirm(`현재 설치된 빌드(b${APP_CLIENT_BUILD})를 서버 최신 기준으로 맞출까요?\n이전 버전으로 되돌린 뒤 업데이트 알림이 반복될 때 사용하면 즉시 해결됩니다.`)) return;
+      try {
+        await db.collection('config').doc('app').set({ latestBuild: APP_CLIENT_BUILD }, { merge: true });
+        await db.collection('config').doc('layout').set({ latestBuild: APP_CLIENT_BUILD }, { merge: true });
+        serverLatestBuild = APP_CLIENT_BUILD;
+        swHasWaitingUpdate = false;
+        updateNotifDispatched = false;
+        hideInAppNotif();
+        applyScreen();
+        showToast(`서버 기준 버전을 현재 빌드(b${APP_CLIENT_BUILD})로 맞췄습니다.`, 'ok');
+      } catch (err) {
+        handleDbError(err, '서버 기준 버전 동기화');
+      }
     };
 
     window.openFromSettingsTab = (tabKey) => {
@@ -34020,6 +34064,9 @@
               새로운 기능과 보안 개선 사항이 반영되었습니다. 아래 버튼을 눌러 최신 화면으로 업데이트해 주세요.
             </div>
             <button class="btn-full" type="button" style="background:#FFFFFF; color:#1D4ED8; padding:11px; font-size:13.5px;" onclick="applyPendingAppUpdate()">🔄 지금 업데이트하기</button>
+            ${isAdmin && serverLatestBuild > APP_CLIENT_BUILD ? `
+              <button class="btn-full" type="button" style="background:rgba(15,23,42,0.38); color:#FDE68A; border:1px solid rgba(253,230,138,0.45); padding:9px; font-size:12px; margin-top:7px;" onclick="syncServerBuildToCurrent()">⚙️ 롤백 후 반복 알림 해결 (서버 기준을 현재 b${APP_CLIENT_BUILD}로 맞추기)</button>
+            ` : ''}
           </div>
         ` : ''}
 
