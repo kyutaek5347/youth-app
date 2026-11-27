@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=262" />
+  <link rel="manifest" href="./manifest.json?v=263" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=262" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=262" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=263" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=263" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4523,7 +4523,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=262" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=263" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5944,9 +5944,9 @@
         • 설치 파일(.apk/.exe) 없는 웹 앱 구조로 기기 파일 접근 원천 차단
       </div>
       <div class="info-box warn" style="margin-top:0; margin-bottom:14px;">
-        <b>3. 공동체 활동 표시 및 보안 로그 기록 범위</b><br>
+        <b>3. 공동체 활동 표시 및 보안 로그 · 구글 시트 기록 범위</b><br>
         • <b>공동체 내 이모지 표시:</b> 공지·광고·설교·CCM에 이모지를 누르면 공동체 확인을 위해 본인 성명이 함께 표시되며, 언제든 다시 눌러 취소할 수 있습니다.<br>
-        • <b>보안 감사 로그 기록:</b> 건전한 공동체 운영을 위해 유튜브 영상 게시(추천)·수정·삭제, 문의 사항 작성·수정·삭제, 가입·탈퇴, 이름 변경 신청, 예배 출석 체크 내역만 관리 로그에 기록됩니다.
+        • <b>보안 감사 로그 · 구글 시트 기록:</b> 건전한 공동체 운영을 위해 관리자의 설정·반응 이모지 편집 활동과 회원의 유튜브 영상 게시(추천)·수정·삭제, 문의 사항 작성·수정·삭제, 가입·탈퇴, 이름 변경 신청, 예배 출석 체크 내역은 앱 보안 로그 및 연동된 구글 시트에 기록됩니다.
       </div>
       <button class="btn-full btn-dark" type="button" style="padding:11px;" data-close="privacyGuideModal">확인</button>
     </div>
@@ -6384,8 +6384,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 262;
-    const APP_CACHE_NAME = 'right-youth-app-v10.162';
+    const APP_CLIENT_BUILD = 263;
+    const APP_CACHE_NAME = 'right-youth-app-v10.163';
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.156-log-archive';
     const SHEET_SCHEMA_TABS = [
@@ -7513,7 +7513,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=262" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=263" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7537,8 +7537,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=262', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=262', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=263', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=263', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -12645,7 +12645,7 @@
             `<b>예배 · 특별 행사 출석 체크:</b> 설정된 주일 예배 시간(기본 일요일 14:00~15:30) 또는 특별 행사 시간에만 <b>${hLbl}</b> 맨 위에 <b>초록색 출석 카드</b>가 자동으로 나타납니다.`,
             `<b>출석O / 출석X 선택 및 주간 출석부 반영:</b> <b>[출석O]</b> 또는 <b>[출석X]</b> 버튼을 누르면 출석이 즉시 기록되고 카드가 닫힙니다. 구글 시트 주간 출석부에는 출석한 지체(<b>출석O</b>)만 소속 셀 칸에 <b>○</b>로 자동 체크되며, 불참·미응답은 빈칸으로 유지됩니다. 내 출석 이력은 하단 <b>[${stIcn} ${stLbl}] → 👤 내 계정 관리</b>에서 확인할 수 있습니다.`
           ],
-          tip: '출석 시간이 지났거나 잘못 누른 경우에는 관리자에게 말씀해 주시면 즉시 수정해 드립니다.'
+          tip: '출석 시간이 지났거나 잘못 누른 경우에는 관리자에게 말씀해 주시면 즉시 수정해 드립니다. (공지·영상 이모지 누르기/취소는 보안 로그·시트에 남지 않으며, 관리자의 반응 이모지 설정 변경만 보안 로그·구글 시트에 기록됩니다.)'
         },
         {
           id: 'ug_sermon_ccm',
@@ -12992,7 +12992,7 @@
           targetLabel: `${getTabIcon('manageLogs')} ${getTabLabel('manageLogs')} 탭 열기`,
           steps: [
             `<b>초대 QR 관리 ([${qrIcn} ${qrLbl}]):</b> 평소에는 <b>오늘 하루(00:00 갱신)</b>로 두고, 주일 현장 가입을 받을 때는 <b>5분 · 10분 자동 갱신 모드</b>(직전 QR 3~5분 유예 + 화면 복귀 시 즉시 갱신)로 전환할 수 있습니다. 외부 유출 시 <b>[🔄 새 QR 즉시 재발급]</b>을 누르면 유예 없이 즉시 폐기됩니다.`,
-            `<b>통합 보안 감사 로그 ([${logIcn} ${logLbl}]):</b> 악의적 글 게시·임의 변경·장난을 방지하기 위해 <b>관리자의 모든 추가/수정/삭제/설정 변경(반응 이모지 추가·수정·삭제 포함)</b>과 <b>이용자의 영상 게시(추천)·문의·이름 변경 신청·가입/탈퇴·출석 체크</b>가 날짜·시각(초 단위 KST)과 함께 기록됩니다.`,
+            `<b>통합 보안 감사 로그 ([${logIcn} ${logLbl}] · 구글 시트 자동 기록):</b> 악의적 글 게시·임의 변경·장난을 방지하기 위해 <b>관리자의 모든 추가/수정/삭제/설정 변경(반응 이모지 추가·수정·삭제·순서 변경 포함)</b>과 <b>이용자의 영상 게시(추천)·문의·이름 변경 신청·가입/탈퇴·출석 체크</b>가 날짜·시각(초 단위 KST) 및 변경 전/후 상세 내용과 함께 앱 로그 및 <b>구글 시트 [관리자 활동 로그 / 이용자 활동 로그]</b>에 자동 기록됩니다.`,
             `<b>위변조·삭제 불가 & 3단계 자동 보관:</b> 보안상 최고 관리자도 앱에서 로그를 임의로 수정·삭제할 수 없습니다. 대신 <b>[${logIcn} ${logLbl}]</b> 상단의 <b>[📦 로그 자동 분리 · 백업 · 보관 관리]</b>에서 ① 연도·행수 자동 분리(<code>_2026</code>), ② 별도 백업 시트 파일 1클릭 이관, ③ Firebase 자동 만료(TTL)를 안전하게 관리할 수 있습니다.`,
             `<b>프라이버시 미기록 범위:</b> 이용자 비밀번호 변경, 전체 글자 크기·알림 설정, 공지·영상 이모지 누르기/취소, 외부 사이트 이동, 공지·${byLbl} 단순 조회는 기록되지 않습니다.`
           ],
@@ -13009,7 +13009,7 @@
           targetTab: 'diagnostics',
           targetLabel: `${getTabIcon('manageDiagnostics')} ${getTabLabel('manageDiagnostics')} 탭 열기`,
           steps: [
-            `<b>${lblLbl} & 반응 이모지 편집 ([${lblIcn} ${lblLbl}]):</b> 하단 탭, 설정 항목, <b>${mngLbl}</b> 서브탭의 이모지·이름·순서와 상단 단축 아이콘(QR·알림), 각 관리 섹션 제목(<b>[✏️ 수정]</b>)은 물론 <b>공지·광고 · 설교·CCM 반응 이모지(추가 · 수정 · 삭제 · 순서)</b>까지 자유롭게 편집할 수 있으며 모든 변경 내역은 보안 로그에 자동 기록됩니다.`,
+            `<b>${lblLbl} & 반응 이모지 편집 ([${lblIcn} ${lblLbl}]):</b> 하단 탭, 설정 항목, <b>${mngLbl}</b> 서브탭의 이모지·이름·순서와 상단 단축 아이콘(QR·알림), 각 관리 섹션 제목(<b>[✏️ 수정]</b>)은 물론 <b>공지·광고 · 설교·CCM 반응 이모지(추가 · 수정 · 삭제 · 순서 · 기본 복원)</b>까지 자유롭게 편집할 수 있으며, 모든 변경 전/후 이모지·명칭 내역은 앱 <b>[${logIcn} ${logLbl}]</b>와 <b>구글 시트 [관리자 활동 로그]</b>(<code>상세</code> 열)에 즉시 자동 기록됩니다.`,
             `<b>앱 성능 · 자동 안전 최적화 ([${diagIcn} ${diagLbl} → ⚡ 성능 · 자동 최적화]):</b> 불러온 문서 수, 저장소 사용량, 평균 렌더링 속도, 실시간 구독 수를 한눈에 확인하며, 자동 최적화가 구버전 캐시와 만료 임시 기록만 무손실 정리합니다. (서버 데이터·시트·로그인·설정 100% 보존 · 보안 로그는 최근 250건씩 분할 조회)`,
             `<b>${diagCnt}개 항목 수동·자동 기능 점검 ([${diagIcn} ${diagLbl}]):</b> <b>[🚀 수동 전체 기능 일괄 점검 실행]</b> 및 자동 주기 점검으로 Firebase, 구글 시트 10개 탭(버전·누락·삭제 대조), 초대 QR, 알림, 설정·영상·예배·문의·PWA 최신 빌드 상태를 한 번에 진단합니다.`,
             `<b>일반 회원 · 참관자 시점 미리보기:</b> <b>[👁️ 일반 회원 / 참관자 미리보기]</b>로 실제 회원·참관자 화면을 안전하게 확인하고 상단 배너의 <b>[관리자 복귀]</b>로 즉시 돌아옵니다.`,
@@ -18871,7 +18871,7 @@
           <div class="card">
             <div class="info-box" style="margin-top:0; margin-bottom:12px;">
               • 이용자들이 <b>공지·광고</b>와 <b>설교·CCM 영상</b>에 달 수 있는 이모지와 명칭을 자유롭게 추가·수정·순서 변경·삭제할 수 있습니다.<br>
-              • 모든 이모지 추가·수정·삭제·순서 변경 내역은 <b>[📋 로그]</b>와 <b>구글 시트</b>에 자동으로 기록됩니다. (홈 상단 배너에는 이모지가 표시되지 않습니다)
+              • 모든 이모지 추가·수정·삭제·순서 변경·기본 복원 내역은 앱 <b>[📋 로그]</b>와 <b>구글 시트 [관리자 활동 로그]</b>(변경 전/후 이모지·명칭 상세 포함)에 즉시 자동 기록됩니다. (홈 상단 배너에는 이모지가 표시되지 않습니다)
             </div>
             ${buildReactionEmojiEditorBlockHtml('post', '📢 공지 · 광고 반응 이모지', 'slate', postEmojiList)}
             <div class="manage-divider" style="margin:12px 0 14px;"></div>
@@ -19052,14 +19052,14 @@
       const sc = scope === 'video' ? 'video' : 'post';
       const fieldKey = sc === 'video' ? 'videoReactionEmojis' : 'postReactionEmojis';
       const scopeTarget = sc === 'video' ? '설교·CCM 반응 이모지' : '공지·광고 반응 이모지';
-      setInlineSaveStatus('reaction_emojis', 'loading', '⏳ 반응 이모지 설정을 저장하는 중입니다...');
+      setInlineSaveStatus('reaction_emojis', 'loading', '⏳ 반응 이모지 설정을 저장하고 로그·구글 시트에 기록하는 중입니다...');
       try {
         await db.collection('config').doc('labels').set({
           [fieldKey]: nextList
         }, { merge: true });
         tabLabels[fieldKey] = nextList;
         saveCachedTabLabels(tabLabels);
-        recordAuditLog({
+        const logEntry = await recordAuditLog({
           actorType: 'admin',
           category: '역할·메뉴',
           action: logAction,
@@ -19068,9 +19068,14 @@
           afterVal: afterVal || '',
           detail: detail || ''
         });
-        setInlineSaveStatus('reaction_emojis', 'ok', toastMsg || '✅ 반응 이모지가 저장되었습니다!');
+        const hasSheet = !!getAdminSheetUrl();
+        const sheetSuffix = logEntry
+          ? (hasSheet ? ' (보안 로그 및 구글 시트 [관리자 활동 로그] 자동 기록)' : ' (보안 로그 기록 완료 · 시트 연결 시 자동 반영)')
+          : '';
+        const baseOkMsg = toastMsg || '✅ 반응 이모지가 저장되었습니다!';
+        setInlineSaveStatus('reaction_emojis', 'ok', `${baseOkMsg}${sheetSuffix}`);
         applyScreen();
-        showToast(toastMsg || '✅ 반응 이모지가 저장되었습니다!', 'ok');
+        showToast(`${baseOkMsg}${hasSheet ? ' · 구글 시트 기록 완료' : ''}`, 'ok');
         return true;
       } catch (err) {
         setInlineSaveStatus('reaction_emojis', 'err', '❌ 반응 이모지 저장에 실패했습니다.');
@@ -22243,7 +22248,14 @@
       const beforeVal = String(entry.beforeVal || '');
       const afterVal = String(entry.afterVal || '');
       const detail = String(entry.detail || '');
-      const diffPart = (beforeVal && afterVal) ? `${beforeVal} → ${afterVal}` : target;
+      const changeSummary = (beforeVal && afterVal)
+        ? `변경: ${beforeVal} → ${afterVal}`
+        : (afterVal ? `추가/설정: ${afterVal}` : (beforeVal ? `삭제/해제: ${beforeVal}` : ''));
+      const sheetDetailParts = [];
+      if (changeSummary && !detail.includes(changeSummary)) sheetDetailParts.push(changeSummary);
+      if (detail) sheetDetailParts.push(detail);
+      const sheetDetail = sheetDetailParts.join(' · ');
+      const diffPart = (beforeVal && afterVal) ? `${beforeVal} → ${afterVal}` : (afterVal || beforeVal || target);
       const dateStr = entry.dateWithDow || (entry.date ? `${entry.date}${entry.dow ? ` (${entry.dow})` : ''}` : '');
       const timeOnly = String(entry.time || '');
       const fullDt = entry.dateTime || `${dateStr} ${timeOnly}`.trim();
@@ -22264,7 +22276,7 @@
         target,
         beforeVal,
         afterVal,
-        detail,
+        detail: sheetDetail,
         decision: String(entry.decision || ''),
         name: `${whoTag} ${actor}`,
         status: `[${cat}] ${act}`,
@@ -34516,7 +34528,7 @@
         {
           id: 'tos_6',
           title: '제6조 (영상 게시 · 문의 사항 및 보안 로그 관리)',
-          body: '① 회원이 작성한 설교·찬양 영상 게시(추천)와 문의 사항의 책임은 작성자 본인에게 있으며, 본인이 작성한 글은 언제든 직접 수정·삭제할 수 있습니다.\n② 비방·욕설·허위사실 유포·광고성 스팸·악성 링크 등 공동체 질서를 해치는 게시물은 사전 통보 없이 차단 또는 삭제될 수 있습니다.\n③ 건전한 공동체 운영과 보안 사고 예방을 위해 관리자 활동 전반(공지·배너·역할·메뉴·반응 이모지 설정 포함)과 회원의 영상 게시(등록·수정·삭제), 문의 사항(작성·수정·삭제), 이름 변경 신청, 가입·탈퇴, 출석 체크 내역은 위변조·삭제 불가 보안 로그에 기록됩니다.\n④ 보안 로그는 연도 및 최대 행 수 기준에 따라 구글 시트 보관 탭 및 별도 로그 백업 시트 파일로 안전하게 분리·이관되며, 서버 저장 로그에는 설정된 자동 만료 기간(TTL)이 적용됩니다.'
+          body: '① 회원이 작성한 설교·찬양 영상 게시(추천)와 문의 사항의 책임은 작성자 본인에게 있으며, 본인이 작성한 글은 언제든 직접 수정·삭제할 수 있습니다.\n② 비방·욕설·허위사실 유포·광고성 스팸·악성 링크 등 공동체 질서를 해치는 게시물은 사전 통보 없이 차단 또는 삭제될 수 있습니다.\n③ 건전한 공동체 운영과 보안 사고 예방을 위해 관리자 활동 전반(공지·배너·역할·메뉴·반응 이모지의 추가·수정·삭제·순서 변경 포함)과 회원의 영상 게시(등록·수정·삭제), 문의 사항(작성·수정·삭제), 이름 변경 신청, 가입·탈퇴, 출석 체크 내역은 위변조·삭제 불가 보안 로그 및 연동된 구글 시트 기록에 저장됩니다.\n④ 보안 로그는 연도 및 최대 행 수 기준에 따라 구글 시트 보관 탭 및 별도 로그 백업 시트 파일로 안전하게 분리·이관되며, 서버 저장 로그에는 설정된 자동 만료 기간(TTL)이 적용됩니다.'
         },
         {
           id: 'tos_7',
