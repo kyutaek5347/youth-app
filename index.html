@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=255" />
+  <link rel="manifest" href="./manifest.json?v=256" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=255" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=255" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=256" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=256" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4239,7 +4239,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=255" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=256" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -6095,10 +6095,10 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 255;
-    const APP_CACHE_NAME = 'right-youth-app-v10.155';
+    const APP_CLIENT_BUILD = 256;
+    const APP_CACHE_NAME = 'right-youth-app-v10.156';
     const APP_BOOT_TS = Date.now();
-    const SHEET_SCHEMA_VERSION = 'v10.155-weekly-hourly';
+    const SHEET_SCHEMA_VERSION = 'v10.156-log-archive';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '주간 출석부 (날짜별 탭)', isWeeklyAttendance: true, kind: 'state', addedIn: 'v10.151', rebuildable: true, desc: '예배·행사 날짜별 셀 주간 출석부 탭 (예: 26.11.29 · 구버전 누적 출석부 폐기)' },
       { id: 'members', name: '회원 명단', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '성명·역할·가입일·상태·이전이름 (생일 열 폐기)' },
@@ -6116,6 +6116,13 @@
       { name: '생일 변경 로그', removedIn: 'v10.69', reason: '생년월일 기능 폐기 및 개인정보 최소화 (회원 명단 생년월일 열 포함)' }
     ];
     const SHEET_SCHEMA_CHANGELOG = [
+      {
+        version: 'v10.156',
+        date: '2026.11.27',
+        added: ['구글 시트 로그 자동 분리 (연도 변경 + 최대 행 수 도달 시 보관 탭 자동 전환)', '분리된 보관 로그 탭 → 별도 로그 백업 구글 시트 파일 1클릭 이관', 'Firebase 오래된 로그 자동 만료(TTL · expireAt) 설정 및 기존 로그 일괄 적용'],
+        removed: [],
+        changed: ['보관 탭 포함 전체 기록ID 대조로 전체 동기화 시 과거 로그 중복 기록 원천 차단']
+      },
       {
         version: 'v10.155',
         date: '2026.11.27',
@@ -6293,6 +6300,11 @@
       intervalMin: 10,
       warnDocCount: 1500,
       warnStoragePct: 70
+    };
+    const DEFAULT_LOG_RETENTION_CONFIG = {
+      sheetMaxRows: 5000,
+      sheetYearlyRotate: true,
+      firebaseTtlDays: 365
     };
     const AUTO_ALERT_DEFAULT_COOLDOWN_MS = 10 * 60 * 1000;
     const AUTO_CHECK_CONSECUTIVE_FAIL_THRESHOLD = 2;
@@ -7172,7 +7184,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=255" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=256" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7196,8 +7208,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=255', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=255', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=256', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=256', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -7899,6 +7911,8 @@
     let unsubSheetSecret = null;
     let adminSheetUrl = '';
     let adminAttendanceSheetUrl = '';
+    let adminLogArchiveSheetUrl = '';
+    let logRetentionConfig = structuredClone(DEFAULT_LOG_RETENTION_CONFIG);
     let isSyncingUnsyncedAtt = false;
     let isSyncingUnsyncedInq = false;
     let isSyncingUnsyncedVid = false;
@@ -7963,6 +7977,7 @@
       if (unsubSheetSecret) { unsubSheetSecret(); unsubSheetSecret = null; }
       adminSheetUrl = '';
       adminAttendanceSheetUrl = '';
+      adminLogArchiveSheetUrl = '';
       isSyncingUnsyncedAtt = false;
       isSyncingUnsyncedInq = false;
       isSyncingUnsyncedVid = false;
@@ -9484,6 +9499,7 @@
         unsubSheetSecret = db.collection('config').doc('sheetSecret').onSnapshot(doc => {
           adminSheetUrl = (doc.exists && doc.data().url) ? String(doc.data().url).trim() : '';
           adminAttendanceSheetUrl = (doc.exists && doc.data().attendanceSheetUrl) ? String(doc.data().attendanceSheetUrl).trim() : '';
+          adminLogArchiveSheetUrl = (doc.exists && doc.data().logArchiveSheetUrl) ? String(doc.data().logArchiveSheetUrl).trim() : '';
           if (adminSheetUrl) {
             if (sheetAutoInspectedUrl !== adminSheetUrl) {
               sheetAutoInspectedUrl = adminSheetUrl;
@@ -9514,6 +9530,7 @@
         unsubSheetSecret = null;
         adminSheetUrl = '';
         adminAttendanceSheetUrl = '';
+        adminLogArchiveSheetUrl = '';
       }
 
       if (canReadManage && !unsubAttendanceAdmin) {
@@ -10388,6 +10405,17 @@
             };
           } else {
             autoOptConfig = structuredClone(DEFAULT_AUTO_OPT_CONFIG);
+          }
+          if (d.logRetentionConfig && typeof d.logRetentionConfig === 'object') {
+            const rawMax = Number(d.logRetentionConfig.sheetMaxRows);
+            const rawTtl = Number(d.logRetentionConfig.firebaseTtlDays);
+            logRetentionConfig = {
+              sheetMaxRows: (Number.isFinite(rawMax) && rawMax >= 0) ? Math.min(50000, Math.round(rawMax)) : DEFAULT_LOG_RETENTION_CONFIG.sheetMaxRows,
+              sheetYearlyRotate: d.logRetentionConfig.sheetYearlyRotate !== undefined ? !!d.logRetentionConfig.sheetYearlyRotate : true,
+              firebaseTtlDays: (Number.isFinite(rawTtl) && rawTtl >= 0) ? Math.min(3650, Math.round(rawTtl)) : DEFAULT_LOG_RETENTION_CONFIG.firebaseTtlDays
+            };
+          } else {
+            logRetentionConfig = structuredClone(DEFAULT_LOG_RETENTION_CONFIG);
           }
           if (typeof syncAutoOptRunner === 'function') syncAutoOptRunner();
           checkCloneDomainWarning();
@@ -12608,7 +12636,7 @@
           steps: [
             `<b>초대 QR 관리 ([${qrIcn} ${qrLbl}]):</b> 평소에는 <b>오늘 하루(00:00 갱신)</b>로 두고, 주일 현장 가입을 받을 때는 <b>5분 · 10분 자동 갱신 모드</b>(직전 QR 3~5분 유예 + 화면 복귀 시 즉시 갱신)로 전환할 수 있습니다. 외부 유출 시 <b>[🔄 새 QR 즉시 재발급]</b>을 누르면 유예 없이 즉시 폐기됩니다.`,
             `<b>통합 보안 감사 로그 ([${logIcn} ${logLbl}]):</b> 악의적 글 게시·임의 변경·장난을 방지하기 위해 <b>관리자의 모든 추가/수정/삭제/설정 변경</b>과 <b>이용자의 영상 추천·문의·이름 변경 신청·가입/탈퇴·출석 체크</b>가 날짜·시각(초 단위 KST)과 함께 기록됩니다.`,
-            '<b>위변조·삭제 불가:</b> 보안상 최고 관리자도 앱에서 로그를 수정하거나 삭제할 수 없으며, 상단 필터(전체/관리자/이용자), 분류 선택, 검색창으로 빠르게 추적할 수 있습니다.',
+            `<b>위변조·삭제 불가 & 3단계 자동 보관:</b> 보안상 최고 관리자도 앱에서 로그를 임의로 수정·삭제할 수 없습니다. 대신 <b>[${logIcn} ${logLbl}]</b> 상단의 <b>[📦 로그 자동 분리 · 백업 · 보관 관리]</b>에서 ① 연도·행수 자동 분리(<code>_2026</code>), ② 별도 백업 시트 파일 1클릭 이관, ③ Firebase 자동 만료(TTL)를 안전하게 관리할 수 있습니다.`,
             `<b>프라이버시 미기록 범위:</b> 이용자 비밀번호 변경, 전체 글자 크기·알림 설정, 외부 사이트 이동, 공지·${byLbl} 단순 조회는 기록되지 않습니다.`
           ],
           tip: `시트에 아직 반영되지 않은 미전송 로그는 [${getTabIcon('manageSheet')} ${getTabLabel('manageSheet')}] 탭에서 한 번에 동기화할 수 있습니다.`
@@ -19775,6 +19803,10 @@
       return String(adminAttendanceSheetUrl || '').trim();
     }
 
+    function getAdminLogArchiveSheetUrl() {
+      return String(adminLogArchiveSheetUrl || '').trim();
+    }
+
     // --- Google Sheet Apps Script POST Helper (관리자 전용 격리 URL 사용 · 출석부 전용 시트 자동 분기 · 20초 타임아웃) ---
     async function postToGoogleSheet(payload, overrideUrl = '', returnDetail = false, timeoutMs = 20000) {
       const url = String(overrideUrl || getAdminSheetUrl() || '').trim();
@@ -19783,7 +19815,7 @@
       }
       const sendPayload = (payload && typeof payload === 'object' && !Array.isArray(payload))
         ? Object.assign(
-            { attendanceSheetUrl: getAdminAttendanceSheetUrl(), attendanceExclusive: true },
+            { attendanceSheetUrl: getAdminAttendanceSheetUrl(), attendanceExclusive: true, logArchiveSheetUrl: getAdminLogArchiveSheetUrl() },
             payload
           )
         : payload;
@@ -21348,7 +21380,21 @@
         if (withdrawReason) entry.withdrawReason = truncateLogText(withdrawReason, 220);
         if (roleName) entry.roleName = String(roleName).slice(0, 30);
 
-        await db.collection('auditLogs').doc(id).set(entry);
+        const ttlDays = Number((logRetentionConfig && logRetentionConfig.firebaseTtlDays) || 0);
+        if (ttlDays > 0 && firebase && firebase.firestore && firebase.firestore.Timestamp) {
+          entry.expireAt = firebase.firestore.Timestamp.fromMillis(nowTs + ttlDays * 24 * 60 * 60 * 1000);
+        }
+
+        try {
+          await db.collection('auditLogs').doc(id).set(entry);
+        } catch (writeErr) {
+          if (entry.expireAt && writeErr && writeErr.code === 'permission-denied') {
+            delete entry.expireAt;
+            await db.collection('auditLogs').doc(id).set(entry);
+          } else {
+            throw writeErr;
+          }
+        }
 
         if (resolvedActorType === 'admin' && isActualAdmin) {
           const sheetUrl = getAdminSheetUrl();
@@ -21938,11 +21984,13 @@
 
       const logsListOpen = isManageSectionOpen('logs_list', true);
       el.innerHTML = `
+        ${buildLogRetentionManagementCardHtml(user)}
         ${buildManageAccordionBar({
           key: 'logs_list',
           titleHtml: `${escapeHtml(getTabIcon('manageLogs'))} ${escapeHtml(getTabLabel('manageLogs'))}`,
           badgeHtml: `<span class="tag slate">${allLogs.length}건 · 삭제 불가</span>`,
-          defaultOpen: true
+          defaultOpen: true,
+          marginTop: '10px'
         })}
         <div data-acc-body="logs_list" class="${logsListOpen ? '' : 'hidden'}">
         <div class="info-box" style="margin-top:0; margin-bottom:12px;">
@@ -21981,6 +22029,377 @@
 
       renderAdminLogsListOnly();
     }
+
+
+    function buildLogRetentionManagementCardHtml(user) {
+      const cfg = logRetentionConfig || DEFAULT_LOG_RETENTION_CONFIG;
+      const isReadOnly = isManageReadOnlyUser(user);
+      const isLinked = !!getAdminSheetUrl();
+      const secOpen = isManageSectionOpen('logs_retention', false);
+      const inspData = (sheetLiveInspection && sheetLiveInspection.data) ? sheetLiveInspection.data : null;
+      const activeCounts = (inspData && inspData.activeLogCounts && typeof inspData.activeLogCounts === 'object') ? inspData.activeLogCounts : null;
+      const archivedTabs = (inspData && Array.isArray(inspData.archivedLogTabs)) ? inspData.archivedLogTabs : [];
+      const archUrl = getAdminLogArchiveSheetUrl();
+      const hasV156 = !!(inspData && inspData.supportsLogRetention);
+
+      const maxRowsVal = Number(cfg.sheetMaxRows || 0);
+      const ttlDaysVal = Number(cfg.firebaseTtlDays || 0);
+      const ttlLabel = ttlDaysVal === 365 ? 'TTL 1년' : (ttlDaysVal === 730 ? 'TTL 2년' : (ttlDaysVal === 180 ? 'TTL 6개월' : (ttlDaysVal > 0 ? `TTL ${ttlDaysVal}일` : '영구 보관')));
+      const rotLabel = maxRowsVal > 0 ? `${maxRowsVal.toLocaleString()}행` : '행수 무제한';
+      const badgeHtml = `<span class="tag ${archivedTabs.length > 0 ? 'warm' : 'green'}">${escapeHtml(rotLabel)}${cfg.sheetYearlyRotate ? '·연도 분리' : ''} · ${escapeHtml(ttlLabel)}</span>`;
+
+      const rowStatusHtml = activeCounts ? `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:9px;">
+          ${Object.entries(activeCounts).map(([nm, cnt]) => {
+            const n = Number(cnt || 0);
+            const pct = maxRowsVal > 0 ? Math.min(100, Math.round((n / maxRowsVal) * 100)) : 0;
+            const warnCls = (maxRowsVal > 0 && pct >= 80) ? 'color:#B45309; background:#FFFBEB; border-color:#FCD34D;' : 'color:#334155; background:#F8FAFC; border-color:var(--border);';
+            return `<div style="font-size:11.5px; padding:7px 9px; border:1px solid; border-radius:9px; ${warnCls}">
+              <div style="font-weight:800; margin-bottom:2px;">${escapeHtml(nm)}</div>
+              <div>${n.toLocaleString()}행${maxRowsVal > 0 ? ` <span style="opacity:0.75;">(${pct}%)</span>` : ''}</div>
+            </div>`;
+          }).join('')}
+        </div>
+      ` : '';
+
+      const archivedListHtml = archivedTabs.length > 0 ? `
+        <div style="background:#FFFBEB; border:1px solid #FCD34D; border-radius:10px; padding:8px 10px; margin-bottom:9px; font-size:11.5px; color:#92400E; line-height:1.5;">
+          <b>📂 통합 시트에 보관 중인 과거 로그 탭 (${archivedTabs.length}개):</b><br>
+          ${archivedTabs.map(t => `<span class="tag warm" style="margin:2px 3px 2px 0; font-size:10.5px;">${escapeHtml(t.name)} (${Number(t.rows || 0).toLocaleString()}행)</span>`).join('')}
+        </div>
+      ` : (hasV156 ? `
+        <div style="font-size:11.5px; color:#64748B; background:#F8FAFC; border:1px solid var(--border); border-radius:9px; padding:7px 10px; margin-bottom:9px;">
+          ✅ 현재 통합 시트에 쌓여 있는 과거 보관 로그 탭이 없습니다. (최신 활성 4개 탭만 가볍게 유지 중)
+        </div>
+      ` : '');
+
+      const unexpCount = (auditLogs || []).filter(l => l && !l.expireAt).length;
+
+      return `
+        ${buildManageAccordionBar({
+          key: 'logs_retention',
+          titleHtml: '📦 로그 자동 분리 · 백업 · 보관 관리 (3단계)',
+          badgeHtml,
+          defaultOpen: false
+        })}
+        <div data-acc-body="logs_retention" class="${secOpen ? '' : 'hidden'}">
+          <div class="card" style="padding:13px 14px; margin-bottom:10px;">
+            <div class="info-box" style="margin-top:0; margin-bottom:10px; background:#F0FDF4; border-color:#BBF7D0; color:#14532D;">
+              🛡️ <b>위변조 방지 유지 + 장기 운영 자동 경량화</b><br>
+              • <b>1단계 (구글 시트 자동 분리):</b> 해가 바뀌거나(1월 1일) 지정 행 수에 도달하면 <code>_2026</code> 보관 탭으로 자동 넘기고 새 탭에 기록합니다.<br>
+              • <b>2단계 (백업 파일 1클릭 이관):</b> 보관 탭들을 별도 백업 구글 시트로 안전하게 옮긴 뒤 원본 시트만 슬림하게 정리합니다.<br>
+              • <b>3단계 (Firebase 자동 만료 TTL):</b> 구글 시트에 백업된 오래된 서버 로그만 만료일(<code>expireAt</code>) 기준으로 자동 정리합니다.
+            </div>
+
+            ${!isLinked ? `
+              <div class="info-box warn" style="margin-top:0; margin-bottom:10px;">
+                ⚠️ 구글 시트가 아직 미연동 상태입니다. <b>[📊 시트 연동]</b>에서 스크립트 URL을 먼저 연결해 주세요.
+              </div>
+            ` : (!hasV156 && inspData ? `
+              <div class="info-box warn" style="margin-top:0; margin-bottom:10px;">
+                ⚠️ 1·2단계 자동 분리/이관을 쓰려면 구글 시트 Apps Script를 최신 <b><code>google-apps-script-v10.156.js</code></b>로 교체·새 버전 배포해 주세요.
+              </div>
+            ` : '')}
+
+            <!-- 1단계: 구글 시트 자동 분리 -->
+            <div style="font-size:12.5px; font-weight:800; color:#0F172A; margin-bottom:6px;">1️⃣ 구글 시트 로그 자동 분리</div>
+            <div class="setting-row" style="padding:4px 0 8px;">
+              <div>
+                <div class="setting-title" style="font-size:13px;">해가 바뀌면(1월 1일) 연도별 탭 자동 분리</div>
+                <div class="setting-sub" style="font-size:11.5px;">예: 2027년이 되면 기존 탭을 <code>_2026</code>으로 보관하고 새 탭 생성</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="cfgLogYearlyRotate" ${cfg.sheetYearlyRotate ? 'checked' : ''} ${isReadOnly ? 'disabled' : ''} />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="form-group" style="margin-bottom:9px;">
+              <label class="form-label" for="cfgLogMaxRows">탭당 최대 행 수 (초과 시 자동 보관 탭 분리)</label>
+              <select id="cfgLogMaxRows" class="form-select" ${isReadOnly ? 'disabled' : ''}>
+                <option value="2000" ${maxRowsVal === 2000 ? 'selected' : ''}>2,000행마다 자동 분리 (초고속)</option>
+                <option value="5000" ${maxRowsVal === 5000 ? 'selected' : ''}>5,000행마다 자동 분리 (권장)</option>
+                <option value="10000" ${maxRowsVal === 10000 ? 'selected' : ''}>10,000행마다 자동 분리</option>
+                <option value="20000" ${maxRowsVal === 20000 ? 'selected' : ''}>20,000행마다 자동 분리</option>
+                <option value="0" ${maxRowsVal === 0 ? 'selected' : ''}>행 수 제한 사용 안 함 (연도 분리만)</option>
+              </select>
+            </div>
+
+            ${rowStatusHtml}
+            ${archivedListHtml}
+
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
+              <button id="rotateLogsNowBtn" class="btn-sm warn" type="button" style="flex:1; padding:8px;" ${(isReadOnly || !isLinked) ? 'disabled' : ''} onclick="handleRotateLogsNow()">📂 지금 보관 탭으로 분리</button>
+              <button class="btn-sm" type="button" style="padding:8px 10px;" ${!isLinked ? 'disabled' : ''} onclick="runLiveSheetSchemaInspect(false)">🔍 행 수 새로고침</button>
+            </div>
+
+            <!-- 2단계: 별도 로그 백업 파일 이관 -->
+            <div style="font-size:12.5px; font-weight:800; color:#0F172A; margin:10px 0 6px; padding-top:10px; border-top:1px dashed var(--border);">2️⃣ 별도 백업 시트 파일로 이관 (원본 파일 슬림화)</div>
+            <div class="form-group" style="margin-bottom:8px;">
+              <label class="form-label" for="cfgLogArchiveUrlInLogs">📦 로그 백업 전용 구글 시트 주소 (관리자 전용 격리)</label>
+              <input id="cfgLogArchiveUrlInLogs" type="url" class="form-input" value="${escapeHtml(isReadOnly ? '' : archUrl)}" placeholder="${isReadOnly ? '최고 관리자 전용 비공개' : 'https://docs.google.com/spreadsheets/d/... (새 빈 구글 시트 주소)'}" ${isReadOnly ? 'disabled' : ''} />
+            </div>
+            <button id="exportArchivedLogsBtn" class="btn-sm primary" type="button" style="width:100%; padding:9px; margin-bottom:12px;" ${(isReadOnly || !isLinked) ? 'disabled' : ''} onclick="handleExportArchivedLogsToBackup()">📤 보관 로그 탭(${archivedTabs.length}개) → 백업 파일로 안전 이관</button>
+
+            <!-- 3단계: Firebase 자동 만료 (TTL) -->
+            <div style="font-size:12.5px; font-weight:800; color:#0F172A; margin:10px 0 6px; padding-top:10px; border-top:1px dashed var(--border);">3️⃣ Firebase(앱 서버) 오래된 로그 자동 만료 (TTL)</div>
+            <div class="form-group" style="margin-bottom:8px;">
+              <label class="form-label" for="cfgLogFirebaseTtlDays">서버 보관 기간 (구글 시트 백업과 별도 · 신규 로그 자동 적용)</label>
+              <select id="cfgLogFirebaseTtlDays" class="form-select" ${isReadOnly ? 'disabled' : ''}>
+                <option value="365" ${ttlDaysVal === 365 ? 'selected' : ''}>1년(365일) 후 자동 만료 (권장)</option>
+                <option value="730" ${ttlDaysVal === 730 ? 'selected' : ''}>2년(730일) 후 자동 만료</option>
+                <option value="180" ${ttlDaysVal === 180 ? 'selected' : ''}>6개월(180일) 후 자동 만료</option>
+                <option value="0" ${ttlDaysVal === 0 ? 'selected' : ''}>영구 보관 (만료일 미설정)</option>
+              </select>
+            </div>
+            <div style="font-size:11px; color:#475569; background:#F8FAFC; border:1px solid var(--border); border-radius:9px; padding:8px 10px; margin-bottom:8px; line-height:1.5;">
+              💡 <b>Firebase 콘솔 최초 1회 설정:</b><br>
+              Firebase 콘솔 → <b>Firestore Database</b> → 상단 <b>시간 제한(TTL)</b> → <b>정책 만들기</b> → 컬렉션 그룹: <code>auditLogs</code> · 타임스탬프 필드: <code>expireAt</code> → 만들기
+            </div>
+            ${ttlDaysVal > 0 ? `
+              <button id="backfillLogTtlBtn" class="btn-sm" type="button" style="width:100%; padding:8.5px; margin-bottom:10px;" ${isReadOnly ? 'disabled' : ''} onclick="handleBackfillAuditLogsExpireAt()">🔄 기존 로그에도 만료일(${ttlDaysVal}일) 일괄 적용${unexpCount > 0 ? ` (미적용 ${unexpCount}건)` : ''}</button>
+            ` : ''}
+
+            <button id="saveLogRetentionBtn" class="btn-full btn-dark" type="button" style="padding:11px; font-size:13px;" ${isReadOnly ? 'disabled' : ''} onclick="handleSaveLogRetentionSettings()">💾 로그 보관 · 자동 분리 설정 저장 (구글 서버 반영)</button>
+            ${buildInlineSaveStatusHtml('log_retention')}
+          </div>
+        </div>
+      `;
+    }
+
+    window.handleSaveLogRetentionSettings = async () => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const yearlyEl = document.getElementById('cfgLogYearlyRotate');
+      const maxRowsEl = document.getElementById('cfgLogMaxRows');
+      const ttlEl = document.getElementById('cfgLogFirebaseTtlDays');
+      const archUrlEl = document.getElementById('cfgLogArchiveUrlInLogs');
+
+      const sheetYearlyRotate = yearlyEl ? !!yearlyEl.checked : true;
+      const sheetMaxRows = Math.max(0, Math.min(50000, Number((maxRowsEl && maxRowsEl.value) || 0)));
+      const firebaseTtlDays = Math.max(0, Math.min(3650, Number((ttlEl && ttlEl.value) || 0)));
+      const archUrl = archUrlEl ? archUrlEl.value.trim() : getAdminLogArchiveSheetUrl();
+
+      if (archUrl && !/\/spreadsheets\/d\/[a-zA-Z0-9-_]{20,}/.test(archUrl) && !/^[a-zA-Z0-9-_]{20,}$/.test(archUrl)) {
+        setInlineSaveStatus('log_retention', 'err', '❌ 올바른 로그 백업 구글 시트 주소(https://docs.google.com/spreadsheets/d/...)를 입력해 주세요.');
+        return showToast('❌ 올바른 구글 시트 주소를 입력해 주세요.', 'err');
+      }
+
+      const nextCfg = { sheetMaxRows, sheetYearlyRotate, firebaseTtlDays };
+      const btn = document.getElementById('saveLogRetentionBtn');
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ 설정 저장 · 구글 서버 반영 중...'; }
+      setInlineSaveStatus('log_retention', 'loading', '⏳ 로그 자동 분리·보관 설정을 저장하고 구글 서버에 반영하는 중입니다...');
+      try {
+        const batch = db.batch();
+        batch.set(db.collection('config').doc('layout'), { logRetentionConfig: nextCfg }, { merge: true });
+        batch.set(db.collection('config').doc('sheetSecret'), {
+          logArchiveSheetUrl: archUrl,
+          updatedAt: formatKstDateTime(),
+          updatedTs: Date.now(),
+          updatedBy: currentAdminName || '관리자'
+        }, { merge: true });
+        await batch.commit();
+        logRetentionConfig = nextCfg;
+        adminLogArchiveSheetUrl = archUrl;
+
+        const sheetUrl = getAdminSheetUrl();
+        if (!sheetUrl) {
+          setInlineSaveStatus('log_retention', 'warn', '⚠️ 앱·Firebase 설정 저장 완료! 구글 시트 연동 후 다시 저장하면 시트에도 적용됩니다.');
+          showToast('✅ 앱 설정 저장 완료 (시트 미연동)', 'warn');
+          return;
+        }
+
+        const res = await postToGoogleSheet({
+          action: 'log_retention_set',
+          logArchiveSheetUrl: archUrl,
+          logRetention: { maxRows: sheetMaxRows, yearlyRotate: sheetYearlyRotate }
+        }, sheetUrl, true, 30000);
+
+        if (res && res.ok) {
+          if (res.readable && res.data) {
+            sheetLiveInspection = { ok: true, readable: true, data: res.data, checkedAt: formatKstDateTime() };
+          }
+          const summary = `${sheetMaxRows > 0 ? `${sheetMaxRows.toLocaleString()}행` : '행수 무제한'}${sheetYearlyRotate ? '·연도 분리' : ''} · Firebase ${firebaseTtlDays > 0 ? `${firebaseTtlDays}일 TTL` : '영구 보관'}`;
+          setInlineSaveStatus('log_retention', 'ok', `✅ 저장 및 구글 서버 반영 완료! (${summary})`);
+          showToast('✅ 로그 자동 분리·보관 설정이 저장되었습니다!', 'ok');
+          recordAuditLog({
+            actorType: 'admin',
+            category: '보안·설정',
+            action: '로그 보관·자동 분리 설정 변경',
+            target: summary
+          });
+          manageSectionOpen.logs_retention = true;
+          renderManageLogs(document.getElementById('manageContent'), user);
+        } else {
+          const errMsg = (res && res.data && res.data.error) ? String(res.data.error) : '';
+          const hint = errMsg.includes('알 수 없는 요청')
+            ? 'Apps Script를 최신 google-apps-script-v10.156.js로 교체·새 버전 배포한 뒤 다시 저장해 주세요.'
+            : (errMsg || '구글 서버 응답 오류 · v10.156 배포 및 백업 시트 권한을 확인해 주세요.');
+          setInlineSaveStatus('log_retention', 'warn', `⚠️ 앱 설정은 저장됨 · 구글 서버 반영 실패: ${hint}`);
+          showToast(`⚠️ ${hint}`, 'warn');
+        }
+      } catch (err) {
+        setInlineSaveStatus('log_retention', 'err', '❌ 로그 설정 저장 중 오류가 발생했습니다.');
+        handleDbError(err, '로그 보관 설정 저장');
+      } finally {
+        const liveBtn = document.getElementById('saveLogRetentionBtn');
+        if (liveBtn) { liveBtn.disabled = false; liveBtn.textContent = '💾 로그 보관 · 자동 분리 설정 저장 (구글 서버 반영)'; }
+      }
+    };
+
+    window.handleRotateLogsNow = async () => {
+      const user = getCurrentUser();
+      const url = getAdminSheetUrl();
+      if (!user || !user.isSuperAdmin || !url) return;
+      if (!confirm('현재 데이터가 들어 있는 구글 시트 로그 탭을 연도별 보관 탭(예: _2026)으로 즉시 분리하고 깨끗한 새 로그 탭을 생성할까요?\n(기존 기록은 삭제되지 않고 보관 탭에 그대로 보존됩니다.)')) return;
+      const btn = document.getElementById('rotateLogsNowBtn');
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ 보관 탭 분리 중...'; }
+      setInlineSaveStatus('log_retention', 'loading', '⏳ 현재 로그 탭을 보관 탭으로 분리하는 중입니다...');
+      try {
+        const res = await postToGoogleSheet({ action: 'rotate_logs_now' }, url, true, 45000);
+        if (res && res.ok) {
+          if (res.readable && res.data) {
+            sheetLiveInspection = { ok: true, readable: true, data: res.data, checkedAt: formatKstDateTime() };
+          }
+          const rotated = (res.data && Array.isArray(res.data.rotatedTabs)) ? res.data.rotatedTabs : [];
+          if (rotated.length > 0) {
+            const names = rotated.map(r => `${r.archiveName}(${r.rows}행)`).join(', ');
+            setInlineSaveStatus('log_retention', 'ok', `✅ ${rotated.length}개 로그 탭 분리 완료: ${names}`);
+            showToast(`✅ ${rotated.length}개 로그 탭을 보관 탭으로 분리했습니다!`, 'ok');
+            recordAuditLog({ actorType: 'admin', category: '보안·설정', action: '구글 시트 로그 보관 탭 수동 분리', target: names });
+          } else {
+            setInlineSaveStatus('log_retention', 'ok', 'ℹ️ 분리할 데이터가 들어 있는 활성 로그 탭이 없습니다.');
+            showToast('분리할 활성 로그가 없습니다.');
+          }
+          manageSectionOpen.logs_retention = true;
+          renderManageLogs(document.getElementById('manageContent'), user);
+        } else {
+          const errMsg = (res && res.data && res.data.error) ? String(res.data.error) : 'Apps Script v10.156 배포 확인 필요';
+          setInlineSaveStatus('log_retention', 'warn', `⚠️ 분리 실패: ${errMsg}`);
+          showToast(`⚠️ ${errMsg}`, 'warn');
+        }
+      } finally {
+        const liveBtn = document.getElementById('rotateLogsNowBtn');
+        if (liveBtn) { liveBtn.disabled = false; liveBtn.textContent = '📂 지금 보관 탭으로 분리'; }
+      }
+    };
+
+    window.handleExportArchivedLogsToBackup = async () => {
+      const user = getCurrentUser();
+      const url = getAdminSheetUrl();
+      if (!user || !user.isSuperAdmin || !url) return;
+      const inpEl = document.getElementById('cfgLogArchiveUrlInLogs');
+      const archUrl = (inpEl ? inpEl.value.trim() : '') || getAdminLogArchiveSheetUrl();
+      if (!archUrl) {
+        setInlineSaveStatus('log_retention', 'warn', '⚠️ 먼저 위 [📦 로그 백업 전용 구글 시트 주소]에 새 백업 시트 주소를 입력해 주세요.');
+        return showToast('⚠️ 로그 백업 시트 주소를 먼저 입력해 주세요.', 'warn');
+      }
+      if (!/\/spreadsheets\/d\/[a-zA-Z0-9-_]{20,}/.test(archUrl) && !/^[a-zA-Z0-9-_]{20,}$/.test(archUrl)) {
+        setInlineSaveStatus('log_retention', 'err', '❌ 올바른 구글 시트 주소를 입력해 주세요.');
+        return showToast('❌ 올바른 구글 시트 주소를 입력해 주세요.', 'err');
+      }
+      if (!confirm('분리된 과거 보관 로그 탭들을 백업 전용 구글 시트 파일로 복사·검증한 뒤 원본 시트에서 정리할까요?\n(백업 파일에 안전하게 저장된 것이 확인된 탭만 원본에서 제거됩니다.)')) return;
+
+      const btn = document.getElementById('exportArchivedLogsBtn');
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ 백업 파일로 안전 이관 중...'; }
+      setInlineSaveStatus('log_retention', 'loading', '⏳ 보관 로그 탭을 백업 시트 파일로 복사·검증하고 있습니다...');
+      try {
+        if (archUrl !== getAdminLogArchiveSheetUrl()) {
+          await db.collection('config').doc('sheetSecret').set({
+            logArchiveSheetUrl: archUrl,
+            updatedAt: formatKstDateTime(),
+            updatedTs: Date.now(),
+            updatedBy: currentAdminName || '관리자'
+          }, { merge: true });
+          adminLogArchiveSheetUrl = archUrl;
+        }
+        const res = await postToGoogleSheet({
+          action: 'export_archived_logs_to_backup',
+          logArchiveSheetUrl: archUrl
+        }, url, true, 60000);
+        if (res && res.ok) {
+          if (res.readable && res.data) {
+            sheetLiveInspection = { ok: true, readable: true, data: res.data, checkedAt: formatKstDateTime() };
+          }
+          const moved = (res.data && Array.isArray(res.data.movedTabs)) ? res.data.movedTabs : [];
+          if (moved.length > 0) {
+            const desc = moved.map(m => `${m.destName}(${m.rows}행)`).join(', ');
+            const destTitle = (res.data && res.data.archiveSheetName) ? res.data.archiveSheetName : '백업 시트';
+            setInlineSaveStatus('log_retention', 'ok', `✅ [${destTitle}]으로 ${moved.length}개 탭 이관 완료: ${desc}`);
+            showToast(`✅ 백업 파일로 ${moved.length}개 보관 탭을 이관했습니다!`, 'ok');
+            recordAuditLog({ actorType: 'admin', category: '보안·설정', action: '과거 보관 로그 백업 파일 이관', target: destTitle, detail: desc });
+          } else {
+            setInlineSaveStatus('log_retention', 'ok', 'ℹ️ 백업 파일로 이관할 보관 로그 탭이 없습니다. 먼저 [📂 지금 보관 탭으로 분리]를 실행하거나 자동 분리 후 이관해 주세요.');
+            showToast('이관할 보관 로그 탭이 없습니다.');
+          }
+          manageSectionOpen.logs_retention = true;
+          renderManageLogs(document.getElementById('manageContent'), user);
+        } else {
+          const errMsg = (res && res.data && res.data.error) ? String(res.data.error) : 'Apps Script v10.156 배포 및 백업 시트 접근 권한 확인 필요';
+          setInlineSaveStatus('log_retention', 'warn', `⚠️ 이관 실패: ${errMsg}`);
+          showToast(`⚠️ ${errMsg}`, 'warn');
+        }
+      } finally {
+        const liveBtn = document.getElementById('exportArchivedLogsBtn');
+        if (liveBtn) { liveBtn.disabled = false; liveBtn.textContent = '📤 보관 로그 탭 → 백업 파일로 안전 이관'; }
+      }
+    };
+
+    window.handleBackfillAuditLogsExpireAt = async () => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const ttlEl = document.getElementById('cfgLogFirebaseTtlDays');
+      const ttlDays = Math.max(0, Math.min(3650, Number((ttlEl && ttlEl.value) || (logRetentionConfig && logRetentionConfig.firebaseTtlDays) || 0)));
+      if (ttlDays <= 0) {
+        return showToast('영구 보관 상태에서는 만료일을 지정하지 않습니다.');
+      }
+      if (!confirm(`구글 시트에 백업 완료된 기존 Firebase 로그에 만료일(작성일 + ${ttlDays}일)을 일괄 기록할까요?\n(아직 시트에 백업되지 않은 로그는 보호를 위해 건너뜁니다.)`)) return;
+
+      const btn = document.getElementById('backfillLogTtlBtn');
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ 기존 로그 만료일 적용 중...'; }
+      setInlineSaveStatus('log_retention', 'loading', '⏳ 구글 시트에 백업 완료된 기존 로그에 만료일(expireAt)을 기록하는 중입니다...');
+      try {
+        const snap = await db.collection('auditLogs').orderBy('ts', 'desc').limit(500).get();
+        const targets = snap.docs.filter(d => {
+          const data = d.data() || {};
+          return data.sheetSynced === true && !data.expireAt;
+        });
+        if (targets.length === 0) {
+          setInlineSaveStatus('log_retention', 'ok', '✅ 만료일이 비어 있는 백업 완료 로그가 없습니다. (모두 적용 완료)');
+          showToast('✅ 이미 모든 백업 완료 로그에 만료일이 적용되어 있습니다.', 'ok');
+          return;
+        }
+        let updated = 0;
+        let blocked = 0;
+        const ms = ttlDays * 24 * 60 * 60 * 1000;
+        for (const doc of targets) {
+          const data = doc.data() || {};
+          const baseTs = Number(data.ts || Date.now());
+          const expTs = firebase.firestore.Timestamp.fromMillis(baseTs + ms);
+          try {
+            await db.collection('auditLogs').doc(doc.id).update({ expireAt: expTs });
+            updated++;
+          } catch (e) {
+            if (e && e.code === 'permission-denied') {
+              blocked++;
+              if (blocked >= 2) break;
+            }
+          }
+        }
+        if (blocked > 0 && updated === 0) {
+          setInlineSaveStatus('log_retention', 'warn', '⚠️ Firestore 보안 규칙에서 auditLogs의 expireAt 수정이 제한되어 있습니다. 신규 로그부터 자동 적용되거나, Firestore 규칙의 auditLogs update 허용 필드에 expireAt을 추가해 주세요.');
+          showToast('⚠️ 기존 로그 수정은 Firestore 규칙에 expireAt 허용이 필요합니다.', 'warn');
+        } else {
+          setInlineSaveStatus('log_retention', 'ok', `✅ 기존 백업 완료 로그 ${updated}건에 ${ttlDays}일 만료일(expireAt)을 적용했습니다!`);
+          showToast(`✅ 기존 로그 ${updated}건에 만료일을 적용했습니다!`, 'ok');
+        }
+      } catch (err) {
+        setInlineSaveStatus('log_retention', 'err', '❌ 기존 로그 만료일 적용 중 오류가 발생했습니다.');
+        handleDbError(err, '기존 로그 만료일 적용');
+      } finally {
+        const liveBtn = document.getElementById('backfillLogTtlBtn');
+        if (liveBtn) { liveBtn.disabled = false; liveBtn.textContent = `🔄 기존 로그에도 만료일(${ttlDays}일) 일괄 적용`; }
+      }
+    };
 
     // --- Admin Manage Sub-Tab: ✅ 출석·QR 관리 ---
     function getAllAttendanceSessionOptions() {
@@ -25722,7 +26141,7 @@
               <div class="info-box warn" style="margin-top:0; margin-bottom:10px;">
                 ⚠️ <b>구버전 Apps Script(${escapeHtml(diff.scriptVersion)})가 배포되어 있습니다!</b><br>
                 이번 업데이트로 새로 추가된 시트(<b>${escapeHtml(diff.addedNeedScriptTabs.join(', ') || '문의 내역, 설교·CCM 영상, 공지·광고 목록')}</b>)를 연동하려면:<br>
-                1) 구글 시트 → <b>확장 프로그램 → Apps Script</b>에 최신 <b><code>google-apps-script-v10.155.js</code></b> 코드를 덮어쓰고 저장(Ctrl+S)<br>
+                1) 구글 시트 → <b>확장 프로그램 → Apps Script</b>에 최신 <b><code>google-apps-script-v10.156.js</code></b> 코드를 덮어쓰고 저장(Ctrl+S)<br>
                 2) 오른쪽 위 <b>[배포 → 배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]</b> 클릭 후 위 <b>[🔍 지금 대조]</b>를 눌러 주세요.
               </div>
             ` : (diff && diff.missingTabs.length > 0 ? `
@@ -25849,6 +26268,16 @@
               <input id="cfgAttSheetUrlInput" type="url" class="form-input" value="${escapeHtml(isManageReadOnlyUser(user) ? '' : getAdminAttendanceSheetUrl())}" placeholder="${isManageReadOnlyUser(user) ? '최고 관리자 전용 비공개' : 'https://docs.google.com/spreadsheets/d/... (비워두면 기존 시트에 기록)'}" />
               <div style="font-size:11px; color:#64748B; margin-top:4px; line-height:1.45;">
                 • 새 구글 시트(예: <b>라이트 청년부 출석부</b>) 주소를 넣으면 <b>날짜별 셀 주간 출석부 탭(예: 26.11.29)만 새 시트에 단독 기록</b>되고, 기존 관리 시트에서는 자동 제외됩니다.
+              </div>
+            </div>
+            <div class="form-group" style="margin-top:10px; padding-top:10px; border-top:1px dashed var(--border);">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:5px; flex-wrap:wrap;">
+                <label class="form-label" for="cfgLogArchiveSheetUrlInput" style="margin-bottom:0;">📦 로그 백업 전용 구글 시트 주소 (과거 보관 로그 이관용 · 선택)</label>
+                <span class="tag ${getAdminLogArchiveSheetUrl() ? 'green' : 'slate'}" style="font-size:10.5px;">${getAdminLogArchiveSheetUrl() ? '✅ 백업 파일 연결됨' : '미지정'}</span>
+              </div>
+              <input id="cfgLogArchiveSheetUrlInput" type="url" class="form-input" value="${escapeHtml(isManageReadOnlyUser(user) ? '' : getAdminLogArchiveSheetUrl())}" placeholder="${isManageReadOnlyUser(user) ? '최고 관리자 전용 비공개' : 'https://docs.google.com/spreadsheets/d/... (연도별 보관 로그 백업 시트)'}" />
+              <div style="font-size:11px; color:#64748B; margin-top:4px; line-height:1.45;">
+                • 보관용 새 구글 시트(예: <b>라이트 청년부 로그 백업</b>) 주소를 넣어 두면, <b>[📋 로그]</b> 탭에서 분리된 과거 로그 탭들을 버튼 한 번으로 안전하게 옮길 수 있습니다.
               </div>
             </div>
             <div style="font-size:11.5px; color:#64748B; line-height:1.55; margin-bottom:10px;">
@@ -26482,6 +26911,8 @@
         || String(data.version || '').includes('v10.152')
         || String(data.version || '').includes('v10.154')
         || String(data.version || '').includes('v10.155')
+        || String(data.version || '').includes('v10.156')
+        || data.supportsLogRetention === true
         || data.supportsWeeklyAttendance === true
         || data.supportsWeeklyAutoTrigger === true
         || data.weeklyOnly === true;
@@ -26520,8 +26951,10 @@
     window.handleSaveSheetUrl = async () => {
       const inpEl = document.getElementById('cfgSheetUrlInput');
       const attInpEl = document.getElementById('cfgAttSheetUrlInput');
+      const logArchInpEl = document.getElementById('cfgLogArchiveSheetUrlInput');
       const url = inpEl ? inpEl.value.trim() : getAdminSheetUrl();
       const attUrl = attInpEl ? attInpEl.value.trim() : getAdminAttendanceSheetUrl();
+      const logArchUrl = logArchInpEl ? logArchInpEl.value.trim() : getAdminLogArchiveSheetUrl();
       manageSectionOpen['sheet_main_cfg'] = true;
 
       if (url && !/^https:\/\/script\.google\.com\/macros\/s\//i.test(url)) {
@@ -26531,6 +26964,10 @@
       if (attUrl && !/\/spreadsheets\/d\/[a-zA-Z0-9-_]{20,}/.test(attUrl) && !/^[a-zA-Z0-9-_]{20,}$/.test(attUrl)) {
         setInlineSaveStatus('sheet_url', 'err', '❌ 저장 실패: 올바른 출석부 구글 시트 주소(https://docs.google.com/spreadsheets/d/...)를 입력해 주세요.');
         return showToast('❌ 올바른 출석부 구글 시트 주소(https://docs.google.com/spreadsheets/d/...)를 입력해 주세요.', 'err');
+      }
+      if (logArchUrl && !/\/spreadsheets\/d\/[a-zA-Z0-9-_]{20,}/.test(logArchUrl) && !/^[a-zA-Z0-9-_]{20,}$/.test(logArchUrl)) {
+        setInlineSaveStatus('sheet_url', 'err', '❌ 저장 실패: 올바른 로그 백업 구글 시트 주소(https://docs.google.com/spreadsheets/d/...)를 입력해 주세요.');
+        return showToast('❌ 올바른 로그 백업 구글 시트 주소(https://docs.google.com/spreadsheets/d/...)를 입력해 주세요.', 'err');
       }
 
       const btn = document.getElementById('saveSheetUrlBtn');
@@ -26546,6 +26983,7 @@
         batch.set(db.collection('config').doc('sheetSecret'), {
           url,
           attendanceSheetUrl: attUrl,
+          logArchiveSheetUrl: logArchUrl,
           updatedAt: formatKstDateTime(),
           updatedTs: Date.now(),
           updatedBy: currentAdminName || '관리자'
@@ -26556,6 +26994,7 @@
         await batch.commit();
         adminSheetUrl = url;
         adminAttendanceSheetUrl = attUrl;
+        adminLogArchiveSheetUrl = logArchUrl;
         sheetAutoInspectedUrl = url;
         if (url) {
           setInlineSaveStatus('sheet_url', 'loading', '✅ 서버에 연동 주소 저장 완료 · 구글 시트 연결을 확인하는 중입니다...');
