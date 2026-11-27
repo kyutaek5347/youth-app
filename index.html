@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=257" />
+  <link rel="manifest" href="./manifest.json?v=258" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=257" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=257" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=258" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=258" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4263,6 +4263,103 @@
       word-break: keep-all;
       overflow-wrap: anywhere;
     }
+    /* v10.158 설교 · CCM 영상 이모지 반응 바 */
+    .video-reaction-bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 9px;
+    }
+    .video-reaction-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4.5px 9px;
+      border-radius: 999px;
+      border: 1px solid #E2E8F0;
+      background: #F8FAFC;
+      color: #475569;
+      font-size: 12.5px;
+      font-weight: 700;
+      line-height: 1.25;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.12s ease, background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+      user-select: none;
+    }
+    .video-reaction-chip:active {
+      transform: scale(0.92);
+    }
+    .video-reaction-chip.has-count {
+      background: #FFFFFF;
+      border-color: #CBD5E1;
+      color: #1E293B;
+    }
+    .video-reaction-chip.active {
+      background: #EFF6FF;
+      border-color: #3B82F6;
+      color: #1D4ED8;
+      box-shadow: 0 1px 4px rgba(37, 99, 235, 0.16);
+    }
+    .video-reaction-chip.ccm.active {
+      background: #FAF5FF;
+      border-color: #9333EA;
+      color: #7E22CE;
+      box-shadow: 0 1px 4px rgba(147, 51, 234, 0.16);
+    }
+    .video-reaction-chip .vr-emoji {
+      font-size: 14px;
+      line-height: 1;
+    }
+    .video-reaction-chip .vr-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+    .video-reaction-chip .vr-cnt {
+      font-size: 11.5px;
+      font-weight: 800;
+      min-width: 8px;
+      text-align: center;
+    }
+    .video-reaction-chip.compact {
+      padding: 2.5px 7px;
+      font-size: 11px;
+      gap: 3px;
+    }
+    .video-reaction-chip.compact .vr-emoji {
+      font-size: 12px;
+    }
+    .video-reaction-chip.compact .vr-cnt {
+      font-size: 10.5px;
+    }
+    .video-player-reactions-box {
+      margin-top: 10px;
+      padding: 10px 11px;
+      border-radius: 12px;
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+    }
+    .video-player-reactions-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #475569;
+      margin-bottom: 7px;
+    }
+    @media (max-width: 380px) {
+      .video-reaction-chip {
+        padding: 4px 7.5px;
+        font-size: 12px;
+      }
+      .video-reaction-chip .vr-emoji {
+        font-size: 13px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -4287,7 +4384,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=257" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=258" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5852,6 +5949,7 @@
       <div id="videoPlayerTitle" style="font-size:15.5px; font-weight:800; color:#0F172A; line-height:1.38; margin-bottom:4px;"></div>
       <div id="videoPlayerMeta" style="font-size:12px; color:#64748B; margin-bottom:8px;"></div>
       <div id="videoPlayerNote" class="video-note-box hidden"></div>
+      <div id="videoPlayerReactions" class="video-player-reactions-box hidden"></div>
       <div style="font-size:11.5px; color:#64748B; background:#F8FAFC; border:1px solid var(--border); border-radius:10px; padding:8px 10px; margin-top:8px; line-height:1.45;">
         💡 플레이어 중앙 <b>▶ 버튼</b>을 눌러 재생하세요. 유튜브 프리미엄(광고 없이 시청)이나 백그라운드 재생은 아래 <b>[유튜브 앱에서 열기]</b>를 이용하면 더 편합니다.
       </div>
@@ -6144,8 +6242,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 257;
-    const APP_CACHE_NAME = 'right-youth-app-v10.157';
+    const APP_CLIENT_BUILD = 258;
+    const APP_CACHE_NAME = 'right-youth-app-v10.158';
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.156-log-archive';
     const SHEET_SCHEMA_TABS = [
@@ -6307,6 +6405,15 @@
       sermonTabs: [...DEFAULT_SERMON_SUB_TABS],
       ccmTabs: [...DEFAULT_CCM_SUB_TABS]
     };
+    const VIDEO_REACTION_EMOJIS = [
+      { key: 'amen', emoji: '🙏', label: '아멘' },
+      { key: 'heart', emoji: '❤️', label: '좋아요' },
+      { key: 'grace', emoji: '🙌', label: '은혜' },
+      { key: 'touched', emoji: '🥹', label: '감동' },
+      { key: 'fire', emoji: '🔥', label: '도전' },
+      { key: 'clap', emoji: '👏', label: '감사' }
+    ];
+    const VIDEO_REACTION_VALID_KEYS = new Set(VIDEO_REACTION_EMOJIS.map(e => e.key));
     const YOUTUBE_RISK_KEYWORDS = [
       '무단', '무료 다운로드', '음원 추출', '불법', '가사 영상', '가사영상',
       '1시간 연속', '연속듣기', '찬양 모음 1시간', '플레이리스트 모음', 'mr 추출',
@@ -7233,7 +7340,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=257" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=258" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7257,8 +7364,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=257', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=257', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=258', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=258', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -7946,6 +8053,8 @@
     let ccmSubTabFilter = '전체';
     let lastVideoInspectResult = null;
     let lastVideoSubmitTs = 0;
+    let currentPlayerVideoDocId = '';
+    const videoReactionBusySet = new Set();
 
     let unsubMyMember = null;
     let memberProfileRetryTimer = null;
@@ -9730,6 +9839,7 @@
           }
           videoItems = next;
           if (isAdminUser && adminSheetUrl) syncUnsyncedVideosToSheet(next).catch(() => {});
+          if (typeof refreshOpenVideoPlayerReactions === 'function') refreshOpenVideoPlayerReactions();
           applyScreen();
         }, err => {
           if (err && err.code === 'permission-denied') {
@@ -10252,6 +10362,7 @@
             }
             if (unsubVideosAdmin) return;
             videoItems = next;
+            if (typeof refreshOpenVideoPlayerReactions === 'function') refreshOpenVideoPlayerReactions();
             applyScreen();
           }, () => {});
 
@@ -35560,6 +35671,7 @@ ${handleUrl}`);
                         </div>
                         <div style="font-size:13.5px; font-weight:800; color:#0F172A; line-height:1.35; margin-bottom:3px;">${escapeHtml(v.title || '')}</div>
                         <div style="font-size:11.5px; color:#64748B;">📺 ${escapeHtml(v.channelName || '유튜브')} · ${escapeHtml(v.createdAt ? String(v.createdAt).slice(0, 10) : '')}</div>
+                        ${buildVideoReactionBarHtml(v, 'home')}
                       </div>
                     </div>
                   </div>
@@ -35569,6 +35681,181 @@ ${handleUrl}`);
         </div>
       `;
     }
+
+
+    function getMyVideoReactionKey() {
+      if (!fbUser) return '';
+      if ((fbUser.email || '').toLowerCase() === ADMIN_EMAIL) {
+        const admHex = nameToHex(currentAdminName || 'admin');
+        return `admin_${admHex || fbUser.uid}`;
+      }
+      return String(fbUser.uid);
+    }
+
+    function getVideoReactionStats(v) {
+      const counts = {};
+      VIDEO_REACTION_EMOJIS.forEach(item => { counts[item.key] = 0; });
+      const mine = new Set();
+      let total = 0;
+      const myKey = getMyVideoReactionKey();
+      const rawMap = (v && v.reactions && typeof v.reactions === 'object') ? v.reactions : null;
+      if (rawMap) {
+        Object.keys(rawMap).forEach(actorKey => {
+          const arr = rawMap[actorKey];
+          if (!Array.isArray(arr)) return;
+          const uniq = new Set();
+          arr.forEach(ek => {
+            const k = String(ek || '').trim();
+            if (!VIDEO_REACTION_VALID_KEYS.has(k) || uniq.has(k)) return;
+            uniq.add(k);
+            counts[k] = (counts[k] || 0) + 1;
+            total++;
+            if (myKey && String(actorKey) === String(myKey)) {
+              mine.add(k);
+            }
+          });
+        });
+      }
+      return { counts, mine, total };
+    }
+
+    function buildVideoReactionBarHtml(v, mode = 'card') {
+      if (!v || !v.id || v.status !== 'approved') return '';
+      const stats = getVideoReactionStats(v);
+      const isCcm = isCcmVideo(v);
+      const ccmCls = isCcm ? ' ccm' : '';
+      const vidIdAttr = escapeJsAttr(String(v.id));
+
+      if (mode === 'home') {
+        const activeItems = VIDEO_REACTION_EMOJIS.filter(item => (stats.counts[item.key] || 0) > 0);
+        if (activeItems.length === 0) return '';
+        return `
+          <div class="video-reaction-bar" style="margin-top:5px;" data-vid-react-bar="${escapeHtml(String(v.id))}" data-vid-react-mode="home">
+            ${activeItems.map(item => {
+              const cnt = stats.counts[item.key] || 0;
+              const isMine = stats.mine.has(item.key);
+              return `<button class="video-reaction-chip compact has-count${ccmCls}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(item.label)}" aria-label="${escapeHtml(item.label)} ${cnt}" onclick="event.stopPropagation(); toggleVideoReaction('${vidIdAttr}', '${item.key}')"><span class="vr-emoji">${item.emoji}</span><span class="vr-cnt">${cnt}</span></button>`;
+            }).join('')}
+          </div>
+        `;
+      }
+
+      if (mode === 'player') {
+        return `
+          <div class="video-player-reactions-head">
+            <span>✨ 이 영상에 은혜·공감 이모지 남기기</span>
+            <span>${stats.total > 0 ? `총 ${stats.total}개` : '첫 이모지를 눌러 보세요'}</span>
+          </div>
+          <div class="video-reaction-bar" style="margin-top:0;">
+            ${VIDEO_REACTION_EMOJIS.map(item => {
+              const cnt = stats.counts[item.key] || 0;
+              const isMine = stats.mine.has(item.key);
+              return `<button class="video-reaction-chip${ccmCls}${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(item.label)}" aria-label="${escapeHtml(item.label)} ${cnt}" onclick="toggleVideoReaction('${vidIdAttr}', '${item.key}')"><span class="vr-emoji">${item.emoji}</span><span class="vr-lbl">${escapeHtml(item.label)}</span>${cnt > 0 ? `<span class="vr-cnt">${cnt}</span>` : ''}</button>`;
+            }).join('')}
+          </div>
+        `;
+      }
+
+      return `
+        <div class="video-reaction-bar" data-vid-react-bar="${escapeHtml(String(v.id))}" data-vid-react-mode="card">
+          ${VIDEO_REACTION_EMOJIS.map(item => {
+            const cnt = stats.counts[item.key] || 0;
+            const isMine = stats.mine.has(item.key);
+            return `<button class="video-reaction-chip${ccmCls}${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(item.label)}" aria-label="${escapeHtml(item.label)} ${cnt}" onclick="event.stopPropagation(); toggleVideoReaction('${vidIdAttr}', '${item.key}')"><span class="vr-emoji">${item.emoji}</span>${cnt > 0 ? `<span class="vr-cnt">${cnt}</span>` : ''}</button>`;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function refreshOpenVideoPlayerReactions() {
+      const modal = document.getElementById('videoPlayerModal');
+      const box = document.getElementById('videoPlayerReactions');
+      if (!box) return;
+      if (!modal || !modal.classList.contains('open') || !currentPlayerVideoDocId) {
+        box.classList.add('hidden');
+        box.innerHTML = '';
+        return;
+      }
+      const rec = (videoItems || []).find(x => String(x.id) === String(currentPlayerVideoDocId)) || null;
+      if (!rec || rec.status !== 'approved') {
+        box.classList.add('hidden');
+        box.innerHTML = '';
+        return;
+      }
+      box.innerHTML = buildVideoReactionBarHtml(rec, 'player');
+      box.classList.remove('hidden');
+    }
+
+    function refreshVideoReactionBarsInDom(videoDocId) {
+      const rec = (videoItems || []).find(x => String(x.id) === String(videoDocId)) || null;
+      if (!rec) return;
+      document.querySelectorAll(`[data-vid-react-bar="${CSS.escape ? CSS.escape(String(videoDocId)) : String(videoDocId)}"]`).forEach(el => {
+        const mode = el.getAttribute('data-vid-react-mode') || 'card';
+        const tmp = document.createElement('div');
+        tmp.innerHTML = buildVideoReactionBarHtml(rec, mode);
+        const nextEl = tmp.firstElementChild;
+        if (nextEl) {
+          el.replaceWith(nextEl);
+        } else {
+          el.remove();
+        }
+      });
+      if (String(currentPlayerVideoDocId) === String(videoDocId)) {
+        refreshOpenVideoPlayerReactions();
+      }
+    }
+
+    window.toggleVideoReaction = async (videoDocId, emojiKey) => {
+      const user = getCurrentUser();
+      const myKey = getMyVideoReactionKey();
+      const key = String(emojiKey || '').trim();
+      const docId = String(videoDocId || '').trim();
+      if (!user || !myKey || !docId || !VIDEO_REACTION_VALID_KEYS.has(key)) return;
+      if (videoReactionBusySet.has(docId)) return;
+
+      const idx = (videoItems || []).findIndex(x => String(x.id) === docId);
+      if (idx < 0) return;
+      const target = videoItems[idx];
+      if (!target || target.status !== 'approved') return;
+
+      const prevReactions = (target.reactions && typeof target.reactions === 'object')
+        ? JSON.parse(JSON.stringify(target.reactions))
+        : null;
+      const curRaw = (prevReactions && Array.isArray(prevReactions[myKey]))
+        ? prevReactions[myKey].map(String).filter(k => VIDEO_REACTION_VALID_KEYS.has(k))
+        : [];
+      const hadKey = curRaw.includes(key);
+      const nextList = hadKey
+        ? curRaw.filter(k => k !== key)
+        : Array.from(new Set([...curRaw, key]));
+
+      // 낙관적 즉시 UI 반영 (재생 중인 영상 끊김 없음)
+      const nextMap = prevReactions ? { ...prevReactions } : {};
+      if (nextList.length > 0) nextMap[myKey] = nextList;
+      else delete nextMap[myKey];
+      target.reactions = nextMap;
+      refreshVideoReactionBarsInDom(docId);
+
+      videoReactionBusySet.add(docId);
+      try {
+        const fieldPath = `reactions.${myKey}`;
+        await db.collection('videos').doc(docId).update({
+          [fieldPath]: nextList.length > 0 ? nextList : FieldValue.delete()
+        });
+      } catch (err) {
+        // 실패 시 원래 상태로 안전 복구
+        target.reactions = prevReactions || {};
+        refreshVideoReactionBarsInDom(docId);
+        console.error('toggleVideoReaction error:', err);
+        if (err && err.code === 'permission-denied') {
+          showToast('⚠️ 이모지 반응을 저장하려면 관리자가 최신 Firestore 규칙을 게시해야 합니다.', 'warn');
+        } else {
+          showToast('이모지 반응 저장 중 오류가 발생했습니다.', 'err');
+        }
+      } finally {
+        videoReactionBusySet.delete(docId);
+      }
+    };
 
     window.openYouTubeVideoSafely = (videoId, title = '유튜브 영상', docId = '') => {
       const cleanId = String(videoId || '').trim();
@@ -35639,14 +35926,19 @@ ${handleUrl}`);
         wrapEl.innerHTML = `<iframe class="video-player-iframe" src="${safeEmbedUrl}" title="${escapeHtml((rec && rec.title) || title || '유튜브 영상')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
       }
 
+      currentPlayerVideoDocId = (rec && rec.id) ? String(rec.id) : String(docId || '');
       document.getElementById('videoPlayerModal').classList.add('open');
+      refreshOpenVideoPlayerReactions();
     };
 
     window.closeVideoPlayerModal = () => {
+      currentPlayerVideoDocId = '';
       const modal = document.getElementById('videoPlayerModal');
       if (modal) modal.classList.remove('open');
       const wrapEl = document.getElementById('videoPlayerFrameWrap');
       if (wrapEl) wrapEl.innerHTML = '';
+      const reactEl = document.getElementById('videoPlayerReactions');
+      if (reactEl) { reactEl.classList.add('hidden'); reactEl.innerHTML = ''; }
     };
 
     function buildVideoFeedCardHtml(v, user) {
@@ -35685,6 +35977,7 @@ ${handleUrl}`);
               📺 <b>${escapeHtml(v.channelName || '유튜브')}</b> · 추천: ${escapeHtml(v.authorName || '회원')}${v.roleName ? ` (${escapeHtml(v.roleName)})` : ''}
             </div>
             ${v.note ? `<div class="video-note-box" style="margin:6px 0 0;">${escapeHtml(v.note)}</div>` : ''}
+            ${buildVideoReactionBarHtml(v, 'card')}
             <div class="card-footer" style="margin-top:10px; padding-top:8px;">
               <button class="btn-sm primary" type="button" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">▶ 앱에서 재생</button>
               ${canEdit ? `
