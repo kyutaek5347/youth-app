@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=280" />
+  <link rel="manifest" href="./manifest.json?v=281" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=280" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=280" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=281" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=281" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4734,7 +4734,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=280" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=281" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5982,7 +5982,7 @@
         <button class="close-btn" data-close="cellRosterModal">✕</button>
       </div>
       <div class="info-box" style="margin-top:0; margin-bottom:10px; background:#F0FDF4; border-color:#BBF7D0; color:#14532D;">
-        <b>개인정보 보호 저장:</b> 입력한 셀과 명단은 GitHub 공개 코드가 아니라 <b>로그인 인증이 필요한 Firebase 서버</b>에만 안전하게 보관됩니다.
+        <b>개인정보 보호 저장:</b> 입력한 셀과 명단은 GitHub 공개 코드나 일반 회원 공용 문서가 아니라 <b>관리자 전용 Firebase 보안 문서(config/cellRoster)</b>에만 격리 보관됩니다.
       </div>
       <div class="form-grid-2" style="margin-bottom:6px;">
         <div class="form-group" style="margin-bottom:0;">
@@ -6604,9 +6604,9 @@
     const authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
-    const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 280;
-    const APP_CACHE_NAME = 'right-youth-app-v10.180';
+    const CURRENT_SCHEMA_VERSION = 35;
+    const APP_CLIENT_BUILD = 281;
+    const APP_CACHE_NAME = 'right-youth-app-v10.181';
     const APP_BOOT_TS = Date.now();
     try {
       const _bootUrl = new URL(window.location.href);
@@ -6904,9 +6904,7 @@
       regularEnd: '15:30',
       skippedSundays: [],
       specialEvents: [],
-      sessionNames: {},
-      cellRoster: structuredClone(DEFAULT_CELL_ROSTER),
-      weeklyAuto: structuredClone(DEFAULT_WEEKLY_AUTO_CONFIG)
+      sessionNames: {}
     };
     const KEY_NEWCOMER_NOTIFIED = 'right_youth_newcomer_notified_v1';
     // 기존 기기에 남아 있던 성경·QT 잔여 로컬 기록 즉시 영구 폐기
@@ -7937,7 +7935,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? `<span style="color:#FECACA; display:inline-flex; align-items:center; justify-content:center;">${renderMonoSvg('alertShield', 20)}</span>`
-        : '<img src="./icon-192.png?v=280" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=281" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7961,8 +7959,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=280', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=280', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=281', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=281', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -8704,6 +8702,9 @@
     let unsubMembersAll = null;
     let unsubAdminSecret = null;
     let unsubSheetSecret = null;
+    let unsubCellRoster = null;
+    let adminCellRoster = structuredClone(DEFAULT_CELL_ROSTER);
+    let adminWeeklyAuto = structuredClone(DEFAULT_WEEKLY_AUTO_CONFIG);
     let adminSheetUrl = '';
     let adminAttendanceSheetUrl = '';
     let adminLogArchiveSheetUrl = '';
@@ -8772,6 +8773,9 @@
       if (unsubMembersAll) { unsubMembersAll(); unsubMembersAll = null; }
       if (unsubAdminSecret) { unsubAdminSecret(); unsubAdminSecret = null; }
       if (unsubSheetSecret) { unsubSheetSecret(); unsubSheetSecret = null; }
+      if (unsubCellRoster) { unsubCellRoster(); unsubCellRoster = null; }
+      adminCellRoster = structuredClone(DEFAULT_CELL_ROSTER);
+      adminWeeklyAuto = structuredClone(DEFAULT_WEEKLY_AUTO_CONFIG);
       adminSheetUrl = '';
       adminAttendanceSheetUrl = '';
       adminLogArchiveSheetUrl = '';
@@ -10042,6 +10046,53 @@
           }
         }
 
+
+        // 15) v10.181 (schemaVersion 35): 셀별 주간 출석부 명단(cellRoster) · 자동 생성 예약(weeklyAuto)을 관리자 전용 문서(config/cellRoster)로 격리 이관
+        if ((appSnap.data().schemaVersion || 0) < 35) {
+          try {
+            const attSnap35 = await db.collection('config').doc('attendance').get();
+            if (attSnap35.exists) {
+              const attData35 = attSnap35.data() || {};
+              const hasLegacyRoster = attData35.cellRoster !== undefined;
+              const hasLegacyAuto = attData35.weeklyAuto !== undefined;
+              if (hasLegacyRoster || hasLegacyAuto) {
+                const crRef = db.collection('config').doc('cellRoster');
+                const crSnap = await crRef.get();
+                const crExisting = crSnap.exists ? (crSnap.data() || {}) : {};
+                const crPayload = {
+                  updatedAt: formatKstDateTime(),
+                  updatedTs: Date.now(),
+                  updatedBy: currentAdminName || '자동 이관'
+                };
+                if (hasLegacyRoster && !crExisting.cellRoster) {
+                  crPayload.cellRoster = normalizeCellRosterConfig(attData35.cellRoster);
+                  adminCellRoster = crPayload.cellRoster;
+                }
+                if (hasLegacyAuto && !crExisting.weeklyAuto) {
+                  crPayload.weeklyAuto = normalizeWeeklyAutoConfig(attData35.weeklyAuto);
+                  adminWeeklyAuto = crPayload.weeklyAuto;
+                }
+                if (crPayload.cellRoster || crPayload.weeklyAuto) {
+                  await crRef.set(crPayload, { merge: true });
+                }
+                const delPatch = {};
+                if (hasLegacyRoster) delPatch.cellRoster = FieldValue.delete();
+                if (hasLegacyAuto) delPatch.weeklyAuto = FieldValue.delete();
+                await db.collection('config').doc('attendance').set(delPatch, { merge: true });
+                recordAuditLog({
+                  actorType: 'admin',
+                  category: '보안·설정',
+                  action: '셀 명단 관리자 전용 격리 이관 (v10.181)',
+                  target: 'config/cellRoster',
+                  detail: 'config/attendance에서 셀원 명단(cellRoster)·자동 생성 설정(weeklyAuto) 분리 완료'
+                });
+              }
+            }
+          } catch (v35Err) {
+            console.warn('v10.181 cellRoster isolation migration error:', v35Err);
+          }
+        }
+
         await appRef.set({
           initialized: true,
           schemaVersion: CURRENT_SCHEMA_VERSION,
@@ -10333,6 +10384,29 @@
         adminSheetUrl = '';
         adminAttendanceSheetUrl = '';
         adminLogArchiveSheetUrl = '';
+      }
+
+      if (canReadManage && !unsubCellRoster) {
+        unsubCellRoster = db.collection('config').doc('cellRoster').onSnapshot(doc => {
+          if (doc.exists) {
+            const d = doc.data() || {};
+            adminCellRoster = normalizeCellRosterConfig(d.cellRoster);
+            adminWeeklyAuto = normalizeWeeklyAutoConfig(d.weeklyAuto);
+          } else {
+            adminCellRoster = structuredClone(DEFAULT_CELL_ROSTER);
+            adminWeeklyAuto = structuredClone(DEFAULT_WEEKLY_AUTO_CONFIG);
+          }
+          if (currentMainTab === 'manage' && (currentManageSubTab === 'attendance' || currentManageSubTab === 'worship')) {
+            if (!document.getElementById('cellRosterModal').classList.contains('open')) {
+              applyScreen();
+            }
+          }
+        }, err => onManageReadErr(err, '셀 명단 동기화'));
+      } else if (!canReadManage && unsubCellRoster) {
+        unsubCellRoster();
+        unsubCellRoster = null;
+        adminCellRoster = structuredClone(DEFAULT_CELL_ROSTER);
+        adminWeeklyAuto = structuredClone(DEFAULT_WEEKLY_AUTO_CONFIG);
       }
 
       if (canReadManage && !unsubAttendanceAdmin) {
@@ -10915,20 +10989,22 @@
       unsubCore.push(
         db.collection('config').doc('attendance').onSnapshot(doc => {
           if (doc.exists) {
+            const rawAtt = { ...(doc.data() || {}) };
+            delete rawAtt.cellRoster;
+            delete rawAtt.weeklyAuto;
+            delete rawAtt.sheetUrl;
             attendanceConfig = {
               ...DEFAULT_ATTENDANCE_CONFIG,
-              ...doc.data(),
+              ...rawAtt,
               regularDay: 0,
-              skippedSundays: Array.isArray(doc.data().skippedSundays) ? doc.data().skippedSundays.map(String) : [],
-              specialEvents: Array.isArray(doc.data().specialEvents) ? doc.data().specialEvents : [],
-              sessionNames: (doc.data().sessionNames && typeof doc.data().sessionNames === 'object') ? doc.data().sessionNames : {},
-              cellRoster: normalizeCellRosterConfig(doc.data().cellRoster),
-              weeklyAuto: normalizeWeeklyAutoConfig(doc.data().weeklyAuto)
+              skippedSundays: Array.isArray(rawAtt.skippedSundays) ? rawAtt.skippedSundays.map(String) : [],
+              specialEvents: Array.isArray(rawAtt.specialEvents) ? rawAtt.specialEvents : [],
+              sessionNames: (rawAtt.sessionNames && typeof rawAtt.sessionNames === 'object') ? rawAtt.sessionNames : {}
             };
           } else {
             attendanceConfig = structuredClone(DEFAULT_ATTENDANCE_CONFIG);
           }
-          // sheetUrl은 관리자 전용 문서(config/sheetSecret)에서 별도 격리 동기화
+          // sheetUrl(config/sheetSecret)과 cellRoster·weeklyAuto(config/cellRoster)는 관리자 전용 문서에서 별도 격리 동기화
           if (document.getElementById('skipSundayModal').classList.contains('open')) {
             renderSkipSundayCalendarModal();
           }
@@ -11407,6 +11483,9 @@
           if (unsubMembersAll) { unsubMembersAll(); unsubMembersAll = null; }
           if (unsubAdminSecret) { unsubAdminSecret(); unsubAdminSecret = null; }
           if (unsubSheetSecret) { unsubSheetSecret(); unsubSheetSecret = null; }
+          if (unsubCellRoster) { unsubCellRoster(); unsubCellRoster = null; }
+          adminCellRoster = structuredClone(DEFAULT_CELL_ROSTER);
+          adminWeeklyAuto = structuredClone(DEFAULT_WEEKLY_AUTO_CONFIG);
           adminSheetUrl = '';
           sharedAdminCode = '';
           sharedAdminCodeUpdatedAt = '';
@@ -25143,8 +25222,7 @@
     }
 
     function getWeeklyAutoConfig() {
-      const cfg = attendanceConfig || DEFAULT_ATTENDANCE_CONFIG;
-      return normalizeWeeklyAutoConfig(cfg.weeklyAuto);
+      return normalizeWeeklyAutoConfig(adminWeeklyAuto);
     }
 
     // 한국어 자연어 날짜·요일 파서 (예: 오늘, 내일, 모레, 이번주 월요일, 다음주 수요일, 매주 금요일, 12월 25일, 2026.12.01)
@@ -25570,8 +25648,8 @@
       if (btn) { btn.disabled = true; btn.textContent = '⏳ 구글 서버 예약 반영 중...'; }
       setInlineSaveStatus('weekly_auto_sched', 'loading', '⏳ 주간 출석부 자동 생성 예약을 저장하고 구글 서버 트리거를 설정 중입니다...');
       try {
-        await db.collection('config').doc('attendance').set({ weeklyAuto: nextAuto }, { merge: true });
-        attendanceConfig.weeklyAuto = nextAuto;
+        await db.collection('config').doc('cellRoster').set({ weeklyAuto: nextAuto, updatedAt: formatKstDateTime(), updatedTs: Date.now(), updatedBy: currentAdminName || '관리자' }, { merge: true });
+        adminWeeklyAuto = nextAuto;
         const hourLabel = `${String(hour).padStart(2, '0')}시`;
 
         if (!getAdminSheetUrl()) {
@@ -25671,8 +25749,7 @@
     }
 
     function getCellRosterConfig() {
-      const cfg = attendanceConfig || DEFAULT_ATTENDANCE_CONFIG;
-      return normalizeCellRosterConfig(cfg.cellRoster);
+      return normalizeCellRosterConfig(adminCellRoster);
     }
 
     function isStaffRoleName(roleName, roleId) {
@@ -26209,7 +26286,8 @@
         }
       };
       try {
-        await db.collection('config').doc('attendance').set({ cellRoster: nextRoster }, { merge: true });
+        await db.collection('config').doc('cellRoster').set({ cellRoster: nextRoster, updatedAt: formatKstDateTime(), updatedTs: Date.now(), updatedBy: currentAdminName || '관리자' }, { merge: true });
+        adminCellRoster = nextRoster;
         if (inp) inp.value = '';
         showToast(`✅ [${namesToAdd.join(', ')}] 추가되었습니다!`, 'ok');
         scheduleAutoWeeklySheetSync();
@@ -26240,7 +26318,8 @@
         }
       };
       try {
-        await db.collection('config').doc('attendance').set({ cellRoster: nextRoster }, { merge: true });
+        await db.collection('config').doc('cellRoster').set({ cellRoster: nextRoster, updatedAt: formatKstDateTime(), updatedTs: Date.now(), updatedBy: currentAdminName || '관리자' }, { merge: true });
+        adminCellRoster = nextRoster;
         showToast(`${name}님을 방문자 목록에서 제거했습니다.`);
         scheduleAutoWeeklySheetSync();
       } catch (err) {
@@ -26529,8 +26608,8 @@
       if (btn) { btn.disabled = true; btn.textContent = '⏳ 저장 중...'; }
       setInlineSaveStatus('cell_roster', 'loading', '⏳ 셀 명단을 서버에 안전하게 저장하는 중입니다...');
       try {
-        await db.collection('config').doc('attendance').set({ cellRoster: nextRoster }, { merge: true });
-        attendanceConfig.cellRoster = nextRoster;
+        await db.collection('config').doc('cellRoster').set({ cellRoster: nextRoster, updatedAt: formatKstDateTime(), updatedTs: Date.now(), updatedBy: currentAdminName || '관리자' }, { merge: true });
+        adminCellRoster = nextRoster;
         if (getWeeklyAutoConfig().enabled && getAdminSheetUrl()) {
           syncWeeklyAutoScheduleToGas(true).catch(() => {});
         }
@@ -26642,8 +26721,8 @@
       if (btn) { btn.disabled = true; btn.textContent = '⏳ 저장 중...'; }
       setInlineSaveStatus('cell_roster', 'loading', '⏳ 셀 명단을 저장하는 중입니다...');
       try {
-        await db.collection('config').doc('attendance').set({ cellRoster: nextRoster }, { merge: true });
-        attendanceConfig.cellRoster = nextRoster;
+        await db.collection('config').doc('cellRoster').set({ cellRoster: nextRoster, updatedAt: formatKstDateTime(), updatedTs: Date.now(), updatedBy: currentAdminName || '관리자' }, { merge: true });
+        adminCellRoster = nextRoster;
         if (getWeeklyAutoConfig().enabled && getAdminSheetUrl()) {
           syncWeeklyAutoScheduleToGas(true).catch(() => {});
         }
@@ -30641,6 +30720,7 @@
       if (unsubMembersAll) cnt += 1;
       if (unsubAdminSecret) cnt += 1;
       if (unsubSheetSecret) cnt += 1;
+      if (unsubCellRoster) cnt += 1;
       if (unsubAdminRegistry) cnt += 1;
       if (unsubAdminRegistryObserver) cnt += 1;
       if (unsubAttendanceAdmin) cnt += 1;
