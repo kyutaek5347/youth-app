@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=278" />
+  <link rel="manifest" href="./manifest.json?v=279" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=278" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=278" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=279" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=279" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4621,31 +4621,120 @@
       .icon-btn .ui-svg-icon svg { width: 17.5px; height: 17.5px; }
     }
 
+
+    /* v10.179 Step 1: 핵심 아이콘 단색 선형 SVG 통일 */
+    .guide-icon-badge {
+      color: #1D4ED8;
+    }
+    .guide-icon-badge .ui-svg-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+    .modal-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      line-height: 1.3;
+    }
+    .modal-title .ui-svg-icon svg {
+      width: 19px;
+      height: 19px;
+      color: #0F172A;
+    }
+    .status-emoji.pending {
+      color: #B45309;
+    }
+    .status-emoji.rejected {
+      color: #DC2626;
+    }
+    .status-emoji .ui-svg-icon svg {
+      width: 26px;
+      height: 26px;
+    }
+    .maintenance-icon {
+      color: #FDE68A;
+    }
+    .maintenance-screen.emergency-mode .maintenance-icon {
+      color: #FECACA;
+    }
+    .maintenance-icon .ui-svg-icon svg {
+      width: 28px;
+      height: 28px;
+    }
+    .quick-preset-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .quick-preset-chip .ui-svg-icon svg {
+      width: 14px;
+      height: 14px;
+    }
+    .combo-picker-btn .ui-svg-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+    .btn-attendance-cta .ui-svg-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+    .hero-write-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .hero-write-btn .ui-svg-icon svg {
+      width: 14px;
+      height: 14px;
+    }
+    .bar-inline-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .bar-inline-icon .ui-svg-icon svg {
+      width: 15px;
+      height: 15px;
+    }
+    .empty-state-svg {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      color: #64748B;
+    }
+    .empty-state-svg svg {
+      width: 28px;
+      height: 28px;
+      display: block;
+    }
+
   </style>
 </head>
 <body>
   <div class="app-shell">
     <!-- 비공식/복제 피싱 도메인 접속 경고 배너 -->
     <div id="cloneDomainBanner" class="clone-domain-banner hidden">
-      <span id="cloneDomainBannerText">🚨 비공식 주소(피싱·복제 의심)에서 접속 중입니다.</span>
+      <span id="cloneDomainBannerText" class="bar-inline-icon"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8l7.6 3.1v5.6c0 4.9-3.2 8.7-7.6 10.1-4.4-1.4-7.6-5.2-7.6-10.1V5.9L12 2.8z"/><line x1="12" y1="8.2" x2="12" y2="12.8"/><circle cx="12" cy="16" r="0.9" fill="currentColor" stroke="none"/></svg></span><span>비공식 주소(피싱·복제 의심)에서 접속 중입니다.</span></span>
       <button class="maint-admin-bar-btn" type="button" onclick="dismissCloneDomainBanner()">닫기</button>
     </div>
 
     <!-- 정기 서버 점검 모드 작동 중 관리자 안내 바 -->
     <div id="maintAdminBar" class="maint-admin-bar hidden">
-      <span id="maintAdminBarText">🔧 서버 점검 모드 작동 중 · 일반 회원 접근 차단됨</span>
+      <span id="maintAdminBarText" class="bar-inline-icon"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4.5 4.5 0 0 0-5.8 5.8L4 17a2 2 0 0 0 2.8 2.8l4.9-4.9a4.5 4.5 0 0 0 5.8-5.8l-2.6 2.6-2.8-2.8 2.6-2.6z"/></svg></span><span>서버 점검 모드 작동 중 · 일반 회원 접근 차단됨</span></span>
       <button class="maint-admin-bar-btn" type="button" onclick="quickDisableMaintenance()">점검 해제</button>
     </div>
 
     <!-- 일반 회원 시점 미리보기 배너 (관리자 기능 점검용) -->
     <div id="previewMemberBar" class="preview-member-bar hidden">
-      <span id="previewMemberBarText">👁️ 일반 회원 시점 미리보기 중 (관리자 전용 칸·관리 탭 숨김)</span>
+      <span id="previewMemberBarText" class="bar-inline-icon"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M2.2 12s3.6-6.5 9.8-6.5S21.8 12 21.8 12s-3.6 6.5-9.8 6.5S2.2 12 2.2 12z"/><circle cx="12" cy="12" r="2.8"/></svg></span><span>일반 회원 시점 미리보기 중 (관리자 전용 칸·관리 탭 숨김)</span></span>
       <button class="preview-member-exit" type="button" onclick="toggleMemberPreviewMode(false)">관리자 복귀</button>
     </div>
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=278" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=279" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4713,7 +4802,7 @@
         <!-- 회원가입 (당일 유효 초대 QR 인증 + 이용약관 동의 필수) -->
         <div id="panelSignup" class="hidden">
           <div id="signupQrLockBox" class="signup-qr-lock-box hidden">
-            <div id="signupQrLockIcon" style="font-size:30px; margin-bottom:8px;">🔒</div>
+            <div id="signupQrLockIcon" style="font-size:28px; margin-bottom:8px; color:#991B1B;"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="4.8" y="10.5" width="14.4" height="10" rx="2.2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.2" fill="currentColor"/></svg></span></div>
             <div id="signupQrLockTitle" style="font-size:15.5px; font-weight:800; margin-bottom:6px;">초대 QR 코드가 필요합니다</div>
             <div id="signupQrLockDesc" style="font-size:12.5px; line-height:1.55; color:#7F1D1D;">
               신규 회원가입은 청년부원 또는 관리자가 공유한 <b>오늘의 초대 QR 코드</b>를 스캔해 접속해야 신청할 수 있습니다.
@@ -4780,7 +4869,7 @@
         <!-- 승인 대기 / 거절 상태 (실시간 자동 승인 감지) -->
         <div id="panelStatus" class="hidden">
           <div class="status-box">
-            <div id="statusEmoji" class="status-emoji pending">⏳</div>
+            <div id="statusEmoji" class="status-emoji pending"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg></span></div>
             <h2 id="statusTitle" class="status-title">관리자 승인 대기 중</h2>
             <p id="statusDesc" class="status-desc"></p>
             <div id="statusMeta" class="status-meta"></div>
@@ -4795,7 +4884,7 @@
     <section id="maintenanceScreen" class="maintenance-screen hidden">
       <div class="maintenance-card">
         <div id="maintScreenBadge" class="maint-badge-pill">🔧 서버 점검 안내</div>
-        <div><div id="maintScreenIcon" class="maintenance-icon">🔧</div></div>
+        <div><div id="maintScreenIcon" class="maintenance-icon"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4.5 4.5 0 0 0-5.8 5.8L4 17a2 2 0 0 0 2.8 2.8l4.9-4.9a4.5 4.5 0 0 0 5.8-5.8l-2.6 2.6-2.8-2.8 2.6-2.6z"/></svg></span></div></div>
         <h1 id="maintScreenTitle" style="font-size:20px; font-weight:900; margin:0 0 10px; color:#FFFFFF;">정기 서버 점검 중입니다</h1>
         <p id="maintScreenDesc" style="font-size:13.5px; color:#CBD5E1; line-height:1.6; margin:0; white-space:pre-line; word-break:keep-all;">더 안정적인 서비스 제공을 위해 정기 서버 점검을 진행하고 있습니다. 점검이 끝나면 자동으로 복구됩니다.</p>
         <div id="maintScreenSubNotice" class="maint-sub-notice hidden"></div>
@@ -4836,7 +4925,7 @@
                 <div id="sermonViewSub" class="hero-top-sub">자동 보안·채널 검사를 통과한 교회 설교·특강 영상을 편하게 시청하세요.</div>
               </div>
               <div class="hero-top-actions">
-                <button id="sermonTabsManageBtn" class="hero-write-btn hidden" type="button" style="background:rgba(255,255,255,0.16); color:#FFFFFF; border:1px solid rgba(255,255,255,0.32);" onclick="openSermonTabsModal()">🗂️ 탭 관리</button>
+                <button id="sermonTabsManageBtn" class="hero-write-btn hidden" type="button" style="background:rgba(255,255,255,0.16); color:#FFFFFF; border:1px solid rgba(255,255,255,0.32);" onclick="openSermonTabsModal()"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 6.2a1.8 1.8 0 0 1 1.8-1.8h4.5l2 2.2H19a1.8 1.8 0 0 1 1.8 1.8v9.4a1.8 1.8 0 0 1-1.8 1.8H5a1.8 1.8 0 0 1-1.8-1.8z"/></svg></span><span>탭 관리</span></button>
                 <button id="sermonRecommendTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openVideoSubmitModal(sermonCatFilter === '라이트 청년부' ? '라이트 청년부' : '설교')">+ 설교 게시</button>
               </div>
             </div>
@@ -4861,7 +4950,7 @@
                 <div id="ccmViewSub" class="hero-top-sub">은혜로운 CCM과 찬양 영상을 함께 듣고 나누는 공간입니다.</div>
               </div>
               <div class="hero-top-actions">
-                <button id="ccmTabsManageBtn" class="hero-write-btn hidden" type="button" style="background:rgba(255,255,255,0.16); color:#FFFFFF; border:1px solid rgba(255,255,255,0.32);" onclick="openCcmTabsModal()">🗂️ 탭 관리</button>
+                <button id="ccmTabsManageBtn" class="hero-write-btn hidden" type="button" style="background:rgba(255,255,255,0.16); color:#FFFFFF; border:1px solid rgba(255,255,255,0.32);" onclick="openCcmTabsModal()"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 6.2a1.8 1.8 0 0 1 1.8-1.8h4.5l2 2.2H19a1.8 1.8 0 0 1 1.8 1.8v9.4a1.8 1.8 0 0 1-1.8 1.8H5a1.8 1.8 0 0 1-1.8-1.8z"/></svg></span><span>탭 관리</span></button>
                 <button id="ccmRecommendTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openVideoSubmitModal('CCM')">+ CCM 게시</button>
               </div>
             </div>
@@ -4980,7 +5069,7 @@
   <div id="resetPwModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">🔑 새 비밀번호 설정</h3>
+        <h3 class="modal-title"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.2" cy="14.8" r="4.2"/><path d="M11.3 11.7l7.8-7.8M16.2 6.8l2.5 2.5M18.8 4.2l2.4 2.4"/></svg></span><span>새 비밀번호 설정</span></h3>
         <button class="close-btn" data-close="resetPwModal">✕</button>
       </div>
       <div class="info-box" style="margin-top:0; margin-bottom:12px;">
@@ -5032,7 +5121,7 @@
   <div id="accountModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">👤 내 계정 관리</h3>
+        <h3 class="modal-title"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.2a7.5 7.5 0 0 1 15 0"/></svg></span><span>내 계정 관리</span></h3>
         <button class="close-btn" data-close="accountModal">✕</button>
       </div>
       <div id="accountSummaryBox" class="status-meta" style="margin-bottom:10px;"></div>
@@ -5094,7 +5183,7 @@
   <div id="notifModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">🔔 알림 설정</h3>
+        <h3 class="modal-title"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8.5a6 6 0 0 0-12 0c0 6.5-2.5 8-2.5 8h17s-2.5-1.5-2.5-8"/><path d="M13.8 20a2 2 0 0 1-3.6 0"/></svg></span><span>알림 설정</span></h3>
         <button class="close-btn" data-close="notifModal">✕</button>
       </div>
 
@@ -5303,7 +5392,7 @@
               <label class="form-label" for="uniScheduleDateInput" style="font-size:11.5px; margin-bottom:4px;">예약 날짜 (KST)</label>
               <div class="combo-input-row">
                 <input id="uniScheduleDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="2026.11.29" oninput="formatDateTyping(this)" />
-                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="달력에서 선택" onclick="openNativePicker('uniScheduleDatePicker', 'uniScheduleDateInput', 'date')">📅</button>
+                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="달력에서 선택" onclick="openNativePicker('uniScheduleDatePicker', 'uniScheduleDateInput', 'date')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.2"/><line x1="8" y1="2.8" x2="8" y2="6.2"/><line x1="16" y1="2.8" x2="16" y2="6.2"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/></svg></span></button>
                 <input id="uniScheduleDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('uniScheduleDatePicker', 'uniScheduleDateInput', 'date')" />
               </div>
             </div>
@@ -5311,7 +5400,7 @@
               <label class="form-label" for="uniScheduleTimeInput" style="font-size:11.5px; margin-bottom:4px;">예약 시각 (KST)</label>
               <div class="combo-input-row">
                 <input id="uniScheduleTimeInput" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="09:00" oninput="formatTimeTyping(this)" />
-                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="시계에서 선택" onclick="openNativePicker('uniScheduleTimePicker', 'uniScheduleTimeInput', 'time')">🕒</button>
+                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="시계에서 선택" onclick="openNativePicker('uniScheduleTimePicker', 'uniScheduleTimeInput', 'time')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg></span></button>
                 <input id="uniScheduleTimePicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('uniScheduleTimePicker', 'uniScheduleTimeInput', 'time')" />
               </div>
             </div>
@@ -5394,7 +5483,7 @@
               <label class="form-label" for="noticeScheduleDateInput" style="font-size:11.5px; margin-bottom:4px;">예약 날짜 (KST)</label>
               <div class="combo-input-row">
                 <input id="noticeScheduleDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="2026.11.29" oninput="formatDateTyping(this)" />
-                <button class="combo-picker-btn" type="button" style="width:auto; padding:0 9px; height:36px; font-size:12px; font-weight:700;" title="달력에서 선택" onclick="openNativePicker('noticeScheduleDatePicker', 'noticeScheduleDateInput', 'date')">선택</button>
+                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="달력에서 선택" onclick="openNativePicker('noticeScheduleDatePicker', 'noticeScheduleDateInput', 'date')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.2"/><line x1="8" y1="2.8" x2="8" y2="6.2"/><line x1="16" y1="2.8" x2="16" y2="6.2"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/></svg></span></button>
                 <input id="noticeScheduleDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('noticeScheduleDatePicker', 'noticeScheduleDateInput', 'date')" />
               </div>
             </div>
@@ -5402,7 +5491,7 @@
               <label class="form-label" for="noticeScheduleTimeInput" style="font-size:11.5px; margin-bottom:4px;">예약 시각 (KST)</label>
               <div class="combo-input-row">
                 <input id="noticeScheduleTimeInput" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="09:00" oninput="formatTimeTyping(this)" />
-                <button class="combo-picker-btn" type="button" style="width:auto; padding:0 9px; height:36px; font-size:12px; font-weight:700;" title="시계에서 선택" onclick="openNativePicker('noticeScheduleTimePicker', 'noticeScheduleTimeInput', 'time')">선택</button>
+                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="시계에서 선택" onclick="openNativePicker('noticeScheduleTimePicker', 'noticeScheduleTimeInput', 'time')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg></span></button>
                 <input id="noticeScheduleTimePicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('noticeScheduleTimePicker', 'noticeScheduleTimeInput', 'time')" />
               </div>
             </div>
@@ -5513,7 +5602,7 @@
               <label class="form-label" for="blockScheduleDateInput" style="font-size:11.5px; margin-bottom:4px;">예약 날짜 (KST)</label>
               <div class="combo-input-row">
                 <input id="blockScheduleDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="2026.11.29" oninput="formatDateTyping(this)" />
-                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="달력에서 선택" onclick="openNativePicker('blockScheduleDatePicker', 'blockScheduleDateInput', 'date')">📅</button>
+                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="달력에서 선택" onclick="openNativePicker('blockScheduleDatePicker', 'blockScheduleDateInput', 'date')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.2"/><line x1="8" y1="2.8" x2="8" y2="6.2"/><line x1="16" y1="2.8" x2="16" y2="6.2"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/></svg></span></button>
                 <input id="blockScheduleDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('blockScheduleDatePicker', 'blockScheduleDateInput', 'date')" />
               </div>
             </div>
@@ -5521,7 +5610,7 @@
               <label class="form-label" for="blockScheduleTimeInput" style="font-size:11.5px; margin-bottom:4px;">예약 시각 (KST)</label>
               <div class="combo-input-row">
                 <input id="blockScheduleTimeInput" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="09:00" oninput="formatTimeTyping(this)" />
-                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="시계에서 선택" onclick="openNativePicker('blockScheduleTimePicker', 'blockScheduleTimeInput', 'time')">🕒</button>
+                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="시계에서 선택" onclick="openNativePicker('blockScheduleTimePicker', 'blockScheduleTimeInput', 'time')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg></span></button>
                 <input id="blockScheduleTimePicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('blockScheduleTimePicker', 'blockScheduleTimeInput', 'time')" />
               </div>
             </div>
@@ -5599,11 +5688,11 @@
       <div class="form-group">
         <label class="form-label">빠른 프리셋 선택</label>
         <div class="quick-preset-row">
-          <button class="quick-preset-chip" type="button" onclick="applyQuickLinkPreset('instagram')">📸 인스타그램</button>
-          <button class="quick-preset-chip" type="button" onclick="applyQuickLinkPreset('youtube')">▶️ 유튜브</button>
-          <button class="quick-preset-chip" type="button" onclick="applyQuickLinkPreset('church')">⛪ 교회 홈페이지</button>
-          <button class="quick-preset-chip" type="button" onclick="applyQuickLinkPreset('kakao')">💬 카카오톡</button>
-          <button class="quick-preset-chip" type="button" onclick="applyQuickLinkPreset('naver')">🌿 네이버·블로그</button>
+          <button class="quick-preset-chip" type="button" onclick="applyQuickLinkPreset('instagram')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="2.8" width="18.4" height="18.4" rx="4.8"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg></span><span>인스타그램</span></button>
+          <button class="quick-preset-chip" type="button" onclick="applyQuickLinkPreset('youtube')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="4.8" width="18.4" height="14.4" rx="2.6"/><polygon points="10 8.8 16 12 10 15.2 10 8.8" fill="currentColor" stroke="none"/></svg></span><span>유튜브</span></button>
+          <button class="quick-preset-chip" type="button" onclick="applyQuickLinkPreset('church')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2.5" x2="12" y2="7.5"/><line x1="9.6" y1="4.7" x2="14.4" y2="4.7"/><path d="M5 12.2L12 7.5l7 4.7V20.5H5z"/><path d="M10 20.5v-4.5a2 2 0 0 1 4 0v4.5"/></svg></span><span>교회 홈페이지</span></button>
+          <button class="quick-preset-chip" type="button" onclick="applyQuickLinkPreset('kakao')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.5a7.8 7.8 0 0 1-8.5 7.7 8.4 8.4 0 0 1-3.4-.7L3.8 20l1.3-4.1A7.6 7.6 0 0 1 3.5 11.5a8 8 0 0 1 8.5-7.7 8 8 0 0 1 8.5 7.7z"/></svg></span><span>카카오톡</span></button>
+          <button class="quick-preset-chip" type="button" onclick="applyQuickLinkPreset('naver')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 4.5C13 4.5 7.5 8 5.5 14.5c-.4 1.3-.5 2.7-.5 4.5 1.8 0 3.2-.1 4.5-.5C16 16.5 19.5 11 19.5 4.5z"/><path d="M5 19l6.5-6.5"/></svg></span><span>네이버·블로그</span></button>
         </div>
       </div>
       <div class="form-group">
@@ -5744,7 +5833,7 @@
   <div id="inviteQrModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="inviteQrModalTitle" class="modal-title">📲 오늘의 초대 QR 공유</h3>
+        <h3 id="inviteQrModalTitle" class="modal-title"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.2" y="3.2" width="6.6" height="6.6" rx="1.2"/><rect x="14.2" y="3.2" width="6.6" height="6.6" rx="1.2"/><rect x="3.2" y="14.2" width="6.6" height="6.6" rx="1.2"/><path d="M14.5 14.5h2.2v2.2h-2.2zM18.6 14.5h2.2M14.5 18.8h6.3M18.6 17v3.8"/></svg></span><span>오늘의 초대 QR 공유</span></h3>
         <button class="close-btn" data-close="inviteQrModal">✕</button>
       </div>
       <div class="qr-canvas-card">
@@ -5798,7 +5887,7 @@
         <label class="form-label" for="adminAttTimeInput">기록 시각 (직접 입력 또는 시계 선택)</label>
         <div class="combo-input-row">
           <input id="adminAttTimeInput" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1;" placeholder="예: 14:05" oninput="formatTimeTyping(this)" />
-          <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('adminAttTimePicker', 'adminAttTimeInput', 'time')">🕒</button>
+          <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('adminAttTimePicker', 'adminAttTimeInput', 'time')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg></span></button>
           <input id="adminAttTimePicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('adminAttTimePicker', 'adminAttTimeInput', 'time')" />
         </div>
       </div>
@@ -5846,7 +5935,7 @@
             <label class="form-label" for="spEventStartInput" style="font-size:11.5px; margin-bottom:4px;">시작 시간</label>
             <div class="combo-input-row">
               <input id="spEventStartInput" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1;" value="09:00" placeholder="09:00" oninput="formatTimeTyping(this)" />
-              <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('spEventStartPicker', 'spEventStartInput', 'time')">🕒</button>
+              <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('spEventStartPicker', 'spEventStartInput', 'time')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg></span></button>
               <input id="spEventStartPicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('spEventStartPicker', 'spEventStartInput', 'time')" />
             </div>
           </div>
@@ -5854,7 +5943,7 @@
             <label class="form-label" for="spEventEndInput" style="font-size:11.5px; margin-bottom:4px;">종료 시간</label>
             <div class="combo-input-row">
               <input id="spEventEndInput" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1;" value="21:00" placeholder="21:00" oninput="formatTimeTyping(this)" />
-              <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('spEventEndPicker', 'spEventEndInput', 'time')">🕒</button>
+              <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('spEventEndPicker', 'spEventEndInput', 'time')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg></span></button>
               <input id="spEventEndPicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('spEventEndPicker', 'spEventEndInput', 'time')" />
             </div>
           </div>
@@ -6022,7 +6111,7 @@
   <div id="externalLinkGuardModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">🛡️ 외부 사이트 이동 확인</h3>
+        <h3 class="modal-title"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8l7.6 3.1v5.6c0 4.9-3.2 8.7-7.6 10.1-4.4-1.4-7.6-5.2-7.6-10.1V5.9L12 2.8z"/><path d="M8.8 12.1l2.2 2.2 4.3-4.5"/></svg></span><span>외부 사이트 이동 확인</span></h3>
         <button class="close-btn" data-close="externalLinkGuardModal">✕</button>
       </div>
       <div id="extGuardStatusBadge" style="margin-bottom:8px;"></div>
@@ -6046,7 +6135,7 @@
   <div id="appInstallGuideModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">📱 앱 설치 방법 (홈 화면에 추가)</h3>
+        <h3 class="modal-title"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.6" width="12" height="18.8" rx="2.4"/><line x1="12" y1="7.5" x2="12" y2="14"/><polyline points="9.2 11.5 12 14.3 14.8 11.5"/><line x1="10" y1="18" x2="14" y2="18"/></svg></span><span>앱 설치 방법 (홈 화면에 추가)</span></h3>
         <button class="close-btn" data-close="appInstallGuideModal">✕</button>
       </div>
       <div id="appInstallModalBody"></div>
@@ -6060,7 +6149,7 @@
   <div id="privacyGuideModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">🔒 개인정보 · 보안 안내</h3>
+        <h3 class="modal-title"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="4.8" y="10.5" width="14.4" height="10" rx="2.2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.2" fill="currentColor"/></svg></span><span>개인정보 · 보안 안내</span></h3>
         <button class="close-btn" data-close="privacyGuideModal">✕</button>
       </div>
       <div class="info-box" style="margin-top:0; margin-bottom:10px;">
@@ -6088,7 +6177,7 @@
   <div id="inquiryModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="inquiryModalTitle" class="modal-title">💬 문의 사항</h3>
+        <h3 id="inquiryModalTitle" class="modal-title"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.5a7.8 7.8 0 0 1-8.5 7.7 8.4 8.4 0 0 1-3.4-.7L3.8 20l1.3-4.1A7.6 7.6 0 0 1 3.5 11.5a8 8 0 0 1 8.5-7.7 8 8 0 0 1 8.5 7.7z"/><line x1="8.5" y1="10.8" x2="15.5" y2="10.8"/><line x1="8.5" y1="14" x2="13" y2="14"/></svg></span><span>문의 사항</span></h3>
         <button class="close-btn" data-close="inquiryModal">✕</button>
       </div>
       <input type="hidden" id="editInquiryId" />
@@ -6516,8 +6605,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 278;
-    const APP_CACHE_NAME = 'right-youth-app-v10.178';
+    const APP_CLIENT_BUILD = 279;
+    const APP_CACHE_NAME = 'right-youth-app-v10.179';
     const APP_BOOT_TS = Date.now();
     try {
       const _bootUrl = new URL(window.location.href);
@@ -7059,6 +7148,41 @@
     APP_UI_SVG_ICONS.manageInquiries = APP_UI_SVG_ICONS.setInquiry;
     APP_UI_SVG_ICONS.manageSecurity = APP_UI_SVG_ICONS.manage;
     APP_UI_SVG_ICONS.manageGuide = APP_UI_SVG_ICONS.guide;
+
+    const MONO_SVG_ICONS = {
+      checkCircle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8.5 12.2 10.9 14.6 15.8 9.6"/></svg>',
+      xCircle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>',
+      refresh: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.6-4.5L3.5 8.5"/><polyline points="3.5 4.2 3.5 8.5 7.8 8.5"/><path d="M4 13a8 8 0 0 0 14.6 4.5l1.9-2"/><polyline points="20.5 19.8 20.5 15.5 16.2 15.5"/></svg>',
+      clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>',
+      calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.2"/><line x1="8" y1="2.8" x2="8" y2="6.2"/><line x1="16" y1="2.8" x2="16" y2="6.2"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/></svg>',
+      lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="4.8" y="10.5" width="14.4" height="10" rx="2.2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.2" fill="currentColor"/></svg>',
+      ban: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="5.7" y1="5.7" x2="18.3" y2="18.3"/></svg>',
+      wrench: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4.5 4.5 0 0 0-5.8 5.8L4 17a2 2 0 0 0 2.8 2.8l4.9-4.9a4.5 4.5 0 0 0 5.8-5.8l-2.6 2.6-2.8-2.8 2.6-2.6z"/></svg>',
+      alertShield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8l7.6 3.1v5.6c0 4.9-3.2 8.7-7.6 10.1-4.4-1.4-7.6-5.2-7.6-10.1V5.9L12 2.8z"/><line x1="12" y1="8.2" x2="12" y2="12.8"/><circle cx="12" cy="16" r="0.9" fill="currentColor" stroke="none"/></svg>',
+      search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7.2"/><line x1="20" y1="20" x2="16.2" y2="16.2"/></svg>',
+      sparkle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2z"/></svg>',
+      folder: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 6.2a1.8 1.8 0 0 1 1.8-1.8h4.5l2 2.2H19a1.8 1.8 0 0 1 1.8 1.8v9.4a1.8 1.8 0 0 1-1.8 1.8H5a1.8 1.8 0 0 1-1.8-1.8z"/></svg>',
+      eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M2.2 12s3.6-6.5 9.8-6.5S21.8 12 21.8 12s-3.6 6.5-9.8 6.5S2.2 12 2.2 12z"/><circle cx="12" cy="12" r="2.8"/></svg>',
+      key: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.2" cy="14.8" r="4.2"/><path d="M11.3 11.7l7.8-7.8M16.2 6.8l2.5 2.5M18.8 4.2l2.4 2.4"/></svg>',
+      tag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 13.2l-7 7a1.8 1.8 0 0 1-2.5 0l-7.2-7.2V4.5h8.5l8.2 8.2a1.8 1.8 0 0 1 0 .5z"/><circle cx="8" cy="8.2" r="1.4" fill="currentColor"/></svg>',
+      user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.2a7.5 7.5 0 0 1 15 0"/></svg>',
+      bell: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8.5a6 6 0 0 0-12 0c0 6.5-2.5 8-2.5 8h17s-2.5-1.5-2.5-8"/><path d="M13.8 20a2 2 0 0 1-3.6 0"/></svg>',
+      qr: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.2" y="3.2" width="6.6" height="6.6" rx="1.2"/><rect x="14.2" y="3.2" width="6.6" height="6.6" rx="1.2"/><rect x="3.2" y="14.2" width="6.6" height="6.6" rx="1.2"/><path d="M14.5 14.5h2.2v2.2h-2.2zM18.6 14.5h2.2M14.5 18.8h6.3M18.6 17v3.8"/></svg>',
+      chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.5a7.8 7.8 0 0 1-8.5 7.7 8.4 8.4 0 0 1-3.4-.7L3.8 20l1.3-4.1A7.6 7.6 0 0 1 3.5 11.5a8 8 0 0 1 8.5-7.7 8 8 0 0 1 8.5 7.7z"/><line x1="8.5" y1="10.8" x2="15.5" y2="10.8"/><line x1="8.5" y1="14" x2="13" y2="14"/></svg>',
+      phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.6" width="12" height="18.8" rx="2.4"/><line x1="12" y1="7.5" x2="12" y2="14"/><polyline points="9.2 11.5 12 14.3 14.8 11.5"/><line x1="10" y1="18" x2="14" y2="18"/></svg>',
+      shieldCheck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8l7.6 3.1v5.6c0 4.9-3.2 8.7-7.6 10.1-4.4-1.4-7.6-5.2-7.6-10.1V5.9L12 2.8z"/><path d="M8.8 12.1l2.2 2.2 4.3-4.5"/></svg>',
+      instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="2.8" width="18.4" height="18.4" rx="4.8"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>',
+      youtube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="4.8" width="18.4" height="14.4" rx="2.6"/><polygon points="10 8.8 16 12 10 15.2 10 8.8" fill="currentColor" stroke="none"/></svg>',
+      church: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2.5" x2="12" y2="7.5"/><line x1="9.6" y1="4.7" x2="14.4" y2="4.7"/><path d="M5 12.2L12 7.5l7 4.7V20.5H5z"/><path d="M10 20.5v-4.5a2 2 0 0 1 4 0v4.5"/></svg>',
+      kakao: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.5a7.8 7.8 0 0 1-8.5 7.7 8.4 8.4 0 0 1-3.4-.7L3.8 20l1.3-4.1A7.6 7.6 0 0 1 3.5 11.5a8 8 0 0 1 8.5-7.7 8 8 0 0 1 8.5 7.7z"/></svg>',
+      naver: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 4.5C13 4.5 7.5 8 5.5 14.5c-.4 1.3-.5 2.7-.5 4.5 1.8 0 3.2-.1 4.5-.5C16 16.5 19.5 11 19.5 4.5z"/><path d="M5 19l6.5-6.5"/></svg>'
+    };
+    function renderMonoSvg(name, sizePx = 0) {
+      const svg = MONO_SVG_ICONS[name];
+      if (!svg) return '';
+      const st = sizePx ? ` style="font-size:${Number(sizePx)}px;"` : '';
+      return `<span class="ui-svg-icon" aria-hidden="true"${st}>${svg}</span>`;
+    }
 
     function getUiIconStyle(overrideStyle = null) {
       const s = String(overrideStyle || (tabLabels && tabLabels.uiIconStyle) || DEFAULT_UI_ICON_STYLE).trim();
@@ -7812,8 +7936,8 @@
 
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
-        ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=278" alt="라이트 청년부" />';
+        ? `<span style="color:#FECACA; display:inline-flex; align-items:center; justify-content:center;">${renderMonoSvg('alertShield', 20)}</span>`
+        : '<img src="./icon-192.png?v=279" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7837,8 +7961,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=278', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=278', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=279', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=279', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -8888,7 +9012,7 @@
       const ut = (k) => getUiText(k, overrideUiTexts);
 
       const previewBarTxt = document.getElementById('previewMemberBarText');
-      if (previewBarTxt) previewBarTxt.textContent = `👁️ 일반 회원 시점 미리보기 중 (관리자 전용 칸·${lbl('manage')} 숨김)`;
+      if (previewBarTxt) previewBarTxt.innerHTML = `<span class="bar-inline-icon">${renderMonoSvg('eye')}<span>일반 회원 시점 미리보기 중 (관리자 전용 칸·${escapeHtml(lbl('manage'))} 숨김)</span></span>`;
 
 
 
@@ -8927,7 +9051,7 @@
       if (bylawSearchInp) bylawSearchInp.placeholder = fitSearchPlaceholder(`${lbl('bylaws')} 검색`, ['제5조', '임기'], 17.5);
 
       const invQrTitle = document.getElementById('inviteQrModalTitle');
-      if (invQrTitle) invQrTitle.textContent = `${icn('manageQr')} 오늘의 초대 QR 공유`;
+      if (invQrTitle) invQrTitle.innerHTML = `${renderMonoSvg('qr')}<span>오늘의 초대 QR 공유</span>`;
 
       const admRenameWarn = document.getElementById('adminRenameWarnBox');
       if (admRenameWarn) {
@@ -11493,15 +11617,15 @@
       const titleEl = document.getElementById('signupQrLockTitle');
       const descEl = document.getElementById('signupQrLockDesc');
       if (st.status === 'changed') {
-        if (iconEl) iconEl.textContent = '🔄';
+        if (iconEl) iconEl.innerHTML = renderMonoSvg('refresh', 28);
         titleEl.textContent = '초대 QR이 변경되었습니다 · 새 QR을 사용해 주세요';
         descEl.innerHTML = '사용하신 <b>이전 초대 QR은 변경(갱신)되어 더 이상 사용할 수 없습니다.</b><br>관리자나 청년부원이 새로 띄워 준 <b>최신 초대 QR 코드</b>를 다시 스캔해 접속해 주세요.';
       } else if (st.status === 'expired') {
-        if (iconEl) iconEl.textContent = '⏱️';
+        if (iconEl) iconEl.innerHTML = renderMonoSvg('clock', 28);
         titleEl.textContent = '초대 QR 유효시간이 만료되었습니다 · 새 QR을 사용해 주세요';
         descEl.innerHTML = '사용하신 <b>초대 QR의 유효시간이 지나 만료</b>되었습니다.<br>새로 변경된 <b>최신 초대 QR 코드</b>를 다시 스캔해 접속해 주세요.';
       } else {
-        if (iconEl) iconEl.textContent = '🔒';
+        if (iconEl) iconEl.innerHTML = renderMonoSvg('lock', 28);
         titleEl.textContent = '초대 QR 코드가 필요합니다';
         descEl.innerHTML = '신규 회원가입은 청년부원 또는 관리자가 공유한 <b>유효한 초대 QR 코드</b>를 스캔해 접속해야 신청할 수 있습니다.';
       }
@@ -11866,7 +11990,7 @@
       if (member.status === 'removed') {
         const reasonTxt = String(member.removeReason || '').trim();
         emoji.className = 'status-emoji rejected';
-        emoji.textContent = '🚫';
+        emoji.innerHTML = renderMonoSvg('ban', 26);
         title.textContent = '회원 이용이 해제되었습니다';
         desc.innerHTML = `<b>${escapeHtml(member.name)}</b>님의 회원 계정이 관리자에 의해 해제(내보내기)되었습니다.<br>아래 해제 사유를 확인해 주세요.`;
         meta.innerHTML = `
@@ -11887,7 +12011,7 @@
 
       if (member.status === 'pending') {
         emoji.className = 'status-emoji pending';
-        emoji.textContent = '⏳';
+        emoji.innerHTML = renderMonoSvg('clock', 26);
         title.textContent = '관리자 승인 대기 중';
         desc.innerHTML = `<b>${escapeHtml(member.name)}</b>님의 회원가입 신청이 접수되었습니다.<br>관리자가 승인하면 <b>자동으로 바로 입장</b>됩니다.`;
         recheckBtn.textContent = '승인 여부 다시 확인';
@@ -11906,7 +12030,7 @@
         };
       } else if (member.status === 'reset_pending') {
         emoji.className = 'status-emoji pending';
-        emoji.textContent = '🔑';
+        emoji.innerHTML = renderMonoSvg('key', 26);
         title.textContent = '비밀번호가 초기화되었습니다';
         desc.innerHTML = `관리자가 <b>${escapeHtml(member.name)}</b>님의 비밀번호를 초기화했습니다.<br>관리자에게 받은 <b>8자리 초기화 코드</b>(24시간 유효)로 새 비밀번호를 설정해 주세요.`;
         recheckBtn.textContent = '새 비밀번호 설정하기';
@@ -11917,7 +12041,7 @@
         };
       } else {
         emoji.className = 'status-emoji rejected';
-        emoji.textContent = '🚫';
+        emoji.innerHTML = renderMonoSvg('ban', 26);
         title.textContent = '가입 승인이 보류되었습니다';
         desc.innerHTML = `<b>${escapeHtml(member.name)}</b>님의 가입 신청이 보류되었습니다.`;
         recheckBtn.textContent = '다시 가입 신청하기';
@@ -12324,7 +12448,7 @@
         const roleTxt = String(notice.roleName || '회원').trim();
         const setupCode = String(notice.setupCode || '').trim();
         emoji.className = 'status-emoji pending';
-        emoji.textContent = '🏷️';
+        emoji.innerHTML = renderMonoSvg('tag', 26);
         title.textContent = `[${roleTxt}] 회원으로 전환되었습니다`;
         desc.innerHTML = `<b>${escapeHtml(notice.name || '관리자')}</b>님의 역할이 <b>[${escapeHtml(roleTxt)}]</b>(으)로 변경되어 관리자 세션이 종료되고 일반 회원으로 전환되었습니다.`;
         meta.innerHTML = `
@@ -12381,7 +12505,7 @@
       }
 
       emoji.className = 'status-emoji rejected';
-      emoji.textContent = '🚫';
+      emoji.innerHTML = renderMonoSvg('ban', 26);
       title.textContent = '관리자 권한이 해제되었습니다';
       desc.innerHTML = `<b>${escapeHtml(notice.name || '관리자')}</b>님의 관리자 권한이 해제되어 자동 로그아웃되었습니다.<br>아래 해제 사유를 확인해 주세요.`;
       meta.innerHTML = `
@@ -12513,7 +12637,7 @@
       const logoutBtn = document.getElementById('maintLogoutBtn');
 
       if (badgeEl) badgeEl.textContent = isEmergency ? '🚨 긴급 보안 점검 · 자동 차단' : '🔧 서버 점검 안내';
-      if (iconEl) iconEl.textContent = isEmergency ? '🚨' : '🔧';
+      if (iconEl) iconEl.innerHTML = renderMonoSvg(isEmergency ? 'alertShield' : 'wrench', 28);
       if (titleEl) titleEl.textContent = titleTxt;
       if (descEl) descEl.textContent = descTxt;
 
@@ -12678,10 +12802,10 @@
         const barBtn = maintBar.querySelector('button');
         if (emergencyActive) {
           const reasonTag = (maintenanceConfig && maintenanceConfig.emergencyReason) ? ` (${maintenanceConfig.emergencyReason})` : '';
-          document.getElementById('maintAdminBarText').textContent = `🚨 긴급 보안 점검 작동 중${reasonTag} · 일반 회원·비로그인·타 관리자 차단됨`;
+          document.getElementById('maintAdminBarText').innerHTML = `<span class="bar-inline-icon">${renderMonoSvg('alertShield')}<span>긴급 보안 점검 작동 중${escapeHtml(reasonTag)} · 일반 회원·비로그인·타 관리자 차단됨</span></span>`;
           if (barBtn) barBtn.textContent = '긴급 점검 해제';
         } else {
-          document.getElementById('maintAdminBarText').textContent = '🔧 서버 점검 모드 작동 중 · 일반 회원 접근 차단됨';
+          document.getElementById('maintAdminBarText').innerHTML = `<span class="bar-inline-icon">${renderMonoSvg('wrench')}<span>서버 점검 모드 작동 중 · 일반 회원 접근 차단됨</span></span>`;
           if (barBtn) barBtn.textContent = '점검 해제';
         }
         maintBar.classList.remove('hidden');
@@ -12703,9 +12827,9 @@
         previewBar.classList.toggle('hidden', !isAnyPreview);
         const pbTxt = document.getElementById('previewMemberBarText');
         if (pbTxt && isAnyPreview) {
-          pbTxt.textContent = previewAsObserverMode
-            ? `🧐 참관자(구경) 시점 미리보기 중 (${getTabLabel('manage')} 읽기 전용 · 변경 차단·코드/시트 숨김 확인)`
-            : `👁️ 일반 회원 시점 미리보기 중 (관리자 전용 칸·${getTabLabel('manage')} 숨김)`;
+          pbTxt.innerHTML = previewAsObserverMode
+            ? `<span class="bar-inline-icon">${renderMonoSvg('eye')}<span>참관자(구경) 시점 미리보기 중 (${escapeHtml(getTabLabel('manage'))} 읽기 전용 · 변경 차단·코드/시트 숨김 확인)</span></span>`
+            : `<span class="bar-inline-icon">${renderMonoSvg('eye')}<span>일반 회원 시점 미리보기 중 (관리자 전용 칸·${escapeHtml(getTabLabel('manage'))} 숨김)</span></span>`;
         }
       }
 
@@ -12864,7 +12988,7 @@
       if (matched.length === 0) {
         resEl.innerHTML = `
           <div class="card" style="text-align:center; padding:26px 16px; color:#64748B;">
-            <div style="font-size:24px; margin-bottom:6px;">🔎</div>
+            <div class="empty-state-svg">${renderMonoSvg('search', 26)}</div>
             <div style="font-size:14px; font-weight:700; color:#334155;">일치하는 회칙 조항이 없습니다.</div>
             <div style="font-size:12.5px; margin-top:4px;">다른 키워드나 조항 번호(예: 제5조, 임기, 총회)로 검색해 보세요.</div>
           </div>
@@ -12951,6 +13075,7 @@
       return [
         {
           id: 'ug_install',
+          iconKey: 'setInstall',
           icon: '📱',
           title: '앱 설치 및 로그인 (홈 화면에 추가)',
           sub: '아이폰·갤럭시 스마트폰에 앱처럼 설치해 편하게 이용하기',
@@ -12965,6 +13090,7 @@
         },
         {
           id: 'ug_qr',
+          iconKey: 'setQr',
           icon: '📲',
           title: '회원가입 및 오늘의 초대 QR 공유',
           sub: '신규 지체 초대 방법과 QR 유효기간 안내',
@@ -12978,6 +13104,7 @@
         },
         {
           id: 'ug_home_att',
+          iconKey: 'home',
           icon: getTabIcon('home'),
           title: `${getTabLabel('home')} 소식 · 이모지 반응 & 예배 출석 체크`,
           sub: '공지·배너 슬라이드, 이모지 반응(명칭·반응자 확인) & 주일/행사 출석 방법',
@@ -12993,6 +13120,7 @@
         },
         {
           id: 'ug_sermon_ccm',
+          iconKey: 'sermon',
           icon: getTabIcon('sermon'),
           title: `${getTabLabel('sermon')} · ${getTabLabel('ccm')} 영상 시청 · 게시 및 이모지`,
           sub: `하단 ${getTabLabel('sermon')}·${getTabLabel('ccm')} 탭 시청, [+ 게시], 이모지 반응 & 인기 추천순`,
@@ -13007,6 +13135,7 @@
         },
         {
           id: 'ug_inquiry',
+          iconKey: 'setInquiry',
           icon: getTabIcon('setInquiry'),
           title: `${getTabLabel('setInquiry')} 등록 및 관리자 답변 확인`,
           sub: '앱 불편·개선 사항 전달 및 실시간 답변 알림',
@@ -13019,6 +13148,7 @@
         },
         {
           id: 'ug_bylaws_more',
+          iconKey: 'bylaws',
           icon: getTabIcon('bylaws'),
           title: `청년부 ${getTabLabel('bylaws')} 검색 & ${getTabLabel('more')}`,
           sub: `${getTabLabel('bylaws')} 키워드 검색·복사와 인스타/유튜브/교회 홈페이지 연결`,
@@ -13031,6 +13161,7 @@
         },
         {
           id: 'ug_account',
+          iconKey: 'setAccount',
           icon: '👤',
           title: '내 계정 관리 (이름 변경 신청 / 비밀번호 / 탈퇴)',
           sub: `하단 ${getTabLabel('settings')}에서 내 정보 변경 · 글자 크기 · 비밀번호 관리`,
@@ -13045,6 +13176,7 @@
         },
         {
           id: 'ug_notif',
+          iconKey: 'setNotif',
           icon: '🔔',
           title: '실시간 알림 설정',
           sub: '새 공지·배너, 설교·찬양 영상, 내 문의 답변을 알림으로 받아보기',
@@ -13057,6 +13189,7 @@
         },
         {
           id: 'ug_auto_sync',
+          iconKey: 'refresh',
           icon: '🔄',
           title: '새 기능·업데이트 자동 반영 안내',
           sub: '앱 버전 및 메뉴·설정 변경 시 설명서와 약관이 함께 최신화됩니다',
@@ -13119,7 +13252,7 @@
       if (matched.length === 0) {
         resEl.innerHTML = `
           <div class="card" style="text-align:center; padding:26px 16px; color:#64748B;">
-            <div style="font-size:24px; margin-bottom:6px;">🔎</div>
+            <div class="empty-state-svg">${renderMonoSvg('search', 26)}</div>
             <div style="font-size:14px; font-weight:700; color:#334155;">일치하는 사용 안내가 없습니다.</div>
             <div style="font-size:12.5px; margin-top:4px;">예: 출석, 영상, 이름, 비밀번호, QR, 알림 등으로 검색해 보세요.</div>
           </div>
@@ -13132,7 +13265,7 @@
           <details ${(q || idx === 0) ? 'open' : ''}>
             <summary>
               <div class="guide-summary-left">
-                <span class="guide-icon-badge">${escapeHtml(sec.icon)}</span>
+                <span class="guide-icon-badge">${sec.iconKey === 'refresh' ? renderMonoSvg('refresh', 18) : (sec.iconKey ? renderUiIconHtml(sec.iconKey, { forceOutline: true }) : escapeHtml(sec.icon))}</span>
                 <div style="min-width:0; flex:1;">
                   <div class="guide-card-title">${escapeHtml(sec.title)}</div>
                   <div class="guide-card-sub">${escapeHtml(sec.sub)}</div>
@@ -14385,7 +14518,7 @@
       if (homeContentPermError && !homeBlocksLoaded) {
         container.innerHTML = attendanceHtml + newcomerHtml + `
           <div class="card" style="text-align:center; padding:30px 18px; border-color:#FECACA; background:#FEF2F2;">
-            <div style="font-size:26px; margin-bottom:8px;">🔒</div>
+            <div class="empty-state-svg" style="color:#991B1B;">${renderMonoSvg('lock', 28)}</div>
             <div style="font-size:14.5px; font-weight:800; color:#991B1B; margin-bottom:6px;">메인 소식을 불러올 권한이 필요합니다</div>
             <div style="font-size:12.5px; color:#7F1D1D; line-height:1.55; margin-bottom:14px;">
               관리자에게 Firebase Firestore 보안 규칙을 최신 버전으로 게시해 달라고 요청해 주세요.
@@ -14417,7 +14550,7 @@
       if (!attendanceHtml && !newcomerHtml && !homeVideosHtml && visibleNotices.length === 0 && legacyExtraBanners.length === 0 && !perms.canManageNotices) {
         container.innerHTML = `
           <div class="card" style="text-align:center; padding:42px 20px; color:#64748B;">
-            <div style="font-size:30px; margin-bottom:10px;">✨</div>
+            <div class="empty-state-svg">${renderMonoSvg('sparkle', 28)}</div>
             <div style="font-size:15px; font-weight:800; color:#1E293B; margin-bottom:6px;">아직 메인 화면에 표시된 소식이 없습니다.</div>
             <div style="font-size:12.5px; color:#64748B; line-height:1.55;">새로운 공지나 광고가 올라오면 이곳에 표시됩니다.</div>
           </div>
@@ -21839,11 +21972,11 @@
             <p class="attendance-home-desc">아래에서 <b>출석O</b> 또는 <b>출석X</b>를 눌러 주세요. (1인 1회 · 완료 후 카드 자동 숨김)</p>
             <div class="att-choice-grid">
               <button id="attCheckBtnPresent-${sess.sessionId}" class="btn-attendance-cta present" type="button" onclick="handleMemberCheckIn('${escapeJsAttr(sess.sessionId)}', 'present')">
-                <span>✅</span>
+                ${renderMonoSvg('checkCircle', 18)}
                 <span>출석O</span>
               </button>
               <button id="attCheckBtnAbsent-${sess.sessionId}" class="btn-attendance-cta absent" type="button" onclick="handleMemberCheckIn('${escapeJsAttr(sess.sessionId)}', 'absent')">
-                <span>❌</span>
+                ${renderMonoSvg('xCircle', 18)}
                 <span>출석X</span>
               </button>
             </div>
@@ -22028,7 +22161,7 @@
       const isRe = !!(me && me.isReentry);
       const prevReason = (me && me.removeReason) ? String(me.removeReason).trim() : '';
       document.getElementById('statusEmoji').className = 'status-emoji pending';
-      document.getElementById('statusEmoji').textContent = '🔐';
+      document.getElementById('statusEmoji').innerHTML = renderMonoSvg('lock', 26);
       document.getElementById('statusTitle').textContent = isRe ? '관리자 재입장 승인 대기 중' : '관리자 등록 승인 대기 중';
       document.getElementById('statusDesc').innerHTML = isRe
         ? `<b>${escapeHtml(currentAdminName)}</b>님은 이전에 관리자 권한이 해제되어 재입장 승인 요청이 접수되었습니다.<br>기존 관리자가 승인하면 <b>자동으로 바로 입장</b>됩니다.`
@@ -24204,7 +24337,7 @@
                 <label class="form-label" for="cfgAttRegularStart" style="font-size:12px; margin-bottom:4px;">시작 시간 (KST)</label>
                 <div class="combo-input-row">
                   <input id="cfgAttRegularStart" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1; background:#fff;" value="${escapeHtml(cfg.regularStart || '14:00')}" placeholder="14:00" oninput="formatTimeTyping(this)" />
-                  <button class="combo-picker-btn" type="button" style="width:auto; padding:0 10px; font-size:12px; font-weight:700;" title="시계에서 선택" onclick="openNativePicker('cfgAttRegularStartPicker', 'cfgAttRegularStart', 'time')">선택</button>
+                  <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('cfgAttRegularStartPicker', 'cfgAttRegularStart', 'time')">${renderMonoSvg('clock', 16)}</button>
                   <input id="cfgAttRegularStartPicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('cfgAttRegularStartPicker', 'cfgAttRegularStart', 'time')" />
                 </div>
               </div>
@@ -24212,7 +24345,7 @@
                 <label class="form-label" for="cfgAttRegularEnd" style="font-size:12px; margin-bottom:4px;">종료 시간 (KST)</label>
                 <div class="combo-input-row">
                   <input id="cfgAttRegularEnd" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1; background:#fff;" value="${escapeHtml(cfg.regularEnd || '15:30')}" placeholder="15:30" oninput="formatTimeTyping(this)" />
-                  <button class="combo-picker-btn" type="button" style="width:auto; padding:0 10px; font-size:12px; font-weight:700;" title="시계에서 선택" onclick="openNativePicker('cfgAttRegularEndPicker', 'cfgAttRegularEnd', 'time')">선택</button>
+                  <button class="combo-picker-btn" type="button" title="시계에서 선택" onclick="openNativePicker('cfgAttRegularEndPicker', 'cfgAttRegularEnd', 'time')">${renderMonoSvg('clock', 16)}</button>
                   <input id="cfgAttRegularEndPicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('cfgAttRegularEndPicker', 'cfgAttRegularEnd', 'time')" />
                 </div>
               </div>
@@ -31348,7 +31481,7 @@
       if (issues.length > 0) {
         const txt = document.getElementById('cloneDomainBannerText');
         if (txt) {
-          txt.textContent = `🚨 피싱·복제 주의 (${issues.join(' · ')}) · 공식 주소(${officialHost})인지 확인하세요!`;
+          txt.innerHTML = `<span class="bar-inline-icon">${renderMonoSvg('alertShield')}<span>피싱·복제 주의 (${escapeHtml(issues.join(' · '))}) · 공식 주소(${escapeHtml(officialHost)})인지 확인하세요!</span></span>`;
         }
         banner.classList.remove('hidden');
         if (!cloneDomainLoggedOnce && fbUser) {
@@ -34176,7 +34309,7 @@
         ${showUpdate ? `
           <div class="settings-update-card">
             <div style="display:flex; align-items:center; gap:7px; margin-bottom:5px;">
-              <span style="font-size:18px;">🔄</span>
+              ${renderMonoSvg('refresh', 18)}
               <strong style="font-size:15px;">새 업데이트가 있습니다</strong>
             </div>
             <div style="font-size:12.5px; color:rgba(255,255,255,0.92); line-height:1.5; margin-bottom:11px;">
@@ -34406,7 +34539,7 @@
 
     window.openInquiryModal = () => {
       const titleEl = document.getElementById('inquiryModalTitle');
-      if (titleEl) titleEl.textContent = `${getTabIcon('setInquiry')} ${getTabLabel('setInquiry')}`;
+      if (titleEl) titleEl.innerHTML = `${renderMonoSvg('chat')}<span>${escapeHtml(getTabLabel('setInquiry'))}</span>`;
       resetUserInquiryForm();
       markTabAsSeen('inquiryReply');
       renderMyInquiriesList();
@@ -35216,7 +35349,7 @@
       if (matched.length === 0) {
         resEl.innerHTML = `
           <div class="card" style="text-align:center; padding:26px 16px; color:#64748B;">
-            <div style="font-size:24px; margin-bottom:6px;">🔎</div>
+            <div class="empty-state-svg">${renderMonoSvg('search', 26)}</div>
             <div style="font-size:14px; font-weight:700; color:#334155;">일치하는 이용약관 조항이 없습니다.</div>
           </div>
         `;
@@ -36933,7 +37066,7 @@ ${handleUrl}`);
       return `
         <div class="home-block" data-ts-zone="home_videos">
           <div class="section-head">
-            <h2 class="section-title">${escapeHtml(secIcon)} ${escapeHtml(secTitle)}</h2>
+            <h2 class="section-title"><span class="section-title-with-icon">${renderUiIconHtml('manageVideos', { forceOutline: true })}<span>${escapeHtml(secTitle)}</span></span></h2>
             <div style="display:flex; gap:5px; align-items:center; flex-wrap:wrap;">
               ${canSubmit ? `<button class="btn-sm primary" type="button" onclick="openVideoSubmitModal()">+ 게시</button>` : ''}
             </div>
@@ -37479,7 +37612,7 @@ ${handleUrl}`);
           ].filter(Boolean).join(' · ');
           listEl.innerHTML = `
             <div class="card" style="text-align:center; padding:30px 16px; color:#64748B;">
-              <div style="font-size:28px; margin-bottom:7px;">${escapeHtml(getTabIcon('sermon'))}</div>
+              <div class="empty-state-svg">${renderUiIconHtml('sermon', { forceOutline: true })}</div>
               <div style="font-size:14px; font-weight:800; color:#334155;">${emptyScope ? `[${escapeHtml(emptyScope)}] 영상이 아직 없습니다.` : `등록된 ${escapeHtml(sLbl)} 영상이 없습니다.`}</div>
               <div style="font-size:12px; margin-top:4px; line-height:1.5;">${canSubmit ? `오른쪽 위 [+ ${escapeHtml(sLbl)} 게시]로 영상을 올리고 원하는 세부 탭을 선택해 분류해 보세요.` : `교회별·세부 탭 설교 영상이 등록되면 이곳에 자동 분류됩니다.`}</div>
               ${(canSubmit && sermonSubTabFilter !== '전체' && sermonSubTabFilter !== '기타 설교')
@@ -37622,7 +37755,7 @@ ${handleUrl}`);
           ].filter(Boolean).join(' · ');
           listEl.innerHTML = `
             <div class="card" style="text-align:center; padding:30px 16px; color:#64748B;">
-              <div style="font-size:28px; margin-bottom:7px;">${escapeHtml(getTabIcon('ccm'))}</div>
+              <div class="empty-state-svg">${renderUiIconHtml('ccm', { forceOutline: true })}</div>
               <div style="font-size:14px; font-weight:800; color:#334155;">${emptyScope ? `[${escapeHtml(emptyScope)}] 찬양이 아직 없습니다.` : `등록된 ${escapeHtml(cLbl)} 영상이 없습니다.`}</div>
               <div style="font-size:12px; margin-top:4px; line-height:1.5;">${canSubmit ? `오른쪽 위 [+ ${escapeHtml(cLbl)} 게시]로 영상을 올리고 원하는 세부 탭을 선택해 분류해 보세요.` : `찬양팀별·세부 탭 영상이 등록되면 이곳에 자동 분류됩니다.`}</div>
               ${(canSubmit && ccmSubTabFilter !== '전체' && ccmSubTabFilter !== '기타 CCM')
