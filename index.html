@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=254" />
+  <link rel="manifest" href="./manifest.json?v=255" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=254" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=254" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=255" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=255" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4239,7 +4239,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=254" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=255" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -6095,10 +6095,10 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 254;
-    const APP_CACHE_NAME = 'right-youth-app-v10.154';
+    const APP_CLIENT_BUILD = 255;
+    const APP_CACHE_NAME = 'right-youth-app-v10.155';
     const APP_BOOT_TS = Date.now();
-    const SHEET_SCHEMA_VERSION = 'v10.154-weekly-auto';
+    const SHEET_SCHEMA_VERSION = 'v10.155-weekly-hourly';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '주간 출석부 (날짜별 탭)', isWeeklyAttendance: true, kind: 'state', addedIn: 'v10.151', rebuildable: true, desc: '예배·행사 날짜별 셀 주간 출석부 탭 (예: 26.11.29 · 구버전 누적 출석부 폐기)' },
       { id: 'members', name: '회원 명단', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '성명·역할·가입일·상태·이전이름 (생일 열 폐기)' },
@@ -6116,6 +6116,13 @@
       { name: '생일 변경 로그', removedIn: 'v10.69', reason: '생년월일 기능 폐기 및 개인정보 최소화 (회원 명단 생년월일 열 포함)' }
     ];
     const SHEET_SCHEMA_CHANGELOG = [
+      {
+        version: 'v10.155',
+        date: '2026.11.27',
+        added: ['추가 트리거 권한(script.scriptapp) 불필요 · 매시간 고정 알람(checkAndAutoCreateWeeklySheetHourly) 무인 자동 생성 방식(대안 1) 전환'],
+        removed: ['코드 내 강제 트리거 생성(authorizeWeeklyAutoTrigger) 및 권한 오류 경고 배너 제거'],
+        changed: ['앱에서 시간·추가 날짜·예배X 휴무를 바꿀 때 권한 충돌 없이 구글 서버에 즉시 반영', '특별 행사 등록 시 휴무 일요일도 구글 서버 예약 목록에 자동 반영']
+      },
       {
         version: 'v10.154',
         date: '2026.11.27',
@@ -7165,7 +7172,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=254" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=255" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7189,8 +7196,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=254', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=254', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=255', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=255', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -23389,14 +23396,20 @@
         hourOptions += `<option value="${h}" ${autoCfg.hour === h ? 'selected' : ''}>${String(h).padStart(2, '0')}:00 (${ampm})</option>`;
       }
 
-      const needAuthBanner = (serverTrig && serverTrig.triggerAuthOk === false) ? `
-        <div class="info-box warn" style="margin-top:0; margin-bottom:10px;">
-          🔐 <b>최초 1회 구글 서버 트리거 권한 승인 필요</b><br>
-          1) 통합 시트(<code>라이트 청년부 관리</code>) → <b>확장 프로그램 → Apps Script</b> 열기<br>
-          2) 최신 <code>google-apps-script-v10.154.js</code> 저장 후, 상단 함수 목록에서 <b><code>authorizeWeeklyAutoTrigger</code></b> 선택 → <b>[▶ 실행]</b> 1회 눌러 권한 허용<br>
-          3) 우측 상단 <b>[배포 → 배포 관리 → ✏️ 수정 → 새 버전 → 배포]</b> 후 아래 저장 버튼을 눌러 주세요.
+      const isHourlyLive = !!(serverTrig && (serverTrig.hourlyActiveRecently || (serverTrig.lastHourlyCheckTs && (Date.now() - Number(serverTrig.lastHourlyCheckTs)) < 2 * 60 * 60 * 1000)));
+      const hourlyStatusBanner = !isLinked ? '' : (isHourlyLive ? `
+        <div class="info-box" style="margin-top:0; margin-bottom:10px; background:#ECFDF5; border-color:#6EE7B7; color:#065F46;">
+          🟢 <b>구글 서버 매시간 무인 감시 작동 중</b> (추가 트리거 권한 불필요)<br>
+          최근 확인 시각: <b>${escapeHtml(serverTrig.lastHourlyCheckAt || '정상')}</b> · 앱에서 시간이나 추가 날짜를 바꾸면 권한 경고 없이 바로 적용됩니다.
         </div>
-      ` : '';
+      ` : `
+        <div class="info-box" style="margin-top:0; margin-bottom:10px; background:#EFF6FF; border-color:#BFDBFE; color:#1E3A8A;">
+          ⏰ <b>최초 1회 고정 알람 등록 (추가 권한 승인 불필요)</b><br>
+          1) 통합 시트 → <b>확장 프로그램 → Apps Script</b>에서 최신 <code>google-apps-script-v10.155.js</code> 저장·새 버전 배포<br>
+          2) 왼쪽 <b>⏰ 트리거 → [+ 트리거 추가]</b>에서 함수 <b><code>checkAndAutoCreateWeeklySheetHourly</code></b> · <b>시간 기반</b> · <b>시간 타이머</b> · <b>매시간</b>으로 1개만 추가<br>
+          <span style="color:#475569;">${serverTrig && serverTrig.lastHourlyCheckAt ? `※ 마지막 감시 기록: ${escapeHtml(serverTrig.lastHourlyCheckAt)}` : '※ 1개만 켜두면 이후 앱에서 시간·추가 날짜를 바꿀 때 권한 경고 없이 100% 무인 작동합니다.'}</span>
+        </div>
+      `);
 
       return `
         <div style="margin-top:12px;">
@@ -23415,7 +23428,7 @@
                 • <b>출석 자동 정리:</b> 관리자가 앱을 열면 <b>출석O</b>만 <code>○</code>로 자동 반영되고 합계가 정리됩니다. (불참·미응답은 빈칸 유지)
               </div>
 
-              ${needAuthBanner}
+              ${hourlyStatusBanner}
 
               <div class="setting-row" style="padding:6px 0 10px;">
                 <div>
@@ -23559,7 +23572,7 @@
           if (activeExtras.length > 0) summaryParts.push(`추가 ${activeExtras.length}건`);
           const nowNote = createdNow.length > 0 ? ` · 즉시 생성됨: [${createdNow.join(', ')}]` : '';
           const msg = summaryParts.length > 0
-            ? `✅ 구글 서버 자동 생성 예약 완료! (${summaryParts.join(' + ')}${nowNote})`
+            ? `✅ 구글 서버에 자동 생성 예약 저장 완료! (${summaryParts.join(' + ')}${nowNote})`
             : '✅ 주간 시트 무인 자동 생성 예약이 모두 해제되었습니다.';
           setInlineSaveStatus('weekly_auto_sched', 'ok', msg);
           showToast(msg, 'ok');
@@ -23573,20 +23586,16 @@
           renderManageAttendance(document.getElementById('manageContent'), user);
         } else {
           const errTxt = (res && res.data && res.data.error) ? String(res.data.error) : '';
-          const isAuthIssue = !!(res && res.data && res.data.needTriggerAuth)
+          const isOldScriptAuth = !!(res && res.data && res.data.needTriggerAuth)
             || errTxt.includes('script.scriptapp')
             || errTxt.includes('getProjectTriggers');
-          const hint = isAuthIssue
-            ? '최초 1회 트리거 권한 승인이 필요합니다. Apps Script 편집기 상단에서 [authorizeWeeklyAutoTrigger] 선택 → [▶ 실행] 1회 권한 허용 → 새 버전 배포 후 다시 저장해 주세요.'
+          const hint = isOldScriptAuth
+            ? '구글 시트 Apps Script가 아직 예전 버전(v10.152~154)입니다. 최신 google-apps-script-v10.155.js로 교체·새 버전 배포하면 권한 오류 없이 바로 저장됩니다.'
             : (errTxt.includes('알 수 없는 요청')
-              ? 'Apps Script를 최신 v10.154로 교체·새 버전 배포한 뒤 다시 저장해 주세요.'
-              : (errTxt || '구글 서버 응답 지연 · Apps Script v10.154 배포 상태를 확인해 주세요.'));
+              ? 'Apps Script를 최신 google-apps-script-v10.155.js로 교체·새 버전 배포한 뒤 다시 저장해 주세요.'
+              : (errTxt || '구글 서버 응답 지연 · Apps Script v10.155 배포 상태를 확인해 주세요.'));
           setInlineSaveStatus('weekly_auto_sched', 'warn', `⚠️ 앱 설정은 저장됨 · ${hint}`);
-          showToast(isAuthIssue ? '🔐 Apps Script에서 [authorizeWeeklyAutoTrigger] 1회 실행 후 권한을 허용해 주세요.' : `⚠️ ${hint}`, 'warn');
-          if (isAuthIssue) {
-            manageSectionOpen.att_weekly_auto = true;
-            renderManageAttendance(document.getElementById('manageContent'), user);
-          }
+          showToast(`⚠️ ${hint}`, 'warn');
         }
       } catch (err) {
         setInlineSaveStatus('weekly_auto_sched', 'err', '❌ 자동 생성 예약 저장 중 오류가 발생했습니다.');
@@ -25713,7 +25722,7 @@
               <div class="info-box warn" style="margin-top:0; margin-bottom:10px;">
                 ⚠️ <b>구버전 Apps Script(${escapeHtml(diff.scriptVersion)})가 배포되어 있습니다!</b><br>
                 이번 업데이트로 새로 추가된 시트(<b>${escapeHtml(diff.addedNeedScriptTabs.join(', ') || '문의 내역, 설교·CCM 영상, 공지·광고 목록')}</b>)를 연동하려면:<br>
-                1) 구글 시트 → <b>확장 프로그램 → Apps Script</b>에 최신 <b><code>google-apps-script-v10.154.js</code></b> 코드를 덮어쓰고 저장(Ctrl+S)<br>
+                1) 구글 시트 → <b>확장 프로그램 → Apps Script</b>에 최신 <b><code>google-apps-script-v10.155.js</code></b> 코드를 덮어쓰고 저장(Ctrl+S)<br>
                 2) 오른쪽 위 <b>[배포 → 배포 관리 → ✏️ 수정 → 버전: 새 버전 → 배포]</b> 클릭 후 위 <b>[🔍 지금 대조]</b>를 눌러 주세요.
               </div>
             ` : (diff && diff.missingTabs.length > 0 ? `
@@ -26204,6 +26213,12 @@
           patch.skippedSundays = Array.from(new Set([...curSkipped, ...sunsInRange])).sort();
         }
         await db.collection('config').doc('attendance').set(patch, { merge: true });
+        if (patch.skippedSundays) {
+          attendanceConfig.skippedSundays = patch.skippedSundays;
+          if (getWeeklyAutoConfig().enabled && getAdminSheetUrl()) {
+            syncWeeklyAutoScheduleToGas(true).catch(() => {});
+          }
+        }
         const rangeLbl = startDate === endDate ? startDate : `${startDate}~${endDate}`;
         recordAuditLog({
           actorType: 'admin',
@@ -26466,6 +26481,7 @@
         || String(data.version || '').includes('v10.151')
         || String(data.version || '').includes('v10.152')
         || String(data.version || '').includes('v10.154')
+        || String(data.version || '').includes('v10.155')
         || data.supportsWeeklyAttendance === true
         || data.supportsWeeklyAutoTrigger === true
         || data.weeklyOnly === true;
