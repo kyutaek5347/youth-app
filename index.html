@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=277" />
+  <link rel="manifest" href="./manifest.json?v=278" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=277" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=277" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=278" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=278" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -1337,6 +1337,10 @@
     }
     .quick-sheet-admin-btn {
       flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
       background: rgba(255, 255, 255, 0.1);
       color: #FDE68A;
       border: 1px solid rgba(245, 158, 11, 0.35);
@@ -1345,6 +1349,10 @@
       font-size: 12.5px;
       font-weight: 700;
       cursor: pointer;
+    }
+    .quick-sheet-admin-btn .ui-svg-icon svg {
+      width: 15px;
+      height: 15px;
     }
     .quick-preset-row {
       display: flex;
@@ -4637,7 +4645,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=277" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=278" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -6508,8 +6516,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 277;
-    const APP_CACHE_NAME = 'right-youth-app-v10.177';
+    const APP_CLIENT_BUILD = 278;
+    const APP_CACHE_NAME = 'right-youth-app-v10.178';
     const APP_BOOT_TS = Date.now();
     try {
       const _bootUrl = new URL(window.location.href);
@@ -7103,49 +7111,49 @@
         label: '교회 홈페이지',
         css: 'linear-gradient(135deg, #1E3A5F 0%, #0F2540 100%)',
         darkText: false,
-        svg: '⛪'
+        svg: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2.5" x2="12" y2="7.5"/><line x1="9.6" y1="4.7" x2="14.4" y2="4.7"/><path d="M5 12.2L12 7.5l7 4.7V20.5H5z"/><path d="M10 20.5v-4.5a2 2 0 0 1 4 0v4.5"/></svg>'
       },
       {
         id: 'kakao',
         label: '카카오톡',
         css: 'linear-gradient(135deg, #FEE500 0%, #FACC15 100%)',
         darkText: true,
-        svg: '💬'
+        svg: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.5a7.8 7.8 0 0 1-8.5 7.7 8.4 8.4 0 0 1-3.4-.7L3.8 20l1.3-4.1A7.6 7.6 0 0 1 3.5 11.5a8 8 0 0 1 8.5-7.7 8 8 0 0 1 8.5 7.7z"/></svg>'
       },
       {
         id: 'naver',
         label: '네이버·블로그',
         css: 'linear-gradient(135deg, #03C75A 0%, #059669 100%)',
         darkText: false,
-        svg: '🌿'
+        svg: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 4.5C13 4.5 7.5 8 5.5 14.5c-.4 1.3-.5 2.7-.5 4.5 1.8 0 3.2-.1 4.5-.5C16 16.5 19.5 11 19.5 4.5z"/><path d="M5 19l6.5-6.5"/></svg>'
       },
       {
         id: 'blue',
         label: '로열 블루',
         css: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
         darkText: false,
-        svg: '🔗'
+        svg: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>'
       },
       {
         id: 'dark',
         label: '다크 슬레이트',
         css: 'linear-gradient(135deg, #1E293B 0%, #334155 100%)',
         darkText: false,
-        svg: '🌐'
+        svg: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><ellipse cx="12" cy="12" rx="4.2" ry="9.2"/><line x1="3.1" y1="9.2" x2="20.9" y2="9.2"/><line x1="3.1" y1="14.8" x2="20.9" y2="14.8"/></svg>'
       },
-      { id: 'crimson', label: '크림슨 레드', css: 'linear-gradient(135deg, #991B1B 0%, #DC2626 100%)', darkText: false, svg: '🔗' },
-      { id: 'coral', label: '코랄 선셋', css: 'linear-gradient(135deg, #EA580C 0%, #F43F5E 100%)', darkText: false, svg: '🔗' },
-      { id: 'orange', label: '선셋 오렌지', css: 'linear-gradient(135deg, #C2410C 0%, #F97316 100%)', darkText: false, svg: '🔗' },
-      { id: 'gold', label: '골드 앰버', css: 'linear-gradient(135deg, #B45309 0%, #D97706 100%)', darkText: false, svg: '🔗' },
-      { id: 'olive', label: '올리브 그린', css: 'linear-gradient(135deg, #3F6212 0%, #65A30D 100%)', darkText: false, svg: '🔗' },
-      { id: 'emerald', label: '에메랄드', css: 'linear-gradient(135deg, #065F46 0%, #10B981 100%)', darkText: false, svg: '🔗' },
-      { id: 'teal', label: '딥 틸', css: 'linear-gradient(135deg, #115E59 0%, #0D9488 100%)', darkText: false, svg: '🔗' },
-      { id: 'cyan', label: '아쿠아 시안', css: 'linear-gradient(135deg, #155E75 0%, #06B6D4 100%)', darkText: false, svg: '🔗' },
-      { id: 'sky', label: '스카이 블루', css: 'linear-gradient(135deg, #0369A1 0%, #0EA5E9 100%)', darkText: false, svg: '🔗' },
-      { id: 'indigo', label: '딥 인디고', css: 'linear-gradient(135deg, #312E81 0%, #4F46E5 100%)', darkText: false, svg: '🔗' },
-      { id: 'violet', label: '바이올렛', css: 'linear-gradient(135deg, #5B21B6 0%, #7C3AED 100%)', darkText: false, svg: '🔗' },
-      { id: 'purple', label: '퍼플 마젠타', css: 'linear-gradient(135deg, #6B21A8 0%, #C026D3 100%)', darkText: false, svg: '🔗' },
-      { id: 'rose', label: '로즈 핑크', css: 'linear-gradient(135deg, #9D174D 0%, #EC4899 100%)', darkText: false, svg: '🔗' }
+      { id: 'crimson', label: '크림슨 레드', css: 'linear-gradient(135deg, #991B1B 0%, #DC2626 100%)', darkText: false, svg: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>' },
+      { id: 'coral', label: '코랄 선셋', css: 'linear-gradient(135deg, #EA580C 0%, #F43F5E 100%)', darkText: false, svg: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>' },
+      { id: 'orange', label: '선셋 오렌지', css: 'linear-gradient(135deg, #C2410C 0%, #F97316 100%)', darkText: false, svg: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>' },
+      { id: 'gold', label: '골드 앰버', css: 'linear-gradient(135deg, #B45309 0%, #D97706 100%)', darkText: false, svg: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>' },
+      { id: 'olive', label: '올리브 그린', css: 'linear-gradient(135deg, #3F6212 0%, #65A30D 100%)', darkText: false, svg: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>' },
+      { id: 'emerald', label: '에메랄드', css: 'linear-gradient(135deg, #065F46 0%, #10B981 100%)', darkText: false, svg: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>' },
+      { id: 'teal', label: '딥 틸', css: 'linear-gradient(135deg, #115E59 0%, #0D9488 100%)', darkText: false, svg: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>' },
+      { id: 'cyan', label: '아쿠아 시안', css: 'linear-gradient(135deg, #155E75 0%, #06B6D4 100%)', darkText: false, svg: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>' },
+      { id: 'sky', label: '스카이 블루', css: 'linear-gradient(135deg, #0369A1 0%, #0EA5E9 100%)', darkText: false, svg: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>' },
+      { id: 'indigo', label: '딥 인디고', css: 'linear-gradient(135deg, #312E81 0%, #4F46E5 100%)', darkText: false, svg: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>' },
+      { id: 'violet', label: '바이올렛', css: 'linear-gradient(135deg, #5B21B6 0%, #7C3AED 100%)', darkText: false, svg: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>' },
+      { id: 'purple', label: '퍼플 마젠타', css: 'linear-gradient(135deg, #6B21A8 0%, #C026D3 100%)', darkText: false, svg: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>' },
+      { id: 'rose', label: '로즈 핑크', css: 'linear-gradient(135deg, #9D174D 0%, #EC4899 100%)', darkText: false, svg: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>' }
     ];
 
     const DEFAULT_QUICK_LINKS = [
@@ -7805,7 +7813,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=277" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=278" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7829,8 +7837,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=277', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=277', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=278', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=278', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -8910,7 +8918,7 @@
       if (qsTitleEl) qsTitleEl.innerHTML = `<span class="hero-title-with-icon">${renderUiIconHtml('more', { overrideIcons, forceOutline: true })}<span>${escapeHtml(getQuickSheetLabel(overrideNames))}</span></span>`;
 
       const qsEditBtn = document.getElementById('quickSheetManageEditBtn');
-      if (qsEditBtn) qsEditBtn.textContent = `${icn('manage')} ${lbl('manage')} 편집`;
+      if (qsEditBtn) qsEditBtn.innerHTML = `<span class="hero-title-with-icon" style="gap:5px; justify-content:center;">${renderUiIconHtml('manage', { overrideIcons, forceOutline: true })}<span>${escapeHtml(lbl('manage'))} 편집</span></span>`;
 
       const saveQlBtn = document.getElementById('saveQuickLinkBtn');
       if (saveQlBtn) saveQlBtn.textContent = `${lbl('manageQuickLinks')} 저장`;
@@ -19709,7 +19717,7 @@
           label: '직접 선택 색상',
           css: buildCustomGradientCss(raw),
           darkText: isLightHexColor(raw),
-          svg: '🔗'
+          svg: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>'
         };
       }
       return QUICK_LINK_THEMES.find(t => t.id === raw) || QUICK_LINK_THEMES[5];
@@ -19755,12 +19763,11 @@
       const canEdit = hasUserPerm(user, 'canEditLayout');
       document.getElementById('quickLinksSheetAdminBar').classList.toggle('hidden', !canEdit);
 
-      const sheetIcon = getQuickSheetIcon();
       const sheetLabel = getQuickSheetLabel();
       const titleEl = document.getElementById('quickSheetTitle');
-      if (titleEl) titleEl.textContent = `${sheetIcon} ${sheetLabel}`;
+      if (titleEl) titleEl.innerHTML = `<span class="hero-title-with-icon">${renderUiIconHtml('more', { forceOutline: true })}<span>${escapeHtml(sheetLabel)}</span></span>`;
       const editBtnEl = document.getElementById('quickSheetManageEditBtn');
-      if (editBtnEl) editBtnEl.textContent = `${getTabIcon('manage')} ${getTabLabel('manage')} 편집`;
+      if (editBtnEl) editBtnEl.innerHTML = `<span class="hero-title-with-icon" style="gap:5px; justify-content:center;">${renderUiIconHtml('manage', { forceOutline: true })}<span>${escapeHtml(getTabLabel('manage'))} 편집</span></span>`;
 
       const listEl = document.getElementById('quickLinksSheetList');
       const displayLinks = canEdit
