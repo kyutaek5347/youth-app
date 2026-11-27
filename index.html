@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=247" />
+  <link rel="manifest" href="./manifest.json?v=248" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=247" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=247" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=248" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=248" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4112,7 +4112,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=247" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=248" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5963,8 +5963,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 247;
-    const APP_CACHE_NAME = 'right-youth-app-v10.147';
+    const APP_CLIENT_BUILD = 248;
+    const APP_CACHE_NAME = 'right-youth-app-v10.148';
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.142-10tab-fast-split';
     const SHEET_SCHEMA_TABS = [
@@ -6202,7 +6202,6 @@
       { key: 'setInstall', group: '앱 이용 · 보안', defaultIcon: '📱', defaultLabel: '앱 설치 방법', roleHint: '설정 · 홈 화면 추가 안내' },
       { key: 'setTerms', group: '앱 이용 · 보안', defaultIcon: '📄', defaultLabel: '이용약관', roleHint: '설정 · 서비스 이용약관' },
       { key: 'setPrivacy', group: '앱 이용 · 보안', defaultIcon: '🔒', defaultLabel: '개인정보 · 보안 안내', roleHint: '설정 · 프라이버시 보호 안내' },
-      { key: 'setCacheClean', group: '앱 이용 · 보안', defaultIcon: '🧹', defaultLabel: '앱 캐시 정리 (최적화)', roleHint: '설정 · 임시 캐시 안전 정리' },
       { key: 'setLogout', group: '앱 이용 · 보안', defaultIcon: '🚪', defaultLabel: '로그아웃', roleHint: '설정 · 계정 로그아웃' }
     ];
     const DEFAULT_SETTINGS_ITEM_ORDER = SETTINGS_ITEM_REGISTRY.map(t => t.key);
@@ -6990,7 +6989,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=247" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=248" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7014,8 +7013,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=247', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=247', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=248', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=248', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -7369,8 +7368,10 @@
       lastRenderMs: 0,
       maxRenderMs: 0,
       lastAutoOptAt: '',
+      lastAutoOptTs: 0,
       lastAutoOptSummary: '대기 중 (자동 실행 예정)',
       lastAutoOptCount: 0,
+      autoRunCount: 0,
       totalCleanedItems: 0,
       oldCacheCount: 0
     };
@@ -12166,7 +12167,7 @@
           keywords: '업데이트 자동 변경 반영 버전 동기화 설명서 이용약관',
           steps: [
             `<b>자동 최신화:</b> 새 버전(현재 빌드 <b>b${APP_CLIENT_BUILD}</b>)이나 메뉴 이름·이모지·설정 변경 사항이 적용될 때 사용방법 설명서와 이용약관도 최신 기능 기준으로 자동 반영됩니다.`,
-            `<b>앱 캐시 정리 (무손실 최적화):</b> 앱이 일시적으로 느리거나 이전 화면 캐시가 남았을 때 <b>[${stIcn} ${stLbl}] → 🧹 앱 캐시 정리 (최적화)</b>를 누르면 로그인·알림·글자 크기는 그대로 유지한 채 구버전 캐시와 만료 임시 기록만 깨끗이 정리됩니다.`
+            `<b>백그라운드 자동 최적화 (무손실):</b> 이용자가 별도로 버튼을 누르지 않아도 앱 실행·복귀·네트워크 재연결 시 유휴 시간에 구버전 캐시와 만료된 임시 기록을 자동으로 정리합니다. (로그인·알림·글자 크기·서버 데이터 100% 보존)`
           ],
           tip: '관리자가 하단 메뉴 이름이나 이모지를 변경하더라도 설명서 안내 문구에 실시간으로 연동됩니다.'
         }
@@ -12642,10 +12643,12 @@
         }
       } else {
         if (typeof stopHomeTopBannerAutoSlide === 'function') stopHomeTopBannerAutoSlide();
+        if (typeof stopAutoOptRunner === 'function') stopAutoOptRunner();
       }
     });
     window.addEventListener('online', () => {
       verifyCoreUiConfigFromServer(true);
+      if (typeof onAutoOptVisibilityVisible === 'function') onAutoOptVisibilityVisible();
     });
 
     function checkAndNotifyNewcomers() {
@@ -25702,8 +25705,8 @@
 
               <div class="setting-row" style="padding-top:2px;">
                 <div>
-                  <div class="setting-title" style="font-size:13.5px;">🤖 백그라운드 자동 안전 최적화</div>
-                  <div class="setting-sub" style="font-size:11.5px;">앱 실행 시 및 설정 주기마다 구버전 캐시·만료 임시 기록을 자동 정리하고 용량을 감시합니다.</div>
+                  <div class="setting-title" style="font-size:13.5px;">🤖 전 이용자 백그라운드 자동 안전 최적화</div>
+                  <div class="setting-sub" style="font-size:11.5px;">이용자가 직접 누를 필요 없이 앱 실행·복귀·주기마다 유휴 시간에 구버전 캐시와 만료 임시 기록을 자동 정리합니다.</div>
                 </div>
                 <label class="switch">
                   <input type="checkbox" id="cfgAutoOptEnabled" ${autoOptConfig.enabled !== false ? 'checked' : ''} onchange="handleToggleAutoOpt(this.checked)" />
@@ -25721,7 +25724,7 @@
               </div>
 
               <div style="font-size:11.5px; color:#475569; background:#F8FAFC; border:1px solid var(--border); border-radius:10px; padding:8px 10px; margin-bottom:10px; line-height:1.5;">
-                • <b>최근 최적화:</b> ${escapeHtml(perfMetrics.lastAutoOptAt || '아직 미실행')} — ${escapeHtml(perfMetrics.lastAutoOptSummary || '대기 중')}<br>
+                • <b>최근 자동 최적화 (${perfMetrics.autoRunCount || 0}회 실행):</b> ${escapeHtml(perfMetrics.lastAutoOptAt || '잠시 후 자동 실행')} — ${escapeHtml(perfMetrics.lastAutoOptSummary || '대기 중')}<br>
                 • <b>문서 분포:</b> 회원 ${members.length} · 출석 ${attendanceRecords.length} · 로그 ${auditLogs.length} · 영상 ${videoItems.length} · 공지 ${notices.length} · 문의 ${inquiries.length}
               </div>
 
@@ -27276,11 +27279,13 @@
 
         const totalCleaned = cleanedCaches + cleanedTemp + cleanedLegacy;
         perfMetrics.lastAutoOptAt = formatKstDateTime();
+        perfMetrics.lastAutoOptTs = Date.now();
         perfMetrics.lastAutoOptCount = totalCleaned;
+        perfMetrics.autoRunCount = Number(perfMetrics.autoRunCount || 0) + 1;
         perfMetrics.totalCleanedItems = Number(perfMetrics.totalCleanedItems || 0) + totalCleaned;
         perfMetrics.lastAutoOptSummary = totalCleaned > 0
-          ? `구버전 캐시 ${cleanedCaches}건 · 만료 임시 기록 ${cleanedTemp + cleanedLegacy}건 안전 정리 완료`
-          : '정리할 불필요 캐시 없음 · 최적 상태 유지 중';
+          ? `구버전 캐시 ${cleanedCaches}건 · 만료 임시 기록 ${cleanedTemp + cleanedLegacy}건 자동 정리 완료`
+          : '정리할 불필요 캐시 없음 · 최적 상태 자동 유지 중';
 
         if (!silent && currentMainTab === 'manage' && currentManageSubTab === 'diagnostics') {
           const u = getCurrentUser();
@@ -27290,6 +27295,16 @@
       } finally {
         autoOptBusy = false;
       }
+    }
+
+    function runInBrowserIdle(fn) {
+      if (typeof window.requestIdleCallback === 'function') {
+        try {
+          window.requestIdleCallback(() => fn(), { timeout: 2500 });
+          return;
+        } catch {}
+      }
+      setTimeout(fn, 120);
     }
 
     function stopAutoOptRunner() {
@@ -27303,12 +27318,14 @@
       stopAutoOptRunner();
       if (!autoOptConfig || autoOptConfig.enabled === false) return;
       const ms = Math.max(60000, Number(delayMs || (autoOptConfig.intervalMin || 10) * 60 * 1000));
-      autoOptTimerId = setTimeout(async () => {
+      autoOptTimerId = setTimeout(() => {
         autoOptTimerId = null;
         if (document.visibilityState === 'visible') {
-          await runSafeClientOptimization({ manual: false, silent: true });
+          runInBrowserIdle(async () => {
+            await runSafeClientOptimization({ manual: false, silent: true });
+            scheduleNextAutoOptTick((autoOptConfig.intervalMin || 10) * 60 * 1000);
+          });
         }
-        scheduleNextAutoOptTick((autoOptConfig.intervalMin || 10) * 60 * 1000);
       }, ms);
     }
 
@@ -27321,21 +27338,26 @@
         autoOptBootScheduled = true;
         setTimeout(() => {
           if (document.visibilityState === 'visible' && autoOptConfig && autoOptConfig.enabled !== false) {
-            runSafeClientOptimization({ manual: false, silent: true });
+            runInBrowserIdle(() => runSafeClientOptimization({ manual: false, silent: true }));
           }
-        }, 3500);
+        }, 3000);
       }
-      if (!autoOptTimerId) {
+      if (!autoOptTimerId && document.visibilityState === 'visible') {
         scheduleNextAutoOptTick((autoOptConfig.intervalMin || 10) * 60 * 1000);
       }
     }
 
     function onAutoOptVisibilityVisible() {
       if (!autoOptConfig || autoOptConfig.enabled === false) return;
+      const elapsed = Date.now() - Number(perfMetrics.lastAutoOptTs || 0);
+      if (elapsed >= 3 * 60 * 1000) {
+        runInBrowserIdle(() => runSafeClientOptimization({ manual: false, silent: true }));
+      }
       if (!autoOptTimerId) {
         scheduleNextAutoOptTick((autoOptConfig.intervalMin || 10) * 60 * 1000);
       }
     }
+    syncAutoOptRunner();
 
     window.handleToggleAutoOpt = async (checked) => {
       const u = getCurrentUser();
@@ -27388,18 +27410,7 @@
       }
     };
 
-    window.handleUserCacheCleanup = async () => {
-      const res = await runSafeClientOptimization({ manual: true, silent: true });
-      if (res.totalCleaned > 0) {
-        showToast(`🧹 앱 최적화 완료! 구버전 캐시 ${res.cleanedCaches}건 · 만료 임시 기록 ${res.cleanedTemp + res.cleanedLegacy}건 정리 (로그인·설정 유지)`, 'ok');
-      } else {
-        showToast('✨ 이미 최적 상태입니다! (로그인·알림·글자 크기 설정은 안전하게 유지됩니다)', 'ok');
-      }
-      if (currentMainTab === 'settings') {
-        const u = getCurrentUser();
-        if (u) renderSettingsView(u);
-      }
-    };
+
 
     // ==================== 21. 정기 서버 점검 & 긴급 보안 점검 제어 ====================
     async function syncPublicEmergencyLockFlag(active, meta = {}) {
@@ -30712,20 +30723,6 @@
                 </span>
               </span>
               <span class="settings-row-right">▸</span>
-            </button>
-          `;
-        } else if (key === 'setCacheClean') {
-          const curKb = Math.max(1, Math.round(estimateLocalStorageBytes() / 1024));
-          rowHtml = `
-            <button class="settings-row-btn" type="button" onclick="handleUserCacheCleanup()">
-              <span class="settings-row-left">
-                <span class="settings-row-icon">${escapeHtml(ic)}</span>
-                <span style="min-width:0;">
-                  <div class="settings-row-title">${escapeHtml(lb)}</div>
-                  <div class="settings-row-sub">구버전 캐시·임시 기록만 안전 정리 (로그인·개인 설정 유지 · 현재 ${curKb}KB)</div>
-                </span>
-              </span>
-              <span class="settings-row-right">정리 ▸</span>
             </button>
           `;
         } else if (key === 'setLogout') {
