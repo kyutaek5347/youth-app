@@ -8,13 +8,13 @@
  <title>라이트 청년부</title>
 
  <!-- PWA 필수 설정 -->
- <link rel="manifest" href="./manifest.json?v=272" />
+ <link rel="manifest" href="./manifest.json?v=273" />
  <meta name="theme-color" content="#0B0F19" />
  <meta name="apple-mobile-web-app-capable" content="yes" />
  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
  <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
- <link rel="apple-touch-icon" href="./icon-192.png?v=272" />
- <link rel="icon" type="image/png" href="./icon-192.png?v=272" />
+ <link rel="apple-touch-icon" href="./icon-192.png?v=273" />
+ <link rel="icon" type="image/png" href="./icon-192.png?v=273" />
 
  <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
  <script src="./firebase-app-compat.js"></script>
@@ -4641,7 +4641,7 @@
 
  <!-- 인앱 실시간 알림 팝업 배너 -->
  <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
- <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=272" alt="라이트 청년부" /></div>
+ <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=273" alt="라이트 청년부" /></div>
  <div style="min-width:0; flex:1;">
  <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
  <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -6502,8 +6502,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 272;
-    const APP_CACHE_NAME = 'right-youth-app-v10.172';
+    const APP_CLIENT_BUILD = 273;
+    const APP_CACHE_NAME = 'right-youth-app-v10.173';
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.156-log-archive';
     const SHEET_SCHEMA_TABS = [
@@ -7792,7 +7792,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">!</span>'
-        : '<img src="./icon-192.png?v=272" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=273" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7816,8 +7816,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=272', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=272', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=273', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=273', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -14440,7 +14440,7 @@
           return `
             <div class="home-block" data-ts-zone="home_notice">
               <div class="section-head">
-                <h2 class="section-title"><span class="section-title-with-icon">${renderUiIconHtml('notice', { forceOutline: true })}<span>${escapeHtml(String(b.title || '공지 · 광고 · 소식').replace(/^[▸▸▪•·\s]+/, '') || '공지 · 광고 · 소식')}</span></span></h2>
+                <h2 class="section-title"><span class="section-title-with-icon">${renderUiIconHtml('notice', { forceOutline: true })}<span>${escapeHtml(String(b.title || '공지 · 광고 · 소식').replace(/^[▸▪•·\s]+/, '') || '공지 · 광고 · 소식')}</span></span></h2>
                 ${perms.canManageNotices ? `<button class="btn-sm primary" onclick="openUnifiedContentModal('notice')">+ 글쓰기</button>` : ''}
               </div>
               <div class="filter-row" data-ts-bar="home_notice" data-ts-body="home_notice" data-ts-pos="after-body">
