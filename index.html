@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=251" />
+  <link rel="manifest" href="./manifest.json?v=252" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=251" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=251" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=252" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=252" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4239,7 +4239,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=251" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=252" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -6167,10 +6167,10 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 251;
-    const APP_CACHE_NAME = 'right-youth-app-v10.151';
+    const APP_CLIENT_BUILD = 252;
+    const APP_CACHE_NAME = 'right-youth-app-v10.152';
     const APP_BOOT_TS = Date.now();
-    const SHEET_SCHEMA_VERSION = 'v10.151-weekly-only';
+    const SHEET_SCHEMA_VERSION = 'v10.152-weekly-auto';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '주간 출석부 (날짜별 탭)', isWeeklyAttendance: true, kind: 'state', addedIn: 'v10.151', rebuildable: true, desc: '예배·행사 날짜별 셀 주간 출석부 탭 (예: 26.11.29 · 구버전 누적 출석부 폐기)' },
       { id: 'members', name: '회원 명단', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '성명·역할·가입일·상태·이전이름 (생일 열 폐기)' },
@@ -6188,6 +6188,13 @@
       { name: '생일 변경 로그', removedIn: 'v10.69', reason: '생년월일 기능 폐기 및 개인정보 최소화 (회원 명단 생년월일 열 포함)' }
     ];
     const SHEET_SCHEMA_CHANGELOG = [
+      {
+        version: 'v10.152',
+        date: '2026.11.27',
+        added: ['주간 출석부 구글 서버 무인 자동 생성 예약 (요일·시간 관리자 설정)'],
+        removed: [],
+        changed: ['하이브리드 자동화(매주 지정 요일·시간 무인 생성 + 앱 접속 시 출석 ○ 자동 반영 · 불참/미응답 빈칸 유지)', '정리 완료된 구버전 삭제 시트 목록 화면 비표시']
+      },
       {
         version: 'v10.151',
         date: '2026.11.27',
@@ -6371,6 +6378,11 @@
       staffMembers: [],
       weeklyVisitors: {}
     };
+    const DEFAULT_WEEKLY_AUTO_CONFIG = {
+      enabled: false,
+      weekday: 0,
+      hour: 9
+    };
     const DEFAULT_ATTENDANCE_CONFIG = {
       regularEnabled: true,
       regularDay: 0,
@@ -6380,7 +6392,8 @@
       skippedSundays: [],
       specialEvents: [],
       sessionNames: {},
-      cellRoster: structuredClone(DEFAULT_CELL_ROSTER)
+      cellRoster: structuredClone(DEFAULT_CELL_ROSTER),
+      weeklyAuto: structuredClone(DEFAULT_WEEKLY_AUTO_CONFIG)
     };
     const KEY_NEWCOMER_NOTIFIED = 'right_youth_newcomer_notified_v1';
     // 기존 기기에 남아 있던 성경·QT 잔여 로컬 기록 즉시 영구 폐기
@@ -7219,7 +7232,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=251" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=252" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7243,8 +7256,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=251', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=251', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=252', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=252', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -10163,7 +10176,8 @@
               skippedSundays: Array.isArray(doc.data().skippedSundays) ? doc.data().skippedSundays.map(String) : [],
               specialEvents: Array.isArray(doc.data().specialEvents) ? doc.data().specialEvents : [],
               sessionNames: (doc.data().sessionNames && typeof doc.data().sessionNames === 'object') ? doc.data().sessionNames : {},
-              cellRoster: normalizeCellRosterConfig(doc.data().cellRoster)
+              cellRoster: normalizeCellRosterConfig(doc.data().cellRoster),
+              weeklyAuto: normalizeWeeklyAutoConfig(doc.data().weeklyAuto)
             };
           } else {
             attendanceConfig = structuredClone(DEFAULT_ATTENDANCE_CONFIG);
@@ -22358,6 +22372,10 @@
         : Array.from(new Set([...curSkipped, targetDot])).sort();
       try {
         await db.collection('config').doc('attendance').set({ skippedSundays: nextSkipped }, { merge: true });
+        attendanceConfig.skippedSundays = nextSkipped;
+        if (getWeeklyAutoConfig().enabled && getAdminSheetUrl()) {
+          syncWeeklyAutoScheduleToGas(true).catch(() => {});
+        }
         recordAuditLog({
           actorType: 'admin',
           category: '예배·출석',
@@ -23282,6 +23300,7 @@
         </div>
 
         ${curSess ? '<div id="attRosterListsArea"></div>' : ''}
+        ${buildWeeklyAutoScheduleCardHtml(user)}
       `;
 
       renderAttRosterQuickJumpListOnly();
@@ -23294,7 +23313,237 @@
       }
     }
 
-    // ==================== 셀별 주간 출석부 (방식 A: 날짜별 탭 + 방식 2: 무하드코딩 Firestore 보안 저장) ====================
+// ==================== 셀별 주간 출석부 (방식 A: 날짜별 탭 + 방식 2: 무하드코딩 Firestore 보안 저장) ====================
+    function normalizeWeeklyAutoConfig(raw) {
+      const src = (raw && typeof raw === 'object') ? raw : {};
+      const wd = Number(src.weekday);
+      const hr = Number(src.hour);
+      return {
+        enabled: !!src.enabled,
+        weekday: (Number.isFinite(wd) && wd >= 0 && wd <= 6) ? Math.round(wd) : 0,
+        hour: (Number.isFinite(hr) && hr >= 0 && hr <= 23) ? Math.round(hr) : 9,
+        updatedAt: String(src.updatedAt || ''),
+        updatedBy: String(src.updatedBy || '')
+      };
+    }
+
+    function getWeeklyAutoConfig() {
+      const cfg = attendanceConfig || DEFAULT_ATTENDANCE_CONFIG;
+      return normalizeWeeklyAutoConfig(cfg.weeklyAuto);
+    }
+
+    function buildWeeklyTemplateForGas() {
+      const cfg = attendanceConfig || DEFAULT_ATTENDANCE_CONFIG;
+      const roster = getCellRosterConfig();
+      const approved = (members || []).filter(m => m && m.status === 'approved' && m.name);
+      const placed = new Set();
+
+      const newcomers = [];
+      const addNc = (nm) => {
+        const clean = String(nm || '').trim();
+        const k = normalizePersonKey(clean);
+        if (!k || placed.has(k)) return;
+        placed.add(k);
+        newcomers.push({ name: clean, present: false });
+      };
+      roster.newcomerMembers.forEach(addNc);
+      approved.forEach(m => { if (isNewcomerRoleId(m.roleId)) addNc(m.name); });
+
+      const staff = [];
+      const addSt = (nm) => {
+        const clean = String(nm || '').trim();
+        const k = normalizePersonKey(clean);
+        if (!k || placed.has(k)) return;
+        placed.add(k);
+        staff.push({ name: clean, present: false });
+      };
+      roster.staffMembers.forEach(addSt);
+      approved.forEach(m => {
+        const r = getRoleById(m.roleId);
+        if (isStaffRoleName(r && r.name, m.roleId)) addSt(m.name);
+      });
+
+      const cells = (roster.cells || []).map(c => ({
+        name: c.name,
+        members: (c.members || []).map(nm => ({ name: String(nm || '').trim(), present: false })).filter(x => x.name)
+      }));
+
+      return {
+        venue: roster.venue || '다니엘 성전',
+        displayTime: roster.displayTime || '',
+        regularStart: cfg.regularStart || '14:00',
+        newcomerCellName: roster.newcomerCellName || '새가족 셀',
+        newcomers,
+        cells,
+        staffTitle: roster.staffTitle || '교역자 및 교사',
+        staff,
+        skippedSundays: Array.isArray(cfg.skippedSundays) ? cfg.skippedSundays.map(normalizeDateDotKey).filter(Boolean) : []
+      };
+    }
+
+    function buildWeeklyAutoScheduleCardHtml(user) {
+      const autoCfg = getWeeklyAutoConfig();
+      const isReadOnly = isManageReadOnlyUser(user);
+      const isLinked = !!getAdminSheetUrl();
+      const secOpen = isManageSectionOpen('att_weekly_auto', false);
+      const serverTrig = (sheetLiveInspection && sheetLiveInspection.data && sheetLiveInspection.data.weeklyTrigger)
+        ? sheetLiveInspection.data.weeklyTrigger
+        : null;
+      const dayLabel = DAY_NAMES_KO[autoCfg.weekday] || '일요일';
+      const hourLabel = `${String(autoCfg.hour).padStart(2, '0')}시`;
+      const badgeHtml = autoCfg.enabled
+        ? `<span class="tag green">🟢 매주 ${escapeHtml(dayLabel)} ${escapeHtml(hourLabel)}</span>`
+        : '<span class="tag slate">꺼짐</span>';
+
+      let hourOptions = '';
+      for (let h = 0; h < 24; h++) {
+        const ampm = h === 0 ? '자정 0시' : (h < 12 ? `오전 ${h}시` : (h === 12 ? '오후 12시 (정오)' : `오후 ${h - 12}시`));
+        hourOptions += `<option value="${h}" ${autoCfg.hour === h ? 'selected' : ''}>${String(h).padStart(2, '0')}:00 (${ampm})</option>`;
+      }
+
+      return `
+        <div style="margin-top:12px;">
+          ${buildManageAccordionBar({
+            key: 'att_weekly_auto',
+            titleHtml: '⏰ 주간 시트 자동 생성 예약 (하이브리드 자동화)',
+            badgeHtml,
+            defaultOpen: false
+          })}
+          <div data-acc-body="att_weekly_auto" class="${secOpen ? '' : 'hidden'}">
+            <div class="card" style="padding:13px 14px;">
+              <div class="info-box" style="margin-top:0; margin-bottom:10px; background:#F0FDF4; border-color:#BBF7D0; color:#14532D;">
+                🤖 <b>하이브리드 자동화 작동 방식</b><br>
+                • <b>무인 자동 생성:</b> 앱을 꺼둬도 매주 지정한 요일·시간에 구글 서버가 다가오는 주일 탭(예: <code>26.12.06</code>)을 최신 셀 명단으로 자동 생성합니다. (<code>예배X</code> 휴무 주일은 자동 건너뜀)<br>
+                • <b>출석 자동 정리:</b> 관리자가 앱을 열거나 예배 중 켜 두면 <b>출석O</b>만 <code>○</code>로 자동 반영되고 합계가 정리됩니다. (불참·미응답은 빈칸 유지)
+              </div>
+
+              <div class="setting-row" style="padding:6px 0 10px;">
+                <div>
+                  <div class="setting-title" style="font-size:13.5px;">매주 주간 출석부 시트 자동 생성</div>
+                  <div class="setting-sub" style="font-size:11.5px;">지정한 요일·시간에 구글 시트에 날짜 탭이 자동으로 만들어집니다.</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="cfgWeeklyAutoEnabled" ${autoCfg.enabled ? 'checked' : ''} ${isReadOnly ? 'disabled' : ''} />
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="form-grid-2" style="margin-top:8px; margin-bottom:10px;">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label" for="cfgWeeklyAutoWeekday">자동 생성 요일</label>
+                  <select id="cfgWeeklyAutoWeekday" class="form-select" ${isReadOnly ? 'disabled' : ''}>
+                    ${DAY_NAMES_KO.map((nm, idx) => `<option value="${idx}" ${autoCfg.weekday === idx ? 'selected' : ''}>매주 ${nm}</option>`).join('')}
+                  </select>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label" for="cfgWeeklyAutoHour">자동 생성 시간 (KST)</label>
+                  <select id="cfgWeeklyAutoHour" class="form-select" ${isReadOnly ? 'disabled' : ''}>
+                    ${hourOptions}
+                  </select>
+                </div>
+              </div>
+
+              ${serverTrig && serverTrig.lastAutoRunAt ? `
+                <div style="font-size:11.5px; color:#475569; background:#F8FAFC; border:1px solid var(--border); border-radius:9px; padding:7px 10px; margin-bottom:10px;">
+                  🕒 <b>최근 무인 실행 기록:</b> ${escapeHtml(serverTrig.lastAutoRunAt)}${serverTrig.lastAutoTabName ? ` · 탭: <b>${escapeHtml(serverTrig.lastAutoTabName)}</b>` : ''}
+                </div>
+              ` : ''}
+
+              ${!isLinked ? `
+                <div class="info-box warn" style="margin-top:0; margin-bottom:10px;">
+                  ⚠️ 먼저 <b>[📊 시트 연동]</b> 탭에서 Google Apps Script 웹 앱 URL을 연결해 주세요.
+                </div>
+              ` : ''}
+
+              <button id="saveWeeklyAutoBtn" class="btn-full btn-dark" type="button" style="padding:11px; font-size:13px;" ${isReadOnly ? 'disabled' : ''} onclick="handleSaveWeeklyAutoSchedule()">💾 자동 생성 요일·시간 저장 (구글 서버 반영)</button>
+              ${buildInlineSaveStatusHtml('weekly_auto_sched')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function syncWeeklyAutoScheduleToGas(silent = true, overrideAutoCfg = null) {
+      const user = getCurrentUser();
+      const url = getAdminSheetUrl();
+      if (!user || !user.isSuperAdmin || !url) return { ok: false, reason: 'no_url' };
+      const autoCfg = overrideAutoCfg || getWeeklyAutoConfig();
+      const res = await postToGoogleSheet({
+        action: 'weekly_schedule_set',
+        weeklyAuto: {
+          enabled: !!autoCfg.enabled,
+          weekday: autoCfg.weekday,
+          hour: autoCfg.hour
+        },
+        weeklyTemplate: buildWeeklyTemplateForGas()
+      }, url, true, 30000);
+      if (res && res.ok && res.data && res.data.weeklyTrigger && sheetLiveInspection && sheetLiveInspection.data) {
+        sheetLiveInspection.data.weeklyTrigger = res.data.weeklyTrigger;
+      }
+      return res;
+    }
+
+    window.handleSaveWeeklyAutoSchedule = async () => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const enabled = !!(document.getElementById('cfgWeeklyAutoEnabled') && document.getElementById('cfgWeeklyAutoEnabled').checked);
+      const weekday = Math.max(0, Math.min(6, Number((document.getElementById('cfgWeeklyAutoWeekday') || {}).value || 0)));
+      const hour = Math.max(0, Math.min(23, Number((document.getElementById('cfgWeeklyAutoHour') || {}).value || 9)));
+
+      const nextAuto = {
+        enabled,
+        weekday,
+        hour,
+        updatedAt: formatKstDateTime(),
+        updatedBy: currentAdminName || '관리자'
+      };
+      const btn = document.getElementById('saveWeeklyAutoBtn');
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ 구글 서버 예약 반영 중...'; }
+      setInlineSaveStatus('weekly_auto_sched', 'loading', '⏳ 주간 출석부 자동 생성 예약을 저장하고 구글 서버 트리거를 설정 중입니다...');
+      try {
+        await db.collection('config').doc('attendance').set({ weeklyAuto: nextAuto }, { merge: true });
+        attendanceConfig.weeklyAuto = nextAuto;
+        const dayLabel = DAY_NAMES_KO[weekday] || '일요일';
+        const hourLabel = `${String(hour).padStart(2, '0')}시`;
+
+        if (!getAdminSheetUrl()) {
+          setInlineSaveStatus('weekly_auto_sched', 'warn', '⚠️ 앱 설정은 저장되었지만 구글 시트가 미연동 상태입니다. [📊 시트 연동] 연결 후 다시 저장해 주세요.');
+          showToast('⚠️ 시트 연동 후 다시 저장해 주세요.', 'warn');
+          return;
+        }
+
+        const res = await syncWeeklyAutoScheduleToGas(false, nextAuto);
+        if (res && res.ok) {
+          const msg = enabled
+            ? `✅ 매주 ${dayLabel} ${hourLabel} 주간 시트 자동 생성이 구글 서버에 예약되었습니다!`
+            : '✅ 주간 시트 무인 자동 생성 예약이 꺼졌습니다.';
+          setInlineSaveStatus('weekly_auto_sched', 'ok', msg);
+          showToast(msg, 'ok');
+          recordAuditLog({
+            actorType: 'admin',
+            category: '예배·출석',
+            action: enabled ? '주간 시트 자동 생성 예약 설정' : '주간 시트 자동 생성 예약 해제',
+            target: enabled ? `매주 ${dayLabel} ${hourLabel}` : 'OFF'
+          });
+          manageSectionOpen.att_weekly_auto = true;
+          renderManageAttendance(document.getElementById('manageContent'), user);
+        } else {
+          const errTxt = (res && res.data && res.data.error) ? String(res.data.error) : '';
+          const hint = errTxt.includes('알 수 없는 요청')
+            ? 'Apps Script를 최신 v10.152로 교체·새 버전 배포(권한 허용 포함)한 뒤 다시 저장해 주세요.'
+            : (errTxt || '구글 서버 응답 지연 · Apps Script v10.152 배포 및 트리거 권한을 확인해 주세요.');
+          setInlineSaveStatus('weekly_auto_sched', 'warn', `⚠️ 앱에는 저장됨 · 구글 서버 반영 실패: ${hint}`);
+          showToast(`⚠️ ${hint}`, 'warn');
+        }
+      } catch (err) {
+        setInlineSaveStatus('weekly_auto_sched', 'err', '❌ 자동 생성 예약 저장 중 오류가 발생했습니다.');
+        handleDbError(err, '주간 시트 자동 생성 예약');
+      } finally {
+        const liveBtn = document.getElementById('saveWeeklyAutoBtn');
+        if (liveBtn) { liveBtn.disabled = false; liveBtn.textContent = '💾 자동 생성 요일·시간 저장 (구글 서버 반영)'; }
+      }
+    };
+
     function normalizeCellRosterConfig(raw) {
       const src = (raw && typeof raw === 'object') ? raw : {};
       const cleanNameList = (arr) => {
@@ -23758,7 +24007,8 @@
       const built = buildWeeklySheetGasPayload(curSess);
       const res = await postToGoogleSheet({
         action: 'weekly_attendance_sync',
-        weekly: built.weekly
+        weekly: built.weekly,
+        weeklyTemplate: buildWeeklyTemplateForGas()
       }, url, true, 35000);
       if (res && res.ok) {
         const sid = String(curSess.sessionId);
@@ -23941,6 +24191,7 @@
       try {
         const res = await postToGoogleSheet({
           action: 'weekly_attendance_sync',
+          weeklyTemplate: buildWeeklyTemplateForGas(),
           weekly: {
             tabName: data.tabName,
             date: data.date,
@@ -24202,6 +24453,9 @@
       try {
         await db.collection('config').doc('attendance').set({ cellRoster: nextRoster }, { merge: true });
         attendanceConfig.cellRoster = nextRoster;
+        if (getWeeklyAutoConfig().enabled && getAdminSheetUrl()) {
+          syncWeeklyAutoScheduleToGas(true).catch(() => {});
+        }
         recordAuditLog({
           actorType: 'admin',
           category: '예배·출석',
@@ -24312,6 +24566,9 @@
       try {
         await db.collection('config').doc('attendance').set({ cellRoster: nextRoster }, { merge: true });
         attendanceConfig.cellRoster = nextRoster;
+        if (getWeeklyAutoConfig().enabled && getAdminSheetUrl()) {
+          syncWeeklyAutoScheduleToGas(true).catch(() => {});
+        }
         recordAuditLog({
           actorType: 'admin',
           category: '예배·출석',
@@ -25483,21 +25740,14 @@
               `;
             })()}
 
-            <div style="font-size:12px; font-weight:800; color:#334155; margin:8px 0 5px;">🗑️ 앱에서 삭제(폐기)된 구버전 시트</div>
-            ${SHEET_REMOVED_TABS.map(rem => {
-              const stillThere = diff && diff.deprecatedPresent.some(x => x.includes(rem.name) || x.includes('생년월일'));
-              return `
-                <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; padding:8px 10px; border-radius:9px; background:${stillThere ? '#FEF2F2' : '#F8FAFC'}; border:1px solid ${stillThere ? '#FECACA' : '#E2E8F0'}; margin-bottom:8px;">
-                  <div style="min-width:0; flex:1;">
-                    <div style="font-size:12px; font-weight:800; color:${stillThere ? '#991B1B' : '#475569'};">${escapeHtml(rem.name)} <span style="font-weight:600; font-size:11px;">(${escapeHtml(rem.removedIn)} 삭제)</span></div>
-                    <div style="font-size:11px; color:#64748B; margin-top:2px;">${escapeHtml(rem.reason)}</div>
-                  </div>
-                  ${stillThere
-                    ? '<button class="btn-sm danger" type="button" onclick="handleCleanupDeprecatedSheetTabs()">🧹 시트에서 삭제 정리</button>'
-                    : '<span class="tag green" style="font-size:10.5px;">✅ 정리 완료</span>'}
+            ${diff && Array.isArray(diff.deprecatedPresent) && diff.deprecatedPresent.length > 0 ? `
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; padding:8px 10px; border-radius:9px; background:#FEF2F2; border:1px solid #FECACA; margin:8px 0;">
+                <div style="min-width:0; flex:1; font-size:11.5px; color:#991B1B; font-weight:700;">
+                  ⚠️ 구버전 미사용 탭 남아 있음: ${escapeHtml(diff.deprecatedPresent.join(', '))}
                 </div>
-              `;
-            }).join('')}
+                <button class="btn-sm danger" type="button" onclick="handleCleanupDeprecatedSheetTabs()">🧹 시트에서 삭제 정리</button>
+              </div>
+            ` : ''}
 
             <details style="margin-top:6px; background:#F8FAFC; border:1px solid var(--border); border-radius:10px; padding:8px 10px;">
               <summary style="cursor:pointer; font-size:12px; font-weight:800; color:#1E293B;">📜 버전별 시트 추가 · 삭제 · 변경 이력 보기</summary>
@@ -26222,7 +26472,9 @@
         || String(data.version || '').includes('v10.142')
         || String(data.version || '').includes('v10.150')
         || String(data.version || '').includes('v10.151')
+        || String(data.version || '').includes('v10.152')
         || data.supportsWeeklyAttendance === true
+        || data.supportsWeeklyAutoTrigger === true
         || data.weeklyOnly === true;
     }
 
