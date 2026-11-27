@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=249" />
+  <link rel="manifest" href="./manifest.json?v=250" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=249" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=249" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=250" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=250" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4088,6 +4088,133 @@
       background: #DCFCE7;
       color: #166534;
     }
+    /* v10.150 셀별 주간 출석부 (엑셀 양식 연동) */
+    .cell-sheet-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: #0F172A;
+      color: #FFFFFF;
+      border-radius: 13px;
+      padding: 10px 13px;
+      margin-bottom: 10px;
+      font-size: 12.5px;
+      font-weight: 800;
+    }
+    .cell-sum-card {
+      background: #FEF9C3;
+      border: 1.5px solid #FACC15;
+      border-radius: 14px;
+      padding: 11px 12px;
+      margin-bottom: 10px;
+    }
+    .cell-sum-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-top: 7px;
+    }
+    .cell-sum-pill {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid #FDE047;
+      border-radius: 10px;
+      padding: 7px 4px;
+      text-align: center;
+    }
+    .cell-sum-pill.total {
+      background: #111827;
+      border-color: #111827;
+      color: #FDE68A;
+    }
+    .cell-sum-num {
+      font-size: 16px;
+      font-weight: 900;
+      line-height: 1.15;
+    }
+    .cell-sum-lbl {
+      font-size: 10px;
+      font-weight: 700;
+      margin-top: 2px;
+      opacity: 0.85;
+    }
+    .cell-sheet-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 9px;
+    }
+    @media (min-width: 540px) {
+      .cell-sheet-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .cell-box-card {
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    }
+    .cell-box-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 900;
+      color: #0F172A;
+      background: #FCE4D6;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    }
+    .cell-box-head.visitor { background: #E2EFDA; color: #14532D; }
+    .cell-box-head.staff { background: #D9E1F2; color: #1E3A8A; }
+    .cell-box-head.unassigned { background: #E2E8F0; color: #334155; }
+    .cell-box-body {
+      padding: 10px 11px;
+    }
+    .cell-member-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .cell-member-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1.5px solid #CBD5E1;
+      background: #F8FAFC;
+      color: #334155;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.14s ease;
+    }
+    .cell-member-chip.present {
+      background: #DCFCE7;
+      border-color: #16A34A;
+      color: #14532D;
+      box-shadow: 0 1px 4px rgba(22, 163, 74, 0.18);
+    }
+    .cell-member-chip.absent {
+      background: #FEF2F2;
+      border-color: #FCA5A5;
+      color: #991B1B;
+    }
+    .cell-member-chip:active {
+      transform: scale(0.96);
+    }
+    .cell-edit-card {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 11px;
+      margin-bottom: 8px;
+    }
   </style>
 </head>
 <body>
@@ -4112,7 +4239,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=249" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=250" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5412,6 +5539,67 @@
     </div>
   </div>
 
+  <!-- 관리자: 셀별 주간 출석부 명단 설정 & 일괄 붙여넣기 모달 -->
+  <div id="cellRosterModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 class="modal-title">🧩 셀별 주간 출석부 명단 설정</h3>
+        <button class="close-btn" data-close="cellRosterModal">✕</button>
+      </div>
+      <div class="info-box" style="margin-top:0; margin-bottom:10px; background:#F0FDF4; border-color:#BBF7D0; color:#14532D;">
+        🔒 <b>개인정보 보호 저장:</b> 입력한 셀과 명단은 GitHub 공개 코드가 아니라 <b>로그인 인증이 필요한 Firebase 서버</b>에만 안전하게 보관됩니다.
+      </div>
+      <div class="form-group" style="margin-bottom:10px;">
+        <label class="form-label" for="cellVenueInput">📍 예배 장소 (주간 출석부 상단 표시)</label>
+        <input id="cellVenueInput" class="form-input" maxlength="30" placeholder="예: 다니엘 성전" />
+      </div>
+
+      <div class="modal-tabs-2" data-ts-bar="cell_roster_tabs">
+        <button id="cellTabBulkBtn" class="modal-tab-btn active" type="button" onclick="switchCellRosterTab('bulk')">📋 일괄 붙여넣기 (1분)</button>
+        <button id="cellTabEditBtn" class="modal-tab-btn" type="button" onclick="switchCellRosterTab('edit')">🧩 셀별 개별 편집</button>
+      </div>
+
+      <!-- (1) 일괄 붙여넣기 탭 -->
+      <div id="cellPanelBulk">
+        <div class="info-box" style="margin-top:0; margin-bottom:9px;">
+          아래 형식처럼 <b>셀 이름: 이름1, 이름2, ...</b> 형태로 한 번에 붙여넣고 저장하면 모든 셀이 자동 구성됩니다.<br>
+          <span style="color:#64748B;">• 첫 줄을 <b>새가족 셀: ...</b>, 마지막 줄을 <b>교역자 및 교사: ...</b>로 넣으면 자동으로 알맞은 칸에 배치됩니다.</span>
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label class="form-label" for="cellBulkTextarea">셀 명단 일괄 입력 (한 줄에 한 셀 · 쉼표/공백 구분)</label>
+          <textarea id="cellBulkTextarea" class="form-textarea" style="min-height:175px; font-size:12.5px; line-height:1.55;" placeholder="새가족 셀: 홍길동, 김영희&#10;1셀: 박민수, 이서연, 최준호&#10;2셀: 정하늘, 강도윤&#10;교역자 및 교사: 김목사님, 이선생님"></textarea>
+        </div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
+          <button class="btn-sm" type="button" onclick="loadCurrentCellRosterIntoBulk()">↩️ 현재 저장된 명단 불러오기</button>
+          <button class="btn-sm primary" type="button" onclick="handleAutoImportMembersToBulk()">👥 앱 승인 회원 자동 채우기</button>
+        </div>
+        <button id="saveBulkCellRosterBtn" class="btn-full btn-dark" type="button" onclick="handleParseAndSaveBulkCellRoster()">💾 일괄 파싱 · 저장하기</button>
+      </div>
+
+      <!-- (2) 셀별 개별 편집 탭 -->
+      <div id="cellPanelEdit" class="hidden">
+        <div class="cell-edit-card" style="background:#FFF7ED; border-color:#FDBA74;">
+          <div style="font-size:12.5px; font-weight:800; color:#9A3412; margin-bottom:5px;">💐 새가족 셀 (왼쪽 1~23번 칸)</div>
+          <textarea id="cellEditNewcomersInput" class="form-textarea" style="min-height:58px; background:#fff; font-size:12.5px;" placeholder="이름을 쉼표(,)로 구분해 입력 (앱의 새신자 역할 회원도 자동 포함)"></textarea>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; margin:10px 0 6px;">
+          <span style="font-size:12.5px; font-weight:800; color:#0F172A;">🏠 일반 셀 목록 (상단 5셀 · 하단 3셀 자동 배치)</span>
+          <button class="btn-sm primary" type="button" onclick="addManualCellCard()">+ 셀 추가</button>
+        </div>
+        <div id="cellManualListArea"></div>
+
+        <div class="cell-edit-card" style="background:#EFF6FF; border-color:#93C5FD; margin-top:8px;">
+          <div style="font-size:12.5px; font-weight:800; color:#1E3A8A; margin-bottom:5px;">🙏 교역자 및 교사</div>
+          <textarea id="cellEditStaffInput" class="form-textarea" style="min-height:54px; background:#fff; font-size:12.5px;" placeholder="이름을 쉼표(,)로 구분해 입력 (앱의 목사·부장·교사 역할 회원도 자동 포함)"></textarea>
+        </div>
+
+        <button id="saveManualCellRosterBtn" class="btn-full btn-dark" type="button" style="margin-top:8px;" onclick="handleSaveManualCellRoster()">💾 셀 명단 저장하기</button>
+      </div>
+      <div data-save-fb="cell_roster" class="save-feedback-box hidden"></div>
+    </div>
+  </div>
+
 
   <!-- 관리자: 관리자 이름 변경 모달 (보안 로그 + 구글 시트 기록) -->
   <div id="adminRenameModal" class="modal-backdrop">
@@ -5963,10 +6151,10 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 249;
-    const APP_CACHE_NAME = 'right-youth-app-v10.149';
+    const APP_CLIENT_BUILD = 250;
+    const APP_CACHE_NAME = 'right-youth-app-v10.150';
     const APP_BOOT_TS = Date.now();
-    const SHEET_SCHEMA_VERSION = 'v10.142-10tab-fast-split';
+    const SHEET_SCHEMA_VERSION = 'v10.150-weekly-excel-roster';
     const SHEET_SCHEMA_TABS = [
       { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
       { id: 'members', name: '회원 명단', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '성명·역할·가입일·상태·이전이름 (생일 열 폐기)' },
@@ -5983,6 +6171,13 @@
       { name: '생일 변경 로그', removedIn: 'v10.69', reason: '생년월일 기능 폐기 및 개인정보 최소화 (회원 명단 생년월일 열 포함)' }
     ];
     const SHEET_SCHEMA_CHANGELOG = [
+      {
+        version: 'v10.150',
+        date: '2026.11.27',
+        added: ['날짜별 주간 출석부 탭 (예: 26.11.29)'],
+        removed: [],
+        changed: ['업로드된 가로 A4 엑셀 양식과 동일한 셀별 주간 출석부 시트 자동 생성·누적 지원 (방식 A)', '셀별 출석 소계·청년/새가족/교사·교역자/총원 자동 합계 수식 적용']
+      },
       {
         version: 'v10.136',
         date: '2026.11.26',
@@ -6142,6 +6337,15 @@
     };
     const DEFAULT_EMERGENCY_MAINT_TITLE = '🚨 긴급 보안 점검 중입니다';
     const DEFAULT_EMERGENCY_MAINT_MESSAGE = '보안 위협이 감지되어 이용자 보호를 위해 긴급 보안 점검을 진행하고 있습니다.\n안전 확인 및 조치가 완료되면 자동으로 정상 복구됩니다.';
+    const DEFAULT_CELL_ROSTER = {
+      venue: '다니엘 성전',
+      newcomerCellName: '새가족 셀',
+      newcomerMembers: [],
+      cells: [],
+      staffTitle: '교역자 및 교사',
+      staffMembers: [],
+      weeklyVisitors: {}
+    };
     const DEFAULT_ATTENDANCE_CONFIG = {
       regularEnabled: true,
       regularDay: 0,
@@ -6150,7 +6354,8 @@
       regularEnd: '15:30',
       skippedSundays: [],
       specialEvents: [],
-      sessionNames: {}
+      sessionNames: {},
+      cellRoster: structuredClone(DEFAULT_CELL_ROSTER)
     };
     const KEY_NEWCOMER_NOTIFIED = 'right_youth_newcomer_notified_v1';
     // 기존 기기에 남아 있던 성경·QT 잔여 로컬 기록 즉시 영구 폐기
@@ -6989,7 +7194,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=249" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=250" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7013,8 +7218,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=249', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=249', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=250', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=250', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -7344,8 +7549,11 @@
     let attRosterCalMonth = 0;
     let attRosterSelectedIso = '';
     let attRosterSelectedSessionId = '';
+    let attRosterViewMode = 'cells';
     let attRosterFilter = 'all';
     let attRosterSearchQuery = '';
+    let cellRosterModalDraftCells = [];
+    let weeklySheetSyncDebounceTimer = null;
     let attRosterLastTodayIso = '';
     let attRosterQuickJumpQuery = '';
     let adminRegistry = { lockAutoRegister: false, items: [], renameLogs: [] };
@@ -9929,7 +10137,8 @@
               regularDay: 0,
               skippedSundays: Array.isArray(doc.data().skippedSundays) ? doc.data().skippedSundays.map(String) : [],
               specialEvents: Array.isArray(doc.data().specialEvents) ? doc.data().specialEvents : [],
-              sessionNames: (doc.data().sessionNames && typeof doc.data().sessionNames === 'object') ? doc.data().sessionNames : {}
+              sessionNames: (doc.data().sessionNames && typeof doc.data().sessionNames === 'object') ? doc.data().sessionNames : {},
+              cellRoster: normalizeCellRosterConfig(doc.data().cellRoster)
             };
           } else {
             attendanceConfig = structuredClone(DEFAULT_ATTENDANCE_CONFIG);
@@ -13380,7 +13589,7 @@
     };
 
     // ==================== 12. 관리 센터 ====================
-    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|openSecSimModal|selectSecSimVariant|runAllSecSimulations|runLiveSheetSchemaInspect|loadMoreAuditLogs|switchMainTab|stepTabSlideBar|goToTabSlideBar)\s*\(/;
+    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterViewMode|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|openWeeklyAttendancePrintView|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|openSecSimModal|selectSecSimVariant|runAllSecSimulations|runLiveSheetSchemaInspect|loadMoreAuditLogs|switchMainTab|stepTabSlideBar|goToTabSlideBar)\s*\(/;
     const OBSERVER_ALLOWED_INPUT_IDS = new Set([
       'roleMemberSearchInput', 'adminLogSearchInput', 'adminGuideSearchInput', 'attRosterSearchInput', 'attRosterQuickJumpInput'
     ]);
@@ -22634,14 +22843,26 @@
 
     window.onAttRosterSearchInput = (val) => {
       attRosterSearchQuery = String(val || '');
-      renderAttRosterListsOnly();
+      if (attRosterViewMode === 'cells') {
+        const sessions = getSessionsForIsoDate(attRosterSelectedIso);
+        const curSess = sessions.find(s => String(s.sessionId) === String(attRosterSelectedSessionId)) || sessions[0];
+        if (curSess) renderAttCellSheetView(curSess);
+      } else {
+        renderAttRosterListsOnly();
+      }
     };
 
     window.clearAttRosterSearch = () => {
       attRosterSearchQuery = '';
       const inp = document.getElementById('attRosterSearchInput');
       if (inp) { inp.value = ''; inp.focus(); }
-      renderAttRosterListsOnly();
+      if (attRosterViewMode === 'cells') {
+        const sessions = getSessionsForIsoDate(attRosterSelectedIso);
+        const curSess = sessions.find(s => String(s.sessionId) === String(attRosterSelectedSessionId)) || sessions[0];
+        if (curSess) renderAttCellSheetView(curSess);
+      } else {
+        renderAttRosterListsOnly();
+      }
     };
 
     window.quickMarkAttendanceFromRoster = async (memberId, statusChoice) => {
@@ -22987,6 +23208,9 @@
             ${curSess && curSess.isSpecial && curSess.eventId ? `<button class="btn-sm danger" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="deleteSpecialEvent('${escapeJsAttr(curSess.eventId)}')">🗑️ 행사 삭제</button>` : ''}
             ${curSess ? `<button class="btn-sm primary" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="openAddAdminAttendanceModal()">+ 출석 추가</button>` : ''}
             <button class="btn-sm ${!curSess ? 'primary' : ''}" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="openSpecialEventModal('${escapeJsAttr(attRosterSelectedIso)}')">📅 + 이 날짜 행사 추가</button>
+            <button class="btn-sm" type="button" style="padding:5px 9px; font-size:11.5px; background:#FFF7ED; border-color:#FDBA74; color:#9A3412;" onclick="openCellRosterModal()">🧩 셀·명단 설정</button>
+            ${curSess ? `<button id="syncWeeklySheetBtn" class="btn-sm approve" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="syncCurrentWeeklyAttendanceToSheet(false)">📊 주간 시트 생성·갱신</button>` : ''}
+            ${curSess ? `<button class="btn-sm" type="button" style="padding:5px 9px; font-size:11.5px;" onclick="openWeeklyAttendancePrintView()">🖨️ A4 인쇄</button>` : ''}
           </div>
 
           ${daySessions.length > 1 ? `
@@ -23006,33 +23230,41 @@
                 : '이 날짜에는 예정된 예배·행사나 출석 기록이 없습니다.<br>평일·토요일에도 위 <b>[📅 + 이 날짜 행사 추가]</b>로 특별 행사를 등록하면 <b>주말이 아니어도 출석O · 출석X · 미응답 현황</b>이 바로 표시됩니다.'}
             </div>
           ` : `
-            <div class="att-roster-stat-grid" style="margin-top:6px;">
-              <button type="button" class="att-roster-stat-card present ${f === 'present' ? 'active' : ''}" onclick="setAttRosterFilter('${f === 'present' ? 'all' : 'present'}')">
-                <div class="att-roster-stat-num">${part.presentRecs.length}</div>
-                <div class="att-roster-stat-lbl">✅ 출석O</div>
-              </button>
-              <button type="button" class="att-roster-stat-card absent ${f === 'absent' ? 'active' : ''}" onclick="setAttRosterFilter('${f === 'absent' ? 'all' : 'absent'}')">
-                <div class="att-roster-stat-num">${part.absentRecs.length}</div>
-                <div class="att-roster-stat-lbl">❌ 출석X</div>
-              </button>
-              <button type="button" class="att-roster-stat-card none ${f === 'none' ? 'active' : ''}" onclick="setAttRosterFilter('${f === 'none' ? 'all' : 'none'}')">
-                <div class="att-roster-stat-num">${part.nonResponders.length}</div>
-                <div class="att-roster-stat-lbl">⏳ 미응답</div>
-              </button>
+            <div class="modal-tabs-2" style="margin-top:6px; margin-bottom:9px;">
+              <button class="modal-tab-btn ${attRosterViewMode === 'cells' ? 'active' : ''}" type="button" onclick="setAttRosterViewMode('cells')">📋 셀별 주간 출석부 (엑셀 양식)</button>
+              <button class="modal-tab-btn ${attRosterViewMode !== 'cells' ? 'active' : ''}" type="button" onclick="setAttRosterViewMode('status')">👥 상태별 목록 (O/X/미응답)</button>
             </div>
 
-            <div class="filter-row" style="margin-bottom:8px;" data-ts-bar="manage_att_filter" data-ts-body="#attRosterListsArea">
-              <button class="filter-chip ${f === 'all' ? 'active' : ''}" type="button" onclick="setAttRosterFilter('all')">전체 분리 보기</button>
-              <button class="filter-chip ${f === 'present' ? 'active' : ''}" type="button" onclick="setAttRosterFilter('present')">✅ 출석O (${part.presentRecs.length})</button>
-              <button class="filter-chip ${f === 'absent' ? 'active' : ''}" type="button" onclick="setAttRosterFilter('absent')">❌ 출석X (${part.absentRecs.length})</button>
-              <button class="filter-chip ${f === 'none' ? 'active' : ''}" type="button" onclick="setAttRosterFilter('none')">⏳ 미응답 (${part.nonResponders.length})</button>
-            </div>
+            ${attRosterViewMode === 'cells' ? '' : `
+              <div class="att-roster-stat-grid" style="margin-top:4px;">
+                <button type="button" class="att-roster-stat-card present ${f === 'present' ? 'active' : ''}" onclick="setAttRosterFilter('${f === 'present' ? 'all' : 'present'}')">
+                  <div class="att-roster-stat-num">${part.presentRecs.length}</div>
+                  <div class="att-roster-stat-lbl">✅ 출석O</div>
+                </button>
+                <button type="button" class="att-roster-stat-card absent ${f === 'absent' ? 'active' : ''}" onclick="setAttRosterFilter('${f === 'absent' ? 'all' : 'absent'}')">
+                  <div class="att-roster-stat-num">${part.absentRecs.length}</div>
+                  <div class="att-roster-stat-lbl">❌ 출석X</div>
+                </button>
+                <button type="button" class="att-roster-stat-card none ${f === 'none' ? 'active' : ''}" onclick="setAttRosterFilter('${f === 'none' ? 'all' : 'none'}')">
+                  <div class="att-roster-stat-num">${part.nonResponders.length}</div>
+                  <div class="att-roster-stat-lbl">⏳ 미응답</div>
+                </button>
+              </div>
+
+              <div class="filter-row" style="margin-bottom:8px;" data-ts-bar="manage_att_filter" data-ts-body="#attRosterListsArea">
+                <button class="filter-chip ${f === 'all' ? 'active' : ''}" type="button" onclick="setAttRosterFilter('all')">전체 분리 보기</button>
+                <button class="filter-chip ${f === 'present' ? 'active' : ''}" type="button" onclick="setAttRosterFilter('present')">✅ 출석O (${part.presentRecs.length})</button>
+                <button class="filter-chip ${f === 'absent' ? 'active' : ''}" type="button" onclick="setAttRosterFilter('absent')">❌ 출석X (${part.absentRecs.length})</button>
+                <button class="filter-chip ${f === 'none' ? 'active' : ''}" type="button" onclick="setAttRosterFilter('none')">⏳ 미응답 (${part.nonResponders.length})</button>
+              </div>
+            `}
 
             <div class="search-box" style="margin-bottom:2px;">
               <span class="search-icon">🔍</span>
-              <input id="attRosterSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13px;" type="search" value="${escapeHtml(attRosterSearchQuery)}" placeholder="회원 이름·역할 검색..." oninput="onAttRosterSearchInput(this.value)" />
+              <input id="attRosterSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13px;" type="search" value="${escapeHtml(attRosterSearchQuery)}" placeholder="회원 이름·셀 검색..." oninput="onAttRosterSearchInput(this.value)" />
               <button id="attRosterSearchClear" class="search-clear ${attRosterSearchQuery ? '' : 'hidden'}" type="button" onclick="clearAttRosterSearch()">✕</button>
             </div>
+            ${buildInlineSaveStatusHtml('weekly_att_sheet')}
           `}
         </div>
 
@@ -23041,9 +23273,966 @@
 
       renderAttRosterQuickJumpListOnly();
       if (curSess) {
-        renderAttRosterListsOnly();
+        if (attRosterViewMode === 'cells') {
+          renderAttCellSheetView(curSess);
+        } else {
+          renderAttRosterListsOnly();
+        }
       }
     }
+
+    // ==================== 셀별 주간 출석부 (방식 A: 날짜별 탭 + 방식 2: 무하드코딩 Firestore 보안 저장) ====================
+    function normalizeCellRosterConfig(raw) {
+      const src = (raw && typeof raw === 'object') ? raw : {};
+      const cleanNameList = (arr) => {
+        if (!Array.isArray(arr)) return [];
+        const out = [];
+        const seen = new Set();
+        arr.forEach(x => {
+          const nm = String(x || '').trim();
+          if (nm && !seen.has(nm)) {
+            seen.add(nm);
+            out.push(nm);
+          }
+        });
+        return out;
+      };
+      const cells = Array.isArray(src.cells)
+        ? src.cells.map((c, idx) => ({
+            id: String((c && c.id) || ('cell_' + (idx + 1))),
+            name: String((c && c.name) || ((idx + 1) + '셀')).trim() || ((idx + 1) + '셀'),
+            members: cleanNameList(c && c.members)
+          })).filter(c => c.name)
+        : [];
+      const weeklyVisitors = {};
+      if (src.weeklyVisitors && typeof src.weeklyVisitors === 'object') {
+        Object.keys(src.weeklyVisitors).forEach(sid => {
+          const v = src.weeklyVisitors[sid];
+          if (v && typeof v === 'object') {
+            weeklyVisitors[String(sid)] = {
+              longTime: cleanNameList(v.longTime),
+              firstTime: cleanNameList(v.firstTime)
+            };
+          }
+        });
+      }
+      return {
+        venue: String(src.venue || DEFAULT_CELL_ROSTER.venue).trim() || DEFAULT_CELL_ROSTER.venue,
+        newcomerCellName: String(src.newcomerCellName || DEFAULT_CELL_ROSTER.newcomerCellName).trim() || DEFAULT_CELL_ROSTER.newcomerCellName,
+        newcomerMembers: cleanNameList(src.newcomerMembers),
+        cells,
+        staffTitle: String(src.staffTitle || DEFAULT_CELL_ROSTER.staffTitle).trim() || DEFAULT_CELL_ROSTER.staffTitle,
+        staffMembers: cleanNameList(src.staffMembers),
+        weeklyVisitors
+      };
+    }
+
+    function getCellRosterConfig() {
+      const cfg = attendanceConfig || DEFAULT_ATTENDANCE_CONFIG;
+      return normalizeCellRosterConfig(cfg.cellRoster);
+    }
+
+    function isStaffRoleName(roleName, roleId) {
+      const rn = String(roleName || '').trim();
+      const rid = String(roleId || '').trim();
+      return rid === 'role_pastor' || rid === 'role_director' || rid === 'role_teacher'
+        || /목사|사모|교역자|전도사|부장|교사|권사|집사/.test(rn);
+    }
+
+    function normalizePersonKey(name) {
+      return String(name || '').replace(/\s+/g, '').trim();
+    }
+
+    function buildWeeklySheetDataForSession(curSess) {
+      const roster = getCellRosterConfig();
+      const sessId = curSess ? String(curSess.sessionId) : '';
+      const part = getAttRosterPartitionForSession(curSess);
+
+      const recByName = new Map();
+      (part.presentRecs || []).forEach(r => {
+        const k = normalizePersonKey(r.name);
+        if (k) recByName.set(k, { status: 'present', rec: r });
+      });
+      (part.absentRecs || []).forEach(r => {
+        const k = normalizePersonKey(r.name);
+        if (k && !recByName.has(k)) recByName.set(k, { status: 'absent', rec: r });
+      });
+
+      const placedKeys = new Set();
+
+      const ncList = [];
+      const addNewcomer = (nm) => {
+        const clean = String(nm || '').trim();
+        const k = normalizePersonKey(clean);
+        if (!k || placedKeys.has(k)) return;
+        placedKeys.add(k);
+        const st = recByName.get(k);
+        ncList.push({ name: clean, present: !!(st && st.status === 'present'), absent: !!(st && st.status === 'absent'), rec: st ? st.rec : null });
+      };
+      roster.newcomerMembers.forEach(addNewcomer);
+      (part.approvedMembers || []).forEach(m => {
+        if (isNewcomerRoleId(m.roleId)) addNewcomer(m.name);
+      });
+
+      const staffList = [];
+      const addStaff = (nm) => {
+        const clean = String(nm || '').trim();
+        const k = normalizePersonKey(clean);
+        if (!k || placedKeys.has(k)) return;
+        placedKeys.add(k);
+        const st = recByName.get(k);
+        staffList.push({ name: clean, present: !!(st && st.status === 'present'), absent: !!(st && st.status === 'absent'), rec: st ? st.rec : null });
+      };
+      roster.staffMembers.forEach(addStaff);
+      (part.approvedMembers || []).forEach(m => {
+        const r = getRoleById(m.roleId);
+        if (isStaffRoleName(r && r.name, m.roleId)) addStaff(m.name);
+      });
+
+      const cellsOut = (roster.cells || []).map(cell => {
+        const mOut = [];
+        (cell.members || []).forEach(nm => {
+          const clean = String(nm || '').trim();
+          const k = normalizePersonKey(clean);
+          if (!k) return;
+          placedKeys.add(k);
+          const st = recByName.get(k);
+          mOut.push({ name: clean, present: !!(st && st.status === 'present'), absent: !!(st && st.status === 'absent'), rec: st ? st.rec : null });
+        });
+        return {
+          id: cell.id,
+          name: cell.name,
+          members: mOut,
+          presentCount: mOut.filter(x => x.present).length
+        };
+      });
+
+      const sessVis = (sessId && roster.weeklyVisitors && roster.weeklyVisitors[sessId])
+        ? roster.weeklyVisitors[sessId]
+        : { longTime: [], firstTime: [] };
+      const longTimeVisitors = (sessVis.longTime || []).map(nm => {
+        placedKeys.add(normalizePersonKey(nm));
+        return { name: nm, present: true };
+      });
+      const firstTimeVisitors = (sessVis.firstTime || []).map(nm => {
+        placedKeys.add(normalizePersonKey(nm));
+        return { name: nm, present: true };
+      });
+
+      const unassignedPresent = [];
+      (part.presentRecs || []).forEach(r => {
+        const k = normalizePersonKey(r.name);
+        if (k && !placedKeys.has(k)) {
+          placedKeys.add(k);
+          unassignedPresent.push({ name: r.name, present: true, rec: r });
+        }
+      });
+
+      const ncPresent = ncList.filter(x => x.present).length;
+      const cellsPresent = cellsOut.reduce((acc, c) => acc + c.presentCount, 0);
+      const ltPresent = longTimeVisitors.length;
+      const ftPresent = firstTimeVisitors.length;
+      const staffPresent = staffList.filter(x => x.present).length;
+      const unassignedCount = unassignedPresent.length;
+
+      const youthTotal = cellsPresent + ltPresent + unassignedCount;
+      const newcomerTotal = ncPresent + ftPresent;
+      const staffTotal = staffPresent;
+      const grandTotal = youthTotal + newcomerTotal + staffTotal;
+
+      const dateDot = curSess ? String(curSess.date || attRosterSelectedIso.replace(/-/g, '.')) : attRosterSelectedIso.replace(/-/g, '.');
+      const iso = normalizeDateAnyInput(dateDot) || attRosterSelectedIso;
+      const [yy, mm, dd] = iso.split('-').map(Number);
+      const dowIdx = getDowForDateStr(dateDot);
+      const dowShort = dowIdx >= 0 ? DAY_SHORT_KO[dowIdx] : '';
+      const startHour = (curSess && curSess.start) ? Number(String(curSess.start).split(':')[0]) : 14;
+      const isSpecial = !!(curSess && curSess.isSpecial);
+      const evLabel = (curSess && curSess.label) ? String(curSess.label).trim() : '청년부 예배';
+      const baseTabDate = `${String(yy).slice(-2)}.${String(mm).padStart(2, '0')}.${String(dd).padStart(2, '0')}`;
+      const tabName = isSpecial ? `${baseTabDate} ${evLabel}`.slice(0, 31).trim() : baseTabDate;
+      const dateLine = `날짜: ${yy}년 ${mm}월 ${dd}일 (${dowShort}) ${Number.isFinite(startHour) ? startHour : 14}시${isSpecial ? ` · ${evLabel}` : ''}`;
+
+      return {
+        tabName,
+        date: dateDot,
+        dateLine,
+        venue: roster.venue,
+        newcomerCellName: roster.newcomerCellName,
+        newcomers: ncList,
+        cells: cellsOut,
+        longTimeVisitors,
+        firstTimeVisitors,
+        staffTitle: roster.staffTitle,
+        staff: staffList,
+        unassignedPresent,
+        totals: { youthTotal, newcomerTotal, staffTotal, grandTotal, ncPresent, ltPresent, ftPresent, staffPresent, unassignedCount }
+      };
+    }
+
+    window.setAttRosterViewMode = (mode) => {
+      attRosterViewMode = mode === 'status' ? 'status' : 'cells';
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'attendance') {
+        renderManageAttendance(document.getElementById('manageContent'), u);
+      }
+    };
+
+    function renderAttCellSheetView(curSess) {
+      const el = document.getElementById('attRosterListsArea');
+      if (!el || !curSess) return;
+      const data = buildWeeklySheetDataForSession(curSess);
+      const q = String(attRosterSearchQuery || '').trim().toLowerCase();
+      const clearBtn = document.getElementById('attRosterSearchClear');
+      if (clearBtn) clearBtn.classList.toggle('hidden', !q);
+      const isReadOnly = isManageReadOnlyUser();
+      const rosterEmpty = data.cells.length === 0 && data.newcomers.length === 0 && data.staff.length === 0;
+
+      const filterMembers = (list) => {
+        if (!q) return list;
+        return list.filter(x => String(x.name || '').toLowerCase().includes(q));
+      };
+
+      const renderChip = (item, roleHint = '') => {
+        const cls = item.present ? 'present' : (item.absent ? 'absent' : '');
+        const mark = item.present ? '○ ' : (item.absent ? '✕ ' : '');
+        if (isReadOnly) {
+          return `<span class="cell-member-chip ${cls}" style="cursor:default;">${mark}${escapeHtml(item.name)}</span>`;
+        }
+        return `<button type="button" class="cell-member-chip ${cls}" onclick="toggleCellMemberAttendance('${escapeJsAttr(item.name)}', '${escapeJsAttr(roleHint)}')">${mark}${escapeHtml(item.name)}</button>`;
+      };
+
+      const filteredNc = filterMembers(data.newcomers);
+      const filteredStaff = filterMembers(data.staff);
+      const filteredCells = data.cells.filter(c => {
+        if (!q) return true;
+        return String(c.name || '').toLowerCase().includes(q) || c.members.some(m => String(m.name || '').toLowerCase().includes(q));
+      });
+      const filteredLt = filterMembers(data.longTimeVisitors);
+      const filteredFt = filterMembers(data.firstTimeVisitors);
+      const filteredUn = filterMembers(data.unassignedPresent);
+
+      el.innerHTML = `
+        <div class="cell-sheet-header-bar">
+          <span>📍 장소: ${escapeHtml(data.venue)}</span>
+          <span>📅 ${escapeHtml(data.dateLine.replace(/^날짜:\s*/, ''))}</span>
+        </div>
+
+        <div class="cell-sum-card">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
+            <span style="font-size:13px; font-weight:900; color:#854D0E;">📊 주간 출석 합계 (시트 탭: ${escapeHtml(data.tabName)})</span>
+            <span style="font-size:11px; font-weight:700; color:#A16207;">이름 탭 시 ○ 출석 즉시 체크</span>
+          </div>
+          <div class="cell-sum-grid">
+            <div class="cell-sum-pill">
+              <div class="cell-sum-num" style="color:#0F172A;">${data.totals.youthTotal}</div>
+              <div class="cell-sum-lbl" style="color:#475569;">청년</div>
+            </div>
+            <div class="cell-sum-pill">
+              <div class="cell-sum-num" style="color:#BE185D;">${data.totals.newcomerTotal}</div>
+              <div class="cell-sum-lbl" style="color:#9D174D;">새가족</div>
+            </div>
+            <div class="cell-sum-pill">
+              <div class="cell-sum-num" style="color:#1D4ED8;">${data.totals.staffTotal}</div>
+              <div class="cell-sum-lbl" style="color:#1E3A8A;">교사·교역자</div>
+            </div>
+            <div class="cell-sum-pill total">
+              <div class="cell-sum-num">${data.totals.grandTotal}명</div>
+              <div class="cell-sum-lbl">총원</div>
+            </div>
+          </div>
+        </div>
+
+        ${rosterEmpty ? `
+          <div class="card" style="text-align:center; padding:22px 14px; border:1.5px dashed #FDBA74; background:#FFF7ED;">
+            <div style="font-size:26px; margin-bottom:6px;">🧩</div>
+            <div style="font-size:14px; font-weight:900; color:#9A3412; margin-bottom:5px;">아직 셀 명단이 등록되지 않았습니다</div>
+            <div style="font-size:12px; color:#7C2D12; line-height:1.55; margin-bottom:12px;">
+              개인정보 보호를 위해 셀 명단은 앱 코드에 넣지 않고 서버에만 보관합니다.<br>
+              아래 버튼을 눌러 <b>텍스트 일괄 붙여넣기</b>로 1분 만에 셀과 명단을 등록해 보세요!
+            </div>
+            <button class="btn-full btn-dark" type="button" style="max-width:260px; margin:0 auto; padding:11px; font-size:13px;" onclick="openCellRosterModal()">🧩 셀·명단 일괄 등록하기</button>
+          </div>
+        ` : ''}
+
+        <div class="cell-sheet-grid">
+          <div class="cell-box-card">
+            <div class="cell-box-head">
+              <span>💐 ${escapeHtml(data.newcomerCellName)}</span>
+              <span class="tag green" style="font-size:11px;">출석 ${data.totals.ncPresent}명 / ${data.newcomers.length}</span>
+            </div>
+            <div class="cell-box-body">
+              ${filteredNc.length === 0
+                ? '<div style="font-size:12px; color:#94A3B8; text-align:center; padding:6px 0;">등록된 새가족이 없습니다.</div>'
+                : `<div class="cell-member-chips">${filteredNc.map(item => renderChip(item, '새신자')).join('')}</div>`}
+            </div>
+          </div>
+
+          ${filteredCells.map(cell => {
+            const list = q && !String(cell.name || '').toLowerCase().includes(q) ? filterMembers(cell.members) : cell.members;
+            return `
+              <div class="cell-box-card">
+                <div class="cell-box-head">
+                  <span>🏠 ${escapeHtml(cell.name)}</span>
+                  <span class="tag ${cell.presentCount > 0 ? 'green' : 'slate'}" style="font-size:11px;">출석 ${cell.presentCount}명 / ${cell.members.length}</span>
+                </div>
+                <div class="cell-box-body">
+                  ${list.length === 0
+                    ? '<div style="font-size:12px; color:#94A3B8; text-align:center; padding:6px 0;">배정된 셀원이 없습니다.</div>'
+                    : `<div class="cell-member-chips">${list.map(item => renderChip(item, cell.name)).join('')}</div>`}
+                </div>
+              </div>
+            `;
+          }).join('')}
+
+          <div class="cell-box-card">
+            <div class="cell-box-head visitor">
+              <span>🌿 오랜만에 왔어요</span>
+              <span class="tag green" style="font-size:11px;">출석 ${data.totals.ltPresent}명</span>
+            </div>
+            <div class="cell-box-body">
+              <div class="cell-member-chips" style="margin-bottom:${isReadOnly ? '0' : '8px'};">
+                ${filteredLt.length === 0
+                  ? '<span style="font-size:12px; color:#94A3B8;">기록 없음</span>'
+                  : filteredLt.map(v => `
+                      <span class="cell-member-chip present" style="cursor:default;">
+                        ○ ${escapeHtml(v.name)}
+                        ${!isReadOnly ? `<button type="button" style="border:none; background:transparent; color:#15803D; font-weight:900; cursor:pointer; padding:0 0 0 3px;" onclick="removeWeeklyVisitor('longTime', '${escapeJsAttr(v.name)}')">✕</button>` : ''}
+                      </span>
+                    `).join('')}
+              </div>
+              ${!isReadOnly ? `
+                <div style="display:flex; gap:5px;">
+                  <input id="weeklyLongTimeInput" class="form-input" style="flex:1; padding:6px 9px; font-size:12.5px;" maxlength="12" placeholder="이름 입력 후 추가" onkeydown="if(event.key==='Enter'){event.preventDefault(); addWeeklyVisitor('longTime');}" />
+                  <button class="btn-sm approve" type="button" onclick="addWeeklyVisitor('longTime')">+ 추가</button>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+
+          <div class="cell-box-card">
+            <div class="cell-box-head visitor">
+              <span>✨ 처음 왔어요</span>
+              <span class="tag green" style="font-size:11px;">출석 ${data.totals.ftPresent}명</span>
+            </div>
+            <div class="cell-box-body">
+              <div class="cell-member-chips" style="margin-bottom:${isReadOnly ? '0' : '8px'};">
+                ${filteredFt.length === 0
+                  ? '<span style="font-size:12px; color:#94A3B8;">기록 없음</span>'
+                  : filteredFt.map(v => `
+                      <span class="cell-member-chip present" style="cursor:default;">
+                        ○ ${escapeHtml(v.name)}
+                        ${!isReadOnly ? `<button type="button" style="border:none; background:transparent; color:#15803D; font-weight:900; cursor:pointer; padding:0 0 0 3px;" onclick="removeWeeklyVisitor('firstTime', '${escapeJsAttr(v.name)}')">✕</button>` : ''}
+                      </span>
+                    `).join('')}
+              </div>
+              ${!isReadOnly ? `
+                <div style="display:flex; gap:5px;">
+                  <input id="weeklyFirstTimeInput" class="form-input" style="flex:1; padding:6px 9px; font-size:12.5px;" maxlength="12" placeholder="새방문자 이름 추가" onkeydown="if(event.key==='Enter'){event.preventDefault(); addWeeklyVisitor('firstTime');}" />
+                  <button class="btn-sm approve" type="button" onclick="addWeeklyVisitor('firstTime')">+ 추가</button>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+
+          <div class="cell-box-card">
+            <div class="cell-box-head staff">
+              <span>🙏 ${escapeHtml(data.staffTitle)}</span>
+              <span class="tag green" style="font-size:11px;">출석 ${data.totals.staffPresent}명 / ${data.staff.length}</span>
+            </div>
+            <div class="cell-box-body">
+              ${filteredStaff.length === 0
+                ? '<div style="font-size:12px; color:#94A3B8; text-align:center; padding:6px 0;">등록된 교역자·교사가 없습니다.</div>'
+                : `<div class="cell-member-chips">${filteredStaff.map(item => renderChip(item, '교역자·교사')).join('')}</div>`}
+            </div>
+          </div>
+
+          ${filteredUn.length > 0 ? `
+            <div class="cell-box-card">
+              <div class="cell-box-head unassigned">
+                <span>📌 셀 미배정 출석자</span>
+                <span class="tag warm" style="font-size:11px;">출석 ${filteredUn.length}명</span>
+              </div>
+              <div class="cell-box-body">
+                <div style="font-size:11px; color:#64748B; margin-bottom:6px;">앱에서 출석 체크했으나 아직 셀에 배정되지 않은 회원입니다.</div>
+                <div class="cell-member-chips">${filteredUn.map(item => renderChip(item, '미배정')).join('')}</div>
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    function scheduleAutoWeeklySheetSync() {
+      if (!getAdminSheetUrl()) return;
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      if (weeklySheetSyncDebounceTimer) clearTimeout(weeklySheetSyncDebounceTimer);
+      weeklySheetSyncDebounceTimer = setTimeout(() => {
+        weeklySheetSyncDebounceTimer = null;
+        syncCurrentWeeklyAttendanceToSheet(true).catch(() => {});
+      }, 1800);
+    }
+
+    window.toggleCellMemberAttendance = async (memberName, roleHint = '') => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const sessions = getSessionsForIsoDate(attRosterSelectedIso);
+      const curSess = sessions.find(s => String(s.sessionId) === String(attRosterSelectedSessionId)) || sessions[0];
+      if (!curSess) return showToast('먼저 예배·행사가 있는 날짜를 선택해 주세요.');
+
+      const cleanName = String(memberName || '').trim();
+      const targetKey = normalizePersonKey(cleanName);
+      if (!targetKey) return;
+
+      const part = getAttRosterPartitionForSession(curSess);
+      const existingPresent = (part.presentRecs || []).find(r => normalizePersonKey(r.name) === targetKey);
+      const existingAbsent = (part.absentRecs || []).find(r => normalizePersonKey(r.name) === targetKey);
+      const adminActor = currentAdminName || '관리자';
+      const nowInfo = getKstNowInfo();
+      const nowStr = formatKstDateTime();
+
+      try {
+        if (existingPresent) {
+          await db.collection('attendance').doc(String(existingPresent.id)).delete();
+          postToGoogleSheet({
+            action: 'attendance_delete',
+            colTitle: formatKoreanAttendanceDateLabel(existingPresent.date || curSess.date, existingPresent.label || curSess.label, existingPresent.colTitle || curSess.colTitle),
+            date: formatKoreanAttendanceDateLabel(existingPresent.date || curSess.date, existingPresent.label || curSess.label, existingPresent.colTitle || curSess.colTitle),
+            name: existingPresent.name
+          }).catch(() => {});
+          showToast(`${cleanName}님 출석 체크를 해제했습니다.`);
+        } else if (existingAbsent) {
+          await db.collection('attendance').doc(String(existingAbsent.id)).update({
+            status: 'present',
+            time: nowInfo.hhmm,
+            source: 'admin_cell_toggle',
+            modifiedBy: adminActor,
+            modifiedAt: nowStr,
+            sheetSynced: false
+          });
+          postToGoogleSheet({
+            action: 'attendance_upsert',
+            colTitle: formatKoreanAttendanceDateLabel(curSess.date, curSess.label, curSess.colTitle),
+            date: formatKoreanAttendanceDateLabel(curSess.date, curSess.label, curSess.colTitle),
+            weekday: getWeekdayKoFromAnyDate(curSess.date),
+            eventName: extractAttendanceEventName(curSess.date, curSess.label, curSess.colTitle),
+            name: existingAbsent.name,
+            status: '출석O',
+            attendanceOX: '출석O',
+            time: '출석O',
+            forceUpdate: true
+          }, '', true).then(res => {
+            if (res && res.ok) db.collection('attendance').doc(String(existingAbsent.id)).update({ sheetSynced: true }).catch(() => {});
+          }).catch(() => {});
+          showToast(`✅ ${cleanName}님 출석(○) 처리되었습니다!`, 'ok');
+        } else {
+          const matchedMember = (members || []).find(m => m.status === 'approved' && normalizePersonKey(m.name) === targetKey);
+          const uidKey = matchedMember ? String(matchedMember.id) : ('manual_' + nameToHex(cleanName));
+          const resolvedRoleName = matchedMember ? getRoleById(matchedMember.roleId).name : (roleHint || '청년');
+          const docId = `${curSess.sessionId}_${uidKey}`;
+          const newRec = {
+            id: docId,
+            sessionId: curSess.sessionId,
+            date: curSess.date,
+            colTitle: curSess.colTitle,
+            label: curSess.label,
+            status: 'present',
+            uid: uidKey,
+            name: matchedMember ? matchedMember.name : cleanName,
+            roleName: resolvedRoleName,
+            time: nowInfo.hhmm,
+            ts: Date.now(),
+            source: 'admin_cell_toggle',
+            modifiedBy: adminActor,
+            modifiedAt: nowStr,
+            sheetSynced: false
+          };
+          await db.collection('attendance').doc(docId).set(newRec);
+          postToGoogleSheet({
+            action: 'attendance_upsert',
+            colTitle: formatKoreanAttendanceDateLabel(curSess.date, curSess.label, curSess.colTitle),
+            date: formatKoreanAttendanceDateLabel(curSess.date, curSess.label, curSess.colTitle),
+            weekday: getWeekdayKoFromAnyDate(curSess.date),
+            eventName: extractAttendanceEventName(curSess.date, curSess.label, curSess.colTitle),
+            name: newRec.name,
+            status: '출석O',
+            attendanceOX: '출석O',
+            time: '출석O',
+            forceUpdate: true
+          }, '', true).then(res => {
+            if (res && res.ok) db.collection('attendance').doc(docId).update({ sheetSynced: true }).catch(() => {});
+          }).catch(() => {});
+          showToast(`✅ ${cleanName}님 출석(○) 체크되었습니다!`, 'ok');
+        }
+        scheduleAutoWeeklySheetSync();
+      } catch (err) {
+        handleDbError(err, '셀 출석 체크');
+      }
+    };
+
+    window.addWeeklyVisitor = async (kind) => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const sessions = getSessionsForIsoDate(attRosterSelectedIso);
+      const curSess = sessions.find(s => String(s.sessionId) === String(attRosterSelectedSessionId)) || sessions[0];
+      if (!curSess) return;
+      const inpId = kind === 'firstTime' ? 'weeklyFirstTimeInput' : 'weeklyLongTimeInput';
+      const inp = document.getElementById(inpId);
+      const raw = String((inp && inp.value) || '').trim();
+      if (!raw) return showToast('이름을 입력해 주세요.');
+      if (typeof enforceInputSecurity === 'function' && !enforceInputSecurity(raw, '방문자 이름', true)) return;
+
+      const namesToAdd = raw.split(/[,，\n]+/).map(x => x.trim()).filter(Boolean);
+      if (namesToAdd.length === 0) return;
+
+      const roster = getCellRosterConfig();
+      const sid = String(curSess.sessionId);
+      const curVis = roster.weeklyVisitors[sid] || { longTime: [], firstTime: [] };
+      const targetKey = kind === 'firstTime' ? 'firstTime' : 'longTime';
+      const merged = Array.from(new Set([...(curVis[targetKey] || []), ...namesToAdd]));
+      const nextRoster = {
+        ...roster,
+        weeklyVisitors: {
+          ...roster.weeklyVisitors,
+          [sid]: {
+            longTime: targetKey === 'longTime' ? merged : (curVis.longTime || []),
+            firstTime: targetKey === 'firstTime' ? merged : (curVis.firstTime || [])
+          }
+        }
+      };
+      try {
+        await db.collection('config').doc('attendance').set({ cellRoster: nextRoster }, { merge: true });
+        if (inp) inp.value = '';
+        showToast(`✅ [${namesToAdd.join(', ')}] 추가되었습니다!`, 'ok');
+        scheduleAutoWeeklySheetSync();
+      } catch (err) {
+        handleDbError(err, '방문자 추가');
+      }
+    };
+
+    window.removeWeeklyVisitor = async (kind, name) => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const sessions = getSessionsForIsoDate(attRosterSelectedIso);
+      const curSess = sessions.find(s => String(s.sessionId) === String(attRosterSelectedSessionId)) || sessions[0];
+      if (!curSess) return;
+      const roster = getCellRosterConfig();
+      const sid = String(curSess.sessionId);
+      const curVis = roster.weeklyVisitors[sid] || { longTime: [], firstTime: [] };
+      const targetKey = kind === 'firstTime' ? 'firstTime' : 'longTime';
+      const nextList = (curVis[targetKey] || []).filter(x => x !== name);
+      const nextRoster = {
+        ...roster,
+        weeklyVisitors: {
+          ...roster.weeklyVisitors,
+          [sid]: {
+            longTime: targetKey === 'longTime' ? nextList : (curVis.longTime || []),
+            firstTime: targetKey === 'firstTime' ? nextList : (curVis.firstTime || [])
+          }
+        }
+      };
+      try {
+        await db.collection('config').doc('attendance').set({ cellRoster: nextRoster }, { merge: true });
+        showToast(`${name}님을 방문자 목록에서 제거했습니다.`);
+        scheduleAutoWeeklySheetSync();
+      } catch (err) {
+        handleDbError(err, '방문자 삭제');
+      }
+    };
+
+    window.syncCurrentWeeklyAttendanceToSheet = async (silent = false) => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return false;
+      const url = getAdminSheetUrl();
+      if (!url) {
+        if (!silent) showToast('먼저 [📊 시트 연동] 탭에서 구글 시트 웹앱 URL을 연결해 주세요.', 'warn');
+        return false;
+      }
+      const sessions = getSessionsForIsoDate(attRosterSelectedIso);
+      const curSess = sessions.find(s => String(s.sessionId) === String(attRosterSelectedSessionId)) || sessions[0];
+      if (!curSess) {
+        if (!silent) showToast('예배·행사가 있는 날짜를 먼저 선택해 주세요.', 'warn');
+        return false;
+      }
+      const data = buildWeeklySheetDataForSession(curSess);
+      const btn = document.getElementById('syncWeeklySheetBtn');
+      if (!silent && btn) { btn.disabled = true; btn.textContent = '⏳ 시트 생성 중...'; }
+      if (!silent) setInlineSaveStatus('weekly_att_sheet', 'loading', `⏳ 구글 시트에 [${data.tabName}] 주간 출석부 탭을 생성·갱신하는 중입니다...`);
+      try {
+        const res = await postToGoogleSheet({
+          action: 'weekly_attendance_sync',
+          weekly: {
+            tabName: data.tabName,
+            date: data.date,
+            dateLine: data.dateLine,
+            venue: data.venue,
+            newcomerCellName: data.newcomerCellName,
+            newcomers: data.newcomers.map(x => ({ name: x.name, present: !!x.present })),
+            cells: data.cells.map(c => ({ name: c.name, members: c.members.map(m => ({ name: m.name, present: !!m.present })) })),
+            longTimeVisitors: data.longTimeVisitors.map(x => ({ name: x.name, present: true })),
+            firstTimeVisitors: data.firstTimeVisitors.map(x => ({ name: x.name, present: true })),
+            staffTitle: data.staffTitle,
+            staff: data.staff.map(x => ({ name: x.name, present: !!x.present })),
+            unassignedPresent: data.unassignedPresent.map(x => ({ name: x.name, present: true }))
+          }
+        }, url, true, 35000);
+
+        if (res && res.ok) {
+          const finalTab = (res.data && res.data.tabName) || data.tabName;
+          if (!silent) {
+            setInlineSaveStatus('weekly_att_sheet', 'ok', `✅ 구글 시트 [${finalTab}] 주간 출석부 탭 생성·갱신 완료! (총원 ${data.totals.grandTotal}명)`);
+            showToast(`📊 구글 시트 [${finalTab}] 탭이 엑셀 양식 그대로 업데이트되었습니다!`, 'ok');
+          }
+          return true;
+        }
+        const errMsg = (res && res.data && res.data.error) ? String(res.data.error) : '';
+        if (!silent) {
+          const hint = errMsg.includes('알 수 없는 요청')
+            ? 'Apps Script를 최신 버전(v10.150)으로 교체·새 배포해 주세요.'
+            : (errMsg || '시트 응답이 지연되었습니다. 잠시 후 다시 시도해 주세요.');
+          setInlineSaveStatus('weekly_att_sheet', 'warn', `⚠️ 주간 출석부 시트 연동 실패: ${hint}`);
+          showToast(`⚠️ ${hint}`, 'warn');
+        }
+        return false;
+      } finally {
+        const liveBtn = document.getElementById('syncWeeklySheetBtn');
+        if (!silent && liveBtn) { liveBtn.disabled = false; liveBtn.textContent = '📊 주간 시트 생성·갱신'; }
+      }
+    };
+
+    window.openWeeklyAttendancePrintView = () => {
+      const sessions = getSessionsForIsoDate(attRosterSelectedIso);
+      const curSess = sessions.find(s => String(s.sessionId) === String(attRosterSelectedSessionId)) || sessions[0];
+      if (!curSess) return showToast('인쇄할 예배·행사 날짜를 먼저 선택해 주세요.');
+      const data = buildWeeklySheetDataForSession(curSess);
+
+      const cells = data.cells.slice();
+      while (cells.length < 8) cells.push({ name: `${cells.length + 1}셀`, members: [], presentCount: 0 });
+      const topSlots = Math.max(10, ...cells.slice(0, 5).map(c => c.members.length));
+      const botSlots = Math.max(10, ...cells.slice(5, 8).map(c => c.members.length));
+      const ncSlots = Math.max(23, data.newcomers.length);
+
+      const renderMiniTable = (title, bg, rows, slots, showNum = false) => {
+        let trs = '';
+        let cnt = 0;
+        for (let i = 0; i < slots; i++) {
+          const it = rows[i];
+          const p = !!(it && it.present);
+          if (p) cnt++;
+          trs += `<tr>${showNum ? `<td class="num">${i + 1}</td>` : ''}<td class="nm">${it ? escapeHtml(it.name) : ''}</td><td class="chk">${p ? '○' : ''}</td></tr>`;
+        }
+        return `
+          <table class="att-tbl">
+            <thead><tr><th colspan="${showNum ? 3 : 2}" style="background:${bg};">${escapeHtml(title)}</th></tr></thead>
+            <tbody>${trs}</tbody>
+            <tfoot><tr>${showNum ? '<td></td>' : ''}<td>출석</td><td>${cnt} 명</td></tr></tfoot>
+          </table>
+        `;
+      };
+
+      const win = window.open('', '_blank');
+      if (!win) return showToast('팝업 차단을 해제한 뒤 다시 눌러 주세요.', 'warn');
+      win.document.write(`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${escapeHtml(data.tabName)} 청년부 출석부</title>
+        <style>
+          @page { size: A4 landscape; margin: 10mm; }
+          body { font-family: "Malgun Gothic", -apple-system, sans-serif; margin: 12px; color: #0F172A; }
+          .top-bar { display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: 800; margin-bottom: 10px; }
+          .layout { display: grid; grid-template-columns: 165px 1fr; gap: 10px; align-items: start; }
+          .right-top { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 10px; }
+          .right-bot { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; align-items: start; }
+          .stack { display: flex; flex-direction: column; gap: 10px; }
+          table.att-tbl { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 11px; font-weight: 700; }
+          table.att-tbl th, table.att-tbl td { border: 1px solid #334155; text-align: center; padding: 3px 2px; height: 21px; }
+          table.att-tbl th { font-size: 12px; padding: 5px 2px; }
+          table.att-tbl td.num { width: 24px; }
+          table.att-tbl td.chk { width: 38px; }
+          table.att-tbl tfoot td { background: #F8FAFC; font-weight: 800; }
+          .no-print { text-align: right; margin-bottom: 8px; }
+          @media print { .no-print { display: none; } body { margin: 0; } }
+        </style>
+      </head><body>
+        <div class="no-print"><button onclick="window.print()" style="padding:7px 14px; font-weight:800; border-radius:8px; border:1px solid #111827; background:#111827; color:#fff; cursor:pointer;">🖨️ 인쇄 / PDF 저장</button></div>
+        <div class="top-bar"><span>장소: ${escapeHtml(data.venue)}</span><span>${escapeHtml(data.dateLine)}</span></div>
+        <div class="layout">
+          <div>${renderMiniTable(data.newcomerCellName, '#FCE4D6', data.newcomers, ncSlots, true)}</div>
+          <div>
+            <div class="right-top">${cells.slice(0, 5).map(c => renderMiniTable(c.name, '#FCE4D6', c.members, topSlots)).join('')}</div>
+            <div class="right-bot">
+              ${cells.slice(5, 8).map(c => renderMiniTable(c.name, '#FCE4D6', c.members, botSlots)).join('')}
+              <div class="stack">
+                ${renderMiniTable('오랜만에 왔어요', '#E2EFDA', data.longTimeVisitors, Math.max(4, data.longTimeVisitors.length))}
+                ${renderMiniTable('처음 왔어요', '#E2EFDA', data.firstTimeVisitors, Math.max(4, data.firstTimeVisitors.length))}
+              </div>
+              <div class="stack">
+                ${renderMiniTable(data.staffTitle, '#D9E1F2', data.staff, Math.max(4, data.staff.length))}
+                <table class="att-tbl">
+                  <thead><tr><th colspan="2" style="background:#FFFF99;">합계</th></tr></thead>
+                  <tbody>
+                    <tr><td>청년</td><td class="chk">${data.totals.youthTotal}</td></tr>
+                    <tr><td>새가족</td><td class="chk">${data.totals.newcomerTotal}</td></tr>
+                    <tr><td>교사·교역자</td><td class="chk">${data.totals.staffTotal}</td></tr>
+                  </tbody>
+                  <tfoot><tr><td>총원</td><td>${data.totals.grandTotal} 명</td></tr></tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body></html>`);
+      win.document.close();
+    };
+
+    function formatCellRosterAsBulkText(roster) {
+      const lines = [];
+      if (roster.newcomerMembers.length > 0) {
+        lines.push(`${roster.newcomerCellName}: ${roster.newcomerMembers.join(', ')}`);
+      }
+      (roster.cells || []).forEach(c => {
+        lines.push(`${c.name}: ${(c.members || []).join(', ')}`);
+      });
+      if (roster.staffMembers.length > 0) {
+        lines.push(`${roster.staffTitle}: ${roster.staffMembers.join(', ')}`);
+      }
+      return lines.join('\n');
+    }
+
+    window.openCellRosterModal = () => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return showToast('최고 관리자만 셀 명단을 설정할 수 있습니다.');
+      const roster = getCellRosterConfig();
+      const venueInp = document.getElementById('cellVenueInput');
+      if (venueInp) venueInp.value = roster.venue || '다니엘 성전';
+      const bulkEl = document.getElementById('cellBulkTextarea');
+      if (bulkEl) bulkEl.value = formatCellRosterAsBulkText(roster);
+      const ncEl = document.getElementById('cellEditNewcomersInput');
+      if (ncEl) ncEl.value = roster.newcomerMembers.join(', ');
+      const stEl = document.getElementById('cellEditStaffInput');
+      if (stEl) stEl.value = roster.staffMembers.join(', ');
+      cellRosterModalDraftCells = structuredClone(roster.cells || []);
+      renderManualCellCardsEditor();
+      setInlineSaveStatus('cell_roster', '', '');
+      switchCellRosterTab(roster.cells.length > 0 ? 'edit' : 'bulk');
+      document.getElementById('cellRosterModal').classList.add('open');
+    };
+
+    window.switchCellRosterTab = (tab) => {
+      const isBulk = tab !== 'edit';
+      document.getElementById('cellTabBulkBtn').classList.toggle('active', isBulk);
+      document.getElementById('cellTabEditBtn').classList.toggle('active', !isBulk);
+      document.getElementById('cellPanelBulk').classList.toggle('hidden', !isBulk);
+      document.getElementById('cellPanelEdit').classList.toggle('hidden', isBulk);
+    };
+
+    window.loadCurrentCellRosterIntoBulk = () => {
+      const roster = getCellRosterConfig();
+      const bulkEl = document.getElementById('cellBulkTextarea');
+      if (bulkEl) bulkEl.value = formatCellRosterAsBulkText(roster);
+      showToast('현재 서버에 저장된 셀 명단을 불러왔습니다.');
+    };
+
+    window.handleAutoImportMembersToBulk = () => {
+      const approved = (members || []).filter(m => m && m.status === 'approved' && m.name);
+      if (approved.length === 0) return showToast('승인된 앱 회원이 아직 없습니다.');
+      const nc = [];
+      const st = [];
+      const youth = [];
+      approved.forEach(m => {
+        const r = getRoleById(m.roleId);
+        if (isNewcomerRoleId(m.roleId)) nc.push(m.name);
+        else if (isStaffRoleName(r && r.name, m.roleId)) st.push(m.name);
+        else youth.push(m.name);
+      });
+      const lines = [];
+      if (nc.length > 0) lines.push(`새가족 셀: ${nc.join(', ')}`);
+      if (youth.length > 0) lines.push(`1셀: ${youth.join(', ')}`);
+      if (st.length > 0) lines.push(`교역자 및 교사: ${st.join(', ')}`);
+      const bulkEl = document.getElementById('cellBulkTextarea');
+      if (bulkEl) bulkEl.value = lines.join('\n');
+      showToast(`승인 회원 ${approved.length}명을 자동 분류해 채웠습니다. 셀을 나눈 뒤 저장해 주세요!`, 'ok');
+    };
+
+    window.handleParseAndSaveBulkCellRoster = async () => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const venue = String((document.getElementById('cellVenueInput') || {}).value || '').trim() || '다니엘 성전';
+      const rawText = String((document.getElementById('cellBulkTextarea') || {}).value || '').trim();
+      if (!rawText) return showToast('붙여넣을 셀 명단 내용을 입력해 주세요.');
+      if (typeof enforceInputSecurity === 'function' && !enforceInputSecurity(`${venue} ${rawText}`, '셀 명단 설정', true)) return;
+
+      const cur = getCellRosterConfig();
+      const nextNewcomers = [];
+      const nextStaff = [];
+      const nextCells = [];
+
+      const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      lines.forEach((line, idx) => {
+        const sepMatch = line.match(/^([^:：\t]+)\s*[:：\t]\s*(.*)$/);
+        let groupName = '';
+        let rest = '';
+        if (sepMatch) {
+          groupName = sepMatch[1].trim();
+          rest = sepMatch[2].trim();
+        } else {
+          groupName = `${nextCells.length + 1}셀`;
+          rest = line;
+        }
+        const names = rest
+          .split(/[,，\t/|]+/)
+          .map(x => x.trim())
+          .filter(Boolean);
+        if (/새가족|새신자/.test(groupName)) {
+          names.forEach(n => { if (!nextNewcomers.includes(n)) nextNewcomers.push(n); });
+        } else if (/교역자|교사|목사|임원교사/.test(groupName)) {
+          names.forEach(n => { if (!nextStaff.includes(n)) nextStaff.push(n); });
+        } else {
+          nextCells.push({
+            id: `cell_${Date.now()}_${idx}`,
+            name: groupName.slice(0, 20),
+            members: Array.from(new Set(names))
+          });
+        }
+      });
+
+      const nextRoster = {
+        ...cur,
+        venue,
+        newcomerMembers: nextNewcomers,
+        cells: nextCells,
+        staffMembers: nextStaff
+      };
+      const btn = document.getElementById('saveBulkCellRosterBtn');
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ 저장 중...'; }
+      setInlineSaveStatus('cell_roster', 'loading', '⏳ 셀 명단을 서버에 안전하게 저장하는 중입니다...');
+      try {
+        await db.collection('config').doc('attendance').set({ cellRoster: nextRoster }, { merge: true });
+        attendanceConfig.cellRoster = nextRoster;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '예배·출석',
+          action: '셀별 주간 출석부 명단 일괄 저장',
+          target: `일반 ${nextCells.length}셀 · 새가족 ${nextNewcomers.length}명 · 교역자·교사 ${nextStaff.length}명`,
+          detail: `장소: ${venue}`
+        });
+        setInlineSaveStatus('cell_roster', 'ok', `✅ 저장 완료! (${nextCells.length}개 셀 · 새가족 ${nextNewcomers.length}명 · 교역자·교사 ${nextStaff.length}명)`);
+        showToast(`✅ ${nextCells.length}개 셀 명단이 저장되었습니다!`, 'ok');
+        document.getElementById('cellRosterModal').classList.remove('open');
+        attRosterViewMode = 'cells';
+        renderManageAttendance(document.getElementById('manageContent'), user);
+      } catch (err) {
+        setInlineSaveStatus('cell_roster', 'err', '❌ 셀 명단 저장에 실패했습니다.');
+        handleDbError(err, '셀 명단 저장');
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = '💾 일괄 파싱 · 저장하기'; }
+      }
+    };
+
+    function syncDraftManualCellsFromDom() {
+      const container = document.getElementById('cellManualListArea');
+      if (!container) return;
+      cellRosterModalDraftCells = cellRosterModalDraftCells.map((c, idx) => {
+        const nmEl = container.querySelector(`[data-cell-name="${idx}"]`);
+        const memEl = container.querySelector(`[data-cell-members="${idx}"]`);
+        const name = nmEl ? String(nmEl.value || '').trim() : c.name;
+        const members = memEl
+          ? String(memEl.value || '').split(/[,，\n]+/).map(x => x.trim()).filter(Boolean)
+          : c.members;
+        return { id: c.id || (`cell_${Date.now()}_${idx}`), name: name || `${idx + 1}셀`, members: Array.from(new Set(members)) };
+      });
+    }
+
+    function renderManualCellCardsEditor() {
+      const box = document.getElementById('cellManualListArea');
+      if (!box) return;
+      if (cellRosterModalDraftCells.length === 0) {
+        box.innerHTML = '<div style="text-align:center; font-size:12px; color:#64748B; padding:12px 0;">등록된 셀이 없습니다. [+ 셀 추가]를 누르거나 [📋 일괄 붙여넣기]를 이용해 주세요.</div>';
+        return;
+      }
+      box.innerHTML = cellRosterModalDraftCells.map((c, idx) => `
+        <div class="cell-edit-card">
+          <div style="display:flex; align-items:center; gap:5px; margin-bottom:6px;">
+            <span class="tab-order-num">${idx + 1}</span>
+            <input class="form-input" data-cell-name="${idx}" style="flex:1; padding:6px 9px; font-size:12.5px; font-weight:800; background:#fff;" maxlength="20" value="${escapeHtml(c.name || '')}" placeholder="셀 이름 (예: 1셀)" />
+            <button class="order-btn" type="button" ${idx === 0 ? 'disabled' : ''} onclick="moveManualCellCard(${idx}, -1)">▲</button>
+            <button class="order-btn" type="button" ${idx === cellRosterModalDraftCells.length - 1 ? 'disabled' : ''} onclick="moveManualCellCard(${idx}, 1)">▼</button>
+            <button class="btn-sm danger" type="button" onclick="deleteManualCellCard(${idx})">삭제</button>
+          </div>
+          <textarea class="form-textarea" data-cell-members="${idx}" style="min-height:52px; font-size:12px; background:#fff;" placeholder="셀원 이름을 쉼표(,)로 구분해 입력">${escapeHtml((c.members || []).join(', '))}</textarea>
+        </div>
+      `).join('');
+    }
+
+    window.addManualCellCard = () => {
+      syncDraftManualCellsFromDom();
+      cellRosterModalDraftCells.push({
+        id: 'cell_' + Date.now(),
+        name: `${cellRosterModalDraftCells.length + 1}셀`,
+        members: []
+      });
+      renderManualCellCardsEditor();
+    };
+
+    window.moveManualCellCard = (idx, dir) => {
+      syncDraftManualCellsFromDom();
+      const target = idx + dir;
+      if (target < 0 || target >= cellRosterModalDraftCells.length) return;
+      const tmp = cellRosterModalDraftCells[idx];
+      cellRosterModalDraftCells[idx] = cellRosterModalDraftCells[target];
+      cellRosterModalDraftCells[target] = tmp;
+      renderManualCellCardsEditor();
+    };
+
+    window.deleteManualCellCard = (idx) => {
+      syncDraftManualCellsFromDom();
+      cellRosterModalDraftCells.splice(idx, 1);
+      renderManualCellCardsEditor();
+    };
+
+    window.handleSaveManualCellRoster = async () => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      syncDraftManualCellsFromDom();
+      const venue = String((document.getElementById('cellVenueInput') || {}).value || '').trim() || '다니엘 성전';
+      const ncList = String((document.getElementById('cellEditNewcomersInput') || {}).value || '')
+        .split(/[,，\n]+/).map(x => x.trim()).filter(Boolean);
+      const stList = String((document.getElementById('cellEditStaffInput') || {}).value || '')
+        .split(/[,，\n]+/).map(x => x.trim()).filter(Boolean);
+
+      const allText = `${venue} ${ncList.join(' ')} ${stList.join(' ')} ${cellRosterModalDraftCells.map(c => c.name + ' ' + c.members.join(' ')).join(' ')}`;
+      if (typeof enforceInputSecurity === 'function' && !enforceInputSecurity(allText, '셀 명단 편집', true)) return;
+
+      const cur = getCellRosterConfig();
+      const nextRoster = {
+        ...cur,
+        venue,
+        newcomerMembers: Array.from(new Set(ncList)),
+        cells: cellRosterModalDraftCells,
+        staffMembers: Array.from(new Set(stList))
+      };
+      const btn = document.getElementById('saveManualCellRosterBtn');
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ 저장 중...'; }
+      setInlineSaveStatus('cell_roster', 'loading', '⏳ 셀 명단을 저장하는 중입니다...');
+      try {
+        await db.collection('config').doc('attendance').set({ cellRoster: nextRoster }, { merge: true });
+        attendanceConfig.cellRoster = nextRoster;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '예배·출석',
+          action: '셀별 주간 출석부 명단 수정',
+          target: `일반 ${nextRoster.cells.length}셀 · 새가족 ${nextRoster.newcomerMembers.length}명 · 교역자·교사 ${nextRoster.staffMembers.length}명`,
+          detail: `장소: ${venue}`
+        });
+        setInlineSaveStatus('cell_roster', 'ok', '✅ 셀 명단이 저장되었습니다!');
+        showToast('✅ 셀 명단이 저장되었습니다!', 'ok');
+        document.getElementById('cellRosterModal').classList.remove('open');
+        attRosterViewMode = 'cells';
+        renderManageAttendance(document.getElementById('manageContent'), user);
+      } catch (err) {
+        setInlineSaveStatus('cell_roster', 'err', '❌ 셀 명단 저장에 실패했습니다.');
+        handleDbError(err, '셀 명단 저장');
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = '💾 셀 명단 저장하기'; }
+      }
+    };
 
     // --- 신규 시트 NEW 배지 확인 · 연동 완료 연동 관리 (방식1 + 방식2 통합) ---
     function getSheetTabAckKey(t) {
