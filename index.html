@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=266" />
+  <link rel="manifest" href="./manifest.json?v=267" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=266" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=266" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=267" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=267" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4499,6 +4499,120 @@
         font-size: 12.5px;
       }
     }
+
+    /* ==================== v10.167 자체 제작 모던 SVG 벡터 아이콘 시스템 ==================== */
+    .ui-svg-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      line-height: 0;
+      vertical-align: middle;
+    }
+    .ui-svg-icon svg {
+      width: 1em;
+      height: 1em;
+      display: block;
+    }
+    .tabbar .tab-icon .ui-svg-icon svg {
+      width: 23px;
+      height: 23px;
+      transition: transform 0.14s ease, color 0.14s ease;
+    }
+    .tabbar.icon-only .tab-btn {
+      min-height: 50px;
+      justify-content: center;
+      gap: 0;
+    }
+    .tabbar.icon-only .tab-icon {
+      height: 28px;
+    }
+    .tabbar.icon-only .tab-icon .ui-svg-icon svg {
+      width: 26px;
+      height: 26px;
+    }
+    .tabbar.icon-only .tab-label-text {
+      display: none !important;
+    }
+    .tabbar.light .tab-btn {
+      color: #475569;
+    }
+    .tabbar.light .tab-btn.active {
+      color: #0F172A;
+    }
+    .tabbar.kakao-style.light .tab-btn:not(.active):not(.more-active) .tab-icon {
+      color: #9CA3AF;
+    }
+    .tabbar.kakao-style.dark .tab-btn:not(.active):not(.more-active) .tab-icon {
+      color: #64748B;
+    }
+    .tabbar .tab-btn:active .tab-icon .ui-svg-icon svg {
+      transform: scale(0.9);
+    }
+    .icon-btn .ui-svg-icon svg {
+      width: 19px;
+      height: 19px;
+    }
+    .settings-row-icon {
+      color: #1E293B;
+    }
+    .settings-row-icon.danger {
+      color: #DC2626;
+    }
+    .settings-row-icon .ui-svg-icon svg {
+      width: 19px;
+      height: 19px;
+    }
+    .sub-tab-btn .ui-svg-icon svg {
+      width: 14.5px;
+      height: 14.5px;
+    }
+    .sub-tab-btn .sub-tab-inner {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .manage-tab-intro-icon .ui-svg-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+    .search-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #94A3B8;
+    }
+    .search-icon svg {
+      width: 16px;
+      height: 16px;
+      display: block;
+    }
+    .hero-title-with-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+    .hero-title-with-icon .ui-svg-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+    .section-title-with-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-title-with-icon .ui-svg-icon svg {
+      width: 17px;
+      height: 17px;
+      color: #1E293B;
+    }
+    @media (max-width: 440px) {
+      .tabbar .tab-icon .ui-svg-icon svg { width: 22px; height: 22px; }
+      .tabbar.icon-only .tab-icon .ui-svg-icon svg { width: 25px; height: 25px; }
+      .icon-btn .ui-svg-icon svg { width: 17.5px; height: 17.5px; }
+    }
+
   </style>
 </head>
 <body>
@@ -4523,7 +4637,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=266" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=267" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4720,7 +4834,7 @@
             </div>
           </div>
           <div class="search-box">
-            <span class="search-icon">🔍</span>
+            <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.2"/><line x1="20" y1="20" x2="16.2" y2="16.2"/></svg></span>
             <input id="sermonSearchInput" class="search-input" type="search" placeholder="설교 제목·세부 탭·교회·추천글 검색..." oninput="onSermonSearchInput(this.value)" />
             <button id="sermonSearchClear" class="search-clear hidden" type="button" onclick="clearSermonSearch()">✕</button>
           </div>
@@ -4745,7 +4859,7 @@
             </div>
           </div>
           <div class="search-box">
-            <span class="search-icon">🔍</span>
+            <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.2"/><line x1="20" y1="20" x2="16.2" y2="16.2"/></svg></span>
             <input id="ccmSearchInput" class="search-input" type="search" placeholder="CCM 제목·세부 탭·찬양팀·추천글 검색..." oninput="onCcmSearchInput(this.value)" />
             <button id="ccmSearchClear" class="search-clear hidden" type="button" onclick="clearCcmSearch()">✕</button>
           </div>
@@ -4770,7 +4884,7 @@
           </div>
 
           <div class="search-box">
-            <span class="search-icon">🔍</span>
+            <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.2"/><line x1="20" y1="20" x2="16.2" y2="16.2"/></svg></span>
             <input id="bylawSearchInput" class="search-input" type="search" placeholder="조항·키워드 검색 (예: 제5조, 임기)" oninput="onBylawSearchInput(this.value)" />
             <button id="bylawSearchClear" class="search-clear hidden" type="button" onclick="clearBylawSearch()">✕</button>
           </div>
@@ -4804,7 +4918,7 @@
           </div>
 
           <div class="search-box">
-            <span class="search-icon">🔍</span>
+            <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.2"/><line x1="20" y1="20" x2="16.2" y2="16.2"/></svg></span>
             <input id="userGuideSearchInput" class="search-input" type="search" placeholder="기능 검색 (예: 출석, 영상, 알림)" oninput="onUserGuideSearchInput(this.value)" />
             <button id="userGuideSearchClear" class="search-clear hidden" type="button" onclick="clearUserGuideSearch()">✕</button>
           </div>
@@ -4829,7 +4943,7 @@
             <div id="termsViewSub" class="bylaw-hero-dates">구미제일감리교회 라이트 청년부 회칙을 바탕으로 작성된 서비스 이용약관입니다.</div>
           </div>
           <div class="search-box">
-            <span class="search-icon">🔍</span>
+            <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.2"/><line x1="20" y1="20" x2="16.2" y2="16.2"/></svg></span>
             <input id="termsSearchInput" class="search-input" type="search" placeholder="약관 검색 (예: 회원, 개인정보, 탈퇴)" oninput="onTermsSearchInput(this.value)" />
             <button id="termsSearchClear" class="search-clear hidden" type="button" onclick="clearTermsSearch()">✕</button>
           </div>
@@ -6384,8 +6498,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 266;
-    const APP_CACHE_NAME = 'right-youth-app-v10.166';
+    const APP_CLIENT_BUILD = 267;
+    const APP_CACHE_NAME = 'right-youth-app-v10.167';
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.156-log-archive';
     const SHEET_SCHEMA_TABS = [
@@ -6784,8 +6898,169 @@
       showQr: true,
       order: ['setQr', 'setNotif']
     };
+    const DEFAULT_UI_ICON_STYLE = 'insta'; // 'insta' (선형→채움 추천) | 'kakao' (회색채움→진한채움) | 'emoji' (기존 이모지)
+    const DEFAULT_SHOW_BOTTOM_TAB_LABELS = true;
+    const APP_UI_SVG_ICONS = {
+      home: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.6L12 3.5l8.5 7.1V19.6a1.4 1.4 0 0 1-1.4 1.4H4.9a1.4 1.4 0 0 1-1.4-1.4V10.6z"/><path d="M9.5 21V14.5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1V21"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="none"><path d="M2.8 10.7a1.2 1.2 0 0 1 .4-.92L11.23 3.1a1.2 1.2 0 0 1 1.54 0L20.8 9.78a1.2 1.2 0 0 1 .4.92V19.6a1.8 1.8 0 0 1-1.8 1.8h-4.6v-6.2a1.2 1.2 0 0 0-1.2-1.2h-3.2a1.2 1.2 0 0 0-1.2 1.2v6.2H4.6a1.8 1.8 0 0 1-1.8-1.8V10.7z" fill="currentColor"/></svg>'
+      },
+      sermon: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="8.8" y="2.8" width="6.4" height="10.4" rx="3.2"/><path d="M5.5 11.2a6.5 6.5 0 0 0 13 0"/><line x1="12" y1="17.7" x2="12" y2="21.2"/><line x1="8.8" y1="21.2" x2="15.2" y2="21.2"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="none"><rect x="8.5" y="2.5" width="7" height="11" rx="3.5" fill="currentColor"/><path d="M5.5 11.2a6.5 6.5 0 0 0 13 0" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/><line x1="12" y1="17.7" x2="12" y2="21.2" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/><line x1="8.6" y1="21.2" x2="15.4" y2="21.2" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>'
+      },
+      ccm: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M9.2 17.5V5.8l10.2-2.1v11.6"/><line x1="9.2" y1="9.2" x2="19.4" y2="7.1"/><circle cx="6.7" cy="17.8" r="2.5"/><circle cx="16.9" cy="15.7" r="2.5"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="none"><path d="M9.2 17.6V5.5l10.5-2.2v12.1" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.2 5.5l10.5-2.2v3.3L9.2 8.8V5.5z" fill="currentColor"/><circle cx="6.7" cy="17.8" r="2.9" fill="currentColor"/><circle cx="16.9" cy="15.7" r="2.9" fill="currentColor"/></svg>'
+      },
+      more: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><ellipse cx="12" cy="12" rx="4.2" ry="9.2"/><line x1="3.1" y1="9.2" x2="20.9" y2="9.2"/><line x1="3.1" y1="14.8" x2="20.9" y2="14.8"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.6" fill="currentColor"/><ellipse cx="12" cy="12" rx="4.1" ry="9.4" stroke="#FFFFFF" stroke-width="1.5"/><line x1="2.8" y1="9.2" x2="21.2" y2="9.2" stroke="#FFFFFF" stroke-width="1.5"/><line x1="2.8" y1="14.8" x2="21.2" y2="14.8" stroke="#FFFFFF" stroke-width="1.5"/></svg>'
+      },
+      settings: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.1"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.08a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.08a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="none"><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.08a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.08a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" fill="currentColor"/><circle cx="12" cy="12" r="3.4" fill="#FFFFFF"/></svg>'
+      },
+      manage: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8l7.6 3.1v5.6c0 4.9-3.2 8.7-7.6 10.1-4.4-1.4-7.6-5.2-7.6-10.1V5.9L12 2.8z"/><path d="M8.8 12.1l2.2 2.2 4.3-4.5"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="none"><path d="M12 2.4l8 3.3v5.8c0 5.2-3.4 9.2-8 10.7-4.6-1.5-8-5.5-8-10.7V5.7L12 2.4z" fill="currentColor"/><path d="M8.7 12.1l2.3 2.3 4.5-4.7" stroke="#FFFFFF" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      },
+      setAccount: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.2a7.5 7.5 0 0 1 15 0"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4.2"/><path d="M4.2 20.5a7.8 7.8 0 0 1 15.6 0z"/></svg>'
+      },
+      setNotif: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8.5a6 6 0 0 0-12 0c0 6.5-2.5 8-2.5 8h17s-2.5-1.5-2.5-8"/><path d="M13.8 20a2 2 0 0 1-3.6 0"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 8.5a6 6 0 0 0-12 0c0 6.5-2.5 8-2.5 8h17s-2.5-1.5-2.5-8z"/><path d="M13.8 20a2 2 0 0 1-3.6 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+      },
+      setFont: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19L9.5 5 15 19"/><line x1="6" y1="14.5" x2="13" y2="14.5"/><path d="M16.5 11.5h5M19 9v5"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19L9.5 5 15 19"/><line x1="6" y1="14.5" x2="13" y2="14.5"/><path d="M16.5 11.5h5M19 9v5"/></svg>'
+      },
+      setQr: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.2" y="3.2" width="6.6" height="6.6" rx="1.2"/><rect x="14.2" y="3.2" width="6.6" height="6.6" rx="1.2"/><rect x="3.2" y="14.2" width="6.6" height="6.6" rx="1.2"/><path d="M14.5 14.5h2.2v2.2h-2.2zM18.6 14.5h2.2M14.5 18.8h6.3M18.6 17v3.8"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.4"/><rect x="14" y="3" width="7" height="7" rx="1.4"/><rect x="3" y="14" width="7" height="7" rx="1.4"/><rect x="14" y="14" width="3" height="3" rx="0.6"/><rect x="18" y="18" width="3" height="3" rx="0.6"/><rect x="14" y="18.5" width="2.5" height="2.5" rx="0.5"/><rect x="18.5" y="14" width="2.5" height="2.5" rx="0.5"/></svg>'
+      },
+      bylaws: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.2h9l4 4v13.6a1.2 1.2 0 0 1-1.2 1.2H6.2A1.2 1.2 0 0 1 5 20.8V4.4A1.2 1.2 0 0 1 6.2 3.2z"/><polyline points="14.5 3.2 14.5 7.5 18.8 7.5"/><line x1="8.5" y1="11.5" x2="15.5" y2="11.5"/><line x1="8.5" y1="15.5" x2="15.5" y2="15.5"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h8.8L19 7.2V20a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20V4.5A1.5 1.5 0 0 1 6.5 3z"/><line x1="8.5" y1="11.5" x2="15.5" y2="11.5" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/><line x1="8.5" y1="15.5" x2="14" y2="15.5" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/></svg>'
+      },
+      guide: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M2.8 5.2h6.4a3.2 3.2 0 0 1 2.8 1.8 3.2 3.2 0 0 1 2.8-1.8h6.4v13.6h-6.4a2.8 2.8 0 0 0-2.8 1.6 2.8 2.8 0 0 0-2.8-1.6H2.8z"/><line x1="12" y1="7" x2="12" y2="20.4"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 5h6.7a3.3 3.3 0 0 1 2.8 1.6A3.3 3.3 0 0 1 14.8 5h6.7v14h-6.7a2.8 2.8 0 0 0-2.8 1.5A2.8 2.8 0 0 0 9.2 19H2.5z"/><line x1="12" y1="6.8" x2="12" y2="20.2" stroke="#FFFFFF" stroke-width="1.7"/></svg>'
+      },
+      setInquiry: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.5a7.8 7.8 0 0 1-8.5 7.7 8.4 8.4 0 0 1-3.4-.7L3.8 20l1.3-4.1A7.6 7.6 0 0 1 3.5 11.5a8 8 0 0 1 8.5-7.7 8 8 0 0 1 8.5 7.7z"/><line x1="8.5" y1="10.8" x2="15.5" y2="10.8"/><line x1="8.5" y1="14" x2="13" y2="14"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 11.5a7.8 7.8 0 0 1-8.5 7.7 8.4 8.4 0 0 1-3.4-.7L3.8 20l1.3-4.1A7.6 7.6 0 0 1 3.5 11.5a8 8 0 0 1 8.5-7.7 8 8 0 0 1 8.5 7.7z"/><line x1="8.5" y1="10.8" x2="15.5" y2="10.8" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/><line x1="8.5" y1="14" x2="13" y2="14" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/></svg>'
+      },
+      setInstall: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.6" width="12" height="18.8" rx="2.4"/><line x1="12" y1="7.5" x2="12" y2="14"/><polyline points="9.2 11.5 12 14.3 14.8 11.5"/><line x1="10" y1="18" x2="14" y2="18"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="5.8" y="2.4" width="12.4" height="19.2" rx="2.6"/><line x1="12" y1="7" x2="12" y2="13.8" stroke="#FFFFFF" stroke-width="1.9" stroke-linecap="round"/><polyline points="9.2 11.3 12 14.1 14.8 11.3" fill="none" stroke="#FFFFFF" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="18" x2="14" y2="18" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/></svg>'
+      },
+      setTerms: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="3" width="15" height="18" rx="2"/><line x1="8.5" y1="8.2" x2="15.5" y2="8.2"/><line x1="8.5" y1="12" x2="15.5" y2="12"/><line x1="8.5" y1="15.8" x2="12.5" y2="15.8"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="4.3" y="2.8" width="15.4" height="18.4" rx="2.2"/><line x1="8.5" y1="8.2" x2="15.5" y2="8.2" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/><line x1="8.5" y1="12" x2="15.5" y2="12" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/><line x1="8.5" y1="15.8" x2="12.5" y2="15.8" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/></svg>'
+      },
+      setPrivacy: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="4.8" y="10.5" width="14.4" height="10" rx="2.2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.2" fill="currentColor"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="none"><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/><rect x="4.5" y="10.2" width="15" height="10.6" rx="2.4" fill="currentColor"/><circle cx="12" cy="15.5" r="1.5" fill="#FFFFFF"/></svg>'
+      },
+      setLogout: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4H5.5A1.5 1.5 0 0 0 4 5.5v13A1.5 1.5 0 0 0 5.5 20H10"/><polyline points="15.5 8 19.5 12 15.5 16"/><line x1="19.5" y1="12" x2="9.5" y2="12"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4H5.5A1.5 1.5 0 0 0 4 5.5v13A1.5 1.5 0 0 0 5.5 20H10"/><polyline points="15.5 8 19.5 12 15.5 16"/><line x1="19.5" y1="12" x2="9.5" y2="12"/></svg>'
+      },
+      manageContent: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.2" y="3.6" width="17.6" height="16.8" rx="2.2"/><line x1="3.2" y1="9.4" x2="20.8" y2="9.4"/><line x1="9.5" y1="9.4" x2="9.5" y2="20.4"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3.4" width="18" height="17.2" rx="2.4"/><line x1="3" y1="9.4" x2="21" y2="9.4" stroke="#FFFFFF" stroke-width="1.7"/><line x1="9.5" y1="9.4" x2="9.5" y2="20.6" stroke="#FFFFFF" stroke-width="1.7"/></svg>'
+      },
+      manageQuickLinks: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg>'
+      },
+      manageVideos: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="4.8" width="18.4" height="14.4" rx="2.6"/><polygon points="10 8.8 16 12 10 15.2 10 8.8" fill="currentColor" stroke="none"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="2.6" y="4.6" width="18.8" height="14.8" rx="2.8"/><polygon points="10 8.8 16.2 12 10 15.2 10 8.8" fill="#FFFFFF"/></svg>'
+      },
+      manageWorship: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2.5" x2="12" y2="7.5"/><line x1="9.8" y1="4.7" x2="14.2" y2="4.7"/><path d="M5 12.2L12 7.5l7 4.7V20.5H5z"/><path d="M10 20.5v-4.5a2 2 0 0 1 4 0v4.5"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="none"><line x1="12" y1="2.5" x2="12" y2="7.5" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/><line x1="9.6" y1="4.8" x2="14.4" y2="4.8" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/><path d="M4.6 12.2L12 7.2l7.4 5V21H4.6z" fill="currentColor"/><path d="M10 21v-4.6a2 2 0 0 1 4 0V21z" fill="#FFFFFF"/></svg>'
+      },
+      manageAttendance: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><polyline points="8.2 12.3 10.9 15 16.2 9.5"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="3.4"/><polyline points="8 12.3 10.8 15.1 16.4 9.3" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      },
+      manageSheet: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.2" y="3.8" width="17.6" height="16.4" rx="2.2"/><line x1="3.2" y1="9.4" x2="20.8" y2="9.4"/><line x1="3.2" y1="14.8" x2="20.8" y2="14.8"/><line x1="9.6" y1="9.4" x2="9.6" y2="20.2"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3.6" width="18" height="16.8" rx="2.4"/><line x1="3" y1="9.4" x2="21" y2="9.4" stroke="#FFFFFF" stroke-width="1.7"/><line x1="3" y1="14.8" x2="21" y2="14.8" stroke="#FFFFFF" stroke-width="1.7"/><line x1="9.6" y1="9.4" x2="9.6" y2="20.4" stroke="#FFFFFF" stroke-width="1.7"/></svg>'
+      },
+      manageQr: null,
+      manageMembers: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="9.2" cy="8.2" r="3.4"/><path d="M3 19.6a6.2 6.2 0 0 1 12.4 0"/><circle cx="16.8" cy="9.2" r="2.6"/><path d="M16.5 14.2a4.6 4.6 0 0 1 4.5 5.4"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9.2" cy="8.2" r="3.6"/><path d="M2.8 19.8a6.4 6.4 0 0 1 12.8 0z"/><circle cx="17" cy="9.2" r="2.8"/><path d="M16.2 14.3a4.8 4.8 0 0 1 5 5.5h-4.6z"/></svg>'
+      },
+      manageAdmins: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 17.5L5.2 7.8l4.4 4.2L12 5.6l2.4 6.4 4.4-4.2 1.7 9.7z"/><line x1="4" y1="20.4" x2="20" y2="20.4"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.2 17.6L5 7.4l4.5 4.3L12 5.2l2.5 6.5L19 7.4l1.8 10.2z"/><rect x="3.6" y="19.2" width="16.8" height="2" rx="1"/></svg>'
+      },
+      manageInquiries: null,
+      manageRoles: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 13.2l-7 7a1.8 1.8 0 0 1-2.5 0l-7.2-7.2V4.5h8.5l8.2 8.2a1.8 1.8 0 0 1 0 .5z"/><circle cx="8" cy="8.2" r="1.4" fill="currentColor"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.4 13.2l-7.2 7.2a1.8 1.8 0 0 1-2.5 0l-7.2-7.2V4.2h9l7.9 7.9a1.8 1.8 0 0 1 0 1.1z"/><circle cx="8" cy="8.2" r="1.6" fill="#FFFFFF"/></svg>'
+      },
+      manageAdminCode: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.2" cy="14.8" r="4.2"/><path d="M11.3 11.7l7.8-7.8M16.2 6.8l2.5 2.5M18.8 4.2l2.4 2.4"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.2" cy="14.8" r="4.2" fill="currentColor"/><circle cx="8.2" cy="14.8" r="1.5" fill="#FFFFFF" stroke="none"/><path d="M11.5 11.5l7.6-7.6M16.2 6.8l2.5 2.5M18.8 4.2l2.4 2.4"/></svg>'
+      },
+      manageLogs: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4.2" width="14" height="16.8" rx="2"/><path d="M9 4.2V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1.2"/><line x1="8.5" y1="10.2" x2="15.5" y2="10.2"/><line x1="8.5" y1="14" x2="15.5" y2="14"/><line x1="8.5" y1="17.5" x2="12.5" y2="17.5"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="4.8" y="4.2" width="14.4" height="17" rx="2.2"/><rect x="8.8" y="2" width="6.4" height="3.2" rx="1"/><line x1="8.5" y1="10.2" x2="15.5" y2="10.2" stroke="#FFFFFF" stroke-width="1.7" stroke-linecap="round"/><line x1="8.5" y1="14" x2="15.5" y2="14" stroke="#FFFFFF" stroke-width="1.7" stroke-linecap="round"/><line x1="8.5" y1="17.5" x2="12.5" y2="17.5" stroke="#FFFFFF" stroke-width="1.7" stroke-linecap="round"/></svg>'
+      },
+      manageLabels: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M15.8 3.6l4.6 4.6-11.2 11.2-5.4 1.2 1.2-5.4z"/><line x1="13.2" y1="6.2" x2="17.8" y2="10.8"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 3.2l4.8 4.8-11.5 11.5-5.6 1.3 1.3-5.6z"/><line x1="13.2" y1="6.2" x2="17.8" y2="10.8" stroke="#FFFFFF" stroke-width="1.7"/></svg>'
+      },
+      manageSecurity: null,
+      manageDiagnostics: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 12.5 6.8 12.5 9.6 5.5 14.2 18.5 17 12.5 21.5 12.5"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 12.5 6.8 12.5 9.6 5.5 14.2 18.5 17 12.5 21.5 12.5"/></svg>'
+      },
+      manageGuide: null,
+      notice: {
+        outline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.5v3a1.5 1.5 0 0 0 1.5 1.5h2.2l6.8 4V5l-6.8 4H5a1.5 1.5 0 0 0-1.5 1.5z"/><path d="M18 8.5a4.5 4.5 0 0 1 0 7"/><path d="M7.5 15l1.2 4.5"/></svg>',
+        solid: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.2 10.5v3A1.7 1.7 0 0 0 4.9 15.2h2.3l7 4.1V4.7l-7 4.1H4.9a1.7 1.7 0 0 0-1.7 1.7z"/><path d="M17.8 8.4a4.6 4.6 0 0 1 0 7.2" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>'
+      }
+    };
+    APP_UI_SVG_ICONS.manageQr = APP_UI_SVG_ICONS.setQr;
+    APP_UI_SVG_ICONS.manageInquiries = APP_UI_SVG_ICONS.setInquiry;
+    APP_UI_SVG_ICONS.manageSecurity = APP_UI_SVG_ICONS.manage;
+    APP_UI_SVG_ICONS.manageGuide = APP_UI_SVG_ICONS.guide;
+
+    function getUiIconStyle(overrideStyle = null) {
+      const s = String(overrideStyle || (tabLabels && tabLabels.uiIconStyle) || DEFAULT_UI_ICON_STYLE).trim();
+      return ['insta', 'kakao', 'emoji'].includes(s) ? s : DEFAULT_UI_ICON_STYLE;
+    }
+
+    function getShowBottomTabLabels(overrideVal = null) {
+      if (typeof overrideVal === 'boolean') return overrideVal;
+      if (tabLabels && typeof tabLabels.showBottomTabLabels === 'boolean') return tabLabels.showBottomTabLabels;
+      return DEFAULT_SHOW_BOTTOM_TAB_LABELS;
+    }
+
+    function renderUiIconHtml(key, options = {}) {
+      const { active = false, overrideIcons = null, overrideStyle = null, forceOutline = false } = options || {};
+      const style = getUiIconStyle(overrideStyle);
+      const rawIcon = getEffectiveTabIcon(key, overrideIcons);
+      const svgDef = APP_UI_SVG_ICONS[key];
+      if (style === 'emoji' || !svgDef) {
+        return escapeHtml(rawIcon);
+      }
+      const useSolid = !forceOutline && (style === 'kakao' || active);
+      const svg = useSolid ? (svgDef.solid || svgDef.outline) : svgDef.outline;
+      return `<span class="ui-svg-icon" aria-hidden="true">${svg}</span>`;
+    }
+
     const DEFAULT_TAB_LABELS = Object.assign(
-      { tabOrder: DEFAULT_TAB_ORDER, manageSubTabOrder: DEFAULT_MANAGE_SUBTAB_ORDER, settingsItemOrder: DEFAULT_SETTINGS_ITEM_ORDER, icons: DEFAULT_TAB_ICONS, uiTexts: DEFAULT_UI_TEXTS, sectionTitles: {}, headerShortcuts: structuredClone(DEFAULT_HEADER_SHORTCUTS), postReactionEmojis: structuredClone(DEFAULT_POST_REACTION_EMOJIS), videoReactionEmojis: structuredClone(DEFAULT_VIDEO_REACTION_EMOJIS) },
+      { tabOrder: DEFAULT_TAB_ORDER, manageSubTabOrder: DEFAULT_MANAGE_SUBTAB_ORDER, settingsItemOrder: DEFAULT_SETTINGS_ITEM_ORDER, icons: DEFAULT_TAB_ICONS, uiTexts: DEFAULT_UI_TEXTS, sectionTitles: {}, headerShortcuts: structuredClone(DEFAULT_HEADER_SHORTCUTS), uiIconStyle: DEFAULT_UI_ICON_STYLE, showBottomTabLabels: DEFAULT_SHOW_BOTTOM_TAB_LABELS, postReactionEmojis: structuredClone(DEFAULT_POST_REACTION_EMOJIS), videoReactionEmojis: structuredClone(DEFAULT_VIDEO_REACTION_EMOJIS) },
       Object.fromEntries(BOTTOM_TAB_REGISTRY.map(t => [t.key, t.defaultLabel])),
       Object.fromEntries(SETTINGS_ITEM_REGISTRY.map(t => [t.key, t.defaultLabel])),
       Object.fromEntries(MANAGE_SUBTAB_REGISTRY.map(t => [t.labelKey, t.defaultLabel]))
@@ -7513,7 +7788,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=266" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=267" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7537,8 +7812,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=266', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=266', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=267', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=267', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -7729,6 +8004,8 @@
         uiTexts: { ...DEFAULT_UI_TEXTS, ...(d.uiTexts && typeof d.uiTexts === 'object' ? d.uiTexts : {}) },
         sectionTitles: (d.sectionTitles && typeof d.sectionTitles === 'object') ? { ...d.sectionTitles } : {},
         headerShortcuts: normalizeHeaderShortcutsConfig(d.headerShortcuts),
+        uiIconStyle: ['insta', 'kakao', 'emoji'].includes(String(d.uiIconStyle || '')) ? String(d.uiIconStyle) : DEFAULT_UI_ICON_STYLE,
+        showBottomTabLabels: typeof d.showBottomTabLabels === 'boolean' ? d.showBottomTabLabels : DEFAULT_SHOW_BOTTOM_TAB_LABELS,
         postReactionEmojis: normalizeReactionEmojiList(d.postReactionEmojis, DEFAULT_POST_REACTION_EMOJIS),
         videoReactionEmojis: normalizeReactionEmojiList(d.videoReactionEmojis, DEFAULT_VIDEO_REACTION_EMOJIS)
       };
@@ -8593,9 +8870,10 @@
       const bylawTitle = document.getElementById('bylawViewTitle');
       if (bylawTitle) {
         const customByTitle = ut('bylawsHeroTitle');
-        bylawTitle.textContent = (customByTitle === DEFAULT_UI_TEXTS.bylawsHeroTitle)
-          ? `${icn('bylaws')} 구미제일감리교회 라이트 청년부 ${lbl('bylaws')}`
-          : `${icn('bylaws')} ${customByTitle}`;
+        const txt = (customByTitle === DEFAULT_UI_TEXTS.bylawsHeroTitle)
+          ? `구미제일감리교회 라이트 청년부 ${lbl('bylaws')}`
+          : customByTitle;
+        bylawTitle.innerHTML = `<span class="hero-title-with-icon">${renderUiIconHtml('bylaws', { overrideIcons, forceOutline: true })}<span>${escapeHtml(txt)}</span></span>`;
       }
       const bylawDates = document.getElementById('bylawViewDates');
       if (bylawDates) bylawDates.textContent = ut('bylawsHeroDates');
@@ -8603,15 +8881,16 @@
       const ugTitleEl = document.getElementById('userGuideViewTitle');
       if (ugTitleEl) {
         const customUgTitle = ut('guideHeroTitle');
-        ugTitleEl.textContent = (customUgTitle === DEFAULT_UI_TEXTS.guideHeroTitle)
-          ? `${icn('guide')} 라이트 청년부 앱 ${lbl('guide')}`
-          : `${icn('guide')} ${customUgTitle}`;
+        const txt = (customUgTitle === DEFAULT_UI_TEXTS.guideHeroTitle)
+          ? `라이트 청년부 앱 ${lbl('guide')}`
+          : customUgTitle;
+        ugTitleEl.innerHTML = `<span class="hero-title-with-icon">${renderUiIconHtml('guide', { overrideIcons, forceOutline: true })}<span>${escapeHtml(txt)}</span></span>`;
       }
       const ugSubEl = document.getElementById('userGuideViewSub');
       if (ugSubEl) ugSubEl.textContent = ut('guideHeroSub');
 
       const qsTitleEl = document.getElementById('quickSheetTitle');
-      if (qsTitleEl) qsTitleEl.textContent = `${getQuickSheetIcon(overrideIcons)} ${getQuickSheetLabel(overrideNames)}`;
+      if (qsTitleEl) qsTitleEl.innerHTML = `<span class="hero-title-with-icon">${renderUiIconHtml('more', { overrideIcons, forceOutline: true })}<span>${escapeHtml(getQuickSheetLabel(overrideNames))}</span></span>`;
 
       const qsEditBtn = document.getElementById('quickSheetManageEditBtn');
       if (qsEditBtn) qsEditBtn.textContent = `${icn('manage')} ${lbl('manage')} 편집`;
@@ -8644,11 +8923,11 @@
       const tBack = document.getElementById('termsBackToSettingsBtn');
       if (tBack) tBack.textContent = `← ${stLbl}으로 돌아가기`;
       const tTitle = document.getElementById('termsViewTitle');
-      if (tTitle) tTitle.textContent = `${icn('setTerms')} ${ut('termsHeroTitle')}`;
+      if (tTitle) tTitle.innerHTML = `<span class="hero-title-with-icon">${renderUiIconHtml('setTerms', { overrideIcons, forceOutline: true })}<span>${escapeHtml(ut('termsHeroTitle'))}</span></span>`;
       const tSub = document.getElementById('termsViewSub');
       if (tSub) tSub.textContent = ut('termsHeroSub');
       const sTitle = document.getElementById('sermonViewTitle');
-      if (sTitle) sTitle.textContent = `${icn('sermon')} ${lbl('sermon')}`;
+      if (sTitle) sTitle.innerHTML = `<span class="hero-title-with-icon">${renderUiIconHtml('sermon', { overrideIcons, forceOutline: true })}<span>${escapeHtml(lbl('sermon'))}</span></span>`;
       const sSub = document.getElementById('sermonViewSub');
       if (sSub) sSub.textContent = ut('sermonHeroSub');
       const sBtn = document.getElementById('sermonRecommendTopBtn');
@@ -8657,7 +8936,7 @@
       if (sInp) sInp.placeholder = `${lbl('sermon')} 제목·세부 탭·교회·추천글 검색...`;
 
       const cTitle = document.getElementById('ccmViewTitle');
-      if (cTitle) cTitle.textContent = `${icn('ccm')} ${lbl('ccm')}`;
+      if (cTitle) cTitle.innerHTML = `<span class="hero-title-with-icon">${renderUiIconHtml('ccm', { overrideIcons, forceOutline: true })}<span>${escapeHtml(lbl('ccm'))}</span></span>`;
       const cSub = document.getElementById('ccmViewSub');
       if (cSub) cSub.textContent = ut('ccmHeroSub');
       const cBtn = document.getElementById('ccmRecommendTopBtn');
@@ -8781,28 +9060,28 @@
       return getGlobalHeaderShortcuts();
     }
 
-    function renderHeaderActions(isManageMode = false, overrideNames = null, overrideIcons = null, overrideCfg = null) {
+    function renderHeaderActions(isManageMode = false, overrideNames = null, overrideIcons = null, overrideCfg = null, overrideStyle = null) {
       const box = document.getElementById('headerActions');
       if (!box) return;
       const cfg = getEffectiveHeaderShortcuts(overrideCfg);
       const themeCls = isManageMode ? 'dark' : 'light';
       const notifLbl = getEffectiveTabLabel('setNotif', overrideNames);
-      const notifIcn = getEffectiveTabIcon('setNotif', overrideIcons);
+      const notifIcnHtml = renderUiIconHtml('setNotif', { overrideIcons, overrideStyle });
       const qrLbl = getEffectiveTabLabel('setQr', overrideNames);
-      const qrIcn = getEffectiveTabIcon('setQr', overrideIcons);
+      const qrIcnHtml = renderUiIconHtml('setQr', { overrideIcons, overrideStyle });
 
       const btns = [];
       cfg.order.forEach(key => {
         if (key === 'setQr' && cfg.showQr) {
           btns.push(`
             <button class="icon-btn ${themeCls}" type="button" title="${escapeHtml(qrLbl)}" aria-label="${escapeHtml(qrLbl)}" onclick="openInviteQrModal()">
-              <span>${escapeHtml(qrIcn)}</span>
+              ${qrIcnHtml}
             </button>
           `);
         } else if (key === 'setNotif' && cfg.showNotif) {
           btns.push(`
             <button class="icon-btn ${themeCls}" type="button" title="${escapeHtml(notifLbl)}" aria-label="${escapeHtml(notifLbl)}" onclick="openNotifModal()">
-              <span>${escapeHtml(notifIcn)}</span>
+              ${notifIcnHtml}
               <span id="headerNotifDot" class="notif-dot ${notifPrefs.enabled ? '' : 'hidden'}"></span>
             </button>
           `);
@@ -12408,28 +12687,22 @@
       const pendingCount = getManageTotalBadgeCount();
 
       const tabbar = document.getElementById('appTabbar');
-      tabbar.className = 'tabbar light';
+      const curIconStyle = getUiIconStyle();
+      const showBottomLbls = getShowBottomTabLabels();
+      tabbar.className = `tabbar light${curIconStyle === 'kakao' ? ' kakao-style' : ''}${showBottomLbls ? '' : ' icon-only'}`;
       const orderedTabs = getValidTabOrder().filter(k => k !== 'manage' || canManage);
       const isMoreOpen = document.getElementById('quickLinksSheet').classList.contains('open');
       const activeVisualTab = (currentMainTab === 'bylaws' || currentMainTab === 'guide' || currentMainTab === 'terms') ? 'settings' : (currentMainTab === 'videos' ? 'home' : currentMainTab);
       tabbar.innerHTML = orderedTabs.map(key => {
-        const iconVal = getTabIcon(key);
+        const lblText = getTabLabel(key);
         if (key === 'more') {
-          const moreIconHtml = iconVal === '☰'
-            ? `<span class="tab-icon tab-icon-bars">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-                  <line x1="4" y1="6.5" x2="20" y2="6.5"></line>
-                  <line x1="4" y1="12" x2="20" y2="12"></line>
-                  <line x1="4" y1="17.5" x2="20" y2="17.5"></line>
-                </svg>
-              </span>`
-            : `<span class="tab-icon">${escapeHtml(iconVal)}</span>`;
+          const moreIconHtml = `<span class="tab-icon">${renderUiIconHtml('more', { active: isMoreOpen })}</span>`;
           const moreUnread = getUnreadCountForTab('more', user);
           const moreBadgeHtml = moreUnread > 0 ? `<span class="tab-badge">${moreUnread > 99 ? '99+' : moreUnread}</span>` : '';
           return `
-            <button id="tabBtnMore" class="tab-btn ${isMoreOpen ? 'more-active' : ''}" onclick="toggleQuickLinksSheet()">
+            <button id="tabBtnMore" class="tab-btn ${isMoreOpen ? 'more-active' : ''}" aria-label="${escapeHtml(lblText)}" title="${escapeHtml(lblText)}" onclick="toggleQuickLinksSheet()">
               ${moreIconHtml}
-              <span>${escapeHtml(getTabLabel('more'))}</span>
+              <span class="tab-label-text">${escapeHtml(lblText)}</span>
               ${moreBadgeHtml}
             </button>
           `;
@@ -12441,12 +12714,13 @@
         else if (key === 'ccm') badgeCnt = getUnreadCountForTab('ccm', user);
         else if (key === 'settings') badgeCnt = getUnreadCountForTab('settings', user);
 
+        const isActiveTab = !isMoreOpen && activeVisualTab === key;
         const badgeDisp = badgeCnt > 99 ? '99+' : String(badgeCnt);
         const badgeHtml = badgeCnt > 0 ? `<span class="tab-badge">${badgeDisp}</span>` : '';
         return `
-          <button class="tab-btn ${!isMoreOpen && activeVisualTab === key ? 'active' : ''}" onclick="switchMainTab('${key}')">
-            <span class="tab-icon">${escapeHtml(iconVal)}</span>
-            <span>${escapeHtml(getTabLabel(key))}</span>
+          <button class="tab-btn ${isActiveTab ? 'active' : ''}" aria-label="${escapeHtml(lblText)}" title="${escapeHtml(lblText)}" onclick="switchMainTab('${key}')">
+            <span class="tab-icon">${renderUiIconHtml(key, { active: isActiveTab })}</span>
+            <span class="tab-label-text">${escapeHtml(lblText)}</span>
             ${badgeHtml}
           </button>
         `;
@@ -13206,7 +13480,7 @@
         </div>
 
         <div class="search-box" style="margin-bottom:8px;">
-          <span class="search-icon">🔍</span>
+          <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.2"/><line x1="20" y1="20" x2="16.2" y2="16.2"/></svg></span>
           <input id="adminGuideSearchInput" class="search-input" type="search" value="${escapeHtml(adminGuideSearchQuery)}" placeholder="${escapeHtml(fitSearchPlaceholder('기능 검색', ['인수인계', '영상', '시트', getTabLabel('manageLogs')], 17.5))}" oninput="onAdminGuideSearchInput(this.value)" />
           <button id="adminGuideSearchClear" class="search-clear ${adminGuideSearchQuery ? '' : 'hidden'}" type="button" onclick="clearAdminGuideSearch()">✕</button>
         </div>
@@ -14162,7 +14436,7 @@
           return `
             <div class="home-block" data-ts-zone="home_notice">
               <div class="section-head">
-                <h2 class="section-title">${escapeHtml(b.title || '📢 공지 · 광고 · 소식')}</h2>
+                <h2 class="section-title"><span class="section-title-with-icon">${renderUiIconHtml('notice', { forceOutline: true })}<span>${escapeHtml(String(b.title || '공지 · 광고 · 소식').replace(/^📢\s*/, ''))}</span></span></h2>
                 ${perms.canManageNotices ? `<button class="btn-sm primary" onclick="openUnifiedContentModal('notice')">+ 글쓰기</button>` : ''}
               </div>
               <div class="filter-row" data-ts-bar="home_notice" data-ts-body="home_notice" data-ts-pos="after-body">
@@ -14383,7 +14657,7 @@
       }
     }
 
-    function renderManageSubTabIntro(subId, overrideNames = null, overrideIcons = null) {
+    function renderManageSubTabIntro(subId, overrideNames = null, overrideIcons = null, overrideStyle = null) {
       const box = document.getElementById('manageSubTabIntro');
       if (!box) return;
       const meta = MANAGE_SUBTAB_REGISTRY.find(t => t.id === subId);
@@ -14392,12 +14666,12 @@
         box.innerHTML = '';
         return;
       }
-      const icon = getEffectiveTabIcon(meta.labelKey, overrideIcons);
+      const iconHtml = renderUiIconHtml(meta.labelKey, { overrideIcons, overrideStyle, forceOutline: true });
       const label = getEffectiveTabLabel(meta.labelKey, overrideNames);
       const desc = String(meta.intro || '').trim();
       box.classList.remove('hidden');
       box.innerHTML = `
-        <div class="manage-tab-intro-icon">${escapeHtml(icon)}</div>
+        <div class="manage-tab-intro-icon">${iconHtml}</div>
         <div class="manage-tab-intro-body">
           <div class="manage-tab-intro-title"><span>${escapeHtml(label)}</span></div>
           <div class="manage-tab-intro-desc">${escapeHtml(desc)}</div>
@@ -14430,9 +14704,10 @@
 
       document.getElementById('manageSubTabs').innerHTML = allowed.map(t => {
         const bCnt = perms.canManageMembers ? getManageSubTabBadgeCount(t.id) : 0;
+        const isAct = currentManageSubTab === t.id;
         return `
-          <button class="sub-tab-btn ${currentManageSubTab === t.id ? 'active' : ''} ${bCnt > 0 ? 'has-badge' : ''}" onclick="switchManageSubTab('${t.id}')">
-            <span>${escapeHtml(t.label)}</span>${buildSubTabBadgeHtml(bCnt)}
+          <button class="sub-tab-btn ${isAct ? 'active' : ''} ${bCnt > 0 ? 'has-badge' : ''}" onclick="switchManageSubTab('${t.id}')">
+            <span class="sub-tab-inner">${renderUiIconHtml(t.labelKey, { active: isAct })}<span>${escapeHtml(getTabLabel(t.labelKey))}</span></span>${buildSubTabBadgeHtml(bCnt)}
           </button>
         `;
       }).join('');
@@ -17607,7 +17882,7 @@
           <div id="selectedRoleControlArea"></div>
 
           <div class="search-box" style="margin-bottom:8px;">
-            <span class="search-icon">🔍</span>
+            <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.2"/><line x1="20" y1="20" x2="16.2" y2="16.2"/></svg></span>
             <input id="roleMemberSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13.5px;" type="search" value="${escapeHtml(roleMemberSearchQuery)}" placeholder="회원 이름·역할 검색..." oninput="onRoleMemberSearchInput(this.value)" />
             <button id="roleMemberSearchClear" class="search-clear ${roleMemberSearchQuery ? '' : 'hidden'}" type="button" onclick="clearRoleMemberSearch()">✕</button>
           </div>
@@ -18513,6 +18788,8 @@
     let draftTabIcons = {};
     let draftUiTexts = {};
     let draftHeaderShortcuts = structuredClone(DEFAULT_HEADER_SHORTCUTS);
+    let draftUiIconStyle = DEFAULT_UI_ICON_STYLE;
+    let draftShowBottomTabLabels = DEFAULT_SHOW_BOTTOM_TAB_LABELS;
     let draftResetSectionTitles = false;
     let draftTabInitialized = false;
 
@@ -18540,6 +18817,8 @@
         draftUiTexts[u.key] = getUiText(u.key);
       });
       draftHeaderShortcuts = getGlobalHeaderShortcuts();
+      draftUiIconStyle = getUiIconStyle();
+      draftShowBottomTabLabels = getShowBottomTabLabels();
       draftTabInitialized = true;
     }
 
@@ -18567,52 +18846,44 @@
           .map(id => MANAGE_SUBTAB_REGISTRY.find(t => t.id === id))
           .filter(t => t && t.permCheck(perms));
         subTabsEl.innerHTML = liveAllowed.map(t => {
-          const ic = String(draftTabIcons[t.labelKey] ?? '').trim() || t.defaultIcon;
           const nm = String(draftTabNames[t.labelKey] ?? '').trim() || t.defaultLabel;
           const bCnt = perms.canManageMembers ? getManageSubTabBadgeCount(t.id) : 0;
+          const isAct = currentManageSubTab === t.id;
           return `
-            <button class="sub-tab-btn ${currentManageSubTab === t.id ? 'active' : ''} ${bCnt > 0 ? 'has-badge' : ''}" onclick="switchManageSubTab('${t.id}')">
-              <span>${escapeHtml(ic)} ${escapeHtml(nm)}</span>${buildSubTabBadgeHtml(bCnt)}
+            <button class="sub-tab-btn ${isAct ? 'active' : ''} ${bCnt > 0 ? 'has-badge' : ''}" onclick="switchManageSubTab('${t.id}')">
+              <span class="sub-tab-inner">${renderUiIconHtml(t.labelKey, { active: isAct, overrideIcons: draftTabIcons, overrideStyle: draftUiIconStyle })}<span>${escapeHtml(nm)}</span></span>${buildSubTabBadgeHtml(bCnt)}
             </button>
           `;
         }).join('');
       }
 
-      // 2) 하단 탭바 즉시 실시간 미리보기 (이름·이모지·순서)
+      // 2) 하단 탭바 즉시 실시간 미리보기 (아이콘 스타일·글자 표시·이름·순서)
       const tabbar = document.getElementById('appTabbar');
       if (tabbar) {
         const canManage = hasAnyManagePerm(perms);
         const pendingCount = getManageTotalBadgeCount();
         const orderedTabs = getValidTabOrder(draftTabOrder).filter(k => k !== 'manage' || canManage);
         const isMoreOpen = document.getElementById('quickLinksSheet').classList.contains('open');
+        tabbar.className = `tabbar light${draftUiIconStyle === 'kakao' ? ' kakao-style' : ''}${draftShowBottomTabLabels ? '' : ' icon-only'}`;
         tabbar.innerHTML = orderedTabs.map(key => {
           const meta = BOTTOM_TAB_REGISTRY.find(t => t.key === key) || { defaultIcon: '•', defaultLabel: key };
-          const iconVal = String(draftTabIcons[key] ?? '').trim() || meta.defaultIcon;
           const labelVal = String(draftTabNames[key] ?? '').trim() || meta.defaultLabel;
           if (key === 'more') {
-            const moreIconHtml = iconVal === '☰'
-              ? `<span class="tab-icon tab-icon-bars">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-                    <line x1="4" y1="6.5" x2="20" y2="6.5"></line>
-                    <line x1="4" y1="12" x2="20" y2="12"></line>
-                    <line x1="4" y1="17.5" x2="20" y2="17.5"></line>
-                  </svg>
-                </span>`
-              : `<span class="tab-icon">${escapeHtml(iconVal)}</span>`;
             return `
-              <button id="tabBtnMore" class="tab-btn ${isMoreOpen ? 'more-active' : ''}" onclick="toggleQuickLinksSheet()">
-                ${moreIconHtml}
-                <span>${escapeHtml(labelVal)}</span>
+              <button id="tabBtnMore" class="tab-btn ${isMoreOpen ? 'more-active' : ''}" aria-label="${escapeHtml(labelVal)}" onclick="toggleQuickLinksSheet()">
+                <span class="tab-icon">${renderUiIconHtml('more', { active: isMoreOpen, overrideIcons: draftTabIcons, overrideStyle: draftUiIconStyle })}</span>
+                <span class="tab-label-text">${escapeHtml(labelVal)}</span>
               </button>
             `;
           }
+          const isAct = !isMoreOpen && currentMainTab === key;
           const badgeHtml = (key === 'manage' && perms.canManageMembers && pendingCount > 0)
             ? `<span class="tab-badge">${pendingCount}</span>`
             : '';
           return `
-            <button class="tab-btn ${!isMoreOpen && currentMainTab === key ? 'active' : ''}" onclick="switchMainTab('${key}')">
-              <span class="tab-icon">${escapeHtml(iconVal)}</span>
-              <span>${escapeHtml(labelVal)}</span>
+            <button class="tab-btn ${isAct ? 'active' : ''}" aria-label="${escapeHtml(labelVal)}" onclick="switchMainTab('${key}')">
+              <span class="tab-icon">${renderUiIconHtml(key, { active: isAct, overrideIcons: draftTabIcons, overrideStyle: draftUiIconStyle })}</span>
+              <span class="tab-label-text">${escapeHtml(labelVal)}</span>
               ${badgeHtml}
             </button>
           `;
@@ -18627,7 +18898,10 @@
         manageTitleEl.textContent = getManageSectionTitle('labels_manage', `${mIcon} ${mName} 상단 탭 (왼쪽 → 오른쪽 순)`);
       }
       syncAllDynamicLabelsUI(draftTabNames, draftTabIcons, draftUiTexts);
-      renderHeaderActions(false, draftTabNames, draftTabIcons, draftHeaderShortcuts);
+      renderHeaderActions(false, draftTabNames, draftTabIcons, draftHeaderShortcuts, draftUiIconStyle);
+      if (currentMainTab === 'manage' && typeof renderManageSubTabIntro === 'function') {
+        renderManageSubTabIntro(currentManageSubTab, draftTabNames, draftTabIcons, draftUiIconStyle);
+      }
     }
 
     window.setManageLabelsFilter = (f) => {
@@ -18765,6 +19039,25 @@
                 </div>
               </div>
             ` : ''}
+            <div style="margin-top:12px; padding-top:12px; border-top:1px solid #F1F5F9;">
+              <div style="font-size:12.5px; font-weight:800; color:#0F172A; margin-bottom:4px;">🎨 앱 전체 UI 아이콘 스타일 (하단 탭 · 헤더 · 설정 · 관리)</div>
+              <div style="font-size:11.5px; color:#64748B; line-height:1.45; margin-bottom:7px;">직접 제작한 단색 벡터(SVG) 아이콘으로 기기 상관없이 깔끔하게 통일하거나 기존 이모지로 전환할 수 있습니다.</div>
+              <div class="qr-mode-grid" style="margin:0 0 10px;">
+                <button class="qr-mode-btn ${draftUiIconStyle === 'insta' ? 'active' : ''}" type="button" onclick="setDraftUiIconStyle('insta')">✨ 모던 선형<small>인스타형 · 추천</small></button>
+                <button class="qr-mode-btn ${draftUiIconStyle === 'kakao' ? 'active' : ''}" type="button" onclick="setDraftUiIconStyle('kakao')">💬 심플 채움<small>카톡형</small></button>
+                <button class="qr-mode-btn ${draftUiIconStyle === 'emoji' ? 'active' : ''}" type="button" onclick="setDraftUiIconStyle('emoji')">😀 기본 이모지<small>직접 입력 반영</small></button>
+              </div>
+              <div class="setting-row" style="padding:8px 0 2px; border-top:1px dashed #E2E8F0; border-bottom:none;">
+                <div>
+                  <div class="setting-title" style="font-size:13px;">🏷️ 하단 탭 글자 표시</div>
+                  <div class="setting-sub" style="font-size:11px;">켜면 아이콘 아래 탭 이름 표시 (추천) · 끄면 아이콘만 깔끔하게 표시</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" ${draftShowBottomTabLabels ? 'checked' : ''} onchange="toggleDraftShowBottomTabLabels(this.checked)" />
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
         ` : ''}
@@ -18991,6 +19284,21 @@
       }
     };
 
+
+    window.setDraftUiIconStyle = (style) => {
+      draftUiIconStyle = ['insta', 'kakao', 'emoji'].includes(style) ? style : DEFAULT_UI_ICON_STYLE;
+      syncLiveTabPreview();
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'manage' && currentManageSubTab === 'labels') {
+        renderManageLabels(document.getElementById('manageContent'), u);
+      }
+    };
+
+    window.toggleDraftShowBottomTabLabels = (checked) => {
+      draftShowBottomTabLabels = !!checked;
+      syncLiveTabPreview();
+    };
+
     window.resetTabLabelsDefaults = () => {
       draftTabOrder = [...DEFAULT_TAB_ORDER];
       draftManageSubTabOrder = [...DEFAULT_MANAGE_SUBTAB_ORDER];
@@ -19014,6 +19322,8 @@
         draftUiTexts[u.key] = u.defaultVal;
       });
       draftHeaderShortcuts = structuredClone(DEFAULT_HEADER_SHORTCUTS);
+      draftUiIconStyle = DEFAULT_UI_ICON_STYLE;
+      draftShowBottomTabLabels = DEFAULT_SHOW_BOTTOM_TAB_LABELS;
       draftResetSectionTitles = true;
       draftTabInitialized = true;
       syncLiveTabPreview();
@@ -19034,6 +19344,8 @@
         uiTexts: {},
         sectionTitles: draftResetSectionTitles ? {} : { ...(tabLabels.sectionTitles || {}) },
         headerShortcuts: normalizeHeaderShortcutsConfig(draftHeaderShortcuts),
+        uiIconStyle: ['insta', 'kakao', 'emoji'].includes(draftUiIconStyle) ? draftUiIconStyle : DEFAULT_UI_ICON_STYLE,
+        showBottomTabLabels: !!draftShowBottomTabLabels,
         postReactionEmojis: getConfiguredPostReactionEmojis(),
         videoReactionEmojis: getConfiguredVideoReactionEmojis()
       };
@@ -23018,7 +23330,7 @@
             }).join('')}
           </select>
           <div class="search-box" style="flex:1; margin-bottom:0;">
-            <span class="search-icon">🔍</span>
+            <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.2"/><line x1="20" y1="20" x2="16.2" y2="16.2"/></svg></span>
             <input id="adminLogSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13px;" type="search" value="${escapeHtml(adminLogSearchQuery)}" placeholder="이름·내용·날짜 검색..." oninput="onAdminLogSearchInput(this.value)" />
             <button id="adminLogSearchClear" class="search-clear ${adminLogSearchQuery ? '' : 'hidden'}" type="button" onclick="clearAdminLogSearch()">✕</button>
           </div>
@@ -24398,7 +24710,7 @@
         <!-- 1) 월별 달력 + 날짜·예배·행사명 빠른 찾기 -->
         <div class="card" style="padding:12px;">
           <div class="search-box" style="margin-bottom:8px;">
-            <span class="search-icon">🔍</span>
+            <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.2"/><line x1="20" y1="20" x2="16.2" y2="16.2"/></svg></span>
             <input id="attRosterQuickJumpInput" class="search-input" style="padding-top:8px; padding-bottom:8px; font-size:13px;" type="search" value="${escapeHtml(attRosterQuickJumpQuery)}" placeholder="날짜·예배·행사명 빠른 이동 (예: 11.29, 수련회)" oninput="onAttRosterQuickJumpInput(this.value)" />
             <button id="attRosterQuickJumpClear" class="search-clear ${attRosterQuickJumpQuery ? '' : 'hidden'}" type="button" onclick="clearAttRosterQuickJump()">✕</button>
           </div>
@@ -24509,7 +24821,7 @@
             `}
 
             <div class="search-box" style="margin-bottom:2px;">
-              <span class="search-icon">🔍</span>
+              <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.2"/><line x1="20" y1="20" x2="16.2" y2="16.2"/></svg></span>
               <input id="attRosterSearchInput" class="search-input" style="padding-top:9px; padding-bottom:9px; font-size:13px;" type="search" value="${escapeHtml(attRosterSearchQuery)}" placeholder="회원 이름·셀 검색..." oninput="onAttRosterSearchInput(this.value)" />
               <button id="attRosterSearchClear" class="search-clear ${attRosterSearchQuery ? '' : 'hidden'}" type="button" onclick="clearAttRosterSearch()">✕</button>
             </div>
@@ -33482,7 +33794,7 @@
         if (key === 'setAccount' && (isAdmin || isPreview)) return;
         const reg = SETTINGS_ITEM_REGISTRY.find(x => x.key === key);
         if (!reg) return;
-        const ic = getTabIcon(key);
+        const icHtml = renderUiIconHtml(key);
         const lb = getTabLabel(key);
         let rowHtml = '';
 
@@ -33490,7 +33802,7 @@
           rowHtml = `
             <button class="settings-row-btn" type="button" onclick="openAccountModal()">
               <span class="settings-row-left">
-                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span class="settings-row-icon">${icHtml}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title">${escapeHtml(lb)}</div>
                   <div class="settings-row-sub">이름 변경 신청, 출석 기록, 비밀번호 변경·탈퇴</div>
@@ -33503,7 +33815,7 @@
           rowHtml = `
             <button class="settings-row-btn" type="button" onclick="openNotifModal()">
               <span class="settings-row-left">
-                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span class="settings-row-icon">${icHtml}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title">${escapeHtml(lb)}</div>
                   <div class="settings-row-sub">새 공지·영상·문의 알림 및 기기 알림 권한</div>
@@ -33519,7 +33831,7 @@
           rowHtml = `
             <button class="settings-row-btn" type="button" onclick="toggleSettingsFontAccordion()">
               <span class="settings-row-left">
-                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span class="settings-row-icon">${icHtml}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title">${escapeHtml(lb)}</div>
                   <div class="settings-row-sub">내 기기 화면 글자 크기를 보통 · 크게 · 아주 크게로 조절합니다</div>
@@ -33544,7 +33856,7 @@
           rowHtml = `
             <button class="settings-row-btn" type="button" onclick="openInviteQrModal()">
               <span class="settings-row-left">
-                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span class="settings-row-icon">${icHtml}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title">${escapeHtml(lb)}</div>
                   <div class="settings-row-sub">새 지체 초대 QR 보기 · 이미지 공유 · 링크 복사</div>
@@ -33557,7 +33869,7 @@
           rowHtml = `
             <button class="settings-row-btn" type="button" onclick="openFromSettingsTab('bylaws')">
               <span class="settings-row-left">
-                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span class="settings-row-icon">${icHtml}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title">${escapeHtml(lb)}</div>
                   <div class="settings-row-sub">라이트 청년부 회칙 전문 검색 및 복사</div>
@@ -33570,7 +33882,7 @@
           rowHtml = `
             <button class="settings-row-btn" type="button" onclick="openFromSettingsTab('guide')">
               <span class="settings-row-left">
-                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span class="settings-row-icon">${icHtml}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title">${escapeHtml(lb)}</div>
                   <div class="settings-row-sub">출석·공지·영상·알림 등 앱 사용 방법 안내</div>
@@ -33583,7 +33895,7 @@
           rowHtml = `
             <button class="settings-row-btn" type="button" onclick="openInquiryModal()">
               <span class="settings-row-left">
-                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span class="settings-row-icon">${icHtml}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title" style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;"><span>${escapeHtml(lb)}</span>${unreadMyReplyCnt > 0 ? '<span class="new-badge">NEW</span>' : ''}</div>
                   <div class="settings-row-sub">불편한 점 · 개선 사항 · 기능 요청 · 의견 보내기</div>
@@ -33599,7 +33911,7 @@
           rowHtml = `
             <button class="settings-row-btn" type="button" onclick="openAppInstallGuideModal()">
               <span class="settings-row-left">
-                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span class="settings-row-icon">${icHtml}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title">${escapeHtml(lb)}</div>
                   <div class="settings-row-sub">아이폰·안드로이드 스마트폰에 앱처럼 설치하기</div>
@@ -33612,7 +33924,7 @@
           rowHtml = `
             <button class="settings-row-btn" type="button" onclick="openFromSettingsTab('terms')">
               <span class="settings-row-left">
-                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span class="settings-row-icon">${icHtml}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title">${escapeHtml(lb)}</div>
                   <div class="settings-row-sub">청년부 회칙 기반 앱 서비스 이용약관 확인</div>
@@ -33625,7 +33937,7 @@
           rowHtml = `
             <button class="settings-row-btn" type="button" onclick="openPrivacyGuideModal()">
               <span class="settings-row-left">
-                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span class="settings-row-icon">${icHtml}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title">${escapeHtml(lb)}</div>
                   <div class="settings-row-sub">최소 수집 원칙 및 실시간 보안 방어 안내</div>
@@ -33638,7 +33950,7 @@
           rowHtml = `
             <button class="settings-row-btn" type="button" onclick="confirmLogoutFromSettings()">
               <span class="settings-row-left">
-                <span class="settings-row-icon danger">${escapeHtml(ic)}</span>
+                <span class="settings-row-icon danger">${icHtml}</span>
                 <span style="min-width:0;">
                   <div class="settings-row-title danger">${escapeHtml(lb)}</div>
                   <div class="settings-row-sub">현재 계정에서 안전하게 로그아웃합니다</div>
