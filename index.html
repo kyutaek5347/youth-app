@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=279" />
+  <link rel="manifest" href="./manifest.json?v=280" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=279" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=279" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=280" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=280" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4734,7 +4734,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=279" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=280" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4772,7 +4772,7 @@
 
       <div class="login-card">
         <div id="emergencyRecoveryLoginBanner" class="emergency-login-banner hidden">
-          <div style="font-weight:900; margin-bottom:3px;">🚨 긴급 보안 점검 작동 중 · 지정 최고 관리자 복구 로그인</div>
+          <div style="font-weight:900; margin-bottom:3px;">긴급 보안 점검 작동 중 · 지정 최고 관리자 복구 로그인</div>
           <div>보안 위협으로 앱이 일시 차단되었습니다. <b>지정된 최고 관리자</b>로 로그인해야 복구·해제할 수 있습니다. (일반 회원 및 지정 외 관리자는 차단 화면이 표시됩니다)</div>
           <button class="btn-sm" type="button" style="margin-top:7px;" onclick="closeEmergencyAdminRecoveryLogin()">← 긴급 점검 안내 화면으로 돌아가기</button>
         </div>
@@ -4795,7 +4795,7 @@
           <div id="loginError" class="login-error"></div>
           <button id="submitLoginBtn" class="btn-full btn-dark" type="button">로그인</button>
           <div class="auth-footer-links">
-            <button class="text-link-btn" type="button" onclick="openResetPwModal()">🔑 비밀번호가 초기화되셨나요? 새 비밀번호 설정</button>
+            <button class="text-link-btn" type="button" onclick="openResetPwModal()">비밀번호가 초기화되셨나요? 새 비밀번호 설정</button>
           </div>
         </div>
 
@@ -4811,7 +4811,7 @@
           </div>
 
           <div id="signupTermsGateBox" class="signup-terms-gate-card hidden">
-            <div style="font-size:14.5px; font-weight:900; color:#0F172A; margin-bottom:4px;">📄 라이트 청년부 앱 이용약관 동의</div>
+            <div style="font-size:14.5px; font-weight:900; color:#0F172A; margin-bottom:4px;">라이트 청년부 앱 이용약관 동의</div>
             <div style="font-size:12px; color:#475569; line-height:1.48;">
               회원가입을 진행하기 전에 아래 이용약관을 확인하고 동의해 주세요. 동의를 누르면 이용약관 안내가 닫히고 회원가입 입력 화면이 나타납니다.
             </div>
@@ -4826,8 +4826,8 @@
 
           <div id="signupFormBody" class="hidden">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
-              <div id="signupQrOkBadge" class="signup-qr-ok-badge" style="margin-bottom:0; flex:1 1 180px;">✅ 오늘의 초대 QR 인증 완료 · 회원가입 가능</div>
-              <button class="btn-sm" type="button" onclick="reopenSignupTermsGate()">📄 약관 다시 보기</button>
+              <div id="signupQrOkBadge" class="signup-qr-ok-badge" style="margin-bottom:0; flex:1 1 180px;">오늘의 초대 QR 인증 완료 · 회원가입 가능</div>
+              <button class="btn-sm" type="button" onclick="reopenSignupTermsGate()">약관 다시 보기</button>
             </div>
             <label class="login-field-label" for="signupNameInput">아이디 (본인 성명)</label>
             <div class="login-input-wrap">
@@ -4883,14 +4883,14 @@
     <!-- ==================== 1.5. 서버 점검 · 긴급 보안 점검 안내 화면 ==================== -->
     <section id="maintenanceScreen" class="maintenance-screen hidden">
       <div class="maintenance-card">
-        <div id="maintScreenBadge" class="maint-badge-pill">🔧 서버 점검 안내</div>
+        <div id="maintScreenBadge" class="maint-badge-pill">서버 점검 안내</div>
         <div><div id="maintScreenIcon" class="maintenance-icon"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4.5 4.5 0 0 0-5.8 5.8L4 17a2 2 0 0 0 2.8 2.8l4.9-4.9a4.5 4.5 0 0 0 5.8-5.8l-2.6 2.6-2.8-2.8 2.6-2.6z"/></svg></span></div></div>
         <h1 id="maintScreenTitle" style="font-size:20px; font-weight:900; margin:0 0 10px; color:#FFFFFF;">정기 서버 점검 중입니다</h1>
         <p id="maintScreenDesc" style="font-size:13.5px; color:#CBD5E1; line-height:1.6; margin:0; white-space:pre-line; word-break:keep-all;">더 안정적인 서비스 제공을 위해 정기 서버 점검을 진행하고 있습니다. 점검이 끝나면 자동으로 복구됩니다.</p>
         <div id="maintScreenSubNotice" class="maint-sub-notice hidden"></div>
         <div style="display:flex; flex-direction:column; gap:8px; margin-top:16px;">
-          <button class="btn-full btn-amber" type="button" onclick="recheckMaintenanceNow()">🔄 점검 종료 여부 다시 확인</button>
-          <button id="maintRecoveryLoginBtn" class="btn-outline hidden" type="button" style="background:rgba(239,68,68,0.18); color:#FECACA; border-color:rgba(248,113,113,0.45); padding:11px; font-weight:800;" onclick="openEmergencyAdminRecoveryLogin()">🔐 지정 최고 관리자 복구 로그인</button>
+          <button class="btn-full btn-amber" type="button" onclick="recheckMaintenanceNow()">점검 종료 여부 다시 확인</button>
+          <button id="maintRecoveryLoginBtn" class="btn-outline hidden" type="button" style="background:rgba(239,68,68,0.18); color:#FECACA; border-color:rgba(248,113,113,0.45); padding:11px; font-weight:800;" onclick="openEmergencyAdminRecoveryLogin()">지정 최고 관리자 복구 로그인</button>
           <button id="maintLogoutBtn" class="btn-outline" type="button" style="background:rgba(255,255,255,0.08); color:#E2E8F0; border-color:rgba(255,255,255,0.2); padding:11px;" onclick="logout()">로그아웃</button>
         </div>
       </div>
@@ -4921,7 +4921,7 @@
           <div class="sermon-hero">
             <div class="hero-top-row">
               <div class="hero-top-text">
-                <div id="sermonViewTitle" class="hero-top-title">🎙️ 설교</div>
+                <div id="sermonViewTitle" class="hero-top-title">설교</div>
                 <div id="sermonViewSub" class="hero-top-sub">자동 보안·채널 검사를 통과한 교회 설교·특강 영상을 편하게 시청하세요.</div>
               </div>
               <div class="hero-top-actions">
@@ -4946,7 +4946,7 @@
           <div class="ccm-hero">
             <div class="hero-top-row">
               <div class="hero-top-text">
-                <div id="ccmViewTitle" class="hero-top-title">🎵 CCM</div>
+                <div id="ccmViewTitle" class="hero-top-title">CCM</div>
                 <div id="ccmViewSub" class="hero-top-sub">은혜로운 CCM과 찬양 영상을 함께 듣고 나누는 공간입니다.</div>
               </div>
               <div class="hero-top-actions">
@@ -4972,11 +4972,11 @@
             <button id="bylawsBackToSettingsBtn" class="subview-back-btn" type="button" onclick="switchMainTab('settings')">← 설정으로 돌아가기</button>
             <div id="bylawsAdminBar" class="hidden" style="display:flex; gap:6px; flex-wrap:wrap;">
               <button class="btn-sm primary" type="button" onclick="openBylawFormModal()">+ 조항 추가</button>
-              <button id="bylawsRestoreBtn" class="btn-sm hidden" type="button" onclick="restoreDefaultBylaws()">🔄 기본 복원</button>
+              <button id="bylawsRestoreBtn" class="btn-sm hidden" type="button" onclick="restoreDefaultBylaws()">기본 복원</button>
             </div>
           </div>
           <div class="bylaw-hero">
-            <div id="bylawViewTitle" class="bylaw-hero-title">📜 구미제일감리교회 라이트 청년부 회칙</div>
+            <div id="bylawViewTitle" class="bylaw-hero-title">구미제일감리교회 라이트 청년부 회칙</div>
             <div id="bylawViewDates" class="bylaw-hero-dates">2014.03.23 제정 · 2023.10.29 개정 · 2026.11.22 최종개정</div>
           </div>
 
@@ -5008,7 +5008,7 @@
             <button id="guideBackToSettingsBtn" class="subview-back-btn" type="button" onclick="switchMainTab('settings')">← 설정으로 돌아가기</button>
           </div>
           <div class="guide-hero-user">
-            <div id="userGuideViewTitle" class="bylaw-hero-title">📘 라이트 청년부 앱 사용방법</div>
+            <div id="userGuideViewTitle" class="bylaw-hero-title">라이트 청년부 앱 사용방법</div>
             <div id="userGuideViewSub" class="bylaw-hero-dates">
               처음 사용하시는 분도 쉽게 따라 할 수 있도록 주요 기능과 이용 방법을 정리했습니다.
             </div>
@@ -5032,11 +5032,11 @@
             <button id="termsBackToSettingsBtn" class="subview-back-btn" type="button" onclick="switchMainTab('settings')">← 설정으로 돌아가기</button>
             <div id="termsAdminBar" class="hidden" style="display:flex; gap:6px; flex-wrap:wrap;">
               <button class="btn-sm primary" type="button" onclick="openTermsFormModal()">+ 조항 추가</button>
-              <button id="termsRestoreBtn" class="btn-sm hidden" type="button" onclick="restoreDefaultTerms()">🔄 기본 복원</button>
+              <button id="termsRestoreBtn" class="btn-sm hidden" type="button" onclick="restoreDefaultTerms()">기본 복원</button>
             </div>
           </div>
           <div class="bylaw-hero" style="background:linear-gradient(135deg, #0F172A 0%, #334155 100%);">
-            <div id="termsViewTitle" class="bylaw-hero-title">📄 라이트 청년부 앱 이용약관</div>
+            <div id="termsViewTitle" class="bylaw-hero-title">라이트 청년부 앱 이용약관</div>
             <div id="termsViewSub" class="bylaw-hero-dates">구미제일감리교회 라이트 청년부 회칙을 바탕으로 작성된 서비스 이용약관입니다.</div>
           </div>
           <div class="search-box">
@@ -5100,7 +5100,7 @@
   <div id="adminResetIssuedModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">🔑 비밀번호 초기화 완료</h3>
+        <h3 class="modal-title">비밀번호 초기화 완료</h3>
         <button class="close-btn" data-close="adminResetIssuedModal">✕</button>
       </div>
       <div id="issuedResetDesc" style="font-size:13.5px; color:#334155; line-height:1.55;"></div>
@@ -5111,7 +5111,7 @@
         • 아래 버튼으로 안내 문구를 복사해 카카오톡 등으로 전달해 주세요.
       </div>
       <div style="display:flex; gap:8px;">
-        <button class="btn-full btn-dark" type="button" style="flex:1; padding:12px; font-size:13.5px;" onclick="copyIssuedResetMessage()">📋 안내 문구 복사</button>
+        <button class="btn-full btn-dark" type="button" style="flex:1; padding:12px; font-size:13.5px;" onclick="copyIssuedResetMessage()">안내 문구 복사</button>
         <button class="btn-outline" type="button" data-close="adminResetIssuedModal">닫기</button>
       </div>
     </div>
@@ -5153,7 +5153,7 @@
       <!-- (2) 본인 계정 삭제 (회원 탈퇴) -->
       <div id="accPanelDelete" class="hidden">
         <div class="info-box warn" style="margin-top:0; margin-bottom:12px;">
-          ⚠️ <b>회원 탈퇴(계정 삭제) 안내</b><br>
+          <b>회원 탈퇴(계정 삭제) 안내</b><br>
           계정을 삭제하면 로그인 정보와 회원 기록이 즉시 영구 삭제됩니다. 다시 이용하려면 회원가입 신청이 필요합니다.
         </div>
         <div class="form-group">
@@ -5201,7 +5201,7 @@
       <div id="notifDetailGroup">
         <div class="setting-row">
           <div>
-            <div id="notifHomeTitle" class="setting-title">📢 메인 화면 새 소식 알림</div>
+            <div id="notifHomeTitle" class="setting-title">메인 화면 새 소식 알림</div>
             <div id="notifHomeSub" class="setting-sub">메인 화면에 새 공지·광고·배너, 새신자 소식이 올라올 때</div>
           </div>
           <label class="switch">
@@ -5212,7 +5212,7 @@
 
         <div class="setting-row">
           <div>
-            <div class="setting-title">🎬 새 설교 · 찬양 영상 알림</div>
+            <div class="setting-title">새 설교 · 찬양 영상 알림</div>
             <div class="setting-sub">공식 채널 자동 게시 또는 관리자 승인으로 새 영상이 올라올 때</div>
           </div>
           <label class="switch">
@@ -5223,7 +5223,7 @@
 
         <div class="setting-row hidden" id="notifInquiryReplyRow">
           <div>
-            <div class="setting-title">💬 내 문의 답변 알림</div>
+            <div class="setting-title">내 문의 답변 알림</div>
             <div class="setting-sub">내가 보낸 문의 사항에 관리자가 답변을 남겼을 때</div>
           </div>
           <label class="switch">
@@ -5234,7 +5234,7 @@
 
         <div class="setting-row hidden" id="notifMemberRow">
           <div>
-            <div class="setting-title">👤 신규 회원가입 신청 알림</div>
+            <div class="setting-title">신규 회원가입 신청 알림</div>
             <div class="setting-sub">새 회원이 가입 승인을 요청했을 때 (관리자 전용)</div>
           </div>
           <label class="switch">
@@ -5245,7 +5245,7 @@
 
         <div class="setting-row hidden" id="notifAdminEntryRow">
           <div>
-            <div class="setting-title">👑 새 관리자 입장 · 승인 요청 알림</div>
+            <div class="setting-title">새 관리자 입장 · 승인 요청 알림</div>
             <div class="setting-sub">새로운 관리자가 입장하거나 입장 승인을 요청했을 때 (관리자 전용)</div>
           </div>
           <label class="switch">
@@ -5256,7 +5256,7 @@
 
         <div class="setting-row hidden" id="notifInquiryNewRow">
           <div>
-            <div class="setting-title">💬 새 문의 사항 접수 알림</div>
+            <div class="setting-title">새 문의 사항 접수 알림</div>
             <div class="setting-sub">이용자가 불편·개선·의견 문의를 새로 등록했을 때 (관리자 전용)</div>
           </div>
           <label class="switch">
@@ -5267,7 +5267,7 @@
 
         <div class="setting-row hidden" id="notifVideoPendingRow">
           <div>
-            <div class="setting-title">🎬 미등록 채널 영상 검토 요청 알림</div>
+            <div class="setting-title">미등록 채널 영상 검토 요청 알림</div>
             <div class="setting-sub">미등록 채널의 유튜브 영상이 추천되어 관리자 확인이 필요할 때 (관리자 전용)</div>
           </div>
           <label class="switch">
@@ -5281,7 +5281,7 @@
 
       <div style="display:flex; gap:8px; margin-top:14px;">
         <button id="reqPermBtn" class="btn-full btn-dark hidden" type="button" style="flex:1; padding:11px; font-size:13.5px;" onclick="requestDeviceNotifPermission()">기기 알림 허용하기</button>
-        <button class="btn-outline" type="button" style="flex:1; padding:11px; font-size:13.5px;" onclick="sendTestNotification()">🔔 테스트 알림</button>
+        <button class="btn-outline" type="button" style="flex:1; padding:11px; font-size:13.5px;" onclick="sendTestNotification()">테스트 알림</button>
       </div>
     </div>
   </div>
@@ -5308,16 +5308,16 @@
   <div id="unifiedPostModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="unifiedPostModalTitle" class="modal-title">✨ 새 배너 · 공지 · 광고 등록</h3>
+        <h3 id="unifiedPostModalTitle" class="modal-title">새 배너 · 공지 · 광고 등록</h3>
         <button class="close-btn" data-close="unifiedPostModal">✕</button>
       </div>
 
       <div class="form-group" style="margin-bottom:10px;">
         <label class="form-label">등록 방식 선택</label>
         <div id="uniModeGrid" class="qr-mode-grid" style="margin-top:0; margin-bottom:6px;">
-          <button id="uniModeNoticeBtn" class="qr-mode-btn active" type="button" onclick="setUnifiedPostMode('notice')">📝 공지·광고<small>목록에만 등록</small></button>
-          <button id="uniModeBannerBtn" class="qr-mode-btn" type="button" onclick="setUnifiedPostMode('banner')">🎨 배너·칸<small>홈 배너만 추가</small></button>
-          <button id="uniModeBothBtn" class="qr-mode-btn" type="button" onclick="setUnifiedPostMode('both')">✨ 둘 다 등록<small>배너 + 공지 동시</small></button>
+          <button id="uniModeNoticeBtn" class="qr-mode-btn active" type="button" onclick="setUnifiedPostMode('notice')">공지·광고<small>목록에만 등록</small></button>
+          <button id="uniModeBannerBtn" class="qr-mode-btn" type="button" onclick="setUnifiedPostMode('banner')">배너·칸<small>홈 배너만 추가</small></button>
+          <button id="uniModeBothBtn" class="qr-mode-btn" type="button" onclick="setUnifiedPostMode('both')">둘 다 등록<small>배너 + 공지 동시</small></button>
         </div>
         <div id="uniModeHint" class="info-box" style="margin-top:0; padding:9px 11px; font-size:11.5px;"></div>
       </div>
@@ -5330,7 +5330,7 @@
             <option value="광고">광고</option>
             <option value="소식">소식</option>
             <option value="행사">행사</option>
-            <option value="__custom__">✏️ 직접 입력...</option>
+            <option value="__custom__">직접 입력...</option>
           </select>
           <input id="uniCategoryCustomInput" class="form-input hidden" style="margin-top:6px;" maxlength="12" placeholder="구분 직접 입력 (예: 수련회)" oninput="onUnifiedCategoryChange()" />
         </div>
@@ -5344,7 +5344,7 @@
       <div id="uniBannerStyleFields" class="hidden">
         <div class="form-group" id="uniBadgeGroup">
           <label id="uniBadgeLabel" class="form-label" for="uniBadgeInput">배너 배지 문구 (상단 작은 글씨)</label>
-          <input id="uniBadgeInput" class="form-input" maxlength="24" placeholder="예: 📣 청년부 광고 / 📌 이번 주 안내" />
+          <input id="uniBadgeInput" class="form-input" maxlength="24" placeholder="예: 청년부 광고 / 이번 주 안내" />
         </div>
         <div class="form-group" id="uniColorGroup">
           <label class="form-label">배너 배경 색상 테마</label>
@@ -5366,8 +5366,8 @@
         <label class="form-label" for="uniAudienceSelect">공개 대상 (누가 볼 수 있나요?)</label>
         <select id="uniAudienceSelect" class="form-select" onchange="onUnifiedAudienceChange()">
           <option value="all">전체 승인 회원 (기본)</option>
-          <option value="roles">🎯 선택한 역할만 보기</option>
-          <option value="admin">🔐 최고 관리자만 보기</option>
+          <option value="roles">선택한 역할만 보기</option>
+          <option value="admin">최고 관리자만 보기</option>
         </select>
         <div id="uniRoleTargetBox" class="role-target-box hidden">
           <div class="role-target-actions">
@@ -5382,9 +5382,9 @@
       <div class="form-group">
         <label class="form-label" for="uniPublishModeSelect">게시 방식</label>
         <select id="uniPublishModeSelect" class="form-select" onchange="onUnifiedPublishModeChange()">
-          <option value="now">🚀 바로 게시 (즉시 공개)</option>
-          <option value="draft">📝 임시저장 (숨김 · 관리자만 확인)</option>
-          <option value="scheduled">⏰ 예약 게시 (지정한 한국시간에 자동 공개)</option>
+          <option value="now">바로 게시 (즉시 공개)</option>
+          <option value="draft">임시저장 (숨김 · 관리자만 확인)</option>
+          <option value="scheduled">예약 게시 (지정한 한국시간에 자동 공개)</option>
         </select>
         <div id="uniScheduleBox" class="schedule-time-box hidden">
           <div class="form-grid-2">
@@ -5413,7 +5413,7 @@
 
       <label id="uniPinBannerRow" class="checkbox-row" style="margin-bottom:8px;">
         <input type="checkbox" id="uniPinBannerInput" checked onchange="onUnifiedPinBannerChange()" />
-        <span id="uniPinBannerLabel">📌 상단 고정 공지 배너에도 함께 띄우기</span>
+        <span id="uniPinBannerLabel">상단 고정 공지 배너에도 함께 띄우기</span>
       </label>
 
       <label id="uniNotifyRow" class="checkbox-row" style="margin-bottom:16px;">
@@ -5421,7 +5421,7 @@
         <span>바로 게시 시 대상 회원들에게 알림 띄우기</span>
       </label>
 
-      <button id="saveUnifiedPostBtn" class="btn-full btn-dark" type="button" onclick="handleSaveUnifiedPost()">📝 공지·광고 저장하기</button>
+      <button id="saveUnifiedPostBtn" class="btn-full btn-dark" type="button" onclick="handleSaveUnifiedPost()">공지·광고 저장하기</button>
     </div>
   </div>
 
@@ -5550,7 +5550,7 @@
           <option value="custom_ad">광고 · 홍보 배너 칸</option>
           <option value="hero_notice">상단 메인 고정 공지 배너</option>
           <option value="newcomer_card">새신자 소식 · 환영 안내 칸</option>
-          <option value="leader_card">🎯 특정 역할 전용 소식 칸</option>
+          <option value="leader_card">특정 역할 전용 소식 칸</option>
           <option value="notice_list">공지 · 광고 · 소식 목록</option>
         </select>
       </div>
@@ -5558,7 +5558,7 @@
       <div id="blockContentFields">
         <div class="form-group" id="blockBadgeGroup">
           <label id="blockBadgeLabel" class="form-label" for="blockBadgeInput">배지 문구 (상단 작은 글씨)</label>
-          <input id="blockBadgeInput" class="form-input" maxlength="30" placeholder="예: 📌 중요 / ✨ 특별 광고" />
+          <input id="blockBadgeInput" class="form-input" maxlength="30" placeholder="예: 중요 / 특별 광고" />
         </div>
         <div class="form-group" id="blockTitleGroup">
           <label class="form-label" for="blockTitleInput">제목</label>
@@ -5577,8 +5577,8 @@
         <label class="form-label" for="blockAudienceSelect">이 칸을 볼 수 있는 대상</label>
         <select id="blockAudienceSelect" class="form-select" onchange="onBlockAudienceChange()">
           <option value="all">전체 승인 회원 (기본)</option>
-          <option value="roles">🎯 선택한 역할만 보기</option>
-          <option value="admin">🔐 최고 관리자만 보기</option>
+          <option value="roles">선택한 역할만 보기</option>
+          <option value="admin">최고 관리자만 보기</option>
         </select>
         <div id="blockRoleTargetBox" class="role-target-box hidden">
           <div class="role-target-actions">
@@ -5592,9 +5592,9 @@
       <div class="form-group">
         <label class="form-label" for="blockPublishModeSelect">게시 방식</label>
         <select id="blockPublishModeSelect" class="form-select" onchange="onBlockPublishModeChange()">
-          <option value="now">🚀 바로 게시 (즉시 메인 화면에 공개)</option>
-          <option value="draft">📝 임시저장 (숨김 · 관리자만 확인)</option>
-          <option value="scheduled">⏰ 예약 게시 (지정한 한국시간에 자동 공개)</option>
+          <option value="now">바로 게시 (즉시 메인 화면에 공개)</option>
+          <option value="draft">임시저장 (숨김 · 관리자만 확인)</option>
+          <option value="scheduled">예약 게시 (지정한 한국시간에 자동 공개)</option>
         </select>
         <div id="blockScheduleBox" class="schedule-time-box hidden">
           <div class="form-grid-2">
@@ -5652,7 +5652,7 @@
       <label class="checkbox-row" style="background:#F0F9FF; border:1px solid #BAE6FD; border-radius:11px; padding:10px 11px; margin:10px 0 6px; cursor:pointer;">
         <input type="checkbox" id="roleObserveManageInput" />
         <span>
-          <b style="color:#0369A1;">👁️ 관리 센터 구경(읽기 전용) 권한 부여</b><br>
+          <b style="color:#0369A1;">관리 센터 구경(읽기 전용) 권한 부여</b><br>
           <span style="font-size:11.5px; color:#475569; font-weight:500;">켜면 이 역할의 회원이 관리 화면을 둘러볼 수 있지만, 추가·수정·삭제·승인 및 관리자 코드·시트 주소 열람은 전면 차단됩니다.</span>
         </span>
       </label>
@@ -5666,13 +5666,13 @@
     <div class="quick-sheet-modal">
       <div class="quick-sheet-handle"></div>
       <div class="quick-sheet-head">
-        <h3 id="quickSheetTitle" class="quick-sheet-title">🔗 사이트 바로가기</h3>
+        <h3 id="quickSheetTitle" class="quick-sheet-title">사이트 바로가기</h3>
         <button class="quick-sheet-close" type="button" onclick="closeQuickLinksSheet()">✕</button>
       </div>
       <div id="quickLinksSheetList"></div>
       <div id="quickLinksSheetAdminBar" class="quick-sheet-admin-bar hidden">
         <button class="quick-sheet-admin-btn" type="button" onclick="openAddQuickLinkFromSheet()">+ 사이트 추가</button>
-        <button id="quickSheetManageEditBtn" class="quick-sheet-admin-btn" type="button" onclick="goToQuickLinksManage()">⚙️ 관리 센터 편집</button>
+        <button id="quickSheetManageEditBtn" class="quick-sheet-admin-btn" type="button" onclick="goToQuickLinksManage()">관리 센터 편집</button>
       </div>
     </div>
   </div>
@@ -5681,7 +5681,7 @@
   <div id="quickLinkModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="quickLinkModalTitle" class="modal-title">🔗 사이트 바로가기 추가</h3>
+        <h3 id="quickLinkModalTitle" class="modal-title">사이트 바로가기 추가</h3>
         <button class="close-btn" data-close="quickLinkModal">✕</button>
       </div>
       <input type="hidden" id="editQuickLinkId" />
@@ -5719,7 +5719,7 @@
   <div id="releaseNewcomerModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="releaseNewcomerModalTitle" class="modal-title">💐 새신자 역할 해제</h3>
+        <h3 id="releaseNewcomerModalTitle" class="modal-title">새신자 역할 해제</h3>
         <button class="close-btn" data-close="releaseNewcomerModal">✕</button>
       </div>
       <input type="hidden" id="releaseNewcomerMemberId" />
@@ -5741,13 +5741,13 @@
   <div id="celebrationMsgsModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">💐 새가족 명단 · 환영 설정</h3>
+        <h3 class="modal-title">새가족 명단 · 환영 설정</h3>
         <button class="close-btn" data-close="celebrationMsgsModal">✕</button>
       </div>
 
       <div class="newcomer-mgr-box">
         <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; flex-wrap:wrap;">
-          <div id="celebNewcomerCountHeading" style="font-size:13px; font-weight:800; color:#0F172A;">👥 현재 새가족 명단 (0명)</div>
+          <div id="celebNewcomerCountHeading" style="font-size:13px; font-weight:800; color:#0F172A;">현재 새가족 명단 (0명)</div>
           <span class="tag green" style="font-size:10.5px;">2명 이상 무제한 · 인원수 자동 반영</span>
         </div>
         <div style="font-size:11.5px; color:#475569; line-height:1.48; margin-bottom:8px;">
@@ -5766,26 +5766,26 @@
       </div>
 
       <div class="celeb-section-head" style="margin-top:4px;">
-        <span>💐 새가족 환영 멘트</span>
+        <span>새가족 환영 멘트</span>
         <div style="display:flex; gap:4px; flex-wrap:wrap;">
           <button class="btn-sm" type="button" style="padding:3px 8px; font-size:11px;" onclick="insertNamePlaceholder('celebNewcomerTitleInput', '{이름}')">+ {이름} 넣기</button>
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label" for="celebNewcomerBadgeInput">상단 배지 문구 (예: 💐 새가족 환영)</label>
+        <label class="form-label" for="celebNewcomerBadgeInput">상단 배지 문구 (예: 새가족 환영)</label>
         <input id="celebNewcomerBadgeInput" class="form-input" maxlength="24" placeholder="💐 새가족 환영" oninput="updateCelebrationPreview()" />
       </div>
       <div class="form-group">
         <label class="form-label" for="celebNewcomerTitleInput">새가족 환영 제목 (<b>{이름}</b> 자리에 모든 새가족 이름 자동 입력)</label>
         <input id="celebNewcomerTitleInput" class="form-input" maxlength="60" placeholder="🎉 새가족 {이름}님 환영합니다!" oninput="updateCelebrationPreview()" />
-        <div id="celebTitlePlaceholderWarn" class="hidden" style="font-size:11px; color:#B45309; margin-top:4px;">⚠️ 제목에 <b>{이름}</b>이 없으면 새가족 이름이 자동으로 채워지지 않습니다. 위 <b>[+ {이름} 넣기]</b>를 눌러 주세요.</div>
+        <div id="celebTitlePlaceholderWarn" class="hidden" style="font-size:11px; color:#B45309; margin-top:4px;">제목에 <b>{이름}</b>이 없으면 새가족 이름이 자동으로 채워지지 않습니다. 위 <b>[+ {이름} 넣기]</b>를 눌러 주세요.</div>
       </div>
       <div class="form-group">
         <label class="form-label" for="celebNewcomerDescInput">새가족 환영 내용</label>
         <textarea id="celebNewcomerDescInput" class="form-textarea" style="min-height:74px;" maxlength="200" placeholder="라이트 청년부의 새 가족이 되신 것을 진심으로 축복합니다. 만나면 반갑게 인사해 주세요! 😊" oninput="updateCelebrationPreview()"></textarea>
       </div>
       <div class="form-group">
-        <label class="form-label">🎨 새가족 환영 배너 배경 색상</label>
+        <label class="form-label">새가족 환영 배너 배경 색상</label>
         <div id="celebColorPalette" class="color-palette"></div>
       </div>
       <div id="celebPreviewModeRow" class="filter-row" style="margin-bottom:8px;" data-ts-bar="celeb_preview_mode" data-ts-body="#celebNewcomerPreview">
@@ -5838,7 +5838,7 @@
       </div>
       <div class="qr-canvas-card">
         <canvas id="inviteQrCanvas" width="320" height="380"></canvas>
-        <div id="inviteQrValidMeta" class="qr-meta-pill">⏳ QR 준비 중...</div>
+        <div id="inviteQrValidMeta" class="qr-meta-pill">QR 준비 중...</div>
       </div>
       <div id="inviteQrModalInfoBox" class="info-box" style="margin-top:0; margin-bottom:12px;">
         • 처음 가입을 원하는 가입자에게 이 QR을 스캔하도록 안내해 주세요.<br>
@@ -5846,14 +5846,14 @@
         • 기존 가입 완료 회원은 QR 없이 평소처럼 바로 로그인합니다.
       </div>
       <div style="display:flex; gap:8px; margin-bottom:8px;">
-        <button id="shareInviteQrBtn" class="btn-full btn-blue" type="button" style="flex:1; padding:12px; font-size:13.5px;" onclick="shareInviteQrImage()">📤 이미지 공유 (카톡 등)</button>
-        <button id="downloadInviteQrBtn" class="btn-outline" type="button" style="padding:12px; white-space:nowrap;" onclick="downloadInviteQrImage()">💾 저장</button>
+        <button id="shareInviteQrBtn" class="btn-full btn-blue" type="button" style="flex:1; padding:12px; font-size:13.5px;" onclick="shareInviteQrImage()">이미지 공유 (카톡 등)</button>
+        <button id="downloadInviteQrBtn" class="btn-outline" type="button" style="padding:12px; white-space:nowrap;" onclick="downloadInviteQrImage()">저장</button>
       </div>
-      <button id="copyInviteQrBtn" class="btn-outline" type="button" style="width:100%; padding:11px; margin-bottom:8px;" onclick="copyInviteQrLink()">🔗 초대 링크 복사</button>
+      <button id="copyInviteQrBtn" class="btn-outline" type="button" style="width:100%; padding:11px; margin-bottom:8px;" onclick="copyInviteQrLink()">초대 링크 복사</button>
       <div id="inviteQrAdminZone" class="hidden" style="margin-top:10px; padding-top:10px; border-top:1px dashed #CBD5E1;">
-        <div style="font-size:12px; font-weight:800; color:#334155; margin-bottom:4px;">⏱️ 초대 QR 자동 갱신 주기 (관리자 설정)</div>
+        <div style="font-size:12px; font-weight:800; color:#334155; margin-bottom:4px;">초대 QR 자동 갱신 주기 (관리자 설정)</div>
         <div id="inviteQrModalModeBtns" class="qr-mode-grid"></div>
-        <button id="regenInviteQrBtn" class="btn-full btn-amber" type="button" style="padding:12px; font-size:13.5px;" onclick="regenerateInviteQrByAdmin()">🔄 새 QR 즉시 재발급 (기존 QR 즉시 폐기)</button>
+        <button id="regenInviteQrBtn" class="btn-full btn-amber" type="button" style="padding:12px; font-size:13.5px;" onclick="regenerateInviteQrByAdmin()">새 QR 즉시 재발급 (기존 QR 즉시 폐기)</button>
       </div>
     </div>
   </div>
@@ -5862,7 +5862,7 @@
   <div id="adminAttendanceModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="adminAttModalTitle" class="modal-title">✅ 출석 추가</h3>
+        <h3 id="adminAttModalTitle" class="modal-title">출석 추가</h3>
         <button class="close-btn" data-close="adminAttendanceModal">✕</button>
       </div>
       <input type="hidden" id="editAttDocId" />
@@ -5879,8 +5879,8 @@
       <div class="form-group">
         <label class="form-label" for="adminAttStatusSelect">출석 상태</label>
         <select id="adminAttStatusSelect" class="form-select">
-          <option value="present">✅ 출석O (출석)</option>
-          <option value="absent">❌ 출석X (불참)</option>
+          <option value="present">출석O (출석)</option>
+          <option value="absent">출석X (불참)</option>
         </select>
       </div>
       <div class="form-group">
@@ -5902,18 +5902,18 @@
   <div id="specialEventModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="spEventModalTitle" class="modal-title">📅 특별 행사 · 수련회 출석 추가</h3>
+        <h3 id="spEventModalTitle" class="modal-title">특별 행사 · 수련회 출석 추가</h3>
         <button class="close-btn" data-close="specialEventModal">✕</button>
       </div>
       <input type="hidden" id="editSpEventId" />
       <div class="form-group">
         <label class="form-label" for="spEventTitleInput">어떤 행사인가요? (행사 이름 입력)</label>
         <div class="quick-preset-row" style="margin-bottom:6px;">
-          <button class="quick-preset-chip" type="button" onclick="applySpEventTitlePreset('겨울 수련회')">❄️ 겨울 수련회</button>
-          <button class="quick-preset-chip" type="button" onclick="applySpEventTitlePreset('여름 수련회')">☀️ 여름 수련회</button>
-          <button class="quick-preset-chip" type="button" onclick="applySpEventTitlePreset('성탄절 예배')">🎄 성탄절 예배</button>
-          <button class="quick-preset-chip" type="button" onclick="applySpEventTitlePreset('부활절 예배')">🐣 부활절 예배</button>
-          <button class="quick-preset-chip" type="button" onclick="applySpEventTitlePreset('특별 기도회')">🙏 특별 기도회</button>
+          <button class="quick-preset-chip" type="button" onclick="applySpEventTitlePreset('겨울 수련회')">겨울 수련회</button>
+          <button class="quick-preset-chip" type="button" onclick="applySpEventTitlePreset('여름 수련회')">여름 수련회</button>
+          <button class="quick-preset-chip" type="button" onclick="applySpEventTitlePreset('성탄절 예배')">성탄절 예배</button>
+          <button class="quick-preset-chip" type="button" onclick="applySpEventTitlePreset('부활절 예배')">부활절 예배</button>
+          <button class="quick-preset-chip" type="button" onclick="applySpEventTitlePreset('특별 기도회')">특별 기도회</button>
         </div>
         <input id="spEventTitleInput" class="form-input" maxlength="24" placeholder="예: 겨울 수련회, 성탄절 감사예배 등" />
       </div>
@@ -5953,7 +5953,7 @@
         <input type="checkbox" id="spEventSkipSundayCheck" checked />
         <span id="spEventSkipSundayLabel" style="font-size:12px; color:#92400E;">행사 기간에 포함된 일요일의 기존 주일 예배는 자동으로 예배X(휴무) 처리</span>
       </label>
-      <button id="saveSpEventBtn" class="btn-full btn-dark" type="button" onclick="handleSaveSpecialEvent()">💾 행사 출석 일정 저장</button>
+      <button id="saveSpEventBtn" class="btn-full btn-dark" type="button" onclick="handleSaveSpecialEvent()">행사 출석 일정 저장</button>
     </div>
   </div>
 
@@ -5961,12 +5961,12 @@
   <div id="skipSundayModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">🚫 예배 없는 날 설정 (출석체크 끄기)</h3>
+        <h3 class="modal-title">예배 없는 날 설정 (출석체크 끄기)</h3>
         <button class="close-btn" data-close="skipSundayModal">✕</button>
       </div>
       <div class="info-box" style="margin-top:0; margin-bottom:10px;">
         • 매주 일요일에만 정기 예배 출석체크가 자동으로 열립니다.<br>
-        • 아래 달력에서 <b>예배가 없는 일요일</b>을 클릭하면 <b>🚫 예배X</b>로 바뀌어, 그날 <b>메인 화면에 출석체크가 뜨지 않습니다.</b> (다시 누르면 <b>예배O</b>로 복구)
+        • 아래 달력에서 <b>예배가 없는 일요일</b>을 클릭하면 <b>예배X</b>로 바뀌어, 그날 <b>메인 화면에 출석체크가 뜨지 않습니다.</b> (다시 누르면 <b>예배O</b>로 복구)
       </div>
       <div id="skipSundayCalendarBox" class="sp-cal-wrap"></div>
       <div id="skipSundayListBox" style="margin-top:8px;"></div>
@@ -5978,19 +5978,19 @@
   <div id="cellRosterModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">🧩 셀별 주간 출석부 명단 설정</h3>
+        <h3 class="modal-title">셀별 주간 출석부 명단 설정</h3>
         <button class="close-btn" data-close="cellRosterModal">✕</button>
       </div>
       <div class="info-box" style="margin-top:0; margin-bottom:10px; background:#F0FDF4; border-color:#BBF7D0; color:#14532D;">
-        🔒 <b>개인정보 보호 저장:</b> 입력한 셀과 명단은 GitHub 공개 코드가 아니라 <b>로그인 인증이 필요한 Firebase 서버</b>에만 안전하게 보관됩니다.
+        <b>개인정보 보호 저장:</b> 입력한 셀과 명단은 GitHub 공개 코드가 아니라 <b>로그인 인증이 필요한 Firebase 서버</b>에만 안전하게 보관됩니다.
       </div>
       <div class="form-grid-2" style="margin-bottom:6px;">
         <div class="form-group" style="margin-bottom:0;">
-          <label class="form-label" for="cellVenueInput">📍 예배 장소 (출석부 상단)</label>
+          <label class="form-label" for="cellVenueInput">예배 장소 (출석부 상단)</label>
           <input id="cellVenueInput" class="form-input" maxlength="30" placeholder="예: 다니엘 성전" />
         </div>
         <div class="form-group" style="margin-bottom:0;">
-          <label class="form-label" for="cellDisplayTimeInput">🕒 출석부 표기 예배 시간</label>
+          <label class="form-label" for="cellDisplayTimeInput">출석부 표기 예배 시간</label>
           <input id="cellDisplayTimeInput" class="form-input" maxlength="20" placeholder="예: 오후 2시 / 14시" />
         </div>
       </div>
@@ -6002,12 +6002,12 @@
         <button class="quick-preset-chip" type="button" onclick="applyCellDisplayTimePreset('')">자동 (예배 시작시간)</button>
       </div>
       <div style="font-size:11px; color:#64748B; margin-bottom:10px; line-height:1.45;">
-        💡 <b>[⛪ 예배 관리]</b>의 출석체크 시간(예: 12:30~16:30)과 별개로, 주간 출석부 상단 날짜 옆에 자동으로 적히는 예배 시간입니다. 비워두면 예배 시작 시간이 자동 기재됩니다.
+        <b>[예배 관리]</b>의 출석체크 시간(예: 12:30~16:30)과 별개로, 주간 출석부 상단 날짜 옆에 자동으로 적히는 예배 시간입니다. 비워두면 예배 시작 시간이 자동 기재됩니다.
       </div>
 
       <div class="modal-tabs-2" data-ts-bar="cell_roster_tabs">
-        <button id="cellTabBulkBtn" class="modal-tab-btn active" type="button" onclick="switchCellRosterTab('bulk')">📋 일괄 붙여넣기 (1분)</button>
-        <button id="cellTabEditBtn" class="modal-tab-btn" type="button" onclick="switchCellRosterTab('edit')">🧩 셀별 개별 편집</button>
+        <button id="cellTabBulkBtn" class="modal-tab-btn active" type="button" onclick="switchCellRosterTab('bulk')">일괄 붙여넣기 (1분)</button>
+        <button id="cellTabEditBtn" class="modal-tab-btn" type="button" onclick="switchCellRosterTab('edit')">셀별 개별 편집</button>
       </div>
 
       <!-- (1) 일괄 붙여넣기 탭 -->
@@ -6021,31 +6021,31 @@
           <textarea id="cellBulkTextarea" class="form-textarea" style="min-height:175px; font-size:12.5px; line-height:1.55;" placeholder="새가족 셀: 홍길동, 김영희&#10;1셀: 박민수, 이서연, 최준호&#10;2셀: 정하늘, 강도윤&#10;교역자 및 교사: 김목사님, 이선생님"></textarea>
         </div>
         <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
-          <button class="btn-sm" type="button" onclick="loadCurrentCellRosterIntoBulk()">↩️ 현재 저장된 명단 불러오기</button>
-          <button class="btn-sm primary" type="button" onclick="handleAutoImportMembersToBulk()">👥 앱 승인 회원 자동 채우기</button>
+          <button class="btn-sm" type="button" onclick="loadCurrentCellRosterIntoBulk()">현재 저장된 명단 불러오기</button>
+          <button class="btn-sm primary" type="button" onclick="handleAutoImportMembersToBulk()">앱 승인 회원 자동 채우기</button>
         </div>
-        <button id="saveBulkCellRosterBtn" class="btn-full btn-dark" type="button" onclick="handleParseAndSaveBulkCellRoster()">💾 일괄 파싱 · 저장하기</button>
+        <button id="saveBulkCellRosterBtn" class="btn-full btn-dark" type="button" onclick="handleParseAndSaveBulkCellRoster()">일괄 파싱 · 저장하기</button>
       </div>
 
       <!-- (2) 셀별 개별 편집 탭 -->
       <div id="cellPanelEdit" class="hidden">
         <div class="cell-edit-card" style="background:#FFF7ED; border-color:#FDBA74;">
-          <div style="font-size:12.5px; font-weight:800; color:#9A3412; margin-bottom:5px;">💐 새가족 셀 (왼쪽 1~23번 칸)</div>
+          <div style="font-size:12.5px; font-weight:800; color:#9A3412; margin-bottom:5px;">새가족 셀 (왼쪽 1~23번 칸)</div>
           <textarea id="cellEditNewcomersInput" class="form-textarea" style="min-height:58px; background:#fff; font-size:12.5px;" placeholder="이름을 쉼표(,)로 구분해 입력 (앱의 새신자 역할 회원도 자동 포함)"></textarea>
         </div>
 
         <div style="display:flex; align-items:center; justify-content:space-between; margin:10px 0 6px;">
-          <span style="font-size:12.5px; font-weight:800; color:#0F172A;">🏠 일반 셀 목록 (상단 5셀 · 하단 3셀 자동 배치)</span>
+          <span style="font-size:12.5px; font-weight:800; color:#0F172A;">일반 셀 목록 (상단 5셀 · 하단 3셀 자동 배치)</span>
           <button class="btn-sm primary" type="button" onclick="addManualCellCard()">+ 셀 추가</button>
         </div>
         <div id="cellManualListArea"></div>
 
         <div class="cell-edit-card" style="background:#EFF6FF; border-color:#93C5FD; margin-top:8px;">
-          <div style="font-size:12.5px; font-weight:800; color:#1E3A8A; margin-bottom:5px;">🙏 교역자 및 교사</div>
+          <div style="font-size:12.5px; font-weight:800; color:#1E3A8A; margin-bottom:5px;">교역자 및 교사</div>
           <textarea id="cellEditStaffInput" class="form-textarea" style="min-height:54px; background:#fff; font-size:12.5px;" placeholder="이름을 쉼표(,)로 구분해 입력 (앱의 목사·부장·교사 역할 회원도 자동 포함)"></textarea>
         </div>
 
-        <button id="saveManualCellRosterBtn" class="btn-full btn-dark" type="button" style="margin-top:8px;" onclick="handleSaveManualCellRoster()">💾 셀 명단 저장하기</button>
+        <button id="saveManualCellRosterBtn" class="btn-full btn-dark" type="button" style="margin-top:8px;" onclick="handleSaveManualCellRoster()">셀 명단 저장하기</button>
       </div>
       <div data-save-fb="cell_roster" class="save-feedback-box hidden"></div>
     </div>
@@ -6056,13 +6056,13 @@
   <div id="adminRenameModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="adminRenameModalTitle" class="modal-title">✏️ 관리자 이름 변경</h3>
+        <h3 id="adminRenameModalTitle" class="modal-title">관리자 이름 변경</h3>
         <button class="close-btn" data-close="adminRenameModal">✕</button>
       </div>
       <input type="hidden" id="renameAdminTargetId" />
       <div id="adminRenameTargetInfo" class="info-box" style="margin-top:0; margin-bottom:10px;"></div>
       <div id="adminRenameWarnBox" class="info-box warn" style="margin-top:0; margin-bottom:12px;">
-        🔐 보안을 위해 관리자 이름을 변경하면 <b>처리 관리자 · 변경 전/후 이름 · 변경 날짜 · 변경 시각</b>이 <b>[📋 로그]</b> 탭과 <b>구글 시트</b>에 자동 기록되며, 앱에서 삭제할 수 없습니다.
+        보안을 위해 관리자 이름을 변경하면 <b>처리 관리자 · 변경 전/후 이름 · 변경 날짜 · 변경 시각</b>이 <b>[로그]</b> 탭과 <b>구글 시트</b>에 자동 기록되며, 앱에서 삭제할 수 없습니다.
       </div>
       <div class="form-group">
         <label class="form-label" for="adminRenameNewInput">새 관리자 성명 (2~10글자)</label>
@@ -6070,7 +6070,7 @@
       </div>
       <div id="adminRenameError" class="login-error"></div>
       <div style="display:flex; gap:8px; margin-top:8px;">
-        <button id="submitAdminRenameBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSubmitAdminRename()">💾 이름 변경 및 로그 기록</button>
+        <button id="submitAdminRenameBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSubmitAdminRename()">이름 변경 및 로그 기록</button>
         <button class="btn-outline" type="button" data-close="adminRenameModal">취소</button>
       </div>
     </div>
@@ -6080,7 +6080,7 @@
   <div id="adminChangeRoleModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="adminChangeRoleModalTitle" class="modal-title">🏷️ 관리자 역할 변경 (회원 전환)</h3>
+        <h3 id="adminChangeRoleModalTitle" class="modal-title">관리자 역할 변경 (회원 전환)</h3>
         <button class="close-btn" data-close="adminChangeRoleModal">✕</button>
       </div>
       <input type="hidden" id="changeRoleAdminTargetId" />
@@ -6101,7 +6101,7 @@
         <input id="adminToMemberReasonInput" class="form-input" maxlength="120" placeholder="사유가 있다면 간단히 입력해 주세요 (선택)" />
       </div>
       <div style="display:flex; gap:8px; margin-top:8px;">
-        <button id="submitAdminChangeRoleBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSubmitAdminChangeToMember()">🔄 역할 변경 및 회원 전환</button>
+        <button id="submitAdminChangeRoleBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSubmitAdminChangeToMember()">역할 변경 및 회원 전환</button>
         <button class="btn-outline" type="button" data-close="adminChangeRoleModal">취소</button>
       </div>
     </div>
@@ -6186,7 +6186,7 @@
         <span style="color:#64748B;">※ 보안을 위해 전화번호·주소 등 민감한 개인정보는 적지 말아 주세요. 작성·수정·삭제 내역은 관리 로그에 기록됩니다.</span>
       </div>
       <div id="inquiryEditBanner" class="info-box warn hidden" style="margin-top:0; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
-        <span>✏️ 기존 문의 사항을 수정하는 중입니다.</span>
+        <span>기존 문의 사항을 수정하는 중입니다.</span>
         <button class="btn-sm" type="button" onclick="cancelEditUserInquiry()">수정 취소</button>
       </div>
       <div class="form-group">
@@ -6207,12 +6207,12 @@
         <textarea id="inquiryBodyInput" class="form-textarea" style="min-height:105px;" maxlength="1000" placeholder="불편했던 화면이나 원하시는 개선 사항을 자유롭게 적어 주세요."></textarea>
       </div>
       <div style="display:flex; gap:8px;">
-        <button id="submitInquiryBtn" class="btn-full btn-blue" type="button" style="flex:1;" onclick="handleSubmitUserInquiry()">📨 관리자에게 문의 보내기</button>
+        <button id="submitInquiryBtn" class="btn-full btn-blue" type="button" style="flex:1;" onclick="handleSubmitUserInquiry()">관리자에게 문의 보내기</button>
         <button id="cancelEditInquiryBtn" class="btn-outline hidden" type="button" onclick="cancelEditUserInquiry()">취소</button>
       </div>
 
       <div class="manage-divider" style="margin:16px 0 12px;"></div>
-      <div style="font-size:13.5px; font-weight:800; color:#0F172A; margin-bottom:8px;">📋 내가 보낸 문의 내역</div>
+      <div style="font-size:13.5px; font-weight:800; color:#0F172A; margin-bottom:8px;">내가 보낸 문의 내역</div>
       <div id="myInquiriesListArea"></div>
     </div>
   </div>
@@ -6221,7 +6221,7 @@
   <div id="adminInquiryReplyModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">✍️ 문의 답변 작성</h3>
+        <h3 class="modal-title">문의 답변 작성</h3>
         <button class="close-btn" data-close="adminInquiryReplyModal">✕</button>
       </div>
       <input type="hidden" id="replyInquiryId" />
@@ -6231,7 +6231,7 @@
         <textarea id="adminInquiryReplyInput" class="form-textarea" style="min-height:110px;" maxlength="1000" placeholder="이용자에게 전달할 답변을 입력해 주세요."></textarea>
       </div>
       <div style="display:flex; gap:8px;">
-        <button id="saveAdminInquiryReplyBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveAdminInquiryReply()">💾 답변 저장 및 알림 전송</button>
+        <button id="saveAdminInquiryReplyBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveAdminInquiryReply()">답변 저장 및 알림 전송</button>
         <button class="btn-outline" type="button" data-close="adminInquiryReplyModal">취소</button>
       </div>
     </div>
@@ -6241,7 +6241,7 @@
   <div id="termsFormModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="termsFormModalTitle" class="modal-title">📄 이용약관 조항 추가</h3>
+        <h3 id="termsFormModalTitle" class="modal-title">이용약관 조항 추가</h3>
         <button class="close-btn" data-close="termsFormModal">✕</button>
       </div>
       <input type="hidden" id="editTermsId" />
@@ -6254,7 +6254,7 @@
         <textarea id="termsBodyInput" class="form-textarea" style="min-height:140px;" maxlength="2000" placeholder="약관 내용을 입력해 주세요."></textarea>
       </div>
       <div style="display:flex; gap:8px;">
-        <button id="saveTermsArticleBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveTermsArticle()">💾 이용약관 저장</button>
+        <button id="saveTermsArticleBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveTermsArticle()">이용약관 저장</button>
         <button class="btn-outline" type="button" data-close="termsFormModal">취소</button>
       </div>
     </div>
@@ -6264,7 +6264,7 @@
   <div id="bylawFormModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="bylawFormModalTitle" class="modal-title">📜 회칙 조항 추가</h3>
+        <h3 id="bylawFormModalTitle" class="modal-title">회칙 조항 추가</h3>
         <button class="close-btn" data-close="bylawFormModal">✕</button>
       </div>
       <input type="hidden" id="editBylawIdx" />
@@ -6295,7 +6295,7 @@
         <textarea id="bylawBodyInput" class="form-textarea" style="min-height:140px;" maxlength="2500" placeholder="회칙 본문을 입력해 주세요."></textarea>
       </div>
       <div style="display:flex; gap:8px;">
-        <button id="saveBylawArticleBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveBylawArticle()">💾 회칙 조항 저장</button>
+        <button id="saveBylawArticleBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveBylawArticle()">회칙 조항 저장</button>
         <button class="btn-outline" type="button" data-close="bylawFormModal">취소</button>
       </div>
     </div>
@@ -6314,7 +6314,7 @@
       <div id="videoPlayerNote" class="video-note-box hidden"></div>
       <div id="videoPlayerReactions" class="video-player-reactions-box hidden"></div>
       <div style="font-size:11.5px; color:#64748B; background:#F8FAFC; border:1px solid var(--border); border-radius:10px; padding:8px 10px; margin-top:8px; line-height:1.45;">
-        💡 플레이어 중앙 <b>▶ 버튼</b>을 눌러 재생하세요. 유튜브 프리미엄(광고 없이 시청)이나 백그라운드 재생은 아래 <b>[유튜브 앱에서 열기]</b>를 이용하면 더 편합니다.
+        플레이어 중앙 <b>▶ 버튼</b>을 눌러 재생하세요. 유튜브 프리미엄(광고 없이 시청)이나 백그라운드 재생은 아래 <b>[유튜브 앱에서 열기]</b>를 이용하면 더 편합니다.
       </div>
       <div style="display:flex; gap:8px; margin-top:10px;">
         <a id="videoPlayerExternalLink" class="btn-outline" href="#" target="_blank" rel="noopener noreferrer" style="flex:1; text-align:center; text-decoration:none; padding:10px 12px;">▶ 유튜브 앱에서 열기 ↗</a>
@@ -6327,12 +6327,12 @@
   <div id="videoSubmitModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="videoSubmitModalTitle" class="modal-title">🎬 유튜브 영상 게시</h3>
+        <h3 id="videoSubmitModalTitle" class="modal-title">유튜브 영상 게시</h3>
         <button class="close-btn" data-close="videoSubmitModal">✕</button>
       </div>
       <input type="hidden" id="editVideoDocId" />
       <div class="info-box" style="margin-top:0; margin-bottom:11px;">
-        🛡️ <b>등록 전 자동 4단계 보안·저작권 검사</b><br>
+        <b>등록 전 자동 4단계 보안·저작권 검사</b><br>
         • 구미제일감리교회·라이트 청년부 등 <b>등록된 공식 채널이라도 등록 전 똑같이 보안·실존·위험 문구 검사를 실행</b>합니다.<br>
         • 검사를 모두 통과한 공식 채널 영상은 즉시 자동 게시되며, 미등록 채널 영상은 관리자 검토 후 게시됩니다.
       </div>
@@ -6340,7 +6340,7 @@
         <label class="form-label" for="videoUrlInput">유튜브 영상 링크 (URL)</label>
         <div style="display:flex; gap:6px;">
           <input id="videoUrlInput" type="url" class="form-input" style="flex:1;" placeholder="https://youtu.be/... 또는 https://www.youtube.com/watch?v=..." oninput="onVideoUrlFieldChange()" />
-          <button id="runVideoInspectBtn" class="btn-sm primary" type="button" style="white-space:nowrap; padding:0 12px;" onclick="handleInspectYouTubeInput()">🔍 자동 검사</button>
+          <button id="runVideoInspectBtn" class="btn-sm primary" type="button" style="white-space:nowrap; padding:0 12px;" onclick="handleInspectYouTubeInput()">자동 검사</button>
         </div>
       </div>
 
@@ -6362,7 +6362,7 @@
       </div>
 
       <div class="form-group" id="videoSermonTabGroup">
-        <label class="form-label" for="videoSermonTabSelect">📂 설교 세부 탭 (선택 또는 직접 입력)</label>
+        <label class="form-label" for="videoSermonTabSelect">설교 세부 탭 (선택 또는 직접 입력)</label>
         <select id="videoSermonTabSelect" class="form-select" onchange="onVideoSermonTabSelectChange()"></select>
         <input id="videoSermonTabCustomInput" class="form-input hidden" style="margin-top:6px;" maxlength="20" placeholder="새 세부 탭 이름 입력 (예: 로마서 강해, 금요기도회)" oninput="onVideoSermonTabSelectChange()" />
         <div style="font-size:11px; color:#64748B; margin-top:4px; line-height:1.45;">
@@ -6371,7 +6371,7 @@
       </div>
 
       <div class="form-group hidden" id="videoCcmTabGroup">
-        <label class="form-label" for="videoCcmTabSelect">📂 CCM 세부 탭 (선택 또는 직접 입력)</label>
+        <label class="form-label" for="videoCcmTabSelect">CCM 세부 탭 (선택 또는 직접 입력)</label>
         <select id="videoCcmTabSelect" class="form-select" onchange="onVideoCcmTabSelectChange()"></select>
         <input id="videoCcmTabCustomInput" class="form-input hidden" style="margin-top:6px;" maxlength="20" placeholder="새 세부 탭 이름 입력 (예: 경배·찬양, 수련회 찬양)" oninput="onVideoCcmTabSelectChange()" />
         <div style="font-size:11px; color:#64748B; margin-top:4px; line-height:1.45;">
@@ -6386,7 +6386,7 @@
 
       <label id="videoAdminAutoAddChannelRow" class="checkbox-row hidden" style="margin-bottom:10px;">
         <input type="checkbox" id="videoAdminAutoAddChannelInput" />
-        <span>⭐ 이 미등록 채널을 공식 채널 목록에도 함께 자동 추가</span>
+        <span>이 미등록 채널을 공식 채널 목록에도 함께 자동 추가</span>
       </label>
 
       <label class="checkbox-row" style="margin-bottom:12px;">
@@ -6395,7 +6395,7 @@
       </label>
 
       <div style="display:flex; gap:8px;">
-        <button id="submitVideoBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSubmitVideo()">🔍 검사 후 등록하기</button>
+        <button id="submitVideoBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSubmitVideo()">검사 후 등록하기</button>
         <button class="btn-outline" type="button" data-close="videoSubmitModal">취소</button>
       </div>
     </div>
@@ -6406,7 +6406,7 @@
   <div id="sermonTabsModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">🗂️ 설교 세부 탭 관리</h3>
+        <h3 class="modal-title">설교 세부 탭 관리</h3>
         <button class="close-btn" data-close="sermonTabsModal">✕</button>
       </div>
       <div class="info-box" style="margin-top:0; margin-bottom:12px;">
@@ -6423,7 +6423,7 @@
       <div id="sermonTabsModalList" style="margin-bottom:10px;"></div>
       <div id="sermonTabsModalFeedback"></div>
       <div style="display:flex; gap:8px; margin-top:10px;">
-        <button class="btn-outline" type="button" onclick="handleResetDefaultSermonSubTabs()">🔄 기본 탭 복원</button>
+        <button class="btn-outline" type="button" onclick="handleResetDefaultSermonSubTabs()">기본 탭 복원</button>
         <button class="btn-full btn-dark" type="button" style="flex:1; padding:11px;" data-close="sermonTabsModal">닫기</button>
       </div>
     </div>
@@ -6434,7 +6434,7 @@
   <div id="ccmTabsModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">🗂️ CCM 세부 탭 관리</h3>
+        <h3 class="modal-title">CCM 세부 탭 관리</h3>
         <button class="close-btn" data-close="ccmTabsModal">✕</button>
       </div>
       <div class="info-box" style="margin-top:0; margin-bottom:12px;">
@@ -6451,7 +6451,7 @@
       <div id="ccmTabsModalList" style="margin-bottom:10px;"></div>
       <div id="ccmTabsModalFeedback"></div>
       <div style="display:flex; gap:8px; margin-top:10px;">
-        <button class="btn-outline" type="button" onclick="handleResetDefaultCcmSubTabs()">🔄 기본 탭 복원</button>
+        <button class="btn-outline" type="button" onclick="handleResetDefaultCcmSubTabs()">기본 탭 복원</button>
         <button class="btn-full btn-dark" type="button" style="flex:1; padding:11px;" data-close="ccmTabsModal">닫기</button>
       </div>
     </div>
@@ -6461,19 +6461,19 @@
   <div id="officialChannelModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="officialChannelModalTitle" class="modal-title">⭐ 공식 유튜브 채널 추가</h3>
+        <h3 id="officialChannelModalTitle" class="modal-title">공식 유튜브 채널 추가</h3>
         <button class="close-btn" data-close="officialChannelModal">✕</button>
       </div>
       <input type="hidden" id="editOfficialChannelId" />
       <div class="info-box" style="margin-top:0; margin-bottom:11px;">
-        • 유튜브 <b>채널 주소</b>(<code>youtube.com/@...</code> · <code>youtube.com/channel/UC...</code>)나 <b>해당 채널의 영상 링크</b>를 입력하고 <b>[🔍 자동검사]</b>를 누르면 <b>공식 채널 이름 · 채널 고유 ID(UC...) · 채널 핸들 URL(/@...)</b>이 자동으로 생성됩니다.<br>
+        • 유튜브 <b>채널 주소</b>(<code>youtube.com/@...</code> · <code>youtube.com/channel/UC...</code>)나 <b>해당 채널의 영상 링크</b>를 입력하고 <b>[자동검사]</b>를 누르면 <b>공식 채널 이름 · 채널 고유 ID(UC...) · 채널 핸들 URL(/@...)</b>이 자동으로 생성됩니다.<br>
         • 등록된 공식 채널 영상도 게시 전 보안·실존·위험 문구 검사를 똑같이 거친 뒤 자동 게시됩니다.
       </div>
       <div class="form-group">
         <label class="form-label" for="offChUrlInput">유튜브 채널 링크 또는 해당 채널 영상 링크 (필수)</label>
         <div style="display:flex; gap:6px;">
           <input id="offChUrlInput" type="url" class="form-input" style="flex:1;" placeholder="https://youtube.com/@채널명 또는 /channel/UC..." oninput="onOffChUrlFieldChange()" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleVerifyOfficialChannelInput();}" />
-          <button id="verifyOffChBtn" class="btn-sm primary" type="button" style="white-space:nowrap; padding:0 11px;" onclick="handleVerifyOfficialChannelInput()">🔍 자동검사</button>
+          <button id="verifyOffChBtn" class="btn-sm primary" type="button" style="white-space:nowrap; padding:0 11px;" onclick="handleVerifyOfficialChannelInput()">자동검사</button>
         </div>
       </div>
       <div id="offChVerifyStatus" class="hidden"></div>
@@ -6492,7 +6492,7 @@
         </div>
       </div>
       <div style="display:flex; gap:8px; margin-top:6px;">
-        <button id="saveOfficialChannelBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveOfficialChannel()">💾 공식 채널 저장</button>
+        <button id="saveOfficialChannelBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveOfficialChannel()">공식 채널 저장</button>
         <button class="btn-outline" type="button" data-close="officialChannelModal">취소</button>
       </div>
     </div>
@@ -6502,7 +6502,7 @@
   <div id="diagSimModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="diagSimModalTitle" class="modal-title">🧪 기능 시뮬레이션</h3>
+        <h3 id="diagSimModalTitle" class="modal-title">기능 시뮬레이션</h3>
         <button class="close-btn" data-close="diagSimModal">✕</button>
       </div>
       <div id="diagSimModalBody"></div>
@@ -6513,7 +6513,7 @@
   <div id="removeReasonModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 id="removeReasonModalTitle" class="modal-title">🚫 해제 사유 입력</h3>
+        <h3 id="removeReasonModalTitle" class="modal-title">해제 사유 입력</h3>
         <button class="close-btn" data-close="removeReasonModal">✕</button>
       </div>
       <input type="hidden" id="removeReasonMode" />
@@ -6536,7 +6536,7 @@
   <div id="sectionTitleEditModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">✏️ 명칭 수정</h3>
+        <h3 class="modal-title">명칭 수정</h3>
         <button class="close-btn" data-close="sectionTitleEditModal">✕</button>
       </div>
       <input type="hidden" id="editSectionTitleKey" />
@@ -6548,7 +6548,7 @@
       </div>
       <div style="display:flex; gap:8px; margin-top:10px;">
         <button id="resetSectionTitleBtn" class="btn-outline" type="button" onclick="handleResetSectionTitle()">기본값 복원</button>
-        <button id="saveSectionTitleBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveSectionTitle()">💾 명칭 저장</button>
+        <button id="saveSectionTitleBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveSectionTitle()">명칭 저장</button>
       </div>
     </div>
   </div>
@@ -6605,8 +6605,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 279;
-    const APP_CACHE_NAME = 'right-youth-app-v10.179';
+    const APP_CLIENT_BUILD = 280;
+    const APP_CACHE_NAME = 'right-youth-app-v10.180';
     const APP_BOOT_TS = Date.now();
     try {
       const _bootUrl = new URL(window.location.href);
@@ -7937,7 +7937,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? `<span style="color:#FECACA; display:inline-flex; align-items:center; justify-content:center;">${renderMonoSvg('alertShield', 20)}</span>`
-        : '<img src="./icon-192.png?v=279" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=280" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7961,8 +7961,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=279', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=279', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=280', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=280', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -8005,7 +8005,7 @@
       const nhTitle = document.getElementById('notifHomeTitle');
       const nhSub = document.getElementById('notifHomeSub');
       const homeLbl = getTabLabel('home');
-      if (nhTitle) nhTitle.textContent = `📢 ${homeLbl} 새 소식 알림`;
+      if (nhTitle) nhTitle.textContent = `${homeLbl} 새 소식 알림`;
       if (nhSub) nhSub.textContent = `${homeLbl} 화면에 새 공지·광고·배너, 새신자 소식이 올라올 때`;
 
       document.getElementById('notifMasterToggle').checked = notifPrefs.enabled;
@@ -8046,21 +8046,21 @@
 
       if (perm === 'granted') {
         box.className = 'info-box';
-        box.innerHTML = '✅ <b>기기 알림 권한이 허용되어 있습니다.</b><br>앱이 열려 있거나 실행 중인 동안 새 소식이 올라오면 즉시 알림을 띄워 드립니다.';
+        box.innerHTML = '<b>기기 알림 권한이 허용되어 있습니다.</b><br>앱이 열려 있거나 실행 중인 동안 새 소식이 올라오면 즉시 알림을 띄워 드립니다.';
         reqBtn.classList.add('hidden');
       } else if (perm === 'denied') {
         box.className = 'info-box warn';
-        box.innerHTML = '⚠️ <b>기기 알림이 차단되어 있습니다.</b><br>스마트폰 설정 → 알림(또는 브라우저 사이트 설정)에서 허용해 주시면 기기 알림도 함께 받을 수 있습니다. (앱 내 팝업 알림은 정상 작동합니다.)';
+        box.innerHTML = '<b>기기 알림이 차단되어 있습니다.</b><br>스마트폰 설정 → 알림(또는 브라우저 사이트 설정)에서 허용해 주시면 기기 알림도 함께 받을 수 있습니다. (앱 내 팝업 알림은 정상 작동합니다.)';
         reqBtn.classList.add('hidden');
       } else if (perm === 'unsupported') {
         box.className = 'info-box warn';
         box.innerHTML = isIOS && !isStandalone
-          ? '📱 <b>아이폰·아이패드 안내:</b> 사파리 화면에서 <b>공유(□↑) → 홈 화면에 추가</b>로 설치한 앱에서 열면 기기 알림을 켤 수 있어요. (현재도 앱 내 알림은 작동합니다.)'
-          : 'ℹ️ 현재 브라우저에서는 기기 시스템 알림을 지원하지 않아 <b>앱 내 상단 팝업 알림</b>으로만 안내해 드립니다.';
+          ? '<b>아이폰·아이패드 안내:</b> 사파리 화면에서 <b>공유(□↑) → 홈 화면에 추가</b>로 설치한 앱에서 열면 기기 알림을 켤 수 있어요. (현재도 앱 내 알림은 작동합니다.)'
+          : '현재 브라우저에서는 기기 시스템 알림을 지원하지 않아 <b>앱 내 상단 팝업 알림</b>으로만 안내해 드립니다.';
         reqBtn.classList.add('hidden');
       } else {
         box.className = 'info-box';
-        box.innerHTML = '🔔 아래 <b>기기 알림 허용하기</b>를 누르면 앱 사용 중 새 공지·승인 요청을 기기 알림으로도 받을 수 있습니다.';
+        box.innerHTML = '아래 <b>기기 알림 허용하기</b>를 누르면 앱 사용 중 새 공지·승인 요청을 기기 알림으로도 받을 수 있습니다.';
         reqBtn.classList.remove('hidden');
       }
     }
@@ -9055,7 +9055,7 @@
 
       const admRenameWarn = document.getElementById('adminRenameWarnBox');
       if (admRenameWarn) {
-        admRenameWarn.innerHTML = `🔐 보안을 위해 관리자 이름을 변경하면 <b>처리 관리자 · 변경 전/후 이름 · 변경 날짜 · 변경 시각</b>이 <b>[${escapeHtml(icn('manageLogs'))} ${escapeHtml(lbl('manageLogs'))}]</b> 탭과 <b>구글 시트</b>에 자동 기록되며, 앱에서 삭제할 수 없습니다.`;
+        admRenameWarn.innerHTML = `보안을 위해 관리자 이름을 변경하면 <b>처리 관리자 · 변경 전/후 이름 · 변경 날짜 · 변경 시각</b>이 <b>[${escapeHtml(lbl('manageLogs'))}]</b> 탭과 <b>구글 시트</b>에 자동 기록되며, 앱에서 삭제할 수 없습니다.`;
       }
 
       const labelsHead = document.getElementById('labelsPageHeading');
@@ -11600,14 +11600,14 @@
         if (okBadge) {
           if (st.status === 'grace') {
             okBadge.className = 'signup-qr-ok-badge grace';
-            okBadge.innerHTML = `⏳ <b>초대 QR이 새로 변경되었습니다.</b><br>직전 QR 유예 시간(<b>${formatCountdownMmSs(st.graceRemainMs)}</b> 남음) 안에 가입을 완료해 주세요. 시간이 지나면 새 QR을 스캔해야 합니다.`;
+            okBadge.innerHTML = `<b>초대 QR이 새로 변경되었습니다.</b><br>직전 QR 유예 시간(<b>${formatCountdownMmSs(st.graceRemainMs)}</b> 남음) 안에 가입을 완료해 주세요. 시간이 지나면 새 QR을 스캔해야 합니다.`;
           } else if (st.modeMin > 0) {
             const gMin = getInviteGraceMinutes(st.modeMin);
             okBadge.className = 'signup-qr-ok-badge';
-            okBadge.innerHTML = `✅ <b>현장 초대 QR 인증 완료</b> · 남은 시간 <b>${formatCountdownMmSs(st.remainMs)}</b><br><span style="font-weight:600; opacity:0.9;">갱신 시에도 직전 QR로 ${gMin}분간 가입 유예됩니다.</span>`;
+            okBadge.innerHTML = `<b>현장 초대 QR 인증 완료</b> · 남은 시간 <b>${formatCountdownMmSs(st.remainMs)}</b><br><span style="font-weight:600; opacity:0.9;">갱신 시에도 직전 QR로 ${gMin}분간 가입 유예됩니다.</span>`;
           } else {
             okBadge.className = 'signup-qr-ok-badge';
-            okBadge.innerHTML = '✅ <b>오늘의 초대 QR 인증 완료</b> · 회원가입 가능';
+            okBadge.innerHTML = '<b>오늘의 초대 QR 인증 완료</b> · 회원가입 가능';
           }
         }
         return;
@@ -11998,7 +11998,7 @@
           <div><b>해제 일시:</b> ${escapeHtml(member.removedAt || '-')}</div>
           <div><b>처리 관리자:</b> ${escapeHtml(member.removedBy || '관리자')}</div>
           <div class="reason-note-box admin-removed" style="margin-top:8px;">
-            <b>📝 해제(내보내기) 사유</b><br>${escapeHtml(reasonTxt || '등록된 사유가 없습니다.')}
+            <b>해제(내보내기) 사유</b><br>${escapeHtml(reasonTxt || '등록된 사유가 없습니다.')}
           </div>
           <div style="font-size:11.5px; color:#64748B; margin-top:8px; line-height:1.45;">
             다시 이용을 원하시면 청년부 <b>오늘의 초대 QR</b>을 통해 회원가입을 다시 신청해 주세요.
@@ -12456,10 +12456,10 @@
           <div><b>변경된 역할:</b> <span class="tag" style="margin-left:2px;">${escapeHtml(roleTxt)}</span></div>
           <div><b>변경 일시:</b> ${escapeHtml(notice.removedAt || '-')}</div>
           <div><b>처리 관리자:</b> ${escapeHtml(notice.removedBy || '관리자')}</div>
-          ${reasonTxt ? `<div class="reason-note-box" style="margin-top:8px;"><b>📝 변경 안내</b><br>${escapeHtml(reasonTxt)}</div>` : ''}
+          ${reasonTxt ? `<div class="reason-note-box" style="margin-top:8px;"><b>변경 안내</b><br>${escapeHtml(reasonTxt)}</div>` : ''}
           ${setupCode ? `
             <div class="reason-note-box self-withdrawn" style="margin-top:8px;">
-              <b>🔑 회원 비밀번호 설정 코드 (24시간 유효):</b> <b style="font-size:14px; letter-spacing:1.5px;">${escapeHtml(setupCode)}</b><br>
+              <b>회원 비밀번호 설정 코드 (24시간 유효):</b> <b style="font-size:14px; letter-spacing:1.5px;">${escapeHtml(setupCode)}</b><br>
               아래 버튼을 눌러 회원 비밀번호를 설정하면 바로 [${escapeHtml(roleTxt)}] 회원으로 로그인됩니다.
             </div>
           ` : `
@@ -12471,7 +12471,7 @@
         if (recheckBtn) {
           recheckBtn.classList.remove('hidden');
           if (setupCode) {
-            recheckBtn.textContent = '🔑 새 비밀번호 설정하고 회원 입장';
+            recheckBtn.textContent = '새 비밀번호 설정하고 회원 입장';
             recheckBtn.onclick = () => {
               const nm = notice.name || '';
               const cd = setupCode;
@@ -12480,7 +12480,7 @@
               openResetPwModal(nm, cd);
             };
           } else {
-            recheckBtn.textContent = '👤 회원 로그인 화면으로 이동';
+            recheckBtn.textContent = '회원 로그인 화면으로 이동';
             recheckBtn.onclick = () => {
               const nm = notice.name || '';
               setPendingRemovalNotice(null);
@@ -12492,7 +12492,7 @@
         }
         if (switchBtn) {
           switchBtn.classList.remove('hidden');
-          switchBtn.textContent = '🔑 8자리 코드로 새 비밀번호 설정';
+          switchBtn.textContent = '8자리 코드로 새 비밀번호 설정';
           switchBtn.onclick = () => {
             const nm = notice.name || '';
             const cd = setupCode;
@@ -12513,7 +12513,7 @@
         <div><b>해제 일시:</b> ${escapeHtml(notice.removedAt || '-')}</div>
         <div><b>처리 관리자:</b> ${escapeHtml(notice.removedBy || '관리자')}</div>
         <div class="reason-note-box admin-removed" style="margin-top:8px;">
-          <b>📝 관리자 해제 사유</b><br>${escapeHtml(reasonTxt || '등록된 사유가 없습니다.')}
+          <b>관리자 해제 사유</b><br>${escapeHtml(reasonTxt || '등록된 사유가 없습니다.')}
         </div>
         <div style="font-size:11.5px; color:#64748B; margin-top:8px; line-height:1.45;">
           추후 같은 성명으로 다시 로그인하면 기존 관리자의 승인 대기 상태로 접수됩니다.
@@ -12636,7 +12636,7 @@
       const recBtn = document.getElementById('maintRecoveryLoginBtn');
       const logoutBtn = document.getElementById('maintLogoutBtn');
 
-      if (badgeEl) badgeEl.textContent = isEmergency ? '🚨 긴급 보안 점검 · 자동 차단' : '🔧 서버 점검 안내';
+      if (badgeEl) badgeEl.textContent = isEmergency ? '긴급 보안 점검 · 자동 차단' : '서버 점검 안내';
       if (iconEl) iconEl.innerHTML = renderMonoSvg(isEmergency ? 'alertShield' : 'wrench', 28);
       if (titleEl) titleEl.textContent = titleTxt;
       if (descEl) descEl.textContent = descTxt;
@@ -12644,11 +12644,11 @@
       if (subNoticeEl) {
         if (isEmergency && isBlockedAdmin) {
           const allowed = getEffectiveEmergencyAdmins();
-          subNoticeEl.innerHTML = `<b>🔐 관리자 접근 제한 안내</b><br>현재 긴급 보안 점검이 발동되어 <b>지정된 최고 관리자</b> 외 타 관리자(<b>${escapeHtml(currentAdminName || '관리자')}</b>)의 입장이 일시 차단되었습니다.<br>지정 최고 관리자가 안전 확인 후 점검을 해제하면 즉시 정상 입장됩니다.${allowed.length > 0 ? `<br><span style="opacity:0.85;">• 지정 복구 관리자: ${escapeHtml(allowed.join(', '))}</span>` : ''}`;
+          subNoticeEl.innerHTML = `<b>관리자 접근 제한 안내</b><br>현재 긴급 보안 점검이 발동되어 <b>지정된 최고 관리자</b> 외 타 관리자(<b>${escapeHtml(currentAdminName || '관리자')}</b>)의 입장이 일시 차단되었습니다.<br>지정 최고 관리자가 안전 확인 후 점검을 해제하면 즉시 정상 입장됩니다.${allowed.length > 0 ? `<br><span style="opacity:0.85;">• 지정 복구 관리자: ${escapeHtml(allowed.join(', '))}</span>` : ''}`;
           subNoticeEl.classList.remove('hidden');
         } else if (isEmergency) {
           const trigAt = (cfg.emergencyTriggeredAt || (pubLock && pubLock.triggeredAt) || '').trim();
-          subNoticeEl.innerHTML = `🛡️ <b>이용자 안전 보호 조치</b>${trigAt ? ` · 발동 시각: ${escapeHtml(trigAt)}` : ''}<br>지정 최고 관리자가 보안 점검을 마치고 해제할 때까지 모든 일반 접속이 제한됩니다.`;
+          subNoticeEl.innerHTML = `<b>이용자 안전 보호 조치</b>${trigAt ? ` · 발동 시각: ${escapeHtml(trigAt)}` : ''}<br>지정 최고 관리자가 보안 점검을 마치고 해제할 때까지 모든 일반 접속이 제한됩니다.`;
           subNoticeEl.classList.remove('hidden');
         } else {
           subNoticeEl.classList.add('hidden');
@@ -12691,7 +12691,23 @@
       });
     }
 
+    function ensureModalEmojiCleanGuards() {
+      if (window.__modalEmojiObserverBound || typeof MutationObserver === 'undefined') return;
+      window.__modalEmojiObserverBound = true;
+      document.querySelectorAll('.modal-backdrop').forEach(mb => {
+        if (mb.id === 'quickLinksSheet') return;
+        stripEmojisInManageDom(mb);
+        const mmo = new MutationObserver(() => {
+          if (!manageEmojiStripRunning && mb.classList.contains('open')) {
+            stripEmojisInManageDom(mb);
+          }
+        });
+        mmo.observe(mb, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+      });
+    }
+
     function applyScreen() {
+      ensureModalEmojiCleanGuards();
       const _perfStart = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
       try {
         _applyScreenInner();
@@ -13084,7 +13100,7 @@
             '<b>아이폰 · 아이패드 (Safari):</b> 하단 또는 상단의 <b>공유(□↑)</b> 버튼을 누른 뒤 <b>[홈 화면에 추가]</b>를 선택하면 앱 아이콘이 생성됩니다.',
             '<b>안드로이드 (Chrome / 삼성 인터넷):</b> 상단 설치 배너의 <b>[앱 설치]</b> 버튼 또는 브라우저 메뉴(⋮) → <b>[앱 설치 / 홈 화면에 추가]</b>를 누릅니다.',
             '<b>카카오톡 안에서 열었을 때:</b> 카톡 내장 브라우저에서는 설치나 알림이 제한되므로, 우측 하단 <b>⋮ → 다른 브라우저로 열기</b>를 눌러 Safari나 Chrome으로 열어 주세요.',
-            `<b>로그인 유지:</b> 한 번 로그인하면 앱을 껐다 켜도 로그인 상태가 유지됩니다. (공용 기기에서는 하단 <b>[${stIcn} ${stLbl}] → 로그아웃</b>을 눌러 주세요.)`
+            `<b>로그인 유지:</b> 한 번 로그인하면 앱을 껐다 켜도 로그인 상태가 유지됩니다. (공용 기기에서는 하단 <b>[${stLbl}] → 로그아웃</b>을 눌러 주세요.)`
           ],
           tip: '홈 화면에 추가해 앱으로 실행하면 전체 화면으로 깔끔하게 보이고, 실시간 알림 기능도 더 안정적으로 작동합니다.'
         },
@@ -13098,7 +13114,7 @@
           steps: [
             '<b>신규 회원가입 (약관 동의 필수):</b> 기존 회원이나 관리자가 공유한 <b>오늘의 초대 QR 코드</b>를 스캔해 접속하면 먼저 <b>이용약관</b>이 표시됩니다. 약관에 동의 체크 후 <b>[동의하고 회원가입 진행하기]</b>를 누르면 입력 화면이 열리며, 본인 성명 · 역할 선택(목록) · 비밀번호(6자리 이상)를 입력해 신청합니다.',
             `<b>실시간 자동 입장:</b> 가입 신청 후 관리자가 승인하면 별도로 새로고침하지 않아도 자동으로 <b>${hLbl}</b> 화면에 입장됩니다.`,
-            `<b>친구 초대하기:</b> 하단 <b>[${stIcn} ${stLbl}] → 오늘의 초대 QR</b>을 누르면 <b>카카오톡 이미지 공유</b>, <b>이미지 저장</b>, <b>초대 링크 복사</b>로 바로 전달할 수 있습니다.`
+            `<b>친구 초대하기:</b> 하단 <b>[${stLbl}] → 오늘의 초대 QR</b>을 누르면 <b>카카오톡 이미지 공유</b>, <b>이미지 저장</b>, <b>초대 링크 복사</b>로 바로 전달할 수 있습니다.`
           ],
           tip: '초대 QR은 보안 설정(오늘 하루 또는 현장 5분·10분 주기)에 따라 새 QR로 자동 변경됩니다. 이전 QR을 사용하면 새 QR로 다시 스캔하도록 안내되며, 이미 가입된 회원은 QR 없이 평소처럼 로그인합니다.'
         },
@@ -13114,7 +13130,7 @@
             `<b>공지 · 광고 이모지 반응 & 반응자 확인:</b> 공지·광고 목록 카드와 상세 창에서 명칭이 적힌 이모지(<b>👍 확인 · ❤️ 좋아요 · 🙏 아멘</b> 등)를 눌러 마음을 표현할 수 있으며, 다시 누르면 취소됩니다. 버튼 아래 <b>[👥 이름 ▾]</b>을 누르거나 상세 창을 열면 <b>누가 어떤 이모지를 달았는지</b> 확인할 수 있습니다. (상단 배너에는 이모지가 달리지 않습니다.)`,
             `<b>새가족 환영 배너:</b> 새로 온 새가족이 있으면 <b>${hLbl}</b> 상단에 환영 배너가 자동으로 표시됩니다.`,
             `<b>예배 · 특별 행사 출석 체크:</b> 설정된 주일 예배 시간(기본 일요일 14:00~15:30) 또는 특별 행사 시간에만 <b>${hLbl}</b> 맨 위에 <b>초록색 출석 카드</b>가 자동으로 나타납니다.`,
-            `<b>출석O / 출석X 선택 및 주간 출석부 반영:</b> <b>[출석O]</b> 또는 <b>[출석X]</b> 버튼을 누르면 출석이 즉시 기록되고 카드가 닫힙니다. 구글 시트 주간 출석부에는 출석한 지체(<b>출석O</b>)만 소속 셀 칸에 <b>○</b>로 자동 체크되며, 불참·미응답은 빈칸으로 유지됩니다. 내 출석 이력은 하단 <b>[${stIcn} ${stLbl}] → 👤 내 계정 관리</b>에서 확인할 수 있습니다.`
+            `<b>출석O / 출석X 선택 및 주간 출석부 반영:</b> <b>[출석O]</b> 또는 <b>[출석X]</b> 버튼을 누르면 출석이 즉시 기록되고 카드가 닫힙니다. 구글 시트 주간 출석부에는 출석한 지체(<b>출석O</b>)만 소속 셀 칸에 <b>○</b>로 자동 체크되며, 불참·미응답은 빈칸으로 유지됩니다. 내 출석 이력은 하단 <b>[${stLbl}] → 내 계정 관리</b>에서 확인할 수 있습니다.`
           ],
           tip: '출석 시간이 지났거나 잘못 누른 경우에는 관리자에게 말씀해 주시면 즉시 수정해 드립니다. (공지·영상 이모지 누르기/취소는 보안 로그·시트에 남지 않으며, 관리자의 반응 이모지 설정 변경만 보안 로그·구글 시트에 기록됩니다.)'
         },
@@ -13141,7 +13157,7 @@
           sub: '앱 불편·개선 사항 전달 및 실시간 답변 알림',
           keywords: `${getTabLabel('setInquiry')} 문의 불편 개선 기능 요청 답변 수정 삭제 알림`,
           steps: [
-            `<b>문의 작성하기:</b> 하단 <b>[${stIcn} ${stLbl}] → ${escapeHtml(getTabIcon('setInquiry'))} ${escapeHtml(getTabLabel('setInquiry'))}</b>에서 분류(불편한 점 · 개선 사항 · 기능 추가 요청 · 기타 의견)와 제목·내용을 입력해 보낼 수 있습니다.`,
+            `<b>문의 작성하기:</b> 하단 <b>[${stLbl}] → ${escapeHtml(getTabLabel('setInquiry'))}</b>에서 분류(불편한 점 · 개선 사항 · 기능 추가 요청 · 기타 의견)와 제목·내용을 입력해 보낼 수 있습니다.`,
             '<b>수정 · 삭제 및 답변 확인:</b> 내가 보낸 문의는 같은 화면 하단 목록에서 언제든 수정·삭제할 수 있으며, 관리자가 답변을 등록하면 실시간 알림으로 바로 안내됩니다.'
           ],
           tip: '보안을 위해 전화번호·집주소 등 민감한 개인정보는 문의 내용에 적지 말아 주세요.'
@@ -13154,8 +13170,8 @@
           sub: `${getTabLabel('bylaws')} 키워드 검색·복사와 인스타/유튜브/교회 홈페이지 연결`,
           keywords: `${getTabLabel('bylaws')} 회칙 검색 조항 복사 ${getTabLabel('more')} 사이트 바로가기 인스타그램 유튜브 교회 홈페이지`,
           steps: [
-            `<b>${byLbl} 검색:</b> 하단 <b>[${stIcn} ${stLbl}] → [${byIcn} ${byLbl}]</b>에서 <b>제5조</b>, <b>선거권</b>, <b>임기</b> 등 원하는 키워드나 추천 해시태그(#)를 눌러 해당 조항을 바로 찾을 수 있습니다. 각 조항 우측 <b>[복사]</b> 버튼으로 본문 복사도 가능합니다.`,
-            `<b>${mIcn} ${mLbl}:</b> 하단 <b>[${mIcn} ${mLbl}]</b> 탭을 누르면 청년부 인스타그램, 유튜브 채널, 교회 홈페이지 등 등록된 외부 사이트로 한 번에 이동할 수 있습니다.`
+            `<b>${byLbl} 검색:</b> 하단 <b>[${stLbl}] → [${byLbl}]</b>에서 <b>제5조</b>, <b>선거권</b>, <b>임기</b> 등 원하는 키워드나 추천 해시태그(#)를 눌러 해당 조항을 바로 찾을 수 있습니다. 각 조항 우측 <b>[복사]</b> 버튼으로 본문 복사도 가능합니다.`,
+            `<b>${mLbl}:</b> 하단 <b>[${mLbl}]</b> 탭을 누르면 청년부 인스타그램, 유튜브 채널, 교회 홈페이지 등 등록된 외부 사이트로 한 번에 이동할 수 있습니다.`
           ],
           tip: `${getTabLabel('bylaws')} 열람, 공지 확인, ${getTabLabel('more')} 이동은 개인 활동으로 보안 로그에 남지 않습니다.`
         },
@@ -13167,8 +13183,8 @@
           sub: `하단 ${getTabLabel('settings')}에서 내 정보 변경 · 글자 크기 · 비밀번호 관리`,
           keywords: `내 계정 ${getTabLabel('settings')} 글자 크기 이름 변경 신청 승인 거절 비밀번호 변경 초기화 분실 탈퇴 삭제`,
           steps: [
-            `<b>이름 변경 신청:</b> 하단 <b>[${stIcn} ${stLbl}] → 👤 내 계정 관리 → [✏️ 내 이름 변경 신청]</b>에 새 성명(2~10글자)을 입력해 신청합니다. 관리자가 승인하면 즉시 새 이름으로 변경되며(다음 로그인부터 새 이름으로 로그인), 거절 시 기존 이름이 유지됩니다.`,
-            `<b>전체 글자 크기 조절:</b> 하단 <b>[${stIcn} ${stLbl}] → 🔤 전체 글자 크기</b>에서 보통·크게·아주 크게를 선택하면 앱 전체 글자가 보기 편하게 커집니다.`,
+            `<b>이름 변경 신청:</b> 하단 <b>[${stLbl}] → 내 계정 관리 → [내 이름 변경 신청]</b>에 새 성명(2~10글자)을 입력해 신청합니다. 관리자가 승인하면 즉시 새 이름으로 변경되며(다음 로그인부터 새 이름으로 로그인), 거절 시 기존 이름이 유지됩니다.`,
+            `<b>전체 글자 크기 조절:</b> 하단 <b>[${stLbl}] → 전체 글자 크기</b>에서 보통·크게·아주 크게를 선택하면 앱 전체 글자가 보기 편하게 커집니다.`,
             '<b>비밀번호 변경:</b> 하단 <b>[비밀번호 변경]</b> 탭에서 현재 비밀번호와 새 비밀번호(6자리 이상)를 입력해 직접 변경할 수 있습니다. <b>(비밀번호 변경은 보안상 로그에 남지 않습니다.)</b>',
             '<b>비밀번호를 잊어버렸을 때:</b> 관리자에게 비밀번호 초기화를 요청해 <b>8자리 초기화 코드(24시간 유효)</b>를 받은 뒤, 로그인 화면 하단의 <b>[🔑 새 비밀번호 설정]</b>에서 재설정하면 바로 로그인됩니다.'
           ],
@@ -13182,7 +13198,7 @@
           sub: '새 공지·배너, 설교·찬양 영상, 내 문의 답변을 알림으로 받아보기',
           keywords: `알림 설정 팝업 기기알림 테스트알림 ${getTabLabel('home')} 영상 문의`,
           steps: [
-            `하단 <b>[${stIcn} ${stLbl}] → 🔔 알림 설정</b>을 눌러 전체 알림과 항목별 알림(<b>${hLbl} 새 소식</b> / <b>새 설교·찬양 영상</b> / <b>내 문의 답변</b>)을 자유롭게 켜고 끌 수 있습니다.`,
+            `하단 <b>[${stLbl}] → 알림 설정</b>을 눌러 전체 알림과 항목별 알림(<b>${hLbl} 새 소식</b> / <b>새 설교·찬양 영상</b> / <b>내 문의 답변</b>)을 자유롭게 켜고 끌 수 있습니다.`,
             '<b>[기기 알림 허용하기]</b>를 눌러 권한을 허용하면 스마트폰 상단 알림으로도 소식을 받을 수 있으며, <b>[🔔 테스트 알림]</b>으로 정상 작동 여부를 바로 확인할 수 있습니다.'
           ],
           tip: '아이폰에서는 반드시 Safari → 공유 → [홈 화면에 추가]로 설치한 앱에서 열어야 기기 알림 허용 버튼이 활성화됩니다.'
@@ -13277,7 +13293,7 @@
               <ol class="guide-step-list">
                 ${sec.steps.map(s => `<li>${s}</li>`).join('')}
               </ol>
-              ${sec.tip ? `<div class="guide-tip-box ${sec.warn ? 'warn' : ''}">💡 ${escapeHtml(sec.tip)}</div>` : ''}
+              ${sec.tip ? `<div class="guide-tip-box ${sec.warn ? 'warn' : ''}"><b>참고 ·</b> ${escapeHtml(sec.tip)}</div>` : ''}
             </div>
           </details>
         </div>
@@ -13582,7 +13598,7 @@
                   `).join('')}
                 </div>
               ` : ''}
-              ${sec.tip ? `<div class="guide-tip-box ${sec.warn ? 'warn' : ''}">💡 ${escapeHtml(sec.tip)}</div>` : ''}
+              ${sec.tip ? `<div class="guide-tip-box ${sec.warn ? 'warn' : ''}"><b>참고 ·</b> ${escapeHtml(sec.tip)}</div>` : ''}
               ${sec.targetTab ? `
                 <div style="margin-top:10px; display:flex; justify-content:flex-end;">
                   <button class="btn-sm primary" type="button" onclick="switchManageSubTab('${escapeJsAttr(sec.targetTab)}')">${escapeHtml(sec.targetLabel || '바로가기')} →</button>
@@ -13926,7 +13942,7 @@
       const titleText = renderCelebrationText(getCelebrationMsg('newcomerTitle'), namesArr);
       const descText = renderCelebrationText(getCelebrationMsg('newcomerDesc'), namesArr);
       const adminEditBtn = (user && user.isSuperAdmin)
-        ? `<button class="banner-quick-edit-btn" type="button" onclick="event.stopPropagation(); openCelebrationMsgsModal()">🎨 명단·멘트·색</button>`
+        ? `<button class="banner-quick-edit-btn" type="button" onclick="event.stopPropagation(); openCelebrationMsgsModal()">명단·멘트·색</button>`
         : '';
       return `
         <div class="newcomer-auto-banner ${isBannerThemeLight(nTheme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(nTheme)};">
@@ -14094,7 +14110,7 @@
       if (mode === 'detail') {
         return `
           <div class="detail-reactions-head">
-            <span>✨ 이 공지·광고에 이모지 남기기</span>
+            <span>이 공지·광고에 이모지 남기기</span>
             <span>${stats.total > 0 ? `총 ${stats.total}개` : '첫 이모지를 눌러 보세요'}</span>
           </div>
           <div class="post-reaction-bar" style="margin-top:0;">
@@ -14249,7 +14265,7 @@
       const heroTheme = getNoticeEffectiveBannerTheme(pinned, b);
       const heroBadgeText = getNoticeEffectiveBannerBadge(pinned, b);
       const heroEditBtn = (user && user.isSuperAdmin)
-        ? `<button class="banner-quick-edit-btn" type="button" onclick="event.stopPropagation(); openQuickBannerStyleModal('${escapeJsAttr(pinned.id)}', '${escapeJsAttr(b.id)}')">🎨 색·배지</button>`
+        ? `<button class="banner-quick-edit-btn" type="button" onclick="event.stopPropagation(); openQuickBannerStyleModal('${escapeJsAttr(pinned.id)}', '${escapeJsAttr(b.id)}')">색·배지</button>`
         : '';
       return `
         <div class="hero-banner ${isBannerThemeLight(heroTheme) ? 'light-banner-text' : ''}" style="background:${getThemeCss(heroTheme)};" onclick="openDetail('${escapeJsAttr(pinned.id)}')">
@@ -14269,7 +14285,7 @@
       const hasDesc = !!String(b.desc || '').trim();
       const clickable = hasDesc || blkNew;
       const adminEditBtn = (user && user.isSuperAdmin)
-        ? `<button class="banner-quick-edit-btn" type="button" onclick="event.stopPropagation(); openEditBlockModal('${escapeJsAttr(b.id)}')">✏️ 수정</button>`
+        ? `<button class="banner-quick-edit-btn" type="button" onclick="event.stopPropagation(); openEditBlockModal('${escapeJsAttr(b.id)}')">수정</button>`
         : '';
       const schedHtml = typeof getAdminSchedPillFn === 'function' ? getAdminSchedPillFn(b) : '';
       const lightCls = isBannerThemeLight(b.theme) ? 'light-banner-text' : '';
@@ -14507,7 +14523,7 @@
       function getAdminSchedPill(item) {
         if (!user.isSuperAdmin || getPublishState(item) !== 'scheduled') return '';
         const p = tsToKstParts(item.publishAtTs);
-        return `<div class="sched-preview-pill">⏰ 예약 미리보기 · ${escapeHtml(p ? p.shortLabel : '')} 자동 공개</div>`;
+        return `<div class="sched-preview-pill">예약 미리보기 · ${escapeHtml(p ? p.shortLabel : '')} 자동 공개</div>`;
       }
 
       const attendanceHtml = buildAttendanceHomeCardHtml(user);
@@ -14523,7 +14539,7 @@
             <div style="font-size:12.5px; color:#7F1D1D; line-height:1.55; margin-bottom:14px;">
               관리자에게 Firebase Firestore 보안 규칙을 최신 버전으로 게시해 달라고 요청해 주세요.
             </div>
-            <button class="btn-sm primary" type="button" style="padding:9px 14px;" onclick="retryLoadHomeContent()">🔄 다시 불러오기</button>
+            <button class="btn-sm primary" type="button" style="padding:9px 14px;" onclick="retryLoadHomeContent()">다시 불러오기</button>
           </div>
         `;
         return;
@@ -14818,8 +14834,8 @@
           const p = n.parentElement;
           if (!p) continue;
           const tag = p.tagName;
-          if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'INPUT' || tag === 'OPTION') continue;
-          if (p.closest && p.closest('[data-keep-emoji="1"], svg')) continue;
+          if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'INPUT') continue;
+          if (p.closest && p.closest('[data-keep-emoji="1"], .post-reaction-bar, .video-reaction-bar, .reaction-who-list, #detailReactionsBox, #videoPlayerReactions, #detailTitle, #detailBody, #videoPlayerTitle, #videoPlayerNote, #qbsPreviewCard, #celebNewcomerPreview, svg')) continue;
           if (n.nodeValue && MANAGE_EMOJI_TEST_RE.test(n.nodeValue)) {
             textNodes.push(n);
           }
@@ -21011,18 +21027,18 @@
       if (metaEl && document.getElementById('inviteQrModal').classList.contains('open')) {
         if (!inviteQrDoc || !inviteQrDoc.token) {
           metaEl.className = 'qr-meta-pill';
-          metaEl.textContent = '⏳ 초대 QR을 준비하고 있습니다...';
+          metaEl.textContent = '초대 QR을 준비하고 있습니다...';
         } else if (!isCurrent) {
           metaEl.className = 'qr-meta-pill expired';
           metaEl.textContent = modeMin > 0
-            ? `⏱️ ${modeMin}분 유효시간 만료 · 관리자 화면에서 새 QR 발급 필요`
-            : '⏱️ 오늘의 QR 갱신 대기 중 · 관리자가 앱을 열면 자동 생성됩니다';
+            ? `${modeMin}분 유효시간 만료 · 관리자 화면에서 새 QR 발급 필요`
+            : '오늘의 QR 갱신 대기 중 · 관리자가 앱을 열면 자동 생성됩니다';
         } else if (modeMin > 0) {
           metaEl.className = 'qr-meta-pill live';
-          metaEl.textContent = `⏱️ ${modeMin}분 현장 모드 · 남은 시간 ${formatCountdownMmSs(remainMs)}${graceRemainMs > 0 ? ` (직전 QR 유예 ${formatCountdownMmSs(graceRemainMs)})` : ''}`;
+          metaEl.textContent = `${modeMin}분 현장 모드 · 남은 시간 ${formatCountdownMmSs(remainMs)}${graceRemainMs > 0 ? ` (직전 QR 유예 ${formatCountdownMmSs(graceRemainMs)})` : ''}`;
         } else {
           metaEl.className = 'qr-meta-pill';
-          metaEl.textContent = `⏰ ${todayDot} 23:59까지 유효 (발급: ${inviteQrDoc.updatedBy || '자동'})`;
+          metaEl.textContent = `${todayDot} 23:59까지 유효 (발급: ${inviteQrDoc.updatedBy || '자동'})`;
         }
       }
 
@@ -21952,9 +21968,9 @@
           <div class="home-block">
             <div class="attendance-home-card">
               <span class="attendance-live-badge"><span class="attendance-live-dot"></span><span>${escapeHtml(sess.label)} 출석 진행 중 · ${escapeHtml(sess.start)}~${escapeHtml(sess.end)}</span></span>
-              <h2 class="attendance-home-title">📋 출석O ${presentCnt}명 · 출석X ${absentCnt}명</h2>
+              <h2 class="attendance-home-title">출석O ${presentCnt}명 · 출석X ${absentCnt}명</h2>
               <p class="attendance-home-desc">${escapeHtml(getTabLabel('manage'))}에서 실시간 출석 명단 확인 및 추가·수정·삭제를 할 수 있습니다.</p>
-              <button class="btn-attendance-cta" type="button" onclick="goToAttendanceManage()">✅ 출석 현황 관리 바로가기</button>
+              <button class="btn-attendance-cta" type="button" onclick="goToAttendanceManage()">출석 현황 관리 바로가기</button>
             </div>
           </div>
         `;
@@ -22173,7 +22189,7 @@
         <div><b>현재 상태:</b> 기존 관리자 승인 대기</div>
         ${isRe ? `
           <div class="reason-note-box admin-removed" style="margin-top:8px;">
-            <b>📝 이전 관리자 해제 사유</b><br>${escapeHtml(prevReason || '등록된 사유가 없습니다.')}
+            <b>이전 관리자 해제 사유</b><br>${escapeHtml(prevReason || '등록된 사유가 없습니다.')}
           </div>
         ` : ''}
       `;
@@ -34016,27 +34032,27 @@
       bodyEl.innerHTML = `
         ${isStandalone ? `
           <div class="att-history-box" style="margin-bottom:12px;">
-            ✅ <b>이미 앱으로 설치되어 실행 중입니다!</b><br>
+            <b>이미 앱으로 설치되어 실행 중입니다!</b><br>
             홈 화면 아이콘으로 편리하게 이용하고 계십니다.
           </div>
         ` : ''}
         ${canDirectInstall ? `
-          <button class="btn-full btn-blue" type="button" style="margin-bottom:12px; padding:12px;" onclick="triggerInstallFromModal()">📲 지금 바로 앱 설치하기</button>
+          <button class="btn-full btn-blue" type="button" style="margin-bottom:12px; padding:12px;" onclick="triggerInstallFromModal()">지금 바로 앱 설치하기</button>
         ` : ''}
         <div class="info-box" style="margin-top:0; margin-bottom:9px;">
-          <b>🍎 아이폰 · 아이패드 (Safari)</b><br>
+          <b>아이폰 · 아이패드 (Safari)</b><br>
           1) 사파리(Safari) 브라우저로 앱 주소를 엽니다.<br>
           2) 화면 아래(또는 위) <b>공유 버튼(□↑)</b>을 누릅니다.<br>
           3) <b>[홈 화면에 추가]</b> → <b>[추가]</b>를 누르면 바탕화면에 앱 아이콘이 생깁니다.
         </div>
         <div class="info-box" style="margin-top:0; margin-bottom:9px;">
-          <b>🤖 안드로이드 (Chrome / 삼성 인터넷)</b><br>
+          <b>안드로이드 (Chrome / 삼성 인터넷)</b><br>
           1) 크롬 또는 삼성 인터넷에서 앱 주소를 엽니다.<br>
           2) 우측 상단(또는 하단) <b>메뉴(⋮ 또는 ☰)</b>를 누릅니다.<br>
           3) <b>[앱 설치]</b> 또는 <b>[홈 화면에 추가]</b>를 선택해 설치합니다.
         </div>
         <div class="info-box warn" style="margin-top:0;">
-          <b>💬 카카오톡 안에서 링크를 눌렀을 때</b><br>
+          <b>카카오톡 안에서 링크를 눌렀을 때</b><br>
           카카오톡 화면 안에서는 설치가 되지 않습니다. 우측 하단 <b>⋮ → 다른 브라우저로 열기</b>를 눌러 Safari나 Chrome으로 연 뒤 설치해 주세요.
         </div>
       `;
@@ -34299,7 +34315,7 @@
             </div>
             <div style="font-size:12px; color:#CBD5E1; margin-top:4px; line-height:1.4;">
               ${todayAtt
-                ? `✅ 오늘 ${escapeHtml(todayAtt.label || '예배')} 출석 완료 (${escapeHtml(todayAtt.time || '')})`
+                ? `오늘 ${escapeHtml(todayAtt.label || '예배')} 출석 완료 (${escapeHtml(todayAtt.time || '')})`
                 : escapeHtml(getUiText('settingsProfileSub'))}
             </div>
           </div>
@@ -34315,9 +34331,9 @@
             <div style="font-size:12.5px; color:rgba(255,255,255,0.92); line-height:1.5; margin-bottom:11px;">
               새로운 기능과 보안 개선 사항이 반영되었습니다. 아래 버튼을 눌러 최신 화면으로 업데이트해 주세요.
             </div>
-            <button class="btn-full" type="button" style="background:#FFFFFF; color:#1D4ED8; padding:11px; font-size:13.5px;" onclick="applyPendingAppUpdate()">🔄 지금 업데이트하기</button>
+            <button class="btn-full" type="button" style="background:#FFFFFF; color:#1D4ED8; padding:11px; font-size:13.5px;" onclick="applyPendingAppUpdate()">지금 업데이트하기</button>
             ${isAdmin && serverLatestBuild > APP_CLIENT_BUILD ? `
-              <button class="btn-full" type="button" style="background:rgba(15,23,42,0.38); color:#FDE68A; border:1px solid rgba(253,230,138,0.45); padding:9px; font-size:12px; margin-top:7px;" onclick="syncServerBuildToCurrent()">⚙️ 롤백 후 반복 알림 해결 (서버 기준을 현재 b${APP_CLIENT_BUILD}로 맞추기)</button>
+              <button class="btn-full" type="button" style="background:rgba(15,23,42,0.38); color:#FDE68A; border:1px solid rgba(253,230,138,0.45); padding:9px; font-size:12px; margin-top:7px;" onclick="syncServerBuildToCurrent()">롤백 후 반복 알림 해결 (서버 기준을 현재 b${APP_CLIENT_BUILD}로 맞추기)</button>
             ` : ''}
           </div>
         ` : ''}
@@ -37060,8 +37076,8 @@ ${handleUrl}`);
       const cIcn = getTabIcon('ccm');
       const homeVideoTabs = [
         { key: '전체', label: `전체 (${approved.length})`, unread: unreadAllCnt },
-        { key: '설교', label: `${sIcn} ${sLbl} (${sermonList.length})`, unread: unreadSermonCnt },
-        { key: 'CCM', label: `${cIcn} ${cLbl} (${ccmList.length})`, unread: unreadCcmCnt }
+        { key: '설교', label: `${sLbl} (${sermonList.length})`, unread: unreadSermonCnt },
+        { key: 'CCM', label: `${cLbl} (${ccmList.length})`, unread: unreadCcmCnt }
       ];
       return `
         <div class="home-block" data-ts-zone="home_videos">
@@ -37088,15 +37104,15 @@ ${handleUrl}`);
                       <img class="video-compact-thumb" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="썸네일" loading="lazy" />
                       <div style="min-width:0; flex:1;">
                         <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap; margin-bottom:3px;">
-                          ${reactTotal > 0 ? `<span class="tag warm" style="font-size:10px; padding:2px 6px;">🔥 추천 ${idx + 1}위 · ${reactTotal}</span>` : ''}
+                          ${reactTotal > 0 ? `<span class="tag warm" style="font-size:10px; padding:2px 6px;">추천 ${idx + 1}위 · ${reactTotal}</span>` : ''}
                           ${vidNew ? '<span class="new-badge">NEW</span>' : ''}
-                          <span class="tag slate" style="font-size:10px; padding:2px 6px;">${ccm ? '🎵' : (grp === '라이트 청년부' ? '✨' : '⛪')} ${escapeHtml(grp)}</span>
-                          ${(!ccm && getSermonSubTabLabel(v) && getSermonSubTabLabel(v) !== '기타 설교') ? `<span class="tag" style="font-size:10px; padding:2px 6px;">📂 ${escapeHtml(getSermonSubTabLabel(v))}</span>` : ''}
-                          ${(ccm && getCcmSubTabLabel(v) && getCcmSubTabLabel(v) !== '기타 CCM') ? `<span class="tag" style="font-size:10px; padding:2px 6px; background:#F3E8FF; color:#7E22CE;">📂 ${escapeHtml(getCcmSubTabLabel(v))}</span>` : ''}
-                          ${v.officialVerified ? '<span class="tag green" style="font-size:10px; padding:2px 6px;">✅ 공식 채널</span>' : '<span class="tag" style="font-size:10px; padding:2px 6px;">🛡️ 관리자 검증</span>'}
+                          <span class="tag slate" style="font-size:10px; padding:2px 6px;">${escapeHtml(grp)}</span>
+                          ${(!ccm && getSermonSubTabLabel(v) && getSermonSubTabLabel(v) !== '기타 설교') ? `<span class="tag" style="font-size:10px; padding:2px 6px;">${escapeHtml(getSermonSubTabLabel(v))}</span>` : ''}
+                          ${(ccm && getCcmSubTabLabel(v) && getCcmSubTabLabel(v) !== '기타 CCM') ? `<span class="tag" style="font-size:10px; padding:2px 6px; background:#F3E8FF; color:#7E22CE;">${escapeHtml(getCcmSubTabLabel(v))}</span>` : ''}
+                          ${v.officialVerified ? '<span class="tag green" style="font-size:10px; padding:2px 6px;">공식 채널</span>' : '<span class="tag" style="font-size:10px; padding:2px 6px;">관리자 검증</span>'}
                         </div>
                         <div style="font-size:13.5px; font-weight:800; color:#0F172A; line-height:1.35; margin-bottom:3px;">${escapeHtml(v.title || '')}</div>
-                        <div style="font-size:11.5px; color:#64748B;">📺 ${escapeHtml(v.channelName || '유튜브')} · ${escapeHtml(v.createdAt ? String(v.createdAt).slice(0, 10) : '')}</div>
+                        <div style="font-size:11.5px; color:#64748B;">${escapeHtml(v.channelName || '유튜브')} · ${escapeHtml(v.createdAt ? String(v.createdAt).slice(0, 10) : '')}</div>
                         ${buildVideoReactionBarHtml(v, 'home')}
                       </div>
                     </div>
@@ -37150,7 +37166,7 @@ ${handleUrl}`);
       if (mode === 'player') {
         return `
           <div class="video-player-reactions-head">
-            <span>✨ 이 영상에 은혜·공감 이모지 남기기</span>
+            <span>이 영상에 은혜·공감 이모지 남기기</span>
             <span>${stats.total > 0 ? `총 ${stats.total}개` : '첫 이모지를 눌러 보세요'}</span>
           </div>
           <div class="video-reaction-bar" style="margin-top:0;">
@@ -37390,8 +37406,8 @@ ${handleUrl}`);
       const sermonSubTab = ccm ? '' : getSermonSubTabLabel(v);
       const ccmSubTab = ccm ? getCcmSubTabLabel(v) : '';
       const grpBadgeHtml = ccm
-        ? `<button class="tag" type="button" style="border:none; cursor:pointer; background:#F3E8FF; color:#7E22CE;" onclick="jumpToCcmTeam('${escapeJsAttr(grp)}')">🎵 ${escapeHtml(grp)}</button>${ccmSubTab ? `<button class="tag" type="button" style="border:none; cursor:pointer; background:#EDE9FE; color:#6D28D9;" onclick="jumpToCcmSubTab('${escapeJsAttr(grp)}', '${escapeJsAttr(ccmSubTab)}')">📂 ${escapeHtml(ccmSubTab)}</button>` : ''}`
-        : `<button class="tag slate" type="button" style="border:none; cursor:pointer;" onclick="jumpToSermonChurch('${escapeJsAttr(grp)}')">${grp === '라이트 청년부' ? '✨' : '⛪'} ${escapeHtml(grp)}</button>${sermonSubTab ? `<button class="tag" type="button" style="border:none; cursor:pointer;" onclick="jumpToSermonSubTab('${escapeJsAttr(grp)}', '${escapeJsAttr(sermonSubTab)}')">📂 ${escapeHtml(sermonSubTab)}</button>` : ''}`;
+        ? `<button class="tag" type="button" style="border:none; cursor:pointer; background:#F3E8FF; color:#7E22CE;" onclick="jumpToCcmTeam('${escapeJsAttr(grp)}')">${escapeHtml(grp)}</button>${ccmSubTab ? `<button class="tag" type="button" style="border:none; cursor:pointer; background:#EDE9FE; color:#6D28D9;" onclick="jumpToCcmSubTab('${escapeJsAttr(grp)}', '${escapeJsAttr(ccmSubTab)}')">${escapeHtml(ccmSubTab)}</button>` : ''}`
+        : `<button class="tag slate" type="button" style="border:none; cursor:pointer;" onclick="jumpToSermonChurch('${escapeJsAttr(grp)}')">${escapeHtml(grp)}</button>${sermonSubTab ? `<button class="tag" type="button" style="border:none; cursor:pointer;" onclick="jumpToSermonSubTab('${escapeJsAttr(grp)}', '${escapeJsAttr(sermonSubTab)}')">${escapeHtml(sermonSubTab)}</button>` : ''}`;
       return `
         <div class="video-card">
           <div class="video-thumb-wrap" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">
@@ -37407,14 +37423,14 @@ ${handleUrl}`);
                 ${vidNew ? '<span class="new-badge">NEW</span>' : ''}
                 ${grpBadgeHtml}
                 ${v.officialVerified
-                  ? '<span class="tag green">✅ 공식 채널 · 자동 검사 통과</span>'
-                  : '<span class="tag">🛡️ 관리자 검증 완료</span>'}
+                  ? '<span class="tag green">공식 채널 · 자동 검사 통과</span>'
+                  : '<span class="tag">관리자 검증 완료</span>'}
               </div>
               <span class="card-date">${escapeHtml(v.createdAt ? String(v.createdAt).slice(0, 10) : '')}</span>
             </div>
             <div style="font-size:15px; font-weight:800; color:#0F172A; line-height:1.38; margin-bottom:4px;">${escapeHtml(v.title || '')}</div>
             <div style="font-size:12px; color:#475569; margin-bottom:${v.note ? '7px' : '0'};">
-              📺 <b>${escapeHtml(v.channelName || '유튜브')}</b> · 추천: ${escapeHtml(v.authorName || '회원')}${v.roleName ? ` (${escapeHtml(v.roleName)})` : ''}
+              <b>${escapeHtml(v.channelName || '유튜브')}</b> · 추천: ${escapeHtml(v.authorName || '회원')}${v.roleName ? ` (${escapeHtml(v.roleName)})` : ''}
             </div>
             ${v.note ? `<div class="video-note-box" style="margin:6px 0 0;">${escapeHtml(v.note)}</div>` : ''}
             ${buildVideoReactionBarHtml(v, 'card')}
@@ -37480,7 +37496,7 @@ ${handleUrl}`);
       return `
         <div class="manage-divider" style="margin:18px 0 12px;"></div>
         <div class="section-head">
-          <h3 class="section-title">📋 ${escapeHtml(headingLabel)} (${nonApproved.length})</h3>
+          <h3 class="section-title">${escapeHtml(headingLabel)} (${nonApproved.length})</h3>
         </div>
         ${nonApproved.map(v => `
           <div class="card ${v.status === 'pending' ? 'highlight-pending' : ''}">
@@ -37575,7 +37591,7 @@ ${handleUrl}`);
         const scopeName = sermonCatFilter === '전체' ? '전체 설교' : sermonCatFilter;
         subBoxEl.innerHTML = `
           <div class="sermon-subtabs-head">
-            <span class="sermon-subtabs-label">📂 ${escapeHtml(scopeName)} 세부 탭</span>
+            <span class="sermon-subtabs-label">${escapeHtml(scopeName)} 세부 탭</span>
             ${user.isSuperAdmin ? '<button class="btn-sm" type="button" style="padding:2.5px 7px; font-size:10.5px;" onclick="openSermonTabsModal()">+ 탭 편집</button>' : ''}
           </div>
           <div class="sermon-subtab-row" data-ts-bar="sermon_sub" data-ts-body="#sermonListArea">
@@ -37718,7 +37734,7 @@ ${handleUrl}`);
         const scopeName = ccmTeamFilter === '전체' ? `전체 ${getTabLabel('ccm')}` : ccmTeamFilter;
         subBoxEl.innerHTML = `
           <div class="sermon-subtabs-head">
-            <span class="ccm-subtabs-label">📂 ${escapeHtml(scopeName)} 세부 탭</span>
+            <span class="ccm-subtabs-label">${escapeHtml(scopeName)} 세부 탭</span>
             ${user.isSuperAdmin ? '<button class="btn-sm" type="button" style="padding:2.5px 7px; font-size:10.5px;" onclick="openCcmTabsModal()">+ 탭 편집</button>' : ''}
           </div>
           <div class="sermon-subtab-row" data-ts-bar="ccm_sub" data-ts-body="#ccmListArea">
@@ -38457,7 +38473,7 @@ ${handleUrl}`);
             </div>
             ${buildSermonTabsManagerRowsHtml()}
             <div style="display:flex; justify-content:flex-end; margin-top:8px;">
-              <button class="btn-sm" type="button" onclick="handleResetDefaultSermonSubTabs()">🔄 기본 탭 복원</button>
+              <button class="btn-sm" type="button" onclick="handleResetDefaultSermonSubTabs()">기본 탭 복원</button>
             </div>
             ${buildInlineSaveStatusHtml('sermon_tabs')}
           </div>
@@ -38484,7 +38500,7 @@ ${handleUrl}`);
             </div>
             ${buildCcmTabsManagerRowsHtml()}
             <div style="display:flex; justify-content:flex-end; margin-top:8px;">
-              <button class="btn-sm" type="button" onclick="handleResetDefaultCcmSubTabs()">🔄 기본 탭 복원</button>
+              <button class="btn-sm" type="button" onclick="handleResetDefaultCcmSubTabs()">기본 탭 복원</button>
             </div>
             ${buildInlineSaveStatusHtml('ccm_tabs')}
           </div>
