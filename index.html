@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=260" />
+  <link rel="manifest" href="./manifest.json?v=261" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=260" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=260" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=261" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=261" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4523,7 +4523,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=260" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=261" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4715,7 +4715,7 @@
               </div>
               <div class="hero-top-actions">
                 <button id="sermonTabsManageBtn" class="hero-write-btn hidden" type="button" style="background:rgba(255,255,255,0.16); color:#FFFFFF; border:1px solid rgba(255,255,255,0.32);" onclick="openSermonTabsModal()">🗂️ 탭 관리</button>
-                <button id="sermonRecommendTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openVideoSubmitModal(sermonCatFilter === '라이트 청년부' ? '라이트 청년부' : '설교')">+ 설교 추천</button>
+                <button id="sermonRecommendTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openVideoSubmitModal(sermonCatFilter === '라이트 청년부' ? '라이트 청년부' : '설교')">+ 설교 게시</button>
               </div>
             </div>
           </div>
@@ -4740,7 +4740,7 @@
               </div>
               <div class="hero-top-actions">
                 <button id="ccmTabsManageBtn" class="hero-write-btn hidden" type="button" style="background:rgba(255,255,255,0.16); color:#FFFFFF; border:1px solid rgba(255,255,255,0.32);" onclick="openCcmTabsModal()">🗂️ 탭 관리</button>
-                <button id="ccmRecommendTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openVideoSubmitModal('CCM')">+ CCM 추천</button>
+                <button id="ccmRecommendTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openVideoSubmitModal('CCM')">+ CCM 게시</button>
               </div>
             </div>
           </div>
@@ -6382,8 +6382,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 260;
-    const APP_CACHE_NAME = 'right-youth-app-v10.160';
+    const APP_CLIENT_BUILD = 261;
+    const APP_CACHE_NAME = 'right-youth-app-v10.161';
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.156-log-archive';
     const SHEET_SCHEMA_TABS = [
@@ -7489,7 +7489,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=260" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=261" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7513,8 +7513,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=260', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=260', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=261', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=261', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -8590,7 +8590,7 @@
       const sSub = document.getElementById('sermonViewSub');
       if (sSub) sSub.textContent = ut('sermonHeroSub');
       const sBtn = document.getElementById('sermonRecommendTopBtn');
-      if (sBtn) sBtn.textContent = `+ ${lbl('sermon')} 추천`;
+      if (sBtn) sBtn.textContent = `+ ${lbl('sermon')} 게시`;
       const sInp = document.getElementById('sermonSearchInput');
       if (sInp) sInp.placeholder = `${lbl('sermon')} 제목·세부 탭·교회·추천글 검색...`;
 
@@ -8599,7 +8599,7 @@
       const cSub = document.getElementById('ccmViewSub');
       if (cSub) cSub.textContent = ut('ccmHeroSub');
       const cBtn = document.getElementById('ccmRecommendTopBtn');
-      if (cBtn) cBtn.textContent = `+ ${lbl('ccm')} 추천`;
+      if (cBtn) cBtn.textContent = `+ ${lbl('ccm')} 게시`;
       const cInp = document.getElementById('ccmSearchInput');
       if (cInp) cInp.placeholder = `${lbl('ccm')} 제목·세부 탭·찬양팀·추천글 검색...`;
 
@@ -12629,7 +12629,7 @@
           steps: [
             `<b>${escapeHtml(getTabLabel('sermon'))} 탭 (${escapeHtml(getTabIcon('sermon'))}):</b> 설교 영상을 올리면 교회별(구미제일감리교회·라이트 청년부 등) 1차 탭과 주일예배·청년부예배 등 2차 세부 탭으로 자동 분류되어 편하게 시청할 수 있습니다.`,
             `<b>${escapeHtml(getTabLabel('ccm'))} 탭 (${escapeHtml(getTabIcon('ccm'))}):</b> CCM 영상을 올리면 찬양팀 이름(예: 어노인팅, 마커스) 1차 탭과 경배·찬양, 묵상·기도 등 2차 세부 탭으로 자동 분류되어 모아 들을 수 있습니다.`,
-            `<b>영상 추천하기:</b> 추천 권한이 있는 지체는 <b>${hLbl}</b> 영상 영역 또는 각 탭 우측 상단의 <b>[+ 추천]</b> 버튼에서 유튜브 링크를 넣고 <b>[🔍 자동 검사]</b>를 누르면 공식 원본 제목이 자동 입력되어 안전하게 등록됩니다.`
+            `<b>영상 게시하기:</b> 게시 권한이 있는 지체는 <b>${hLbl}</b> 영상 영역의 <b>[+ 게시]</b> 또는 각 탭 우측 상단의 <b>[+ 게시]</b> 버튼에서 유튜브 링크를 넣고 <b>[🔍 자동 검사]</b>를 누르면 공식 원본 제목이 자동 입력되어 안전하게 등록됩니다. <b>${hLbl}</b>에는 이모지를 가장 많이 받은 추천 영상이 우선 표시됩니다.`
           ],
           tip: '공식 채널(구미제일감리교회·라이트 청년부 등) 영상은 4단계 자동 검사 통과 시 즉시 게시되며, 미등록 채널 영상은 관리자 확인 후 게시됩니다.'
         },
@@ -12895,7 +12895,7 @@
           targetLabel: `${getTabIcon('manageVideos')} ${getTabLabel('manageVideos')} 열기`,
           steps: [
             `<b>${qlLbl} ([${qlIcn} ${qlLbl}]):</b> 하단 <b>[${moreIcn} ${moreLbl}]</b> 메뉴에 표시되는 인스타그램·유튜브·교회 홈페이지 등의 링크를 추가·수정·순서 변경·삭제할 수 있습니다.`,
-            `<b>${vidLbl} ([${vidIcn} ${vidLbl}]):</b> 공식 유튜브 채널(구미제일감리교회·라이트 청년부 등)은 4단계 자동 검사 통과 시 즉시 게시되며, 미등록 채널 추천 영상은 검토 후 승인(공식 채널 자동 추가 가능) 또는 거절합니다. <b>${sermonLbl}·${ccmLbl}</b> 탭 상단의 <b>[🗂️ 탭 관리]</b>에서 2차 세부 탭을 자유롭게 편집할 수 있으며, ${hLbl} 영상 영역에는 <b>[+ 추천]</b> 버튼과 필터 칩만 간결하게 표시됩니다.`,
+            `<b>${vidLbl} ([${vidIcn} ${vidLbl}]):</b> 공식 유튜브 채널(구미제일감리교회·라이트 청년부 등)은 4단계 자동 검사 통과 시 즉시 게시되며, 미등록 채널 추천 영상은 검토 후 승인(공식 채널 자동 추가 가능) 또는 거절합니다. <b>${sermonLbl}·${ccmLbl}</b> 탭 상단의 <b>[🗂️ 탭 관리]</b>에서 2차 세부 탭을 자유롭게 편집할 수 있으며, ${hLbl} 영상 영역에는 이모지가 가장 많이 달린 추천 영상이 우선 표시되며 <b>[+ 게시]</b> 버튼과 필터 칩만 간결하게 표시됩니다.`,
             `<b>${inqLbl} ([${inqIcn} ${inqLbl}]):</b> 이용자가 <b>설정 → 문의 사항</b>으로 남긴 불편·개선 요청을 확인하고 답변을 저장하면 해당 이용자에게 실시간 알림이 전송되며, 구글 시트 <b>[문의 내역]</b> 탭에도 자동 기록됩니다.`
           ],
           tip: '인스타그램·유튜브 URL을 등록하면 스마트폰에 해당 앱이 설치된 이용자가 눌렀을 때 앱으로 바로 연결됩니다.'
@@ -36094,9 +36094,14 @@ ${handleUrl}`);
       const unreadSermonCnt = sermonList.filter(v => isVideoUnread(v)).length;
       const unreadCcmCnt = ccmList.filter(v => isVideoUnread(v)).length;
       if (!['전체', '설교', 'CCM'].includes(homeVideoFilter)) homeVideoFilter = '전체';
-      const scopedList = homeVideoFilter === '설교'
+      const baseScopedList = homeVideoFilter === '설교'
         ? sermonList
         : (homeVideoFilter === 'CCM' ? ccmList : approved);
+      const scopedList = baseScopedList.slice().sort((a, b) => {
+        const reactDiff = getVideoReactionStats(b).total - getVideoReactionStats(a).total;
+        if (reactDiff !== 0) return reactDiff;
+        return getVideoItemTs(b) - getVideoItemTs(a);
+      });
       const latest = scopedList.slice(0, 3);
       const sLbl = getTabLabel('sermon');
       const cLbl = getTabLabel('ccm');
@@ -36112,7 +36117,7 @@ ${handleUrl}`);
           <div class="section-head">
             <h2 class="section-title">${escapeHtml(secIcon)} ${escapeHtml(secTitle)}</h2>
             <div style="display:flex; gap:5px; align-items:center; flex-wrap:wrap;">
-              ${canSubmit ? `<button class="btn-sm primary" type="button" onclick="openVideoSubmitModal()">+ 추천</button>` : ''}
+              ${canSubmit ? `<button class="btn-sm primary" type="button" onclick="openVideoSubmitModal()">+ 게시</button>` : ''}
             </div>
           </div>
           <div class="filter-row" data-ts-bar="home_videos" data-ts-body="home_videos" data-ts-pos="after-body">
@@ -36120,17 +36125,19 @@ ${handleUrl}`);
           </div>
           <div class="ts-swipe-body" data-ts-body="home_videos">
             ${latest.length === 0
-              ? `<div class="card" style="text-align:center; color:#64748B; font-size:12.5px; padding:18px 12px;">${homeVideoFilter === '전체' ? '아직 등록된 설교·CCM 영상이 없습니다.' : `등록된 ${escapeHtml(homeVideoFilter === '설교' ? sLbl : cLbl)} 영상이 아직 없습니다.`}${canSubmit ? '<br>오른쪽 위 <b>[+ 추천]</b> 버튼으로 공식 채널 영상을 올려 보세요!' : ''}</div>`
-              : latest.map(v => {
+              ? `<div class="card" style="text-align:center; color:#64748B; font-size:12.5px; padding:18px 12px;">${homeVideoFilter === '전체' ? '아직 등록된 설교·CCM 영상이 없습니다.' : `등록된 ${escapeHtml(homeVideoFilter === '설교' ? sLbl : cLbl)} 영상이 아직 없습니다.`}${canSubmit ? '<br>오른쪽 위 <b>[+ 게시]</b> 버튼으로 공식 채널 영상을 올려 보세요!' : ''}</div>`
+              : latest.map((v, idx) => {
                   const grp = getVideoAutoGroupLabel(v);
                   const ccm = isCcmVideo(v);
                   const vidNew = isVideoUnread(v);
+                  const reactTotal = getVideoReactionStats(v).total;
                   return `
                   <div class="card" style="padding:11px 12px; margin-bottom:9px;">
                     <div class="video-compact-row" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">
                       <img class="video-compact-thumb" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="썸네일" loading="lazy" />
                       <div style="min-width:0; flex:1;">
                         <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap; margin-bottom:3px;">
+                          ${reactTotal > 0 ? `<span class="tag warm" style="font-size:10px; padding:2px 6px;">🔥 추천 ${idx + 1}위 · ${reactTotal}</span>` : ''}
                           ${vidNew ? '<span class="new-badge">NEW</span>' : ''}
                           <span class="tag slate" style="font-size:10px; padding:2px 6px;">${ccm ? '🎵' : (grp === '라이트 청년부' ? '✨' : '⛪')} ${escapeHtml(grp)}</span>
                           ${(!ccm && getSermonSubTabLabel(v) && getSermonSubTabLabel(v) !== '기타 설교') ? `<span class="tag" style="font-size:10px; padding:2px 6px;">📂 ${escapeHtml(getSermonSubTabLabel(v))}</span>` : ''}
@@ -36252,6 +36259,10 @@ ${handleUrl}`);
       });
       if (String(currentPlayerVideoDocId) === String(videoDocId)) {
         refreshOpenVideoPlayerReactions();
+      }
+      if (currentMainTab === 'home') {
+        const u = getCurrentUser();
+        if (u) renderHomeView(u);
       }
     }
 
@@ -36647,7 +36658,7 @@ ${handleUrl}`);
             <div class="card" style="text-align:center; padding:30px 16px; color:#64748B;">
               <div style="font-size:28px; margin-bottom:7px;">${escapeHtml(getTabIcon('sermon'))}</div>
               <div style="font-size:14px; font-weight:800; color:#334155;">${emptyScope ? `[${escapeHtml(emptyScope)}] 영상이 아직 없습니다.` : `등록된 ${escapeHtml(sLbl)} 영상이 없습니다.`}</div>
-              <div style="font-size:12px; margin-top:4px; line-height:1.5;">${canSubmit ? `오른쪽 위 [+ ${escapeHtml(sLbl)} 추천]으로 영상을 올리고 원하는 세부 탭을 선택해 분류해 보세요.` : `교회별·세부 탭 설교 영상이 등록되면 이곳에 자동 분류됩니다.`}</div>
+              <div style="font-size:12px; margin-top:4px; line-height:1.5;">${canSubmit ? `오른쪽 위 [+ ${escapeHtml(sLbl)} 게시]로 영상을 올리고 원하는 세부 탭을 선택해 분류해 보세요.` : `교회별·세부 탭 설교 영상이 등록되면 이곳에 자동 분류됩니다.`}</div>
               ${(canSubmit && sermonSubTabFilter !== '전체' && sermonSubTabFilter !== '기타 설교')
                 ? `<button class="btn-sm primary" type="button" style="margin-top:11px; padding:7px 12px;" onclick="openVideoSubmitModal(sermonCatFilter === '라이트 청년부' ? '라이트 청년부' : '설교', '${escapeJsAttr(sermonSubTabFilter)}')">+ [${escapeHtml(sermonSubTabFilter)}] 설교 등록</button>`
                 : ''}
@@ -36790,7 +36801,7 @@ ${handleUrl}`);
             <div class="card" style="text-align:center; padding:30px 16px; color:#64748B;">
               <div style="font-size:28px; margin-bottom:7px;">${escapeHtml(getTabIcon('ccm'))}</div>
               <div style="font-size:14px; font-weight:800; color:#334155;">${emptyScope ? `[${escapeHtml(emptyScope)}] 찬양이 아직 없습니다.` : `등록된 ${escapeHtml(cLbl)} 영상이 없습니다.`}</div>
-              <div style="font-size:12px; margin-top:4px; line-height:1.5;">${canSubmit ? `오른쪽 위 [+ ${escapeHtml(cLbl)} 추천]으로 영상을 올리고 원하는 세부 탭을 선택해 분류해 보세요.` : `찬양팀별·세부 탭 영상이 등록되면 이곳에 자동 분류됩니다.`}</div>
+              <div style="font-size:12px; margin-top:4px; line-height:1.5;">${canSubmit ? `오른쪽 위 [+ ${escapeHtml(cLbl)} 게시]로 영상을 올리고 원하는 세부 탭을 선택해 분류해 보세요.` : `찬양팀별·세부 탭 영상이 등록되면 이곳에 자동 분류됩니다.`}</div>
               ${(canSubmit && ccmSubTabFilter !== '전체' && ccmSubTabFilter !== '기타 CCM')
                 ? `<button class="btn-sm primary" type="button" style="margin-top:11px; padding:7px 12px;" onclick="openVideoSubmitModal('CCM', '${escapeJsAttr(ccmSubTabFilter)}')">+ [${escapeHtml(ccmSubTabFilter)}] ${escapeHtml(cLbl)} 등록</button>`
                 : ''}
