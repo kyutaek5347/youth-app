@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=252" />
+  <link rel="manifest" href="./manifest.json?v=253" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=252" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=252" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=253" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=253" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4239,7 +4239,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=252" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=253" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -6167,8 +6167,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 252;
-    const APP_CACHE_NAME = 'right-youth-app-v10.152';
+    const APP_CLIENT_BUILD = 253;
+    const APP_CACHE_NAME = 'right-youth-app-v10.153';
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.152-weekly-auto';
     const SHEET_SCHEMA_TABS = [
@@ -7232,7 +7232,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=252" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=253" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7256,8 +7256,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=252', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=252', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=253', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=253', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -25466,8 +25466,8 @@
 
     // --- Admin Manage Sub-Tab: 📊 구글 시트 연동 · 자동화 · 스키마 변경 자동 감지 · 동기화 · 재정비 전용 탭 ---
     window.setManageSheetFilter = (f) => {
-      manageSheetFilter = ['all', 'auto', 'schema', 'cfg', 'sync', 'rebuild', 'test'].includes(f) ? f : 'all';
-      const accMap = { auto: 'sheet_auto_ops', schema: 'sheet_schema_board', cfg: 'sheet_main_cfg', sync: 'sheet_sync_ops', rebuild: 'sheet_rebuild_ops', test: 'sheet_live_test' };
+      manageSheetFilter = ['all', 'auto', 'schema', 'cfg', 'sync', 'rebuild'].includes(f) ? f : 'all';
+      const accMap = { auto: 'sheet_auto_ops', schema: 'sheet_schema_board', cfg: 'sheet_main_cfg', sync: 'sheet_sync_ops', rebuild: 'sheet_rebuild_ops' };
       if (accMap[manageSheetFilter]) manageSectionOpen[accMap[manageSheetFilter]] = true;
       const u = getCurrentUser();
       if (u && currentMainTab === 'manage' && currentManageSubTab === 'sheet') {
@@ -25496,13 +25496,11 @@
       const showCfg = sf === 'all' || sf === 'cfg';
       const showSync = sf === 'all' || sf === 'sync';
       const showRebuild = sf === 'all' || sf === 'rebuild';
-      const showTest = sf === 'all' || sf === 'test';
       const sheetAutoOpen = isManageSectionOpen('sheet_auto_ops', true);
       const sheetSchemaOpen = isManageSectionOpen('sheet_schema_board', true);
       const sheetMainOpen = isManageSectionOpen('sheet_main_cfg', !isLinked || sf === 'cfg');
       const sheetSyncOpen = isManageSectionOpen('sheet_sync_ops', true);
       const sheetRebuildOpen = isManageSectionOpen('sheet_rebuild_ops', sf === 'rebuild');
-      const sheetLiveTestOpen = isManageSectionOpen('sheet_live_test', sf === 'test');
 
       const autoBadgeHtml = !autoCfg.enabled
         ? '<span id="autoSheetAccBadge" class="tag slate">꺼짐</span>'
@@ -25545,7 +25543,6 @@
           <button class="filter-chip ${sf === 'cfg' ? 'active' : ''}" type="button" onclick="setManageSheetFilter('cfg')">📊 주소 설정</button>
           <button class="filter-chip ${sf === 'sync' ? 'active' : ''}" type="button" onclick="setManageSheetFilter('sync')">🔄 데이터 동기화</button>
           <button class="filter-chip ${sf === 'rebuild' ? 'active' : ''}" type="button" onclick="setManageSheetFilter('rebuild')">🛠️ 양식 재정비</button>
-          <button class="filter-chip ${sf === 'test' ? 'active' : ''}" type="button" onclick="setManageSheetFilter('test')">🧪 실전 테스트</button>
         </div>
 
         ${showAuto ? `
@@ -25833,10 +25830,10 @@
         ` : ''}
 
         ${showRebuild ? `
-        <!-- 3) 시트 양식 재정비 · 출석 0 기록 정리 -->
+        <!-- 3) 시트 양식 재정비 -->
         ${buildManageAccordionBar({
           key: 'sheet_rebuild_ops',
-          titleHtml: '🛠️ 시트 양식 재정비 · 빈 기록 정리',
+          titleHtml: '🛠️ 시트 양식 재정비',
           badgeHtml: '<span class="tag slate">현황·운영 6개 탭</span>',
           defaultOpen: sf === 'rebuild',
           marginTop: (showSchema || showCfg || showSync) ? '10px' : ''
@@ -25848,41 +25845,18 @@
               <span style="color:#0F172A; font-weight:700;">🔒 4개 보안 감사 로그 탭은 위변조 방지를 위해 초기화되지 않고 그대로 보존됩니다.</span>
             </div>
             <div class="form-grid-2" style="gap:6px; margin-bottom:8px;">
-              <button class="btn-sm warn" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['attendance'])">🔄 출석부 재정비</button>
+              <button class="btn-sm warn" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['attendance'])">🔄 주간 출석부 재정비</button>
               <button class="btn-sm warn" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['members'])">🔄 회원 명단 재정비</button>
               <button class="btn-sm warn" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['admins'])">🔄 관리자 명단 재정비</button>
               <button class="btn-sm warn" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['inquiries'])">🔄 문의 내역 재정비</button>
               <button class="btn-sm warn" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['videos'])">🔄 설교·CCM 영상 재정비</button>
               <button class="btn-sm warn" type="button" style="padding:9px 8px;" onclick="handleRebuildSheetTabs(['notices'])">🔄 공지·광고 재정비</button>
             </div>
-            <button class="btn-sm primary" type="button" style="width:100%; padding:10px; margin-bottom:6px;" onclick="handleRebuildSheetTabs(['attendance','members','admins','inquiries','videos','notices'])">✨ 현황·운영 6개 탭 일괄 재정비</button>
-            <button class="btn-sm danger" type="button" style="width:100%; padding:9px;" onclick="handleCleanupZeroSheetEntries()">🧹 출석 0인 날짜·인원(테스트 흔적) 시트에서 정리</button>
+            <button class="btn-sm primary" type="button" style="width:100%; padding:10px;" onclick="handleRebuildSheetTabs(['attendance','members','admins','inquiries','videos','notices'])">✨ 현황·운영 6개 탭 일괄 재정비</button>
             ${buildInlineSaveStatusHtml('sheet_rebuild')}
           </div>
         </div>
 
-        ` : ''}
-
-        ${showTest ? `
-        <!-- 4) 구글 시트 실전 쓰기 · 삭제 테스트 -->
-        ${buildManageAccordionBar({
-          key: 'sheet_live_test',
-          titleHtml: '🧪 구글 시트 실전 쓰기 · 삭제 테스트',
-          badgeHtml: '<span class="tag slate">점검용</span>',
-          defaultOpen: sf === 'test',
-          marginTop: (showSchema || showCfg || showSync || showRebuild) ? '10px' : ''
-        })}
-        <div data-acc-body="sheet_live_test" class="${sheetLiveTestOpen ? '' : 'hidden'}">
-          <div class="card" style="background:#F8FAFC;">
-            <div style="font-size:11.5px; color:#64748B; line-height:1.5; margin-bottom:10px;">
-              실제 구글 시트 <b>출석부</b>에 <code>[테스트점검]</code> 행을 써서 연동이 잘 되는지 확인한 뒤, 오른쪽 버튼으로 테스트 흔적을 깔끔하게 지울 수 있습니다.
-            </div>
-            <div style="display:flex; gap:6px; flex-wrap:wrap;">
-              <button class="btn-sm primary" type="button" style="flex:1; padding:9px;" onclick="runSheetLiveWriteTest()">📝 시트에 테스트 출석 쓰기</button>
-              <button class="btn-sm danger" type="button" style="flex:1; padding:9px;" onclick="runSheetLiveCleanupTest()">🧹 테스트·0기록 삭제</button>
-            </div>
-          </div>
-        </div>
         ` : ''}
       `;
     }
@@ -26447,10 +26421,10 @@
 
     function isSheetResponseMultiTab(data) {
       if (!data || typeof data !== 'object') return false;
-      if (data.multiTab === true || data.supportsAttendanceSplit === true || data.supportsSchemaInspect === true || data.supportsBatchSync === true) return true;
+      if (data.multiTab === true || data.supportsAttendanceSplit === true || data.supportsSchemaInspect === true || data.supportsBatchSync === true || data.supportsWeeklyAttendance === true || data.supportsWeeklyAutoTrigger === true || data.weeklyOnly === true) return true;
       if (Number(data.tabCount || 0) >= 3) return true;
-      if (String(data.message || '').includes('탭')) return true;
-      if (String(data.version || '').includes('v10.136') || String(data.version || '').includes('v10.137') || String(data.version || '').includes('v10.138') || String(data.version || '').includes('v10.139') || String(data.version || '').includes('v10.140') || String(data.version || '').includes('v10.141') || String(data.version || '').includes('v10.142')) return true;
+      if (String(data.message || '').includes('탭') || String(data.message || '').includes('주간 출석부')) return true;
+      if (/v10\.(?:1(?:[3-9]\d)|[2-9]\d\d)/.test(String(data.version || ''))) return true;
       if (data.result && typeof data.result === 'object') return true;
       return false;
     }
@@ -28555,65 +28529,7 @@
       showToast('새가족 환영 팝업 알림 미리보기를 띄웠습니다!');
     };
 
-    window.runSheetLiveWriteTest = async () => {
-      const url = getAdminSheetUrl();
-      if (!url) return showToast(`먼저 [${getTabLabel('manageSheet')}]에서 구글 시트 URL을 저장해 주세요.`);
-      const now = getKstNowInfo();
-      const colTitle = `${now.dot} (기능점검 테스트)`;
-      const res = await postToGoogleSheet({
-        action: 'attendance_upsert',
-        colTitle,
-        date: now.dot,
-        name: '[테스트점검]',
-        role: '점검용',
-        time: now.hhmm,
-        modifiedBy: `기능점검 테스트: ${currentAdminName || '관리자'} (${now.dateTime})`,
-        forceUpdate: true
-      }, url, true);
-      if (warnIfOldAppsScript(res)) return;
-      showToast(res.ok ? '✅ 구글 시트 출석부에 [테스트점검] 기록을 썼습니다! 시트에서 확인 후 삭제해 보세요.' : '전송 실패: URL을 확인해 주세요.');
-    };
 
-    window.handleCleanupZeroSheetEntries = async () => {
-      const url = getAdminSheetUrl();
-      if (!url) return showToast('구글 시트 URL이 설정되어 있지 않습니다.');
-      if (!confirm('구글 시트 [출석부]에서 출석이 0인 날짜 열과 0명 행을 모두 깔끔하게 삭제할까요?')) return;
-      const res = await postToGoogleSheet({ action: 'cleanup_zeros' }, url, true);
-      if (warnIfOldAppsScript(res)) return;
-      const statsObj = (res && res.ok && res.readable && res.data)
-        ? ((res.data.result && typeof res.data.result === 'object') ? res.data.result : res.data)
-        : null;
-      if (statsObj && (statsObj.deletedCols !== undefined || statsObj.deletedRows !== undefined)) {
-        const dc = Number(statsObj.deletedCols || 0);
-        const dr = Number(statsObj.deletedRows || 0);
-        if (dc === 0 && dr === 0) {
-          showToast('✅ 정리할 출석 0인 빈 열·행이 없습니다. (최신 상태)');
-        } else {
-          showToast(`🧹 출석 0인 날짜 ${dc}열 · 인원 ${dr}행을 시트에서 깔끔하게 삭제했습니다!`);
-        }
-      } else if (res.ok) {
-        showToast('🧹 시트에 출석 0 정리 요청을 보냈습니다! 시트를 새로고침해 확인해 주세요.');
-      } else {
-        showToast('정리 요청 실패: URL을 확인해 주세요.');
-      }
-    };
-
-    window.runSheetLiveCleanupTest = async () => {
-      const url = getAdminSheetUrl();
-      if (!url) return showToast('구글 시트 URL이 설정되어 있지 않습니다.');
-      const now = getKstNowInfo();
-      const colTitle = `${now.dot} (기능점검 테스트)`;
-      const res = await postToGoogleSheet({
-        action: 'attendance_delete',
-        colTitle,
-        date: now.dot,
-        name: '[테스트점검]',
-        modifiedBy: ''
-      }, url, true);
-      if (warnIfOldAppsScript(res)) return;
-      await postToGoogleSheet({ action: 'cleanup_zeros' }, url, true).catch(() => {});
-      showToast(res.ok ? '🧹 테스트 출석과 출석 0인 빈 열·행을 모두 지웠습니다!' : '삭제 요청 실패');
-    };
 
 
     // ==================== 20.5. 앱 성능 모니터링 & 무손실 자동 최적화 엔진 ====================
