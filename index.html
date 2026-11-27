@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=261" />
+  <link rel="manifest" href="./manifest.json?v=262" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=261" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=261" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=262" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=262" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4523,7 +4523,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=261" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=262" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5934,7 +5934,8 @@
       <div class="info-box" style="margin-top:0; margin-bottom:10px;">
         <b>1. 내 기기에서만 보관 (관리자 열람 불가 · 미기록)</b><br>
         • 전체 글자 크기 설정, 알림 수신 설정<br>
-        • 비밀번호 변경 내역 및 공지·회칙·바로가기 단순 열람
+        • 비밀번호 변경 내역 및 공지·회칙·바로가기 단순 열람<br>
+        • 공지·광고·설교·CCM 이모지 반응 누르기/취소 내역 (보안 로그 미기록)
       </div>
       <div class="info-box" style="margin-top:0; margin-bottom:10px;">
         <b>2. 공동체 보호를 위한 자동 보안 방어</b><br>
@@ -5943,8 +5944,9 @@
         • 설치 파일(.apk/.exe) 없는 웹 앱 구조로 기기 파일 접근 원천 차단
       </div>
       <div class="info-box warn" style="margin-top:0; margin-bottom:14px;">
-        <b>3. 공동체 게시판 기록 범위</b><br>
-        건전한 공동체 운영을 위해 유튜브 영상 추천·수정·삭제, 문의 사항 작성·수정·삭제, 가입·탈퇴, 이름 변경 신청, 예배 출석 체크 내역만 관리 기록에 남습니다.
+        <b>3. 공동체 활동 표시 및 보안 로그 기록 범위</b><br>
+        • <b>공동체 내 이모지 표시:</b> 공지·광고·설교·CCM에 이모지를 누르면 공동체 확인을 위해 본인 성명이 함께 표시되며, 언제든 다시 눌러 취소할 수 있습니다.<br>
+        • <b>보안 감사 로그 기록:</b> 건전한 공동체 운영을 위해 유튜브 영상 게시(추천)·수정·삭제, 문의 사항 작성·수정·삭제, 가입·탈퇴, 이름 변경 신청, 예배 출석 체크 내역만 관리 로그에 기록됩니다.
       </div>
       <button class="btn-full btn-dark" type="button" style="padding:11px;" data-close="privacyGuideModal">확인</button>
     </div>
@@ -6382,8 +6384,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 261;
-    const APP_CACHE_NAME = 'right-youth-app-v10.161';
+    const APP_CLIENT_BUILD = 262;
+    const APP_CACHE_NAME = 'right-youth-app-v10.162';
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.156-log-archive';
     const SHEET_SCHEMA_TABS = [
@@ -6545,7 +6547,8 @@
       sermonTabs: [...DEFAULT_SERMON_SUB_TABS],
       ccmTabs: [...DEFAULT_CCM_SUB_TABS]
     };
-    const VIDEO_REACTION_EMOJIS = [
+    const MAX_REACTION_EMOJI_ITEMS = 10;
+    const DEFAULT_VIDEO_REACTION_EMOJIS = [
       { key: 'amen', emoji: '🙏', label: '아멘' },
       { key: 'heart', emoji: '❤️', label: '좋아요' },
       { key: 'grace', emoji: '🙌', label: '은혜' },
@@ -6553,8 +6556,7 @@
       { key: 'fire', emoji: '🔥', label: '도전' },
       { key: 'clap', emoji: '👏', label: '감사' }
     ];
-    const VIDEO_REACTION_VALID_KEYS = new Set(VIDEO_REACTION_EMOJIS.map(e => e.key));
-    const POST_REACTION_EMOJIS = [
+    const DEFAULT_POST_REACTION_EMOJIS = [
       { key: 'check', emoji: '👍', label: '확인' },
       { key: 'heart', emoji: '❤️', label: '좋아요' },
       { key: 'amen', emoji: '🙏', label: '아멘' },
@@ -6562,7 +6564,29 @@
       { key: 'clap', emoji: '👏', label: '감사' },
       { key: 'party', emoji: '🎉', label: '축하' }
     ];
-    const POST_REACTION_VALID_KEYS = new Set(POST_REACTION_EMOJIS.map(e => e.key));
+    function normalizeReactionEmojiList(rawList, fallbackList) {
+      if (!Array.isArray(rawList)) return structuredClone(fallbackList);
+      const out = [];
+      const seenKeys = new Set();
+      rawList.forEach((item, idx) => {
+        if (!item || typeof item !== 'object') return;
+        const emoji = String(item.emoji || '').trim().slice(0, 8);
+        const label = String(item.label || '').trim().slice(0, 12);
+        let key = String(item.key || '').trim().replace(/[^a-zA-Z0-9_-]/g, '');
+        if (!emoji || !label) return;
+        if (!key) key = `emo_${idx + 1}`;
+        if (seenKeys.has(key)) return;
+        seenKeys.add(key);
+        out.push({ key, emoji, label });
+      });
+      return out.length > 0 ? out.slice(0, MAX_REACTION_EMOJI_ITEMS) : structuredClone(fallbackList);
+    }
+    function getConfiguredPostReactionEmojis() {
+      return normalizeReactionEmojiList(tabLabels && tabLabels.postReactionEmojis, DEFAULT_POST_REACTION_EMOJIS);
+    }
+    function getConfiguredVideoReactionEmojis() {
+      return normalizeReactionEmojiList(tabLabels && tabLabels.videoReactionEmojis, DEFAULT_VIDEO_REACTION_EMOJIS);
+    }
     const YOUTUBE_RISK_KEYWORDS = [
       '무단', '무료 다운로드', '음원 추출', '불법', '가사 영상', '가사영상',
       '1시간 연속', '연속듣기', '찬양 모음 1시간', '플레이리스트 모음', 'mr 추출',
@@ -6761,7 +6785,7 @@
       order: ['setQr', 'setNotif']
     };
     const DEFAULT_TAB_LABELS = Object.assign(
-      { tabOrder: DEFAULT_TAB_ORDER, manageSubTabOrder: DEFAULT_MANAGE_SUBTAB_ORDER, settingsItemOrder: DEFAULT_SETTINGS_ITEM_ORDER, icons: DEFAULT_TAB_ICONS, uiTexts: DEFAULT_UI_TEXTS, sectionTitles: {}, headerShortcuts: structuredClone(DEFAULT_HEADER_SHORTCUTS) },
+      { tabOrder: DEFAULT_TAB_ORDER, manageSubTabOrder: DEFAULT_MANAGE_SUBTAB_ORDER, settingsItemOrder: DEFAULT_SETTINGS_ITEM_ORDER, icons: DEFAULT_TAB_ICONS, uiTexts: DEFAULT_UI_TEXTS, sectionTitles: {}, headerShortcuts: structuredClone(DEFAULT_HEADER_SHORTCUTS), postReactionEmojis: structuredClone(DEFAULT_POST_REACTION_EMOJIS), videoReactionEmojis: structuredClone(DEFAULT_VIDEO_REACTION_EMOJIS) },
       Object.fromEntries(BOTTOM_TAB_REGISTRY.map(t => [t.key, t.defaultLabel])),
       Object.fromEntries(SETTINGS_ITEM_REGISTRY.map(t => [t.key, t.defaultLabel])),
       Object.fromEntries(MANAGE_SUBTAB_REGISTRY.map(t => [t.labelKey, t.defaultLabel]))
@@ -7489,7 +7513,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=261" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=262" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7513,8 +7537,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=261', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=261', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=262', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=262', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -7704,7 +7728,9 @@
         icons: { ...DEFAULT_TAB_ICONS, ...(d.icons && typeof d.icons === 'object' ? d.icons : {}) },
         uiTexts: { ...DEFAULT_UI_TEXTS, ...(d.uiTexts && typeof d.uiTexts === 'object' ? d.uiTexts : {}) },
         sectionTitles: (d.sectionTitles && typeof d.sectionTitles === 'object') ? { ...d.sectionTitles } : {},
-        headerShortcuts: normalizeHeaderShortcutsConfig(d.headerShortcuts)
+        headerShortcuts: normalizeHeaderShortcutsConfig(d.headerShortcuts),
+        postReactionEmojis: normalizeReactionEmojiList(d.postReactionEmojis, DEFAULT_POST_REACTION_EMOJIS),
+        videoReactionEmojis: normalizeReactionEmojiList(d.videoReactionEmojis, DEFAULT_VIDEO_REACTION_EMOJIS)
       };
     }
 
@@ -12609,11 +12635,12 @@
         {
           id: 'ug_home_att',
           icon: getTabIcon('home'),
-          title: `${getTabLabel('home')} 소식 확인 & 예배 출석 체크`,
-          sub: '공지·배너·새가족 환영 & 주일/행사 출석 방법',
-          keywords: `${getTabLabel('home')} 메인 홈 공지 광고 소식 배너 새신자 출석 체크 주일예배 행사`,
+          title: `${getTabLabel('home')} 소식 · 이모지 반응 & 예배 출석 체크`,
+          sub: '공지·배너 슬라이드, 이모지 반응(명칭·반응자 확인) & 주일/행사 출석 방법',
+          keywords: `${getTabLabel('home')} 메인 홈 공지 광고 소식 배너 슬라이드 이모지 반응 확인 좋아요 아멘 새신자 출석 체크 주일예배 행사`,
           steps: [
-            `<b>공지 · 광고 · 소식 확인:</b> <b>${hLbl}</b> 상단 고정 배너와 하단 공지 목록에서 청년부 소식을 확인합니다. 구분 칩(전체/공지/광고/소식/행사 등)으로 필터링할 수 있으며, 카드를 누르면 전체 본문이 열립니다.`,
+            `<b>공지 · 광고 · 소식 & 상단 배너 확인:</b> <b>${hLbl}</b> 상단 고정 배너(2개 이상 시 좌우 스와이프 및 <b>❚❚/▶</b> 자동 넘김 제어 지원)와 하단 공지 목록에서 청년부 소식을 확인합니다. 구분 칩으로 필터링할 수 있으며 카드를 누르면 전체 본문이 열립니다.`,
+            `<b>공지 · 광고 이모지 반응 & 반응자 확인:</b> 공지·광고 목록 카드와 상세 창에서 명칭이 적힌 이모지(<b>👍 확인 · ❤️ 좋아요 · 🙏 아멘</b> 등)를 눌러 마음을 표현할 수 있으며, 다시 누르면 취소됩니다. 버튼 아래 <b>[👥 이름 ▾]</b>을 누르거나 상세 창을 열면 <b>누가 어떤 이모지를 달았는지</b> 확인할 수 있습니다. (상단 배너에는 이모지가 달리지 않습니다.)`,
             `<b>새가족 환영 배너:</b> 새로 온 새가족이 있으면 <b>${hLbl}</b> 상단에 환영 배너가 자동으로 표시됩니다.`,
             `<b>예배 · 특별 행사 출석 체크:</b> 설정된 주일 예배 시간(기본 일요일 14:00~15:30) 또는 특별 행사 시간에만 <b>${hLbl}</b> 맨 위에 <b>초록색 출석 카드</b>가 자동으로 나타납니다.`,
             `<b>출석O / 출석X 선택 및 주간 출석부 반영:</b> <b>[출석O]</b> 또는 <b>[출석X]</b> 버튼을 누르면 출석이 즉시 기록되고 카드가 닫힙니다. 구글 시트 주간 출석부에는 출석한 지체(<b>출석O</b>)만 소속 셀 칸에 <b>○</b>로 자동 체크되며, 불참·미응답은 빈칸으로 유지됩니다. 내 출석 이력은 하단 <b>[${stIcn} ${stLbl}] → 👤 내 계정 관리</b>에서 확인할 수 있습니다.`
@@ -12623,15 +12650,28 @@
         {
           id: 'ug_sermon_ccm',
           icon: getTabIcon('sermon'),
-          title: `${getTabLabel('sermon')} · ${getTabLabel('ccm')} 영상 시청 및 추천`,
-          sub: `하단 ${getTabLabel('sermon')}·${getTabLabel('ccm')} 탭에서 교회 설교와 은혜로운 찬양 바로 보기`,
-          keywords: `${getTabLabel('sermon')} ${getTabLabel('ccm')} 설교 CCM 찬양 유튜브 영상 재생 추천`,
+          title: `${getTabLabel('sermon')} · ${getTabLabel('ccm')} 영상 시청 · 게시 및 이모지`,
+          sub: `하단 ${getTabLabel('sermon')}·${getTabLabel('ccm')} 탭 시청, [+ 게시], 이모지 반응 & 인기 추천순`,
+          keywords: `${getTabLabel('sermon')} ${getTabLabel('ccm')} 설교 CCM 찬양 유튜브 영상 재생 게시 추천 이모지 반응 은혜 감동`,
           steps: [
             `<b>${escapeHtml(getTabLabel('sermon'))} 탭 (${escapeHtml(getTabIcon('sermon'))}):</b> 설교 영상을 올리면 교회별(구미제일감리교회·라이트 청년부 등) 1차 탭과 주일예배·청년부예배 등 2차 세부 탭으로 자동 분류되어 편하게 시청할 수 있습니다.`,
             `<b>${escapeHtml(getTabLabel('ccm'))} 탭 (${escapeHtml(getTabIcon('ccm'))}):</b> CCM 영상을 올리면 찬양팀 이름(예: 어노인팅, 마커스) 1차 탭과 경배·찬양, 묵상·기도 등 2차 세부 탭으로 자동 분류되어 모아 들을 수 있습니다.`,
-            `<b>영상 게시하기:</b> 게시 권한이 있는 지체는 <b>${hLbl}</b> 영상 영역의 <b>[+ 게시]</b> 또는 각 탭 우측 상단의 <b>[+ 게시]</b> 버튼에서 유튜브 링크를 넣고 <b>[🔍 자동 검사]</b>를 누르면 공식 원본 제목이 자동 입력되어 안전하게 등록됩니다. <b>${hLbl}</b>에는 이모지를 가장 많이 받은 추천 영상이 우선 표시됩니다.`
+            `<b>영상 게시하기:</b> 게시 권한이 있는 지체는 <b>${hLbl}</b> 영상 영역의 <b>[+ 게시]</b> 또는 각 탭 우측 상단의 <b>[+ 게시]</b> 버튼에서 유튜브 링크를 넣고 <b>[🔍 자동 검사]</b>를 누르면 공식 원본 제목이 자동 입력되어 안전하게 등록됩니다.`,
+            `<b>이모지 반응 & ${hLbl} 인기 추천순:</b> 영상 카드와 재생 창에서 명칭이 표시된 이모지(<b>🙏 아멘 · ❤️ 좋아요 · 🙌 은혜 · 🥹 감동</b> 등)를 남기고 반응자 명단을 확인할 수 있습니다. <b>${hLbl}</b>에는 이모지를 가장 많이 받은 추천 영상(<b>🔥 추천 1위</b>)이 우선 표시됩니다.`
           ],
           tip: '공식 채널(구미제일감리교회·라이트 청년부 등) 영상은 4단계 자동 검사 통과 시 즉시 게시되며, 미등록 채널 영상은 관리자 확인 후 게시됩니다.'
+        },
+        {
+          id: 'ug_inquiry',
+          icon: getTabIcon('setInquiry'),
+          title: `${getTabLabel('setInquiry')} 등록 및 관리자 답변 확인`,
+          sub: '앱 불편·개선 사항 전달 및 실시간 답변 알림',
+          keywords: `${getTabLabel('setInquiry')} 문의 불편 개선 기능 요청 답변 수정 삭제 알림`,
+          steps: [
+            `<b>문의 작성하기:</b> 하단 <b>[${stIcn} ${stLbl}] → ${escapeHtml(getTabIcon('setInquiry'))} ${escapeHtml(getTabLabel('setInquiry'))}</b>에서 분류(불편한 점 · 개선 사항 · 기능 추가 요청 · 기타 의견)와 제목·내용을 입력해 보낼 수 있습니다.`,
+            '<b>수정 · 삭제 및 답변 확인:</b> 내가 보낸 문의는 같은 화면 하단 목록에서 언제든 수정·삭제할 수 있으며, 관리자가 답변을 등록하면 실시간 알림으로 바로 안내됩니다.'
+          ],
+          tip: '보안을 위해 전화번호·집주소 등 민감한 개인정보는 문의 내용에 적지 말아 주세요.'
         },
         {
           id: 'ug_bylaws_more',
@@ -12663,7 +12703,7 @@
           id: 'ug_notif',
           icon: '🔔',
           title: '실시간 알림 설정',
-          sub: '새 공지·말씀·승인 결과를 알림으로 받아보기',
+          sub: '새 공지·배너, 설교·찬양 영상, 내 문의 답변을 알림으로 받아보기',
           keywords: `알림 설정 팝업 기기알림 테스트알림 ${getTabLabel('home')} 영상 문의`,
           steps: [
             `하단 <b>[${stIcn} ${stLbl}] → 🔔 알림 설정</b>을 눌러 전체 알림과 항목별 알림(<b>${hLbl} 새 소식</b> / <b>새 설교·찬양 영상</b> / <b>내 문의 답변</b>)을 자유롭게 켜고 끌 수 있습니다.`,
@@ -12701,6 +12741,8 @@
         const quickTagList = [
           { q: '설치', label: '#앱설치' },
           { q: '출석', label: '#출석체크' },
+          { q: '이모지', label: '#이모지반응' },
+          { q: '문의', label: '#문의사항' },
           { q: '이름', label: '#이름변경' },
           { q: 'QR', label: '#초대QR' },
           { q: '알림', label: '#알림설정' }
@@ -12849,9 +12891,9 @@
           catId: 'handover',
           category: catMap.handover,
           icon: '🤝',
-          title: '1. 새 관리자 인수인계 필수 절차',
-          sub: '관리자 등록 · 잠금 · 퇴임자 해제/회원 전환 · 코드 변경 · 이름 변경',
-          keywords: `인수인계 새 관리자 로그인 성명 코드 잠금 해제 퇴임 역할 변경 회원 전환 참관자 이름 변경 ${getTabLabel('manageAdmins')} ${getTabLabel('manageAdminCode')} ${getTabLabel('manageLogs')}`,
+          title: '1. 새 관리자 인수인계 필수 절차 & 배포 구조',
+          sub: '관리자 등록 · 잠금 · 퇴임자 해제/회원 전환 · 코드 변경 · GitHub/Firebase/Apps Script 구분',
+          keywords: `인수인계 새 관리자 로그인 성명 코드 잠금 해제 퇴임 역할 변경 회원 전환 참관자 이름 변경 배포 GitHub Firebase Apps Script ${getTabLabel('manageAdmins')} ${getTabLabel('manageAdminCode')} ${getTabLabel('manageLogs')}`,
           targetTab: 'admins',
           targetLabel: `${getTabIcon('manageAdmins')} ${getTabLabel('manageAdmins')} 탭 열기`,
           steps: [
@@ -12859,7 +12901,7 @@
             `<b>신규 관리자 자동 등록 잠금 활용:</b> 평상시에는 <b>[${admIcn} ${admLbl}] → 🔒 신규 관리자 자동 등록 잠금</b>을 켜 두는 것을 권장합니다. 잠금이 켜진 상태에서 새 관리자가 로그인하면 기존 관리자의 승인 대기 목록에 뜨며, <b>[✅ 관리자 입장 승인]</b>을 눌러야 입장됩니다.`,
             `<b>퇴임·이전 관리자 해제 또는 회원 전환:</b> 인수인계가 끝나면 <b>[${admIcn} ${admLbl}]</b> 탭에서 퇴임 관리자의 <b>[관리자 해제]</b>(해제 사유 입력 · 즉시 로그아웃) 또는 <b>[🏷️ 역할 변경]</b>(일반 회원·참관자로 전환)을 처리합니다. 해제된 관리자는 재입장 시 기존 관리자의 승인이 필요합니다.`,
             `<b>관리자 코드 변경 (인수인계 마감):</b> <b>[${codeIcn} ${codeLbl}]</b> 탭에서 새 6자리 이상 코드로 변경(🎲 자동 생성 지원)하면 Firebase 로그인 비밀번호와 공유 코드가 동시에 바뀝니다.`,
-            `<b>내 관리자 이름 변경:</b> <b>[${admIcn} ${admLbl}] → ✏️ 내 관리자 이름 설정</b>에서 본인 이름을 변경할 수 있습니다. (보안을 위해 <b>[${logIcn} ${logLbl}]</b>와 구글 시트 <b>[이름 변경 로그]</b> 탭에 자동 기록)`
+            `<b>내 관리자 이름 변경 & 시스템 3단 배포 구조:</b> <b>[${admIcn} ${admLbl}] → ✏️ 내 관리자 이름 설정</b>에서 본인 이름을 변경할 수 있습니다. 추후 앱 업데이트 시에는 ① 화면·기능 변경 → <b>GitHub(<code>index.html</code>, <code>sw.js</code>, <code>manifest.json</code>)</b>, ② DB 권한 변경 → <b>Firebase Firestore 규칙</b>, ③ 시트 양식·자동화 변경 → <b>Google Apps Script</b>만 각각 반영하면 됩니다.`
           ],
           tip: '최소 1명의 활성 관리자는 항상 유지되어야 하므로, 새 관리자를 먼저 등록·승인한 뒤 이전 관리자를 해제하거나 일반 회원으로 전환해 주세요.',
           warn: true
@@ -12869,17 +12911,17 @@
           catId: 'content_qt',
           category: catMap.content_qt,
           icon: getTabIcon('manageContent'),
-          title: `2. ${getTabLabel('manageContent')} (배너 · 슬라이드 · 역할별 공개 · 예약 게시 · 새가족)`,
-          sub: `${getTabLabel('home')} 배너 구성, 자동 슬라이드, 특정 역할 전용 공지, 예약 게시(KST)`,
-          keywords: `${getTabLabel('manageContent')} ${getTabLabel('home')} 화면 공지 배너 칸 배치 순서 자동 슬라이드 색상 배지 임시저장 예약 게시 역할 전용 새가족 새신자 환영 멘트`,
+          title: `2. ${getTabLabel('manageContent')} (배너 · 슬라이드 · 이모지 · 역할별 공개 · 예약 · 새가족)`,
+          sub: `${getTabLabel('home')} 배너 구성, 자동 슬라이드, 공지 이모지 반응, 역할 전용 공지, 예약 게시(KST)`,
+          keywords: `${getTabLabel('manageContent')} ${getTabLabel('home')} 화면 공지 배너 칸 배치 순서 자동 슬라이드 색상 배지 이모지 반응 임시저장 예약 게시 역할 전용 새가족 새신자 환영 멘트`,
           targetTab: 'content',
           targetLabel: `${getTabIcon('manageContent')} ${getTabLabel('manageContent')} 열기`,
           steps: [
             `<b>${hLbl} 배너·공지·광고 통합 등록·관리:</b> <b>[+ 새 배너 · 공지 · 광고 등록]</b> 버튼 하나로 <b>공지·광고만 / 배너·칸만 / 둘 다 동시 등록</b>을 선택해 올릴 수 있으며, 통합 목록에서 필터와 <b>▲/▼</b> 순서를 한눈에 관리합니다.`,
+            `<b>공지·광고 이모지 반응 (배너 제외):</b> 게시된 공지·광고 카드와 상세 화면에는 명칭이 적힌 이모지 버튼이 표시되며, 반응한 회원 성명을 실시간으로 확인할 수 있습니다. (홈 상단 배너에는 이모지가 표시되지 않으며, 이모지 종류·명칭은 <b>[${lblIcn} ${lblLbl}]</b>에서 추가·수정·삭제 가능)`,
             `<b>다중 배너 · 개별 색상/배지 · 자동 슬라이드:</b> 공지 여러 개를 동시에 <b>[📌 배너 고정]</b>하거나 배너마다 배경색·배지 문구를 다르게 설정할 수 있으며, ${hLbl} 상단 슬라이더의 자동 넘김 시간(끄기 / 3·5·7·10초)도 조절할 수 있습니다.`,
             '<b>특정 역할에게만 보여주기 (서버 보안 분리):</b> 공개 대상에서 <b>[🎯 선택한 역할만 보기]</b>를 고르고 원하는 역할(목사·부장·회장·팀장·셀장 등 중복 선택)을 체크하면 해당 역할 회원에게만 표시됩니다.',
-            '<b>임시저장 & 예약 게시:</b> <b>[📝 임시저장]</b>은 관리자만 볼 수 있고, <b>[⏰ 예약 게시]</b>는 지정한 한국시간(KST)이 지나면 자동으로 공개됩니다.',
-            '<b>새가족 명단 & 환영 멘트 설정:</b> 상단 노란색 카드의 <b>[✏️ 멘트·명단 설정]</b>에서 새가족 이름을 직접 추가·해제하거나 기존 회원을 지정할 수 있으며, 등록 인원(1명 / 2명 이상)에 따라 환영 문구가 자동 전환됩니다.'
+            '<b>임시저장 · 예약 게시 & 새가족 명단:</b> <b>[📝 임시저장]</b>은 관리자만 볼 수 있고, <b>[⏰ 예약 게시]</b>는 지정한 한국시간(KST)이 지나면 자동 공개됩니다. 상단 노란색 카드의 <b>[✏️ 멘트·명단 설정]</b>에서 새가족 이름을 추가·해제할 수 있습니다.'
           ],
           tip: '예약 게시 항목은 보안상 관리자 전용 서버(adminNotices/adminBlocks)에 격리되어 있으며, 지정 시각 이후 관리자가 앱에 접속 중이거나 앱을 열 때 즉시 자동 공개됩니다.'
         },
@@ -12889,13 +12931,14 @@
           category: catMap.content_qt,
           icon: getTabIcon('manageQuickLinks'),
           title: `3. ${getTabLabel('manageQuickLinks')} · ${getTabLabel('manageVideos')} · ${getTabLabel('manageInquiries')}`,
-          sub: `${getTabLabel('more')}(${getTabIcon('more')}) 링크, ${getTabLabel('sermon')}/${getTabLabel('ccm')} 세부 탭 및 이용자 문의 관리`,
-          keywords: `${getTabLabel('manageQuickLinks')} ${getTabLabel('manageVideos')} ${getTabLabel('manageInquiries')} ${getTabLabel('more')} ${getTabLabel('sermon')} ${getTabLabel('ccm')} 사이트 바로가기 유튜브 영상 공식 채널 세부 탭 문의 답변`,
+          sub: `${getTabLabel('more')}(${getTabIcon('more')}) 링크, ${getTabLabel('sermon')}/${getTabLabel('ccm')} [+ 게시]·이모지·인기순 및 문의 관리`,
+          keywords: `${getTabLabel('manageQuickLinks')} ${getTabLabel('manageVideos')} ${getTabLabel('manageInquiries')} ${getTabLabel('more')} ${getTabLabel('sermon')} ${getTabLabel('ccm')} 사이트 바로가기 유튜브 영상 게시 공식 채널 세부 탭 이모지 인기순 문의 답변`,
           targetTab: 'videos',
           targetLabel: `${getTabIcon('manageVideos')} ${getTabLabel('manageVideos')} 열기`,
           steps: [
             `<b>${qlLbl} ([${qlIcn} ${qlLbl}]):</b> 하단 <b>[${moreIcn} ${moreLbl}]</b> 메뉴에 표시되는 인스타그램·유튜브·교회 홈페이지 등의 링크를 추가·수정·순서 변경·삭제할 수 있습니다.`,
-            `<b>${vidLbl} ([${vidIcn} ${vidLbl}]):</b> 공식 유튜브 채널(구미제일감리교회·라이트 청년부 등)은 4단계 자동 검사 통과 시 즉시 게시되며, 미등록 채널 추천 영상은 검토 후 승인(공식 채널 자동 추가 가능) 또는 거절합니다. <b>${sermonLbl}·${ccmLbl}</b> 탭 상단의 <b>[🗂️ 탭 관리]</b>에서 2차 세부 탭을 자유롭게 편집할 수 있으며, ${hLbl} 영상 영역에는 이모지가 가장 많이 달린 추천 영상이 우선 표시되며 <b>[+ 게시]</b> 버튼과 필터 칩만 간결하게 표시됩니다.`,
+            `<b>${vidLbl} ([${vidIcn} ${vidLbl}]):</b> 공식 유튜브 채널(구미제일감리교회·라이트 청년부 등)은 4단계 자동 검사 통과 시 즉시 게시되며, 미등록 채널 영상은 검토 후 승인(공식 채널 자동 추가 가능) 또는 거절합니다. <b>${sermonLbl}·${ccmLbl}</b> 탭 상단의 <b>[+ ${sermonLbl} 게시] / [+ ${ccmLbl} 게시]</b>로 영상을 올리고 <b>[🗂️ 탭 관리]</b>에서 2차 세부 탭을 편집할 수 있습니다.`,
+            `<b>이모지 반응 & ${hLbl} 인기 추천순:</b> 설교·CCM 영상 카드와 재생 창에서 명칭이 적힌 이모지 반응과 반응자 성명을 확인할 수 있으며, <b>${hLbl}</b> 영상 영역에는 이모지가 가장 많이 달린 추천 영상(<b>🔥 추천 1위</b>)이 우선 표시되고 <b>[+ 게시]</b> 버튼이 제공됩니다.`,
             `<b>${inqLbl} ([${inqIcn} ${inqLbl}]):</b> 이용자가 <b>설정 → 문의 사항</b>으로 남긴 불편·개선 요청을 확인하고 답변을 저장하면 해당 이용자에게 실시간 알림이 전송되며, 구글 시트 <b>[문의 내역]</b> 탭에도 자동 기록됩니다.`
           ],
           tip: '인스타그램·유튜브 URL을 등록하면 스마트폰에 해당 앱이 설치된 이용자가 눌렀을 때 앱으로 바로 연결됩니다.'
@@ -12924,18 +12967,18 @@
           category: catMap.worship_sheet,
           icon: getTabIcon('manageSheet'),
           title: `5. ${getTabLabel('manageWorship')} · ${getTabLabel('manageAttendance')} · ${getTabLabel('manageSheet')} (날짜별 주간 출석부 · 자동 예약)`,
-          sub: '예배/행사 달력, 셀별 주간 출석부(26.11.29 탭), 매주 일요일 무인 자동 생성 및 10개 탭 고속 동기화',
-          keywords: `${getTabLabel('manageWorship')} ${getTabLabel('manageAttendance')} ${getTabLabel('manageSheet')} 예배 출석인원 주간 출석부 셀 명단 자동 생성 예약 출석O 출석X 빈칸 달력 휴무 예배X 수련회 특별 행사 구글 시트 출석부 분리 Apps Script 10개 탭 동기화 재정비`,
+          sub: '예배/행사 달력, 셀별 주간 출석부(26.11.29 탭), 매시간 트리거 무인 자동 생성 및 3종 시트 분리',
+          keywords: `${getTabLabel('manageWorship')} ${getTabLabel('manageAttendance')} ${getTabLabel('manageSheet')} 예배 출석인원 주간 출석부 셀 명단 자동 생성 예약 출석O 출석X 빈칸 달력 휴무 예배X 수련회 특별 행사 구글 시트 출석부 분리 로그 백업 시트 Apps Script 트리거 10개 탭 동기화 재정비`,
           targetTab: 'sheet',
           targetLabel: `${getTabIcon('manageSheet')} ${getTabLabel('manageSheet')} 열기`,
           steps: [
             `<b>예배 · 휴무 · 특별 행사 설정 ([${wIcn} ${wLbl}]):</b> 매주 일요일 정기 예배 출석체크 시간과 <b>[🚫 예배 없는 날 설정]</b>(예배X 휴무)을 관리하고, 수련회·성탄절 등은 달력 기간 선택으로 특별 행사 출석을 추가합니다.`,
             `<b>셀별 주간 출석부 & A4 인쇄 ([${attIcn} ${attLbl}]):</b> <b>[🧩 셀·명단 설정]</b>에서 예배 장소·출석부 상단 표기 예배 시간·셀별 명단을 등록합니다. 달력에서 날짜를 고르고 이름을 탭하면 <b>○</b> 출석 체크가 즉시 반영되며, <b>[📊 주간 시트 생성·갱신]</b> 또는 <b>[🖨️ A4 인쇄]</b>로 가로 엑셀 양식 그대로 출력할 수 있습니다.`,
-            `<b>하이브리드 무인 자동 생성 예약 ([${attIcn} ${attLbl}] 하단):</b> 매주 일요일 지정한 시각에 구글 서버가 다가오는 주일 탭(예: <code>26.12.06</code>)을 자동 생성하며, 필요 시 <code>오늘</code>·<code>내일</code>·<code>이번주 월요일</code>처럼 추가 날짜·요일도 직접 입력해 예약할 수 있습니다. (출석O만 <code>○</code> 표시 · 불참/미응답은 빈칸 유지)`,
-            `<b>출석부 전용 시트 분리 & 10개 탭 고속 동기화 ([${shIcn} ${shLbl}]):</b> 출석부 전용 시트 주소를 등록하면 날짜별 주간 출석부 탭만 새 시트에 단독 기록됩니다. 최신 Apps Script(<code>${SHEET_SCHEMA_VERSION}</code>) 배포 후 <b>[🔄 전체 시트 동기화]</b>·<b>[🛠️ 양식 재정비]</b>(현황 6탭 재생성 · 보안 로그 4탭 보존)를 활용하세요.`
+            `<b>하이브리드 무인 자동 생성 예약 ([${attIcn} ${attLbl}] 하단):</b> Apps Script 트리거에서 <code>checkAndAutoCreateWeeklySheetHourly</code>를 <b>시간 기반(매시간)</b>으로 1회 등록해 두면, 매주 일요일 지정 시각(및 <code>오늘</code>·<code>내일</code>·<code>이번주 월요일</code> 등 직접 입력한 추가 날짜)에 다가오는 주일 탭(예: <code>26.12.06</code>)이 자동 생성됩니다. (출석O만 <code>○</code> 표시 · 불참/미응답은 빈칸 유지)`,
+            `<b>3종 구글 시트 분리 & 10개 탭 고속 동기화 ([${shIcn} ${shLbl}] · [${logIcn} ${logLbl}]):</b> 기본 통합 시트 외에 <b>출석부 전용 시트</b>와 <b>로그 백업 전용 시트</b>를 각각 분리 연결할 수 있습니다. 최신 Apps Script(<code>${SHEET_SCHEMA_VERSION}</code>) 배포 후 <b>[🔄 전체 시트 동기화]</b>·<b>[🛠️ 양식 재정비]</b>(현황 6탭 재생성 · 보안 로그 4탭 보존)를 활용하세요.`
           ],
           sheetTabs: SHEET_SCHEMA_TABS.map((t, idx) => ({ name: `${idx + 1}. ${t.name}${(t.isNew && typeof isSheetTabNewCleared === 'function' && !isSheetTabNewCleared(t)) ? ' (NEW)' : ''}`, desc: t.desc })),
-          tip: '구글 시트 URL과 출석부 전용 시트 주소는 관리자 전용 문서(config/sheetSecret)에 격리되어 있어 일반 회원은 절대 볼 수 없습니다.'
+          tip: '기본 시트 URL, 출석부 전용 시트 주소, 로그 백업 시트 주소는 모두 관리자 전용 문서(config/sheetSecret)에 격리되어 있어 일반 회원은 절대 볼 수 없습니다.'
         },
         {
           id: 'ag_qr_logs',
@@ -12943,15 +12986,15 @@
           category: catMap.sec_log,
           icon: getTabIcon('manageLogs'),
           title: `6. ${getTabLabel('manageQr')} & 통합 보안 감사 ${getTabLabel('manageLogs')}`,
-          sub: `QR 갱신 주기·긴급 폐기와 삭제 불가능한 보안 ${getTabLabel('manageLogs')} 조회법`,
-          keywords: `${getTabLabel('manageQr')} ${getTabLabel('manageLogs')} QR 관리 초대 재발급 폐기 보안 로그 감사 검색 필터 구글 시트 동기화`,
+          sub: `QR 갱신 주기·긴급 폐기와 삭제 불가능한 보안 ${getTabLabel('manageLogs')} 조회·분리·이관법`,
+          keywords: `${getTabLabel('manageQr')} ${getTabLabel('manageLogs')} QR 관리 초대 재발급 폐기 보안 로그 감사 자동 분리 백업 이관 TTL 검색 필터 구글 시트 동기화`,
           targetTab: 'logs',
           targetLabel: `${getTabIcon('manageLogs')} ${getTabLabel('manageLogs')} 탭 열기`,
           steps: [
             `<b>초대 QR 관리 ([${qrIcn} ${qrLbl}]):</b> 평소에는 <b>오늘 하루(00:00 갱신)</b>로 두고, 주일 현장 가입을 받을 때는 <b>5분 · 10분 자동 갱신 모드</b>(직전 QR 3~5분 유예 + 화면 복귀 시 즉시 갱신)로 전환할 수 있습니다. 외부 유출 시 <b>[🔄 새 QR 즉시 재발급]</b>을 누르면 유예 없이 즉시 폐기됩니다.`,
-            `<b>통합 보안 감사 로그 ([${logIcn} ${logLbl}]):</b> 악의적 글 게시·임의 변경·장난을 방지하기 위해 <b>관리자의 모든 추가/수정/삭제/설정 변경</b>과 <b>이용자의 영상 추천·문의·이름 변경 신청·가입/탈퇴·출석 체크</b>가 날짜·시각(초 단위 KST)과 함께 기록됩니다.`,
+            `<b>통합 보안 감사 로그 ([${logIcn} ${logLbl}]):</b> 악의적 글 게시·임의 변경·장난을 방지하기 위해 <b>관리자의 모든 추가/수정/삭제/설정 변경(반응 이모지 추가·수정·삭제 포함)</b>과 <b>이용자의 영상 게시(추천)·문의·이름 변경 신청·가입/탈퇴·출석 체크</b>가 날짜·시각(초 단위 KST)과 함께 기록됩니다.`,
             `<b>위변조·삭제 불가 & 3단계 자동 보관:</b> 보안상 최고 관리자도 앱에서 로그를 임의로 수정·삭제할 수 없습니다. 대신 <b>[${logIcn} ${logLbl}]</b> 상단의 <b>[📦 로그 자동 분리 · 백업 · 보관 관리]</b>에서 ① 연도·행수 자동 분리(<code>_2026</code>), ② 별도 백업 시트 파일 1클릭 이관, ③ Firebase 자동 만료(TTL)를 안전하게 관리할 수 있습니다.`,
-            `<b>프라이버시 미기록 범위:</b> 이용자 비밀번호 변경, 전체 글자 크기·알림 설정, 외부 사이트 이동, 공지·${byLbl} 단순 조회는 기록되지 않습니다.`
+            `<b>프라이버시 미기록 범위:</b> 이용자 비밀번호 변경, 전체 글자 크기·알림 설정, 공지·영상 이모지 누르기/취소, 외부 사이트 이동, 공지·${byLbl} 단순 조회는 기록되지 않습니다.`
           ],
           tip: `시트에 아직 반영되지 않은 미전송 로그는 [${getTabIcon('manageSheet')} ${getTabLabel('manageSheet')}] 탭에서 한 번에 동기화할 수 있습니다.`
         },
@@ -12960,13 +13003,13 @@
           catId: 'sec_log',
           category: catMap.sec_log,
           icon: getTabIcon('manageDiagnostics'),
-          title: `7. ${getTabLabel('manageLabels')} 편집 & ${getTabLabel('manageDiagnostics')} · 정기 서버 점검 모드`,
-          sub: `탭 이모지/순서/명칭 커스터마이징, ${diagCnt}항목 점검, 미리보기, 서버 점검 차단`,
-          keywords: `${getTabLabel('manageLabels')} ${getTabLabel('manageDiagnostics')} ${getTabLabel('manage')} 메뉴 이름 이모지 순서 섹션 명칭 수정 기능 점검 시뮬레이션 일반 회원 참관자 미리보기 정기 서버 점검 모드`,
+          title: `7. ${getTabLabel('manageLabels')} · 반응 이모지 편집 & ${getTabLabel('manageDiagnostics')} · 서버 점검`,
+          sub: `메뉴·이모지·순서 커스터마이징, ${diagCnt}항목 점검, 미리보기, 서버 점검 차단`,
+          keywords: `${getTabLabel('manageLabels')} ${getTabLabel('manageDiagnostics')} ${getTabLabel('manage')} 메뉴 이름 이모지 반응 이모지 추가 수정 삭제 순서 섹션 명칭 수정 기능 점검 시뮬레이션 일반 회원 참관자 미리보기 정기 서버 점검 모드`,
           targetTab: 'diagnostics',
           targetLabel: `${getTabIcon('manageDiagnostics')} ${getTabLabel('manageDiagnostics')} 탭 열기`,
           steps: [
-            `<b>${lblLbl} 편집 ([${lblIcn} ${lblLbl}]):</b> 하단 탭, 설정 항목, <b>${mngLbl}</b> 서브탭의 이모지·이름·순서와 상단 단축 아이콘(QR·알림), 각 관리 섹션 제목(<b>[✏️ 수정]</b>)을 자유롭게 바꿀 수 있으며, 변경 시 설명서와 이용약관 문구에도 자동 연동됩니다.`,
+            `<b>${lblLbl} & 반응 이모지 편집 ([${lblIcn} ${lblLbl}]):</b> 하단 탭, 설정 항목, <b>${mngLbl}</b> 서브탭의 이모지·이름·순서와 상단 단축 아이콘(QR·알림), 각 관리 섹션 제목(<b>[✏️ 수정]</b>)은 물론 <b>공지·광고 · 설교·CCM 반응 이모지(추가 · 수정 · 삭제 · 순서)</b>까지 자유롭게 편집할 수 있으며 모든 변경 내역은 보안 로그에 자동 기록됩니다.`,
             `<b>앱 성능 · 자동 안전 최적화 ([${diagIcn} ${diagLbl} → ⚡ 성능 · 자동 최적화]):</b> 불러온 문서 수, 저장소 사용량, 평균 렌더링 속도, 실시간 구독 수를 한눈에 확인하며, 자동 최적화가 구버전 캐시와 만료 임시 기록만 무손실 정리합니다. (서버 데이터·시트·로그인·설정 100% 보존 · 보안 로그는 최근 250건씩 분할 조회)`,
             `<b>${diagCnt}개 항목 수동·자동 기능 점검 ([${diagIcn} ${diagLbl}]):</b> <b>[🚀 수동 전체 기능 일괄 점검 실행]</b> 및 자동 주기 점검으로 Firebase, 구글 시트 10개 탭(버전·누락·삭제 대조), 초대 QR, 알림, 설정·영상·예배·문의·PWA 최신 빌드 상태를 한 번에 진단합니다.`,
             `<b>일반 회원 · 참관자 시점 미리보기:</b> <b>[👁️ 일반 회원 / 참관자 미리보기]</b>로 실제 회원·참관자 화면을 안전하게 확인하고 상단 배너의 <b>[관리자 복귀]</b>로 즉시 돌아옵니다.`,
@@ -13114,7 +13157,7 @@
             ${buildSectionEditBtnHtml('guide_admin_hero', formatManageGuideHeading(), true)}
           </div>
           <div class="bylaw-hero-dates" style="margin-top:4px;">
-            새로운 관리자가 들어와도 막힘없이 운영할 수 있도록 현재 버전(b${APP_CLIENT_BUILD}) 기준 모든 관리 기능과 구글 시트 ${SHEET_SCHEMA_TABS.length}개 탭(출석부 전용 시트 분리 포함) 연동 방법을 정리했습니다.
+            새로운 관리자가 들어와도 막힘없이 운영할 수 있도록 현재 버전(b${APP_CLIENT_BUILD}) 기준 모든 관리 기능과 구글 시트 ${SHEET_SCHEMA_TABS.length}개 탭(출석부·로그 백업 시트 분리 포함) 연동 방법을 정리했습니다.
           </div>
         </div>
 
@@ -13556,13 +13599,16 @@
     };
 
     function getPostReactionStats(item) {
-      return computeReactionStatsGeneric(item, POST_REACTION_EMOJIS, POST_REACTION_VALID_KEYS);
+      const defs = getConfiguredPostReactionEmojis();
+      const validSet = new Set(defs.map(e => e.key));
+      return computeReactionStatsGeneric(item, defs, validSet);
     }
 
     function buildPostReactionBarHtml(kind, item, mode = 'card') {
       // 배너에는 이모지 반응을 표시하지 않음 (공지·광고 글 전용)
       if (kind === 'block') return '';
       if (!item || !item.id || getPublishState(item) !== 'live') return '';
+      const defs = getConfiguredPostReactionEmojis();
       const idStr = String(item.id);
       const idAttr = escapeJsAttr(idStr);
       const stats = getPostReactionStats(item);
@@ -13574,26 +13620,26 @@
             <span>${stats.total > 0 ? `총 ${stats.total}개` : '첫 이모지를 눌러 보세요'}</span>
           </div>
           <div class="post-reaction-bar" style="margin-top:0;">
-            ${POST_REACTION_EMOJIS.map(e => {
+            ${defs.map(e => {
               const cnt = stats.counts[e.key] || 0;
               const isMine = stats.mine.has(e.key);
-              return `<button class="post-reaction-chip${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(e.label)}" aria-label="${escapeHtml(e.label)} ${cnt}" onclick="togglePostReaction('notice', '${idAttr}', '${e.key}')"><span class="pr-emoji">${e.emoji}</span><span class="pr-lbl">${escapeHtml(e.label)}</span>${cnt > 0 ? `<span class="pr-cnt">${cnt}</span>` : ''}</button>`;
+              return `<button class="post-reaction-chip${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(e.label)}" aria-label="${escapeHtml(e.label)} ${cnt}" onclick="togglePostReaction('notice', '${idAttr}', '${escapeJsAttr(e.key)}')"><span class="pr-emoji">${escapeHtml(e.emoji)}</span><span class="pr-lbl">${escapeHtml(e.label)}</span>${cnt > 0 ? `<span class="pr-cnt">${cnt}</span>` : ''}</button>`;
             }).join('')}
           </div>
-          ${buildReactionWhoBreakdownHtml(POST_REACTION_EMOJIS, stats, true)}
+          ${buildReactionWhoBreakdownHtml(defs, stats, true)}
         `;
       }
 
       return `
         <div data-post-react-bar="notice:${escapeHtml(idStr)}" data-post-react-mode="card">
           <div class="post-reaction-bar">
-            ${POST_REACTION_EMOJIS.map(e => {
+            ${defs.map(e => {
               const cnt = stats.counts[e.key] || 0;
               const isMine = stats.mine.has(e.key);
-              return `<button class="post-reaction-chip${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(e.label)}" aria-label="${escapeHtml(e.label)} ${cnt}" onclick="event.stopPropagation(); togglePostReaction('notice', '${idAttr}', '${e.key}')"><span class="pr-emoji">${e.emoji}</span><span class="pr-lbl">${escapeHtml(e.label)}</span>${cnt > 0 ? `<span class="pr-cnt">${cnt}</span>` : ''}</button>`;
+              return `<button class="post-reaction-chip${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(e.label)}" aria-label="${escapeHtml(e.label)} ${cnt}" onclick="event.stopPropagation(); togglePostReaction('notice', '${idAttr}', '${escapeJsAttr(e.key)}')"><span class="pr-emoji">${escapeHtml(e.emoji)}</span><span class="pr-lbl">${escapeHtml(e.label)}</span>${cnt > 0 ? `<span class="pr-cnt">${cnt}</span>` : ''}</button>`;
             }).join('')}
           </div>
-          ${buildReactionWhoCardSectionHtml(`notice:${idStr}`, POST_REACTION_EMOJIS, stats)}
+          ${buildReactionWhoCardSectionHtml(`notice:${idStr}`, defs, stats)}
         </div>
       `;
     }
@@ -13646,9 +13692,11 @@
       const user = getCurrentUser();
       const myKey = (typeof getMyVideoReactionKey === 'function') ? getMyVideoReactionKey() : '';
       const myName = getMyReactionDisplayName();
+      const defs = getConfiguredPostReactionEmojis();
+      const validSet = new Set(defs.map(e => e.key));
       const key = String(emojiKey || '').trim();
       const idStr = String(docId || '').trim();
-      if (!user || !myKey || !idStr || !POST_REACTION_VALID_KEYS.has(key)) return;
+      if (!user || !myKey || !idStr || !validSet.has(key)) return;
       const busyKey = `notice:${idStr}`;
       if (postReactionBusySet.has(busyKey)) return;
 
@@ -13664,7 +13712,7 @@
         ? JSON.parse(JSON.stringify(target.reactionNames))
         : null;
       const curRaw = (prevReactions && Array.isArray(prevReactions[myKey]))
-        ? prevReactions[myKey].map(String).filter(ek => POST_REACTION_VALID_KEYS.has(ek))
+        ? prevReactions[myKey].map(String).filter(ek => validSet.has(ek))
         : [];
       const hadKey = curRaw.includes(key);
       const nextList = hadKey
@@ -14204,7 +14252,7 @@
     };
 
     // ==================== 12. 관리 센터 ====================
-    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterViewMode|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|openWeeklyAttendancePrintView|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|openSecSimModal|selectSecSimVariant|runAllSecSimulations|runLiveSheetSchemaInspect|loadMoreAuditLogs|switchMainTab|stepTabSlideBar|goToTabSlideBar)\s*\(/;
+    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|jumpToManageReactionEmojis|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterViewMode|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|openWeeklyAttendancePrintView|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|openSecSimModal|selectSecSimVariant|runAllSecSimulations|runLiveSheetSchemaInspect|loadMoreAuditLogs|switchMainTab|stepTabSlideBar|goToTabSlideBar)\s*\(/;
     const OBSERVER_ALLOWED_INPUT_IDS = new Set([
       'roleMemberSearchInput', 'adminLogSearchInput', 'adminGuideSearchInput', 'attRosterSearchInput', 'attRosterQuickJumpInput'
     ]);
@@ -14608,8 +14656,9 @@
             marginTop: '12px'
           })}
           <div data-acc-body="content_unified" class="${isManageSectionOpen('content_unified', true) ? '' : 'hidden'}">
-            <div style="margin-bottom:10px;">
-              <button class="btn-full btn-dark" type="button" style="padding:11px 12px; font-size:13.5px; border-radius:12px;" onclick="openUnifiedContentModal()">+ 새 배너 · 공지 · 광고 등록</button>
+            <div style="display:flex; gap:6px; margin-bottom:10px;">
+              <button class="btn-full btn-dark" type="button" style="flex:1; padding:11px 12px; font-size:13.5px; border-radius:12px;" onclick="openUnifiedContentModal()">+ 새 배너 · 공지 · 광고 등록</button>
+              <button class="btn-outline" type="button" style="white-space:nowrap; padding:0 11px; border-radius:12px; font-size:12px; font-weight:800;" onclick="jumpToManageReactionEmojis()">😊 이모지 설정</button>
             </div>
 
             <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_content_filter" data-ts-body="#manageContentCardsBody">
@@ -18547,13 +18596,60 @@
 
     window.setManageLabelsFilter = (f) => {
       manageLabelsFilter = ['all', 'header', 'bottom', 'settings', 'manage'].includes(f) ? f : 'all';
-      const accMap = { header: 'labels_header_shortcuts', bottom: 'labels_bottom', settings: 'labels_settings_items', manage: 'labels_manage' };
+      const accMap = { header: 'labels_header_shortcuts', bottom: 'labels_bottom', settings: 'labels_settings_items', manage: 'labels_manage', emojis: 'labels_reaction_emojis' };
       if (accMap[manageLabelsFilter]) manageSectionOpen[accMap[manageLabelsFilter]] = true;
       const u = getCurrentUser();
       if (u && currentMainTab === 'manage' && currentManageSubTab === 'labels') {
         renderManageLabels(document.getElementById('manageContent'), u);
       }
     };
+
+    window.jumpToManageReactionEmojis = () => {
+      currentMainTab = 'manage';
+      currentManageSubTab = 'labels';
+      manageLabelsFilter = 'emojis';
+      manageSectionOpen['labels_reaction_emojis'] = true;
+      applyScreen();
+    };
+
+    function buildReactionEmojiEditorBlockHtml(scope, titleHtml, badgeColorCls, list) {
+      const sc = scope === 'video' ? 'video' : 'post';
+      const emojiInputId = sc === 'video' ? 'newVideoReactEmojiInput' : 'newPostReactEmojiInput';
+      const labelInputId = sc === 'video' ? 'newVideoReactLabelInput' : 'newPostReactLabelInput';
+      const canAdd = list.length < MAX_REACTION_EMOJI_ITEMS;
+      return `
+        <div style="margin-bottom:14px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap; margin-bottom:7px;">
+            <div style="font-size:13px; font-weight:800; color:#0F172A;">${titleHtml} <span class="tag ${badgeColorCls}" style="font-size:10.5px;">${list.length}/${MAX_REACTION_EMOJI_ITEMS}개</span></div>
+            <button class="btn-sm" type="button" style="padding:4px 8px; font-size:11px;" onclick="handleResetReactionEmojis('${sc}')">🔄 기본 복원</button>
+          </div>
+          ${canAdd ? `
+            <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
+              <input id="${emojiInputId}" class="emoji-input" maxlength="6" placeholder="😊" title="추가할 이모지 입력" />
+              <input id="${labelInputId}" class="form-input" style="flex:1; padding:7px 10px; font-size:13px;" maxlength="12" placeholder="이모지 명칭 (예: 축복, 은혜, 최고)" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleAddReactionEmoji('${sc}');}" />
+              <button class="btn-sm primary" type="button" style="white-space:nowrap; padding:8px 11px;" onclick="handleAddReactionEmoji('${sc}')">+ 추가</button>
+            </div>
+          ` : `
+            <div class="info-box warn" style="margin-top:0; margin-bottom:8px; padding:7px 10px; font-size:11.5px;">최대 ${MAX_REACTION_EMOJI_ITEMS}개까지 등록할 수 있습니다. 새 이모지를 추가하려면 기존 항목을 삭제하거나 수정해 주세요.</div>
+          `}
+          ${list.map((item, idx) => `
+            <div class="tab-order-row" style="margin-bottom:6px;">
+              <span class="tab-order-num">${idx + 1}</span>
+              <span class="tab-order-icon" style="font-size:19px; min-width:26px; text-align:center;">${escapeHtml(item.emoji)}</span>
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:13.5px; font-weight:800; color:#0F172A;">${escapeHtml(item.label)}</div>
+              </div>
+              <div style="display:flex; gap:4px; align-items:center; flex-shrink:0;">
+                <button class="order-btn" type="button" title="위로" onclick="handleMoveReactionEmoji('${sc}', ${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                <button class="order-btn" type="button" title="아래로" onclick="handleMoveReactionEmoji('${sc}', ${idx}, 1)" ${idx === list.length - 1 ? 'disabled' : ''}>▼</button>
+                <button class="btn-sm" type="button" style="padding:5px 8px;" onclick="handleEditReactionEmoji('${sc}', ${idx})">✏️ 수정</button>
+                <button class="btn-sm danger" type="button" style="padding:5px 8px;" onclick="handleDeleteReactionEmoji('${sc}', ${idx})" ${list.length <= 1 ? 'disabled' : ''}>삭제</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
 
     function renderManageLabels(el, user) {
       initDraftTabEditorFromCurrent(false);
@@ -18564,6 +18660,9 @@
       const showBottom = lf === 'all' || lf === 'bottom';
       const showSettings = lf === 'all' || lf === 'settings';
       const showManage = lf === 'all' || lf === 'manage';
+      const showEmojis = lf === 'all' || lf === 'emojis';
+      const postEmojiList = getConfiguredPostReactionEmojis();
+      const videoEmojiList = getConfiguredVideoReactionEmojis();
       const dhs = normalizeHeaderShortcutsConfig(draftHeaderShortcuts);
       const dhsActiveCnt = (dhs.showNotif ? 1 : 0) + (dhs.showQr ? 1 : 0);
       const dhsQrFirst = dhs.order[0] === 'setQr';
@@ -18586,6 +18685,7 @@
           <button class="filter-chip ${lf === 'bottom' ? 'active' : ''}" type="button" onclick="setManageLabelsFilter('bottom')">📱 하단 메뉴 (${draftTabOrder.length})</button>
           <button class="filter-chip ${lf === 'settings' ? 'active' : ''}" type="button" onclick="setManageLabelsFilter('settings')">${escapeHtml(getTabIcon('settings'))} ${escapeHtml(getTabLabel('settings'))} 메뉴 (${draftSettingsItemOrder.length})</button>
           <button class="filter-chip ${lf === 'manage' ? 'active' : ''}" type="button" onclick="setManageLabelsFilter('manage')">${escapeHtml(curManageIcon)} ${escapeHtml(curManageName)} 탭 (${draftManageSubTabOrder.length})</button>
+          <button class="filter-chip ${lf === 'emojis' ? 'active' : ''}" type="button" onclick="setManageLabelsFilter('emojis')">😊 반응 이모지 (${postEmojiList.length + videoEmojiList.length})</button>
         </div>
 
         ${showHeader ? `
@@ -18758,6 +18858,28 @@
 
         <button id="saveTabLabelsInlineBtn" class="btn-full btn-dark" type="button" style="margin-top:10px;" onclick="handleSaveTabLabels()">💾 전체 메뉴 · 이름 · 순서 저장하기</button>
         ${buildInlineSaveStatusHtml('tab_labels')}
+
+        ${showEmojis ? `
+        ${buildManageAccordionBar({
+          key: 'labels_reaction_emojis',
+          marginTop: '14px',
+          titleHtml: '😊 공지·광고 · 설교·CCM 반응 이모지 편집',
+          badgeHtml: `<span class="tag green">수정·추가·삭제 · 로그 기록</span>`,
+          defaultOpen: true
+        })}
+        <div data-acc-body="labels_reaction_emojis" class="${isManageSectionOpen('labels_reaction_emojis', true) ? '' : 'hidden'}">
+          <div class="card">
+            <div class="info-box" style="margin-top:0; margin-bottom:12px;">
+              • 이용자들이 <b>공지·광고</b>와 <b>설교·CCM 영상</b>에 달 수 있는 이모지와 명칭을 자유롭게 추가·수정·순서 변경·삭제할 수 있습니다.<br>
+              • 모든 이모지 추가·수정·삭제·순서 변경 내역은 <b>[📋 로그]</b>와 <b>구글 시트</b>에 자동으로 기록됩니다. (홈 상단 배너에는 이모지가 표시되지 않습니다)
+            </div>
+            ${buildReactionEmojiEditorBlockHtml('post', '📢 공지 · 광고 반응 이모지', 'slate', postEmojiList)}
+            <div class="manage-divider" style="margin:12px 0 14px;"></div>
+            ${buildReactionEmojiEditorBlockHtml('video', '🎬 설교 · CCM 반응 이모지', 'warm', videoEmojiList)}
+            ${buildInlineSaveStatusHtml('reaction_emojis')}
+          </div>
+        </div>
+        ` : ''}
       `;
     }
 
@@ -18873,7 +18995,9 @@
         icons: {},
         uiTexts: {},
         sectionTitles: draftResetSectionTitles ? {} : { ...(tabLabels.sectionTitles || {}) },
-        headerShortcuts: normalizeHeaderShortcutsConfig(draftHeaderShortcuts)
+        headerShortcuts: normalizeHeaderShortcutsConfig(draftHeaderShortcuts),
+        postReactionEmojis: getConfiguredPostReactionEmojis(),
+        videoReactionEmojis: getConfiguredVideoReactionEmojis()
       };
       BOTTOM_TAB_REGISTRY.forEach(t => {
         next[t.key] = String(draftTabNames[t.key] ?? '').trim() || t.defaultLabel;
@@ -18919,6 +19043,178 @@
         const liveBtn = document.getElementById('saveTabLabelsInlineBtn') || document.getElementById('saveTabLabelsBtn');
         if (liveBtn) { liveBtn.disabled = false; liveBtn.textContent = prevBtnText || '💾 전체 메뉴 · 이름 · 순서 저장하기'; }
       }
+    };
+
+
+    async function persistReactionEmojiList(scope, nextList, logAction, beforeVal, afterVal, detail, toastMsg) {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return false;
+      const sc = scope === 'video' ? 'video' : 'post';
+      const fieldKey = sc === 'video' ? 'videoReactionEmojis' : 'postReactionEmojis';
+      const scopeTarget = sc === 'video' ? '설교·CCM 반응 이모지' : '공지·광고 반응 이모지';
+      setInlineSaveStatus('reaction_emojis', 'loading', '⏳ 반응 이모지 설정을 저장하는 중입니다...');
+      try {
+        await db.collection('config').doc('labels').set({
+          [fieldKey]: nextList
+        }, { merge: true });
+        tabLabels[fieldKey] = nextList;
+        saveCachedTabLabels(tabLabels);
+        recordAuditLog({
+          actorType: 'admin',
+          category: '역할·메뉴',
+          action: logAction,
+          target: scopeTarget,
+          beforeVal: beforeVal || '',
+          afterVal: afterVal || '',
+          detail: detail || ''
+        });
+        setInlineSaveStatus('reaction_emojis', 'ok', toastMsg || '✅ 반응 이모지가 저장되었습니다!');
+        applyScreen();
+        showToast(toastMsg || '✅ 반응 이모지가 저장되었습니다!', 'ok');
+        return true;
+      } catch (err) {
+        setInlineSaveStatus('reaction_emojis', 'err', '❌ 반응 이모지 저장에 실패했습니다.');
+        handleDbError(err, '반응 이모지 저장');
+        return false;
+      }
+    }
+
+    window.handleAddReactionEmoji = async (scope) => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const sc = scope === 'video' ? 'video' : 'post';
+      const emojiInp = document.getElementById(sc === 'video' ? 'newVideoReactEmojiInput' : 'newPostReactEmojiInput');
+      const labelInp = document.getElementById(sc === 'video' ? 'newVideoReactLabelInput' : 'newPostReactLabelInput');
+      const emoji = String(emojiInp ? emojiInp.value : '').trim().slice(0, 8);
+      const label = String(labelInp ? labelInp.value : '').trim().slice(0, 12);
+      if (!emoji) return showToast('추가할 이모지를 입력해 주세요.');
+      if (!label) return showToast('이모지 명칭(뜻)을 입력해 주세요. (예: 아멘, 은혜)');
+      if (!enforceInputSecurity(`${emoji} ${label}`, '반응 이모지', true)) return;
+
+      const cur = sc === 'video' ? getConfiguredVideoReactionEmojis() : getConfiguredPostReactionEmojis();
+      if (cur.length >= MAX_REACTION_EMOJI_ITEMS) {
+        return showToast(`최대 ${MAX_REACTION_EMOJI_ITEMS}개까지 등록할 수 있습니다.`);
+      }
+      if (cur.some(x => x.label === label)) {
+        return showToast(`이미 [${label}] 명칭의 이모지가 등록되어 있습니다.`);
+      }
+      const key = `emo_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 5)}`;
+      const next = [...cur, { key, emoji, label }];
+      const ok = await persistReactionEmojiList(
+        sc,
+        next,
+        sc === 'video' ? '설교·CCM 반응 이모지 추가' : '공지·광고 반응 이모지 추가',
+        '',
+        `${emoji} ${label}`,
+        `추가 후 총 ${next.length}개`,
+        `✅ [${emoji} ${label}] 이모지가 추가되었습니다!`
+      );
+      if (ok) {
+        if (emojiInp) emojiInp.value = '';
+        if (labelInp) labelInp.value = '';
+      }
+    };
+
+    window.handleEditReactionEmoji = async (scope, idx) => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const sc = scope === 'video' ? 'video' : 'post';
+      const cur = sc === 'video' ? getConfiguredVideoReactionEmojis() : getConfiguredPostReactionEmojis();
+      const item = cur[idx];
+      if (!item) return;
+
+      const nextEmojiRaw = prompt(`[${item.emoji} ${item.label}]의 새 이모지를 입력해 주세요:`, item.emoji);
+      if (nextEmojiRaw === null) return;
+      const nextEmoji = String(nextEmojiRaw || '').trim().slice(0, 8);
+      if (!nextEmoji) return showToast('이모지를 비워둘 수 없습니다.');
+
+      const nextLabelRaw = prompt(`[${nextEmoji}] 이모지의 새 명칭(최대 12자)을 입력해 주세요:`, item.label);
+      if (nextLabelRaw === null) return;
+      const nextLabel = String(nextLabelRaw || '').trim().slice(0, 12);
+      if (!nextLabel) return showToast('이모지 명칭을 입력해 주세요.');
+
+      if (nextEmoji === item.emoji && nextLabel === item.label) return;
+      if (!enforceInputSecurity(`${nextEmoji} ${nextLabel}`, '반응 이모지 수정', true)) return;
+      if (cur.some((x, i) => i !== idx && x.label === nextLabel)) {
+        return showToast(`이미 [${nextLabel}] 명칭의 이모지가 존재합니다.`);
+      }
+
+      const prevDesc = `${item.emoji} ${item.label}`;
+      const nextDesc = `${nextEmoji} ${nextLabel}`;
+      const next = cur.map((x, i) => i === idx ? { ...x, emoji: nextEmoji, label: nextLabel } : x);
+      await persistReactionEmojiList(
+        sc,
+        next,
+        sc === 'video' ? '설교·CCM 반응 이모지 수정' : '공지·광고 반응 이모지 수정',
+        prevDesc,
+        nextDesc,
+        `키(${item.key}) 유지 · 기존 반응 자동 연동`,
+        `✅ [${prevDesc}] → [${nextDesc}](으)로 수정되었습니다!`
+      );
+    };
+
+    window.handleDeleteReactionEmoji = async (scope, idx) => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const sc = scope === 'video' ? 'video' : 'post';
+      const cur = sc === 'video' ? getConfiguredVideoReactionEmojis() : getConfiguredPostReactionEmojis();
+      const item = cur[idx];
+      if (!item) return;
+      if (cur.length <= 1) return showToast('최소 1개 이상의 이모지는 유지해야 합니다.');
+      if (!confirm(`[${item.emoji} ${item.label}] 이모지를 삭제할까요?
+(삭제 내역은 보안 로그에 기록됩니다.)`)) return;
+
+      const next = cur.filter((_, i) => i !== idx);
+      await persistReactionEmojiList(
+        sc,
+        next,
+        sc === 'video' ? '설교·CCM 반응 이모지 삭제' : '공지·광고 반응 이모지 삭제',
+        `${item.emoji} ${item.label}`,
+        '',
+        `삭제 후 총 ${next.length}개`,
+        `🗑️ [${item.emoji} ${item.label}] 이모지를 삭제했습니다.`
+      );
+    };
+
+    window.handleMoveReactionEmoji = async (scope, idx, dir) => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const sc = scope === 'video' ? 'video' : 'post';
+      const cur = sc === 'video' ? getConfiguredVideoReactionEmojis() : getConfiguredPostReactionEmojis();
+      const targetIdx = idx + dir;
+      if (idx < 0 || idx >= cur.length || targetIdx < 0 || targetIdx >= cur.length) return;
+      const beforeSeq = cur.map(x => `${x.emoji}${x.label}`).join(' · ');
+      const next = [...cur];
+      [next[idx], next[targetIdx]] = [next[targetIdx], next[idx]];
+      const afterSeq = next.map(x => `${x.emoji}${x.label}`).join(' · ');
+      await persistReactionEmojiList(
+        sc,
+        next,
+        sc === 'video' ? '설교·CCM 반응 이모지 순서 변경' : '공지·광고 반응 이모지 순서 변경',
+        beforeSeq,
+        afterSeq,
+        '',
+        '✅ 반응 이모지 순서가 변경되었습니다!'
+      );
+    };
+
+    window.handleResetReactionEmojis = async (scope) => {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin) return;
+      const sc = scope === 'video' ? 'video' : 'post';
+      const defaults = sc === 'video' ? structuredClone(DEFAULT_VIDEO_REACTION_EMOJIS) : structuredClone(DEFAULT_POST_REACTION_EMOJIS);
+      const label = sc === 'video' ? '설교·CCM 반응 이모지' : '공지·광고 반응 이모지';
+      if (!confirm(`${label}를 기본 구성(${defaults.map(x => `${x.emoji} ${x.label}`).join(', ')})으로 복원할까요?`)) return;
+      const cur = sc === 'video' ? getConfiguredVideoReactionEmojis() : getConfiguredPostReactionEmojis();
+      await persistReactionEmojiList(
+        sc,
+        defaults,
+        `${label} 기본 복원`,
+        cur.map(x => `${x.emoji}${x.label}`).join(' · '),
+        defaults.map(x => `${x.emoji}${x.label}`).join(' · '),
+        '',
+        `🔄 ${label}가 기본값으로 복원되었습니다!`
+      );
     };
 
     // ==================== 17. 더보기(☰) 사이트 바로가기 바텀시트 및 관리자 편집 ====================
@@ -34205,27 +34501,27 @@
         {
           id: 'tos_3',
           title: '제3조 (회원의 권리와 의무)',
-          body: '① 승인된 회원은 앱에서 공지·소식 열람, 예배·행사 출석 체크, 설교·찬양 영상 시청 및 추천, 회칙 열람, 문의 사항 등록 등의 기능을 이용할 수 있습니다.\n② 회원은 회칙 제6조에 따라 예배와 교육에 성실히 참여하고 교회 질서와 회칙을 준수하며, 앱 내 소통 공간에서 공동체의 덕을 세우는 언어와 태도를 지켜야 합니다.\n③ 타인의 계정을 도용하거나, 악성 코드·피싱 링크 삽입, 도배 행위 등 앱의 정상적인 운영을 방해하는 행위는 금지됩니다.'
+          body: '① 승인된 회원은 앱에서 공지·소식 열람, 예배·행사 출석 체크, 설교·찬양 영상 시청 및 게시(추천), 공지·광고·영상 이모지 반응, 회칙 열람, 문의 사항 등록 등의 기능을 이용할 수 있습니다.\n② 공지·광고·설교·CCM에 이모지 반응을 남기면 공동체 내 소통과 확인을 위해 본인의 성명이 함께 표시되며, 언제든 다시 눌러 취소할 수 있습니다. 홈 화면에는 이모지를 가장 많이 받은 추천 영상이 우선 표시됩니다.\n③ 회원은 회칙 제6조에 따라 예배와 교육에 성실히 참여하고 교회 질서와 회칙을 준수하며, 타인 계정 도용, 악성 코드·피싱 링크 삽입, 도배 행위 등 앱의 정상적인 운영을 방해하는 행위를 해서는 안 됩니다.'
         },
         {
           id: 'tos_4',
-          title: '제4조 (출석부 운영 및 기록 기준)',
-          body: `① 출석 체크는 일요일 정기 예배 및 등록된 특별 행사 등 출석이 진행되는 날에 한해 운영되며, 회원이 [출석O] 또는 [출석X]를 선택하면 해당 날짜(요일·행사명 포함) 열에 즉시 기록됩니다.\n② 출석 버튼을 누르지 않은 인원은 해당 날짜 칸을 빈칸으로 유지하며, 누적 출석은 [출석O] 횟수만 집계합니다.\n③ 출석부 데이터는 [${mngLbl} → ${attLbl} / ${shLbl}] 및 연결된 출석부 시트를 통해 운영·관리됩니다.`
+          title: '제4조 (주간 출석부 운영 및 기록 기준)',
+          body: `① 출석 체크는 매주 일요일 정기 예배 및 등록된 특별 행사 등 출석이 진행되는 날에 한해 운영되며, 회원이 [출석O] 또는 [출석X]를 선택하면 즉시 반영됩니다.\n② 연결된 구글 시트의 날짜별 주간 출석부 탭(예: 26.11.29)에는 [출석O]를 선택한 회원만 소속 셀 칸에 ○로 자동 기록되며, 불참([출석X]) 및 미응답 인원은 빈칸으로 유지됩니다.\n③ 주간 출석부는 매주 지정된 요일·시각에 무인 자동 생성할 수 있으며, [${mngLbl} → ${attLbl} / ${shLbl}] 및 출석부 전용 시트를 통해 운영·관리됩니다.`
         },
         {
           id: 'tos_5',
           title: '제5조 (개인정보 최소 수집 및 프라이버시 보호)',
-          body: '① 본 앱은 개인정보 피해 가능성을 최소화하기 위해 전화번호·집주소·주민등록번호·생년월일·이메일을 수집하지 않으며, 공동체 운영에 꼭 필요한 [성명]만 수집합니다.\n② 로그인 비밀번호는 암호화되어 저장되며 관리자를 포함한 누구도 열람할 수 없습니다.\n③ 회원의 글자 크기 및 알림 설정은 오직 본인 기기에만 저장되며 관리자에게 공개되거나 로그에 기록되지 않습니다.\n④ 회칙 제18조 제3항의 정신에 따라 개인의 신앙생활 및 상담과 관련된 비밀사항은 철저히 보호합니다.'
+          body: '① 본 앱은 개인정보 피해 가능성을 최소화하기 위해 전화번호·집주소·주민등록번호·생년월일·이메일을 수집하지 않으며, 공동체 운영에 꼭 필요한 [성명]만 수집합니다.\n② 로그인 비밀번호는 암호화되어 저장되며 관리자를 포함한 누구도 열람할 수 없습니다.\n③ 회원의 글자 크기·알림 설정은 본인 기기에만 저장되며, 공지·광고·영상에 이모지를 누르거나 취소한 내역은 공동체 내 화면 표시 외에 별도의 보안 감사 로그에 기록되지 않습니다.\n④ 회칙 제18조 제3항의 정신에 따라 개인의 신앙생활 및 상담과 관련된 비밀사항은 철저히 보호합니다.'
         },
         {
           id: 'tos_6',
-          title: '제6조 (영상 추천 · 문의 사항 및 보안 로그)',
-          body: '① 회원이 작성한 설교·찬양 영상 추천과 문의 사항의 책임은 작성자 본인에게 있으며, 본인이 작성한 글은 언제든 직접 수정·삭제할 수 있습니다.\n② 비방·욕설·허위사실 유포·광고성 스팸·악성 링크 등 공동체 질서를 해치는 게시물은 사전 통보 없이 차단 또는 삭제될 수 있습니다.\n③ 건전한 공동체 운영과 보안 사고 예방을 위해 관리자 활동 전반과 회원의 영상 추천(등록·수정·삭제), 문의 사항(작성·수정·삭제), 이름 변경 신청, 가입·탈퇴, 출석 체크 내역은 삭제 불가 보안 로그에 기록됩니다.'
+          title: '제6조 (영상 게시 · 문의 사항 및 보안 로그 관리)',
+          body: '① 회원이 작성한 설교·찬양 영상 게시(추천)와 문의 사항의 책임은 작성자 본인에게 있으며, 본인이 작성한 글은 언제든 직접 수정·삭제할 수 있습니다.\n② 비방·욕설·허위사실 유포·광고성 스팸·악성 링크 등 공동체 질서를 해치는 게시물은 사전 통보 없이 차단 또는 삭제될 수 있습니다.\n③ 건전한 공동체 운영과 보안 사고 예방을 위해 관리자 활동 전반(공지·배너·역할·메뉴·반응 이모지 설정 포함)과 회원의 영상 게시(등록·수정·삭제), 문의 사항(작성·수정·삭제), 이름 변경 신청, 가입·탈퇴, 출석 체크 내역은 위변조·삭제 불가 보안 로그에 기록됩니다.\n④ 보안 로그는 연도 및 최대 행 수 기준에 따라 구글 시트 보관 탭 및 별도 로그 백업 시트 파일로 안전하게 분리·이관되며, 서버 저장 로그에는 설정된 자동 만료 기간(TTL)이 적용됩니다.'
         },
         {
           id: 'tos_7',
-          title: '제7조 (운영 조직 및 관리 권한)',
-          body: '① 앱의 공지·배너 게시, 회원 승인, 역할 배정, 출석부·보안 관리 권한은 회칙 제7조·제8조에 따른 지도교역자·부장·회장 및 위임받은 최고 관리자에게 부여됩니다.\n② 관리자는 회원의 개인정보를 본회 사역 외의 목적으로 외부에 유출하거나 무단 이용해서는 안 되며, 임기 종료·인수인계 시 즉시 관리자 권한을 해제하고 관리자 코드를 변경하여야 합니다.'
+          title: '제7조 (운영 조직 · 관리 권한 및 참관자 열람 기준)',
+          body: '① 앱의 공지·배너 게시, 회원 승인, 역할·이모지 설정, 출석부·보안 관리 권한은 회칙 제7조·제8조에 따른 지도교역자·부장·회장 및 위임받은 최고 관리자에게 부여됩니다.\n② 참관자(읽기 전용) 역할이 부여된 회원은 관리 화면의 현황과 목록을 열람할 수 있으나, 모든 추가·수정·삭제·승인 및 관리자 코드·시트 주소 열람 권한은 부여되지 않습니다.\n③ 관리자는 회원의 개인정보를 본회 사역 외의 목적으로 외부에 유출하거나 무단 이용해서는 안 되며, 임기 종료·인수인계 시 즉시 관리자 권한을 해제하고 관리자 코드를 변경하여야 합니다.'
         },
         {
           id: 'tos_8',
@@ -36168,11 +36464,14 @@ ${handleUrl}`);
     }
 
     function getVideoReactionStats(v) {
-      return computeReactionStatsGeneric(v, VIDEO_REACTION_EMOJIS, VIDEO_REACTION_VALID_KEYS);
+      const defs = getConfiguredVideoReactionEmojis();
+      const validSet = new Set(defs.map(e => e.key));
+      return computeReactionStatsGeneric(v, defs, validSet);
     }
 
     function buildVideoReactionBarHtml(v, mode = 'card') {
       if (!v || !v.id || v.status !== 'approved') return '';
+      const defs = getConfiguredVideoReactionEmojis();
       const stats = getVideoReactionStats(v);
       const isCcm = isCcmVideo(v);
       const ccmCls = isCcm ? ' ccm' : '';
@@ -36180,14 +36479,14 @@ ${handleUrl}`);
       const vidIdAttr = escapeJsAttr(idStr);
 
       if (mode === 'home') {
-        const activeItems = VIDEO_REACTION_EMOJIS.filter(item => (stats.counts[item.key] || 0) > 0);
+        const activeItems = defs.filter(item => (stats.counts[item.key] || 0) > 0);
         if (activeItems.length === 0) return '';
         return `
           <div class="video-reaction-bar" style="margin-top:5px;" data-vid-react-bar="${escapeHtml(idStr)}" data-vid-react-mode="home">
             ${activeItems.map(item => {
               const cnt = stats.counts[item.key] || 0;
               const isMine = stats.mine.has(item.key);
-              return `<button class="video-reaction-chip compact has-count${ccmCls}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(item.label)}" aria-label="${escapeHtml(item.label)} ${cnt}" onclick="event.stopPropagation(); toggleVideoReaction('${vidIdAttr}', '${item.key}')"><span class="vr-emoji">${item.emoji}</span><span class="vr-lbl">${escapeHtml(item.label)}</span><span class="vr-cnt">${cnt}</span></button>`;
+              return `<button class="video-reaction-chip compact has-count${ccmCls}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(item.label)}" aria-label="${escapeHtml(item.label)} ${cnt}" onclick="event.stopPropagation(); toggleVideoReaction('${vidIdAttr}', '${escapeJsAttr(item.key)}')"><span class="vr-emoji">${escapeHtml(item.emoji)}</span><span class="vr-lbl">${escapeHtml(item.label)}</span><span class="vr-cnt">${cnt}</span></button>`;
             }).join('')}
           </div>
         `;
@@ -36200,26 +36499,26 @@ ${handleUrl}`);
             <span>${stats.total > 0 ? `총 ${stats.total}개` : '첫 이모지를 눌러 보세요'}</span>
           </div>
           <div class="video-reaction-bar" style="margin-top:0;">
-            ${VIDEO_REACTION_EMOJIS.map(item => {
+            ${defs.map(item => {
               const cnt = stats.counts[item.key] || 0;
               const isMine = stats.mine.has(item.key);
-              return `<button class="video-reaction-chip${ccmCls}${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(item.label)}" aria-label="${escapeHtml(item.label)} ${cnt}" onclick="toggleVideoReaction('${vidIdAttr}', '${item.key}')"><span class="vr-emoji">${item.emoji}</span><span class="vr-lbl">${escapeHtml(item.label)}</span>${cnt > 0 ? `<span class="vr-cnt">${cnt}</span>` : ''}</button>`;
+              return `<button class="video-reaction-chip${ccmCls}${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(item.label)}" aria-label="${escapeHtml(item.label)} ${cnt}" onclick="toggleVideoReaction('${vidIdAttr}', '${escapeJsAttr(item.key)}')"><span class="vr-emoji">${escapeHtml(item.emoji)}</span><span class="vr-lbl">${escapeHtml(item.label)}</span>${cnt > 0 ? `<span class="vr-cnt">${cnt}</span>` : ''}</button>`;
             }).join('')}
           </div>
-          ${buildReactionWhoBreakdownHtml(VIDEO_REACTION_EMOJIS, stats, true)}
+          ${buildReactionWhoBreakdownHtml(defs, stats, true)}
         `;
       }
 
       return `
         <div data-vid-react-bar="${escapeHtml(idStr)}" data-vid-react-mode="card">
           <div class="video-reaction-bar">
-            ${VIDEO_REACTION_EMOJIS.map(item => {
+            ${defs.map(item => {
               const cnt = stats.counts[item.key] || 0;
               const isMine = stats.mine.has(item.key);
-              return `<button class="video-reaction-chip${ccmCls}${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(item.label)}" aria-label="${escapeHtml(item.label)} ${cnt}" onclick="event.stopPropagation(); toggleVideoReaction('${vidIdAttr}', '${item.key}')"><span class="vr-emoji">${item.emoji}</span><span class="vr-lbl">${escapeHtml(item.label)}</span>${cnt > 0 ? `<span class="vr-cnt">${cnt}</span>` : ''}</button>`;
+              return `<button class="video-reaction-chip${ccmCls}${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(item.label)}" aria-label="${escapeHtml(item.label)} ${cnt}" onclick="event.stopPropagation(); toggleVideoReaction('${vidIdAttr}', '${escapeJsAttr(item.key)}')"><span class="vr-emoji">${escapeHtml(item.emoji)}</span><span class="vr-lbl">${escapeHtml(item.label)}</span>${cnt > 0 ? `<span class="vr-cnt">${cnt}</span>` : ''}</button>`;
             }).join('')}
           </div>
-          ${buildReactionWhoCardSectionHtml(`video:${idStr}`, VIDEO_REACTION_EMOJIS, stats)}
+          ${buildReactionWhoCardSectionHtml(`video:${idStr}`, defs, stats)}
         </div>
       `;
     }
@@ -36270,9 +36569,11 @@ ${handleUrl}`);
       const user = getCurrentUser();
       const myKey = getMyVideoReactionKey();
       const myName = getMyReactionDisplayName();
+      const defs = getConfiguredVideoReactionEmojis();
+      const validSet = new Set(defs.map(e => e.key));
       const key = String(emojiKey || '').trim();
       const docId = String(videoDocId || '').trim();
-      if (!user || !myKey || !docId || !VIDEO_REACTION_VALID_KEYS.has(key)) return;
+      if (!user || !myKey || !docId || !validSet.has(key)) return;
       if (videoReactionBusySet.has(docId)) return;
 
       const idx = (videoItems || []).findIndex(x => String(x.id) === docId);
@@ -36287,7 +36588,7 @@ ${handleUrl}`);
         ? JSON.parse(JSON.stringify(target.reactionNames))
         : null;
       const curRaw = (prevReactions && Array.isArray(prevReactions[myKey]))
-        ? prevReactions[myKey].map(String).filter(k => VIDEO_REACTION_VALID_KEYS.has(k))
+        ? prevReactions[myKey].map(String).filter(k => validSet.has(k))
         : [];
       const hadKey = curRaw.includes(key);
       const nextList = hadKey
@@ -37405,7 +37706,7 @@ ${handleUrl}`);
         ${buildManageSectionHead({
           key: 'vid_main',
           defaultTitle: `${getTabIcon('manageVideos')} ${getTabLabel('manageVideos')}`,
-          rightHtml: '<button class="btn-admin" type="button" onclick="openVideoSubmitModal()">+ 영상 등록</button>'
+          rightHtml: '<div style="display:flex; gap:5px; align-items:center;"><button class="btn-sm" type="button" onclick="jumpToManageReactionEmojis()">😊 이모지</button><button class="btn-admin" type="button" onclick="openVideoSubmitModal()">+ 영상 등록</button></div>'
         })}
         <div class="info-box" style="margin-top:0; margin-bottom:10px;">
           • <b>구미제일감리교회 유튜브</b>와 <b>라이트 청년부</b> 채널이 공식 채널로 자동 등록되어 있습니다.<br>
