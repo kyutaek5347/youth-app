@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=259" />
+  <link rel="manifest" href="./manifest.json?v=260" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=259" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=259" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=260" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=260" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4368,14 +4368,11 @@
       gap: 5px;
       margin-top: 9px;
     }
-    .post-reaction-bar.in-banner {
-      margin-top: 10px;
-    }
     .post-reaction-chip {
       display: inline-flex;
       align-items: center;
       gap: 3.5px;
-      padding: 4px 8.5px;
+      padding: 4.5px 9px;
       border-radius: 999px;
       border: 1px solid #E2E8F0;
       background: #F8FAFC;
@@ -4417,29 +4414,64 @@
       min-width: 8px;
       text-align: center;
     }
-    .post-reaction-chip.banner-chip {
-      padding: 3px 8px;
+    .reaction-who-toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .reaction-who-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid #E2E8F0;
+      background: #F8FAFC;
+      color: #475569;
+      border-radius: 8px;
+      padding: 3.5px 8.5px;
       font-size: 11px;
-      background: rgba(255, 255, 255, 0.18);
-      border-color: rgba(255, 255, 255, 0.28);
-      color: #FFFFFF;
-      backdrop-filter: blur(4px);
+      font-weight: 700;
+      line-height: 1.35;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: left;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
     }
-    .post-reaction-chip.banner-chip.active {
-      background: rgba(255, 255, 255, 0.94);
-      border-color: #FFFFFF;
+    .reaction-who-btn:active {
+      background: #E2E8F0;
+    }
+    .reaction-who-list {
+      margin-top: 7px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      font-size: 11.5px;
+      color: #334155;
+      line-height: 1.55;
+    }
+    .reaction-who-list.in-modal {
+      background: #FFFFFF;
+      margin-top: 8px;
+    }
+    .reaction-who-line {
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
+      margin-bottom: 3px;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+    .reaction-who-line:last-child {
+      margin-bottom: 0;
+    }
+    .reaction-who-tag {
+      font-weight: 800;
       color: #0F172A;
-      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18);
-    }
-    .light-banner-text .post-reaction-chip.banner-chip {
-      background: rgba(15, 23, 42, 0.1);
-      border-color: rgba(15, 23, 42, 0.2);
-      color: #0F172A;
-    }
-    .light-banner-text .post-reaction-chip.banner-chip.active {
-      background: #111827;
-      border-color: #111827;
-      color: #FDE68A;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     .detail-reactions-box {
       margin: 0 0 14px;
@@ -4491,7 +4523,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=259" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=260" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -6350,8 +6382,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 259;
-    const APP_CACHE_NAME = 'right-youth-app-v10.159';
+    const APP_CLIENT_BUILD = 260;
+    const APP_CACHE_NAME = 'right-youth-app-v10.160';
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.156-log-archive';
     const SHEET_SCHEMA_TABS = [
@@ -7457,7 +7489,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=259" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=260" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7481,8 +7513,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=259', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=259', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=260', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=260', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -10117,9 +10149,6 @@
       homeContentPermError = false;
       if (homeBlocksLoaded) {
         applyScreen();
-        if (currentDetailKind === 'block' && currentDetailId && document.getElementById('detailModal').classList.contains('open')) {
-          if (typeof refreshOpenDetailReactions === 'function') refreshOpenDetailReactions();
-        }
       }
     }
 
@@ -13389,10 +13418,62 @@
     }
 
 
-    function getPostReactionStats(item) {
+    const expandedReactionWhoSet = new Set();
+
+    function getMyReactionDisplayName() {
+      const user = getCurrentUser();
+      if (!user) return '회원';
+      if (user.isSuperAdmin) {
+        return String(currentAdminName || user.name || '관리자').trim().slice(0, 20) || '관리자';
+      }
+      return String(user.name || (myMemberDoc && myMemberDoc.name) || '회원').trim().slice(0, 20) || '회원';
+    }
+
+    function decodeHexNameSafe(hexStr) {
+      const h = String(hexStr || '').trim();
+      if (!h || h.length % 2 !== 0 || !/^[0-9a-fA-F]+$/.test(h)) return '';
+      try {
+        const bytes = new Uint8Array(h.length / 2);
+        for (let i = 0; i < h.length; i += 2) {
+          bytes[i / 2] = parseInt(h.slice(i, i + 2), 16);
+        }
+        return new TextDecoder().decode(bytes).trim();
+      } catch {
+        return '';
+      }
+    }
+
+    function resolveReactionActorName(item, actorKey) {
+      const ak = String(actorKey || '').trim();
+      if (!ak) return '회원';
+      const myKey = (typeof getMyVideoReactionKey === 'function') ? getMyVideoReactionKey() : '';
+      if (myKey && ak === myKey) {
+        return getMyReactionDisplayName();
+      }
+      const namesMap = (item && item.reactionNames && typeof item.reactionNames === 'object') ? item.reactionNames : null;
+      if (namesMap && namesMap[ak] && String(namesMap[ak]).trim()) {
+        return String(namesMap[ak]).trim();
+      }
+      if (ak.startsWith('admin_')) {
+        const dec = decodeHexNameSafe(ak.slice(6));
+        if (dec) return dec;
+        return '관리자';
+      }
+      const foundMem = (Array.isArray(members) ? members : []).find(m => m && String(m.id) === ak);
+      if (foundMem && foundMem.name) return String(foundMem.name).trim();
+      return '청년부원';
+    }
+
+    function computeReactionStatsGeneric(item, emojiDefs, validKeySet) {
       const counts = {};
-      POST_REACTION_EMOJIS.forEach(e => { counts[e.key] = 0; });
+      const actorsByKey = {};
+      emojiDefs.forEach(e => {
+        counts[e.key] = 0;
+        actorsByKey[e.key] = [];
+      });
       const mine = new Set();
+      const allActors = [];
+      const seenAllActorKeys = new Set();
       let total = 0;
       const myKey = (typeof getMyVideoReactionKey === 'function') ? getMyVideoReactionKey() : '';
       const rawMap = (item && item.reactions && typeof item.reactions === 'object') ? item.reactions : null;
@@ -13401,65 +13482,118 @@
           const arr = rawMap[actorKey];
           if (!Array.isArray(arr)) return;
           const uniq = new Set();
+          const actorName = resolveReactionActorName(item, actorKey);
+          const isMe = !!(myKey && String(actorKey) === String(myKey));
+          let actorHasAny = false;
           arr.forEach(ek => {
             const k = String(ek || '').trim();
-            if (!POST_REACTION_VALID_KEYS.has(k) || uniq.has(k)) return;
+            if (!validKeySet.has(k) || uniq.has(k)) return;
             uniq.add(k);
             counts[k] = (counts[k] || 0) + 1;
+            actorsByKey[k].push({ key: String(actorKey), name: actorName, isMe });
             total++;
-            if (myKey && String(actorKey) === String(myKey)) {
-              mine.add(k);
-            }
+            actorHasAny = true;
+            if (isMe) mine.add(k);
           });
+          if (actorHasAny && !seenAllActorKeys.has(String(actorKey))) {
+            seenAllActorKeys.add(String(actorKey));
+            allActors.push({ key: String(actorKey), name: actorName, isMe });
+          }
         });
       }
-      return { counts, mine, total };
+      // 본인 이름을 먼저 보여주고 나머지는 이름순 정렬
+      const sortActors = (list) => list.slice().sort((a, b) => (a.isMe === b.isMe ? a.name.localeCompare(b.name, 'ko') : (a.isMe ? -1 : 1)));
+      emojiDefs.forEach(e => { actorsByKey[e.key] = sortActors(actorsByKey[e.key]); });
+      return { counts, mine, total, actorsByKey, allActors: sortActors(allActors) };
+    }
+
+    function buildReactionWhoBreakdownHtml(emojiDefs, stats, inModal = false) {
+      if (!stats || stats.total <= 0) return '';
+      const rows = emojiDefs
+        .filter(e => (stats.counts[e.key] || 0) > 0)
+        .map(e => {
+          const list = stats.actorsByKey[e.key] || [];
+          const namesTxt = list.map(a => a.isMe ? `${escapeHtml(a.name)}(나)` : escapeHtml(a.name)).join(', ');
+          return `
+            <div class="reaction-who-line">
+              <span class="reaction-who-tag">${e.emoji} ${escapeHtml(e.label)} (${list.length}):</span>
+              <span>${namesTxt || '-'}</span>
+            </div>
+          `;
+        });
+      if (rows.length === 0) return '';
+      return `<div class="reaction-who-list${inModal ? ' in-modal' : ''}">${rows.join('')}</div>`;
+    }
+
+    function buildReactionWhoCardSectionHtml(scopeKey, emojiDefs, stats) {
+      if (!stats || stats.total <= 0 || !stats.allActors || stats.allActors.length === 0) return '';
+      const isOpen = expandedReactionWhoSet.has(scopeKey);
+      const previewNames = stats.allActors.slice(0, 3).map(a => a.isMe ? `${escapeHtml(a.name)}(나)` : escapeHtml(a.name)).join(', ');
+      const extraCnt = Math.max(0, stats.allActors.length - 3);
+      const summaryTxt = extraCnt > 0 ? `${previewNames} 외 ${extraCnt}명` : previewNames;
+      const scopeAttr = escapeJsAttr(scopeKey);
+      return `
+        <div class="reaction-who-toggle-row">
+          <button class="reaction-who-btn" type="button" onclick="event.stopPropagation(); toggleReactionWhoList('${scopeAttr}')">
+            <span>👥 ${summaryTxt}</span>
+            <span style="opacity:0.75;">${isOpen ? '▲' : '▼'}</span>
+          </button>
+        </div>
+        ${isOpen ? buildReactionWhoBreakdownHtml(emojiDefs, stats, false) : ''}
+      `;
+    }
+
+    window.toggleReactionWhoList = (scopeKey) => {
+      const k = String(scopeKey || '').trim();
+      if (!k) return;
+      if (expandedReactionWhoSet.has(k)) expandedReactionWhoSet.delete(k);
+      else expandedReactionWhoSet.add(k);
+      if (k.startsWith('notice:')) {
+        refreshPostReactionBarsInDom('notice', k.slice(7));
+      } else if (k.startsWith('video:')) {
+        refreshVideoReactionBarsInDom(k.slice(6));
+      }
+    };
+
+    function getPostReactionStats(item) {
+      return computeReactionStatsGeneric(item, POST_REACTION_EMOJIS, POST_REACTION_VALID_KEYS);
     }
 
     function buildPostReactionBarHtml(kind, item, mode = 'card') {
+      // 배너에는 이모지 반응을 표시하지 않음 (공지·광고 글 전용)
+      if (kind === 'block') return '';
       if (!item || !item.id || getPublishState(item) !== 'live') return '';
-      const k = kind === 'block' ? 'block' : 'notice';
       const idStr = String(item.id);
       const idAttr = escapeJsAttr(idStr);
       const stats = getPostReactionStats(item);
 
-      if (mode === 'banner') {
-        const activeItems = POST_REACTION_EMOJIS.filter(e => (stats.counts[e.key] || 0) > 0);
-        if (activeItems.length === 0) return '';
-        return `
-          <div class="post-reaction-bar in-banner" data-post-react-bar="${k}:${escapeHtml(idStr)}" data-post-react-mode="banner">
-            ${activeItems.map(e => {
-              const cnt = stats.counts[e.key] || 0;
-              const isMine = stats.mine.has(e.key);
-              return `<button class="post-reaction-chip banner-chip${isMine ? ' active' : ''}" type="button" title="${escapeHtml(e.label)}" aria-label="${escapeHtml(e.label)} ${cnt}" onclick="event.stopPropagation(); togglePostReaction('${k}', '${idAttr}', '${e.key}')"><span class="pr-emoji">${e.emoji}</span><span class="pr-cnt">${cnt}</span></button>`;
-            }).join('')}
-          </div>
-        `;
-      }
-
       if (mode === 'detail') {
         return `
           <div class="detail-reactions-head">
-            <span>✨ 이 소식에 이모지로 반응 남기기</span>
+            <span>✨ 이 공지·광고에 이모지 남기기</span>
             <span>${stats.total > 0 ? `총 ${stats.total}개` : '첫 이모지를 눌러 보세요'}</span>
           </div>
           <div class="post-reaction-bar" style="margin-top:0;">
             ${POST_REACTION_EMOJIS.map(e => {
               const cnt = stats.counts[e.key] || 0;
               const isMine = stats.mine.has(e.key);
-              return `<button class="post-reaction-chip${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(e.label)}" aria-label="${escapeHtml(e.label)} ${cnt}" onclick="togglePostReaction('${k}', '${idAttr}', '${e.key}')"><span class="pr-emoji">${e.emoji}</span><span class="pr-lbl">${escapeHtml(e.label)}</span>${cnt > 0 ? `<span class="pr-cnt">${cnt}</span>` : ''}</button>`;
+              return `<button class="post-reaction-chip${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(e.label)}" aria-label="${escapeHtml(e.label)} ${cnt}" onclick="togglePostReaction('notice', '${idAttr}', '${e.key}')"><span class="pr-emoji">${e.emoji}</span><span class="pr-lbl">${escapeHtml(e.label)}</span>${cnt > 0 ? `<span class="pr-cnt">${cnt}</span>` : ''}</button>`;
             }).join('')}
           </div>
+          ${buildReactionWhoBreakdownHtml(POST_REACTION_EMOJIS, stats, true)}
         `;
       }
 
       return `
-        <div class="post-reaction-bar" data-post-react-bar="${k}:${escapeHtml(idStr)}" data-post-react-mode="card">
-          ${POST_REACTION_EMOJIS.map(e => {
-            const cnt = stats.counts[e.key] || 0;
-            const isMine = stats.mine.has(e.key);
-            return `<button class="post-reaction-chip${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(e.label)}" aria-label="${escapeHtml(e.label)} ${cnt}" onclick="event.stopPropagation(); togglePostReaction('${k}', '${idAttr}', '${e.key}')"><span class="pr-emoji">${e.emoji}</span>${cnt > 0 ? `<span class="pr-cnt">${cnt}</span>` : ''}</button>`;
-          }).join('')}
+        <div data-post-react-bar="notice:${escapeHtml(idStr)}" data-post-react-mode="card">
+          <div class="post-reaction-bar">
+            ${POST_REACTION_EMOJIS.map(e => {
+              const cnt = stats.counts[e.key] || 0;
+              const isMine = stats.mine.has(e.key);
+              return `<button class="post-reaction-chip${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(e.label)}" aria-label="${escapeHtml(e.label)} ${cnt}" onclick="event.stopPropagation(); togglePostReaction('notice', '${idAttr}', '${e.key}')"><span class="pr-emoji">${e.emoji}</span><span class="pr-lbl">${escapeHtml(e.label)}</span>${cnt > 0 ? `<span class="pr-cnt">${cnt}</span>` : ''}</button>`;
+            }).join('')}
+          </div>
+          ${buildReactionWhoCardSectionHtml(`notice:${idStr}`, POST_REACTION_EMOJIS, stats)}
         </div>
       `;
     }
@@ -13468,33 +13602,32 @@
       const modal = document.getElementById('detailModal');
       const box = document.getElementById('detailReactionsBox');
       if (!box) return;
-      if (!modal || !modal.classList.contains('open') || !currentDetailId || !currentDetailKind) {
+      // 배너(block) 상세 보기에는 이모지 영역 숨김
+      if (!modal || !modal.classList.contains('open') || !currentDetailId || currentDetailKind !== 'notice') {
         box.classList.add('hidden');
         box.innerHTML = '';
         return;
       }
-      const list = currentDetailKind === 'block' ? (blocks || []) : (notices || []);
-      const target = list.find(x => String(x.id) === String(currentDetailId)) || null;
+      const target = (notices || []).find(x => String(x.id) === String(currentDetailId)) || null;
       if (!target || getPublishState(target) !== 'live') {
         box.classList.add('hidden');
         box.innerHTML = '';
         return;
       }
-      box.innerHTML = buildPostReactionBarHtml(currentDetailKind, target, 'detail');
+      box.innerHTML = buildPostReactionBarHtml('notice', target, 'detail');
       box.classList.remove('hidden');
     }
 
     function refreshPostReactionBarsInDom(kind, docId) {
-      const k = kind === 'block' ? 'block' : 'notice';
+      if (kind === 'block') return;
       const idStr = String(docId || '');
-      const list = k === 'block' ? (blocks || []) : (notices || []);
-      const target = list.find(x => String(x.id) === idStr) || null;
+      const target = (notices || []).find(x => String(x.id) === idStr) || null;
       if (!target) return;
-      const attrKey = `${k}:${idStr}`;
+      const attrKey = `notice:${idStr}`;
       const sel = `[data-post-react-bar="${CSS.escape ? CSS.escape(attrKey) : attrKey}"]`;
       document.querySelectorAll(sel).forEach(el => {
         const mode = el.getAttribute('data-post-react-mode') || 'card';
-        const htmlStr = buildPostReactionBarHtml(k, target, mode).trim();
+        const htmlStr = buildPostReactionBarHtml('notice', target, mode).trim();
         if (htmlStr) {
           const tmp = document.createElement('div');
           tmp.innerHTML = htmlStr;
@@ -13503,33 +13636,32 @@
           el.remove();
         }
       });
-      if (currentDetailKind === k && String(currentDetailId) === idStr) {
+      if (currentDetailKind === 'notice' && String(currentDetailId) === idStr) {
         refreshOpenDetailReactions();
       }
     }
 
     window.togglePostReaction = async (kind, docId, emojiKey) => {
+      if (kind === 'block') return;
       const user = getCurrentUser();
       const myKey = (typeof getMyVideoReactionKey === 'function') ? getMyVideoReactionKey() : '';
-      const k = kind === 'block' ? 'block' : 'notice';
+      const myName = getMyReactionDisplayName();
       const key = String(emojiKey || '').trim();
       const idStr = String(docId || '').trim();
       if (!user || !myKey || !idStr || !POST_REACTION_VALID_KEYS.has(key)) return;
-      const busyKey = `${k}:${idStr}`;
+      const busyKey = `notice:${idStr}`;
       if (postReactionBusySet.has(busyKey)) return;
 
-      const list = k === 'block' ? (blocks || []) : (notices || []);
-      const target = list.find(x => String(x.id) === idStr) || null;
+      const target = (notices || []).find(x => String(x.id) === idStr) || null;
       if (!target || getPublishState(target) !== 'live') return;
 
-      const colName = target._col || (
-        k === 'block'
-          ? (isServerRestrictedItem(target) ? 'adminBlocks' : 'homeBlocks')
-          : (isServerRestrictedItem(target) ? 'adminNotices' : 'notices')
-      );
+      const colName = target._col || (isServerRestrictedItem(target) ? 'adminNotices' : 'notices');
 
       const prevReactions = (target.reactions && typeof target.reactions === 'object')
         ? JSON.parse(JSON.stringify(target.reactions))
+        : null;
+      const prevNames = (target.reactionNames && typeof target.reactionNames === 'object')
+        ? JSON.parse(JSON.stringify(target.reactionNames))
         : null;
       const curRaw = (prevReactions && Array.isArray(prevReactions[myKey]))
         ? prevReactions[myKey].map(String).filter(ek => POST_REACTION_VALID_KEYS.has(ek))
@@ -13540,20 +13672,40 @@
         : Array.from(new Set([...curRaw, key]));
 
       const nextMap = prevReactions ? { ...prevReactions } : {};
-      if (nextList.length > 0) nextMap[myKey] = nextList;
-      else delete nextMap[myKey];
+      const nextNamesMap = prevNames ? { ...prevNames } : {};
+      if (nextList.length > 0) {
+        nextMap[myKey] = nextList;
+        nextNamesMap[myKey] = myName;
+      } else {
+        delete nextMap[myKey];
+        delete nextNamesMap[myKey];
+      }
       target.reactions = nextMap;
-      refreshPostReactionBarsInDom(k, idStr);
+      target.reactionNames = nextNamesMap;
+      refreshPostReactionBarsInDom('notice', idStr);
 
       postReactionBusySet.add(busyKey);
       try {
-        const fieldPath = `reactions.${myKey}`;
-        await db.collection(colName).doc(idStr).update({
-          [fieldPath]: nextList.length > 0 ? nextList : FieldValue.delete()
-        });
+        const reactPath = `reactions.${myKey}`;
+        const namePath = `reactionNames.${myKey}`;
+        try {
+          await db.collection(colName).doc(idStr).update({
+            [reactPath]: nextList.length > 0 ? nextList : FieldValue.delete(),
+            [namePath]: nextList.length > 0 ? myName : FieldValue.delete()
+          });
+        } catch (firstErr) {
+          if (firstErr && firstErr.code === 'permission-denied') {
+            await db.collection(colName).doc(idStr).update({
+              [reactPath]: nextList.length > 0 ? nextList : FieldValue.delete()
+            });
+          } else {
+            throw firstErr;
+          }
+        }
       } catch (err) {
         target.reactions = prevReactions || {};
-        refreshPostReactionBarsInDom(k, idStr);
+        target.reactionNames = prevNames || {};
+        refreshPostReactionBarsInDom('notice', idStr);
         console.error('togglePostReaction error:', err);
         if (err && err.code === 'permission-denied') {
           showToast('⚠️ 이모지 반응을 저장하려면 관리자가 최신 Firestore 규칙을 게시해야 합니다.', 'warn');
@@ -13581,7 +13733,6 @@
             ${pinnedNew ? '<span class="new-badge">NEW</span>' : ''}
           </div>
           <h2 class="hero-title" style="margin-bottom:0;">${escapeHtml(pinned.title)}</h2>
-          ${buildPostReactionBarHtml('notice', pinned, 'banner')}
         </div>
       `;
     }
@@ -13590,8 +13741,7 @@
       if (!b) return '';
       const blkNew = isBlockUnread(b, user);
       const hasDesc = !!String(b.desc || '').trim();
-      const isLiveBlk = getPublishState(b) === 'live';
-      const clickable = hasDesc || blkNew || isLiveBlk;
+      const clickable = hasDesc || blkNew;
       const adminEditBtn = (user && user.isSuperAdmin)
         ? `<button class="banner-quick-edit-btn" type="button" onclick="event.stopPropagation(); openEditBlockModal('${escapeJsAttr(b.id)}')">✏️ 수정</button>`
         : '';
@@ -13599,7 +13749,6 @@
       const lightCls = isBannerThemeLight(b.theme) ? 'light-banner-text' : '';
       const clickAttr = clickable ? `onclick="openBlockDetail('${escapeJsAttr(b.id)}')"` : '';
       const cursorStyle = clickable ? 'cursor:pointer;' : '';
-      const reactBannerHtml = buildPostReactionBarHtml('block', b, 'banner');
 
       if (b.type === 'newcomer_card') {
         return `
@@ -13611,7 +13760,6 @@
               ${blkNew ? '<span class="new-badge">NEW</span>' : ''}
             </div>
             <h3 class="hero-title" style="font-size:17px; margin-bottom:0;">${escapeHtml(b.title)}</h3>
-            ${reactBannerHtml}
           </div>
         `;
       }
@@ -13625,7 +13773,6 @@
               ${blkNew ? '<span class="new-badge">NEW</span>' : ''}
             </div>
             <h3 class="hero-title" style="font-size:16.5px; margin-bottom:0;">${escapeHtml(b.title)}</h3>
-            ${reactBannerHtml}
           </div>
         `;
       }
@@ -13638,7 +13785,6 @@
             ${blkNew ? '<span class="new-badge">NEW</span>' : ''}
           </div>
           <h3 class="hero-title" style="font-size:16.5px; margin-bottom:0;">${escapeHtml(b.title)}</h3>
-          ${reactBannerHtml}
         </div>
       `;
     }
@@ -14029,8 +14175,7 @@
         applyScreen();
       }
       const descTxt = String(b.desc || '').trim();
-      const isLiveBlk = getPublishState(b) === 'live';
-      if (!descTxt && !isLiveBlk) return;
+      if (!descTxt) return;
       currentDetailKind = 'block';
       currentDetailId = String(id);
       document.getElementById('detailTag').textContent = String(b.badge || BLOCK_TYPE_NAMES[b.type] || '안내').trim();
@@ -14043,15 +14188,19 @@
       const bodyEl = document.getElementById('detailBody');
       if (bodyEl) {
         bodyEl.textContent = descTxt;
-        bodyEl.classList.toggle('hidden', !descTxt);
+        bodyEl.classList.remove('hidden');
       }
       const srcEl = document.getElementById('detailSource');
       if (srcEl) {
         srcEl.textContent = '';
         srcEl.classList.add('hidden');
       }
+      const reactBox = document.getElementById('detailReactionsBox');
+      if (reactBox) {
+        reactBox.classList.add('hidden');
+        reactBox.innerHTML = '';
+      }
       document.getElementById('detailModal').classList.add('open');
-      refreshOpenDetailReactions();
     };
 
     // ==================== 12. 관리 센터 ====================
@@ -36012,30 +36161,7 @@ ${handleUrl}`);
     }
 
     function getVideoReactionStats(v) {
-      const counts = {};
-      VIDEO_REACTION_EMOJIS.forEach(item => { counts[item.key] = 0; });
-      const mine = new Set();
-      let total = 0;
-      const myKey = getMyVideoReactionKey();
-      const rawMap = (v && v.reactions && typeof v.reactions === 'object') ? v.reactions : null;
-      if (rawMap) {
-        Object.keys(rawMap).forEach(actorKey => {
-          const arr = rawMap[actorKey];
-          if (!Array.isArray(arr)) return;
-          const uniq = new Set();
-          arr.forEach(ek => {
-            const k = String(ek || '').trim();
-            if (!VIDEO_REACTION_VALID_KEYS.has(k) || uniq.has(k)) return;
-            uniq.add(k);
-            counts[k] = (counts[k] || 0) + 1;
-            total++;
-            if (myKey && String(actorKey) === String(myKey)) {
-              mine.add(k);
-            }
-          });
-        });
-      }
-      return { counts, mine, total };
+      return computeReactionStatsGeneric(v, VIDEO_REACTION_EMOJIS, VIDEO_REACTION_VALID_KEYS);
     }
 
     function buildVideoReactionBarHtml(v, mode = 'card') {
@@ -36043,17 +36169,18 @@ ${handleUrl}`);
       const stats = getVideoReactionStats(v);
       const isCcm = isCcmVideo(v);
       const ccmCls = isCcm ? ' ccm' : '';
-      const vidIdAttr = escapeJsAttr(String(v.id));
+      const idStr = String(v.id);
+      const vidIdAttr = escapeJsAttr(idStr);
 
       if (mode === 'home') {
         const activeItems = VIDEO_REACTION_EMOJIS.filter(item => (stats.counts[item.key] || 0) > 0);
         if (activeItems.length === 0) return '';
         return `
-          <div class="video-reaction-bar" style="margin-top:5px;" data-vid-react-bar="${escapeHtml(String(v.id))}" data-vid-react-mode="home">
+          <div class="video-reaction-bar" style="margin-top:5px;" data-vid-react-bar="${escapeHtml(idStr)}" data-vid-react-mode="home">
             ${activeItems.map(item => {
               const cnt = stats.counts[item.key] || 0;
               const isMine = stats.mine.has(item.key);
-              return `<button class="video-reaction-chip compact has-count${ccmCls}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(item.label)}" aria-label="${escapeHtml(item.label)} ${cnt}" onclick="event.stopPropagation(); toggleVideoReaction('${vidIdAttr}', '${item.key}')"><span class="vr-emoji">${item.emoji}</span><span class="vr-cnt">${cnt}</span></button>`;
+              return `<button class="video-reaction-chip compact has-count${ccmCls}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(item.label)}" aria-label="${escapeHtml(item.label)} ${cnt}" onclick="event.stopPropagation(); toggleVideoReaction('${vidIdAttr}', '${item.key}')"><span class="vr-emoji">${item.emoji}</span><span class="vr-lbl">${escapeHtml(item.label)}</span><span class="vr-cnt">${cnt}</span></button>`;
             }).join('')}
           </div>
         `;
@@ -36072,16 +36199,20 @@ ${handleUrl}`);
               return `<button class="video-reaction-chip${ccmCls}${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(item.label)}" aria-label="${escapeHtml(item.label)} ${cnt}" onclick="toggleVideoReaction('${vidIdAttr}', '${item.key}')"><span class="vr-emoji">${item.emoji}</span><span class="vr-lbl">${escapeHtml(item.label)}</span>${cnt > 0 ? `<span class="vr-cnt">${cnt}</span>` : ''}</button>`;
             }).join('')}
           </div>
+          ${buildReactionWhoBreakdownHtml(VIDEO_REACTION_EMOJIS, stats, true)}
         `;
       }
 
       return `
-        <div class="video-reaction-bar" data-vid-react-bar="${escapeHtml(String(v.id))}" data-vid-react-mode="card">
-          ${VIDEO_REACTION_EMOJIS.map(item => {
-            const cnt = stats.counts[item.key] || 0;
-            const isMine = stats.mine.has(item.key);
-            return `<button class="video-reaction-chip${ccmCls}${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(item.label)}" aria-label="${escapeHtml(item.label)} ${cnt}" onclick="event.stopPropagation(); toggleVideoReaction('${vidIdAttr}', '${item.key}')"><span class="vr-emoji">${item.emoji}</span>${cnt > 0 ? `<span class="vr-cnt">${cnt}</span>` : ''}</button>`;
-          }).join('')}
+        <div data-vid-react-bar="${escapeHtml(idStr)}" data-vid-react-mode="card">
+          <div class="video-reaction-bar">
+            ${VIDEO_REACTION_EMOJIS.map(item => {
+              const cnt = stats.counts[item.key] || 0;
+              const isMine = stats.mine.has(item.key);
+              return `<button class="video-reaction-chip${ccmCls}${cnt > 0 ? ' has-count' : ''}${isMine ? ' active' : ''}" type="button" title="${escapeHtml(item.label)}" aria-label="${escapeHtml(item.label)} ${cnt}" onclick="event.stopPropagation(); toggleVideoReaction('${vidIdAttr}', '${item.key}')"><span class="vr-emoji">${item.emoji}</span><span class="vr-lbl">${escapeHtml(item.label)}</span>${cnt > 0 ? `<span class="vr-cnt">${cnt}</span>` : ''}</button>`;
+            }).join('')}
+          </div>
+          ${buildReactionWhoCardSectionHtml(`video:${idStr}`, VIDEO_REACTION_EMOJIS, stats)}
         </div>
       `;
     }
@@ -36110,11 +36241,11 @@ ${handleUrl}`);
       if (!rec) return;
       document.querySelectorAll(`[data-vid-react-bar="${CSS.escape ? CSS.escape(String(videoDocId)) : String(videoDocId)}"]`).forEach(el => {
         const mode = el.getAttribute('data-vid-react-mode') || 'card';
-        const tmp = document.createElement('div');
-        tmp.innerHTML = buildVideoReactionBarHtml(rec, mode);
-        const nextEl = tmp.firstElementChild;
-        if (nextEl) {
-          el.replaceWith(nextEl);
+        const htmlStr = buildVideoReactionBarHtml(rec, mode).trim();
+        if (htmlStr) {
+          const tmp = document.createElement('div');
+          tmp.innerHTML = htmlStr;
+          if (tmp.firstElementChild) el.replaceWith(tmp.firstElementChild);
         } else {
           el.remove();
         }
@@ -36127,6 +36258,7 @@ ${handleUrl}`);
     window.toggleVideoReaction = async (videoDocId, emojiKey) => {
       const user = getCurrentUser();
       const myKey = getMyVideoReactionKey();
+      const myName = getMyReactionDisplayName();
       const key = String(emojiKey || '').trim();
       const docId = String(videoDocId || '').trim();
       if (!user || !myKey || !docId || !VIDEO_REACTION_VALID_KEYS.has(key)) return;
@@ -36140,6 +36272,9 @@ ${handleUrl}`);
       const prevReactions = (target.reactions && typeof target.reactions === 'object')
         ? JSON.parse(JSON.stringify(target.reactions))
         : null;
+      const prevNames = (target.reactionNames && typeof target.reactionNames === 'object')
+        ? JSON.parse(JSON.stringify(target.reactionNames))
+        : null;
       const curRaw = (prevReactions && Array.isArray(prevReactions[myKey]))
         ? prevReactions[myKey].map(String).filter(k => VIDEO_REACTION_VALID_KEYS.has(k))
         : [];
@@ -36150,20 +36285,39 @@ ${handleUrl}`);
 
       // 낙관적 즉시 UI 반영 (재생 중인 영상 끊김 없음)
       const nextMap = prevReactions ? { ...prevReactions } : {};
-      if (nextList.length > 0) nextMap[myKey] = nextList;
-      else delete nextMap[myKey];
+      const nextNamesMap = prevNames ? { ...prevNames } : {};
+      if (nextList.length > 0) {
+        nextMap[myKey] = nextList;
+        nextNamesMap[myKey] = myName;
+      } else {
+        delete nextMap[myKey];
+        delete nextNamesMap[myKey];
+      }
       target.reactions = nextMap;
+      target.reactionNames = nextNamesMap;
       refreshVideoReactionBarsInDom(docId);
 
       videoReactionBusySet.add(docId);
       try {
-        const fieldPath = `reactions.${myKey}`;
-        await db.collection('videos').doc(docId).update({
-          [fieldPath]: nextList.length > 0 ? nextList : FieldValue.delete()
-        });
+        const reactPath = `reactions.${myKey}`;
+        const namePath = `reactionNames.${myKey}`;
+        try {
+          await db.collection('videos').doc(docId).update({
+            [reactPath]: nextList.length > 0 ? nextList : FieldValue.delete(),
+            [namePath]: nextList.length > 0 ? myName : FieldValue.delete()
+          });
+        } catch (firstErr) {
+          if (firstErr && firstErr.code === 'permission-denied') {
+            await db.collection('videos').doc(docId).update({
+              [reactPath]: nextList.length > 0 ? nextList : FieldValue.delete()
+            });
+          } else {
+            throw firstErr;
+          }
+        }
       } catch (err) {
-        // 실패 시 원래 상태로 안전 복구
         target.reactions = prevReactions || {};
+        target.reactionNames = prevNames || {};
         refreshVideoReactionBarsInDom(docId);
         console.error('toggleVideoReaction error:', err);
         if (err && err.code === 'permission-denied') {
