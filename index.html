@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=269" />
+  <link rel="manifest" href="./manifest.json?v=270" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=269" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=269" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=270" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=270" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4637,7 +4637,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=269" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=270" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -6498,8 +6498,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 269;
-    const APP_CACHE_NAME = 'right-youth-app-v10.169';
+    const APP_CLIENT_BUILD = 270;
+    const APP_CACHE_NAME = 'right-youth-app-v10.170';
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.156-log-archive';
     const SHEET_SCHEMA_TABS = [
@@ -6663,20 +6663,20 @@
     };
     const MAX_REACTION_EMOJI_ITEMS = 10;
     const DEFAULT_VIDEO_REACTION_EMOJIS = [
-      { key: 'amen', emoji: '🙏', label: '아멘' },
-      { key: 'heart', emoji: '❤️', label: '좋아요' },
-      { key: 'grace', emoji: '🙌', label: '은혜' },
-      { key: 'touched', emoji: '🥹', label: '감동' },
-      { key: 'fire', emoji: '🔥', label: '도전' },
-      { key: 'clap', emoji: '👏', label: '감사' }
+      { key: 'amen', emoji: '__R_EMO_PRAY__', label: '아멘' },
+      { key: 'heart', emoji: '__R_EMO_HEART__', label: '좋아요' },
+      { key: 'grace', emoji: '__R_EMO_HANDS__', label: '은혜' },
+      { key: 'touched', emoji: '__R_EMO_TEARS__', label: '감동' },
+      { key: 'fire', emoji: '__R_EMO_FIRE__', label: '도전' },
+      { key: 'clap', emoji: '__R_EMO_CLAP__', label: '감사' }
     ];
     const DEFAULT_POST_REACTION_EMOJIS = [
-      { key: 'check', emoji: '👍', label: '확인' },
-      { key: 'heart', emoji: '❤️', label: '좋아요' },
-      { key: 'amen', emoji: '🙏', label: '아멘' },
-      { key: 'cheer', emoji: '🙌', label: '기대' },
-      { key: 'clap', emoji: '👏', label: '감사' },
-      { key: 'party', emoji: '🎉', label: '축하' }
+      { key: 'check', emoji: '__R_EMO_THUMBS__', label: '확인' },
+      { key: 'heart', emoji: '__R_EMO_HEART__', label: '좋아요' },
+      { key: 'amen', emoji: '__R_EMO_PRAY__', label: '아멘' },
+      { key: 'cheer', emoji: '__R_EMO_HANDS__', label: '기대' },
+      { key: 'clap', emoji: '__R_EMO_CLAP__', label: '감사' },
+      { key: 'party', emoji: '__R_EMO_PARTY__', label: '축하' }
     ];
     function normalizeReactionEmojiList(rawList, fallbackList) {
       if (!Array.isArray(rawList)) return structuredClone(fallbackList);
@@ -7788,7 +7788,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=269" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=270" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7812,8 +7812,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=269', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=269', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=270', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=270', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -9247,8 +9247,8 @@
       if (!text) return;
       let v = variant;
       if (!v) {
-        if (/^(❌|🚨)|실패|오류|권한이 없|일치하지 않|올바른|입력해 주세|선택해 주세|불가/.test(text)) v = 'err';
-        else if (/^⚠️|구버전|주의|잠시 후|미생성|남아 있/.test(text)) v = 'warn';
+        if (/^(?:ERR_ICON|WARN_ICON)|실패|오류|권한이 없|일치하지 않|올바른|입력해 주세|선택해 주세|불가/.test(text)) v = 'err';
+        else if (/^(?:WARN_ICON|WAIT_ICON|LOCK_ICON|SYNC_ICON|EMPTY_ICON)|구버전|주의|잠시 후|미생성|남아 있/.test(text)) v = 'warn';
         else if (/^(✅|💾|🔄|🎉|🧹|🟢|🛡️)|저장되었|완료|변경되었|등록되었|삭제되었|동기화했|복원되었|허용되었|켜졌|해제되었/.test(text)) v = 'ok';
       }
       el.className = 'toast show' + (v ? ` ${v}` : '');
@@ -18935,7 +18935,7 @@
           </div>
           ${canAdd ? `
             <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
-              <input id="${emojiInputId}" class="emoji-input" maxlength="6" placeholder="😊" title="추가할 이모지 입력" />
+              <input id="${emojiInputId}" class="emoji-input" maxlength="6" placeholder="__R_EMO_SMILE__" title="추가할 이모지 입력" />
               <input id="${labelInputId}" class="form-input" style="flex:1; padding:7px 10px; font-size:13px;" maxlength="12" placeholder="이모지 명칭 (예: 축복, 은혜, 최고)" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleAddReactionEmoji('${sc}');}" />
               <button class="btn-sm primary" type="button" style="white-space:nowrap; padding:8px 11px;" onclick="handleAddReactionEmoji('${sc}')">+ 추가</button>
             </div>
@@ -19478,12 +19478,12 @@
       const item = cur[idx];
       if (!item) return;
 
-      const nextEmojiRaw = prompt(`[${item.emoji} ${item.label}]의 새 이모지를 입력해 주세요:`, item.emoji);
+      const nextEmojiRaw = prompt(`[${item.emoji} ${item.label}]__R_PR_EMO__`, item.emoji);
       if (nextEmojiRaw === null) return;
       const nextEmoji = String(nextEmojiRaw || '').trim().slice(0, 8);
       if (!nextEmoji) return showToast('이모지를 비워둘 수 없습니다.');
 
-      const nextLabelRaw = prompt(`[${nextEmoji}] 이모지의 새 명칭(최대 12자)을 입력해 주세요:`, item.label);
+      const nextLabelRaw = prompt(`[${nextEmoji}] __R_PR_LBL__`, item.label);
       if (nextLabelRaw === null) return;
       const nextLabel = String(nextLabelRaw || '').trim().slice(0, 12);
       if (!nextLabel) return showToast('이모지 명칭을 입력해 주세요.');
@@ -19516,8 +19516,7 @@
       const item = cur[idx];
       if (!item) return;
       if (cur.length <= 1) return showToast('최소 1개 이상의 이모지는 유지해야 합니다.');
-      if (!confirm(`[${item.emoji} ${item.label}] 이모지를 삭제할까요?
-(삭제 내역은 보안 로그에 기록됩니다.)`)) return;
+      if (!confirm(`[${item.emoji} ${item.label}] __R_CF_DEL__`)) return;
 
       const next = cur.filter((_, i) => i !== idx);
       await persistReactionEmojiList(
@@ -19559,7 +19558,7 @@
       const sc = scope === 'video' ? 'video' : 'post';
       const defaults = sc === 'video' ? structuredClone(DEFAULT_VIDEO_REACTION_EMOJIS) : structuredClone(DEFAULT_POST_REACTION_EMOJIS);
       const label = sc === 'video' ? '설교·CCM 반응 이모지' : '공지·광고 반응 이모지';
-      if (!confirm(`${label}를 기본 구성(${defaults.map(x => `${x.emoji} ${x.label}`).join(', ')})으로 복원할까요?`)) return;
+      if (!confirm(`${label}__R_CF_RST__ (${defaults.map(x => `${x.emoji} ${x.label}`).join(', ')})`)) return;
       const cur = sc === 'video' ? getConfiguredVideoReactionEmojis() : getConfiguredPostReactionEmojis();
       await persistReactionEmojiList(
         sc,
