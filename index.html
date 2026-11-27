@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=256" />
+  <link rel="manifest" href="./manifest.json?v=257" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=256" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=256" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=257" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=257" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4215,6 +4215,54 @@
       padding: 10px 11px;
       margin-bottom: 8px;
     }
+    /* v10.157 관리 상단 탭별 요약 설명 바 */
+    .manage-tab-intro {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);
+      border: 1px solid #CBD5E1;
+      border-left: 4px solid #111827;
+      border-radius: 13px;
+      padding: 10px 12px;
+      margin-bottom: 11px;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+    }
+    .manage-tab-intro-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: #111827;
+      color: #FDE68A;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .manage-tab-intro-body {
+      min-width: 0;
+      flex: 1;
+    }
+    .manage-tab-intro-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1.32;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .manage-tab-intro-desc {
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.46;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
   </style>
 </head>
 <body>
@@ -4239,7 +4287,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=256" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=257" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4560,6 +4608,7 @@
         <section id="viewManage" class="hidden">
           <div id="observerReadOnlyBanner" class="observer-readonly-banner hidden"></div>
           <div id="manageSubTabs" class="sub-tabs" data-ts-bar="manage_subtabs" data-ts-body="#manageContent"></div>
+          <div id="manageSubTabIntro" class="manage-tab-intro hidden"></div>
           <div id="manageContent"></div>
         </section>
       </main>
@@ -6095,8 +6144,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 256;
-    const APP_CACHE_NAME = 'right-youth-app-v10.156';
+    const APP_CLIENT_BUILD = 257;
+    const APP_CACHE_NAME = 'right-youth-app-v10.157';
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.156-log-archive';
     const SHEET_SCHEMA_TABS = [
@@ -6423,23 +6472,23 @@
     const DEFAULT_UI_TEXTS = Object.fromEntries(UI_TEXT_REGISTRY.map(x => [x.key, x.defaultVal]));
 
     const MANAGE_SUBTAB_REGISTRY = [
-      { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', permCheck: p => !!(p.canEditLayout || p.canManageNotices || p.canObserveManage) },
-      { id: 'quicklinks', labelKey: 'manageQuickLinks', defaultIcon: '🔗', defaultLabel: '사이트 바로가기 관리', permCheck: p => !!(p.canEditLayout || p.canObserveManage) },
-      { id: 'videos', labelKey: 'manageVideos', defaultIcon: '🎬', defaultLabel: '영상 관리', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
-      { id: 'worship', labelKey: 'manageWorship', defaultIcon: '⛪', defaultLabel: '예배 관리', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
-      { id: 'attendance', labelKey: 'manageAttendance', defaultIcon: '✅', defaultLabel: '출석인원', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
-      { id: 'sheet', labelKey: 'manageSheet', defaultIcon: '📊', defaultLabel: '시트 연동', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
-      { id: 'qr', labelKey: 'manageQr', defaultIcon: '📲', defaultLabel: 'QR 관리', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
-      { id: 'members', labelKey: 'manageMembers', defaultIcon: '👥', defaultLabel: '회원 승인', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
-      { id: 'admins', labelKey: 'manageAdmins', defaultIcon: '👑', defaultLabel: '관리자', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
-      { id: 'inquiries', labelKey: 'manageInquiries', defaultIcon: '💬', defaultLabel: '문의 관리', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
-      { id: 'roles', labelKey: 'manageRoles', defaultIcon: '🏷️', defaultLabel: '역할 설정', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
-      { id: 'admincode', labelKey: 'manageAdminCode', defaultIcon: '🔐', defaultLabel: '관리자 코드', permCheck: p => !!p.canManageMembers },
-      { id: 'logs', labelKey: 'manageLogs', defaultIcon: '📋', defaultLabel: '로그', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
-      { id: 'labels', labelKey: 'manageLabels', defaultIcon: '✏️', defaultLabel: '메뉴·이름', permCheck: p => !!(p.canEditLayout || p.canObserveManage) },
-      { id: 'security', labelKey: 'manageSecurity', defaultIcon: '🛡️', defaultLabel: '보안 점검', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
-      { id: 'diagnostics', labelKey: 'manageDiagnostics', defaultIcon: '🧪', defaultLabel: '기능 점검', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
-      { id: 'guide', labelKey: 'manageGuide', defaultIcon: '📖', defaultLabel: '사용방법', permCheck: p => !!(p.canManageMembers || p.canObserveManage) }
+      { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', intro: '홈 화면 배너·칸 순서와 공지·광고 게시(바로·임시저장·예약), 새가족 환영 배너를 관리합니다.', permCheck: p => !!(p.canEditLayout || p.canManageNotices || p.canObserveManage) },
+      { id: 'quicklinks', labelKey: 'manageQuickLinks', defaultIcon: '🔗', defaultLabel: '사이트 바로가기 관리', intro: '하단 바로가기 메뉴에 표시되는 인스타그램·유튜브·교회 홈페이지 등 외부 사이트 링크를 관리합니다.', permCheck: p => !!(p.canEditLayout || p.canObserveManage) },
+      { id: 'videos', labelKey: 'manageVideos', defaultIcon: '🎬', defaultLabel: '영상 관리', intro: '추천된 설교·CCM 유튜브 영상을 검토·승인하고, 공식 채널 화이트리스트와 세부 탭을 관리합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'worship', labelKey: 'manageWorship', defaultIcon: '⛪', defaultLabel: '예배 관리', intro: '매주 일요일 정기 예배 출석체크 시간, 예배X(휴무) 지정 및 수련회·특별 행사 일정을 설정합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'attendance', labelKey: 'manageAttendance', defaultIcon: '✅', defaultLabel: '출석인원', intro: '날짜별 출석 현황을 확인·수정하고, 셀별 주간 출석부 시트 생성·A4 인쇄 및 무인 자동 생성을 예약합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'sheet', labelKey: 'manageSheet', defaultIcon: '📊', defaultLabel: '시트 연동', intro: 'Google Apps Script 연동 주소와 출석부·로그 백업 시트 분리, 10개 영역 동기화 및 양식 재정비를 관리합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'qr', labelKey: 'manageQr', defaultIcon: '📲', defaultLabel: 'QR 관리', intro: '신규 회원가입용 초대 QR 코드의 자동 갱신 주기(하루/5분/10분)를 설정하고 긴급 재발급합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'members', labelKey: 'manageMembers', defaultIcon: '👥', defaultLabel: '회원 승인', intro: '신규 회원가입 신청 승인·보류, 이름 변경 신청 처리, 비밀번호 초기화 및 회원 상태를 관리합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'admins', labelKey: 'manageAdmins', defaultIcon: '👑', defaultLabel: '관리자', intro: '등록된 최고 관리자 현황과 신규 입장 승인·잠금, 이름 변경, 일반 회원 전환 및 권한 해제를 관리합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'inquiries', labelKey: 'manageInquiries', defaultIcon: '💬', defaultLabel: '문의 관리', intro: '이용자가 보낸 불편·개선·기능 요청 문의를 확인하고 답변을 작성해 실시간 알림으로 전달합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'roles', labelKey: 'manageRoles', defaultIcon: '🏷️', defaultLabel: '역할 설정', intro: '회원 이름 옆 직분 배지(색상·명칭)와 참관자(읽기 전용) 권한 및 역할별 회원 명단을 관리합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'admincode', labelKey: 'manageAdminCode', defaultIcon: '🔐', defaultLabel: '관리자 코드', intro: '최고 관리자 로그인에 사용하는 공용 관리자 코드를 안전하게 확인하고 변경합니다.', permCheck: p => !!p.canManageMembers },
+      { id: 'logs', labelKey: 'manageLogs', defaultIcon: '📋', defaultLabel: '로그', intro: '위변조·삭제 불가 보안 감사 로그를 조회하고, 구글 시트 자동 분리·백업 이관 및 Firebase 자동 만료(TTL)를 관리합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'labels', labelKey: 'manageLabels', defaultIcon: '✏️', defaultLabel: '메뉴·이름', intro: '하단 탭·설정·관리 메뉴의 이모지·이름·순서와 상단 단축 아이콘 및 화면 안내 문구를 편집합니다.', permCheck: p => !!(p.canEditLayout || p.canObserveManage) },
+      { id: 'security', labelKey: 'manageSecurity', defaultIcon: '🛡️', defaultLabel: '보안 점검', intro: '해킹·피싱·악성 링크 실시간 방어 설정, 자동 긴급 점검, 보안 진단 및 모의훈련을 관리합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'diagnostics', labelKey: 'manageDiagnostics', defaultIcon: '🧪', defaultLabel: '기능 점검', intro: 'Firebase·구글 시트·알림 등 전체 기능 일괄 진단, 앱 성능 최적화, 회원 미리보기 및 서버 점검 모드를 관리합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
+      { id: 'guide', labelKey: 'manageGuide', defaultIcon: '📖', defaultLabel: '사용방법', intro: '처음 맡은 임원도 바로 운영할 수 있도록 기능별 관리 매뉴얼과 인수인계 절차를 안내합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) }
     ];
     const DEFAULT_TAB_ORDER = BOTTOM_TAB_REGISTRY.map(t => t.key);
     const DEFAULT_MANAGE_SUBTAB_ORDER = MANAGE_SUBTAB_REGISTRY.map(t => t.id);
@@ -7184,7 +7233,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=256" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=257" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7208,8 +7257,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=256', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=256', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=257', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=257', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -8261,6 +8310,9 @@
 
       const labelsHead = document.getElementById('labelsPageHeading');
       if (labelsHead) labelsHead.textContent = getManageSectionTitle('labels_main', formatManageLabelsHeading(overrideNames, overrideIcons));
+      if (currentMainTab === 'manage' && typeof renderManageSubTabIntro === 'function') {
+        renderManageSubTabIntro(currentManageSubTab, overrideNames, overrideIcons);
+      }
 
       const stLbl = lbl('settings');
       const bBack = document.getElementById('bylawsBackToSettingsBtn');
@@ -13668,6 +13720,28 @@
       }
     }
 
+    function renderManageSubTabIntro(subId, overrideNames = null, overrideIcons = null) {
+      const box = document.getElementById('manageSubTabIntro');
+      if (!box) return;
+      const meta = MANAGE_SUBTAB_REGISTRY.find(t => t.id === subId);
+      if (!meta) {
+        box.classList.add('hidden');
+        box.innerHTML = '';
+        return;
+      }
+      const icon = getEffectiveTabIcon(meta.labelKey, overrideIcons);
+      const label = getEffectiveTabLabel(meta.labelKey, overrideNames);
+      const desc = String(meta.intro || '').trim();
+      box.classList.remove('hidden');
+      box.innerHTML = `
+        <div class="manage-tab-intro-icon">${escapeHtml(icon)}</div>
+        <div class="manage-tab-intro-body">
+          <div class="manage-tab-intro-title"><span>${escapeHtml(label)}</span></div>
+          <div class="manage-tab-intro-desc">${escapeHtml(desc)}</div>
+        </div>
+      `;
+    }
+
     function renderManageView(user) {
       ensureObserverReadOnlyGuards();
       const perms = user.role.perms;
@@ -13699,6 +13773,8 @@
           </button>
         `;
       }).join('');
+
+      renderManageSubTabIntro(currentManageSubTab);
 
       const content = document.getElementById('manageContent');
       if (currentManageSubTab === 'content') renderManageContent(content, user);
