@@ -1,4 +1,4 @@
-const CACHE_NAME = 'right-youth-app-v10.146';
+const CACHE_NAME = 'right-youth-app-v10.147';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -40,20 +40,45 @@ self.addEventListener('fetch', (event) => {
 
   const isHtml =
     event.request.mode === 'navigate' ||
-    (event.request.headers.get('accept') || '').includes('text/html');
+    (event.request.headers.get('accept') || '').includes('text/html') ||
+    url.pathname.endsWith('/') ||
+    url.pathname.endsWith('/index.html');
 
+  // HTML(앱 본체)은 항상 최신 버전 우선 확인 (Network-First)
+  if (isHtml) {
+    event.respondWith(
+      fetch(new Request(event.request.url, { cache: 'no-store' }))
+        .then((response) => {
+          if (response && response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // Firebase 로컬 SDK·아이콘·manifest 등 정적 파일은 캐시 우선 즉시 로드 + 백그라운드 갱신 (Cache-First)
   event.respondWith(
-    fetch(isHtml ? new Request(event.request.url, { cache: 'no-store' }) : event.request)
-      .then((response) => {
-        if (response && response.status === 200) {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
-          });
-        }
-        return response;
-      })
-      .catch(() => caches.match(event.request))
+    caches.match(event.request).then((cached) => {
+      const networkFetch = fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(() => cached);
+
+      return cached || networkFetch;
+    })
   );
 });
 

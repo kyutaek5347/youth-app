@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=246" />
+  <link rel="manifest" href="./manifest.json?v=247" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=246" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=246" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=247" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=247" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4112,7 +4112,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=246" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=247" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5963,7 +5963,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 246;
+    const APP_CLIENT_BUILD = 247;
+    const APP_CACHE_NAME = 'right-youth-app-v10.147';
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.142-10tab-fast-split';
     const SHEET_SCHEMA_TABS = [
@@ -6119,6 +6120,12 @@
       failThreshold: 2,
       alertCooldownMin: 10
     };
+    const DEFAULT_AUTO_OPT_CONFIG = {
+      enabled: true,
+      intervalMin: 10,
+      warnDocCount: 1500,
+      warnStoragePct: 70
+    };
     const AUTO_ALERT_DEFAULT_COOLDOWN_MS = 10 * 60 * 1000;
     const AUTO_CHECK_CONSECUTIVE_FAIL_THRESHOLD = 2;
     const DEFAULT_MAINTENANCE_CONFIG = {
@@ -6195,6 +6202,7 @@
       { key: 'setInstall', group: '앱 이용 · 보안', defaultIcon: '📱', defaultLabel: '앱 설치 방법', roleHint: '설정 · 홈 화면 추가 안내' },
       { key: 'setTerms', group: '앱 이용 · 보안', defaultIcon: '📄', defaultLabel: '이용약관', roleHint: '설정 · 서비스 이용약관' },
       { key: 'setPrivacy', group: '앱 이용 · 보안', defaultIcon: '🔒', defaultLabel: '개인정보 · 보안 안내', roleHint: '설정 · 프라이버시 보호 안내' },
+      { key: 'setCacheClean', group: '앱 이용 · 보안', defaultIcon: '🧹', defaultLabel: '앱 캐시 정리 (최적화)', roleHint: '설정 · 임시 캐시 안전 정리' },
       { key: 'setLogout', group: '앱 이용 · 보안', defaultIcon: '🚪', defaultLabel: '로그아웃', roleHint: '설정 · 계정 로그아웃' }
     ];
     const DEFAULT_SETTINGS_ITEM_ORDER = SETTINGS_ITEM_REGISTRY.map(t => t.key);
@@ -6982,7 +6990,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=246" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=247" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7006,8 +7014,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=246', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=246', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=247', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=247', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -7346,8 +7354,27 @@
     let isRenamingAdmin = false;
     let isSyncingUnsyncedRenameLogs = false;
     let isSyncingUnsyncedAuditLogs = false;
+    const AUDIT_LOGS_DEFAULT_LIMIT = 250;
+    let auditLogsFetchLimit = AUDIT_LOGS_DEFAULT_LIMIT;
     let auditLogs = [];
     let unsubAuditLogs = null;
+    let autoOptConfig = structuredClone(DEFAULT_AUTO_OPT_CONFIG);
+    let autoOptTimerId = null;
+    let autoOptBusy = false;
+    let autoOptBootScheduled = false;
+    let perfMetrics = {
+      renderCount: 0,
+      coalescedCount: 0,
+      totalRenderMs: 0,
+      lastRenderMs: 0,
+      maxRenderMs: 0,
+      lastAutoOptAt: '',
+      lastAutoOptSummary: '대기 중 (자동 실행 예정)',
+      lastAutoOptCount: 0,
+      totalCleanedItems: 0,
+      oldCacheCount: 0
+    };
+    let applyScreenRafId = null;
     let adminLogSearchQuery = '';
     let adminLogFilterType = 'all';
     let adminLogFilterCategory = 'all';
@@ -7814,6 +7841,12 @@
       adminRegFirstSnap = true;
       knownPendingAdminIds = new Set();
       knownActiveAdminIds = new Set();
+      auditLogsFetchLimit = AUDIT_LOGS_DEFAULT_LIMIT;
+      if (applyScreenRafId) {
+        try { cancelAnimationFrame(applyScreenRafId); } catch {}
+        applyScreenRafId = null;
+      }
+      if (typeof stopAutoOptRunner === 'function') stopAutoOptRunner();
       if (typeof stopAutoDiagRunner === 'function') stopAutoDiagRunner(true);
       if (typeof stopAutoSecRunner === 'function') stopAutoSecRunner(true);
       if (typeof stopAutoSheetRunner === 'function') stopAutoSheetRunner(true);
@@ -9038,6 +9071,95 @@
       }
     }
 
+    function attachAuditLogsListener(isAdminUser, onErrCallback, isExpand = false) {
+      if (unsubAuditLogs) {
+        try { unsubAuditLogs(); } catch {}
+        unsubAuditLogs = null;
+      }
+      if (!isExpand) {
+        auditLogsFirstSnap = true;
+        knownAuditLogIds = new Set();
+      }
+      const handleAuditSnap = (snap) => {
+        const nextLogs = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
+          .sort((a, b) => Number(b.ts || 0) - Number(a.ts || 0));
+
+        const isAuditCache = !!(snap.metadata && snap.metadata.fromCache);
+        if (isAdminUser) {
+          if (auditLogsFirstSnap || isAuditCache || isExpand) {
+            nextLogs.forEach(l => knownAuditLogIds.add(l.id));
+            auditLogs = nextLogs;
+            if (!isAuditCache && auditLogsFirstSnap) {
+              auditLogsFirstSnap = false;
+              setTimeout(() => runSilentAdminSecurityWatch(), 1400);
+            }
+          } else {
+            const newThreatEvents = [];
+            const nowMs = Date.now();
+            nextLogs.forEach(l => {
+              if (!knownAuditLogIds.has(l.id)) {
+                knownAuditLogIds.add(l.id);
+                if (isSecurityThreatAuditEntry(l)) {
+                  const isSelfImmediateEcho = l.actorType === 'admin'
+                    && l.actorName === currentAdminName
+                    && (nowMs - Number(lastSelfSecBlockTs || 0)) < 12000;
+                  if (!isSelfImmediateEcho) {
+                    newThreatEvents.push(l);
+                  }
+                }
+              }
+            });
+            auditLogs = nextLogs;
+            if (newThreatEvents.length > 0) {
+              const latest = newThreatEvents[0];
+              dispatchAdminSecurityAlert(
+                `🚨 보안 위협 감지 · ${latest.action || '악성 행동 차단'}`,
+                `${latest.actorName || '이용자'} · ${latest.target || '앱'} (${latest.detail || '보안 점검 탭에서 확인하세요'})`,
+                false,
+                'sec-live-threat'
+              );
+            }
+          }
+          if (adminSheetUrl) {
+            syncUnsyncedAuditLogsToSheet().catch(() => {});
+          }
+        } else {
+          auditLogsFirstSnap = false;
+          auditLogs = nextLogs;
+        }
+        if (currentMainTab === 'manage' && (currentManageSubTab === 'logs' || currentManageSubTab === 'security' || currentManageSubTab === 'sheet' || currentManageSubTab === 'members' || currentManageSubTab === 'diagnostics')) {
+          requestApplyScreen();
+        }
+      };
+
+      try {
+        unsubAuditLogs = db.collection('auditLogs')
+          .orderBy('ts', 'desc')
+          .limit(auditLogsFetchLimit)
+          .onSnapshot(handleAuditSnap, err => {
+            if (err && err.code === 'failed-precondition') {
+              unsubAuditLogs = db.collection('auditLogs').limit(auditLogsFetchLimit).onSnapshot(handleAuditSnap, e2 => {
+                if (typeof onErrCallback === 'function') onErrCallback(e2, '보안 로그 동기화');
+              });
+            } else if (typeof onErrCallback === 'function') {
+              onErrCallback(err, '보안 로그 동기화');
+            }
+          });
+      } catch {
+        unsubAuditLogs = db.collection('auditLogs').limit(auditLogsFetchLimit).onSnapshot(handleAuditSnap, err => {
+          if (typeof onErrCallback === 'function') onErrCallback(err, '보안 로그 동기화');
+        });
+      }
+    }
+
+    window.loadMoreAuditLogs = () => {
+      const u = getCurrentUser();
+      if (!u || (!u.isSuperAdmin && !isManageReadOnlyUser(u))) return;
+      auditLogsFetchLimit = Math.min(2000, Number(auditLogsFetchLimit || AUDIT_LOGS_DEFAULT_LIMIT) + 250);
+      attachAuditLogsListener(!!u.isSuperAdmin, null, true);
+      showToast(`📂 최근 보안 로그 조회 한도를 ${auditLogsFetchLimit}건으로 넓혔습니다.`, 'ok');
+    };
+
     function syncMembersAllSubscription() {
       const user = getCurrentUser();
       const isAdminUser = !!(user && user.isSuperAdmin);
@@ -9254,59 +9376,7 @@
       }
 
       if (canReadManage && !unsubAuditLogs) {
-        auditLogsFirstSnap = true;
-        knownAuditLogIds = new Set();
-        unsubAuditLogs = db.collection('auditLogs').onSnapshot(snap => {
-          const nextLogs = snap.docs.map(d => ({ ...d.data(), id: String(d.id) }))
-            .sort((a, b) => Number(b.ts || 0) - Number(a.ts || 0));
-
-          const isAuditCache = !!(snap.metadata && snap.metadata.fromCache);
-          if (isAdminUser) {
-            if (auditLogsFirstSnap || isAuditCache) {
-              nextLogs.forEach(l => knownAuditLogIds.add(l.id));
-              auditLogs = nextLogs;
-              if (!isAuditCache && auditLogsFirstSnap) {
-                auditLogsFirstSnap = false;
-                setTimeout(() => runSilentAdminSecurityWatch(), 1400);
-              }
-            } else {
-              const newThreatEvents = [];
-              const nowMs = Date.now();
-              nextLogs.forEach(l => {
-                if (!knownAuditLogIds.has(l.id)) {
-                  knownAuditLogIds.add(l.id);
-                  if (isSecurityThreatAuditEntry(l)) {
-                    const isSelfImmediateEcho = l.actorType === 'admin'
-                      && l.actorName === currentAdminName
-                      && (nowMs - Number(lastSelfSecBlockTs || 0)) < 12000;
-                    if (!isSelfImmediateEcho) {
-                      newThreatEvents.push(l);
-                    }
-                  }
-                }
-              });
-              auditLogs = nextLogs;
-              if (newThreatEvents.length > 0) {
-                const latest = newThreatEvents[0];
-                dispatchAdminSecurityAlert(
-                  `🚨 보안 위협 감지 · ${latest.action || '악성 행동 차단'}`,
-                  `${latest.actorName || '이용자'} · ${latest.target || '앱'} (${latest.detail || '보안 점검 탭에서 확인하세요'})`,
-                  false,
-                  'sec-live-threat'
-                );
-              }
-            }
-            if (adminSheetUrl) {
-              syncUnsyncedAuditLogsToSheet().catch(() => {});
-            }
-          } else {
-            auditLogsFirstSnap = false;
-            auditLogs = nextLogs;
-          }
-          if (currentMainTab === 'manage' && (currentManageSubTab === 'logs' || currentManageSubTab === 'security' || currentManageSubTab === 'sheet' || currentManageSubTab === 'members')) {
-            applyScreen();
-          }
-        }, err => onManageReadErr(err, '보안 로그 동기화'));
+        attachAuditLogsListener(isAdminUser, onManageReadErr);
       } else if (!canReadManage && unsubAuditLogs) {
         unsubAuditLogs();
         unsubAuditLogs = null;
@@ -9836,6 +9906,7 @@
 
       subscribePublicRoles();
       subscribePublicInviteQr();
+      if (typeof syncAutoOptRunner === 'function') syncAutoOptRunner();
 
       unsubCore.push(
         db.collection('config').doc('maintenance').onSnapshot(doc => {
@@ -9844,7 +9915,7 @@
           } else {
             maintenanceConfig = structuredClone(DEFAULT_MAINTENANCE_CONFIG);
           }
-          applyScreen();
+          requestApplyScreen();
         }, () => {})
       );
 
@@ -10133,9 +10204,21 @@
             serverLatestBuild = d.latestBuild;
             notifyPendingAppUpdateIfNeeded();
           }
+          if (d.autoOptConfig && typeof d.autoOptConfig === 'object') {
+            const rawMin = Number(d.autoOptConfig.intervalMin);
+            autoOptConfig = {
+              enabled: d.autoOptConfig.enabled !== undefined ? !!d.autoOptConfig.enabled : true,
+              intervalMin: (Number.isFinite(rawMin) && rawMin >= 5 && rawMin <= 120) ? Math.round(rawMin) : 10,
+              warnDocCount: Number(d.autoOptConfig.warnDocCount || 1500),
+              warnStoragePct: Number(d.autoOptConfig.warnStoragePct || 70)
+            };
+          } else {
+            autoOptConfig = structuredClone(DEFAULT_AUTO_OPT_CONFIG);
+          }
+          if (typeof syncAutoOptRunner === 'function') syncAutoOptRunner();
           checkCloneDomainWarning();
         }
-        applyScreen();
+        requestApplyScreen();
         if (document.getElementById('quickLinksSheet').classList.contains('open')) {
           renderQuickLinksSheetContent();
         }
@@ -10362,7 +10445,7 @@
         if (getCurrentUser()) {
           syncScopedContentSubscriptions();
           syncMembersAllSubscription();
-          applyScreen();
+          requestApplyScreen();
         }
       }, () => {
         renderSignupRoleOptions();
@@ -11579,7 +11662,35 @@
       applyScreen();
     };
 
+    function requestApplyScreen() {
+      if (applyScreenRafId) {
+        perfMetrics.coalescedCount = Number(perfMetrics.coalescedCount || 0) + 1;
+        return;
+      }
+      const raf = (typeof window.requestAnimationFrame === 'function')
+        ? window.requestAnimationFrame
+        : (fn) => setTimeout(fn, 16);
+      applyScreenRafId = raf(() => {
+        applyScreenRafId = null;
+        applyScreen();
+      });
+    }
+
     function applyScreen() {
+      const _perfStart = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+      try {
+        _applyScreenInner();
+      } finally {
+        const _perfEnd = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+        const _dur = Math.max(0, _perfEnd - _perfStart);
+        perfMetrics.renderCount = Number(perfMetrics.renderCount || 0) + 1;
+        perfMetrics.totalRenderMs = Number(perfMetrics.totalRenderMs || 0) + _dur;
+        perfMetrics.lastRenderMs = _dur;
+        if (_dur > Number(perfMetrics.maxRenderMs || 0)) perfMetrics.maxRenderMs = _dur;
+      }
+    }
+
+    function _applyScreenInner() {
       if (typeof syncTermsAndGuidesAutomatically === 'function') syncTermsAndGuidesAutomatically(false);
       const loginEl = document.getElementById('loginScreen');
       const mainAppEl = document.getElementById('mainApp');
@@ -12055,7 +12166,7 @@
           keywords: '업데이트 자동 변경 반영 버전 동기화 설명서 이용약관',
           steps: [
             `<b>자동 최신화:</b> 새 버전(현재 빌드 <b>b${APP_CLIENT_BUILD}</b>)이나 메뉴 이름·이모지·설정 변경 사항이 적용될 때 사용방법 설명서와 이용약관도 최신 기능 기준으로 자동 반영됩니다.`,
-            '<b>최신 화면 보기:</b> 새 업데이트가 올라오면 앱을 새로고침하거나 서비스 워커 업데이트를 적용해 최신 설명서와 이용약관을 확인하실 수 있습니다.'
+            `<b>앱 캐시 정리 (무손실 최적화):</b> 앱이 일시적으로 느리거나 이전 화면 캐시가 남았을 때 <b>[${stIcn} ${stLbl}] → 🧹 앱 캐시 정리 (최적화)</b>를 누르면 로그인·알림·글자 크기는 그대로 유지한 채 구버전 캐시와 만료 임시 기록만 깨끗이 정리됩니다.`
           ],
           tip: '관리자가 하단 메뉴 이름이나 이모지를 변경하더라도 설명서 안내 문구에 실시간으로 연동됩니다.'
         }
@@ -12343,6 +12454,7 @@
           targetLabel: `${getTabIcon('manageDiagnostics')} ${getTabLabel('manageDiagnostics')} 탭 열기`,
           steps: [
             `<b>${lblLbl} 편집 ([${lblIcn} ${lblLbl}]):</b> 하단 탭, 설정 항목, <b>${mngLbl}</b> 서브탭의 이모지·이름·순서와 상단 단축 아이콘(QR·알림), 각 관리 섹션 제목(<b>[✏️ 수정]</b>)을 자유롭게 바꿀 수 있으며, 변경 시 설명서와 이용약관 문구에도 자동 연동됩니다.`,
+            `<b>앱 성능 · 자동 안전 최적화 ([${diagIcn} ${diagLbl} → ⚡ 성능 · 자동 최적화]):</b> 불러온 문서 수, 저장소 사용량, 평균 렌더링 속도, 실시간 구독 수를 한눈에 확인하며, 자동 최적화가 구버전 캐시와 만료 임시 기록만 무손실 정리합니다. (서버 데이터·시트·로그인·설정 100% 보존 · 보안 로그는 최근 250건씩 분할 조회)`,
             `<b>${diagCnt}개 항목 수동·자동 기능 점검 ([${diagIcn} ${diagLbl}]):</b> <b>[🚀 수동 전체 기능 일괄 점검 실행]</b> 및 자동 주기 점검으로 Firebase, 구글 시트 10개 탭(버전·누락·삭제 대조), 초대 QR, 알림, 설정·영상·예배·문의·PWA 최신 빌드 상태를 한 번에 진단합니다.`,
             `<b>일반 회원 · 참관자 시점 미리보기:</b> <b>[👁️ 일반 회원 / 참관자 미리보기]</b>로 실제 회원·참관자 화면을 안전하게 확인하고 상단 배너의 <b>[관리자 복귀]</b>로 즉시 돌아옵니다.`,
             '<b>서버 점검 모드:</b> 앱 업데이트나 대규모 정비 시 <b>[즉시 서버 점검 모드 켜기]</b>를 켜면 일반 회원에게는 점검 안내 화면만 표시되고 최고 관리자는 정상 작업할 수 있습니다.'
@@ -12522,6 +12634,7 @@
         if (typeof onAutoDiagVisibilityVisible === 'function') onAutoDiagVisibilityVisible();
         if (typeof onAutoSecVisibilityVisible === 'function') onAutoSecVisibilityVisible();
         if (typeof onAutoSheetVisibilityVisible === 'function') onAutoSheetVisibilityVisible();
+        if (typeof onAutoOptVisibilityVisible === 'function') onAutoOptVisibilityVisible();
         const u = getCurrentUser();
         if (u) {
           if (currentMainTab === 'home') renderHomeView(u);
@@ -13264,7 +13377,7 @@
     };
 
     // ==================== 12. 관리 센터 ====================
-    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|openSecSimModal|selectSecSimVariant|runAllSecSimulations|runLiveSheetSchemaInspect|switchMainTab|stepTabSlideBar|goToTabSlideBar)\s*\(/;
+    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|openSecSimModal|selectSecSimVariant|runAllSecSimulations|runLiveSheetSchemaInspect|loadMoreAuditLogs|switchMainTab|stepTabSlideBar|goToTabSlideBar)\s*\(/;
     const OBSERVER_ALLOWED_INPUT_IDS = new Set([
       'roleMemberSearchInput', 'adminLogSearchInput', 'adminGuideSearchInput', 'attRosterSearchInput', 'attRosterQuickJumpInput'
     ]);
@@ -20323,8 +20436,9 @@
       }
     };
 
-    // 30초마다 홈 출석 카드 표시/숨김 자동 갱신 (설정된 시작/종료 시각 자동 반영 · 알림 미발송)
+    // 30초마다 홈 출석 카드 표시/숨김 자동 갱신 (화면이 보일 때만 실행해 배터리 절약 · 알림 미발송)
     setInterval(() => {
+      if (document.visibilityState !== 'visible') return;
       const u = getCurrentUser();
       if (!u) return;
       if (currentMainTab === 'home') {
@@ -21685,7 +21799,9 @@
         return;
       }
 
-      listEl.innerHTML = filtered.slice(0, 200).map(item => {
+      const displayMax = Math.max(200, Number(auditLogsFetchLimit || AUDIT_LOGS_DEFAULT_LIMIT));
+      const canLoadMore = auditLogs.length >= auditLogsFetchLimit && auditLogsFetchLimit < 2000;
+      listEl.innerHTML = filtered.slice(0, displayMax).map(item => {
         const isMemActor = item.actorType === 'member';
         const isRejected = item.decision === 'rejected';
         const isDangerAction = /삭제|해제|거절|보류|초기화|탈퇴/.test(String(item.action || ''));
@@ -21738,7 +21854,9 @@
             </div>
           </div>
         `;
-      }).join('') + (filtered.length >= 4
+      }).join('') + (canLoadMore
+        ? `<button class="btn-outline" type="button" style="width:100%; padding:11px; margin-top:6px; font-weight:800;" onclick="loadMoreAuditLogs()">📂 이전 보안 로그 더 불러오기 (+250건 · 현재 최근 ${auditLogsFetchLimit}건 조회 중)</button>`
+        : '') + (filtered.length >= 4
         ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('logs_list', true)">▲ 로그 목록 접기</button>`
         : '');
     }
@@ -25457,8 +25575,8 @@
     ];
 
     window.setManageDiagnosticsFilter = (f) => {
-      manageDiagnosticsFilter = ['all', 'maint', 'auto', 'sim'].includes(f) ? f : 'all';
-      const accMap = { maint: 'diag_maint', auto: 'diag_auto', sim: 'diag_sim' };
+      manageDiagnosticsFilter = ['all', 'maint', 'perf', 'auto', 'sim'].includes(f) ? f : 'all';
+      const accMap = { maint: 'diag_maint', perf: 'diag_perf', auto: 'diag_auto', sim: 'diag_sim' };
       if (accMap[manageDiagnosticsFilter]) manageSectionOpen[accMap[manageDiagnosticsFilter]] = true;
       const u = getCurrentUser();
       if (u && currentMainTab === 'manage' && currentManageSubTab === 'diagnostics') {
@@ -25473,13 +25591,16 @@
 
       const df = manageDiagnosticsFilter || 'all';
       const showMaint = df === 'all' || df === 'maint';
+      const showPerf = df === 'all' || df === 'perf';
       const showAuto = df === 'all' || df === 'auto';
       const showSim = df === 'all' || df === 'sim';
 
       const mCfg = maintenanceConfig || DEFAULT_MAINTENANCE_CONFIG;
       const mActive = isMaintenanceActiveNow();
+      const perfSnap = getAppPerformanceSnapshot();
 
       const maintOpen = isManageSectionOpen('diag_maint', mActive || df === 'maint');
+      const perfOpen = isManageSectionOpen('diag_perf', true);
       const autoOpen = isManageSectionOpen('diag_auto', true);
       const simOpen = isManageSectionOpen('diag_sim', df === 'sim');
 
@@ -25496,6 +25617,7 @@
         <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_diag_filter" data-ts-body="#manageContent">
           <button class="filter-chip ${df === 'all' ? 'active' : ''}" type="button" onclick="setManageDiagnosticsFilter('all')">전체</button>
           <button class="filter-chip ${df === 'maint' ? 'active' : ''}" type="button" onclick="setManageDiagnosticsFilter('maint')">🔧 서버 점검 모드</button>
+          <button class="filter-chip ${df === 'perf' ? 'active' : ''} ${perfSnap.hasWarning ? 'has-badge' : ''}" type="button" onclick="setManageDiagnosticsFilter('perf')">⚡ 성능 · 자동 최적화</button>
           <button class="filter-chip ${df === 'auto' ? 'active' : ''}" type="button" onclick="setManageDiagnosticsFilter('auto')">🔍 자동 진단 (${DIAG_ITEMS.length})</button>
           <button class="filter-chip ${df === 'sim' ? 'active' : ''}" type="button" onclick="setManageDiagnosticsFilter('sim')">🎭 시뮬레이션</button>
         </div>
@@ -25536,6 +25658,77 @@
               </div>
               <button id="saveMaintCfgBtn" class="btn-full btn-dark" type="button" style="padding:11px; font-size:13.5px;" onclick="handleSaveMaintenanceConfig()">💾 점검 안내 문구 저장</button>
               ${buildInlineSaveStatusHtml('maint_cfg')}
+            </div>
+          </div>
+        ` : ''}
+
+        ${showPerf ? `
+          ${buildManageAccordionBar({
+            key: 'diag_perf',
+            titleHtml: '⚡ 앱 성능 · 자동 안전 최적화',
+            badgeHtml: `<span id="diagPerfStatusBadge" class="tag ${perfSnap.hasWarning ? 'warm' : 'green'}">${perfSnap.hasWarning ? '⚠️ 용량·속도 점검 권장' : '✅ 쾌적'}</span>`,
+            defaultOpen: true,
+            marginTop: showMaint ? '10px' : ''
+          })}
+          <div data-acc-body="diag_perf" class="${perfOpen ? '' : 'hidden'}">
+            <div class="card">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:10px;">
+                <div style="background:#F8FAFC; border:1px solid var(--border); border-radius:11px; padding:9px 10px;">
+                  <div style="font-size:11px; color:#64748B; font-weight:700;">📄 불러온 문서 수</div>
+                  <div style="font-size:16px; font-weight:900; color:${perfSnap.docWarn ? '#B45309' : '#0F172A'}; margin-top:2px;">${perfSnap.totalDocs.toLocaleString()}건</div>
+                  <div style="font-size:10.5px; color:#64748B; margin-top:1px;">로그 최근 ${auditLogsFetchLimit}건 제한 조회</div>
+                </div>
+                <div style="background:#F8FAFC; border:1px solid var(--border); border-radius:11px; padding:9px 10px;">
+                  <div style="font-size:11px; color:#64748B; font-weight:700;">💾 기기 저장소 사용량</div>
+                  <div style="font-size:16px; font-weight:900; color:${perfSnap.storageWarn ? '#B45309' : '#0F172A'}; margin-top:2px;">${perfSnap.storageKb} KB (${perfSnap.storagePct}%)</div>
+                  <div style="font-size:10.5px; color:#64748B; margin-top:1px;">구버전 캐시 ${perfMetrics.oldCacheCount || 0}건</div>
+                </div>
+                <div style="background:#F8FAFC; border:1px solid var(--border); border-radius:11px; padding:9px 10px;">
+                  <div style="font-size:11px; color:#64748B; font-weight:700;">⚡ 평균 렌더링 속도</div>
+                  <div style="font-size:16px; font-weight:900; color:${perfSnap.renderWarn ? '#B45309' : '#15803D'}; margin-top:2px;">${perfSnap.avgRenderMs} ms</div>
+                  <div style="font-size:10.5px; color:#64748B; margin-top:1px;">중복 그리기 ${perfMetrics.coalescedCount || 0}회 병합 절감</div>
+                </div>
+                <div style="background:#F8FAFC; border:1px solid var(--border); border-radius:11px; padding:9px 10px;">
+                  <div style="font-size:11px; color:#64748B; font-weight:700;">📡 실시간 구독 · 절전</div>
+                  <div style="font-size:16px; font-weight:900; color:#0F172A; margin-top:2px;">${perfSnap.activeListeners}개 연결</div>
+                  <div style="font-size:10.5px; color:#15803D; margin-top:1px;">정적 캐시 우선 · 절전 ON</div>
+                </div>
+              </div>
+
+              <div class="info-box" style="margin-top:0; margin-bottom:10px; background:#F0FDF4; border-color:#BBF7D0; color:#14532D;">
+                🛡️ <b>100% 무손실 안전 최적화 원칙</b><br>
+                서버 문서(회원·공지·출석·영상·로그·시트)와 로그인·알림·글자 크기·읽음 표시는 <b>절대 삭제하지 않습니다.</b> 오직 구버전 웹 캐시와 만료된 임시 기록만 자동 정리합니다.
+              </div>
+
+              <div class="setting-row" style="padding-top:2px;">
+                <div>
+                  <div class="setting-title" style="font-size:13.5px;">🤖 백그라운드 자동 안전 최적화</div>
+                  <div class="setting-sub" style="font-size:11.5px;">앱 실행 시 및 설정 주기마다 구버전 캐시·만료 임시 기록을 자동 정리하고 용량을 감시합니다.</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="cfgAutoOptEnabled" ${autoOptConfig.enabled !== false ? 'checked' : ''} onchange="handleToggleAutoOpt(this.checked)" />
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div style="margin:8px 0 10px;">
+                <div style="font-size:11.5px; font-weight:700; color:#475569; margin-bottom:5px;">⏱️ 자동 최적화 실행 주기</div>
+                <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                  ${[5, 10, 30, 60].map(min => `
+                    <button class="filter-chip ${Number(autoOptConfig.intervalMin || 10) === min ? 'active' : ''}" type="button" style="padding:5px 10px; font-size:11.5px;" onclick="handleSetAutoOptInterval(${min})">${min}분</button>
+                  `).join('')}
+                </div>
+              </div>
+
+              <div style="font-size:11.5px; color:#475569; background:#F8FAFC; border:1px solid var(--border); border-radius:10px; padding:8px 10px; margin-bottom:10px; line-height:1.5;">
+                • <b>최근 최적화:</b> ${escapeHtml(perfMetrics.lastAutoOptAt || '아직 미실행')} — ${escapeHtml(perfMetrics.lastAutoOptSummary || '대기 중')}<br>
+                • <b>문서 분포:</b> 회원 ${members.length} · 출석 ${attendanceRecords.length} · 로그 ${auditLogs.length} · 영상 ${videoItems.length} · 공지 ${notices.length} · 문의 ${inquiries.length}
+              </div>
+
+              <button id="runManualOptBtn" class="btn-full btn-dark" type="button" style="padding:11px; font-size:13.5px;" onclick="handleManualAdminOptimize()">
+                ⚡ 지금 즉시 안전 최적화 실행 (캐시·임시 기록 정리)
+              </button>
+              ${buildInlineSaveStatusHtml('diag_perf')}
             </div>
           </div>
         ` : ''}
@@ -26892,6 +27085,322 @@
     };
 
 
+    // ==================== 20.5. 앱 성능 모니터링 & 무손실 자동 최적화 엔진 ====================
+    const SAFE_PRESERVED_LOCAL_KEYS = new Set([
+      KEY_ADMIN_NAME,
+      KEY_NOTIF_PREFS,
+      KEY_APP_FONT_SCALE,
+      KEY_READ_ITEMS,
+      KEY_TAB_SEEN_TS,
+      KEY_SEEN_ADMIN_IDS,
+      KEY_SESSION_EPOCH,
+      KEY_INVITE_TOKEN,
+      KEY_BANNER_AUTO_SLIDE_SEC,
+      KEY_TAB_LABELS_CACHE,
+      KEY_CELEB_MSGS_CACHE,
+      KEY_QUICK_LINKS_CACHE,
+      KEY_SHEET_NEW_ACK_MAP,
+      KEY_NEWCOMER_NOTIFIED
+    ]);
+
+    function estimateLocalStorageBytes() {
+      let totalBytes = 0;
+      try {
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i) || '';
+          const v = localStorage.getItem(k) || '';
+          totalBytes += (k.length + v.length) * 2;
+        }
+      } catch {}
+      return totalBytes;
+    }
+
+    function countActiveFirestoreListeners() {
+      let cnt = 0;
+      if (unsubMyMember) cnt += 1;
+      cnt += (unsubCore || []).length;
+      cnt += (unsubScopedContent || []).length;
+      if (unsubMembersAll) cnt += 1;
+      if (unsubAdminSecret) cnt += 1;
+      if (unsubSheetSecret) cnt += 1;
+      if (unsubAdminRegistry) cnt += 1;
+      if (unsubAdminRegistryObserver) cnt += 1;
+      if (unsubAttendanceAdmin) cnt += 1;
+      if (unsubMyAttendance) cnt += 1;
+      if (unsubMemberHistory) cnt += 1;
+      if (unsubAuditLogs) cnt += 1;
+      if (unsubInquiriesAdmin) cnt += 1;
+      if (unsubMyInquiries) cnt += 1;
+      if (unsubVideosAdmin) cnt += 1;
+      if (unsubVideosApproved) cnt += 1;
+      if (unsubMyVideos) cnt += 1;
+      if (publicRolesSubscribed) cnt += 1;
+      if (publicInviteSubscribed) cnt += 1;
+      return cnt;
+    }
+
+    function getAppPerformanceSnapshot() {
+      const cfg = autoOptConfig || DEFAULT_AUTO_OPT_CONFIG;
+      const totalDocs = (members || []).length
+        + (attendanceRecords || []).length
+        + (auditLogs || []).length
+        + (videoItems || []).length
+        + (notices || []).length
+        + (blocks || []).length
+        + (inquiries || []).length;
+      const storageBytes = estimateLocalStorageBytes();
+      const storageKb = Math.max(1, Math.round(storageBytes / 1024));
+      const storagePct = Math.min(100, Math.round((storageBytes / (5 * 1024 * 1024)) * 100));
+      const avgRenderMs = perfMetrics.renderCount > 0
+        ? Math.round((perfMetrics.totalRenderMs / perfMetrics.renderCount) * 10) / 10
+        : 0;
+      const activeListeners = countActiveFirestoreListeners();
+
+      const docWarn = totalDocs >= Number(cfg.warnDocCount || 1500);
+      const storageWarn = storagePct >= Number(cfg.warnStoragePct || 70);
+      const renderWarn = avgRenderMs >= 80;
+      const hasWarning = docWarn || storageWarn || renderWarn || Number(perfMetrics.oldCacheCount || 0) > 0;
+
+      return {
+        totalDocs,
+        storageBytes,
+        storageKb,
+        storagePct,
+        avgRenderMs,
+        activeListeners,
+        docWarn,
+        storageWarn,
+        renderWarn,
+        hasWarning
+      };
+    }
+
+    async function runSafeClientOptimization({ manual = false, silent = false } = {}) {
+      if (autoOptBusy) return { cleanedCaches: 0, cleanedTemp: 0, cleanedLegacy: 0, totalCleaned: 0 };
+      autoOptBusy = true;
+      let cleanedCaches = 0;
+      let cleanedTemp = 0;
+      let cleanedLegacy = 0;
+
+      try {
+        // 1) 현재 버전이 아닌 구버전 Service Worker 캐시만 안전하게 삭제
+        if (typeof caches !== 'undefined' && typeof caches.keys === 'function') {
+          try {
+            const keys = await caches.keys();
+            const oldKeys = keys.filter(k => k.startsWith('right-youth-app-') && k !== APP_CACHE_NAME);
+            for (const k of oldKeys) {
+              const deleted = await caches.delete(k).catch(() => false);
+              if (deleted) cleanedCaches += 1;
+            }
+            const afterKeys = await caches.keys();
+            perfMetrics.oldCacheCount = afterKeys.filter(k => k.startsWith('right-youth-app-') && k !== APP_CACHE_NAME).length;
+          } catch {}
+        }
+
+        // 2) 이미 폐기된 과거 기능의 로컬 찌꺼기 키 정리 (현재 기능/로그인/설정 절대 보존)
+        try {
+          const toDelete = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const k = localStorage.key(i) || '';
+            if (!k || SAFE_PRESERVED_LOCAL_KEYS.has(k)) continue;
+            if (/^right_youth_(?:bible|bday|celeb_date|header_shortcuts)/.test(k)) {
+              toDelete.push(k);
+            }
+          }
+          toDelete.forEach(k => {
+            try { localStorage.removeItem(k); cleanedLegacy += 1; } catch {}
+          });
+        } catch {}
+
+        // 3) 만료된(24시간 경과) 알림 쿨다운 기록 정리
+        const now = Date.now();
+        [KEY_AUTO_SEC_LAST_ALERT_SIG, KEY_AUTO_DIAG_LAST_ALERT_SIG, KEY_AUTO_SHEET_LAST_ALERT_SIG].forEach(ck => {
+          try {
+            const raw = localStorage.getItem(ck);
+            if (!raw) return;
+            const parsed = JSON.parse(raw);
+            if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+              localStorage.removeItem(ck);
+              cleanedTemp += 1;
+              return;
+            }
+            const nextMap = {};
+            let removedHere = 0;
+            Object.keys(parsed).forEach(sig => {
+              const ts = Number(parsed[sig] || 0);
+              if (ts > 0 && (now - ts) < 24 * 60 * 60 * 1000) {
+                nextMap[sig] = ts;
+              } else {
+                removedHere += 1;
+              }
+            });
+            if (removedHere > 0) {
+              if (Object.keys(nextMap).length === 0) localStorage.removeItem(ck);
+              else localStorage.setItem(ck, JSON.stringify(nextMap));
+              cleanedTemp += removedHere;
+            }
+          } catch {}
+        });
+
+        // 4) 만료된 세션 로그인 제한 임시 키 정리
+        try {
+          const sessDel = [];
+          for (let i = 0; i < sessionStorage.length; i++) {
+            const k = sessionStorage.key(i) || '';
+            if (!k.startsWith('ry_login_rl_')) continue;
+            try {
+              const parsed = JSON.parse(sessionStorage.getItem(k) || '{}');
+              if (!parsed.lockUntil || Number(parsed.lockUntil) < now) sessDel.push(k);
+            } catch {
+              sessDel.push(k);
+            }
+          }
+          sessDel.forEach(k => {
+            try { sessionStorage.removeItem(k); cleanedTemp += 1; } catch {}
+          });
+        } catch {}
+
+        // 5) 저장소가 임계치(70%) 이상일 때만 재생성 가능한 UI 스냅샷 캐시 비우기 (서버에서 즉시 재동기화)
+        const bytesAfter = estimateLocalStorageBytes();
+        const pctAfter = Math.round((bytesAfter / (5 * 1024 * 1024)) * 100);
+        if (pctAfter >= Number((autoOptConfig && autoOptConfig.warnStoragePct) || 70)) {
+          [KEY_TAB_LABELS_CACHE, KEY_CELEB_MSGS_CACHE, KEY_QUICK_LINKS_CACHE].forEach(rk => {
+            try {
+              if (localStorage.getItem(rk) !== null) {
+                localStorage.removeItem(rk);
+                cleanedTemp += 1;
+              }
+            } catch {}
+          });
+        }
+
+        const totalCleaned = cleanedCaches + cleanedTemp + cleanedLegacy;
+        perfMetrics.lastAutoOptAt = formatKstDateTime();
+        perfMetrics.lastAutoOptCount = totalCleaned;
+        perfMetrics.totalCleanedItems = Number(perfMetrics.totalCleanedItems || 0) + totalCleaned;
+        perfMetrics.lastAutoOptSummary = totalCleaned > 0
+          ? `구버전 캐시 ${cleanedCaches}건 · 만료 임시 기록 ${cleanedTemp + cleanedLegacy}건 안전 정리 완료`
+          : '정리할 불필요 캐시 없음 · 최적 상태 유지 중';
+
+        if (!silent && currentMainTab === 'manage' && currentManageSubTab === 'diagnostics') {
+          const u = getCurrentUser();
+          if (u) renderManageDiagnostics(document.getElementById('manageContent'), u);
+        }
+        return { cleanedCaches, cleanedTemp, cleanedLegacy, totalCleaned };
+      } finally {
+        autoOptBusy = false;
+      }
+    }
+
+    function stopAutoOptRunner() {
+      if (autoOptTimerId) {
+        clearTimeout(autoOptTimerId);
+        autoOptTimerId = null;
+      }
+    }
+
+    function scheduleNextAutoOptTick(delayMs) {
+      stopAutoOptRunner();
+      if (!autoOptConfig || autoOptConfig.enabled === false) return;
+      const ms = Math.max(60000, Number(delayMs || (autoOptConfig.intervalMin || 10) * 60 * 1000));
+      autoOptTimerId = setTimeout(async () => {
+        autoOptTimerId = null;
+        if (document.visibilityState === 'visible') {
+          await runSafeClientOptimization({ manual: false, silent: true });
+        }
+        scheduleNextAutoOptTick((autoOptConfig.intervalMin || 10) * 60 * 1000);
+      }, ms);
+    }
+
+    function syncAutoOptRunner() {
+      if (!autoOptConfig || autoOptConfig.enabled === false) {
+        stopAutoOptRunner();
+        return;
+      }
+      if (!autoOptBootScheduled) {
+        autoOptBootScheduled = true;
+        setTimeout(() => {
+          if (document.visibilityState === 'visible' && autoOptConfig && autoOptConfig.enabled !== false) {
+            runSafeClientOptimization({ manual: false, silent: true });
+          }
+        }, 3500);
+      }
+      if (!autoOptTimerId) {
+        scheduleNextAutoOptTick((autoOptConfig.intervalMin || 10) * 60 * 1000);
+      }
+    }
+
+    function onAutoOptVisibilityVisible() {
+      if (!autoOptConfig || autoOptConfig.enabled === false) return;
+      if (!autoOptTimerId) {
+        scheduleNextAutoOptTick((autoOptConfig.intervalMin || 10) * 60 * 1000);
+      }
+    }
+
+    window.handleToggleAutoOpt = async (checked) => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const next = { ...DEFAULT_AUTO_OPT_CONFIG, ...(autoOptConfig || {}), enabled: !!checked };
+      try {
+        await db.collection('config').doc('layout').set({ autoOptConfig: next }, { merge: true });
+        autoOptConfig = next;
+        syncAutoOptRunner();
+        setInlineSaveStatus('diag_perf', 'ok', checked ? `✅ 자동 안전 최적화가 켜졌습니다 (${next.intervalMin}분 주기).` : '자동 안전 최적화가 꺼졌습니다.');
+        showToast(checked ? '⚡ 자동 안전 최적화가 켜졌습니다.' : '자동 안전 최적화가 꺼졌습니다.', 'ok');
+      } catch (err) {
+        handleDbError(err, '자동 최적화 설정');
+      }
+    };
+
+    window.handleSetAutoOptInterval = async (min) => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const safeMin = Math.max(5, Math.min(120, Math.round(Number(min || 10))));
+      const next = { ...DEFAULT_AUTO_OPT_CONFIG, ...(autoOptConfig || {}), intervalMin: safeMin };
+      try {
+        await db.collection('config').doc('layout').set({ autoOptConfig: next }, { merge: true });
+        autoOptConfig = next;
+        syncAutoOptRunner();
+        setInlineSaveStatus('diag_perf', 'ok', `✅ 자동 최적화 주기가 ${safeMin}분으로 저장되었습니다.`);
+        showToast(`⏱️ 자동 최적화 주기가 ${safeMin}분으로 설정되었습니다.`, 'ok');
+        if (currentMainTab === 'manage' && currentManageSubTab === 'diagnostics') {
+          renderManageDiagnostics(document.getElementById('manageContent'), u);
+        }
+      } catch (err) {
+        handleDbError(err, '자동 최적화 주기 변경');
+      }
+    };
+
+    window.handleManualAdminOptimize = async () => {
+      const btn = document.getElementById('runManualOptBtn');
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ 안전 최적화 실행 중...'; }
+      setInlineSaveStatus('diag_perf', 'loading', '⏳ 구버전 캐시와 만료 임시 기록을 점검·정리 중입니다...');
+      try {
+        const res = await runSafeClientOptimization({ manual: true, silent: false });
+        const msg = res.totalCleaned > 0
+          ? `✅ 안전 최적화 완료! 구버전 캐시 ${res.cleanedCaches}건 · 임시 기록 ${res.cleanedTemp + res.cleanedLegacy}건 정리 (원본 데이터 100% 보존)`
+          : '✅ 이미 깨끗한 최적 상태입니다! (정리할 불필요 캐시 없음 · 원본 데이터 100% 보존)';
+        setInlineSaveStatus('diag_perf', 'ok', msg);
+        showToast(msg, 'ok');
+      } finally {
+        const liveBtn = document.getElementById('runManualOptBtn');
+        if (liveBtn) { liveBtn.disabled = false; liveBtn.textContent = '⚡ 지금 즉시 안전 최적화 실행 (캐시·임시 기록 정리)'; }
+      }
+    };
+
+    window.handleUserCacheCleanup = async () => {
+      const res = await runSafeClientOptimization({ manual: true, silent: true });
+      if (res.totalCleaned > 0) {
+        showToast(`🧹 앱 최적화 완료! 구버전 캐시 ${res.cleanedCaches}건 · 만료 임시 기록 ${res.cleanedTemp + res.cleanedLegacy}건 정리 (로그인·설정 유지)`, 'ok');
+      } else {
+        showToast('✨ 이미 최적 상태입니다! (로그인·알림·글자 크기 설정은 안전하게 유지됩니다)', 'ok');
+      }
+      if (currentMainTab === 'settings') {
+        const u = getCurrentUser();
+        if (u) renderSettingsView(u);
+      }
+    };
+
     // ==================== 21. 정기 서버 점검 & 긴급 보안 점검 제어 ====================
     async function syncPublicEmergencyLockFlag(active, meta = {}) {
       try {
@@ -27544,11 +28053,14 @@
       if (domTamperObserver || typeof MutationObserver === 'undefined' || !document.documentElement) return;
       domTamperObserver = new MutationObserver((mutations) => {
         if (securityConfig && securityConfig.domTamperGuard === false) return;
-        for (const mut of mutations) {
-          if (!mut.addedNodes || mut.addedNodes.length === 0) continue;
-          mut.addedNodes.forEach(node => {
-            if (!node || node.nodeType !== 1) return;
-            const tag = String(node.tagName || '').toUpperCase();
+        for (let m = 0; m < mutations.length; m++) {
+          const added = mutations[m].addedNodes;
+          if (!added || added.length === 0) continue;
+          for (let j = 0; j < added.length; j++) {
+            const node = added[j];
+            if (!node || node.nodeType !== 1) continue;
+            const tag = node.tagName;
+            if (tag !== 'SCRIPT' && tag !== 'IFRAME' && tag !== 'OBJECT' && tag !== 'EMBED') continue;
             let violation = '';
             if (tag === 'SCRIPT') {
               const src = String(node.getAttribute('src') || '').trim();
@@ -27562,7 +28074,7 @@
               if (!inVideoPlayer || !isYoutubeEmbed) {
                 violation = `미인가 iframe 삽입(${(src || 'inline').slice(0, 120)})`;
               }
-            } else if (tag === 'OBJECT' || tag === 'EMBED') {
+            } else {
               violation = `위험 플러그인 태그(<${tag.toLowerCase()}>) 삽입`;
             }
             if (violation) {
@@ -27582,7 +28094,7 @@
                 trackSecurityAttackEvent('실시간 악성 스크립트·DOM 변조 침입 감지', violation, true);
               }
             }
-          });
+          }
         }
       });
       try {
@@ -30202,6 +30714,20 @@
               <span class="settings-row-right">▸</span>
             </button>
           `;
+        } else if (key === 'setCacheClean') {
+          const curKb = Math.max(1, Math.round(estimateLocalStorageBytes() / 1024));
+          rowHtml = `
+            <button class="settings-row-btn" type="button" onclick="handleUserCacheCleanup()">
+              <span class="settings-row-left">
+                <span class="settings-row-icon">${escapeHtml(ic)}</span>
+                <span style="min-width:0;">
+                  <div class="settings-row-title">${escapeHtml(lb)}</div>
+                  <div class="settings-row-sub">구버전 캐시·임시 기록만 안전 정리 (로그인·개인 설정 유지 · 현재 ${curKb}KB)</div>
+                </span>
+              </span>
+              <span class="settings-row-right">정리 ▸</span>
+            </button>
+          `;
         } else if (key === 'setLogout') {
           rowHtml = `
             <button class="settings-row-btn" type="button" onclick="confirmLogoutFromSettings()">
@@ -30251,7 +30777,7 @@
       el.innerHTML = `
         <!-- 프로필 요약 카드 -->
         <div class="settings-profile-card">
-          <img src="./icon-192.png" alt="프로필" class="settings-profile-avatar" />
+          <img src="./icon-192.png" alt="프로필" class="settings-profile-avatar" loading="lazy" decoding="async" />
           <div style="min-width:0; flex:1;">
             <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
               <strong style="font-size:16.5px; color:#FFFFFF;">${escapeHtml(user.name)}님</strong>
@@ -33164,7 +33690,7 @@ ${handleUrl}`);
         <div class="video-card">
           <div class="video-thumb-wrap" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">
             ${vidNew ? '<span class="video-new-corner-badge">NEW</span>' : ''}
-            <img class="video-thumb-img" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="${escapeHtml(v.title || '영상')}" loading="lazy" />
+            <img class="video-thumb-img" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="${escapeHtml(v.title || '영상')}" loading="lazy" decoding="async" />
             <div class="video-play-overlay">
               <span class="video-play-pill">▶ 바로 재생</span>
             </div>
@@ -34256,7 +34782,7 @@ ${handleUrl}`);
                   <span class="card-date">${escapeHtml(v.createdAt || '')}</span>
                 </div>
                 <div class="video-compact-row" style="margin-bottom:8px;" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '영상')}')">
-                  <img class="video-compact-thumb" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="썸네일" />
+                  <img class="video-compact-thumb" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="썸네일" loading="lazy" decoding="async" />
                   <div style="min-width:0; flex:1;">
                     <div style="font-size:14px; font-weight:800; color:#0F172A; line-height:1.35;">${escapeHtml(v.title || '')}</div>
                     <div style="font-size:12px; color:#334155; margin-top:3px;">📺 <b>${escapeHtml(v.channelName || '알 수 없음')}</b></div>
