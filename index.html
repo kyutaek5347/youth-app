@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=276" />
+  <link rel="manifest" href="./manifest.json?v=277" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=276" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=276" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=277" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=277" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -940,7 +940,7 @@
     .order-btns { display: flex; gap: 4px; flex-shrink: 0; }
     .order-btn {
       width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border);
-      background: #F8FAFC; font-weight: 800; font-size: 12px; cursor: pointer;
+      background: #F8FAFC; color: #334155; font-weight: 800; font-size: 12px; cursor: pointer;
     }
     .order-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
@@ -4637,7 +4637,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=276" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=277" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5343,7 +5343,7 @@
           <option value="광고">광고</option>
           <option value="소식">소식</option>
           <option value="행사">행사</option>
-          <option value="__custom__">✏️ 직접 입력...</option>
+          <option value="__custom__">직접 입력...</option>
         </select>
         <input id="noticeCategoryCustomInput" class="form-input hidden" style="margin-top:6px;" maxlength="12" placeholder="구분 직접 입력 (예: 수련회)" />
       </div>
@@ -5357,11 +5357,11 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="noticeAudienceSelect">공개 대상 (누가 이 공지를 볼 수 있나요?)</label>
+        <label class="form-label" for="noticeAudienceSelect">공개 대상 (누가 이 글을 볼 수 있나요?)</label>
         <select id="noticeAudienceSelect" class="form-select" onchange="onNoticeAudienceChange()">
           <option value="all">전체 승인 회원 (기본)</option>
-          <option value="roles">🎯 선택한 역할만 보기</option>
-          <option value="admin">🔐 최고 관리자만 보기</option>
+          <option value="roles">선택한 역할만 보기</option>
+          <option value="admin">최고 관리자만 보기</option>
         </select>
         <div id="noticeRoleTargetBox" class="role-target-box hidden">
           <div class="role-target-actions">
@@ -5376,9 +5376,9 @@
       <div class="form-group">
         <label class="form-label" for="noticePublishModeSelect">게시 방식</label>
         <select id="noticePublishModeSelect" class="form-select" onchange="onNoticePublishModeChange()">
-          <option value="now">🚀 바로 게시 (즉시 공개)</option>
-          <option value="draft">📝 임시저장 (숨김 · 관리자만 확인)</option>
-          <option value="scheduled">⏰ 예약 게시 (지정한 한국시간에 자동 공개)</option>
+          <option value="now">바로 게시 (즉시 공개)</option>
+          <option value="draft">임시저장 (숨김 · 관리자만 확인)</option>
+          <option value="scheduled">예약 게시 (지정한 한국시간에 자동 공개)</option>
         </select>
         <div id="noticeScheduleBox" class="schedule-time-box hidden">
           <div class="form-grid-2">
@@ -5386,7 +5386,7 @@
               <label class="form-label" for="noticeScheduleDateInput" style="font-size:11.5px; margin-bottom:4px;">예약 날짜 (KST)</label>
               <div class="combo-input-row">
                 <input id="noticeScheduleDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="2026.11.29" oninput="formatDateTyping(this)" />
-                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="달력에서 선택" onclick="openNativePicker('noticeScheduleDatePicker', 'noticeScheduleDateInput', 'date')">📅</button>
+                <button class="combo-picker-btn" type="button" style="width:auto; padding:0 9px; height:36px; font-size:12px; font-weight:700;" title="달력에서 선택" onclick="openNativePicker('noticeScheduleDatePicker', 'noticeScheduleDateInput', 'date')">선택</button>
                 <input id="noticeScheduleDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('noticeScheduleDatePicker', 'noticeScheduleDateInput', 'date')" />
               </div>
             </div>
@@ -5394,7 +5394,7 @@
               <label class="form-label" for="noticeScheduleTimeInput" style="font-size:11.5px; margin-bottom:4px;">예약 시각 (KST)</label>
               <div class="combo-input-row">
                 <input id="noticeScheduleTimeInput" type="text" inputmode="numeric" maxlength="5" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="09:00" oninput="formatTimeTyping(this)" />
-                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="시계에서 선택" onclick="openNativePicker('noticeScheduleTimePicker', 'noticeScheduleTimeInput', 'time')">🕒</button>
+                <button class="combo-picker-btn" type="button" style="width:auto; padding:0 9px; height:36px; font-size:12px; font-weight:700;" title="시계에서 선택" onclick="openNativePicker('noticeScheduleTimePicker', 'noticeScheduleTimeInput', 'time')">선택</button>
                 <input id="noticeScheduleTimePicker" type="time" class="hidden-native-picker" onchange="syncPickerToText('noticeScheduleTimePicker', 'noticeScheduleTimeInput', 'time')" />
               </div>
             </div>
@@ -5405,18 +5405,28 @@
         </div>
       </div>
 
-      <label id="noticePinBannerRow" class="checkbox-row" style="margin-bottom:8px;">
-        <input type="checkbox" id="noticePinBannerInput" checked onchange="onNoticePinBannerChange()" />
-        <span>📌 상단 고정 공지 배너에도 함께 띄우기</span>
-      </label>
+      <div id="noticePinBannerRow" class="form-group" style="margin-bottom:10px;">
+        <label class="form-label">홈 상단 배너 표시 여부</label>
+        <input type="checkbox" id="noticePinBannerInput" class="hidden" onchange="onNoticePinBannerChange()" />
+        <div class="qr-mode-grid" style="grid-template-columns:1fr 1fr; margin:0;">
+          <button id="noticeBannerOffBtn" class="qr-mode-btn active" type="button" onclick="setNoticePinBannerChoice(false)">
+            배너 띄우지 않기
+            <small>공지·광고 목록에만 표시</small>
+          </button>
+          <button id="noticeBannerOnBtn" class="qr-mode-btn" type="button" onclick="setNoticePinBannerChoice(true)">
+            상단 배너에 띄우기
+            <small>목록 + 홈 상단 배너 고정</small>
+          </button>
+        </div>
+      </div>
 
-      <div id="noticeBannerStyleBox" class="role-target-box" style="margin-top:0; margin-bottom:10px;">
+      <div id="noticeBannerStyleBox" class="role-target-box hidden" style="margin-top:0; margin-bottom:10px;">
         <div class="form-group" style="margin-bottom:10px;">
-          <label class="form-label" for="noticeBannerBadgeInput">🏷️ 이 공지 상단 배지 문구 (선택 · 비워두면 기본 📌 중요)</label>
-          <input id="noticeBannerBadgeInput" class="form-input" style="background:#fff;" maxlength="24" placeholder="예: 📌 중요 / 🔥 필독 / 📣 광고" />
+          <label class="form-label" for="noticeBannerBadgeInput">상단 배너 배지 문구 (선택 · 비워두면 선택한 구분 표시)</label>
+          <input id="noticeBannerBadgeInput" class="form-input" style="background:#fff;" maxlength="24" placeholder="예: 중요 / 필독 / 광고 / 행사" />
         </div>
         <div class="form-group" style="margin-bottom:0;">
-          <label class="form-label">🎨 이 공지 배너 배경 색상 (배너마다 다르게 설정 가능)</label>
+          <label class="form-label">상단 배너 배경 색상 (글마다 개별 설정 가능)</label>
           <div id="noticeColorPalette" class="color-palette"></div>
         </div>
       </div>
@@ -5700,23 +5710,23 @@
   <div id="quickBannerStyleModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">🎨 배너 색상 · 배지 설정</h3>
+        <h3 class="modal-title">배너 색상 · 배지 설정</h3>
         <button class="close-btn" data-close="quickBannerStyleModal">✕</button>
       </div>
       <input type="hidden" id="qbsNoticeId" />
       <input type="hidden" id="qbsHeroBlockId" />
       <div id="qbsPreviewCard" class="hero-banner" style="margin-bottom:13px; cursor:default;"></div>
       <div class="form-group">
-        <label class="form-label" for="qbsBadgeInput">🏷️ 이 배너 상단 배지 문구 (비워두면 기본 배지 사용)</label>
-        <input id="qbsBadgeInput" class="form-input" maxlength="24" placeholder="예: 📌 중요 / 🔥 필독 / 📣 광고" oninput="updateQuickBannerStylePreview()" />
+        <label class="form-label" for="qbsBadgeInput">상단 배너 배지 문구 (비워두면 글 구분 사용)</label>
+        <input id="qbsBadgeInput" class="form-input" maxlength="24" placeholder="예: 중요 / 필독 / 광고 / 행사" oninput="updateQuickBannerStylePreview()" />
       </div>
       <div class="form-group">
-        <label class="form-label">🎨 이 배너 배경 색상 테마 (배너마다 개별 적용)</label>
+        <label class="form-label">배너 배경 색상 테마 (배너마다 개별 적용)</label>
         <div id="qbsColorPalette" class="color-palette"></div>
       </div>
       <div style="display:flex; gap:8px; margin-top:10px;">
-        <button id="saveQuickBannerStyleBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveQuickBannerStyle()">💾 이 배너 색상·배지 저장</button>
-        <button class="btn-outline" type="button" onclick="openNoticeEditFromQuickStyle()">📝 글 수정</button>
+        <button id="saveQuickBannerStyleBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveQuickBannerStyle()">배너 색상·배지 저장</button>
+        <button class="btn-outline" type="button" onclick="openNoticeEditFromQuickStyle()">글 수정</button>
       </div>
     </div>
   </div>
@@ -6498,8 +6508,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 276;
-    const APP_CACHE_NAME = 'right-youth-app-v10.176';
+    const APP_CLIENT_BUILD = 277;
+    const APP_CACHE_NAME = 'right-youth-app-v10.177';
     const APP_BOOT_TS = Date.now();
     try {
       const _bootUrl = new URL(window.location.href);
@@ -6873,7 +6883,7 @@
     const DEFAULT_UI_TEXTS = Object.fromEntries(UI_TEXT_REGISTRY.map(x => [x.key, x.defaultVal]));
 
     const MANAGE_SUBTAB_REGISTRY = [
-      { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', intro: '홈 화면 배너·칸 순서와 공지·광고 게시(바로·임시저장·예약), 새가족 환영 배너를 관리합니다.', permCheck: p => !!(p.canEditLayout || p.canManageNotices || p.canObserveManage) },
+      { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', intro: '공지·광고를 등록·수정할 때 상단 배너 표시 여부를 선택하고, 새가족 환영 배너와 자동 전환 간격을 관리합니다.', permCheck: p => !!(p.canEditLayout || p.canManageNotices || p.canObserveManage) },
       { id: 'quicklinks', labelKey: 'manageQuickLinks', defaultIcon: '🔗', defaultLabel: '사이트 바로가기 관리', intro: '하단 바로가기 메뉴에 표시되는 인스타그램·유튜브·교회 홈페이지 등 외부 사이트 링크를 관리합니다.', permCheck: p => !!(p.canEditLayout || p.canObserveManage) },
       { id: 'videos', labelKey: 'manageVideos', defaultIcon: '🎬', defaultLabel: '영상 관리', intro: '게시(추천)된 설교·CCM 유튜브 영상을 검토·승인하고, 공식 채널 화이트리스트와 세부 탭을 관리합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
       { id: 'worship', labelKey: 'manageWorship', defaultIcon: '⛪', defaultLabel: '예배 관리', intro: '매주 일요일 정기 예배 출석체크 시간, 예배X(휴무) 지정 및 수련회·특별 행사 일정을 설정합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
@@ -7795,7 +7805,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=276" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=277" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7819,8 +7829,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=276', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=276', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=277', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=277', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -13760,6 +13770,8 @@
     function getNoticeEffectiveBannerBadge(n, heroBlock = null) {
       const own = String((n && n.bannerBadge) || '').trim();
       if (own) return own;
+      const cat = String((n && n.category) || '').trim();
+      if (cat) return cat;
       const hb = heroBlock || blocks.find(x => x.type === 'hero_notice');
       return getDefaultHeroBannerBadge(hb);
     }
@@ -14389,7 +14401,12 @@
       const visibleNotices = notices.filter(canSeeItemOnHome);
       const visibleBlocks = blocks.filter(canSeeItemOnHome);
 
-      if (!attendanceHtml && !newcomerHtml && !homeVideosHtml && visibleBlocks.length === 0) {
+      const heroFallbackBlock = blocks.find(x => x.type === 'hero_notice') || { id: 'blk_hero', type: 'hero_notice', badge: '공지', theme: 'dark' };
+      const noticeListBlock = blocks.find(x => x.type === 'notice_list') || { id: 'blk_notices', type: 'notice_list', title: '공지 · 광고 · 소식' };
+      const pinnedNotices = visibleNotices.filter(n => !!n.pinned);
+      const legacyExtraBanners = visibleBlocks.filter(b => b.type === 'newcomer_card' || b.type === 'leader_card' || b.type === 'custom_ad');
+
+      if (!attendanceHtml && !newcomerHtml && !homeVideosHtml && visibleNotices.length === 0 && legacyExtraBanners.length === 0 && !perms.canManageNotices) {
         container.innerHTML = `
           <div class="card" style="text-align:center; padding:42px 20px; color:#64748B;">
             <div style="font-size:30px; margin-bottom:10px;">✨</div>
@@ -14404,26 +14421,18 @@
       if (newcomerInner) {
         topBannerSlides.push({ label: '새가족 환영 배너', html: newcomerInner });
       }
-      let heroNoticesExpanded = false;
-      visibleBlocks.forEach(b => {
-        if (b.type === 'hero_notice') {
-          if (heroNoticesExpanded) return;
-          heroNoticesExpanded = true;
-          const pinnedList = visibleNotices.filter(n => n.pinned);
-          const heroTargets = pinnedList.length > 0
-            ? pinnedList
-            : (visibleNotices[0] ? [visibleNotices[0]] : []);
-          heroTargets.forEach(pn => {
-            const slideHtml = buildHeroNoticeCardInner(b, pn, user);
-            if (slideHtml) {
-              topBannerSlides.push({ label: pn.title || '중요 배너', html: slideHtml });
-            }
-          });
-        } else if (b.type === 'newcomer_card' || b.type === 'leader_card' || b.type === 'custom_ad') {
-          const slideHtml = buildHomeBannerBlockInner(b, user, getAdminSchedPill);
-          if (slideHtml) {
-            topBannerSlides.push({ label: getBlockDisplayLabel(b), html: slideHtml });
-          }
+      // 공지·광고 중 '상단 배너에 띄우기'가 선택된 글만 배너로 표시
+      pinnedNotices.forEach(pn => {
+        const slideHtml = buildHeroNoticeCardInner(heroFallbackBlock, pn, user);
+        if (slideHtml) {
+          topBannerSlides.push({ label: pn.title || '공지 배너', html: slideHtml });
+        }
+      });
+      // 기존에 등록된 단독 배너가 남아 있는 경우 호환 표시
+      legacyExtraBanners.forEach(b => {
+        const slideHtml = buildHomeBannerBlockInner(b, user, getAdminSchedPill);
+        if (slideHtml) {
+          topBannerSlides.push({ label: getBlockDisplayLabel(b), html: slideHtml });
         }
       });
 
@@ -14432,63 +14441,57 @@
         ? buildTopBannerCarouselHtml(topBannerSlides)
         : (topBannerSlides.length === 1 ? `<div class="home-block">${topBannerSlides[0].html}</div>` : '');
 
-      container.innerHTML = attendanceHtml + topBannerAreaHtml + visibleBlocks.map(b => {
-        if (b.type === 'hero_notice' || b.type === 'newcomer_card' || b.type === 'leader_card' || b.type === 'custom_ad') {
-          return '';
+      const filtered = currentFilter === '전체' ? visibleNotices : visibleNotices.filter(n => n.category === currentFilter);
+      const unreadCatMap = new Map();
+      let totalUnreadNotices = 0;
+      visibleNotices.forEach(n => {
+        if (isNoticeUnread(n, user)) {
+          totalUnreadNotices++;
+          const c = String(n.category || '');
+          unreadCatMap.set(c, (unreadCatMap.get(c) || 0) + 1);
         }
-
-        if (b.type === 'notice_list') {
-          const filtered = currentFilter === '전체' ? visibleNotices : visibleNotices.filter(n => n.category === currentFilter);
-          const unreadCatMap = new Map();
-          let totalUnreadNotices = 0;
-          visibleNotices.forEach(n => {
-            if (isNoticeUnread(n, user)) {
-              totalUnreadNotices++;
-              const c = String(n.category || '');
-              unreadCatMap.set(c, (unreadCatMap.get(c) || 0) + 1);
-            }
-          });
-          return `
-            <div class="home-block" data-ts-zone="home_notice">
-              <div class="section-head">
-                <h2 class="section-title"><span class="section-title-with-icon">${renderUiIconHtml('notice', { forceOutline: true })}<span>${escapeHtml(String(b.title || '공지 · 광고 · 소식').replace(/^📢\s*/, ''))}</span></span></h2>
-                ${perms.canManageNotices ? `<button class="btn-sm primary" onclick="openUnifiedContentModal('notice')">+ 글쓰기</button>` : ''}
-              </div>
-              <div class="filter-row" data-ts-bar="home_notice" data-ts-body="home_notice" data-ts-pos="after-body">
-                ${Array.from(new Set(['전체', '공지', '광고', '소식', '행사', ...visibleNotices.map(n => n.category).filter(Boolean)])).map(cat => {
-                  const uCnt = cat === '전체' ? totalUnreadNotices : (unreadCatMap.get(cat) || 0);
-                  return `<button class="filter-chip ${currentFilter === cat ? 'active' : ''} ${uCnt > 0 ? 'has-badge' : ''}" data-cat="${escapeHtml(cat)}" onclick="setFilter(this.dataset.cat)"><span>${escapeHtml(cat)}</span>${buildSubTabBadgeHtml(uCnt)}</button>`;
-                }).join('')}
-              </div>
-              <div class="ts-swipe-body" data-ts-body="home_notice">
-                ${filtered.length === 0
-                  ? '<div class="card" style="text-align:center;color:#64748B;">해당 구분의 글이 없습니다.</div>'
-                  : filtered.map(n => {
-                      const isNewN = isNoticeUnread(n, user);
-                      return `
-                        <div class="card clickable" onclick="openDetail('${escapeJsAttr(n.id)}')">
-                          <div class="card-top">
-                            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-                              ${isNewN ? '<span class="new-badge">NEW</span>' : ''}
-                              <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
-                              ${n.pinned ? '<span class="tag green">배너고정</span>' : ''}
-                              ${getPublishState(n) === 'scheduled' ? getPublishStateBadgeHtml(n) : ''}
-                              ${getAudienceBadgeHtml(n)}
-                            </div>
-                            <span class="card-date">${escapeHtml(n.date)}</span>
-                          </div>
-                          <h3 class="card-title" style="margin-bottom:0;">${escapeHtml(n.title)}</h3>
-                          ${buildPostReactionBarHtml('notice', n, 'card')}
+      });
+      const noticeSectionTitle = String((noticeListBlock && noticeListBlock.title) || '공지 · 광고 · 소식').replace(/^📢\s*/, '') || '공지 · 광고 · 소식';
+      const noticeListHtml = `
+        <div class="home-block" data-ts-zone="home_notice">
+          <div class="section-head">
+            <h2 class="section-title"><span class="section-title-with-icon">${renderUiIconHtml('notice', { forceOutline: true })}<span>${escapeHtml(noticeSectionTitle)}</span></span></h2>
+            ${perms.canManageNotices ? `<button class="btn-sm primary" onclick="openAddNoticeModal()">+ 글쓰기</button>` : ''}
+          </div>
+          <div class="filter-row" data-ts-bar="home_notice" data-ts-body="home_notice" data-ts-pos="after-body">
+            ${Array.from(new Set(['전체', '공지', '광고', '소식', '행사', ...visibleNotices.map(n => n.category).filter(Boolean)])).map(cat => {
+              const uCnt = cat === '전체' ? totalUnreadNotices : (unreadCatMap.get(cat) || 0);
+              return `<button class="filter-chip ${currentFilter === cat ? 'active' : ''} ${uCnt > 0 ? 'has-badge' : ''}" data-cat="${escapeHtml(cat)}" onclick="setFilter(this.dataset.cat)"><span>${escapeHtml(cat)}</span>${buildSubTabBadgeHtml(uCnt)}</button>`;
+            }).join('')}
+          </div>
+          <div class="ts-swipe-body" data-ts-body="home_notice">
+            ${filtered.length === 0
+              ? '<div class="card" style="text-align:center;color:#64748B;">해당 구분의 글이 없습니다.</div>'
+              : filtered.map(n => {
+                  const isNewN = isNoticeUnread(n, user);
+                  return `
+                    <div class="card clickable" onclick="openDetail('${escapeJsAttr(n.id)}')">
+                      <div class="card-top">
+                        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                          ${isNewN ? '<span class="new-badge">NEW</span>' : ''}
+                          <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
+                          ${n.pinned ? '<span class="tag green">배너고정</span>' : ''}
+                          ${getPublishState(n) === 'scheduled' ? getPublishStateBadgeHtml(n) : ''}
+                          ${getAudienceBadgeHtml(n)}
                         </div>
-                      `;
-                    }).join('')}
-              </div>
-              <div data-ts-ctrl-slot="home_notice"></div>
-            </div>
-          `;
-        }
-        return '';
-      }).join('') + homeVideosHtml;
+                        <span class="card-date">${escapeHtml(n.date)}</span>
+                      </div>
+                      <h3 class="card-title" style="margin-bottom:0;">${escapeHtml(n.title)}</h3>
+                      ${buildPostReactionBarHtml('notice', n, 'card')}
+                    </div>
+                  `;
+                }).join('')}
+          </div>
+          <div data-ts-ctrl-slot="home_notice"></div>
+        </div>
+      `;
+
+      container.innerHTML = attendanceHtml + topBannerAreaHtml + noticeListHtml + homeVideosHtml;
 
       if (useTopCarousel) bindHomeTopBannerCarousel();
       else stopHomeTopBannerAutoSlide();
@@ -14871,7 +14874,8 @@
     };
 
     window.setManageContentFilter = (filterKey) => {
-      manageContentFilter = ['all', 'blocks', 'notices', 'pending'].includes(filterKey) ? filterKey : 'all';
+      const normalized = (filterKey === 'blocks') ? 'banner' : ((filterKey === 'notices') ? 'all' : filterKey);
+      manageContentFilter = ['all', 'banner', 'listonly', 'pending'].includes(normalized) ? normalized : 'all';
       manageSectionOpen.content_unified = true;
       const u = getCurrentUser();
       if (u && currentMainTab === 'manage' && currentManageSubTab === 'content') {
@@ -14882,74 +14886,45 @@
     function renderManageContent(el, user) {
       const canLayout = hasUserPerm(user, 'canEditLayout') || isManageReadOnlyUser(user);
       const canNotices = hasUserPerm(user, 'canManageNotices') || isManageReadOnlyUser(user);
-      const liveBlockCount = blocks.filter(b => getPublishState(b) === 'live').length;
-      const liveNoticeCount = notices.filter(n => getPublishState(n) === 'live').length;
-      const pendingOrDraftCount =
-        (canLayout ? blocks.filter(b => getPublishState(b) !== 'live').length : 0) +
-        (canNotices ? notices.filter(n => getPublishState(n) !== 'live').length : 0);
 
-      if (manageContentFilter === 'blocks' && !canLayout) manageContentFilter = 'all';
-      if (manageContentFilter === 'notices' && !canNotices) manageContentFilter = 'all';
-      if (manageContentFilter === 'pending' && pendingOrDraftCount === 0) manageContentFilter = 'all';
+      const liveNotices = notices.filter(n => getPublishState(n) === 'live');
+      const pinnedLiveNotices = liveNotices.filter(n => !!n.pinned);
+      const listOnlyLiveNotices = liveNotices.filter(n => !n.pinned);
+      const pendingNotices = notices.filter(n => getPublishState(n) !== 'live');
+      const legacyExtraBlocks = blocks.filter(b => b.type !== 'hero_notice' && b.type !== 'notice_list');
 
-      const totalCount = (canLayout ? blocks.length : 0) + (canNotices ? notices.length : 0);
-      const showBlocks = canLayout && (manageContentFilter === 'all' || manageContentFilter === 'blocks' || manageContentFilter === 'pending');
-      const showNotices = canNotices && (manageContentFilter === 'all' || manageContentFilter === 'notices' || manageContentFilter === 'pending');
-      const isPendingOnly = manageContentFilter === 'pending';
+      if (!['all', 'banner', 'listonly', 'pending'].includes(manageContentFilter)) {
+        manageContentFilter = 'all';
+      }
+      if (manageContentFilter === 'pending' && pendingNotices.length === 0) {
+        manageContentFilter = 'all';
+      }
 
-      const visibleBlockEntries = showBlocks
-        ? blocks.map((b, idx) => ({ b, idx })).filter(({ b }) => !isPendingOnly || getPublishState(b) !== 'live')
-        : [];
-      const visibleNoticeEntries = showNotices
-        ? notices.map((n, idx) => ({ n, idx })).filter(({ n }) => !isPendingOnly || getPublishState(n) !== 'live')
-        : [];
-      const renderedCount = visibleBlockEntries.length + visibleNoticeEntries.length;
-
-      const blockCardsHtml = visibleBlockEntries.map(({ b, idx }) => {
-        const st = getPublishState(b);
-        const dispTitle = getBlockDisplayLabel(b);
-        const typeHint = BLOCK_TYPE_NAMES[b.type] || '';
-        return `
-          <div class="card" style="${st === 'draft' ? 'opacity:0.74; background:#F8FAFC;' : (st === 'scheduled' ? 'border-color:#A5B4FC; background:#F5F7FF;' : '')}">
-            <div class="layout-item-head">
-              <div style="min-width:0;">
-                <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-bottom:4px;">
-                  <span class="tag slate" style="display:inline-flex;align-items:center;gap:4px;">${b.type !== 'notice_list' ? `<span class="banner-swatch-dot" style="background:${getThemeCss(b.theme)};"></span>` : ''}🎨 배너·칸 ${idx + 1}</span>
-                  ${getPublishStateBadgeHtml(b)}
-                  ${getAudienceBadgeHtml(b)}
-                </div>
-                <strong style="font-size:14.5px; color:#0F172A;">${escapeHtml(dispTitle)}</strong>
-                ${(typeHint && typeHint !== dispTitle) ? `<div style="font-size:11.5px; color:#64748B; margin-top:3px;">유형: ${escapeHtml(typeHint)}</div>` : ''}
-              </div>
-              ${!isPendingOnly ? `
-                <div class="order-btns">
-                  <button class="order-btn" onclick="moveBlock(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
-                  <button class="order-btn" onclick="moveBlock(${idx}, 1)" ${idx === blocks.length - 1 ? 'disabled' : ''}>▼</button>
-                </div>
-              ` : ''}
-            </div>
-            <div class="card-footer">
-              <button class="btn-sm ${st !== 'live' ? 'approve' : ''}" onclick="toggleBlockHomeVisibility('${escapeJsAttr(b.id)}')">${st === 'live' ? '숨기기(임시저장)' : '🚀 지금 바로 게시'}</button>
-              <div style="display:flex; gap:6px;">
-                <button class="btn-sm" onclick="openEditBlockModal('${escapeJsAttr(b.id)}')">수정</button>
-                <button class="btn-sm danger" onclick="deleteBlock('${escapeJsAttr(b.id)}')">삭제</button>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
+      const visibleNoticeEntries = notices.map((n, idx) => ({ n, idx })).filter(({ n }) => {
+        const st = getPublishState(n);
+        if (manageContentFilter === 'banner') return st === 'live' && !!n.pinned;
+        if (manageContentFilter === 'listonly') return st === 'live' && !n.pinned;
+        if (manageContentFilter === 'pending') return st !== 'live';
+        return true;
+      });
+      const isFilteredView = manageContentFilter !== 'all';
 
       const noticeCardsHtml = visibleNoticeEntries.map(({ n, idx }) => {
         const st = getPublishState(n);
+        const statusBadgeHtml = st !== 'live'
+          ? `${getPublishStateBadgeHtml(n)}${n.pinned && st === 'scheduled' ? '<span class="tag green">배너 예정</span>' : ''}`
+          : (n.pinned
+            ? `<span class="tag green" style="display:inline-flex;align-items:center;gap:4px;"><span class="banner-swatch-dot" style="background:${getThemeCss(getNoticeEffectiveBannerTheme(n))};"></span>상단 배너 표시중</span>`
+            : '<span class="tag slate">목록만 표시</span>');
         return `
           <div class="card" style="${st === 'draft' ? 'opacity:0.74; background:#F8FAFC;' : (st === 'scheduled' ? 'border-color:#A5B4FC; background:#F5F7FF;' : '')}">
             <div class="card-top">
               <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
-                <span class="tag ${tagColor(n.category)}">📝 ${escapeHtml(n.category)} ${idx + 1}</span>
-                ${st !== 'live' ? getPublishStateBadgeHtml(n) : (n.pinned ? `<span class="tag green" style="display:inline-flex;align-items:center;gap:4px;"><span class="banner-swatch-dot" style="background:${getThemeCss(getNoticeEffectiveBannerTheme(n))};"></span>상단 배너 고정중</span>` : '<span class="tag green">게시중</span>')}
+                <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)} ${idx + 1}</span>
+                ${statusBadgeHtml}
                 ${getAudienceBadgeHtml(n)}
               </div>
-              ${!isPendingOnly ? `
+              ${!isFilteredView ? `
                 <div class="order-btns">
                   <button class="order-btn" onclick="moveNotice(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
                   <button class="order-btn" onclick="moveNotice(${idx}, 1)" ${idx === notices.length - 1 ? 'disabled' : ''}>▼</button>
@@ -14962,10 +14937,10 @@
               <span class="card-date">${escapeHtml(n.date)}</span>
               <div style="display:flex;gap:6px;flex-wrap:wrap;">
                 ${st !== 'live'
-                  ? `<button class="btn-sm approve" onclick="publishNoticeNow('${escapeJsAttr(n.id)}')">🚀 지금 바로 게시</button>`
+                  ? `<button class="btn-sm approve" onclick="publishNoticeNow('${escapeJsAttr(n.id)}')">지금 바로 게시</button>`
                   : (n.pinned
-                    ? `<button class="btn-sm" onclick="openQuickBannerStyleModal('${escapeJsAttr(n.id)}')">🎨 배너 색</button><button class="btn-sm warn" onclick="unpinNoticeFromHomeBanner('${escapeJsAttr(n.id)}')">📌 고정 해제</button>`
-                    : `<button class="btn-sm primary" onclick="pinNoticeToHomeBanner('${escapeJsAttr(n.id)}')">📌 배너 고정</button>`)}
+                    ? `<button class="btn-sm" onclick="openQuickBannerStyleModal('${escapeJsAttr(n.id)}')">배너 색</button><button class="btn-sm warn" onclick="unpinNoticeFromHomeBanner('${escapeJsAttr(n.id)}')">배너 내리기</button>`
+                    : `<button class="btn-sm primary" onclick="pinNoticeToHomeBanner('${escapeJsAttr(n.id)}')">배너 띄우기</button>`)}
                 <button class="btn-sm" onclick="openEditNotice('${escapeJsAttr(n.id)}')">수정</button>
                 <button class="btn-sm danger" onclick="deleteNotice('${escapeJsAttr(n.id)}')">삭제</button>
               </div>
@@ -14974,38 +14949,59 @@
         `;
       }).join('');
 
-      const emptyBlocksHintHtml = (showBlocks && !isPendingOnly && blocks.length === 0)
-        ? `<div class="card" style="text-align:center;color:#64748B;font-size:12.5px;background:#F8FAFC;border-style:dashed;">
-             <div>배치된 ${escapeHtml(getTabLabel('home'))} 배너·칸이 없습니다.</div>
-             <div style="margin-top:8px; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
-               <button class="btn-sm primary" type="button" onclick="restoreDefaultLayoutBlocks()">✨ 기본 ${escapeHtml(getTabLabel('home'))} 칸 자동 채우기</button>
-               <button class="btn-sm" type="button" onclick="openUnifiedContentModal('banner')">+ 직접 칸 추가</button>
-             </div>
+      const emptyNoticeHtml = visibleNoticeEntries.length === 0
+        ? `<div class="card" style="text-align:center;color:#64748B;font-size:13px;padding:22px 14px;">
+             ${manageContentFilter === 'banner'
+               ? '현재 상단 배너에 띄워진 공지·광고가 없습니다.'
+               : (manageContentFilter === 'listonly'
+                 ? '목록에만 표시 중인 공지·광고가 없습니다.'
+                 : (manageContentFilter === 'pending'
+                   ? '임시저장 또는 예약된 공지·광고가 없습니다.'
+                   : '등록된 공지·광고가 없습니다. 위 [+ 새 공지 · 광고 등록] 버튼으로 첫 글을 올려 보세요.'))}
            </div>`
         : '';
 
-      const emptyAllHtml = (renderedCount === 0 && !emptyBlocksHintHtml)
-        ? `<div class="card" style="text-align:center;color:#64748B;font-size:13px;padding:22px 14px;">
-             ${manageContentFilter === 'notices'
-               ? '등록된 공지·광고가 없습니다.'
-               : (manageContentFilter === 'pending'
-                 ? '임시저장 또는 예약된 항목이 없습니다.'
-                 : '등록된 배너·칸이나 공지·광고가 없습니다.')}
-           </div>`
-        : '';
+      const legacyBlocksSectionHtml = (canLayout && legacyExtraBlocks.length > 0) ? `
+        ${buildManageAccordionBar({
+          key: 'content_legacy_blocks',
+          titleHtml: '이전 단독 배너 정리',
+          badgeHtml: `<span class="tag warm">${legacyExtraBlocks.length}개</span>`,
+          defaultOpen: false,
+          marginTop: '14px'
+        })}
+        <div data-acc-body="content_legacy_blocks" class="${isManageSectionOpen('content_legacy_blocks', false) ? '' : 'hidden'}">
+          <div class="info-box" style="margin-top:0; margin-bottom:10px;">
+            예전에 따로 등록해 둔 단독 배너입니다. 이제 배너는 공지·광고를 입력할 때 선택하므로, 불필요한 이전 배너는 여기서 삭제할 수 있습니다.
+          </div>
+          ${legacyExtraBlocks.map(b => `
+            <div class="card">
+              <div class="layout-item-head">
+                <div style="min-width:0;">
+                  <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-bottom:4px;">
+                    <span class="tag slate">${escapeHtml(BLOCK_TYPE_NAMES[b.type] || '단독 배너')}</span>
+                    ${getPublishStateBadgeHtml(b)}
+                  </div>
+                  <strong style="font-size:14px; color:#0F172A;">${escapeHtml(getBlockDisplayLabel(b))}</strong>
+                </div>
+                <button class="btn-sm danger" type="button" onclick="deleteBlock('${escapeJsAttr(b.id)}')">삭제</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      ` : '';
 
       el.innerHTML = `
         <div class="stats-grid-3">
-          <div class="stat-box" onclick="switchMainTab('home')">
-            <div class="stat-num">${liveBlockCount}</div>
-            <div class="stat-label">${escapeHtml(getTabLabel('home'))} 표시</div>
+          <div class="stat-box" onclick="setManageContentFilter('banner')">
+            <div class="stat-num">${pinnedLiveNotices.length}</div>
+            <div class="stat-label">상단 배너</div>
           </div>
-          <div class="stat-box" onclick="setManageContentFilter('notices')">
-            <div class="stat-num">${liveNoticeCount}</div>
-            <div class="stat-label">게시 공지</div>
+          <div class="stat-box" onclick="setManageContentFilter('all')">
+            <div class="stat-num">${liveNotices.length}</div>
+            <div class="stat-label">게시 공지·광고</div>
           </div>
           <div class="stat-box" onclick="setManageContentFilter('pending')">
-            <div class="stat-num">${pendingOrDraftCount}</div>
+            <div class="stat-num">${pendingNotices.length}</div>
             <div class="stat-label">임시·예약</div>
           </div>
         </div>
@@ -15016,8 +15012,8 @@
           return `
           <div class="card celeb-manage-card">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; flex-wrap:wrap;">
-              <div style="font-size:13.5px; font-weight:800; color:#0F172A; display:inline-flex; align-items:center; gap:6px;"><span class="banner-swatch-dot" style="background:${getThemeCss(getCelebrationMsg('newcomerTheme'))};"></span>💐 새가족 환영 · 현재 ${curNc.length}명</div>
-              <button class="btn-sm primary" type="button" style="padding:6px 10px;" onclick="openCelebrationMsgsModal()">🎨 명단·멘트·색 수정</button>
+              <div style="font-size:13.5px; font-weight:800; color:#0F172A; display:inline-flex; align-items:center; gap:6px;"><span class="banner-swatch-dot" style="background:${getThemeCss(getCelebrationMsg('newcomerTheme'))};"></span>새가족 환영 · 현재 ${curNc.length}명</div>
+              <button class="btn-sm primary" type="button" style="padding:6px 10px;" onclick="openCelebrationMsgsModal()">명단·멘트·색 수정</button>
             </div>
             <div style="font-size:12px; color:#475569; line-height:1.52; word-break:keep-all;">
               ${curNcNames.length > 0
@@ -15033,7 +15029,7 @@
         ${canLayout ? `
           <div class="card" style="padding:12px 14px; margin-bottom:10px;">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:7px; flex-wrap:wrap;">
-              <div style="font-size:13px; font-weight:800; color:#0F172A;">⏱️ 상단 배너 자동 전환 간격</div>
+              <div style="font-size:13px; font-weight:800; color:#0F172A;">상단 배너 자동 전환 간격</div>
               <span class="tag ${bannerAutoSlideSec > 0 ? 'green' : 'slate'}">${bannerAutoSlideSec > 0 ? `${bannerAutoSlideSec}초마다 자동 순환` : '자동 전환 꺼짐'}</span>
             </div>
             <div class="filter-row" style="margin-bottom:4px;" data-ts-skip="1">
@@ -15048,32 +15044,34 @@
         ${(canLayout || canNotices) ? `
           ${buildManageAccordionBar({
             key: 'content_unified',
-            titleHtml: `${escapeHtml(getTabIcon('manageContent'))} ${escapeHtml(getTabLabel('home'))} 배너·공지·광고 관리`,
-            badgeHtml: `<span class="tag slate">총 ${totalCount}개</span>`,
+            titleHtml: '공지 · 광고 관리',
+            badgeHtml: `<span class="tag slate">총 ${notices.length}개</span>`,
             defaultOpen: true,
             marginTop: '12px'
           })}
           <div data-acc-body="content_unified" class="${isManageSectionOpen('content_unified', true) ? '' : 'hidden'}">
+            <div class="info-box" style="margin-top:0; margin-bottom:10px;">
+              공지·광고를 작성하거나 수정할 때 <b>상단 배너에 띄우기</b>를 선택하면 홈 맨 위 배너에도 함께 표시됩니다.
+            </div>
             <div style="display:flex; gap:6px; margin-bottom:10px;">
-              <button class="btn-full btn-dark" type="button" style="flex:1; padding:11px 12px; font-size:13.5px; border-radius:12px;" onclick="openUnifiedContentModal()">+ 새 배너 · 공지 · 광고 등록</button>
-              <button class="btn-outline" type="button" style="white-space:nowrap; padding:0 11px; border-radius:12px; font-size:12px; font-weight:800;" onclick="jumpToManageReactionEmojis()">😊 이모지 설정</button>
+              <button class="btn-full btn-dark" type="button" style="flex:1; padding:11px 12px; font-size:13.5px; border-radius:12px;" onclick="openAddNoticeModal()">+ 새 공지 · 광고 등록</button>
+              <button class="btn-outline" type="button" style="white-space:nowrap; padding:0 11px; border-radius:12px; font-size:12px; font-weight:800;" onclick="jumpToManageReactionEmojis()">이모지 설정</button>
             </div>
 
             <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_content_filter" data-ts-body="#manageContentCardsBody">
-              <button class="filter-chip ${manageContentFilter === 'all' ? 'active' : ''}" type="button" onclick="setManageContentFilter('all')">전체 (${totalCount})</button>
-              ${canLayout ? `<button class="filter-chip ${manageContentFilter === 'blocks' ? 'active' : ''}" type="button" onclick="setManageContentFilter('blocks')">🎨 배너·칸 (${blocks.length})</button>` : ''}
-              ${canNotices ? `<button class="filter-chip ${manageContentFilter === 'notices' ? 'active' : ''}" type="button" onclick="setManageContentFilter('notices')">📝 공지·광고 (${notices.length})</button>` : ''}
-              ${pendingOrDraftCount > 0 ? `<button class="filter-chip ${manageContentFilter === 'pending' ? 'active' : ''}" type="button" onclick="setManageContentFilter('pending')">⏳ 임시·예약 (${pendingOrDraftCount})</button>` : ''}
+              <button class="filter-chip ${manageContentFilter === 'all' ? 'active' : ''}" type="button" onclick="setManageContentFilter('all')">전체 (${notices.length})</button>
+              <button class="filter-chip ${manageContentFilter === 'banner' ? 'active' : ''}" type="button" onclick="setManageContentFilter('banner')">배너 표시중 (${pinnedLiveNotices.length})</button>
+              <button class="filter-chip ${manageContentFilter === 'listonly' ? 'active' : ''}" type="button" onclick="setManageContentFilter('listonly')">목록만 표시 (${listOnlyLiveNotices.length})</button>
+              ${pendingNotices.length > 0 ? `<button class="filter-chip ${manageContentFilter === 'pending' ? 'active' : ''}" type="button" onclick="setManageContentFilter('pending')">임시·예약 (${pendingNotices.length})</button>` : ''}
             </div>
 
             <div id="manageContentCardsBody">
-              ${emptyBlocksHintHtml}
-              ${blockCardsHtml}
               ${noticeCardsHtml}
-              ${emptyAllHtml}
+              ${emptyNoticeHtml}
             </div>
-            ${renderedCount >= 5 ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('content_unified', true)">▲ 배너·공지·광고 목록 접기</button>` : ''}
+            ${visibleNoticeEntries.length >= 5 ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('content_unified', true)">▲ 공지·광고 목록 접기</button>` : ''}
           </div>
+          ${legacyBlocksSectionHtml}
         ` : ''}
       `;
     }
@@ -15374,11 +15372,52 @@
       renderNoticeThemePalette();
     };
 
+    window.setNoticePinBannerChoice = (showBanner) => {
+      const chk = document.getElementById('noticePinBannerInput');
+      if (chk) chk.checked = !!showBanner;
+      onNoticePinBannerChange();
+    };
+
     window.onNoticePinBannerChange = () => {
       const mode = document.getElementById('noticePublishModeSelect').value;
       const pinned = !!(document.getElementById('noticePinBannerInput') && document.getElementById('noticePinBannerInput').checked);
+      const offBtn = document.getElementById('noticeBannerOffBtn');
+      const onBtn = document.getElementById('noticeBannerOnBtn');
+      if (offBtn) offBtn.classList.toggle('active', !pinned);
+      if (onBtn) onBtn.classList.toggle('active', pinned);
       const box = document.getElementById('noticeBannerStyleBox');
       if (box) box.classList.toggle('hidden', mode === 'draft' || !pinned);
+    };
+
+    window.openAddNoticeModal = () => {
+      const user = getCurrentUser();
+      if (!user) return;
+      document.getElementById('noticeModalTitle').textContent = '새 공지 · 광고 등록';
+      document.getElementById('editNoticeId').value = '';
+      document.getElementById('noticeCategory').value = '공지';
+      document.getElementById('noticeCategoryCustomInput').value = '';
+      onNoticeCategorySelectChange();
+      document.getElementById('noticeTitleInput').value = '';
+      document.getElementById('noticeBodyInput').value = '';
+      document.getElementById('noticeAudienceSelect').value = 'all';
+      renderRoleChecklist('notice', []);
+      onNoticeAudienceChange();
+      const def = getDefaultScheduleKst();
+      document.getElementById('noticePublishModeSelect').value = 'now';
+      document.getElementById('noticeScheduleDateInput').value = def.dot;
+      document.getElementById('noticeScheduleTimeInput').value = def.hhmm;
+      document.getElementById('noticePinBannerInput').checked = false;
+      const nbBadge = document.getElementById('noticeBannerBadgeInput');
+      if (nbBadge) nbBadge.value = '';
+      selectedNoticeTheme = 'dark';
+      renderNoticeThemePalette();
+      document.getElementById('noticeNotifyInput').checked = true;
+      onNoticePublishModeChange();
+      document.getElementById('noticeModal').classList.add('open');
+      setTimeout(() => {
+        const t = document.getElementById('noticeTitleInput');
+        if (t) t.focus();
+      }, 60);
     };
 
     window.onNoticePublishModeChange = () => {
@@ -15752,6 +15791,8 @@
     };
 
     window.openUnifiedContentModal = (initialMode = '') => {
+      openAddNoticeModal();
+      return;
       const user = getCurrentUser();
       if (!user) return;
       let startMode = initialMode;
