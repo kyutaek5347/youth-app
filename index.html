@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=250" />
+  <link rel="manifest" href="./manifest.json?v=251" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=250" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=250" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=251" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=251" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4239,7 +4239,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=250" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=251" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5549,9 +5549,25 @@
       <div class="info-box" style="margin-top:0; margin-bottom:10px; background:#F0FDF4; border-color:#BBF7D0; color:#14532D;">
         🔒 <b>개인정보 보호 저장:</b> 입력한 셀과 명단은 GitHub 공개 코드가 아니라 <b>로그인 인증이 필요한 Firebase 서버</b>에만 안전하게 보관됩니다.
       </div>
-      <div class="form-group" style="margin-bottom:10px;">
-        <label class="form-label" for="cellVenueInput">📍 예배 장소 (주간 출석부 상단 표시)</label>
-        <input id="cellVenueInput" class="form-input" maxlength="30" placeholder="예: 다니엘 성전" />
+      <div class="form-grid-2" style="margin-bottom:6px;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label" for="cellVenueInput">📍 예배 장소 (출석부 상단)</label>
+          <input id="cellVenueInput" class="form-input" maxlength="30" placeholder="예: 다니엘 성전" />
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label" for="cellDisplayTimeInput">🕒 출석부 표기 예배 시간</label>
+          <input id="cellDisplayTimeInput" class="form-input" maxlength="20" placeholder="예: 오후 2시 / 14시" />
+        </div>
+      </div>
+      <div class="quick-preset-row" style="margin-bottom:8px;">
+        <button class="quick-preset-chip" type="button" onclick="applyCellDisplayTimePreset('오후 2시')">오후 2시</button>
+        <button class="quick-preset-chip" type="button" onclick="applyCellDisplayTimePreset('14시')">14시</button>
+        <button class="quick-preset-chip" type="button" onclick="applyCellDisplayTimePreset('오후 1시 30분')">오후 1시 30분</button>
+        <button class="quick-preset-chip" type="button" onclick="applyCellDisplayTimePreset('오전 11시')">오전 11시</button>
+        <button class="quick-preset-chip" type="button" onclick="applyCellDisplayTimePreset('')">자동 (예배 시작시간)</button>
+      </div>
+      <div style="font-size:11px; color:#64748B; margin-bottom:10px; line-height:1.45;">
+        💡 <b>[⛪ 예배 관리]</b>의 출석체크 시간(예: 12:30~16:30)과 별개로, 주간 출석부 상단 날짜 옆에 자동으로 적히는 예배 시간입니다. 비워두면 예배 시작 시간이 자동 기재됩니다.
       </div>
 
       <div class="modal-tabs-2" data-ts-bar="cell_roster_tabs">
@@ -6151,12 +6167,12 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 250;
-    const APP_CACHE_NAME = 'right-youth-app-v10.150';
+    const APP_CLIENT_BUILD = 251;
+    const APP_CACHE_NAME = 'right-youth-app-v10.151';
     const APP_BOOT_TS = Date.now();
-    const SHEET_SCHEMA_VERSION = 'v10.150-weekly-excel-roster';
+    const SHEET_SCHEMA_VERSION = 'v10.151-weekly-only';
     const SHEET_SCHEMA_TABS = [
-      { id: 'attendance', name: '출석부', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '예배·행사별 출석O/출석X 시각 & 누적 출석' },
+      { id: 'attendance', name: '주간 출석부 (날짜별 탭)', isWeeklyAttendance: true, kind: 'state', addedIn: 'v10.151', rebuildable: true, desc: '예배·행사 날짜별 셀 주간 출석부 탭 (예: 26.11.29 · 구버전 누적 출석부 폐기)' },
       { id: 'members', name: '회원 명단', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '성명·역할·가입일·상태·이전이름 (생일 열 폐기)' },
       { id: 'admins', name: '관리자 명단', kind: 'state', addedIn: 'v10.20', rebuildable: true, desc: '활성/해제/회원전환 관리자 현황·접속일·횟수' },
       { id: 'inquiries', name: '문의 내역', kind: 'state', addedIn: 'v10.109', isNew: true, rebuildable: true, desc: '이용자 문의 분류·제목·내용·처리상태·관리자 답변' },
@@ -6168,9 +6184,17 @@
       { id: 'member_audit_logs', name: '이용자 활동 로그', kind: 'log', addedIn: 'v10.48', rebuildable: false, desc: '영상 추천·문의·가입/탈퇴·출석 이력 (삭제 불가)' }
     ];
     const SHEET_REMOVED_TABS = [
+      { name: '출석부', removedIn: 'v10.151', reason: '날짜별 셀 주간 출석부 탭(예: 26.11.29)으로 전면 전환 (구버전 누적 출석부 탭 자동 삭제)' },
       { name: '생일 변경 로그', removedIn: 'v10.69', reason: '생년월일 기능 폐기 및 개인정보 최소화 (회원 명단 생년월일 열 포함)' }
     ];
     const SHEET_SCHEMA_CHANGELOG = [
+      {
+        version: 'v10.151',
+        date: '2026.11.27',
+        added: ['출석부 상단 표기 예배 시간 별도 설정'],
+        removed: ['출석부 (구버전 누적 탭)'],
+        changed: ['구버전 누적 출석부 탭 자동 삭제 및 날짜별 주간 출석부 단독 동기화 전환', '출석체크 가능 시간과 출석부 상단 표기 예배 시간을 독립적으로 설정 가능']
+      },
       {
         version: 'v10.150',
         date: '2026.11.27',
@@ -6339,6 +6363,7 @@
     const DEFAULT_EMERGENCY_MAINT_MESSAGE = '보안 위협이 감지되어 이용자 보호를 위해 긴급 보안 점검을 진행하고 있습니다.\n안전 확인 및 조치가 완료되면 자동으로 정상 복구됩니다.';
     const DEFAULT_CELL_ROSTER = {
       venue: '다니엘 성전',
+      displayTime: '오후 2시',
       newcomerCellName: '새가족 셀',
       newcomerMembers: [],
       cells: [],
@@ -7194,7 +7219,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=250" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=251" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7218,8 +7243,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=250', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=250', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=251', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=251', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -20265,13 +20290,23 @@
       let synced = 0;
       let failed = 0;
       try {
-        for (const rec of toSync) {
-          const ok = await postToGoogleSheet(buildAttendanceSheetPayloadItem(rec, { forceUpdate: true }), url);
+        const sessionGroups = new Map();
+        toSync.forEach(rec => {
+          const sid = String(rec.sessionId || rec.date || '');
+          if (!sid) return;
+          if (!sessionGroups.has(sid)) sessionGroups.set(sid, []);
+          sessionGroups.get(sid).push(rec);
+        });
+        for (const [sid, recs] of sessionGroups.entries()) {
+          const sessObj = resolveSessionObjectForRecord(recs[0]);
+          const ok = sessObj ? await syncWeeklyAttendanceForSessionObj(sessObj, true) : false;
           if (ok) {
-            synced++;
-            await db.collection('attendance').doc(String(rec.id)).update({ sheetSynced: true }).catch(() => {});
+            for (const rec of recs) {
+              synced++;
+              await db.collection('attendance').doc(String(rec.id)).update({ sheetSynced: true }).catch(() => {});
+            }
           } else {
-            failed++;
+            failed += recs.length;
           }
         }
       } finally {
@@ -20596,17 +20631,6 @@
           sheetSynced: false
         };
         await docRef.set(record);
-        postToGoogleSheet({
-          action: 'attendance_upsert',
-          colTitle: formatKoreanAttendanceDateLabel(sess.date, sess.label, sess.colTitle),
-          date: formatKoreanAttendanceDateLabel(sess.date, sess.label, sess.colTitle),
-          weekday: getWeekdayKoFromAnyDate(sess.date),
-          eventName: extractAttendanceEventName(sess.date, sess.label, sess.colTitle),
-          name: user.name,
-          status: attStatus === 'absent' ? '출석X' : '출석O',
-          attendanceOX: attStatus === 'absent' ? '출석X' : '출석O',
-          time: attStatus === 'absent' ? '출석X' : '출석O'
-        }).catch(() => {});
         recordAuditLog({
           actorType: 'member',
           actorName: user.name,
@@ -22903,18 +22927,7 @@
           sheetSynced: false
         };
         await db.collection('attendance').doc(docId).set(newRec);
-        postToGoogleSheet({
-          action: 'attendance_upsert',
-          colTitle: curSess.colTitle,
-          date: curSess.date,
-          name: m.name,
-          role: roleName,
-          time: sheetTimeVal,
-          modifiedBy: `추가: ${adminActor} (${nowStr})`,
-          forceUpdate: true
-        }, '', true).then(res => {
-          if (res && res.ok) db.collection('attendance').doc(docId).update({ sheetSynced: true }).catch(() => {});
-        }).catch(() => {});
+        scheduleAutoWeeklySheetSync(curSess);
         recordAuditLog({
           actorType: 'admin',
           category: '예배·출석',
@@ -23318,6 +23331,9 @@
       }
       return {
         venue: String(src.venue || DEFAULT_CELL_ROSTER.venue).trim() || DEFAULT_CELL_ROSTER.venue,
+        displayTime: (src.displayTime !== undefined && src.displayTime !== null)
+          ? String(src.displayTime).trim()
+          : DEFAULT_CELL_ROSTER.displayTime,
         newcomerCellName: String(src.newcomerCellName || DEFAULT_CELL_ROSTER.newcomerCellName).trim() || DEFAULT_CELL_ROSTER.newcomerCellName,
         newcomerMembers: cleanNameList(src.newcomerMembers),
         cells,
@@ -23445,12 +23461,22 @@
       const [yy, mm, dd] = iso.split('-').map(Number);
       const dowIdx = getDowForDateStr(dateDot);
       const dowShort = dowIdx >= 0 ? DAY_SHORT_KO[dowIdx] : '';
-      const startHour = (curSess && curSess.start) ? Number(String(curSess.start).split(':')[0]) : 14;
+      const formatHhmmKo = (hhmm) => {
+        const parts = String(hhmm || '').split(':');
+        const h = Number(parts[0]);
+        const m = Number(parts[1] || 0);
+        if (!Number.isFinite(h)) return '오후 2시';
+        return m > 0 ? `${h}시 ${m}분` : `${h}시`;
+      };
       const isSpecial = !!(curSess && curSess.isSpecial);
       const evLabel = (curSess && curSess.label) ? String(curSess.label).trim() : '청년부 예배';
       const baseTabDate = `${String(yy).slice(-2)}.${String(mm).padStart(2, '0')}.${String(dd).padStart(2, '0')}`;
       const tabName = isSpecial ? `${baseTabDate} ${evLabel}`.slice(0, 31).trim() : baseTabDate;
-      const dateLine = `날짜: ${yy}년 ${mm}월 ${dd}일 (${dowShort}) ${Number.isFinite(startHour) ? startHour : 14}시${isSpecial ? ` · ${evLabel}` : ''}`;
+      const customTimeTxt = String(roster.displayTime || '').trim();
+      const timeDisplay = (!isSpecial && customTimeTxt)
+        ? customTimeTxt
+        : formatHhmmKo(curSess && curSess.start ? curSess.start : '14:00');
+      const dateLine = `날짜: ${yy}년 ${mm}월 ${dd}일 (${dowShort}) ${timeDisplay}${isSpecial ? ` · ${evLabel}` : ''}`;
 
       return {
         tabName,
@@ -23662,15 +23688,103 @@
       `;
     }
 
-    function scheduleAutoWeeklySheetSync() {
+    function resolveSessionObjectForRecord(rec) {
+      if (!rec) return null;
+      const iso = normalizeDateAnyInput(rec.date || '');
+      if (iso) {
+        const sessions = getSessionsForIsoDate(iso);
+        const exact = sessions.find(s => String(s.sessionId) === String(rec.sessionId));
+        if (exact) return exact;
+        if (sessions.length > 0) return sessions[0];
+      }
+      const dot = iso ? iso.replace(/-/g, '.') : String(rec.date || getKstNowInfo().dot);
+      return {
+        sessionId: String(rec.sessionId || `reg_${dot}`),
+        date: dot,
+        colTitle: String(rec.colTitle || `${dot} (${rec.label || '청년부 예배'})`),
+        label: String(rec.label || '청년부 예배'),
+        start: (attendanceConfig && attendanceConfig.regularStart) || '14:00',
+        end: (attendanceConfig && attendanceConfig.regularEnd) || '15:30',
+        isSpecial: !String(rec.sessionId || '').startsWith('reg_')
+      };
+    }
+
+    function buildWeeklySheetGasPayload(curSess) {
+      const data = buildWeeklySheetDataForSession(curSess);
+      return {
+        data,
+        weekly: {
+          tabName: data.tabName,
+          date: data.date,
+          dateLine: data.dateLine,
+          venue: data.venue,
+          newcomerCellName: data.newcomerCellName,
+          newcomers: data.newcomers.map(x => ({ name: x.name, present: !!x.present })),
+          cells: data.cells.map(c => ({ name: c.name, members: c.members.map(m => ({ name: m.name, present: !!m.present })) })),
+          longTimeVisitors: data.longTimeVisitors.map(x => ({ name: x.name, present: true })),
+          firstTimeVisitors: data.firstTimeVisitors.map(x => ({ name: x.name, present: true })),
+          staffTitle: data.staffTitle,
+          staff: data.staff.map(x => ({ name: x.name, present: !!x.present })),
+          unassignedPresent: data.unassignedPresent.map(x => ({ name: x.name, present: true }))
+        }
+      };
+    }
+
+    function buildAllWeeklySheetsForSync(onlyUnsynced = false) {
+      const seen = new Map();
+      (attendanceRecords || []).forEach(r => {
+        if (!r) return;
+        if (onlyUnsynced && r.sheetSynced === true) return;
+        const sess = resolveSessionObjectForRecord(r);
+        if (sess && !seen.has(String(sess.sessionId))) {
+          seen.set(String(sess.sessionId), sess);
+        }
+      });
+      if (seen.size === 0 && !onlyUnsynced) {
+        const now = getKstNowInfo();
+        const daysToSun = now.dow === 0 ? 0 : (7 - now.dow);
+        const sunInfo = getKstDateOffsetInfo(daysToSun);
+        const sunSessions = getSessionsForIsoDate(sunInfo.iso);
+        if (sunSessions.length > 0) seen.set(String(sunSessions[0].sessionId), sunSessions[0]);
+      }
+      return Array.from(seen.values()).map(s => buildWeeklySheetGasPayload(s).weekly);
+    }
+
+    async function syncWeeklyAttendanceForSessionObj(curSess, silent = true) {
+      const user = getCurrentUser();
+      if (!user || !user.isSuperAdmin || !curSess) return false;
+      const url = getAdminSheetUrl();
+      if (!url) return false;
+      const built = buildWeeklySheetGasPayload(curSess);
+      const res = await postToGoogleSheet({
+        action: 'weekly_attendance_sync',
+        weekly: built.weekly
+      }, url, true, 35000);
+      if (res && res.ok) {
+        const sid = String(curSess.sessionId);
+        (attendanceRecords || []).forEach(r => {
+          if (r && String(r.sessionId) === sid && r.sheetSynced !== true) {
+            db.collection('attendance').doc(String(r.id)).update({ sheetSynced: true }).catch(() => {});
+          }
+        });
+        return true;
+      }
+      return false;
+    }
+
+    function scheduleAutoWeeklySheetSync(targetSess = null) {
       if (!getAdminSheetUrl()) return;
       const u = getCurrentUser();
       if (!u || !u.isSuperAdmin) return;
       if (weeklySheetSyncDebounceTimer) clearTimeout(weeklySheetSyncDebounceTimer);
       weeklySheetSyncDebounceTimer = setTimeout(() => {
         weeklySheetSyncDebounceTimer = null;
-        syncCurrentWeeklyAttendanceToSheet(true).catch(() => {});
-      }, 1800);
+        if (targetSess) {
+          syncWeeklyAttendanceForSessionObj(targetSess, true).catch(() => {});
+        } else {
+          syncCurrentWeeklyAttendanceToSheet(true).catch(() => {});
+        }
+      }, 1500);
     }
 
     window.toggleCellMemberAttendance = async (memberName, roleHint = '') => {
@@ -23694,12 +23808,6 @@
       try {
         if (existingPresent) {
           await db.collection('attendance').doc(String(existingPresent.id)).delete();
-          postToGoogleSheet({
-            action: 'attendance_delete',
-            colTitle: formatKoreanAttendanceDateLabel(existingPresent.date || curSess.date, existingPresent.label || curSess.label, existingPresent.colTitle || curSess.colTitle),
-            date: formatKoreanAttendanceDateLabel(existingPresent.date || curSess.date, existingPresent.label || curSess.label, existingPresent.colTitle || curSess.colTitle),
-            name: existingPresent.name
-          }).catch(() => {});
           showToast(`${cleanName}님 출석 체크를 해제했습니다.`);
         } else if (existingAbsent) {
           await db.collection('attendance').doc(String(existingAbsent.id)).update({
@@ -23710,20 +23818,6 @@
             modifiedAt: nowStr,
             sheetSynced: false
           });
-          postToGoogleSheet({
-            action: 'attendance_upsert',
-            colTitle: formatKoreanAttendanceDateLabel(curSess.date, curSess.label, curSess.colTitle),
-            date: formatKoreanAttendanceDateLabel(curSess.date, curSess.label, curSess.colTitle),
-            weekday: getWeekdayKoFromAnyDate(curSess.date),
-            eventName: extractAttendanceEventName(curSess.date, curSess.label, curSess.colTitle),
-            name: existingAbsent.name,
-            status: '출석O',
-            attendanceOX: '출석O',
-            time: '출석O',
-            forceUpdate: true
-          }, '', true).then(res => {
-            if (res && res.ok) db.collection('attendance').doc(String(existingAbsent.id)).update({ sheetSynced: true }).catch(() => {});
-          }).catch(() => {});
           showToast(`✅ ${cleanName}님 출석(○) 처리되었습니다!`, 'ok');
         } else {
           const matchedMember = (members || []).find(m => m.status === 'approved' && normalizePersonKey(m.name) === targetKey);
@@ -23748,23 +23842,9 @@
             sheetSynced: false
           };
           await db.collection('attendance').doc(docId).set(newRec);
-          postToGoogleSheet({
-            action: 'attendance_upsert',
-            colTitle: formatKoreanAttendanceDateLabel(curSess.date, curSess.label, curSess.colTitle),
-            date: formatKoreanAttendanceDateLabel(curSess.date, curSess.label, curSess.colTitle),
-            weekday: getWeekdayKoFromAnyDate(curSess.date),
-            eventName: extractAttendanceEventName(curSess.date, curSess.label, curSess.colTitle),
-            name: newRec.name,
-            status: '출석O',
-            attendanceOX: '출석O',
-            time: '출석O',
-            forceUpdate: true
-          }, '', true).then(res => {
-            if (res && res.ok) db.collection('attendance').doc(docId).update({ sheetSynced: true }).catch(() => {});
-          }).catch(() => {});
           showToast(`✅ ${cleanName}님 출석(○) 체크되었습니다!`, 'ok');
         }
-        scheduleAutoWeeklySheetSync();
+        scheduleAutoWeeklySheetSync(curSess);
       } catch (err) {
         handleDbError(err, '셀 출석 체크');
       }
@@ -23879,9 +23959,16 @@
 
         if (res && res.ok) {
           const finalTab = (res.data && res.data.tabName) || data.tabName;
+          const sid = String(curSess.sessionId);
+          (attendanceRecords || []).forEach(r => {
+            if (r && String(r.sessionId) === sid && r.sheetSynced !== true) {
+              db.collection('attendance').doc(String(r.id)).update({ sheetSynced: true }).catch(() => {});
+            }
+          });
+          const legacyNote = (res.data && res.data.removedLegacyAttendance) ? ' · 구버전 출석부 탭 자동 삭제됨' : '';
           if (!silent) {
-            setInlineSaveStatus('weekly_att_sheet', 'ok', `✅ 구글 시트 [${finalTab}] 주간 출석부 탭 생성·갱신 완료! (총원 ${data.totals.grandTotal}명)`);
-            showToast(`📊 구글 시트 [${finalTab}] 탭이 엑셀 양식 그대로 업데이트되었습니다!`, 'ok');
+            setInlineSaveStatus('weekly_att_sheet', 'ok', `✅ 구글 시트 [${finalTab}] 주간 출석부 탭 생성·갱신 완료! (총원 ${data.totals.grandTotal}명${legacyNote})`);
+            showToast(`📊 구글 시트 [${finalTab}] 탭이 업데이트되었습니다!${legacyNote}`, 'ok');
           }
           return true;
         }
@@ -24002,6 +24089,8 @@
       const roster = getCellRosterConfig();
       const venueInp = document.getElementById('cellVenueInput');
       if (venueInp) venueInp.value = roster.venue || '다니엘 성전';
+      const timeInp = document.getElementById('cellDisplayTimeInput');
+      if (timeInp) timeInp.value = roster.displayTime || '';
       const bulkEl = document.getElementById('cellBulkTextarea');
       if (bulkEl) bulkEl.value = formatCellRosterAsBulkText(roster);
       const ncEl = document.getElementById('cellEditNewcomersInput');
@@ -24013,6 +24102,11 @@
       setInlineSaveStatus('cell_roster', '', '');
       switchCellRosterTab(roster.cells.length > 0 ? 'edit' : 'bulk');
       document.getElementById('cellRosterModal').classList.add('open');
+    };
+
+    window.applyCellDisplayTimePreset = (val) => {
+      const inp = document.getElementById('cellDisplayTimeInput');
+      if (inp) inp.value = String(val || '');
     };
 
     window.switchCellRosterTab = (tab) => {
@@ -24055,9 +24149,10 @@
       const user = getCurrentUser();
       if (!user || !user.isSuperAdmin) return;
       const venue = String((document.getElementById('cellVenueInput') || {}).value || '').trim() || '다니엘 성전';
+      const displayTime = String((document.getElementById('cellDisplayTimeInput') || {}).value || '').trim();
       const rawText = String((document.getElementById('cellBulkTextarea') || {}).value || '').trim();
       if (!rawText) return showToast('붙여넣을 셀 명단 내용을 입력해 주세요.');
-      if (typeof enforceInputSecurity === 'function' && !enforceInputSecurity(`${venue} ${rawText}`, '셀 명단 설정', true)) return;
+      if (typeof enforceInputSecurity === 'function' && !enforceInputSecurity(`${venue} ${displayTime} ${rawText}`, '셀 명단 설정', true)) return;
 
       const cur = getCellRosterConfig();
       const nextNewcomers = [];
@@ -24096,6 +24191,7 @@
       const nextRoster = {
         ...cur,
         venue,
+        displayTime,
         newcomerMembers: nextNewcomers,
         cells: nextCells,
         staffMembers: nextStaff
@@ -24192,18 +24288,20 @@
       if (!user || !user.isSuperAdmin) return;
       syncDraftManualCellsFromDom();
       const venue = String((document.getElementById('cellVenueInput') || {}).value || '').trim() || '다니엘 성전';
+      const displayTime = String((document.getElementById('cellDisplayTimeInput') || {}).value || '').trim();
       const ncList = String((document.getElementById('cellEditNewcomersInput') || {}).value || '')
         .split(/[,，\n]+/).map(x => x.trim()).filter(Boolean);
       const stList = String((document.getElementById('cellEditStaffInput') || {}).value || '')
         .split(/[,，\n]+/).map(x => x.trim()).filter(Boolean);
 
-      const allText = `${venue} ${ncList.join(' ')} ${stList.join(' ')} ${cellRosterModalDraftCells.map(c => c.name + ' ' + c.members.join(' ')).join(' ')}`;
+      const allText = `${venue} ${displayTime} ${ncList.join(' ')} ${stList.join(' ')} ${cellRosterModalDraftCells.map(c => c.name + ' ' + c.members.join(' ')).join(' ')}`;
       if (typeof enforceInputSecurity === 'function' && !enforceInputSecurity(allText, '셀 명단 편집', true)) return;
 
       const cur = getCellRosterConfig();
       const nextRoster = {
         ...cur,
         venue,
+        displayTime,
         newcomerMembers: Array.from(new Set(ncList)),
         cells: cellRosterModalDraftCells,
         staffMembers: Array.from(new Set(stList))
@@ -24354,11 +24452,16 @@
       const legacyDetected = Array.isArray(data.legacyDetected) ? data.legacyDetected.map(String) : [];
       const birthdayRemnants = Array.isArray(data.birthdayRemnants) ? data.birthdayRemnants.map(String) : [];
 
+      const weeklyTabs = Array.isArray(data.weeklyTabs) ? data.weeklyTabs.map(String) : [];
+      const serverDeprecated = Array.isArray(data.deprecatedPresent) ? data.deprecatedPresent.map(String) : [];
       const deprecatedPresent = [];
       SHEET_REMOVED_TABS.forEach(rem => {
-        if ((existingTabs && existingTabs.includes(rem.name)) || birthdayRemnants.some(x => x.includes(rem.name))) {
-          deprecatedPresent.push(rem.name);
+        if (serverDeprecated.includes(rem.name) || (existingTabs && existingTabs.includes(rem.name)) || birthdayRemnants.some(x => x.includes(rem.name))) {
+          if (!deprecatedPresent.includes(rem.name)) deprecatedPresent.push(rem.name);
         }
+      });
+      serverDeprecated.forEach(nm => {
+        if (nm && !deprecatedPresent.includes(nm)) deprecatedPresent.push(nm);
       });
       birthdayRemnants.forEach(r => {
         if (!deprecatedPresent.some(x => r.includes(x))) deprecatedPresent.push(r);
@@ -24369,6 +24472,17 @@
       const tabStatuses = SHEET_SCHEMA_TABS.map(t => {
         if (!readable) {
           return { ...t, state: 'opaque', label: '연결됨 (응답 비공개)', rowCount: null };
+        }
+        if (t.isWeeklyAttendance) {
+          if (weeklyTabs.length > 0) {
+            const preview = weeklyTabs.slice(0, 2).join(', ') + (weeklyTabs.length > 2 ? ` 외 ${weeklyTabs.length - 2}` : '');
+            return { ...t, state: 'ok', label: `✅ 주간 탭 ${weeklyTabs.length}개 (${preview})`, rowCount: weeklyTabs.length };
+          }
+          if (existingTabs && existingTabs.includes('출석부') && !data.weeklyOnly) {
+            return { ...t, state: 'legacy', label: '⚠️ 구버전 출석부 (v10.151 배포 권장)', rowCount: 0 };
+          }
+          missingTabs.push(t.name);
+          return { ...t, state: 'missing', label: '⚠️ 주간 탭 미생성 (출석인원에서 생성)', rowCount: 0 };
         }
         if (needsScriptUpdate && t.isNew) {
           addedNeedScriptTabs.push(t.name);
@@ -25927,7 +26041,7 @@
         .map(l => buildAuditLogSheetPayload(l));
       return {
         action: 'sync_all',
-        attendance: attPayload,
+        weeklySheets: buildAllWeeklySheetsForSync(false),
         members: memberPayload,
         admins: adminPayload,
         inquiries: inquiryPayload,
@@ -25939,7 +26053,7 @@
 
     function buildUnsyncedSheetSyncPayload(missingTabNames = []) {
       const missingSet = new Set(Array.isArray(missingTabNames) ? missingTabNames.map(String) : []);
-      const needAllAtt = missingSet.has('출석부');
+      const needAllAtt = missingSet.has('출석부') || missingSet.has('주간 출석부 (날짜별 탭)');
       const needAllMem = missingSet.has('회원 명단');
       const needAllAdm = missingSet.has('관리자 명단');
       const needAllInq = missingSet.has('문의 내역');
@@ -26019,7 +26133,7 @@
 
       return {
         action: 'sync_all',
-        attendance: attPayload,
+        weeklySheets: buildAllWeeklySheetsForSync(!needAllAtt),
         members: memberPayload,
         admins: adminPayload,
         inquiries: inquiryPayload,
@@ -26105,7 +26219,11 @@
         || String(data.version || '').includes('v10.139')
         || String(data.version || '').includes('v10.140')
         || String(data.version || '').includes('v10.141')
-        || String(data.version || '').includes('v10.142');
+        || String(data.version || '').includes('v10.142')
+        || String(data.version || '').includes('v10.150')
+        || String(data.version || '').includes('v10.151')
+        || data.supportsWeeklyAttendance === true
+        || data.weeklyOnly === true;
     }
 
     function isSheetResponseFastBatch(data) {
@@ -26299,7 +26417,7 @@
       const payload = {
         action: 'rebuild_tabs',
         targets: validTargets,
-        attendance: validTargets.includes('attendance') ? full.attendance : [],
+        weeklySheets: validTargets.includes('attendance') ? full.weeklySheets : [],
         members: validTargets.includes('members') ? full.members : [],
         admins: validTargets.includes('admins') ? full.admins : [],
         inquiries: validTargets.includes('inquiries') ? full.inquiries : [],
@@ -26529,20 +26647,7 @@
             modifiedAt: nowStr,
             sheetSynced: false
           });
-          postToGoogleSheet({
-            action: 'attendance_upsert',
-            colTitle: formatKoreanAttendanceDateLabel(rec.date || dateDot, rec.label || label, rec.colTitle || colTitle),
-            date: formatKoreanAttendanceDateLabel(rec.date || dateDot, rec.label || label, rec.colTitle || colTitle),
-            weekday: getWeekdayKoFromAnyDate(rec.date || dateDot),
-            eventName: extractAttendanceEventName(rec.date || dateDot, rec.label || label, rec.colTitle || colTitle),
-            name: rec.name,
-            status: attStatus === 'absent' ? '출석X' : '출석O',
-            attendanceOX: attStatus === 'absent' ? '출석X' : '출석O',
-            time: attStatus === 'absent' ? '출석X' : '출석O',
-            forceUpdate: true
-          }, '', true).then(res => {
-            if (res && res.ok) db.collection('attendance').doc(String(editDocId)).update({ sheetSynced: true }).catch(() => {});
-          }).catch(() => {});
+          scheduleAutoWeeklySheetSync(resolveSessionObjectForRecord(rec));
           recordAuditLog({
             actorType: 'admin',
             category: '예배·출석',
@@ -26576,20 +26681,7 @@
             sheetSynced: false
           };
           await db.collection('attendance').doc(newDocId).set(newRec);
-          postToGoogleSheet({
-            action: 'attendance_upsert',
-            colTitle: formatKoreanAttendanceDateLabel(dateDot, label, colTitle),
-            date: formatKoreanAttendanceDateLabel(dateDot, label, colTitle),
-            weekday: getWeekdayKoFromAnyDate(dateDot),
-            eventName: extractAttendanceEventName(dateDot, label, colTitle),
-            name: m.name,
-            status: attStatus === 'absent' ? '출석X' : '출석O',
-            attendanceOX: attStatus === 'absent' ? '출석X' : '출석O',
-            time: attStatus === 'absent' ? '출석X' : '출석O',
-            forceUpdate: true
-          }, '', true).then(res => {
-            if (res && res.ok) db.collection('attendance').doc(newDocId).update({ sheetSynced: true }).catch(() => {});
-          }).catch(() => {});
+          scheduleAutoWeeklySheetSync(resolveSessionObjectForRecord(newRec));
           recordAuditLog({
             actorType: 'admin',
             category: '예배·출석',
@@ -26614,12 +26706,7 @@
       const nowStr = formatKstDateTime();
       try {
         await db.collection('attendance').doc(String(docId)).delete();
-        postToGoogleSheet({
-          action: 'attendance_delete',
-          colTitle: formatKoreanAttendanceDateLabel(rec.date || rec.colTitle || '', rec.label || '', rec.colTitle || ''),
-          date: formatKoreanAttendanceDateLabel(rec.date || rec.colTitle || '', rec.label || '', rec.colTitle || ''),
-          name: rec.name
-        }).catch(() => {});
+        scheduleAutoWeeklySheetSync(resolveSessionObjectForRecord(rec));
         recordAuditLog({
           actorType: 'admin',
           category: '예배·출석',
