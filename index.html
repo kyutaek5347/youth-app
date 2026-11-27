@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=263" />
+  <link rel="manifest" href="./manifest.json?v=264" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=263" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=263" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=264" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=264" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4523,7 +4523,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=263" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=264" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -6384,8 +6384,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 263;
-    const APP_CACHE_NAME = 'right-youth-app-v10.163';
+    const APP_CLIENT_BUILD = 264;
+    const APP_CACHE_NAME = 'right-youth-app-v10.164';
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.156-log-archive';
     const SHEET_SCHEMA_TABS = [
@@ -7513,7 +7513,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=263" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=264" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7537,8 +7537,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=263', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=263', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=264', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=264', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -7918,15 +7918,51 @@
       return !!defaultOpen;
     }
 
+    const HTML_NAMED_ENTITIES = {
+      amp: '&',
+      lt: '<',
+      gt: '>',
+      quot: '"',
+      apos: "'",
+      nbsp: ' '
+    };
+
+    function decodeHtmlEntitiesOnce(str) {
+      return String(str ?? '').replace(/&(#x[0-9a-fA-F]+|#\d+|[a-zA-Z]+);/g, (full, ent) => {
+        if (ent[0] === '#') {
+          const isHex = ent[1] === 'x' || ent[1] === 'X';
+          const code = parseInt(ent.slice(isHex ? 2 : 1), isHex ? 16 : 10);
+          if (Number.isInteger(code) && code > 0 && code <= 0x10FFFF) {
+            try { return String.fromCodePoint(code); } catch { return full; }
+          }
+          return full;
+        }
+        const lower = ent.toLowerCase();
+        return Object.prototype.hasOwnProperty.call(HTML_NAMED_ENTITIES, lower)
+          ? HTML_NAMED_ENTITIES[lower]
+          : full;
+      });
+    }
+
+    function stripHtmlTagsLinear(str) {
+      const s = String(str ?? '');
+      let out = '';
+      let inTag = false;
+      for (let i = 0; i < s.length; i++) {
+        const ch = s[i];
+        if (ch === '<') {
+          inTag = true;
+        } else if (ch === '>' && inTag) {
+          inTag = false;
+        } else if (!inTag) {
+          out += ch;
+        }
+      }
+      return out;
+    }
+
     function unescapeBasicHtml(str) {
-      return String(str ?? '')
-        .replace(/<[^>]*>/g, '')
-        .replace(/&amp;/g, '&')
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'")
-        .trim();
+      return decodeHtmlEntitiesOnce(stripHtmlTagsLinear(str)).trim();
     }
 
     function getManageSectionTitle(key, defaultTitle) {
@@ -34985,19 +35021,13 @@
     }
 
     function decodeHtmlAndJsonText(raw) {
-      let s = String(raw || '');
+      const s = String(raw || '');
       if (!s) return '';
-      s = s.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
-           .replace(/\\\//g, '/')
-           .replace(/\\"/g, '"');
-      s = s.replace(/&amp;/g, '&')
-           .replace(/&lt;/g, '<')
-           .replace(/&gt;/g, '>')
-           .replace(/&quot;/g, '"')
-           .replace(/&#39;|&apos;/g, "'")
-           .replace(/&#x([0-9a-fA-F]+);/g, (_, h) => { try { return String.fromCodePoint(parseInt(h, 16)); } catch { return ''; } })
-           .replace(/&#(\d+);/g, (_, d) => { try { return String.fromCodePoint(parseInt(d, 10)); } catch { return ''; } });
-      return s.trim();
+      const jsonDecoded = s.replace(/\\(?:u([0-9a-fA-F]{4})|(["\\/]))/g, (_, hex, esc) => {
+        if (hex) return String.fromCharCode(parseInt(hex, 16));
+        return esc || '';
+      });
+      return decodeHtmlEntitiesOnce(jsonDecoded).trim();
     }
 
     function normalizeYouTubeChannelUrl(rawUrl) {
