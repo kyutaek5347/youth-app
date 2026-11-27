@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=245" />
+  <link rel="manifest" href="./manifest.json?v=246" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=245" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=245" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=246" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=246" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -2874,6 +2874,57 @@
       font-size: 30px;
       margin-bottom: 14px;
     }
+    .maintenance-screen.emergency-mode {
+      background: radial-gradient(circle at top center, #450A0A 0%, #1F080A 55%, #09090B 100%);
+    }
+    .maintenance-screen.emergency-mode .maintenance-card {
+      background: rgba(127, 29, 29, 0.24);
+      border-color: rgba(248, 113, 113, 0.6);
+      box-shadow: 0 20px 48px rgba(127, 29, 29, 0.48);
+    }
+    .maintenance-screen.emergency-mode .maintenance-icon {
+      background: rgba(239, 68, 68, 0.24);
+      border-color: rgba(248, 113, 113, 0.72);
+    }
+    .maint-badge-pill {
+      display: inline-block;
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 11px;
+      background: rgba(245, 158, 11, 0.22);
+      color: #FDE68A;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .maintenance-screen.emergency-mode .maint-badge-pill {
+      background: rgba(239, 68, 68, 0.28);
+      color: #FECACA;
+      border-color: rgba(248, 113, 113, 0.55);
+    }
+    .maint-sub-notice {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      color: #FECACA;
+      font-size: 12px;
+      line-height: 1.5;
+      text-align: left;
+      word-break: keep-all;
+    }
+    .emergency-login-banner {
+      background: #FEF2F2;
+      border: 1.5px solid #FCA5A5;
+      border-radius: 13px;
+      padding: 10px 12px;
+      margin-bottom: 13px;
+      font-size: 12px;
+      color: #991B1B;
+      line-height: 1.5;
+      text-align: left;
+    }
 
     /* ==================== v10.42 관리자 이름 변경 & 보안 로그 탭 스타일 ==================== */
     .log-rename-diff {
@@ -4061,7 +4112,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=245" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=246" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4098,6 +4149,11 @@
       </div>
 
       <div class="login-card">
+        <div id="emergencyRecoveryLoginBanner" class="emergency-login-banner hidden">
+          <div style="font-weight:900; margin-bottom:3px;">🚨 긴급 보안 점검 작동 중 · 지정 최고 관리자 복구 로그인</div>
+          <div>보안 위협으로 앱이 일시 차단되었습니다. <b>지정된 최고 관리자</b>로 로그인해야 복구·해제할 수 있습니다. (일반 회원 및 지정 외 관리자는 차단 화면이 표시됩니다)</div>
+          <button class="btn-sm" type="button" style="margin-top:7px;" onclick="closeEmergencyAdminRecoveryLogin()">← 긴급 점검 안내 화면으로 돌아가기</button>
+        </div>
         <div id="authTabs" class="auth-tabs" role="tablist" data-ts-bar="auth_tabs">
           <button id="tabBtnLogin" class="auth-tab-btn active" type="button" onclick="switchAuthTab('login')">로그인</button>
           <button id="tabBtnSignup" class="auth-tab-btn" type="button" onclick="switchAuthTab('signup')">회원가입</button>
@@ -4202,15 +4258,18 @@
       </div>
     </section>
 
-    <!-- ==================== 1.5. 정기 서버 점검 안내 화면 (일반 회원 전용) ==================== -->
+    <!-- ==================== 1.5. 서버 점검 · 긴급 보안 점검 안내 화면 ==================== -->
     <section id="maintenanceScreen" class="maintenance-screen hidden">
       <div class="maintenance-card">
-        <div class="maintenance-icon">🔧</div>
+        <div id="maintScreenBadge" class="maint-badge-pill">🔧 서버 점검 안내</div>
+        <div><div id="maintScreenIcon" class="maintenance-icon">🔧</div></div>
         <h1 id="maintScreenTitle" style="font-size:20px; font-weight:900; margin:0 0 10px; color:#FFFFFF;">정기 서버 점검 중입니다</h1>
         <p id="maintScreenDesc" style="font-size:13.5px; color:#CBD5E1; line-height:1.6; margin:0; white-space:pre-line; word-break:keep-all;">더 안정적인 서비스 제공을 위해 정기 서버 점검을 진행하고 있습니다. 점검이 끝나면 자동으로 복구됩니다.</p>
+        <div id="maintScreenSubNotice" class="maint-sub-notice hidden"></div>
         <div style="display:flex; flex-direction:column; gap:8px; margin-top:16px;">
           <button class="btn-full btn-amber" type="button" onclick="recheckMaintenanceNow()">🔄 점검 종료 여부 다시 확인</button>
-          <button class="btn-outline" type="button" style="background:rgba(255,255,255,0.08); color:#E2E8F0; border-color:rgba(255,255,255,0.2); padding:11px;" onclick="logout()">로그아웃</button>
+          <button id="maintRecoveryLoginBtn" class="btn-outline hidden" type="button" style="background:rgba(239,68,68,0.18); color:#FECACA; border-color:rgba(248,113,113,0.45); padding:11px; font-weight:800;" onclick="openEmergencyAdminRecoveryLogin()">🔐 지정 최고 관리자 복구 로그인</button>
+          <button id="maintLogoutBtn" class="btn-outline" type="button" style="background:rgba(255,255,255,0.08); color:#E2E8F0; border-color:rgba(255,255,255,0.2); padding:11px;" onclick="logout()">로그아웃</button>
         </div>
       </div>
     </section>
@@ -5904,7 +5963,7 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 34;
-    const APP_CLIENT_BUILD = 245;
+    const APP_CLIENT_BUILD = 246;
     const APP_BOOT_TS = Date.now();
     const SHEET_SCHEMA_VERSION = 'v10.142-10tab-fast-split';
     const SHEET_SCHEMA_TABS = [
@@ -6034,6 +6093,10 @@
       blockSuspiciousLinks: true,
       detectCloneDomain: true,
       alertAdminOnSecurityEvent: true,
+      domTamperGuard: true,
+      autoEmergencyLockOnBreach: true,
+      autoLockdownExtras: true,
+      emergencySuperAdmins: [],
       officialHost: 'kyutaek5347.github.io',
       threatAckTs: 0,
       piiAckSig: ''
@@ -6060,9 +6123,18 @@
     const AUTO_CHECK_CONSECUTIVE_FAIL_THRESHOLD = 2;
     const DEFAULT_MAINTENANCE_CONFIG = {
       enabled: false,
+      mode: 'regular',
       title: '서버 점검 중입니다',
-      message: '더 안정적인 서비스 제공을 위해 서버 점검을 진행하고 있습니다.\n점검이 끝나면 자동으로 복구됩니다.'
+      message: '더 안정적인 서비스 제공을 위해 서버 점검을 진행하고 있습니다.\n점검이 끝나면 자동으로 복구됩니다.',
+      emergencyReason: '',
+      emergencyDetail: '',
+      emergencyTriggeredAt: '',
+      emergencyTriggeredTs: 0,
+      emergencyTriggeredBy: '',
+      emergencyAllowedAdmins: []
     };
+    const DEFAULT_EMERGENCY_MAINT_TITLE = '🚨 긴급 보안 점검 중입니다';
+    const DEFAULT_EMERGENCY_MAINT_MESSAGE = '보안 위협이 감지되어 이용자 보호를 위해 긴급 보안 점검을 진행하고 있습니다.\n안전 확인 및 조치가 완료되면 자동으로 정상 복구됩니다.';
     const DEFAULT_ATTENDANCE_CONFIG = {
       regularEnabled: true,
       regularDay: 0,
@@ -6910,7 +6982,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? '<span style="font-size:21px;">🚨</span>'
-        : '<img src="./icon-192.png?v=245" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=246" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -6934,8 +7006,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=245', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=245', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=246', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=246', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -7496,6 +7568,11 @@
     let autoDiagCountdownTimerId = null;
     let autoDiagBusy = false;
     let securityConfig = structuredClone(DEFAULT_SECURITY_CONFIG);
+    let emergencyRecoveryLoginOpen = false;
+    let isTriggeringEmergencyLockdown = false;
+    let recentSecurityAttackTimestamps = [];
+    let domTamperObserver = null;
+    let lastDomTamperLogTs = 0;
     let secCheckResults = {};
     let secCheckRunningAll = false;
     let autoSecConfig = structuredClone(DEFAULT_AUTO_SEC_CONFIG);
@@ -10472,8 +10549,11 @@
       db.collection('config').doc('inviteQr').onSnapshot(doc => {
         inviteQrDoc = doc.exists ? doc.data() : null;
         updateSignupQrGateUI();
+        if (!fbUser) {
+          applyScreen();
+        }
         const st = getInviteTokenStatus();
-        if (!fbUser && !document.getElementById('loginScreen').classList.contains('hidden')) {
+        if (!fbUser && !isPublicEmergencyLockActive() && !document.getElementById('loginScreen').classList.contains('hidden')) {
           const shouldShowSignup = st.valid || (capturedInviteFromUrl && (st.status === 'changed' || st.status === 'expired'));
           if (shouldShowSignup && document.getElementById('panelSignup').classList.contains('hidden') && document.getElementById('panelStatus').classList.contains('hidden')) {
             switchAuthTab('signup');
@@ -11383,17 +11463,143 @@
       return !!cfg.enabled;
     }
 
+    function isPublicEmergencyLockActive() {
+      return !!(inviteQrDoc && inviteQrDoc.emergencyLock && inviteQrDoc.emergencyLock.active);
+    }
+
+    function isEmergencyMaintenanceActive() {
+      const cfg = maintenanceConfig || DEFAULT_MAINTENANCE_CONFIG;
+      if (cfg.enabled && cfg.mode === 'emergency') return true;
+      if (!fbUser && isPublicEmergencyLockActive()) return true;
+      return false;
+    }
+
+    function getEffectiveEmergencyAdmins() {
+      const activeList = (adminRegistry && Array.isArray(adminRegistry.items))
+        ? adminRegistry.items.filter(a => a && a.status === 'active' && String(a.name || '').trim())
+        : [];
+      const activeNames = activeList.map(a => String(a.name).trim());
+      const activeSet = new Set(activeNames);
+
+      const configuredRaw = Array.isArray(securityConfig && securityConfig.emergencySuperAdmins)
+        ? securityConfig.emergencySuperAdmins.map(x => String(x || '').trim()).filter(Boolean)
+        : [];
+      const snapshotRaw = Array.isArray(maintenanceConfig && maintenanceConfig.emergencyAllowedAdmins)
+        ? maintenanceConfig.emergencyAllowedAdmins.map(x => String(x || '').trim()).filter(Boolean)
+        : [];
+
+      const validConfigured = activeNames.length > 0
+        ? configuredRaw.filter(nm => activeSet.has(nm))
+        : configuredRaw;
+      if (validConfigured.length > 0) return Array.from(new Set(validConfigured));
+
+      const validSnapshot = activeNames.length > 0
+        ? snapshotRaw.filter(nm => activeSet.has(nm))
+        : snapshotRaw;
+      if (validSnapshot.length > 0) return Array.from(new Set(validSnapshot));
+
+      if (activeNames.length > 0) return [activeNames[0]];
+      if (currentAdminName) return [String(currentAdminName).trim()];
+      return [];
+    }
+
+    function isDesignatedEmergencyAdmin(name = currentAdminName) {
+      const nm = String(name || '').trim();
+      if (!nm) return false;
+      const allowed = getEffectiveEmergencyAdmins();
+      if (allowed.length === 0) return true;
+      return allowed.includes(nm);
+    }
+
+    function showMaintenanceBlockScreen({ isEmergency = false, isLoggedOut = false, isBlockedAdmin = false } = {}) {
+      const loginEl = document.getElementById('loginScreen');
+      const mainAppEl = document.getElementById('mainApp');
+      const maintEl = document.getElementById('maintenanceScreen');
+      const themeMeta = document.querySelector('meta[name="theme-color"]');
+      if (loginEl) loginEl.classList.add('hidden');
+      if (mainAppEl) mainAppEl.classList.add('hidden');
+      if (!maintEl) return;
+
+      const pubLock = (inviteQrDoc && inviteQrDoc.emergencyLock) ? inviteQrDoc.emergencyLock : null;
+      const cfg = maintenanceConfig || DEFAULT_MAINTENANCE_CONFIG;
+      const titleTxt = isEmergency
+        ? ((cfg.enabled && cfg.mode === 'emergency' && cfg.title) || (pubLock && pubLock.title) || DEFAULT_EMERGENCY_MAINT_TITLE)
+        : (cfg.title || DEFAULT_MAINTENANCE_CONFIG.title);
+      const descTxt = isEmergency
+        ? ((cfg.enabled && cfg.mode === 'emergency' && cfg.message) || (pubLock && pubLock.message) || DEFAULT_EMERGENCY_MAINT_MESSAGE)
+        : (cfg.message || DEFAULT_MAINTENANCE_CONFIG.message);
+
+      maintEl.classList.toggle('emergency-mode', !!isEmergency);
+      const badgeEl = document.getElementById('maintScreenBadge');
+      const iconEl = document.getElementById('maintScreenIcon');
+      const titleEl = document.getElementById('maintScreenTitle');
+      const descEl = document.getElementById('maintScreenDesc');
+      const subNoticeEl = document.getElementById('maintScreenSubNotice');
+      const recBtn = document.getElementById('maintRecoveryLoginBtn');
+      const logoutBtn = document.getElementById('maintLogoutBtn');
+
+      if (badgeEl) badgeEl.textContent = isEmergency ? '🚨 긴급 보안 점검 · 자동 차단' : '🔧 서버 점검 안내';
+      if (iconEl) iconEl.textContent = isEmergency ? '🚨' : '🔧';
+      if (titleEl) titleEl.textContent = titleTxt;
+      if (descEl) descEl.textContent = descTxt;
+
+      if (subNoticeEl) {
+        if (isEmergency && isBlockedAdmin) {
+          const allowed = getEffectiveEmergencyAdmins();
+          subNoticeEl.innerHTML = `<b>🔐 관리자 접근 제한 안내</b><br>현재 긴급 보안 점검이 발동되어 <b>지정된 최고 관리자</b> 외 타 관리자(<b>${escapeHtml(currentAdminName || '관리자')}</b>)의 입장이 일시 차단되었습니다.<br>지정 최고 관리자가 안전 확인 후 점검을 해제하면 즉시 정상 입장됩니다.${allowed.length > 0 ? `<br><span style="opacity:0.85;">• 지정 복구 관리자: ${escapeHtml(allowed.join(', '))}</span>` : ''}`;
+          subNoticeEl.classList.remove('hidden');
+        } else if (isEmergency) {
+          const trigAt = (cfg.emergencyTriggeredAt || (pubLock && pubLock.triggeredAt) || '').trim();
+          subNoticeEl.innerHTML = `🛡️ <b>이용자 안전 보호 조치</b>${trigAt ? ` · 발동 시각: ${escapeHtml(trigAt)}` : ''}<br>지정 최고 관리자가 보안 점검을 마치고 해제할 때까지 모든 일반 접속이 제한됩니다.`;
+          subNoticeEl.classList.remove('hidden');
+        } else {
+          subNoticeEl.classList.add('hidden');
+        }
+      }
+
+      if (recBtn) recBtn.classList.toggle('hidden', !(isEmergency && isLoggedOut));
+      if (logoutBtn) logoutBtn.classList.toggle('hidden', !!isLoggedOut);
+
+      maintEl.classList.remove('hidden');
+      if (themeMeta) themeMeta.setAttribute('content', isEmergency ? '#450A0A' : '#0B0F19');
+    }
+
+    window.openEmergencyAdminRecoveryLogin = () => {
+      emergencyRecoveryLoginOpen = true;
+      applyScreen();
+      switchAuthTab('admin');
+      setTimeout(() => {
+        const inp = document.getElementById('adminNameInput');
+        if (inp) inp.focus();
+      }, 60);
+    };
+
+    window.closeEmergencyAdminRecoveryLogin = () => {
+      emergencyRecoveryLoginOpen = false;
+      applyScreen();
+    };
+
     function applyScreen() {
       if (typeof syncTermsAndGuidesAutomatically === 'function') syncTermsAndGuidesAutomatically(false);
       const loginEl = document.getElementById('loginScreen');
       const mainAppEl = document.getElementById('mainApp');
       const maintEl = document.getElementById('maintenanceScreen');
       const maintBar = document.getElementById('maintAdminBar');
+      const recBanner = document.getElementById('emergencyRecoveryLoginBanner');
       const themeMeta = document.querySelector('meta[name="theme-color"]');
       if (maintEl) maintEl.classList.add('hidden');
       if (maintBar) maintBar.classList.add('hidden');
+      if (recBanner) recBanner.classList.add('hidden');
+
+      const maintActive = isMaintenanceActiveNow();
+      const emergencyActive = isEmergencyMaintenanceActive();
 
       if (fbUser && (fbUser.email || '').toLowerCase() !== ADMIN_EMAIL && !myMemberDoc) {
+        if (emergencyActive || maintActive) {
+          document.getElementById('loadingScreen').classList.add('hidden');
+          showMaintenanceBlockScreen({ isEmergency: emergencyActive, isLoggedOut: false, isBlockedAdmin: false });
+          return;
+        }
         // 로그인된 일반 회원의 프로필을 불러오는 중에는 로그인 화면을 띄우지 않음
         document.getElementById('loadingScreen').classList.remove('hidden');
         loginEl.classList.add('hidden');
@@ -11402,6 +11608,10 @@
       }
 
       if (fbUser && (fbUser.email || '').toLowerCase() === ADMIN_EMAIL && pendingAdminStatus === 'pending') {
+        if (emergencyActive) {
+          showMaintenanceBlockScreen({ isEmergency: true, isLoggedOut: false, isBlockedAdmin: true });
+          return;
+        }
         loginEl.classList.remove('hidden');
         mainAppEl.classList.add('hidden');
         themeMeta.setAttribute('content', '#0B0F19');
@@ -11410,6 +11620,10 @@
       }
 
       if (fbUser && (fbUser.email || '').toLowerCase() !== ADMIN_EMAIL && myMemberDoc && myMemberDoc.status !== 'approved') {
+        if (emergencyActive || maintActive) {
+          showMaintenanceBlockScreen({ isEmergency: emergencyActive, isLoggedOut: false, isBlockedAdmin: false });
+          return;
+        }
         loginEl.classList.remove('hidden');
         mainAppEl.classList.add('hidden');
         themeMeta.setAttribute('content', '#0B0F19');
@@ -11419,34 +11633,55 @@
 
       const user = getCurrentUser();
       if (!user) {
+        if (emergencyActive && !emergencyRecoveryLoginOpen) {
+          showMaintenanceBlockScreen({ isEmergency: true, isLoggedOut: true, isBlockedAdmin: false });
+          return;
+        }
         loginEl.classList.remove('hidden');
         mainAppEl.classList.add('hidden');
-        themeMeta.setAttribute('content', '#0B0F19');
+        themeMeta.setAttribute('content', emergencyActive ? '#450A0A' : '#0B0F19');
+        if (recBanner && emergencyActive && emergencyRecoveryLoginOpen) {
+          recBanner.classList.remove('hidden');
+        }
         if (pendingRemovalNotice) {
           showRemovalNoticePanel(pendingRemovalNotice);
           return;
         }
         if (!document.getElementById('panelStatus').classList.contains('hidden')) {
-          switchAuthTab('login');
+          switchAuthTab(emergencyActive ? 'admin' : 'login');
         }
         return;
       }
 
-      const maintActive = isMaintenanceActiveNow();
-      if (maintActive && !user.isSuperAdmin && !user.isPreviewMember) {
-        loginEl.classList.add('hidden');
-        mainAppEl.classList.add('hidden');
-        if (maintEl) {
-          document.getElementById('maintScreenTitle').textContent = (maintenanceConfig && maintenanceConfig.title) || DEFAULT_MAINTENANCE_CONFIG.title;
-          document.getElementById('maintScreenDesc').textContent = (maintenanceConfig && maintenanceConfig.message) || DEFAULT_MAINTENANCE_CONFIG.message;
-          maintEl.classList.remove('hidden');
+      // 로그인 완료 시 복구 로그인 플래그 초기화
+      emergencyRecoveryLoginOpen = false;
+
+      if (emergencyActive) {
+        const isActualAdminAccount = !!((fbUser && (fbUser.email || '').toLowerCase() === ADMIN_EMAIL) && currentAdminName && pendingAdminStatus !== 'pending');
+        const isAllowedRecoveryAdmin = isActualAdminAccount && isDesignatedEmergencyAdmin(currentAdminName);
+        if (!isAllowedRecoveryAdmin) {
+          showMaintenanceBlockScreen({
+            isEmergency: true,
+            isLoggedOut: false,
+            isBlockedAdmin: isActualAdminAccount
+          });
+          return;
         }
-        themeMeta.setAttribute('content', '#0B0F19');
+      } else if (maintActive && !user.isSuperAdmin && !user.isPreviewMember) {
+        showMaintenanceBlockScreen({ isEmergency: false, isLoggedOut: false, isBlockedAdmin: false });
         return;
       }
 
-      if (maintBar && maintActive && (user.isSuperAdmin || user.isPreviewMember)) {
-        document.getElementById('maintAdminBarText').textContent = '🔧 서버 점검 모드 작동 중 · 일반 회원 접근 차단됨';
+      if (maintBar && (emergencyActive || maintActive) && (user.isSuperAdmin || user.isPreviewMember)) {
+        const barBtn = maintBar.querySelector('button');
+        if (emergencyActive) {
+          const reasonTag = (maintenanceConfig && maintenanceConfig.emergencyReason) ? ` (${maintenanceConfig.emergencyReason})` : '';
+          document.getElementById('maintAdminBarText').textContent = `🚨 긴급 보안 점검 작동 중${reasonTag} · 일반 회원·비로그인·타 관리자 차단됨`;
+          if (barBtn) barBtn.textContent = '긴급 점검 해제';
+        } else {
+          document.getElementById('maintAdminBarText').textContent = '🔧 서버 점검 모드 작동 중 · 일반 회원 접근 차단됨';
+          if (barBtn) barBtn.textContent = '점검 해제';
+        }
         maintBar.classList.remove('hidden');
       }
 
@@ -12120,16 +12355,16 @@
           category: catMap.sec_log,
           icon: getTabIcon('manageSecurity'),
           title: `8. ${getTabLabel('manageSecurity')} (해킹 · 피싱 · 악성 링크 점검 및 실시간 방어)`,
-          sub: `${secCnt}개 보안 진단, 실시간 자동 감시, 방어 설정 및 6종 해킹·피싱 방어 시뮬레이션`,
-          keywords: `${getTabLabel('manageSecurity')} 보안 점검 해킹 피싱 스미싱 악성 링크 단축 URL 복제 도메인 XSS 도배 차단 자동 점검 개인정보 시뮬레이션 모의 공격`,
+          sub: `${secCnt}개 보안 진단, 2단계 자동 긴급 점검(지정 최고 관리자 전용), DOM 감시 및 7종 모의훈련`,
+          keywords: `${getTabLabel('manageSecurity')} 보안 점검 해킹 피싱 바이러스 악성 파일 링크 DOM 변조 자동 긴급 점검 지정 최고 관리자 복제 도메인 XSS 시뮬레이션 모의 공격`,
           targetTab: 'security',
           targetLabel: `${getTabIcon('manageSecurity')} ${getTabLabel('manageSecurity')} 탭 열기`,
           steps: [
-            `<b>${secCnt}개 항목 수동·자동 보안 일괄 점검 ([${secIcn} ${secLbl}]):</b> 공식 HTTPS 도메인, CSP·로컬 SDK 무결성, 전체 링크·XSS·개인정보 노출 스캔, 관리자 잠금·비공개 서버 격리·참관자 권한, QR·비번 초기화 만료, 유튜브 채널·방어 정책·저장소 보안을 한 번에 점검합니다.`,
-            '<b>실시간 자동 보안 점검:</b> 원하는 주기(초)를 설정해 두면 백그라운드에서 자동 점검하다가 문제 감지 시 즉시 멈추고 최고 관리자에게 알림을 보내며, 해결되면 자동으로 재개합니다.',
-            '<b>실시간 방어 스위치 & 관리자 전용 보안 알림:</b> 악성 스크립트(XSS) 차단, 피싱·위험 링크 자동 차단, 복제 사이트 경고와 <b>🚨 보안 문제 발생 시 관리자 실시간 알림</b>을 켜고 끌 수 있습니다. (보안 알림은 최고 관리자에게만 표시)',
-            '<b>6종 해킹·피싱 공격 방어 시뮬레이션:</b> XSS 스크립트, 피싱 링크, 복제 도메인, 관리자 권한 탈취, 만료·위조 QR 가입, 악성 유튜브·개인정보 노출 공격 시 실제 앱 방어 엔진이 몇 단계로 어떻게 차단하고 대처하는지 데이터·로그 오염 없이 모의 체험할 수 있습니다.',
-            `<b>기능 점검과 역할 분리:</b> 앱 오류·연동·화면 체험은 <b>[${diagIcn} ${diagLbl}]</b>에서, 해킹·피싱·보안 방어는 <b>[${secIcn} ${secLbl}]</b>에서 각각 전문적으로 점검합니다.`
+            `<b>1차 실시간 차단 (XSS · 피싱/바이러스 파일 · DOM 변조):</b> 악성 스크립트, 난독화 코드, <code>.apk/.exe</code> 등 악성 실행·설치 파일 다운로드 링크, 실행 중 미인가 외부 스크립트/iframe 주입(DOM 변조)을 1차로 즉시 차단합니다.`,
+            `<b>2차 자동 긴급 보안 점검 & 지정 최고 관리자 통제:</b> 1차 방어를 뚫은 침입 흔적(저장 데이터 XSS·고위험 링크·비공식 도메인·서버 격리 이상·DOM 변조·5분 내 5회 공격 폭주)이 감지되면 자동으로 <b>🚨 긴급 보안 점검</b>을 발동합니다. 발동 즉시 <b>일반 회원·비로그인 방문자·지정 외 타 관리자</b> 접근을 전면 차단하고 초대 QR 폐기·신규 관리자 잠금을 함께 적용합니다.`,
+            `<b>지정 최고 관리자 복구:</b> <b>[${secIcn} ${secLbl}] → 🚨 2차 침입 차단</b>에서 긴급 점검 시 입장·해제가 가능한 <b>지정 최고 관리자(최소 1명)</b>를 선택해 둘 수 있습니다. (미지정 시 최초 등록 활성 관리자 자동 보호)`,
+            `<b>${secCnt}개 항목 수동·자동 보안 일괄 점검 & 7종 공격 시뮬레이션:</b> 백그라운드 주기 점검과 7종 모의훈련(긴급 점검 발동 체험 포함)으로 현재 보안 상태를 데이터 오염 없이 언제든 검증할 수 있습니다.`,
+            `<b>기능 점검과 역할 분리:</b> 앱 오류·연동·일반 서버 점검은 <b>[${diagIcn} ${diagLbl}]</b>에서, 해킹·피싱·바이러스 링크·긴급 보안 점검은 <b>[${secIcn} ${secLbl}]</b>에서 전문적으로 관리합니다.`
           ],
           tip: `악성 스크립트나 피싱 링크 입력이 차단되면 실행자·시각·시도 내용이 [${getTabIcon('manageLogs')} ${getTabLabel('manageLogs')}]에 자동 기록되어 추적할 수 있습니다.`
         }
@@ -14984,6 +15219,7 @@
                           <div class="member-name">
                             <span>${escapeHtml(a.name)}</span>
                             <span class="role-pill" style="background:#D97706;">관리자</span>
+                            ${isDesignatedEmergencyAdmin(a.name) ? '<span class="tag red" style="font-size:10px; padding:2px 6px;">🚨 긴급 복구 지정</span>' : ''}
                             ${isMe ? '<span class="tag green" style="font-size:10px; padding:2px 6px;">나</span>' : ''}
                             ${a.reentryCount ? `<span class="tag slate" style="font-size:10px; padding:2px 6px;">재입장 ${a.reentryCount}회</span>` : ''}
                             ${a.renameCount ? `<span class="tag" style="font-size:10px; padding:2px 6px;">변경 ${a.renameCount}회</span>` : ''}
@@ -18858,7 +19094,10 @@
       const prevGraceUntilTs = (prevTok && graceMin > 0)
         ? (nowTs + graceMin * 60 * 1000)
         : 0;
-      return {
+      const existingEmergLock = (inviteQrDoc && inviteQrDoc.emergencyLock && inviteQrDoc.emergencyLock.active)
+        ? inviteQrDoc.emergencyLock
+        : null;
+      const payload = {
         date: todayDot,
         token: generateInviteToken(),
         refreshMinutes: modeMin,
@@ -18870,6 +19109,8 @@
         updatedTs: nowTs,
         updatedBy: updatedBy || currentAdminName || '관리자'
       };
+      if (existingEmergLock) payload.emergencyLock = existingEmergLock;
+      return payload;
     }
 
     async function ensureTodayInviteQrExists(keepPrevGrace = true) {
@@ -21334,6 +21575,17 @@
           lockAutoRegister: !!adminRegistry.lockAutoRegister,
           items
         }, { merge: true });
+
+        if (Array.isArray(securityConfig && securityConfig.emergencySuperAdmins) && securityConfig.emergencySuperAdmins.includes(oldName)) {
+          const updatedEmerg = Array.from(new Set(securityConfig.emergencySuperAdmins.map(x => x === oldName ? newName : x)));
+          securityConfig = { ...securityConfig, emergencySuperAdmins: updatedEmerg };
+          db.collection('config').doc('layout').set({ securityConfig }, { merge: true }).catch(() => {});
+        }
+        if (Array.isArray(maintenanceConfig && maintenanceConfig.emergencyAllowedAdmins) && maintenanceConfig.emergencyAllowedAdmins.includes(oldName)) {
+          const updatedAllowed = Array.from(new Set(maintenanceConfig.emergencyAllowedAdmins.map(x => x === oldName ? newName : x)));
+          maintenanceConfig = { ...maintenanceConfig, emergencyAllowedAdmins: updatedAllowed };
+          db.collection('config').doc('maintenance').set({ emergencyAllowedAdmins: updatedAllowed }, { merge: true }).catch(() => {});
+        }
 
         document.getElementById('adminRenameModal').classList.remove('open');
 
@@ -25257,10 +25509,17 @@
           })}
           <div data-acc-body="diag_maint" class="${maintOpen ? '' : 'hidden'}">
             <div class="card" style="${mActive ? 'border-color:#FCA5A5; background:#FEF2F2;' : ''}">
+              ${isEmergencyMaintenanceActive() ? `
+                <div class="info-box warn" style="margin-top:0; margin-bottom:10px; background:#FEF2F2; border-color:#FCA5A5; color:#991B1B;">
+                  🚨 <b>현재 긴급 보안 점검 모드가 작동 중입니다.</b><br>
+                  사유: ${escapeHtml(mCfg.emergencyReason || '보안 위협 감지')}${mCfg.emergencyTriggeredAt ? ` (${escapeHtml(mCfg.emergencyTriggeredAt)})` : ''}<br>
+                  긴급 점검 해제 및 지정 최고 관리자 설정은 <b>[${escapeHtml(getTabIcon('manageSecurity'))} ${escapeHtml(getTabLabel('manageSecurity'))}]</b> 탭에서 관리할 수 있습니다.
+                </div>
+              ` : ''}
               <div class="setting-row" style="padding-top:0; border-bottom:none; padding-bottom:6px;">
                 <div>
-                  <div class="setting-title" style="font-size:13.5px;">즉시 서버 점검 모드 켜기</div>
-                  <div class="setting-sub" style="font-size:11.5px;">켜면 일반 회원에게 점검 안내 화면만 표시됩니다. (최고 관리자는 정상 접속)</div>
+                  <div class="setting-title" style="font-size:13.5px;">즉시 일반 서버 점검 모드 켜기</div>
+                  <div class="setting-sub" style="font-size:11.5px;">켜면 일반 회원에게 점검 안내 화면만 표시됩니다. (해킹·침입 대응용 <b>긴급 보안 점검</b>은 보안 점검 탭에서 자동·수동 작동)</div>
                 </div>
                 <label class="switch">
                   <input type="checkbox" id="cfgMaintEnabled" ${mCfg.enabled ? 'checked' : ''} onchange="handleToggleMaintenanceImmediate(this.checked)" />
@@ -25456,7 +25715,10 @@
           blockMaliciousInput: true,
           blockSuspiciousLinks: true,
           detectCloneDomain: true,
-          alertAdminOnSecurityEvent: true
+          alertAdminOnSecurityEvent: true,
+          domTamperGuard: true,
+          autoEmergencyLockOnBreach: true,
+          autoLockdownExtras: true
         };
         try {
           await db.collection('config').doc('layout').set({ securityConfig: nextCfg }, { merge: true });
@@ -26630,14 +26892,200 @@
     };
 
 
-    // ==================== 21. 정기 서버 점검 모드 제어 ====================
-    window.handleToggleMaintenanceImmediate = async (checked) => {
+    // ==================== 21. 정기 서버 점검 & 긴급 보안 점검 제어 ====================
+    async function syncPublicEmergencyLockFlag(active, meta = {}) {
+      try {
+        if (active) {
+          const lockObj = {
+            active: true,
+            title: meta.title || DEFAULT_EMERGENCY_MAINT_TITLE,
+            message: meta.message || DEFAULT_EMERGENCY_MAINT_MESSAGE,
+            triggeredAt: meta.triggeredAt || formatKstDateTime(),
+            triggeredTs: Date.now()
+          };
+          await db.collection('config').doc('inviteQr').set({ emergencyLock: lockObj }, { merge: true });
+          if (inviteQrDoc) inviteQrDoc.emergencyLock = lockObj;
+        } else {
+          await db.collection('config').doc('inviteQr').set({ emergencyLock: FieldValue.delete() }, { merge: true });
+          if (inviteQrDoc && inviteQrDoc.emergencyLock) delete inviteQrDoc.emergencyLock;
+        }
+      } catch (err) {
+        console.warn('syncPublicEmergencyLockFlag error:', err);
+      }
+    }
+
+    async function triggerEmergencySecurityLockdown(reason, detail = '', opts = {}) {
+      const isManual = !!opts.manual;
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return false;
+      if (isEmergencyMaintenanceActive() && !opts.forceUpdate) return false;
+      if (isTriggeringEmergencyLockdown) return false;
+      isTriggeringEmergencyLockdown = true;
+
+      try {
+        const nowStr = formatKstDateTime();
+        const nowTs = Date.now();
+        const allowedAdmins = getEffectiveEmergencyAdmins();
+        const safeReason = String(reason || '보안 위협 감지').trim().slice(0, 80);
+        const safeDetail = String(detail || '').trim().slice(0, 260);
+        const title = DEFAULT_EMERGENCY_MAINT_TITLE;
+        const message = DEFAULT_EMERGENCY_MAINT_MESSAGE;
+
+        const payload = {
+          enabled: true,
+          mode: 'emergency',
+          title,
+          message,
+          emergencyReason: safeReason,
+          emergencyDetail: safeDetail,
+          emergencyTriggeredAt: nowStr,
+          emergencyTriggeredTs: nowTs,
+          emergencyTriggeredBy: isManual ? `${currentAdminName || '관리자'} (수동 발동)` : '자동 보안 감시 시스템',
+          emergencyAllowedAdmins: allowedAdmins,
+          updatedAt: nowStr,
+          updatedBy: currentAdminName || '시스템'
+        };
+
+        await db.collection('config').doc('maintenance').set(payload, { merge: true });
+        maintenanceConfig = { ...DEFAULT_MAINTENANCE_CONFIG, ...payload };
+
+        const extrasApplied = [];
+        if (securityConfig && securityConfig.autoLockdownExtras !== false) {
+          try {
+            const modeMin = getInviteRefreshMinutes(inviteQrDoc);
+            const nextQrDoc = buildInviteQrDocPayload({
+              refreshMinutes: modeMin,
+              keepPrevGrace: false,
+              updatedBy: '긴급 보안 점검 자동 폐기'
+            });
+            nextQrDoc.emergencyLock = { active: true, title, message, triggeredAt: nowStr, triggeredTs: nowTs };
+            await db.collection('config').doc('inviteQr').set(nextQrDoc);
+            inviteQrDoc = nextQrDoc;
+            extrasApplied.push('초대 QR 즉시 폐기');
+          } catch {
+            await syncPublicEmergencyLockFlag(true, { title, message, triggeredAt: nowStr });
+          }
+
+          if (!adminRegistry.lockAutoRegister) {
+            try {
+              await db.collection('config').doc('adminRegistry').set({ lockAutoRegister: true }, { merge: true });
+              adminRegistry.lockAutoRegister = true;
+              extrasApplied.push('신규 관리자 등록 잠금 ON');
+            } catch {}
+          }
+        } else {
+          await syncPublicEmergencyLockFlag(true, { title, message, triggeredAt: nowStr });
+        }
+
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: isManual ? '긴급 보안 점검 수동 발동' : '긴급 보안 점검 자동 발동',
+          target: safeReason,
+          detail: `${safeDetail ? safeDetail + ' · ' : ''}허용 지정 관리자: ${allowedAdmins.join(', ') || '-'}${extrasApplied.length ? ` · 추가 조치: ${extrasApplied.join(', ')}` : ''}`
+        });
+
+        if (isDesignatedEmergencyAdmin(currentAdminName)) {
+          showInAppNotif(
+            '🚨',
+            '🚨 긴급 보안 점검 자동 발동',
+            `${safeReason} — 일반 회원·비로그인·타 관리자 접근이 전면 차단되었습니다.`,
+            () => {
+              currentMainTab = 'manage';
+              currentManageSubTab = 'security';
+              manageSectionOpen['sec_emergency'] = true;
+              applyScreen();
+            },
+            'sec-alert'
+          );
+          sendDeviceNotification('🚨 긴급 보안 점검 발동', `${safeReason} — 지정 최고 관리자 외 접근 전면 차단`, 'sec-emergency-lock');
+        }
+        applyScreen();
+        return true;
+      } catch (err) {
+        console.error('Emergency lockdown trigger failed:', err);
+        return false;
+      } finally {
+        isTriggeringEmergencyLockdown = false;
+      }
+    }
+
+    window.handleManualTriggerEmergencyLockdown = async () => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const allowed = getEffectiveEmergencyAdmins();
+      const willBlockMe = !isDesignatedEmergencyAdmin(currentAdminName);
+      const ok = confirm(
+        `🚨 긴급 보안 점검을 지금 바로 발동할까요?\n\n` +
+        `• 일반 회원, 비로그인 방문자, 지정 외 타 관리자의 접속이 즉시 차단됩니다.\n` +
+        `• 지정 복구 최고 관리자: ${allowed.join(', ') || currentAdminName}\n` +
+        (securityConfig.autoLockdownExtras !== false ? `• 초대 QR 즉시 폐기 및 신규 관리자 자동 등록 잠금이 함께 적용됩니다.\n` : '') +
+        (willBlockMe ? `\n⚠️ 주의: 현재 로그인한 [${currentAdminName}]님은 지정 최고 관리자에 포함되어 있지 않아 발동 즉시 본인 화면도 차단됩니다!` : '')
+      );
+      if (!ok) return;
+      const done = await triggerEmergencySecurityLockdown('관리자 수동 긴급 보안 점검 발동', `${currentAdminName || '관리자'} 수동 비상 잠금`, { manual: true });
+      if (done) {
+        showToast('🚨 긴급 보안 점검이 발동되었습니다. 지정 최고 관리자 외 모든 접속이 차단됩니다.', 'warn');
+      }
+    };
+
+    window.handleReleaseEmergencyLockdown = async () => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin || !isDesignatedEmergencyAdmin(currentAdminName)) {
+        return showToast('🚨 지정된 최고 관리자만 긴급 보안 점검을 해제할 수 있습니다.', 'err');
+      }
+      if (!confirm('🚨 긴급 보안 점검을 해제하고 앱을 정상 운영으로 복구할까요?\n\n침입 원인·악성 게시물·의심 링크 정리를 모두 마치셨는지 확인해 주세요.')) return;
       try {
         await db.collection('config').doc('maintenance').set({
+          enabled: false,
+          mode: 'regular',
+          title: DEFAULT_MAINTENANCE_CONFIG.title,
+          message: DEFAULT_MAINTENANCE_CONFIG.message,
+          emergencyReason: '',
+          emergencyDetail: '',
+          emergencyTriggeredAt: '',
+          emergencyTriggeredTs: 0,
+          emergencyTriggeredBy: '',
+          scheduled: FieldValue.delete(),
+          startTs: FieldValue.delete(),
+          endTs: FieldValue.delete(),
+          updatedAt: formatKstDateTime(),
+          updatedBy: currentAdminName || '지정 최고 관리자'
+        }, { merge: true });
+        await syncPublicEmergencyLockFlag(false);
+        recentSecurityAttackTimestamps = [];
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '긴급 보안 점검 해제',
+          target: '정상 운영 복구',
+          detail: `지정 최고 관리자(${currentAdminName}) 해제`
+        });
+        showToast('🟢 긴급 보안 점검이 해제되어 정상 운영으로 복구되었습니다!', 'ok');
+      } catch (err) {
+        handleDbError(err, '긴급 보안 점검 해제');
+      }
+    };
+
+    window.handleToggleMaintenanceImmediate = async (checked) => {
+      if (!checked && isEmergencyMaintenanceActive() && !isDesignatedEmergencyAdmin(currentAdminName)) {
+        return showToast('🚨 긴급 보안 점검은 지정된 최고 관리자만 해제할 수 있습니다.', 'err');
+      }
+      try {
+        const patch = {
           enabled: !!checked,
+          mode: 'regular',
           updatedAt: formatKstDateTime(),
           updatedBy: currentAdminName || '관리자'
-        }, { merge: true });
+        };
+        if (!checked) {
+          patch.emergencyReason = '';
+          patch.emergencyDetail = '';
+          patch.emergencyTriggeredAt = '';
+          patch.emergencyTriggeredTs = 0;
+        }
+        await db.collection('config').doc('maintenance').set(patch, { merge: true });
+        if (!checked) await syncPublicEmergencyLockFlag(false);
         recordAuditLog({
           actorType: 'admin',
           category: '보안·설정',
@@ -26653,16 +27101,21 @@
     };
 
     window.quickDisableMaintenance = async () => {
+      if (isEmergencyMaintenanceActive()) {
+        return handleReleaseEmergencyLockdown();
+      }
       if (!confirm('서버 점검 모드를 지금 바로 해제할까요?')) return;
       try {
         await db.collection('config').doc('maintenance').set({
           enabled: false,
+          mode: 'regular',
           scheduled: FieldValue.delete(),
           startTs: FieldValue.delete(),
           endTs: FieldValue.delete(),
           updatedAt: formatKstDateTime(),
           updatedBy: currentAdminName || '관리자'
         }, { merge: true });
+        await syncPublicEmergencyLockFlag(false);
         recordAuditLog({
           actorType: 'admin',
           category: '보안·설정',
@@ -26686,6 +27139,7 @@
       try {
         await db.collection('config').doc('maintenance').set({
           enabled,
+          mode: (enabled && isEmergencyMaintenanceActive()) ? 'emergency' : 'regular',
           scheduled: FieldValue.delete(),
           startTs: FieldValue.delete(),
           endTs: FieldValue.delete(),
@@ -26694,6 +27148,7 @@
           updatedAt: formatKstDateTime(),
           updatedBy: currentAdminName || '관리자'
         }, { merge: true });
+        if (!enabled) await syncPublicEmergencyLockFlag(false);
         recordAuditLog({
           actorType: 'admin',
           category: '보안·설정',
@@ -26714,13 +27169,26 @@
 
     window.recheckMaintenanceNow = async () => {
       try {
+        if (!fbUser) {
+          const qrSnap = await db.collection('config').doc('inviteQr').get({ source: 'server' });
+          inviteQrDoc = qrSnap.exists ? qrSnap.data() : null;
+          applyScreen();
+          if (isEmergencyMaintenanceActive()) {
+            showToast('아직 긴급 보안 점검이 진행 중입니다. 잠시 후 다시 시도해 주세요.', 'warn');
+          } else {
+            showToast('🟢 긴급 점검이 종료되어 로그인 화면으로 복구되었습니다!', 'ok');
+          }
+          return;
+        }
         const snap = await db.collection('config').doc('maintenance').get({ source: 'server' });
         maintenanceConfig = snap.exists ? { ...DEFAULT_MAINTENANCE_CONFIG, ...snap.data() } : structuredClone(DEFAULT_MAINTENANCE_CONFIG);
         applyScreen();
-        if (isMaintenanceActiveNow()) {
+        if (isEmergencyMaintenanceActive()) {
+          showToast('아직 긴급 보안 점검이 진행 중입니다. 안전 확인 후 자동 복구됩니다.', 'warn');
+        } else if (isMaintenanceActiveNow()) {
           showToast('아직 서버 점검이 진행 중입니다. 잠시 후 다시 시도해 주세요.');
         } else {
-          showToast('점검이 완료되어 정상 화면으로 복구되었습니다!');
+          showToast('점검이 완료되어 정상 화면으로 복구되었습니다!', 'ok');
         }
       } catch {
         location.reload();
@@ -26781,8 +27249,11 @@
         { re: /<\s*(iframe|object|embed|applet|meta|base)\b/i, reason: '위험 HTML 프레임/객체 태그 삽입 시도' },
         { re: /\b(?:javascript|vbscript)\s*:/i, reason: '스크립트 실행 프로토콜(javascript:) 포함' },
         { re: /\bdata\s*:\s*text\/html/i, reason: 'HTML 데이터 실행 URI 포함' },
-        { re: /\bon(?:error|load|click|mouseover|focus|input|submit)\s*=/i, reason: 'HTML 이벤트 실행 속성(on*=) 포함' },
+        { re: /\bon(?:error|load|click|mouseover|mouseenter|pointerenter|focus|blur|input|submit|toggle|animationstart)\s*=/i, reason: 'HTML 이벤트 실행 속성(on*=) 포함' },
         { re: /\b(?:document\.cookie|window\.location|eval\s*\(|Function\s*\()/i, reason: '브라우저 쿠키 탈취·코드 실행 구문 포함' },
+        { re: /\bsrcdoc\s*=/i, reason: '악성 HTML 문서 삽입(srcdoc=) 시도' },
+        { re: /\b(?:String\.fromCharCode|atob\s*\(|document\.write\s*\(|innerHTML\s*=)/i, reason: '난독화 스크립트·DOM 변조 구문 포함' },
+        { re: /<\s*form\b[^>]*\baction\s*=/i, reason: '외부 피싱 입력 폼(<form action>) 삽입 시도' },
         { re: /<\s*svg\b[^>]*\bon[a-z]+\s*=/i, reason: '악성 SVG 스크립트 태그 포함' }
       ];
       const reasons = [];
@@ -26879,6 +27350,11 @@
         elevate('warn');
         reasons.push('비영문 국제화 도메인(유사 주소 위장 여부 확인 필요)');
       }
+      const lowerPathAndSearch = `${parsed.pathname || ''}${parsed.search || ''}`.toLowerCase();
+      if (/\.(?:exe|apk|bat|cmd|msi|scr|vbs|vbe|ps1|sh|dll|dmg|iso|jar|hta|pif|lnk)(?:[?#&/]|$)/i.test(lowerPathAndSearch)) {
+        elevate('danger');
+        reasons.push('바이러스·악성 실행/설치 파일 다운로드 링크 의심');
+      }
 
       return {
         riskLevel,
@@ -26921,6 +27397,7 @@
             target: contextLabel || '입력란',
             detail: `${xss.reasons.join(', ')} (감지: ${xss.matched})`
           });
+          trackSecurityAttackEvent('악성 스크립트(XSS) 연속 공격', `${contextLabel || '입력란'} · ${xss.reasons.join(', ')}`);
           showToast('🛡️ 보안 차단: 악성 스크립트 패턴이 감지되어 등록이 차단되었습니다.');
           return false;
         }
@@ -26939,7 +27416,8 @@
             target: contextLabel || '입력란',
             detail: dangerLinks.map(l => `${l.url} [${l.reasons.join(', ')}]`).join(' / ')
           });
-          alert(`🚨 보안 차단: 피싱 또는 위험 링크가 감지되어 등록할 수 없습니다.\n\n• 감지 주소: ${dangerLinks[0].url}\n• 사유: ${dangerLinks[0].reasons.join(', ')}`);
+          trackSecurityAttackEvent('피싱·바이러스 링크 연속 공격', `${contextLabel || '입력란'} · ${dangerLinks[0].url}`);
+          alert(`🚨 보안 차단: 피싱 또는 위험·바이러스 링크가 감지되어 등록할 수 없습니다.\n\n• 감지 주소: ${dangerLinks[0].url}\n• 사유: ${dangerLinks[0].reasons.join(', ')}`);
           return false;
         }
 
@@ -27007,6 +27485,111 @@
       const b = document.getElementById('cloneDomainBanner');
       if (b) b.classList.add('hidden');
     };
+
+    function trackSecurityAttackEvent(reason, detail = '', immediateOnDomBreach = false) {
+      const now = Date.now();
+      recentSecurityAttackTimestamps = recentSecurityAttackTimestamps.filter(ts => now - ts < 5 * 60 * 1000);
+      recentSecurityAttackTimestamps.push(now);
+
+      const u = getCurrentUser();
+      const cfg = securityConfig || DEFAULT_SECURITY_CONFIG;
+      if (!u || !u.isSuperAdmin || cfg.autoEmergencyLockOnBreach === false) return;
+      if (isEmergencyMaintenanceActive()) return;
+
+      if (immediateOnDomBreach || recentSecurityAttackTimestamps.length >= 5) {
+        triggerEmergencySecurityLockdown(
+          immediateOnDomBreach ? reason : `5분 내 고위험 공격 ${recentSecurityAttackTimestamps.length}회 폭주 감지`,
+          detail || reason,
+          { manual: false }
+        );
+      }
+    }
+
+    function evaluateBreachAndAutoLockdown(sourceTag = '') {
+      const u = getCurrentUser();
+      const cfg = securityConfig || DEFAULT_SECURITY_CONFIG;
+      if (!u || !u.isSuperAdmin || cfg.autoEmergencyLockOnBreach === false) return false;
+      if (isEmergencyMaintenanceActive()) return false;
+
+      const criticalIds = ['domain_https', 'csp_sdk', 'link_scan', 'xss_scan', 'isolation_rbac'];
+      const criticalHits = criticalIds
+        .map(id => ({ id, item: SEC_CHECK_ITEMS.find(x => x.id === id), res: secCheckResults[id] }))
+        .filter(x => x.res && x.res.status === 'err');
+
+      if (criticalHits.length > 0) {
+        const reason = `치명적 보안 침입·돌파 감지 (${criticalHits.map(x => (x.item && x.item.title) || x.id).join(', ')})`;
+        const detail = criticalHits.map(x => `${x.id}: ${(x.res.msg || '').split('\n')[0]}`).join(' / ');
+        triggerEmergencySecurityLockdown(reason, `${sourceTag ? `[${sourceTag}] ` : ''}${detail}`, { manual: false });
+        return true;
+      }
+
+      const fiveMinAgo = Date.now() - 5 * 60 * 1000;
+      const ackTs = Number(cfg.threatAckTs || 0);
+      const recentBurst = (auditLogs || []).filter(l => {
+        const ts = Number(l.ts || 0);
+        return ts >= fiveMinAgo && ts > ackTs && isSecurityThreatAuditEntry(l);
+      });
+      if (recentBurst.length >= 5) {
+        triggerEmergencySecurityLockdown(
+          `단시간 보안 공격 폭주 감지 (5분 내 ${recentBurst.length}건)`,
+          `${sourceTag ? `[${sourceTag}] ` : ''}${recentBurst.slice(0, 3).map(l => l.action).join(', ')}`,
+          { manual: false }
+        );
+        return true;
+      }
+      return false;
+    }
+
+    function startDomTamperGuard() {
+      if (domTamperObserver || typeof MutationObserver === 'undefined' || !document.documentElement) return;
+      domTamperObserver = new MutationObserver((mutations) => {
+        if (securityConfig && securityConfig.domTamperGuard === false) return;
+        for (const mut of mutations) {
+          if (!mut.addedNodes || mut.addedNodes.length === 0) continue;
+          mut.addedNodes.forEach(node => {
+            if (!node || node.nodeType !== 1) return;
+            const tag = String(node.tagName || '').toUpperCase();
+            let violation = '';
+            if (tag === 'SCRIPT') {
+              const src = String(node.getAttribute('src') || '').trim();
+              if (src && /^https?:\/\//i.test(src) && !TRUSTED_FIREBASE_RUNTIME_SCRIPTS.some(re => re.test(src))) {
+                violation = `미인가 외부 스크립트 삽입(${src.slice(0, 120)})`;
+              }
+            } else if (tag === 'IFRAME') {
+              const src = String(node.getAttribute('src') || '').trim();
+              const inVideoPlayer = !!(node.closest && node.closest('#videoPlayerFrameWrap'));
+              const isYoutubeEmbed = /^https:\/\/www\.youtube(?:-nocookie)?\.com\/embed\//i.test(src);
+              if (!inVideoPlayer || !isYoutubeEmbed) {
+                violation = `미인가 iframe 삽입(${(src || 'inline').slice(0, 120)})`;
+              }
+            } else if (tag === 'OBJECT' || tag === 'EMBED') {
+              violation = `위험 플러그인 태그(<${tag.toLowerCase()}>) 삽입`;
+            }
+            if (violation) {
+              try { node.remove(); } catch {}
+              const now = Date.now();
+              if (now - lastDomTamperLogTs > 5000) {
+                lastDomTamperLogTs = now;
+                if (fbUser) {
+                  recordAuditLog({
+                    actorType: (fbUser.email || '').toLowerCase() === ADMIN_EMAIL ? 'admin' : 'member',
+                    category: '보안·설정',
+                    action: '실시간 DOM 변조 차단',
+                    target: '웹 앱 화면',
+                    detail: violation
+                  });
+                }
+                trackSecurityAttackEvent('실시간 악성 스크립트·DOM 변조 침입 감지', violation, true);
+              }
+            }
+          });
+        }
+      });
+      try {
+        domTamperObserver.observe(document.documentElement, { childList: true, subtree: true });
+      } catch {}
+    }
+    startDomTamperGuard();
 
     window.openExternalLinkSafely = (rawUrl, label = '외부 사이트') => {
       const safeUrl = normalizeExternalUrl(rawUrl);
@@ -27233,8 +27816,8 @@
     }
 
     window.setManageSecurityFilter = (f) => {
-      manageSecurityFilter = ['all', 'checks', 'defense', 'sim', 'threats'].includes(f) ? f : 'all';
-      const accMap = { checks: 'sec_check_list', defense: 'sec_defense_cfg', sim: 'sec_sim', threats: 'sec_threat_feed' };
+      manageSecurityFilter = ['all', 'emergency', 'checks', 'defense', 'sim', 'threats'].includes(f) ? f : 'all';
+      const accMap = { emergency: 'sec_emergency', checks: 'sec_check_list', defense: 'sec_defense_cfg', sim: 'sec_sim', threats: 'sec_threat_feed' };
       if (accMap[manageSecurityFilter]) manageSectionOpen[accMap[manageSecurityFilter]] = true;
       const u = getCurrentUser();
       if (u && currentMainTab === 'manage' && currentManageSubTab === 'security') {
@@ -27252,10 +27835,18 @@
       const threatAckTs = Number(cfg.threatAckTs || 0);
       const unackedThreatLogs = threatLogs.filter(l => Number(l.ts || 0) > threatAckTs);
       const secf = manageSecurityFilter || 'all';
+      const emergencyActive = isEmergencyMaintenanceActive();
+      const activeAdminItems = (adminRegistry && Array.isArray(adminRegistry.items))
+        ? adminRegistry.items.filter(a => a && a.status === 'active')
+        : [];
+      const effectiveEmergencyAdmins = getEffectiveEmergencyAdmins();
+      const amDesignatedEmergency = isDesignatedEmergencyAdmin(currentAdminName);
+      const showEmergency = secf === 'all' || secf === 'emergency';
       const showChecks = secf === 'all' || secf === 'checks';
       const showDefense = secf === 'all' || secf === 'defense';
       const showSim = secf === 'all' || secf === 'sim';
       const showThreats = secf === 'all' || secf === 'threats';
+      const emergencyOpen = isManageSectionOpen('sec_emergency', true);
       const defenseOpen = isManageSectionOpen('sec_defense_cfg', true);
       const checksOpen = isManageSectionOpen('sec_check_list', true);
       const simOpen = isManageSectionOpen('sec_sim', true);
@@ -27339,11 +27930,104 @@
 
         <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_sec_filter" data-ts-body="#manageContent">
           <button class="filter-chip ${secf === 'all' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('all')">전체</button>
+          <button class="filter-chip ${secf === 'emergency' ? 'active' : ''} ${emergencyActive ? 'has-badge' : ''}" type="button" onclick="setManageSecurityFilter('emergency')">🚨 긴급 보안 점검</button>
           <button class="filter-chip ${secf === 'checks' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('checks')">🔍 ${SEC_CHECK_ITEMS.length}개 보안 진단</button>
           <button class="filter-chip ${secf === 'defense' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('defense')">🚧 실시간 방어</button>
-          <button class="filter-chip ${secf === 'sim' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('sim')">🎭 공격 시뮬레이션 (6)</button>
+          <button class="filter-chip ${secf === 'sim' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('sim')">🎭 공격 시뮬레이션 (7)</button>
           <button class="filter-chip ${secf === 'threats' ? 'active' : ''}" type="button" onclick="setManageSecurityFilter('threats')">🚨 위협 기록 (${unackedThreatLogs.length > 0 ? `미확인 ${unackedThreatLogs.length}` : threatLogs.length})</button>
         </div>
+
+        ${showEmergency ? `
+        <!-- 0) 침입 돌파 시 자동 긴급 보안 점검 & 지정 최고 관리자 통제 -->
+        ${buildManageAccordionBar({
+          key: 'sec_emergency',
+          titleHtml: '🚨 2차 침입 차단 · 자동 긴급 보안 점검',
+          badgeHtml: `<span class="tag ${emergencyActive ? 'red' : (cfg.autoEmergencyLockOnBreach !== false ? 'green' : 'warm')}">${emergencyActive ? '🔴 긴급 점검 작동 중' : (cfg.autoEmergencyLockOnBreach !== false ? '🛡️ 자동 발동 ON' : '⚠️ 자동 발동 OFF')}</span>`,
+          defaultOpen: true
+        })}
+        <div data-acc-body="sec_emergency" class="${emergencyOpen ? '' : 'hidden'}">
+          <div class="card" style="${emergencyActive ? 'border-color:#EF4444; background:#FEF2F2;' : 'border-color:#FECACA;'}">
+            ${emergencyActive ? `
+              <div class="info-box warn" style="margin-top:0; margin-bottom:11px; background:#7F1D1D; border-color:#FCA5A5; color:#FEE2E2;">
+                <div style="font-weight:900; font-size:13px; margin-bottom:4px;">🚨 긴급 보안 점검 작동 중 · 전원 접속 차단</div>
+                • 발동 사유: <b>${escapeHtml((maintenanceConfig && maintenanceConfig.emergencyReason) || '보안 위협 감지')}</b><br>
+                • 발동 시각: ${escapeHtml((maintenanceConfig && maintenanceConfig.emergencyTriggeredAt) || '-')} (${escapeHtml((maintenanceConfig && maintenanceConfig.emergencyTriggeredBy) || '자동 시스템')})<br>
+                • 현재 일반 회원, 비로그인 방문자, 지정 외 타 관리자는 모두 긴급 점검 화면으로 차단되어 있습니다.
+              </div>
+              <button class="btn-full" type="button" style="background:#16A34A; color:#fff; padding:12px; font-size:13.5px; margin-bottom:12px;" ${!amDesignatedEmergency ? 'disabled' : ''} onclick="handleReleaseEmergencyLockdown()">
+                🟢 긴급 보안 점검 해제 및 정상 운영 복구
+              </button>
+            ` : `
+              <div class="info-box" style="margin-top:0; margin-bottom:10px; background:#FFF5F5; border-color:#FECACA; color:#7F1D1D;">
+                <b>🛡️ 2단계 이중 방어 작동 구조</b><br>
+                • <b>1차 방어:</b> 악성 스크립트(XSS)·피싱/바이러스 파일(.exe/.apk 등) 링크·실시간 DOM 변조를 즉시 차단합니다.<br>
+                • <b>2차 비상 차단:</b> 1차 방어를 뚫고 침입 흔적이 발견되거나 5분 내 5회 이상 연속 공격이 감지되면 <b>자동 긴급 보안 점검</b>을 발동해 <b>이용자·비로그인 방문자·지정 외 타 관리자</b> 접근을 즉시 전면 차단합니다.
+              </div>
+              <button class="btn-full" type="button" style="background:#DC2626; color:#fff; padding:11px; font-size:13px; margin-bottom:12px;" onclick="handleManualTriggerEmergencyLockdown()">
+                🚨 긴급 보안 점검 수동 즉시 발동 (비상 차단)
+              </button>
+            `}
+
+            <div class="setting-row" style="padding-top:4px;">
+              <div>
+                <div class="setting-title" style="font-size:13.5px;">🚨 방어 돌파·침입 감지 시 자동 긴급 점검 발동</div>
+                <div class="setting-sub" style="font-size:11.5px;">저장 데이터 악성 코드·고위험 링크 돌파, DOM 변조, 비공식 도메인, 5분 내 5회 공격 폭주 시 자동 발동</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="cfgSecAutoEmergency" ${cfg.autoEmergencyLockOnBreach !== false ? 'checked' : ''} onchange="handleSaveEmergencyLockPolicy()" />
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-row">
+              <div>
+                <div class="setting-title" style="font-size:13.5px;">🔒 긴급 발동 시 초대 QR 즉시 폐기 + 관리자 잠금</div>
+                <div class="setting-sub" style="font-size:11.5px;">긴급 점검 전환과 동시에 오늘 초대 QR을 유예 없이 폐기하고 신규 관리자 자동 등록 잠금을 강제로 켭니다.</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="cfgSecAutoLockExtras" ${cfg.autoLockdownExtras !== false ? 'checked' : ''} onchange="handleSaveEmergencyLockPolicy()" />
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-row">
+              <div>
+                <div class="setting-title" style="font-size:13.5px;">🧬 실시간 DOM 변조 · 외부 악성 스크립트 감시</div>
+                <div class="setting-sub" style="font-size:11.5px;">실행 중인 앱 화면에 미인가 외부 스크립트·iframe·플러그인이 주입되면 즉시 제거하고 차단 기록을 남깁니다.</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="cfgSecDomGuard" ${cfg.domTamperGuard !== false ? 'checked' : ''} onchange="handleSaveEmergencyLockPolicy()" />
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="role-target-box" style="margin-top:10px; background:#FFFBEB; border-color:#FCD34D;">
+              <div style="font-size:12.5px; font-weight:800; color:#92400E; margin-bottom:4px;">👑 긴급 점검 시 입장 · 해제 가능한 지정 최고 관리자</div>
+              <div style="font-size:11.5px; color:#78350F; line-height:1.45; margin-bottom:8px;">
+                긴급 보안 점검이 발동되면 아래 <b>선택된 지정 최고 관리자</b>만 접속해 원인을 해결하고 점검을 해제할 수 있습니다. (선택되지 않은 타 관리자는 긴급 점검 화면으로 차단됨 · 최소 1명 필수)
+              </div>
+              <div class="role-target-grid">
+                ${activeAdminItems.length === 0
+                  ? '<span style="font-size:12px; color:#64748B;">활성 관리자 명단이 없습니다.</span>'
+                  : activeAdminItems.map(a => {
+                      const nm = String(a.name || '').trim();
+                      const isSel = effectiveEmergencyAdmins.includes(nm);
+                      return `
+                        <label class="role-check-chip ${isSel ? 'checked' : ''}" onclick="toggleEmergencySuperAdmin('${escapeJsAttr(nm)}')">
+                          <span class="role-check-dot" style="background:${isSel ? '#F59E0B' : '#94A3B8'};"></span>
+                          <span>${escapeHtml(nm)}${nm === currentAdminName ? ' (나)' : ''}</span>
+                        </label>
+                      `;
+                    }).join('')}
+              </div>
+              <div style="font-size:11px; color:#92400E; margin-top:7px;">
+                현재 지정됨: <b>${escapeHtml(effectiveEmergencyAdmins.join(', ') || '-')}</b>
+              </div>
+            </div>
+            ${buildInlineSaveStatusHtml('sec_emerg')}
+          </div>
+        </div>
+        ` : ''}
 
         ${showChecks ? `
         <!-- 1) 7개 보안 항목 점검 -->
@@ -27433,7 +28117,7 @@
             <span style="color:#64748B;">※ 100% 안전한 모의훈련이며 실제 데이터 저장·감사 로그 오염·알림 발송은 발생하지 않습니다.</span>
           </div>
           <button class="btn-full btn-dark" type="button" style="padding:11px; font-size:13px; margin-bottom:9px;" onclick="runAllSecSimulations()">
-            🚀 전체 6종 공격 방어 일괄 모의 테스트
+            🚀 전체 7종 공격 방어 일괄 모의 테스트
           </button>
           <div class="diag-sim-grid" style="margin-bottom:4px;">
             <button class="diag-sim-btn" type="button" onclick="openSecSimModal('xss')">
@@ -27465,6 +28149,11 @@
               <div style="font-size:18px; margin-bottom:4px;">🎬</div>
               <div style="font-size:13px; font-weight:800;">악성 영상 · 개인정보 노출</div>
               <div style="font-size:11px; color:#64748B; margin-top:2px;">위험 유튜브·주민번호·연락처 탐지</div>
+            </button>
+            <button class="diag-sim-btn" type="button" style="grid-column:1 / -1; background:#FEF2F2; border-color:#FCA5A5;" onclick="openSecSimModal('emergency_breach')">
+              <div style="font-size:18px; margin-bottom:4px;">🚨</div>
+              <div style="font-size:13px; font-weight:800; color:#991B1B;">방어 돌파 침입 → 자동 긴급 보안 점검 체험</div>
+              <div style="font-size:11px; color:#7F1D1D; margin-top:2px;">바이러스 파일(.apk/.exe)·DOM 변조·공격 폭주 시 이용자·타 관리자 전면 차단 체험</div>
             </button>
           </div>
         </div>
@@ -27931,9 +28620,11 @@
         } else if (id === 'defense_storage') {
           const disabledCore = [];
           if (cfg.blockMaliciousInput === false) disabledCore.push('XSS 입력 차단');
-          if (cfg.blockSuspiciousLinks === false) disabledCore.push('피싱 링크 자동 차단');
+          if (cfg.blockSuspiciousLinks === false) disabledCore.push('피싱·바이러스 링크 차단');
           if (cfg.detectCloneDomain === false) disabledCore.push('복제 도메인 경고');
           if (cfg.alertAdminOnSecurityEvent === false) disabledCore.push('관리자 보안 실시간 알림');
+          if (cfg.domTamperGuard === false) disabledCore.push('실시간 DOM 변조 감시');
+          if (cfg.autoEmergencyLockOnBreach === false) disabledCore.push('돌파 시 자동 긴급 점검');
 
           const leakedStorageKeys = [];
           try {
@@ -27966,7 +28657,8 @@
               actions: [{ label: '🛡️ 핵심 방어 4종 일괄 켜기', type: 'enable_core_defense', primary: true }]
             });
           } else {
-            setSecCheckResult(id, 'ok', '핵심 실시간 방어 4종 모두 ON · 브라우저 저장소 민감정보(코드·시트URL) 노출 0건 확인');
+            const desig = getEffectiveEmergencyAdmins();
+            setSecCheckResult(id, 'ok', `핵심 방어 6종(XSS·피싱/바이러스·복제·알림·DOM감시·자동긴급점검) 모두 ON · 지정 최고 관리자 ${desig.length}명(${desig.join(', ')}) · 저장소 민감정보 노출 0건`);
           }
         }
       } catch (err) {
@@ -28005,6 +28697,7 @@
         refreshSecurityLiveUI();
       }
       const errItems = SEC_CHECK_ITEMS.filter(it => secCheckResults[it.id] && secCheckResults[it.id].status === 'err');
+      evaluateBreachAndAutoLockdown('수동 보안 점검');
       if (errItems.length > 0) {
         dispatchAdminSecurityAlert(
           `🚨 보안 점검 위험 ${errItems.length}건 발견`,
@@ -28170,6 +28863,7 @@
             autoSecState.issueIds = problemItems.map(it => it.id);
             autoSecState.pausedAt = formatKstDateTime();
             autoSecState.lastTransientSummary = '';
+            evaluateBreachAndAutoLockdown('자동 보안 점검');
             dispatchAutoSecIssueAlert(problemItems);
             refreshManageBadgesLight(u);
             if (currentMainTab === 'manage' && currentManageSubTab === 'security') {
@@ -28405,6 +29099,87 @@
       }
     };
 
+    window.handleSaveEmergencyLockPolicy = async () => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const autoEm = !!(document.getElementById('cfgSecAutoEmergency') ? document.getElementById('cfgSecAutoEmergency').checked : (securityConfig.autoEmergencyLockOnBreach !== false));
+      const extras = !!(document.getElementById('cfgSecAutoLockExtras') ? document.getElementById('cfgSecAutoLockExtras').checked : (securityConfig.autoLockdownExtras !== false));
+      const domGuard = !!(document.getElementById('cfgSecDomGuard') ? document.getElementById('cfgSecDomGuard').checked : (securityConfig.domTamperGuard !== false));
+      const next = {
+        ...DEFAULT_SECURITY_CONFIG,
+        ...(securityConfig || {}),
+        autoEmergencyLockOnBreach: autoEm,
+        autoLockdownExtras: extras,
+        domTamperGuard: domGuard
+      };
+      setInlineSaveStatus('sec_emerg', 'loading', '⏳ 긴급 보안 점검 정책을 저장하는 중입니다...');
+      try {
+        await db.collection('config').doc('layout').set({ securityConfig: next }, { merge: true });
+        securityConfig = next;
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '긴급 보안 점검 정책 변경',
+          target: '2차 침입 차단 설정',
+          detail: `자동긴급점검:${autoEm ? 'ON' : 'OFF'} · QR폐기+잠금:${extras ? 'ON' : 'OFF'} · DOM감시:${domGuard ? 'ON' : 'OFF'}`
+        });
+        setInlineSaveStatus('sec_emerg', 'ok', `✅ 긴급 보안 정책 저장 완료 (자동발동:${autoEm ? 'ON' : 'OFF'} · DOM감시:${domGuard ? 'ON' : 'OFF'})`);
+        showToast('🛡️ 긴급 보안 점검 정책이 저장되었습니다.', 'ok');
+      } catch (err) {
+        setInlineSaveStatus('sec_emerg', 'err', '❌ 긴급 보안 정책 저장에 실패했습니다.');
+        handleDbError(err, '긴급 보안 정책 저장');
+      }
+    };
+
+    window.toggleEmergencySuperAdmin = async (adminName) => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      if (isEmergencyMaintenanceActive() && !isDesignatedEmergencyAdmin(currentAdminName)) {
+        return showToast('🚨 긴급 점검 중에는 지정 최고 관리자만 명단을 변경할 수 있습니다.', 'err');
+      }
+      const nm = String(adminName || '').trim();
+      if (!nm) return;
+      const curList = getEffectiveEmergencyAdmins();
+      let nextList;
+      if (curList.includes(nm)) {
+        if (curList.length <= 1) {
+          return showToast('⚠️ 긴급 복구 지정 최고 관리자는 최소 1명 이상 유지해야 합니다.', 'warn');
+        }
+        nextList = curList.filter(x => x !== nm);
+      } else {
+        nextList = [...curList, nm];
+      }
+      const next = {
+        ...DEFAULT_SECURITY_CONFIG,
+        ...(securityConfig || {}),
+        emergencySuperAdmins: nextList
+      };
+      setInlineSaveStatus('sec_emerg', 'loading', '⏳ 지정 최고 관리자 명단을 저장하는 중입니다...');
+      try {
+        await db.collection('config').doc('layout').set({ securityConfig: next }, { merge: true });
+        securityConfig = next;
+        if (isEmergencyMaintenanceActive()) {
+          await db.collection('config').doc('maintenance').set({ emergencyAllowedAdmins: nextList }, { merge: true });
+          maintenanceConfig.emergencyAllowedAdmins = nextList;
+        }
+        recordAuditLog({
+          actorType: 'admin',
+          category: '보안·설정',
+          action: '긴급 복구 지정 최고 관리자 변경',
+          target: nextList.join(', '),
+          detail: `${curList.includes(nm) ? `${nm} 지정 해제` : `${nm} 지정 추가`}`
+        });
+        setInlineSaveStatus('sec_emerg', 'ok', `✅ 지정 최고 관리자 저장 완료: ${nextList.join(', ')}`);
+        showToast(`👑 지정 최고 관리자가 [${nextList.join(', ')}](으)로 업데이트되었습니다.`, 'ok');
+        if (currentMainTab === 'manage' && (currentManageSubTab === 'security' || currentManageSubTab === 'admins')) {
+          renderManageView(u);
+        }
+      } catch (err) {
+        setInlineSaveStatus('sec_emerg', 'err', '❌ 지정 최고 관리자 저장에 실패했습니다.');
+        handleDbError(err, '지정 최고 관리자 저장');
+      }
+    };
+
 
     // ==================== 해킹 · 피싱 공격 방어 시뮬레이션 엔진 (100% 무해 모의훈련) ====================
     const SEC_SIM_SCENARIOS = {
@@ -28538,6 +29313,29 @@
             label: '문의·공지에 민감 개인정보 입력',
             context: '문의 사항 · 공지 본문',
             payload: '연락처 010-1234-5678 / 주민번호 990101-1234567 / test@example.com'
+          }
+        ]
+      },
+      emergency_breach: {
+        id: 'emergency_breach',
+        icon: '🚨',
+        title: '방어 돌파 침입 → 자동 긴급 보안 점검',
+        subtitle: '바이러스 파일 링크·실시간 DOM 변조·연속 공격 폭주 시 1차 차단 후 돌파 징후가 있으면 자동으로 긴급 점검을 발동해 이용자와 타 관리자를 전면 차단',
+        variants: [
+          {
+            label: '바이러스(.apk/.exe) 링크 유포',
+            context: '공지·문의·바로가기 악성 파일 링크',
+            payload: 'https://event-check.example/update/youth-install.apk'
+          },
+          {
+            label: '실시간 DOM 악성 스크립트 주입',
+            context: '화면 변조(MutationObserver 감시)',
+            payload: '<scr' + 'ipt src="https://evil-cdn.test/steal.js"></scr' + 'ipt>'
+          },
+          {
+            label: '5분 내 연속 공격 폭주(5회+)',
+            context: '자동 보안 감시 · 2차 비상 봉쇄',
+            payload: '[5분 내 XSS·피싱 링크·무단 접근 5회 연속 감지]'
           }
         ]
       }
@@ -28949,6 +29747,67 @@
             '10번 보안 진단이 게시 완료된 영상의 위험 문구와 공식 채널 무결성을 주기적으로 재검증합니다.'
           ];
         }
+      } else if (scenarioId === 'emergency_breach') {
+        const autoEmergOn = cfg.autoEmergencyLockOnBreach !== false;
+        const domOn = cfg.domTamperGuard !== false;
+        const extrasOn = cfg.autoLockdownExtras !== false;
+        const allowedAdmins = getEffectiveEmergencyAdmins();
+        const urlTest = vIdx === 0 ? analyzeUrlRisk(variant.payload) : null;
+
+        if (!autoEmergOn || !domOn) {
+          overallStatus = 'warn';
+          overallBadge = !autoEmergOn ? '⚠️ 자동 긴급 점검 OFF' : '⚠️ DOM 감시 OFF';
+          fixAction = { label: '🛡️ 핵심 방어 일괄 켜기', type: 'enable_core_defense' };
+        }
+
+        steps = [
+          {
+            status: 'ok',
+            title: vIdx === 0 ? '1단계 · 1차 웹 앱 실시간 차단 (바이러스 파일 링크 탐지)' : (vIdx === 1 ? `1단계 · 실시간 DOM 변조 감시 (${domOn ? 'ON' : 'OFF'})` : '1단계 · 5분 공격 폭주 카운터 집계'),
+            badge: vIdx === 0 ? (urlTest && urlTest.riskLevel === 'danger' ? '고위험 차단' : '감지') : (vIdx === 1 ? (domOn ? '즉시 제거' : '꺼짐') : '5회 돌파'),
+            body: vIdx === 0
+              ? `URL 분석기가 실행·설치 파일 확장자(.apk/.exe 등)를 고위험(${(urlTest && urlTest.reasons[0]) || '바이러스 파일 링크'})으로 판정해 1차 등록을 차단합니다.`
+              : (vIdx === 1
+                ? '실행 중인 화면에 미인가 외부 스크립트나 iframe이 주입되면 MutationObserver가 즉시 DOM에서 삭제하고 차단 로그를 기록합니다.'
+                : '5분 이내에 5회 이상 고위험 공격 시도가 누적되면 단순 오입력이 아닌 조직적 침입 시도로 판정합니다.')
+          },
+          {
+            status: autoEmergOn ? 'ok' : 'warn',
+            title: `2단계 · 2차 자동 긴급 보안 점검 발동 (${autoEmergOn ? 'ON' : 'OFF'})`,
+            badge: autoEmergOn ? '자동 비상 전환' : '수동만 가능',
+            body: autoEmergOn
+              ? '1차 방어를 뚫은 침입 흔적·DOM 변조·공격 폭주가 감지되는 즉시 서버(config/maintenance + 공개 잠금 플래그)를 [🚨 긴급 보안 점검] 상태로 전환합니다.'
+              : '현재 자동 긴급 보안 점검 스위치가 꺼져 있습니다. 상단 [🚨 2차 침입 차단]에서 스위치를 켜면 즉시 자동화됩니다.'
+          },
+          {
+            status: 'ok',
+            title: '3단계 · 이용자 · 비로그인 방문자 · 지정 외 타 관리자 전면 차단',
+            badge: '지정 최고 관리자 전용',
+            body: `일반 회원과 비로그인 방문자는 물론, 지정 최고 관리자(${allowedAdmins.join(', ') || '미지정'}) 이외의 다른 관리자까지 모두 [🚨 긴급 보안 점검 중] 화면으로 즉시 차단됩니다.`
+          },
+          {
+            status: extrasOn ? 'ok' : 'warn',
+            title: `4단계 · 추가 침입 경로 봉쇄 (${extrasOn ? 'ON' : 'OFF'})`,
+            badge: extrasOn ? 'QR 폐기 + 잠금' : '꺼짐',
+            body: '오늘 초대 QR을 유예 시간 없이 즉시 폐기·재발급하고, 신규 관리자 자동 등록 잠금을 강제로 켜 추가 침입을 원천 차단합니다.'
+          }
+        ];
+
+        previewHtml = `
+          <div style="font-size:11px; font-weight:800; color:#64748B; margin-bottom:6px;">👁️ 긴급 보안 점검 발동 시 대상별 실제 화면 반응</div>
+          <div style="background:#450A0A; border:1.5px solid #F87171; border-radius:11px; padding:10px 11px; color:#FEE2E2; font-size:11.5px; line-height:1.55;">
+            <div style="font-weight:900; color:#FECACA; margin-bottom:3px;">🚨 긴급 보안 점검 중입니다</div>
+            • <b>일반 회원 · 비로그인 방문자:</b> 모든 화면 차단 → 긴급 보안 점검 안내 표시<br>
+            • <b>지정 외 타 관리자:</b> 로그인되어 있어도 관리 센터 차단 → 긴급 점검 안내 표시<br>
+            • <b>지정 최고 관리자 (${escapeHtml(allowedAdmins.join(', ') || '-')}):</b> 정상 입장 → 원인 확인·정리 후 <b>[🟢 긴급 보안 점검 해제]</b> 가능
+          </div>
+        `;
+
+        responseGuide = [
+          `지정 최고 관리자(${allowedAdmins.join(', ') || '1인 이상'})로 로그인해 [📋 ${logLbl}]와 [🛡️ 보안 점검]에서 침입 원인과 오염된 게시물·링크를 확인하고 삭제합니다.`,
+          '필요 시 [🔐 관리자 코드]를 새 8자리 이상 코드로 변경하고 의심 계정을 해제합니다.',
+          '안전 확인이 끝나면 상단 빨간 바의 [긴급 점검 해제] 또는 [🟢 긴급 보안 점검 해제 및 정상 운영 복구]를 눌러 정상화합니다.'
+        ];
       }
 
       return { sc, vIdx, variant, overallStatus, overallBadge, steps, previewHtml, responseGuide, fixAction };
@@ -29014,12 +29873,12 @@
     };
 
     window.runAllSecSimulations = () => {
-      const ids = ['xss', 'phishing', 'clone', 'admin_hijack', 'qr_brute', 'yt_pii'];
+      const ids = ['xss', 'phishing', 'clone', 'admin_hijack', 'qr_brute', 'yt_pii', 'emergency_breach'];
       const results = ids.map(id => evaluateSecSimScenario(id, 0));
       const okCnt = results.filter(r => r.overallStatus === 'ok').length;
       const warnCnt = results.length - okCnt;
 
-      document.getElementById('diagSimModalTitle').textContent = '🚀 전체 6종 공격 방어 모의 테스트 결과';
+      document.getElementById('diagSimModalTitle').textContent = '🚀 전체 7종 공격 방어 모의 테스트 결과';
       document.getElementById('diagSimModalBody').innerHTML = `
         <div class="info-box ${warnCnt > 0 ? 'warn' : ''}" style="margin-top:0; margin-bottom:11px;">
           <b>${warnCnt === 0 ? `✅ 전체 ${results.length}종 모의 공격 모두 완전 방어 확인!` : `⚠️ ${okCnt}/${results.length}종 완전 방어 · ${warnCnt}종 방어 설정 보강 권장`}</b><br>
@@ -30205,6 +31064,21 @@
       if (xssNotice || xssVideo || xssInq) {
         alerts.push('게시물·영상·문의 내 악성 스크립트 흔적 발견');
         sigParts.push(`xss:${xssNotice ? xssNotice.id : ''}:${xssVideo ? xssVideo.id : ''}:${xssInq ? xssInq.id : ''}`);
+        if (cfg.autoEmergencyLockOnBreach !== false && !isEmergencyMaintenanceActive()) {
+          triggerEmergencySecurityLockdown(
+            '저장 데이터 내 악성 스크립트(XSS) 돌파 흔적 감지',
+            `${xssNotice ? `공지:${xssNotice.title}` : (xssVideo ? `영상:${xssVideo.title}` : `문의:${xssInq.title}`)}`,
+            { manual: false }
+          );
+        }
+      } else if (!isLocal && (proto !== 'https:' || host !== officialHost)) {
+        if (cfg.autoEmergencyLockOnBreach !== false && !isEmergencyMaintenanceActive()) {
+          triggerEmergencySecurityLockdown(
+            '비공식 도메인·비암호화 접속 침입 감지',
+            `${proto}//${host}`,
+            { manual: false }
+          );
+        }
       }
 
       if (alerts.length === 0) {
