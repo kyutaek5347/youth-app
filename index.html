@@ -6640,20 +6640,20 @@
     };
     const MAX_REACTION_EMOJI_ITEMS = 10;
     const DEFAULT_VIDEO_REACTION_EMOJIS = [
-      { key: 'amen', emoji: '__R_EMO_PRAY__', label: '아멘' },
-      { key: 'heart', emoji: '__R_EMO_HEART__', label: '좋아요' },
-      { key: 'grace', emoji: '__R_EMO_HANDS__', label: '은혜' },
-      { key: 'touched', emoji: '__R_EMO_TEARS__', label: '감동' },
-      { key: 'fire', emoji: '__R_EMO_FIRE__', label: '도전' },
-      { key: 'clap', emoji: '__R_EMO_CLAP__', label: '감사' }
+      { key: 'amen', emoji: '🙏', label: '아멘' },
+      { key: 'heart', emoji: '❤️', label: '좋아요' },
+      { key: 'grace', emoji: '🙌', label: '은혜' },
+      { key: 'touched', emoji: '🥹', label: '감동' },
+      { key: 'fire', emoji: '🔥', label: '도전' },
+      { key: 'clap', emoji: '👏', label: '감사' }
     ];
     const DEFAULT_POST_REACTION_EMOJIS = [
-      { key: 'check', emoji: '__R_EMO_THUMBS__', label: '확인' },
-      { key: 'heart', emoji: '__R_EMO_HEART__', label: '좋아요' },
-      { key: 'amen', emoji: '__R_EMO_PRAY__', label: '아멘' },
-      { key: 'cheer', emoji: '__R_EMO_HANDS__', label: '기대' },
-      { key: 'clap', emoji: '__R_EMO_CLAP__', label: '감사' },
-      { key: 'party', emoji: '__R_EMO_PARTY__', label: '축하' }
+      { key: 'check', emoji: '👍', label: '확인' },
+      { key: 'heart', emoji: '❤️', label: '좋아요' },
+      { key: 'amen', emoji: '🙏', label: '아멘' },
+      { key: 'cheer', emoji: '🙌', label: '기대' },
+      { key: 'clap', emoji: '👏', label: '감사' },
+      { key: 'party', emoji: '🎉', label: '축하' }
     ];
     function normalizeReactionEmojiList(rawList, fallbackList) {
       if (!Array.isArray(rawList)) return structuredClone(fallbackList);
@@ -18894,7 +18894,7 @@
           </div>
           ${canAdd ? `
             <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
-              <input id="${emojiInputId}" class="emoji-input" maxlength="6" placeholder="__R_EMO_SMILE__" title="추가할 이모지 입력" />
+              <input id="${emojiInputId}" class="emoji-input" maxlength="6" placeholder="😊" title="추가할 이모지 입력" />
               <input id="${labelInputId}" class="form-input" style="flex:1; padding:7px 10px; font-size:13px;" maxlength="12" placeholder="이모지 명칭 (예: 축복, 은혜, 최고)" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleAddReactionEmoji('${sc}');}" />
               <button class="btn-sm primary" type="button" style="white-space:nowrap; padding:8px 11px;" onclick="handleAddReactionEmoji('${sc}')">+ 추가</button>
             </div>
@@ -19437,12 +19437,12 @@
       const item = cur[idx];
       if (!item) return;
 
-      const nextEmojiRaw = prompt(`[${item.emoji} ${item.label}]__R_PR_EMO__`, item.emoji);
+      const nextEmojiRaw = prompt(`[${item.emoji} ${item.label}]의 새 이모지(또는 반응 기호)를 입력해 주세요:`, item.emoji);
       if (nextEmojiRaw === null) return;
       const nextEmoji = String(nextEmojiRaw || '').trim().slice(0, 8);
       if (!nextEmoji) return showToast('이모지를 비워둘 수 없습니다.');
 
-      const nextLabelRaw = prompt(`[${nextEmoji}] __R_PR_LBL__`, item.label);
+      const nextLabelRaw = prompt(`[${nextEmoji}]  반응의 새 명칭(최대 12자)을 입력해 주세요:`, item.label);
       if (nextLabelRaw === null) return;
       const nextLabel = String(nextLabelRaw || '').trim().slice(0, 12);
       if (!nextLabel) return showToast('이모지 명칭을 입력해 주세요.');
@@ -19475,7 +19475,8 @@
       const item = cur[idx];
       if (!item) return;
       if (cur.length <= 1) return showToast('최소 1개 이상의 이모지는 유지해야 합니다.');
-      if (!confirm(`[${item.emoji} ${item.label}] __R_CF_DEL__`)) return;
+      if (!confirm(`[${item.emoji} ${item.label}]  반응을 삭제할까요?
+(삭제 내역은 보안 로그에 기록됩니다.)`)) return;
 
       const next = cur.filter((_, i) =>i !== idx);
       await persistReactionEmojiList(
@@ -19517,7 +19518,7 @@
       const sc = scope === 'video' ? 'video' : 'post';
       const defaults = sc === 'video' ? structuredClone(DEFAULT_VIDEO_REACTION_EMOJIS) : structuredClone(DEFAULT_POST_REACTION_EMOJIS);
       const label = sc === 'video' ? '설교·CCM 반응 이모지' : '공지·광고 반응 이모지';
-      if (!confirm(`${label}__R_CF_RST__ (${defaults.map(x => `${x.emoji} ${x.label}`).join(', ')})`)) return;
+      if (!confirm(`${label}를 기본 구성 (${defaults.map(x => `${x.emoji} ${x.label}`).join(', ')})`)) return;
       const cur = sc === 'video' ? getConfiguredVideoReactionEmojis() : getConfiguredPostReactionEmojis();
       await persistReactionEmojiList(
         sc,
