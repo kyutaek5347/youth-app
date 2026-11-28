@@ -1,0 +1,277 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===== 공통 권한 헬퍼 함수 =====
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.email == 'admin@right-youth.app';
+    }
+
+    function myMemberPath() {
+      return /databases/$(database)/documents/members/$(request.auth.uid);
+    }
+
+    function hasMemberDoc() {
+      return isSignedIn() && exists(myMemberPath());
+    }
+
+    function isApprovedMember() {
+      return hasMemberDoc() && get(myMemberPath()).data.status == 'approved';
+    }
+
+    function myRoleId() {
+      return isApprovedMember() ? get(myMemberPath()).data.roleId : '';
+    }
+
+    function isObserver() {
+      return isApprovedMember() && (
+        myRoleId() == 'role_observer' ||
+        (exists(/databases/$(database)/documents/config/roles) &&
+         get(/databases/$(database)/documents/config/roles).data.observerRoleIds != null &&
+         myRoleId() in get(/databases/$(database)/documents/config/roles).data.observerRoleIds)
+      );
+    }
+
+    function isPastor() {
+      return isApprovedMember() && (
+        myRoleId() == 'role_pastor' ||
+        (exists(/databases/$(database)/documents/config/roles) &&
+         get(/databases/$(database)/documents/config/roles).data.metaById != null &&
+         myRoleId() in get(/databases/$(database)/documents/config/roles).data.metaById &&
+         get(/databases/$(database)/documents/config/roles).data.metaById[myRoleId()].name.matches('.*목사.*'))
+      );
+    }
+
+    function isCellLeader() {
+      return isApprovedMember() && (
+        myRoleId() == 'role_cell_leader' ||
+        (exists(/databases/$(database)/documents/config/roles) &&
+         get(/databases/$(database)/documents/config/roles).data.metaById != null &&
+         myRoleId() in get(/databases/$(database)/documents/config/roles).data.metaById &&
+         get(/databases/$(database)/documents/config/roles).data.metaById[myRoleId()].name.matches('.*셀장.*'))
+      );
+    }
+
+    // ===== 1. 시스템 설정 문서 (config) =====
+    // 회원가입·점검 화면 진입 시 로그인 전 읽기 허용 문서
+    match /config/roles {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /config/inviteQr {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /config/maintenance {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 로그인 사용자 공용 설정 문서
+    match /config/app {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /config/layout {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /config/labels {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /config/quickLinks {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /config/attendance {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // 관리자·참관자 전용 문서 (일반 회원 열람 불가)
+    match /config/adminRegistry {
+      allow read: if isAdmin() || isObserver();
+      allow write: if isAdmin();
+    }
+    match /config/cellRoster {
+      allow read: if isAdmin() || isObserver();
+      allow write: if isAdmin();
+    }
+
+    // 최고 관리자 절대 기밀 문서 (참관자·일반 회원 전면 차단)
+    match /config/adminSecret {
+      allow read, write: if isAdmin();
+    }
+    match /config/sheetSecret {
+      allow read, write: if isAdmin();
+    }
+
+    // ===== 2. 목사님 → 셀장 전용 링크 (v10.186 신규) =====
+    match /cellLeaderLinks/{docId} {
+      allow read: if isAdmin() || isPastor() || isCellLeader();
+      allow create, update, delete: if isAdmin() || isPastor();
+    }
+
+    // ===== 3. 로그인 아이디 인덱스 · 비밀번호 초기화 코드 =====
+    match /authIndex/{docId} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow create, update: if isAdmin() || isSignedIn();
+      allow delete: if isAdmin();
+    }
+
+    match /passwordResets/{resetKey} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        isSignedIn() &&
+        resource.data.used == false &&
+        request.resource.data.used == true &&
+        request.resource.data.newUid == request.auth.uid
+      );
+    }
+
+    // ===== 4. 회원 명단 · 회원 이력 · 새가족 =====
+    match /members/{uid} {
+      allow read: if isAdmin() || isObserver() || (isSignedIn() && request.auth.uid == uid);
+      allow create: if isAdmin() || (
+        isSignedIn() &&
+        request.auth.uid == uid &&
+        (
+          request.resource.data.status == 'pending' ||
+          (request.resource.data.resetKey is string &&
+           exists(/databases/$(database)/documents/passwordResets/$(request.resource.data.resetKey)) &&
+           get(/databases/$(database)/documents/passwordResets/$(request.resource.data.resetKey)).data.used == false)
+        )
+      );
+      allow update: if isAdmin() || (
+        isApprovedMember() &&
+        request.auth.uid == uid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['pendingName', 'pendingNameAt', 'pendingNameTs'])
+      );
+      allow delete: if isAdmin() || (isSignedIn() && request.auth.uid == uid) || (
+        isSignedIn() &&
+        resource.data.status == 'reset_pending'
+      );
+    }
+
+    match /memberHistory/{docId} {
+      allow read: if isAdmin() || isObserver();
+      allow write: if isAdmin();
+    }
+
+    match /newcomers/{docId} {
+      allow read: if isAdmin() || isObserver() || isApprovedMember();
+      allow create: if isAdmin() || (isSignedIn() && request.auth.uid == docId);
+      allow update, delete: if isAdmin();
+    }
+
+    // ===== 5. 홈 광고 · 배너 (공개 vs 관리자·예약·임시저장 서버 분리) =====
+    match /notices/{docId} {
+      allow read: if isAdmin() || isObserver() || (
+        isApprovedMember() &&
+        resource.data.visibleTo is list &&
+        ('__all__' in resource.data.visibleTo || myRoleId() in resource.data.visibleTo)
+      );
+      allow write: if isAdmin();
+    }
+
+    match /adminNotices/{docId} {
+      allow read: if isAdmin() || isObserver();
+      allow write: if isAdmin();
+    }
+
+    match /homeBlocks/{docId} {
+      allow read: if isAdmin() || isObserver() || (
+        isApprovedMember() &&
+        resource.data.visibleTo is list &&
+        ('__all__' in resource.data.visibleTo || myRoleId() in resource.data.visibleTo)
+      );
+      allow write: if isAdmin();
+    }
+
+    match /adminBlocks/{docId} {
+      allow read: if isAdmin() || isObserver();
+      allow write: if isAdmin();
+    }
+
+    // ===== 6. 예배 · 특별 행사 출석 =====
+    match /attendance/{docId} {
+      allow read: if isAdmin() || isObserver() || (
+        isApprovedMember() && resource.data.uid == request.auth.uid
+      );
+      allow create: if isAdmin() || (
+        isApprovedMember() && request.resource.data.uid == request.auth.uid
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    // ===== 7. 이용자 문의 사항 =====
+    match /inquiries/{docId} {
+      allow read: if isAdmin() || isObserver() || (
+        isApprovedMember() && resource.data.uid == request.auth.uid
+      );
+      allow create: if isAdmin() || (
+        isApprovedMember() && request.resource.data.uid == request.auth.uid
+      );
+      allow update: if isAdmin() || (
+        isApprovedMember() &&
+        resource.data.uid == request.auth.uid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['category', 'title', 'body', 'edited', 'updatedAt', 'updatedTs'])
+      );
+      allow delete: if isAdmin() || (
+        isApprovedMember() && resource.data.uid == request.auth.uid
+      );
+    }
+
+    // ===== 8. 설교 · 주간 찬양 콘티 영상 (찬양 콘티는 최고 관리자 전용) =====
+    match /videos/{docId} {
+      allow read: if isAdmin() || isObserver() || (
+        isApprovedMember() && (
+          resource.data.status == 'approved' ||
+          resource.data.uid == request.auth.uid
+        )
+      );
+      allow create: if isAdmin() || (
+        isApprovedMember() &&
+        request.resource.data.uid == request.auth.uid &&
+        request.resource.data.category != 'CCM' &&
+        request.resource.data.category != '찬양'
+      );
+      allow update: if isAdmin() || (
+        isApprovedMember() &&
+        resource.data.uid == request.auth.uid &&
+        resource.data.category != 'CCM' &&
+        resource.data.category != '찬양' &&
+        request.resource.data.category != 'CCM' &&
+        request.resource.data.category != '찬양'
+      );
+      allow delete: if isAdmin() || (
+        isApprovedMember() &&
+        resource.data.uid == request.auth.uid &&
+        resource.data.category != 'CCM' &&
+        resource.data.category != '찬양'
+      );
+    }
+
+    // ===== 9. 위변조·삭제 불가 보안 감사 로그 =====
+    match /auditLogs/{docId} {
+      allow read: if isAdmin() || isObserver();
+      allow create: if isSignedIn();
+      allow update: if isAdmin() &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['sheetSynced', 'expireAt']);
+      allow delete: if false;
+    }
+
+    // ===== 10. 기타 정의되지 않은 경로 전면 차단 =====
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

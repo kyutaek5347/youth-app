@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=285" />
+  <link rel="manifest" href="./manifest.json?v=286" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=285" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=285" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=286" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=286" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4814,6 +4814,106 @@
       .home-cal-ev-pill { font-size: 9.2px; padding: 1px 2.5px; }
     }
 
+    /* v10.186 셀장 전용 링크창 · NEW 자동 해제 페이드 · 전역 버튼 터치감 */
+    .icon-btn.cell-link-accent {
+      background: #F0FDFA;
+      color: #0F766E;
+      border-color: #99F6E4;
+    }
+    .icon-btn.cell-link-accent.dark {
+      background: #134E4A;
+      color: #99F6E4;
+      border-color: #2DD4BF;
+    }
+    .notif-dot.cell-new {
+      background: #EF4444;
+    }
+    .cell-link-card {
+      background: #FFFFFF;
+      border: 1.5px solid #CCFBF1;
+      border-left: 4px solid #0D9488;
+      border-radius: 14px;
+      padding: 13px 14px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 6px rgba(13, 148, 136, 0.06);
+    }
+    .cell-link-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1.38;
+      margin: 0 0 4px;
+      word-break: keep-all;
+    }
+    .cell-link-url {
+      font-size: 11.5px;
+      color: #0F766E;
+      word-break: break-all;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .cell-link-note {
+      font-size: 12.5px;
+      color: #334155;
+      background: #F8FAFC;
+      border-radius: 9px;
+      padding: 8px 10px;
+      margin: 6px 0 8px;
+      line-height: 1.52;
+      white-space: pre-line;
+      word-break: keep-all;
+    }
+    .cell-link-settings-card {
+      background: linear-gradient(135deg, #0F766E 0%, #0D9488 100%);
+      color: #FFFFFF;
+      border-radius: 17px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 6px 18px rgba(13, 148, 136, 0.24);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .new-badge, .video-new-corner-badge {
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .new-badge.auto-read-fade, .video-new-corner-badge.auto-read-fade {
+      opacity: 0;
+      transform: scale(0.82);
+      pointer-events: none;
+    }
+    button, .btn-full, .btn-admin, .btn-outline, .btn-sm, .tab-btn,
+    .filter-chip, .sub-tab-btn, .sermon-subtab-chip, .ccm-subtab-chip,
+    .quick-tag, .quick-preset-chip, .order-btn, .close-btn, .font-scale-btn,
+    .qr-mode-btn, .auth-tab-btn, .modal-tab-btn, .card.clickable {
+      transition: transform 0.09s ease, background-color 0.14s ease, border-color 0.14s ease, opacity 0.14s ease;
+    }
+    .btn-full:active:not(:disabled),
+    .btn-admin:active:not(:disabled),
+    .btn-outline:active:not(:disabled),
+    .btn-sm:active:not(:disabled),
+    .filter-chip:active:not(:disabled),
+    .sub-tab-btn:active:not(:disabled),
+    .sermon-subtab-chip:active:not(:disabled),
+    .ccm-subtab-chip:active:not(:disabled),
+    .quick-tag:active:not(:disabled),
+    .order-btn:active:not(:disabled),
+    .close-btn:active:not(:disabled),
+    .font-scale-btn:active:not(:disabled),
+    .qr-mode-btn:active:not(:disabled),
+    .auth-tab-btn:active:not(:disabled),
+    .modal-tab-btn:active:not(:disabled) {
+      transform: scale(0.96);
+    }
+    .tab-btn:active {
+      transform: scale(0.94);
+    }
+    .card.clickable:active {
+      transform: scale(0.988);
+    }
+
   </style>
 </head>
 <body>
@@ -4838,7 +4938,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=285" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=286" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5946,6 +6046,49 @@
   </div>
 
 
+  <!-- 목사님 → 셀장 전용 링크창 모달 (상단 QR 버튼 옆) -->
+  <div id="cellLeaderLinksModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 class="modal-title"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.5 1.5"/><path d="M13.8 10.2a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.5-1.5"/></svg></span><span>셀장 전용 링크</span></h3>
+        <button class="close-btn" type="button" onclick="closeCellLeaderLinksModal()">✕</button>
+      </div>
+      <div id="cellLeaderLinksIntroBox" class="info-box" style="margin-top:0; margin-bottom:12px;">
+        목사님이 셀장님들과 공유한 전용 링크입니다. 링크가 등록되어 있을 때만 상단 QR 버튼 옆에 바로가기 버튼이 표시됩니다.
+      </div>
+      <div id="cellLeaderLinksPermErrBox" class="info-box warn hidden" style="margin-top:0; margin-bottom:12px;">
+        <b>Firestore 보안 규칙 업데이트 필요</b><br>
+        셀장 전용 링크(<code>cellLeaderLinks</code>)를 사용하려면 Firebase Console → Firestore Database → 규칙에 최신 전체 보안 규칙을 붙여넣고 <b>게시</b>해 주세요.
+      </div>
+      <div id="cellLeaderLinksListArea"></div>
+
+      <div id="cellLeaderLinkFormBox" class="hidden" style="margin-top:14px; padding-top:14px; border-top:1.5px dashed #CBD5E1;">
+        <div id="cellLeaderLinkFormHeading" style="font-size:14px; font-weight:800; color:#0F172A; margin-bottom:9px;">+ 새 셀장 전용 링크 올리기</div>
+        <input type="hidden" id="editCellLeaderLinkId" />
+        <div class="form-group">
+          <label class="form-label" for="cellLeaderLinkTitleInput">링크 제목 (필수)</label>
+          <input id="cellLeaderLinkTitleInput" class="form-input" maxlength="40" placeholder="예: 이번 주 셀모임 나눔지, 셀장 회의 자료" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="cellLeaderLinkUrlInput">링크 주소 URL (필수)</label>
+          <input id="cellLeaderLinkUrlInput" type="url" class="form-input" placeholder="https://..." />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="cellLeaderLinkNoteInput">간단한 안내 메모 (선택)</label>
+          <textarea id="cellLeaderLinkNoteInput" class="form-textarea" style="min-height:68px;" maxlength="300" placeholder="셀장님께 전달할 메모가 있다면 적어 주세요."></textarea>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button id="saveCellLeaderLinkBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveCellLeaderLink()">셀장 전용 링크 저장</button>
+          <button id="cancelEditCellLeaderLinkBtn" class="btn-outline hidden" type="button" onclick="cancelEditCellLeaderLink()">취소</button>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <button class="btn-outline" type="button" style="width:100%; padding:11px;" onclick="closeCellLeaderLinksModal()">닫기</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 오늘의 초대 QR 공유 모달 (회원·관리자 공유 / 관리자 전용 재발급) -->
   <div id="inviteQrModal" class="modal-backdrop">
     <div class="modal">
@@ -6749,8 +6892,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 35;
-    const APP_CLIENT_BUILD = 285;
-    const APP_CACHE_NAME = 'right-youth-app-v10.185';
+    const APP_CLIENT_BUILD = 286;
+    const APP_CACHE_NAME = 'right-youth-app-v10.186';
     const APP_BOOT_TS = Date.now();
     try {
       const _bootUrl = new URL(window.location.href);
@@ -6865,6 +7008,7 @@
     const KEY_REMOVAL_NOTICE = 'right_youth_removal_notice_v1';
     const KEY_READ_ITEMS = 'right_youth_read_items_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
+    const KEY_HAPTIC_ENABLED = 'right_youth_haptic_v1';
     const KEY_HEADER_SHORTCUTS_LOCAL = 'right_youth_header_shortcuts_v1';
     const KEY_TAB_LABELS_CACHE = 'right_youth_tab_labels_cache_v1';
     const KEY_CELEB_MSGS_CACHE = 'right_youth_celeb_msgs_cache_v1';
@@ -8053,7 +8197,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? `<span style="color:#FECACA; display:inline-flex; align-items:center; justify-content:center;">${renderMonoSvg('alertShield', 20)}</span>`
-        : '<img src="./icon-192.png?v=285" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=286" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -8077,8 +8221,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=285', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=285', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=286', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=286', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -8399,6 +8543,16 @@
     let homeCalEventsLoading = false;
     let homeCalEventsError = '';
     let homeCalShowFallbackIframe = false;
+    let cellLeaderLinks = [];
+    let cellLeaderLinksLoaded = false;
+    let cellLeaderLinksFirstSnap = true;
+    let knownCellLeaderLinkIds = new Set();
+    let unsubCellLeaderLinks = null;
+    let cellLeaderLinksSubMode = '';
+    let cellLeaderLinksPermError = false;
+    let lastSelfCellLinkEditTs = 0;
+    let autoMarkReadTimerId = null;
+    let pendingAutoMarkReadArea = '';
     let bannerAutoSlideSec = loadCachedBannerAutoSlideSec();
     let quickLinks = loadCachedQuickLinks();
     let selectedQuickLinkTheme = 'instagram';
@@ -9014,6 +9168,15 @@
       if (typeof stopAutoSecRunner === 'function') stopAutoSecRunner(true);
       if (typeof stopAutoSheetRunner === 'function') stopAutoSheetRunner(true);
       if (typeof stopHomeTopBannerAutoSlide === 'function') stopHomeTopBannerAutoSlide();
+      if (unsubCellLeaderLinks) { try { unsubCellLeaderLinks(); } catch {} unsubCellLeaderLinks = null; }
+      cellLeaderLinksSubMode = '';
+      cellLeaderLinks = [];
+      cellLeaderLinksLoaded = false;
+      cellLeaderLinksFirstSnap = true;
+      knownCellLeaderLinkIds = new Set();
+      cellLeaderLinksPermError = false;
+      if (autoMarkReadTimerId) { clearTimeout(autoMarkReadTimerId); autoMarkReadTimerId = null; }
+      pendingAutoMarkReadArea = '';
     }
 
     function getRoleById(roleId) {
@@ -9375,6 +9538,398 @@
       return getGlobalHeaderShortcuts();
     }
 
+    // ==================== v10.186 목사님 → 셀장 전용 링크창 & 전역 미세 진동(터치감) ====================
+    function isPastorRoleUser(user) {
+      if (!user || !user.role) return false;
+      const rid = String(user.role.id || '');
+      const rname = String(user.role.name || '');
+      return rid === 'role_pastor' || rname.includes('목사');
+    }
+
+    function isCellLeaderRoleUser(user) {
+      if (!user || !user.role) return false;
+      const rid = String(user.role.id || '');
+      const rname = String(user.role.name || '');
+      return rid === 'role_cell_leader' || rname.includes('셀장');
+    }
+
+    function canManageCellLeaderLinks(user = getCurrentUser()) {
+      if (!user) return false;
+      return !!(user.isSuperAdmin || isPastorRoleUser(user));
+    }
+
+    function canViewCellLeaderLinks(user = getCurrentUser()) {
+      if (!user) return false;
+      return !!(user.isSuperAdmin || isPastorRoleUser(user) || isCellLeaderRoleUser(user));
+    }
+
+    function normalizeCellLeaderLinksArray(rawItems) {
+      if (!Array.isArray(rawItems)) return [];
+      return rawItems
+        .filter(x => x && typeof x === 'object' && String(x.url || '').trim())
+        .map((x, idx) => ({
+          id: String(x.id || `cll_${idx}`),
+          title: String(x.title || '셀장 전용 링크').trim().slice(0, 40),
+          url: String(x.url || '').trim().slice(0, 500),
+          note: String(x.note || '').trim().slice(0, 300),
+          authorName: String(x.authorName || '목사님').trim().slice(0, 20),
+          createdAt: String(x.createdAt || ''),
+          createdTs: Number(x.createdTs || 0),
+          updatedTs: Number(x.updatedTs || x.createdTs || 0)
+        }))
+        .sort((a, b) => (b.updatedTs - a.updatedTs) || (b.createdTs - a.createdTs));
+    }
+
+    function syncCellLeaderLinksSubscription() {
+      const user = getCurrentUser();
+      const canView = canViewCellLeaderLinks(user);
+      const desired = (fbUser && canView) ? `${fbUser.uid}:${user.isSuperAdmin ? 'adm' : String(user.role && user.role.id || '')}` : '';
+      if (desired === cellLeaderLinksSubMode) return;
+
+      if (unsubCellLeaderLinks) {
+        try { unsubCellLeaderLinks(); } catch {}
+        unsubCellLeaderLinks = null;
+      }
+      cellLeaderLinksSubMode = desired;
+      cellLeaderLinksPermError = false;
+
+      if (!desired) {
+        cellLeaderLinks = [];
+        cellLeaderLinksLoaded = false;
+        cellLeaderLinksFirstSnap = true;
+        knownCellLeaderLinkIds = new Set();
+        return;
+      }
+
+      cellLeaderLinksFirstSnap = true;
+      knownCellLeaderLinkIds = new Set();
+      unsubCellLeaderLinks = db.collection('cellLeaderLinks').doc('shared').onSnapshot(doc => {
+        cellLeaderLinksPermError = false;
+        cellLeaderLinksLoaded = true;
+        const isFromCache = !!(doc.metadata && doc.metadata.fromCache);
+        const nextItems = doc.exists ? normalizeCellLeaderLinksArray(doc.data().items) : [];
+
+        if (cellLeaderLinksFirstSnap || isFromCache) {
+          nextItems.forEach(it => knownCellLeaderLinkIds.add(it.id));
+          if (!isFromCache) cellLeaderLinksFirstSnap = false;
+        } else {
+          const added = nextItems.filter(it => !knownCellLeaderLinkIds.has(it.id));
+          nextItems.forEach(it => knownCellLeaderLinkIds.add(it.id));
+          if (added.length > 0 && (Date.now() - lastSelfCellLinkEditTs) > 4000) {
+            const first = added[0];
+            dispatchAppNotification({
+              type: 'notice',
+              icon: '🔗',
+              title: '셀장 전용 링크가 등록되었습니다',
+              body: `${first.title}${first.authorName ? ` · ${first.authorName}` : ''}`,
+              onClick: () => openCellLeaderLinksModal()
+            });
+          }
+        }
+
+        cellLeaderLinks = nextItems;
+        renderHeaderActions(false);
+        if (document.getElementById('cellLeaderLinksModal').classList.contains('open')) {
+          renderCellLeaderLinksModalContent();
+        }
+        if (currentMainTab === 'settings') {
+          const curU = getCurrentUser();
+          if (curU) renderSettingsView(curU);
+        }
+      }, err => {
+        if (err && err.code === 'permission-denied') {
+          cellLeaderLinksPermError = true;
+          if (document.getElementById('cellLeaderLinksModal').classList.contains('open')) {
+            renderCellLeaderLinksModalContent();
+          }
+        }
+      });
+    }
+
+    function renderCellLeaderLinksModalContent() {
+      const user = getCurrentUser();
+      const canManage = canManageCellLeaderLinks(user);
+      const listEl = document.getElementById('cellLeaderLinksListArea');
+      const formBox = document.getElementById('cellLeaderLinkFormBox');
+      const permBox = document.getElementById('cellLeaderLinksPermErrBox');
+
+      if (permBox) permBox.classList.toggle('hidden', !cellLeaderLinksPermError);
+      if (formBox) formBox.classList.toggle('hidden', !canManage);
+
+      if (listEl) {
+        if (cellLeaderLinks.length === 0) {
+          listEl.innerHTML = `
+            <div class="card" style="text-align:center; padding:24px 14px; color:#64748B; margin-bottom:0;">
+              <div class="empty-state-svg">${renderUiIconHtml('manageQuickLinks', { forceOutline: true })}</div>
+              <div style="font-size:13.5px; font-weight:800; color:#334155;">등록된 셀장 전용 링크가 없습니다.</div>
+              <div style="font-size:12px; margin-top:4px; line-height:1.5;">${canManage ? '아래 입력칸에서 링크를 등록하면 상단 QR 버튼 옆에 셀장 전용 링크 버튼이 자동으로 생깁니다.' : '목사님이 링크를 올리시면 이곳에 표시됩니다.'}</div>
+            </div>
+          `;
+        } else {
+          listEl.innerHTML = cellLeaderLinks.map(item => {
+            const safeUrl = normalizeExternalUrl(item.url);
+            const isNewItem = isCellLeaderLinkUnread(item);
+            let hostLabel = item.url;
+            try { hostLabel = new URL(safeUrl).hostname.replace(/^www\./, ''); } catch {}
+            return `
+              <div class="cell-link-card">
+                <div class="card-top" style="margin-bottom:4px;">
+                  <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                    ${isNewItem ? '<span class="new-badge">NEW</span>' : ''}
+                    <span class="tag" style="background:#CCFBF1; color:#0F766E;">셀장 전용</span>
+                    <span style="font-size:11px; color:#64748B;">${escapeHtml(item.authorName || '목사님')}</span>
+                  </div>
+                  <span class="card-date">${escapeHtml(item.createdAt ? String(item.createdAt).slice(0, 10) : '')}</span>
+                </div>
+                <div class="cell-link-title">${escapeHtml(item.title)}</div>
+                <div class="cell-link-url">${escapeHtml(hostLabel)}</div>
+                ${item.note ? `<div class="cell-link-note">${escapeHtml(item.note)}</div>` : ''}
+                <div class="card-footer" style="margin-top:8px; padding-top:8px;">
+                  <button class="btn-sm primary" type="button" style="background:#0F766E; border-color:#0F766E;" onclick="openExternalLinkSafely('${escapeJsAttr(safeUrl || item.url)}', '${escapeJsAttr(item.title)}')">링크 열기 ↗</button>
+                  ${canManage ? `
+                    <div style="display:flex; gap:5px;">
+                      <button class="btn-sm" type="button" onclick="startEditCellLeaderLink('${escapeJsAttr(item.id)}')">수정</button>
+                      <button class="btn-sm danger" type="button" onclick="deleteCellLeaderLink('${escapeJsAttr(item.id)}')">삭제</button>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+    }
+
+    window.openCellLeaderLinksModal = () => {
+      const user = getCurrentUser();
+      if (!canViewCellLeaderLinks(user)) {
+        return showToast('셀장 전용 링크는 셀장과 목사님만 확인할 수 있습니다.');
+      }
+      cancelEditCellLeaderLink();
+      renderCellLeaderLinksModalContent();
+      document.getElementById('cellLeaderLinksModal').classList.add('open');
+      if (getUnreadCellLeaderLinksCount() > 0) {
+        scheduleAutoMarkSeenForArea('cellLeaderLinks');
+      }
+    };
+
+    window.closeCellLeaderLinksModal = () => {
+      if (pendingAutoMarkReadArea === 'cellLeaderLinks') {
+        flushPendingAutoMarkSeen();
+      }
+      document.getElementById('cellLeaderLinksModal').classList.remove('open');
+    };
+
+    window.startEditCellLeaderLink = (id) => {
+      if (!canManageCellLeaderLinks()) return;
+      const target = cellLeaderLinks.find(x => String(x.id) === String(id));
+      if (!target) return;
+      document.getElementById('editCellLeaderLinkId').value = target.id;
+      document.getElementById('cellLeaderLinkTitleInput').value = target.title || '';
+      document.getElementById('cellLeaderLinkUrlInput').value = target.url || '';
+      document.getElementById('cellLeaderLinkNoteInput').value = target.note || '';
+      const heading = document.getElementById('cellLeaderLinkFormHeading');
+      if (heading) heading.textContent = '셀장 전용 링크 수정';
+      const saveBtn = document.getElementById('saveCellLeaderLinkBtn');
+      if (saveBtn) saveBtn.textContent = '수정 내용 저장';
+      const cancelBtn = document.getElementById('cancelEditCellLeaderLinkBtn');
+      if (cancelBtn) cancelBtn.classList.remove('hidden');
+      const inp = document.getElementById('cellLeaderLinkTitleInput');
+      if (inp) { inp.scrollIntoView({ behavior: 'smooth', block: 'center' }); inp.focus(); }
+    };
+
+    window.cancelEditCellLeaderLink = () => {
+      const editEl = document.getElementById('editCellLeaderLinkId');
+      if (editEl) editEl.value = '';
+      const tEl = document.getElementById('cellLeaderLinkTitleInput');
+      const uEl = document.getElementById('cellLeaderLinkUrlInput');
+      const nEl = document.getElementById('cellLeaderLinkNoteInput');
+      if (tEl) tEl.value = '';
+      if (uEl) uEl.value = '';
+      if (nEl) nEl.value = '';
+      const heading = document.getElementById('cellLeaderLinkFormHeading');
+      if (heading) heading.textContent = '+ 새 셀장 전용 링크 올리기';
+      const saveBtn = document.getElementById('saveCellLeaderLinkBtn');
+      if (saveBtn) saveBtn.textContent = '셀장 전용 링크 저장';
+      const cancelBtn = document.getElementById('cancelEditCellLeaderLinkBtn');
+      if (cancelBtn) cancelBtn.classList.add('hidden');
+    };
+
+    window.handleSaveCellLeaderLink = async () => {
+      const user = getCurrentUser();
+      if (!canManageCellLeaderLinks(user)) {
+        return showToast('목사님과 최고 관리자만 셀장 전용 링크를 등록·수정할 수 있습니다.');
+      }
+      const editId = String(document.getElementById('editCellLeaderLinkId').value || '').trim();
+      const title = String(document.getElementById('cellLeaderLinkTitleInput').value || '').trim().slice(0, 40);
+      const rawUrl = String(document.getElementById('cellLeaderLinkUrlInput').value || '').trim();
+      const note = String(document.getElementById('cellLeaderLinkNoteInput').value || '').trim().slice(0, 300);
+
+      if (!title) return showToast('링크 제목을 입력해 주세요.');
+      const safeUrl = normalizeExternalUrl(rawUrl);
+      if (!safeUrl) return showToast('올바른 웹 링크 주소(https://...)를 입력해 주세요.');
+      if (!enforceInputSecurity(`${title}
+${note}`, '셀장 전용 링크', !!user.isSuperAdmin)) return;
+      const risk = analyzeUrlRisk(safeUrl);
+      if (risk.riskLevel === 'danger') {
+        return showToast(`보안 차단: 위험한 링크는 등록할 수 없습니다. (${risk.reasons[0] || ''})`, 'err');
+      }
+
+      const btn = document.getElementById('saveCellLeaderLinkBtn');
+      if (btn) btn.disabled = true;
+      try {
+        const nowTs = Date.now();
+        const nowFull = formatKstDateTime();
+        const nextList = structuredClone(cellLeaderLinks);
+        if (editId) {
+          const idx = nextList.findIndex(x => String(x.id) === editId);
+          if (idx >= 0) {
+            nextList[idx] = {
+              ...nextList[idx],
+              title,
+              url: safeUrl,
+              note,
+              updatedTs: nowTs
+            };
+          }
+        } else {
+          nextList.unshift({
+            id: `cll_${nowTs}_${Math.random().toString(36).slice(2, 6)}`,
+            title,
+            url: safeUrl,
+            note,
+            authorName: user.name || '목사님',
+            createdAt: nowFull,
+            createdTs: nowTs,
+            updatedTs: nowTs
+          });
+        }
+        lastSelfCellLinkEditTs = Date.now();
+        await db.collection('cellLeaderLinks').doc('shared').set({
+          items: nextList,
+          updatedAt: nowFull,
+          updatedTs: nowTs,
+          updatedBy: user.name || '목사님'
+        }, { merge: true });
+        cellLeaderLinks = normalizeCellLeaderLinksArray(nextList);
+        cellLeaderLinksPermError = false;
+        recordAuditLog({
+          actorType: user.isSuperAdmin ? 'admin' : 'member',
+          actorName: user.name,
+          category: '바로가기',
+          action: editId ? '셀장 전용 링크 수정' : '셀장 전용 링크 등록',
+          target: title,
+          detail: safeUrl
+        });
+        cancelEditCellLeaderLink();
+        renderCellLeaderLinksModalContent();
+        renderHeaderActions(false);
+        if (currentMainTab === 'settings') renderSettingsView(user);
+        showToast(editId ? '셀장 전용 링크가 수정되었습니다!' : '셀장 전용 링크가 등록되었습니다! (상단 QR 옆에 버튼 표시됨)', 'ok');
+      } catch (err) {
+        if (err && err.code === 'permission-denied') {
+          cellLeaderLinksPermError = true;
+          renderCellLeaderLinksModalContent();
+          showToast('Firestore 전체 보안 규칙을 최신 버전으로 게시해 주세요.', 'warn');
+        } else {
+          handleDbError(err, '셀장 전용 링크 저장');
+        }
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    };
+
+    window.deleteCellLeaderLink = async (id) => {
+      const user = getCurrentUser();
+      if (!canManageCellLeaderLinks(user)) return;
+      const target = cellLeaderLinks.find(x => String(x.id) === String(id));
+      if (!target) return;
+      if (!confirm(`[${target.title}] 셀장 전용 링크를 삭제할까요?`)) return;
+      try {
+        const nextList = cellLeaderLinks.filter(x => String(x.id) !== String(id));
+        const nowTs = Date.now();
+        lastSelfCellLinkEditTs = nowTs;
+        await db.collection('cellLeaderLinks').doc('shared').set({
+          items: nextList,
+          updatedAt: formatKstDateTime(),
+          updatedTs: nowTs,
+          updatedBy: user.name || '목사님'
+        }, { merge: true });
+        cellLeaderLinks = nextList;
+        recordAuditLog({
+          actorType: user.isSuperAdmin ? 'admin' : 'member',
+          actorName: user.name,
+          category: '바로가기',
+          action: '셀장 전용 링크 삭제',
+          target: target.title,
+          detail: target.url
+        });
+        renderCellLeaderLinksModalContent();
+        renderHeaderActions(false);
+        if (currentMainTab === 'settings') renderSettingsView(user);
+        showToast(nextList.length === 0 ? '링크를 삭제했습니다. (상단 셀장 링크 버튼 숨김)' : '셀장 전용 링크를 삭제했습니다.');
+      } catch (err) {
+        handleDbError(err, '셀장 전용 링크 삭제');
+      }
+    };
+
+    // --- 전역 미세 진동(터치감) 엔진 ---
+    function loadHapticEnabled() {
+      try {
+        const v = localStorage.getItem(KEY_HAPTIC_ENABLED);
+        return v === null ? true : v === '1';
+      } catch {
+        return true;
+      }
+    }
+    let hapticEnabled = loadHapticEnabled();
+    let lastHapticTs = 0;
+
+    function triggerHapticFeedback(kind = 'light') {
+      if (!hapticEnabled) return;
+      const now = Date.now();
+      if (now - lastHapticTs < 45) return;
+      lastHapticTs = now;
+      try {
+        if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+          const ms = kind === 'medium' ? 14 : (kind === 'soft' ? 8 : 10);
+          navigator.vibrate(ms);
+        }
+      } catch {}
+    }
+
+    window.toggleHapticEnabled = (checked) => {
+      hapticEnabled = !!checked;
+      try { localStorage.setItem(KEY_HAPTIC_ENABLED, hapticEnabled ? '1' : '0'); } catch {}
+      if (hapticEnabled) {
+        lastHapticTs = 0;
+        triggerHapticFeedback('medium');
+        showToast('버튼 터치 진동이 켜졌습니다.', 'ok');
+      } else {
+        showToast('버튼 터치 진동이 꺼졌습니다.');
+      }
+      if (currentMainTab === 'settings') {
+        const u = getCurrentUser();
+        if (u) renderSettingsView(u);
+      }
+    };
+
+    document.addEventListener('click', (e) => {
+      if (!hapticEnabled || !e || !e.target || e.target.nodeType !== 1) return;
+      const targetEl = e.target.closest(
+        'button, a.btn-outline, a.quick-link-btn, .switch, .role-check-chip, .color-dot, .card.clickable, .video-thumb-wrap, .video-compact-row, summary'
+      );
+      if (!targetEl) return;
+      if (targetEl.disabled || targetEl.getAttribute('aria-disabled') === 'true') return;
+      if (targetEl.classList.contains('danger') || targetEl.classList.contains('btn-full') || targetEl.classList.contains('btn-attendance-cta')) {
+        triggerHapticFeedback('medium');
+      } else if (targetEl.classList.contains('switch') || targetEl.classList.contains('filter-chip') || targetEl.classList.contains('home-cal-day')) {
+        triggerHapticFeedback('soft');
+      } else {
+        triggerHapticFeedback('light');
+      }
+    }, true);
+
     function renderHeaderActions(isManageMode = false, overrideNames = null, overrideIcons = null, overrideCfg = null, overrideStyle = null) {
       const box = document.getElementById('headerActions');
       if (!box) return;
@@ -9385,9 +9940,24 @@
       const qrLbl = getEffectiveTabLabel('setQr', overrideNames);
       const qrIcnHtml = renderUiIconHtml('setQr', { overrideIcons, overrideStyle });
 
+      const curUser = getCurrentUser();
+      const showCellLinkBtn = canViewCellLeaderLinks(curUser) && Array.isArray(cellLeaderLinks) && cellLeaderLinks.length > 0;
+      const cellLinkUnreadCnt = showCellLinkBtn ? getUnreadCellLeaderLinksCount() : 0;
+      const cellLinkBtnHtml = showCellLinkBtn ? `
+            <button id="headerCellLeaderLinkBtn" class="icon-btn cell-link-accent ${themeCls}" type="button" title="셀장 전용 링크 (${cellLeaderLinks.length})" aria-label="셀장 전용 링크" onclick="openCellLeaderLinksModal()">
+              ${renderUiIconHtml('manageQuickLinks', { overrideIcons, overrideStyle })}
+              <span id="headerCellLinkDot" class="notif-dot cell-new ${cellLinkUnreadCnt > 0 ? '' : 'hidden'}"></span>
+            </button>
+          ` : '';
+
       const btns = [];
+      let cellLinkInserted = false;
       cfg.order.forEach(key => {
         if (key === 'setQr' && cfg.showQr) {
+          if (showCellLinkBtn && !cellLinkInserted) {
+            btns.push(cellLinkBtnHtml);
+            cellLinkInserted = true;
+          }
           btns.push(`
             <button class="icon-btn ${themeCls}" type="button" title="${escapeHtml(qrLbl)}" aria-label="${escapeHtml(qrLbl)}" onclick="openInviteQrModal()">
               ${qrIcnHtml}
@@ -9402,6 +9972,9 @@
           `);
         }
       });
+      if (showCellLinkBtn && !cellLinkInserted) {
+        btns.unshift(cellLinkBtnHtml);
+      }
       box.innerHTML = btns.join('');
       box.classList.toggle('hidden', btns.length === 0);
     }
@@ -10966,6 +11539,7 @@
 
     function syncScopedContentSubscriptions() {
       if (!fbUser) return;
+      syncCellLeaderLinksSubscription();
       const isActualAdmin = (fbUser.email || '').toLowerCase() === ADMIN_EMAIL && pendingAdminStatus !== 'pending';
       const myRoleId = (!isActualAdmin && myMemberDoc && myMemberDoc.status === 'approved')
         ? String(myMemberDoc.roleId || 'role_youth')
@@ -13181,6 +13755,7 @@
     };
 
     window.switchMainTab = (tab) => {
+      flushPendingAutoMarkSeen();
       if (currentMainTab === 'manage' && currentManageSubTab === 'sheet' && tab !== 'manage' && typeof finalizeViewedLinkedSheetNewTabs === 'function') finalizeViewedLinkedSheetNewTabs();
       document.getElementById('quickLinksSheet').classList.remove('open');
       if (currentMainTab === 'manage' && tab !== 'manage') {
@@ -15511,6 +16086,9 @@
       `;
 
       container.innerHTML = attendanceHtml + newcomerHtml + homeCalendarHtml + noticeListHtml;
+      if (totalUnreadNotices > 0 || (blocks || []).some(b => isBlockUnread(b, user))) {
+        scheduleAutoMarkSeenForArea('home');
+      }
     }
 
     window.setFilter = (cat) => {
@@ -19429,8 +20007,15 @@
             closeVideoPlayerModal();
             return;
           }
+          if (bg.id === 'cellLeaderLinksModal') {
+            closeCellLeaderLinksModal();
+            return;
+          }
+          if (bg.id === 'quickLinksSheet') {
+            closeQuickLinksSheet();
+            return;
+          }
           bg.classList.remove('open');
-          if (bg.id === 'quickLinksSheet') syncMoreTabActiveState();
         }
       });
     });
@@ -20586,10 +21171,14 @@
         renderQuickLinksSheetContent();
         sheet.classList.add('open');
         syncMoreTabActiveState();
+        if ((quickLinks || []).some(isQuickLinkUnread)) {
+          scheduleAutoMarkSeenForArea('more');
+        }
       }
     };
 
     window.closeQuickLinksSheet = () => {
+      if (pendingAutoMarkReadArea === 'more') flushPendingAutoMarkSeen();
       document.getElementById('quickLinksSheet').classList.remove('open');
       syncMoreTabActiveState();
     };
@@ -34763,6 +35352,19 @@
                 </div>
               </div>
             ` : ''}
+            <div class="settings-row-static" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+              <span class="settings-row-left">
+                <span class="settings-row-icon">${renderUiIconHtml('setInstall', { forceOutline: true })}</span>
+                <span style="min-width:0;">
+                  <div class="settings-row-title">버튼 터치 진동</div>
+                  <div class="settings-row-sub">버튼을 누를 때 미세한 진동 터치감을 제공합니다 (안드로이드 지원)</div>
+                </span>
+              </span>
+              <label class="switch">
+                <input type="checkbox" ${hapticEnabled ? 'checked' : ''} onchange="toggleHapticEnabled(this.checked)" />
+                <span class="slider"></span>
+              </label>
+            </div>
           `;
         } else if (key === 'setQr') {
           rowHtml = `
@@ -34921,6 +35523,23 @@
           </div>
         </div>
 
+        <!-- 목사님 · 최고 관리자 전용: 셀장 전용 링크 관리 진입점 (링크 0개일 때도 등록 가능) -->
+        ${canManageCellLeaderLinks(user) ? `
+          <div class="cell-link-settings-card">
+            <div style="min-width:0; flex:1 1 170px;">
+              <div style="font-size:14.5px; font-weight:800; display:flex; align-items:center; gap:6px;">
+                ${renderUiIconHtml('manageQuickLinks', { forceOutline: true })}
+                <span>셀장 전용 링크 관리</span>
+                <span class="tag" style="background:rgba(255,255,255,0.22); color:#FFFFFF; font-size:10.5px;">${cellLeaderLinks.length}개 등록됨</span>
+              </div>
+              <div style="font-size:11.5px; color:rgba(255,255,255,0.9); margin-top:3px; line-height:1.42;">
+                링크를 등록하면 상단 QR 버튼 옆에 셀장 전용 링크 버튼이 자동으로 나타납니다.
+              </div>
+            </div>
+            <button class="btn-sm" type="button" style="background:#FFFFFF; color:#0F766E; border:none; padding:8px 12px; font-weight:800;" onclick="openCellLeaderLinksModal()">링크 관리</button>
+          </div>
+        ` : ''}
+
         <!-- 미업데이트 시에만 표시되는 업데이트 알림 카드 (버전명 미표시) -->
         ${showUpdate ? `
           <div class="settings-update-card">
@@ -34948,7 +35567,7 @@
         const raw = JSON.parse(localStorage.getItem(KEY_TAB_SEEN_TS) || '{}');
         const now = Date.now();
         if (!raw || typeof raw !== 'object' || !raw.initialized) {
-          const init = { initialized: true, home: now, sermon: now, ccm: now, quickLinks: now, inquiryReply: now };
+          const init = { initialized: true, home: now, sermon: now, ccm: now, quickLinks: now, cellLeaderLinks: now, inquiryReply: now };
           localStorage.setItem(KEY_TAB_SEEN_TS, JSON.stringify(init));
           return init;
         }
@@ -34956,11 +35575,12 @@
         if (raw.sermon === undefined) { raw.sermon = now; changed = true; }
         if (raw.ccm === undefined) { raw.ccm = now; changed = true; }
         if (raw.quickLinks === undefined) { raw.quickLinks = now; changed = true; }
+        if (raw.cellLeaderLinks === undefined) { raw.cellLeaderLinks = now; changed = true; }
         if (changed) localStorage.setItem(KEY_TAB_SEEN_TS, JSON.stringify(raw));
         return raw;
       } catch {
         const now = Date.now();
-        return { initialized: true, home: now, sermon: now, ccm: now, quickLinks: now, inquiryReply: now };
+        return { initialized: true, home: now, sermon: now, ccm: now, quickLinks: now, cellLeaderLinks: now, inquiryReply: now };
       }
     }
 
@@ -34979,10 +35599,11 @@
           videos: (raw && raw.videos && typeof raw.videos === 'object') ? raw.videos : {},
           notices: (raw && raw.notices && typeof raw.notices === 'object') ? raw.notices : {},
           blocks: (raw && raw.blocks && typeof raw.blocks === 'object') ? raw.blocks : {},
-          quickLinks: (raw && raw.quickLinks && typeof raw.quickLinks === 'object') ? raw.quickLinks : {}
+          quickLinks: (raw && raw.quickLinks && typeof raw.quickLinks === 'object') ? raw.quickLinks : {},
+          cellLeaderLinks: (raw && raw.cellLeaderLinks && typeof raw.cellLeaderLinks === 'object') ? raw.cellLeaderLinks : {}
         };
       } catch {
-        return { videos: {}, notices: {}, blocks: {}, quickLinks: {} };
+        return { videos: {}, notices: {}, blocks: {}, quickLinks: {}, cellLeaderLinks: {} };
       }
     }
 
@@ -35087,6 +35708,176 @@
       markItemRead('quickLinks', ql.id, getQuickLinkItemTs(ql));
       applyScreen();
     };
+
+    function isCellLeaderLinkUnread(item) {
+      if (!item || !item.id) return false;
+      const ts = Math.max(Number(item.updatedTs || 0), Number(item.createdTs || 0));
+      if (!ts) return false;
+      const seen = loadTabSeenTs();
+      const baseline = Number(seen.cellLeaderLinks || 0);
+      if (ts <= baseline) return false;
+      const readMap = loadReadItemsMap();
+      const readTs = Number((readMap.cellLeaderLinks && readMap.cellLeaderLinks[String(item.id)]) || 0);
+      return readTs < ts;
+    }
+
+    function getUnreadCellLeaderLinksCount() {
+      return (cellLeaderLinks || []).filter(isCellLeaderLinkUnread).length;
+    }
+
+    function markVisibleAreaItemsRead(areaKey, user = getCurrentUser()) {
+      if (!user || !areaKey) return false;
+      let changed = false;
+
+      if (areaKey === 'home') {
+        if (!homeNoticesLoaded) return false;
+        const unreadNotices = (notices || []).filter(n => isNoticeUnread(n, user));
+        const unreadBlocks = (blocks || []).filter(b => isBlockUnread(b, user));
+        if (unreadNotices.length === 0 && unreadBlocks.length === 0) return false;
+        unreadNotices.forEach(n => markItemRead('notices', n.id, getNoticeItemTs(n)));
+        unreadBlocks.forEach(b => markItemRead('blocks', b.id, getBlockItemTs(b)));
+        markTabAsSeen('home');
+        changed = true;
+      } else if (areaKey === 'sermon') {
+        const approved = (videoItems || []).filter(v => v.status === 'approved' && isSermonVideo(v));
+        const visible = approved.filter(v => {
+          const chName = getSermonChurchLabel(v);
+          const sTab = getSermonSubTabLabel(v) || '기타 설교';
+          if (sermonCatFilter !== '전체' && chName !== sermonCatFilter) return false;
+          if (sermonSubTabFilter !== '전체' && sTab !== sermonSubTabFilter) return false;
+          return true;
+        });
+        const unread = visible.filter(isVideoUnread);
+        if (unread.length === 0) return false;
+        unread.forEach(v => markItemRead('videos', v.id, getVideoItemTs(v)));
+        if (approved.every(v => !isVideoUnread(v))) markTabAsSeen('sermon');
+        changed = true;
+      } else if (areaKey === 'ccm') {
+        const approved = (videoItems || []).filter(v => v.status === 'approved' && isCcmVideo(v));
+        const visible = approved.filter(v => {
+          if (ccmSubTabFilter === '전체' || !ccmSubTabFilter) return true;
+          return getVideoContiInfo(v).key === ccmSubTabFilter;
+        });
+        const unread = visible.filter(isVideoUnread);
+        if (unread.length === 0) return false;
+        unread.forEach(v => markItemRead('videos', v.id, getVideoItemTs(v)));
+        if (approved.every(v => !isVideoUnread(v))) markTabAsSeen('ccm');
+        changed = true;
+      } else if (areaKey === 'more') {
+        const unread = (quickLinks || []).filter(isQuickLinkUnread);
+        if (unread.length === 0) return false;
+        unread.forEach(ql => markItemRead('quickLinks', ql.id, getQuickLinkItemTs(ql)));
+        markTabAsSeen('quickLinks');
+        changed = true;
+      } else if (areaKey === 'cellLeaderLinks') {
+        const unread = (cellLeaderLinks || []).filter(isCellLeaderLinkUnread);
+        if (unread.length === 0) return false;
+        unread.forEach(it => markItemRead('cellLeaderLinks', it.id, Math.max(Number(it.updatedTs || 0), Number(it.createdTs || 0))));
+        markTabAsSeen('cellLeaderLinks');
+        changed = true;
+      }
+      return changed;
+    }
+
+    function updateTabbarUnreadBadgesLightweight(user = getCurrentUser()) {
+      if (!user) return;
+      const tabbar = document.getElementById('appTabbar');
+      if (tabbar) {
+        const perms = user.role.perms;
+        const pendingCount = getManageTotalBadgeCount();
+        tabbar.querySelectorAll('.tab-btn').forEach(btn => {
+          const oc = btn.getAttribute('onclick') || '';
+          let key = '';
+          if (btn.id === 'tabBtnMore') key = 'more';
+          else {
+            const m = oc.match(/switchMainTab\('([^']+)'\)/);
+            if (m) key = m[1];
+          }
+          if (!key) return;
+          let cnt = 0;
+          if (key === 'manage' && perms.canManageMembers) cnt = pendingCount;
+          else cnt = getUnreadCountForTab(key, user);
+          let badgeEl = btn.querySelector('.tab-badge');
+          if (cnt > 0) {
+            if (!badgeEl) {
+              badgeEl = document.createElement('span');
+              badgeEl.className = 'tab-badge';
+              btn.appendChild(badgeEl);
+            }
+            badgeEl.textContent = cnt > 99 ? '99+' : String(cnt);
+          } else if (badgeEl) {
+            badgeEl.remove();
+          }
+        });
+      }
+      const cellDot = document.getElementById('headerCellLinkDot');
+      if (cellDot) cellDot.classList.toggle('hidden', getUnreadCellLeaderLinksCount() === 0);
+    }
+
+    function fadeOutNewBadgesInRoot(rootEl) {
+      if (!rootEl) return;
+      const targets = rootEl.querySelectorAll('.new-badge, .video-new-corner-badge');
+      targets.forEach(el => el.classList.add('auto-read-fade'));
+      setTimeout(() => {
+        targets.forEach(el => { if (el.isConnected) el.remove(); });
+      }, 360);
+    }
+
+    function flushPendingAutoMarkSeen() {
+      if (autoMarkReadTimerId) {
+        clearTimeout(autoMarkReadTimerId);
+        autoMarkReadTimerId = null;
+      }
+      const area = pendingAutoMarkReadArea;
+      pendingAutoMarkReadArea = '';
+      if (!area) return;
+      const user = getCurrentUser();
+      if (!user) return;
+      if (markVisibleAreaItemsRead(area, user)) {
+        updateTabbarUnreadBadgesLightweight(user);
+      }
+    }
+
+    function scheduleAutoMarkSeenForArea(areaKey) {
+      const user = getCurrentUser();
+      if (!user || !areaKey) return;
+      if (autoMarkReadTimerId) {
+        clearTimeout(autoMarkReadTimerId);
+        autoMarkReadTimerId = null;
+      }
+      pendingAutoMarkReadArea = areaKey;
+      autoMarkReadTimerId = setTimeout(() => {
+        autoMarkReadTimerId = null;
+        if (document.visibilityState !== 'visible') return;
+        const curU = getCurrentUser();
+        if (!curU || pendingAutoMarkReadArea !== areaKey) return;
+        if (areaKey === 'home' && currentMainTab !== 'home') return;
+        if (areaKey === 'sermon' && currentMainTab !== 'sermon') return;
+        if (areaKey === 'ccm' && currentMainTab !== 'ccm') return;
+        if (areaKey === 'more' && !document.getElementById('quickLinksSheet').classList.contains('open')) return;
+        if (areaKey === 'cellLeaderLinks' && !document.getElementById('cellLeaderLinksModal').classList.contains('open')) return;
+
+        pendingAutoMarkReadArea = '';
+        if (markVisibleAreaItemsRead(areaKey, curU)) {
+          updateTabbarUnreadBadgesLightweight(curU);
+          if (areaKey === 'home') {
+            fadeOutNewBadgesInRoot(document.getElementById('viewHome'));
+            const homeAdBadge = document.querySelector('#viewHome .section-title .sub-tab-badge');
+            if (homeAdBadge) homeAdBadge.remove();
+          } else if (areaKey === 'sermon') {
+            fadeOutNewBadgesInRoot(document.getElementById('viewSermon'));
+            renderSermonView();
+          } else if (areaKey === 'ccm') {
+            fadeOutNewBadgesInRoot(document.getElementById('viewCcm'));
+            renderCcmView();
+          } else if (areaKey === 'more') {
+            fadeOutNewBadgesInRoot(document.getElementById('quickLinksSheetList'));
+          } else if (areaKey === 'cellLeaderLinks') {
+            fadeOutNewBadgesInRoot(document.getElementById('cellLeaderLinksListArea'));
+          }
+        }
+      }, 1200);
+    }
 
     function getUnreadInquiryReplyCount() {
       const seen = loadTabSeenTs();
@@ -38317,6 +39108,9 @@ ${handleUrl}`);
       if (myArea) {
         myArea.innerHTML = buildMySubmittedVideosHtml(user, isSermonVideo, `내가 추천한 검토 대기 · 반려 ${getTabLabel('sermon')} 영상`);
       }
+      if (filtered.some(isVideoUnread)) {
+        scheduleAutoMarkSeenForArea('sermon');
+      }
     }
 
     window.setSermonCatFilter = (cat) => {
@@ -38474,6 +39268,9 @@ ${handleUrl}`);
 
       const myArea = document.getElementById('mySubmittedCcmArea');
       if (myArea) myArea.innerHTML = '';
+      if (filtered.some(isVideoUnread)) {
+        scheduleAutoMarkSeenForArea('ccm');
+      }
     }
 
     window.setCcmDateFilter = (dateKey) => {
