@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=287" />
+  <link rel="manifest" href="./manifest.json?v=288" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=287" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=287" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=288" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=288" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4852,6 +4852,20 @@
       margin-bottom: 5px;
       font-weight: 600;
     }
+    .cell-link-uploader {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #0F172A;
+      background: #F0FDFA;
+      border: 1px solid #99F6E4;
+      border-radius: 8px;
+      padding: 4px 8px;
+      margin: 4px 0 6px;
+    }
     .cell-link-note {
       font-size: 12.5px;
       color: #334155;
@@ -4938,7 +4952,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=287" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=288" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -6046,7 +6060,7 @@
   </div>
 
 
-  <!-- 목사님 → 셀장 전용 링크창 모달 (상단 QR 버튼 옆) -->
+  <!-- 관리자 → 셀장 전용 링크창 모달 (상단 QR 버튼 옆) -->
   <div id="cellLeaderLinksModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
@@ -6054,7 +6068,7 @@
         <button class="close-btn" type="button" onclick="closeCellLeaderLinksModal()">✕</button>
       </div>
       <div id="cellLeaderLinksIntroBox" class="info-box" style="margin-top:0; margin-bottom:12px;">
-        목사님이 셀장님들과 공유한 전용 링크입니다. 링크가 등록되어 있을 때만 상단 QR 버튼 옆에 바로가기 버튼이 표시됩니다.
+        관리자가 셀장님께 공유한 전용 링크입니다. 관리에서 링크를 공유하면 상단 QR 버튼 옆에 바로가기 버튼이 자동으로 표시됩니다.
       </div>
       <div id="cellLeaderLinksPermErrBox" class="info-box warn hidden" style="margin-top:0; margin-bottom:12px;">
         <b>Firestore 보안 규칙 업데이트 필요</b><br>
@@ -6892,8 +6906,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 35;
-    const APP_CLIENT_BUILD = 287;
-    const APP_CACHE_NAME = 'right-youth-app-v10.187';
+    const APP_CLIENT_BUILD = 288;
+    const APP_CACHE_NAME = 'right-youth-app-v10.188';
     const APP_BOOT_TS = Date.now();
     try {
       const _bootUrl = new URL(window.location.href);
@@ -7009,6 +7023,7 @@
     const KEY_READ_ITEMS = 'right_youth_read_items_v1';
     const KEY_APP_FONT_SCALE = 'right_youth_app_font_scale_v1';
     const KEY_HAPTIC_ENABLED = 'right_youth_haptic_v1';
+    const KEY_HAPTIC_LEVEL = 'right_youth_haptic_level_v1';
     const KEY_HEADER_SHORTCUTS_LOCAL = 'right_youth_header_shortcuts_v1';
     const KEY_TAB_LABELS_CACHE = 'right_youth_tab_labels_cache_v1';
     const KEY_CELEB_MSGS_CACHE = 'right_youth_celeb_msgs_cache_v1';
@@ -7241,7 +7256,7 @@
 
     const MANAGE_SUBTAB_REGISTRY = [
       { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', intro: '홈 상단 구글 캘린더 연동과 새가족 환영 카드, 캘린더 아래 통합 광고 목록을 관리합니다.', permCheck: p => !!(p.canEditLayout || p.canManageNotices || p.canObserveManage) },
-      { id: 'quicklinks', labelKey: 'manageQuickLinks', defaultIcon: '🔗', defaultLabel: '사이트 바로가기 관리', intro: '하단 바로가기 메뉴에 표시되는 인스타그램·유튜브·교회 홈페이지 등 외부 사이트 링크를 관리합니다.', permCheck: p => !!(p.canEditLayout || p.canObserveManage) },
+      { id: 'quicklinks', labelKey: 'manageQuickLinks', defaultIcon: '🔗', defaultLabel: '사이트 바로가기 관리', intro: '하단 바로가기 메뉴의 외부 사이트 링크와 상단 QR 버튼 옆에 표시되는 셀장 전용 공유 링크를 관리합니다.', permCheck: p => !!(p.canEditLayout || p.canObserveManage) },
       { id: 'videos', labelKey: 'manageVideos', defaultIcon: '🎬', defaultLabel: '영상 관리', intro: '게시(추천)된 설교·CCM 유튜브 영상을 검토·승인하고, 공식 채널 화이트리스트와 세부 탭을 관리합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
       { id: 'worship', labelKey: 'manageWorship', defaultIcon: '⛪', defaultLabel: '예배 관리', intro: '매주 일요일 정기 예배 출석체크 시간, 예배X(휴무) 지정 및 수련회·특별 행사 일정을 설정합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
       { id: 'attendance', labelKey: 'manageAttendance', defaultIcon: '✅', defaultLabel: '출석인원', intro: '날짜별 출석 현황을 확인·수정하고, 셀별 주간 출석부 시트 생성·A4 인쇄 및 무인 자동 생성을 예약합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
@@ -8197,7 +8212,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? `<span style="color:#FECACA; display:inline-flex; align-items:center; justify-content:center;">${renderMonoSvg('alertShield', 20)}</span>`
-        : '<img src="./icon-192.png?v=287" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=288" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -8221,8 +8236,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=287', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=287', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=288', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=288', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -9538,14 +9553,7 @@
       return getGlobalHeaderShortcuts();
     }
 
-    // ==================== v10.186 목사님 → 셀장 전용 링크창 & 전역 미세 진동(터치감) ====================
-    function isPastorRoleUser(user) {
-      if (!user || !user.role) return false;
-      const rid = String(user.role.id || '');
-      const rname = String(user.role.name || '');
-      return rid === 'role_pastor' || rname.includes('목사');
-    }
-
+    // ==================== v10.188 관리자 → 셀장 전용 링크창 & 미세 진동(터치감) ====================
     function isCellLeaderRoleUser(user) {
       if (!user || !user.role) return false;
       const rid = String(user.role.id || '');
@@ -9555,12 +9563,12 @@
 
     function canManageCellLeaderLinks(user = getCurrentUser()) {
       if (!user) return false;
-      return !!(user.isSuperAdmin || isPastorRoleUser(user));
+      return !!user.isSuperAdmin;
     }
 
     function canViewCellLeaderLinks(user = getCurrentUser()) {
       if (!user) return false;
-      return !!(user.isSuperAdmin || isPastorRoleUser(user) || isCellLeaderRoleUser(user));
+      return !!(user.isSuperAdmin || isCellLeaderRoleUser(user));
     }
 
     function normalizeCellLeaderLinksArray(rawItems) {
@@ -9572,8 +9580,10 @@
           title: String(x.title || '셀장 전용 링크').trim().slice(0, 40),
           url: String(x.url || '').trim().slice(0, 500),
           note: String(x.note || '').trim().slice(0, 300),
-          authorName: String(x.authorName || '목사님').trim().slice(0, 20),
+          authorName: String(x.authorName || '관리자').trim().slice(0, 20),
+          updatedBy: String(x.updatedBy || '').trim().slice(0, 20),
           createdAt: String(x.createdAt || ''),
+          updatedAt: String(x.updatedAt || ''),
           createdTs: Number(x.createdTs || 0),
           updatedTs: Number(x.updatedTs || x.createdTs || 0)
         }))
@@ -9620,8 +9630,8 @@
             dispatchAppNotification({
               type: 'notice',
               icon: '🔗',
-              title: '셀장 전용 링크가 등록되었습니다',
-              body: `${first.title}${first.authorName ? ` · ${first.authorName}` : ''}`,
+              title: '셀장 전용 링크가 공유되었습니다',
+              body: `${first.authorName || '관리자'} 관리자: ${first.title}`,
               onClick: () => openCellLeaderLinksModal()
             });
           }
@@ -9632,9 +9642,9 @@
         if (document.getElementById('cellLeaderLinksModal').classList.contains('open')) {
           renderCellLeaderLinksModalContent();
         }
-        if (currentMainTab === 'settings') {
-          const curU = getCurrentUser();
-          if (curU) renderSettingsView(curU);
+        const curU = getCurrentUser();
+        if (curU && currentMainTab === 'manage' && currentManageSubTab === 'quicklinks') {
+          renderManageQuickLinks(document.getElementById('manageContent'), curU);
         }
       }, err => {
         if (err && err.code === 'permission-denied') {
@@ -9642,8 +9652,18 @@
           if (document.getElementById('cellLeaderLinksModal').classList.contains('open')) {
             renderCellLeaderLinksModalContent();
           }
+          const curU = getCurrentUser();
+          if (curU && currentMainTab === 'manage' && currentManageSubTab === 'quicklinks') {
+            renderManageQuickLinks(document.getElementById('manageContent'), curU);
+          }
         }
       });
+    }
+
+    function formatCellLinkAdminDisplay(nameRaw) {
+      const n = String(nameRaw || '').trim();
+      if (!n || n === '관리자') return '관리자';
+      return n.endsWith('관리자') ? n : `${n} 관리자`;
     }
 
     function renderCellLeaderLinksModalContent() {
@@ -9661,27 +9681,34 @@
           listEl.innerHTML = `
             <div class="card" style="text-align:center; padding:24px 14px; color:#64748B; margin-bottom:0;">
               <div class="empty-state-svg">${renderUiIconHtml('manageQuickLinks', { forceOutline: true })}</div>
-              <div style="font-size:13.5px; font-weight:800; color:#334155;">등록된 셀장 전용 링크가 없습니다.</div>
-              <div style="font-size:12px; margin-top:4px; line-height:1.5;">${canManage ? '아래 입력칸에서 링크를 등록하면 상단 QR 버튼 옆에 셀장 전용 링크 버튼이 자동으로 생깁니다.' : '목사님이 링크를 올리시면 이곳에 표시됩니다.'}</div>
+              <div style="font-size:13.5px; font-weight:800; color:#334155;">공유된 셀장 전용 링크가 없습니다.</div>
+              <div style="font-size:12px; margin-top:4px; line-height:1.5;">${canManage ? '아래에서 링크를 공유하면 상단 QR 버튼 옆에 셀장 전용 링크 버튼이 자동으로 나타납니다.' : '관리자가 링크를 공유하면 이곳에 표시됩니다.'}</div>
             </div>
           `;
         } else {
           listEl.innerHTML = cellLeaderLinks.map(item => {
             const safeUrl = normalizeExternalUrl(item.url);
             const isNewItem = isCellLeaderLinkUnread(item);
+            const authorDisp = formatCellLinkAdminDisplay(item.authorName);
+            const editorNote = (item.updatedBy && item.updatedBy !== item.authorName)
+              ? ` <span style="color:#64748B; font-weight:600;">(수정: ${escapeHtml(formatCellLinkAdminDisplay(item.updatedBy))})</span>`
+              : '';
             let hostLabel = item.url;
             try { hostLabel = new URL(safeUrl).hostname.replace(/^www\./, ''); } catch {}
             return `
               <div class="cell-link-card">
-                <div class="card-top" style="margin-bottom:4px;">
+                <div class="card-top" style="margin-bottom:5px;">
                   <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                     ${isNewItem ? '<span class="new-badge">NEW</span>' : ''}
                     <span class="tag" style="background:#CCFBF1; color:#0F766E;">셀장 전용</span>
-                    <span style="font-size:11px; color:#64748B;">${escapeHtml(item.authorName || '목사님')}</span>
                   </div>
-                  <span class="card-date">${escapeHtml(item.createdAt ? String(item.createdAt).slice(0, 10) : '')}</span>
+                  <span class="card-date">${escapeHtml(item.createdAt || '')}</span>
                 </div>
                 <div class="cell-link-title">${escapeHtml(item.title)}</div>
+                <div class="cell-link-uploader">
+                  ${renderMonoSvg('user', 13)}
+                  <span>공유 관리자: <b>${escapeHtml(authorDisp)}</b>${editorNote}</span>
+                </div>
                 <div class="cell-link-url">${escapeHtml(hostLabel)}</div>
                 ${item.note ? `<div class="cell-link-note">${escapeHtml(item.note)}</div>` : ''}
                 <div class="card-footer" style="margin-top:8px; padding-top:8px;">
@@ -9700,17 +9727,31 @@
       }
     }
 
-    window.openCellLeaderLinksModal = () => {
+    window.openCellLeaderLinksModal = (focusForm = false) => {
       const user = getCurrentUser();
       if (!canViewCellLeaderLinks(user)) {
-        return showToast('셀장 전용 링크는 셀장과 목사님만 확인할 수 있습니다.');
+        return showToast('셀장 전용 링크는 셀장과 관리자만 확인할 수 있습니다.');
       }
       cancelEditCellLeaderLink();
       renderCellLeaderLinksModalContent();
       document.getElementById('cellLeaderLinksModal').classList.add('open');
+      if (focusForm && canManageCellLeaderLinks(user)) {
+        setTimeout(() => {
+          const inp = document.getElementById('cellLeaderLinkTitleInput');
+          if (inp) { inp.scrollIntoView({ behavior: 'smooth', block: 'center' }); inp.focus(); }
+        }, 120);
+      }
       if (getUnreadCellLeaderLinksCount() > 0) {
         scheduleAutoMarkSeenForArea('cellLeaderLinks');
       }
+    };
+
+    window.openEditCellLeaderLinkFromManage = (id) => {
+      const user = getCurrentUser();
+      if (!canManageCellLeaderLinks(user)) return;
+      renderCellLeaderLinksModalContent();
+      document.getElementById('cellLeaderLinksModal').classList.add('open');
+      startEditCellLeaderLink(id);
     };
 
     window.closeCellLeaderLinksModal = () => {
@@ -9748,9 +9789,9 @@
       if (uEl) uEl.value = '';
       if (nEl) nEl.value = '';
       const heading = document.getElementById('cellLeaderLinkFormHeading');
-      if (heading) heading.textContent = '+ 새 셀장 전용 링크 올리기';
+      if (heading) heading.textContent = '+ 새 셀장 전용 링크 공유하기';
       const saveBtn = document.getElementById('saveCellLeaderLinkBtn');
-      if (saveBtn) saveBtn.textContent = '셀장 전용 링크 저장';
+      if (saveBtn) saveBtn.textContent = '셀장에게 링크 공유';
       const cancelBtn = document.getElementById('cancelEditCellLeaderLinkBtn');
       if (cancelBtn) cancelBtn.classList.add('hidden');
     };
@@ -9758,7 +9799,7 @@
     window.handleSaveCellLeaderLink = async () => {
       const user = getCurrentUser();
       if (!canManageCellLeaderLinks(user)) {
-        return showToast('목사님과 최고 관리자만 셀장 전용 링크를 등록·수정할 수 있습니다.');
+        return showToast('최고 관리자만 셀장 전용 링크를 공유·수정할 수 있습니다.');
       }
       const editId = String(document.getElementById('editCellLeaderLinkId').value || '').trim();
       const title = String(document.getElementById('cellLeaderLinkTitleInput').value || '').trim().slice(0, 40);
@@ -9768,13 +9809,13 @@
       if (!title) return showToast('링크 제목을 입력해 주세요.');
       const safeUrl = normalizeExternalUrl(rawUrl);
       if (!safeUrl) return showToast('올바른 웹 링크 주소(https://...)를 입력해 주세요.');
-      if (!enforceInputSecurity(`${title}
-${note}`, '셀장 전용 링크', !!user.isSuperAdmin)) return;
+      if (!enforceInputSecurity(`${title}\n${note}`, '셀장 전용 링크', true)) return;
       const risk = analyzeUrlRisk(safeUrl);
       if (risk.riskLevel === 'danger') {
         return showToast(`보안 차단: 위험한 링크는 등록할 수 없습니다. (${risk.reasons[0] || ''})`, 'err');
       }
 
+      const adminName = String(user.name || currentAdminName || '관리자').trim().slice(0, 20);
       const btn = document.getElementById('saveCellLeaderLinkBtn');
       if (btn) btn.disabled = true;
       try {
@@ -9789,6 +9830,8 @@ ${note}`, '셀장 전용 링크', !!user.isSuperAdmin)) return;
               title,
               url: safeUrl,
               note,
+              updatedBy: adminName,
+              updatedAt: nowFull,
               updatedTs: nowTs
             };
           }
@@ -9798,8 +9841,10 @@ ${note}`, '셀장 전용 링크', !!user.isSuperAdmin)) return;
             title,
             url: safeUrl,
             note,
-            authorName: user.name || '목사님',
+            authorName: adminName,
+            updatedBy: adminName,
             createdAt: nowFull,
+            updatedAt: nowFull,
             createdTs: nowTs,
             updatedTs: nowTs
           });
@@ -9809,23 +9854,25 @@ ${note}`, '셀장 전용 링크', !!user.isSuperAdmin)) return;
           items: nextList,
           updatedAt: nowFull,
           updatedTs: nowTs,
-          updatedBy: user.name || '목사님'
+          updatedBy: adminName
         }, { merge: true });
         cellLeaderLinks = normalizeCellLeaderLinksArray(nextList);
         cellLeaderLinksPermError = false;
         recordAuditLog({
-          actorType: user.isSuperAdmin ? 'admin' : 'member',
-          actorName: user.name,
+          actorType: 'admin',
+          actorName: adminName,
           category: '바로가기',
-          action: editId ? '셀장 전용 링크 수정' : '셀장 전용 링크 등록',
+          action: editId ? '셀장 전용 링크 수정' : '셀장 전용 링크 공유',
           target: title,
-          detail: safeUrl
+          detail: `${adminName} 관리자 · ${safeUrl}`
         });
         cancelEditCellLeaderLink();
         renderCellLeaderLinksModalContent();
         renderHeaderActions(false);
-        if (currentMainTab === 'settings') renderSettingsView(user);
-        showToast(editId ? '셀장 전용 링크가 수정되었습니다!' : '셀장 전용 링크가 등록되었습니다! (상단 QR 옆에 버튼 표시됨)', 'ok');
+        if (currentMainTab === 'manage' && currentManageSubTab === 'quicklinks') {
+          renderManageQuickLinks(document.getElementById('manageContent'), user);
+        }
+        showToast(editId ? '셀장 전용 링크가 수정되었습니다!' : '셀장에게 링크가 공유되었습니다! (상단 QR 옆에 버튼 표시됨)', 'ok');
       } catch (err) {
         if (err && err.code === 'permission-denied') {
           cellLeaderLinksPermError = true;
@@ -9845,6 +9892,7 @@ ${note}`, '셀장 전용 링크', !!user.isSuperAdmin)) return;
       const target = cellLeaderLinks.find(x => String(x.id) === String(id));
       if (!target) return;
       if (!confirm(`[${target.title}] 셀장 전용 링크를 삭제할까요?`)) return;
+      const adminName = String(user.name || currentAdminName || '관리자').trim().slice(0, 20);
       try {
         const nextList = cellLeaderLinks.filter(x => String(x.id) !== String(id));
         const nowTs = Date.now();
@@ -9853,12 +9901,12 @@ ${note}`, '셀장 전용 링크', !!user.isSuperAdmin)) return;
           items: nextList,
           updatedAt: formatKstDateTime(),
           updatedTs: nowTs,
-          updatedBy: user.name || '목사님'
+          updatedBy: adminName
         }, { merge: true });
         cellLeaderLinks = nextList;
         recordAuditLog({
-          actorType: user.isSuperAdmin ? 'admin' : 'member',
-          actorName: user.name,
+          actorType: 'admin',
+          actorName: adminName,
           category: '바로가기',
           action: '셀장 전용 링크 삭제',
           target: target.title,
@@ -9866,14 +9914,16 @@ ${note}`, '셀장 전용 링크', !!user.isSuperAdmin)) return;
         });
         renderCellLeaderLinksModalContent();
         renderHeaderActions(false);
-        if (currentMainTab === 'settings') renderSettingsView(user);
+        if (currentMainTab === 'manage' && currentManageSubTab === 'quicklinks') {
+          renderManageQuickLinks(document.getElementById('manageContent'), user);
+        }
         showToast(nextList.length === 0 ? '링크를 삭제했습니다. (상단 셀장 링크 버튼 숨김)' : '셀장 전용 링크를 삭제했습니다.');
       } catch (err) {
         handleDbError(err, '셀장 전용 링크 삭제');
       }
     };
 
-    // --- 전역 미세 진동(터치감) 엔진 ---
+    // --- 전역 미세 진동(터치감) 엔진 (기본: 아주 미세한 2~4ms 틱) ---
     function loadHapticEnabled() {
       try {
         const v = localStorage.getItem(KEY_HAPTIC_ENABLED);
@@ -9882,17 +9932,32 @@ ${note}`, '셀장 전용 링크', !!user.isSuperAdmin)) return;
         return true;
       }
     }
+    function loadHapticLevel() {
+      try {
+        const v = String(localStorage.getItem(KEY_HAPTIC_LEVEL) || 'micro').trim();
+        return ['micro', 'light', 'normal'].includes(v) ? v : 'micro';
+      } catch {
+        return 'micro';
+      }
+    }
     let hapticEnabled = loadHapticEnabled();
+    let hapticLevel = loadHapticLevel();
     let lastHapticTs = 0;
 
     function triggerHapticFeedback(kind = 'light') {
       if (!hapticEnabled) return;
       const now = Date.now();
-      if (now - lastHapticTs < 45) return;
+      if (now - lastHapticTs < 65) return;
       lastHapticTs = now;
       try {
         if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
-          const ms = kind === 'medium' ? 14 : (kind === 'soft' ? 8 : 10);
+          const table = {
+            micro: { soft: 2, light: 3, medium: 4 },
+            light: { soft: 4, light: 5, medium: 7 },
+            normal: { soft: 6, light: 8, medium: 11 }
+          };
+          const preset = table[hapticLevel] || table.micro;
+          const ms = preset[kind] || preset.light;
           navigator.vibrate(ms);
         }
       } catch {}
@@ -9903,11 +9968,29 @@ ${note}`, '셀장 전용 링크', !!user.isSuperAdmin)) return;
       try { localStorage.setItem(KEY_HAPTIC_ENABLED, hapticEnabled ? '1' : '0'); } catch {}
       if (hapticEnabled) {
         lastHapticTs = 0;
-        triggerHapticFeedback('medium');
-        showToast('버튼 터치 진동이 켜졌습니다.', 'ok');
+        triggerHapticFeedback('light');
+        showToast('버튼 미세 진동이 켜졌습니다.', 'ok');
       } else {
         showToast('버튼 터치 진동이 꺼졌습니다.');
       }
+      if (currentMainTab === 'settings') {
+        const u = getCurrentUser();
+        if (u) renderSettingsView(u);
+      }
+    };
+
+    window.setHapticLevel = (lvl) => {
+      const next = ['micro', 'light', 'normal'].includes(lvl) ? lvl : 'micro';
+      hapticLevel = next;
+      try { localStorage.setItem(KEY_HAPTIC_LEVEL, next); } catch {}
+      if (!hapticEnabled) {
+        hapticEnabled = true;
+        try { localStorage.setItem(KEY_HAPTIC_ENABLED, '1'); } catch {}
+      }
+      lastHapticTs = 0;
+      triggerHapticFeedback('light');
+      const labelMap = { micro: '미세 (가장 약하게)', light: '약하게', normal: '보통' };
+      showToast(`진동 강도: ${labelMap[next]}`, 'ok');
       if (currentMainTab === 'settings') {
         const u = getCurrentUser();
         if (u) renderSettingsView(u);
@@ -16681,7 +16764,66 @@ ${note}`, '셀장 전용 링크', !!user.isSuperAdmin)) return;
     // (A-2) 사이트 바로가기 관리 (독립 탭)
     function renderManageQuickLinks(el, user) {
       const qlOpen = isManageSectionOpen('ql_main', true);
+      const cellOpen = isManageSectionOpen('ql_cell_links', true);
+      const canManageCell = canManageCellLeaderLinks(user);
+      const cellLinksHtml = canManageCell ? `
+        ${buildManageAccordionBar({
+          key: 'ql_cell_links',
+          titleHtml: '셀장 전용 링크 공유 (상단 QR 옆 표시)',
+          badgeHtml: cellLeaderLinks.length > 0
+            ? `<span class="tag green">${cellLeaderLinks.length}개 공유중</span>`
+            : '<span class="tag slate">미공유</span>',
+          actionHtml: '<button class="btn-admin" type="button" style="padding:6px 10px; font-size:11.5px; background:#0F766E;" onclick="openCellLeaderLinksModal(true)">+ 셀장 링크 공유</button>',
+          defaultOpen: true
+        })}
+        <div data-acc-body="ql_cell_links" class="${cellOpen ? '' : 'hidden'}" style="margin-bottom:14px;">
+          <div class="info-box" style="margin-top:0; margin-bottom:10px;">
+            • 여기서 링크를 공유하면 <b>셀장</b>(및 관리자) 화면의 <b>상단 QR 버튼 바로 옆</b>에 전용 링크 버튼이 자동으로 나타납니다.<br>
+            • 셀장 화면에는 <b>공유한 관리자 성명</b>이 함께 표시되어 누가 올린 링크인지 바로 확인할 수 있습니다. (링크를 모두 삭제하면 상단 버튼도 사라집니다.)
+          </div>
+          ${cellLeaderLinksPermError ? `
+            <div class="info-box warn" style="margin-top:0; margin-bottom:10px;">
+              <b>Firestore 보안 규칙 게시 필요:</b> <code>cellLeaderLinks</code> 권한을 최신 전체 규칙으로 게시해 주세요.
+            </div>
+          ` : ''}
+          ${cellLeaderLinks.length === 0
+            ? `<div class="card" style="text-align:center; color:#64748B; font-size:13px; padding:18px 14px;">
+                현재 셀장에게 공유 중인 링크가 없습니다.<br>
+                오른쪽 위 <b>[+ 셀장 링크 공유]</b>를 눌러 링크를 등록하면 상단 QR 버튼 옆에 바로가기 버튼이 생깁니다.
+              </div>`
+            : cellLeaderLinks.map(item => {
+                const safeUrl = normalizeExternalUrl(item.url);
+                const authorDisp = formatCellLinkAdminDisplay(item.authorName);
+                const editorNote = (item.updatedBy && item.updatedBy !== item.authorName)
+                  ? ` · 수정: ${escapeHtml(formatCellLinkAdminDisplay(item.updatedBy))}`
+                  : '';
+                return `
+                  <div class="cell-link-card">
+                    <div class="card-top" style="margin-bottom:4px;">
+                      <span class="tag" style="background:#CCFBF1; color:#0F766E;">셀장 전용</span>
+                      <span class="card-date">${escapeHtml(item.createdAt || '')}</span>
+                    </div>
+                    <div class="cell-link-title">${escapeHtml(item.title)}</div>
+                    <div class="cell-link-uploader">
+                      ${renderMonoSvg('user', 13)}
+                      <span>공유 관리자: <b>${escapeHtml(authorDisp)}</b>${editorNote}</span>
+                    </div>
+                    <div class="cell-link-url">${escapeHtml(item.url)}</div>
+                    ${item.note ? `<div class="cell-link-note">${escapeHtml(item.note)}</div>` : ''}
+                    <div class="card-footer" style="margin-top:8px; padding-top:8px;">
+                      <button class="btn-sm" type="button" onclick="openExternalLinkSafely('${escapeJsAttr(safeUrl || item.url)}', '${escapeJsAttr(item.title)}')">열기 테스트 ↗</button>
+                      <div style="display:flex; gap:6px;">
+                        <button class="btn-sm" type="button" onclick="openEditCellLeaderLinkFromManage('${escapeJsAttr(item.id)}')">수정</button>
+                        <button class="btn-sm danger" type="button" onclick="deleteCellLeaderLink('${escapeJsAttr(item.id)}')">삭제</button>
+                      </div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+        </div>
+      ` : '';
       el.innerHTML = `
+        ${cellLinksHtml}
         ${buildManageAccordionBar({
           key: 'ql_main',
           titleHtml: `${escapeHtml(getTabIcon('manageQuickLinks'))} ${escapeHtml(getTabLabel('manageQuickLinks'))}`,
@@ -35377,18 +35519,27 @@ ${note}`, '셀장 전용 링크', !!user.isSuperAdmin)) return;
                 </div>
               </div>
             ` : ''}
-            <div class="settings-row-static" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
-              <span class="settings-row-left">
-                <span class="settings-row-icon">${renderUiIconHtml('setInstall', { forceOutline: true })}</span>
-                <span style="min-width:0;">
-                  <div class="settings-row-title">버튼 터치 진동</div>
-                  <div class="settings-row-sub">버튼을 누를 때 미세한 진동 터치감을 제공합니다 (안드로이드 지원)</div>
+            <div class="settings-row-static">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                <span class="settings-row-left">
+                  <span class="settings-row-icon">${renderUiIconHtml('setInstall', { forceOutline: true })}</span>
+                  <span style="min-width:0;">
+                    <div class="settings-row-title">버튼 터치 진동</div>
+                    <div class="settings-row-sub">버튼을 누를 때 미세한 진동 터치감을 제공합니다 (안드로이드 지원)</div>
+                  </span>
                 </span>
-              </span>
-              <label class="switch">
-                <input type="checkbox" ${hapticEnabled ? 'checked' : ''} onchange="toggleHapticEnabled(this.checked)" />
-                <span class="slider"></span>
-              </label>
+                <label class="switch">
+                  <input type="checkbox" ${hapticEnabled ? 'checked' : ''} onchange="toggleHapticEnabled(this.checked)" />
+                  <span class="slider"></span>
+                </label>
+              </div>
+              ${hapticEnabled ? `
+                <div class="font-scale-seg" style="margin-top:9px;">
+                  <button class="font-scale-btn ${hapticLevel === 'micro' ? 'active' : ''}" type="button" onclick="setHapticLevel('micro')">미세 (기본)</button>
+                  <button class="font-scale-btn ${hapticLevel === 'light' ? 'active' : ''}" type="button" onclick="setHapticLevel('light')">약하게</button>
+                  <button class="font-scale-btn ${hapticLevel === 'normal' ? 'active' : ''}" type="button" onclick="setHapticLevel('normal')">보통</button>
+                </div>
+              ` : ''}
             </div>
           `;
         } else if (key === 'setQr') {
@@ -35547,23 +35698,6 @@ ${note}`, '셀장 전용 링크', !!user.isSuperAdmin)) return;
             </div>
           </div>
         </div>
-
-        <!-- 목사님 · 최고 관리자 전용: 셀장 전용 링크 관리 진입점 (링크 0개일 때도 등록 가능) -->
-        ${canManageCellLeaderLinks(user) ? `
-          <div class="cell-link-settings-card">
-            <div style="min-width:0; flex:1 1 170px;">
-              <div style="font-size:14.5px; font-weight:800; display:flex; align-items:center; gap:6px;">
-                ${renderUiIconHtml('manageQuickLinks', { forceOutline: true })}
-                <span>셀장 전용 링크 관리</span>
-                <span class="tag" style="background:rgba(255,255,255,0.22); color:#FFFFFF; font-size:10.5px;">${cellLeaderLinks.length}개 등록됨</span>
-              </div>
-              <div style="font-size:11.5px; color:rgba(255,255,255,0.9); margin-top:3px; line-height:1.42;">
-                링크를 등록하면 상단 QR 버튼 옆에 셀장 전용 링크 버튼이 자동으로 나타납니다.
-              </div>
-            </div>
-            <button class="btn-sm" type="button" style="background:#FFFFFF; color:#0F766E; border:none; padding:8px 12px; font-weight:800;" onclick="openCellLeaderLinksModal()">링크 관리</button>
-          </div>
-        ` : ''}
 
         <!-- 미업데이트 시에만 표시되는 업데이트 알림 카드 (버전명 미표시) -->
         ${showUpdate ? `

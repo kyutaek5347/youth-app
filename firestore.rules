@@ -36,16 +36,6 @@ service cloud.firestore {
       );
     }
 
-    function isPastor() {
-      return isApprovedMember() && (
-        myRoleId() == 'role_pastor' ||
-        (exists(/databases/$(database)/documents/config/roles) &&
-         get(/databases/$(database)/documents/config/roles).data.metaById != null &&
-         myRoleId() in get(/databases/$(database)/documents/config/roles).data.metaById &&
-         get(/databases/$(database)/documents/config/roles).data.metaById[myRoleId()].name.matches('.*목사.*'))
-      );
-    }
-
     function isCellLeader() {
       return isApprovedMember() && (
         myRoleId() == 'role_cell_leader' ||
@@ -111,10 +101,10 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
-    // ===== 2. 목사님 → 셀장 전용 링크 (v10.186 신규) =====
+    // ===== 2. 관리자 → 셀장 전용 링크 (v10.188 관리자 전용 공유 · 셀장/관리자 열람) =====
     match /cellLeaderLinks/{docId} {
-      allow read: if isAdmin() || isPastor() || isCellLeader();
-      allow create, update, delete: if isAdmin() || isPastor();
+      allow read: if isAdmin() || isCellLeader();
+      allow create, update, delete: if isAdmin();
     }
 
     // ===== 3. 로그인 아이디 인덱스 · 비밀번호 초기화 코드 =====
