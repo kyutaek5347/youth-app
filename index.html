@@ -8,13 +8,13 @@
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=281" />
+  <link rel="manifest" href="./manifest.json?v=282" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=281" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=281" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=282" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=282" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4710,6 +4710,45 @@
       display: block;
     }
 
+    /* v10.182 주간 찬양 콘티 날짜 탭 스타일 */
+    .conti-week-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: linear-gradient(135deg, #F5F3FF 0%, #FDF2F8 100%);
+      border: 1px solid #DDD6FE;
+      border-left: 4px solid #7E22CE;
+      border-radius: 13px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+    .conti-week-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #4C1D95;
+      line-height: 1.35;
+    }
+    .conti-week-sub {
+      font-size: 11.5px;
+      color: #6B21A8;
+      margin-top: 2px;
+    }
+    .conti-order-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #7E22CE;
+      color: #FFFFFF;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 2.5px 7.5px;
+      border-radius: 999px;
+      line-height: 1.25;
+      flex-shrink: 0;
+    }
+
   </style>
 </head>
 <body>
@@ -4734,7 +4773,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=281" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=282" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -4941,26 +4980,25 @@
           <div id="mySubmittedSermonArea"></div>
         </section>
 
-        <!-- (3) CCM 화면 (하단 탭) -->
+        <!-- (3) 주간 찬양 콘티(CCM) 화면 (하단 탭) -->
         <section id="viewCcm" class="hidden">
           <div class="ccm-hero">
             <div class="hero-top-row">
               <div class="hero-top-text">
                 <div id="ccmViewTitle" class="hero-top-title">CCM</div>
-                <div id="ccmViewSub" class="hero-top-sub">은혜로운 CCM과 찬양 영상을 함께 듣고 나누는 공간입니다.</div>
+                <div id="ccmViewSub" class="hero-top-sub">주일·예배 날짜별 찬양 콘티 영상을 미리 듣고 함께 준비하는 공간입니다.</div>
               </div>
               <div class="hero-top-actions">
-                <button id="ccmTabsManageBtn" class="hero-write-btn hidden" type="button" style="background:rgba(255,255,255,0.16); color:#FFFFFF; border:1px solid rgba(255,255,255,0.32);" onclick="openCcmTabsModal()"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 6.2a1.8 1.8 0 0 1 1.8-1.8h4.5l2 2.2H19a1.8 1.8 0 0 1 1.8 1.8v9.4a1.8 1.8 0 0 1-1.8 1.8H5a1.8 1.8 0 0 1-1.8-1.8z"/></svg></span><span>탭 관리</span></button>
-                <button id="ccmRecommendTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openVideoSubmitModal('CCM')">+ CCM 게시</button>
+                <button id="ccmTabsManageBtn" class="hero-write-btn hidden" type="button" style="background:rgba(255,255,255,0.16); color:#FFFFFF; border:1px solid rgba(255,255,255,0.32);" onclick="openCcmTabsModal()"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.2"/><line x1="8" y1="2.8" x2="8" y2="6.2"/><line x1="16" y1="2.8" x2="16" y2="6.2"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/></svg></span><span>날짜 탭</span></button>
+                <button id="ccmRecommendTopBtn" class="btn-amber hidden hero-write-btn" type="button" onclick="openVideoSubmitModal('CCM')">+ 콘티 등록</button>
               </div>
             </div>
           </div>
           <div class="search-box">
             <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.2"/><line x1="20" y1="20" x2="16.2" y2="16.2"/></svg></span>
-            <input id="ccmSearchInput" class="search-input" type="search" placeholder="CCM 제목·세부 탭·찬양팀·추천글 검색..." oninput="onCcmSearchInput(this.value)" />
+            <input id="ccmSearchInput" class="search-input" type="search" placeholder="찬양 제목·날짜(예: 11월 29일)·메모 검색..." oninput="onCcmSearchInput(this.value)" />
             <button id="ccmSearchClear" class="search-clear hidden" type="button" onclick="clearCcmSearch()">✕</button>
           </div>
-          <div id="ccmTeamChips" class="filter-row" data-ts-bar="ccm_team" data-ts-body="#ccmListArea"></div>
           <div id="ccmSubTabsBox" class="ccm-subtabs-box" data-ts-zone="ccm_sub"></div>
           <div id="ccmListArea" class="ts-swipe-body" data-ts-zone="ccm_sub"></div>
           <div id="mySubmittedCcmArea"></div>
@@ -6352,7 +6390,7 @@
           <select id="videoCategorySelect" class="form-select" onchange="onVideoCategorySelectChange()">
             <option value="설교">설교 (교회별 탭 자동 생성)</option>
             <option value="라이트 청년부">라이트 청년부</option>
-            <option value="CCM">CCM · 찬양 (찬양팀별 탭 자동 생성)</option>
+            <option value="CCM" id="videoCatOptionCcm">찬양 콘티 (주간 날짜 탭 · 관리자 전용)</option>
           </select>
         </div>
         <div class="form-group">
@@ -6371,16 +6409,36 @@
       </div>
 
       <div class="form-group hidden" id="videoCcmTabGroup">
-        <label class="form-label" for="videoCcmTabSelect">CCM 세부 탭 (선택 또는 직접 입력)</label>
+        <label class="form-label" for="videoCcmTabSelect">주간 찬양 콘티 날짜 탭 (최고 관리자 전용)</label>
         <select id="videoCcmTabSelect" class="form-select" onchange="onVideoCcmTabSelectChange()"></select>
-        <input id="videoCcmTabCustomInput" class="form-input hidden" style="margin-top:6px;" maxlength="20" placeholder="새 세부 탭 이름 입력 (예: 경배·찬양, 수련회 찬양)" oninput="onVideoCcmTabSelectChange()" />
-        <div style="font-size:11px; color:#64748B; margin-top:4px; line-height:1.45;">
-          자동 분류를 선택하면 영상 제목·내용에 따라 알맞은 CCM 세부 탭에 자동 배치되며, 원하는 탭을 직접 선택할 수도 있습니다.
+        <div id="videoCcmCustomDateWrap" class="hidden" style="margin-top:8px; padding:10px; border-radius:11px; background:#FAF5FF; border:1px solid #DDD6FE;">
+          <div class="form-grid-2">
+            <div>
+              <label class="form-label" for="videoCcmDateInput" style="font-size:11.5px; margin-bottom:4px;">예배 · 행사 날짜</label>
+              <div class="combo-input-row">
+                <input id="videoCcmDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; background:#fff; padding:8px 9px; font-size:13px;" placeholder="2026.11.29" oninput="formatDateTyping(this); onVideoCcmCustomDateTyped();" />
+                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="달력에서 선택" onclick="openNativePicker('videoCcmDatePicker', 'videoCcmDateInput', 'date')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.2"/><line x1="8" y1="2.8" x2="8" y2="6.2"/><line x1="16" y1="2.8" x2="16" y2="6.2"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/></svg></span></button>
+                <input id="videoCcmDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('videoCcmDatePicker', 'videoCcmDateInput', 'date'); onVideoCcmCustomDateTyped();" />
+              </div>
+            </div>
+            <div>
+              <label class="form-label" for="videoCcmTabCustomInput" style="font-size:11.5px; margin-bottom:4px;">탭 표시 이름 (자동 생성 · 수정 가능)</label>
+              <input id="videoCcmTabCustomInput" class="form-input" style="background:#fff; padding:8px 9px; font-size:13px;" maxlength="24" placeholder="예: 11월 29일 주일" oninput="onVideoCcmTabSelectChange()" />
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+          <label class="form-label" for="videoCcmOrderInput" style="margin:0; white-space:nowrap;">콘티 곡 순서</label>
+          <input id="videoCcmOrderInput" type="number" min="1" max="30" class="form-input" style="width:78px; padding:7px 10px; font-size:13px; text-align:center;" value="1" />
+          <span style="font-size:11.5px; color:#64748B;">번 곡 (같은 날짜 탭 안에서 순서대로 표시됩니다)</span>
+        </div>
+        <div style="font-size:11px; color:#64748B; margin-top:5px; line-height:1.45;">
+          새 날짜를 선택해 등록하면 날짜 탭이 자동으로 생성되며, 다른 주간에 부른 곡도 중복 제한 없이 다시 올릴 수 있습니다.
         </div>
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="videoNoteInput">은혜 나눔 · 추천 한마디 (선택)</label>
+        <label class="form-label" id="videoNoteLabel" for="videoNoteInput">은혜 나눔 · 추천 한마디 (선택)</label>
         <textarea id="videoNoteInput" class="form-textarea" style="min-height:82px;" maxlength="400" placeholder="어떤 부분에서 은혜를 받았는지 간단히 나눠 주세요."></textarea>
       </div>
 
@@ -6430,29 +6488,39 @@
   </div>
 
 
-  <!-- 관리자: CCM 세부 탭 관리 모달 (추가 · 이름 수정 · 순서 변경 · 삭제) -->
+  <!-- 관리자: 주간 찬양 콘티 날짜 탭 관리 모달 -->
   <div id="ccmTabsModal" class="modal-backdrop">
     <div class="modal">
       <div class="modal-head">
-        <h3 class="modal-title">CCM 세부 탭 관리</h3>
+        <h3 class="modal-title">주간 찬양 콘티 날짜 탭 관리</h3>
         <button class="close-btn" data-close="ccmTabsModal">✕</button>
       </div>
-      <div class="info-box" style="margin-top:0; margin-bottom:12px;">
-        • <b>CCM</b> 화면 안에서 찬양팀별 1차 탭 아래에 표시되는 <b>2차 세부 탭</b>을 자유롭게 추가·수정·순서 변경·삭제할 수 있습니다.<br>
-        • 탭 이름을 수정하면 해당 탭에 들어 있던 기존 CCM 영상들도 새 탭 이름으로 함께 이동됩니다.
+      <div class="info-box" style="margin-top:0; margin-bottom:11px;">
+        • 주일이나 특별 예배 날짜를 추가하면 <b>최신 날짜순으로 상단 날짜 탭</b>이 만들어집니다.<br>
+        • 탭 이름을 수정하면 해당 주에 등록된 찬양 곡들의 탭 표시 이름도 함께 바뀝니다.
+      </div>
+      <div class="form-group" style="margin-bottom:10px;">
+        <label class="form-label">주일 날짜 빠른 추가</label>
+        <div id="ccmQuickSundayBtns" class="quick-preset-row" style="margin-bottom:0;"></div>
       </div>
       <div class="form-group">
-        <label class="form-label" for="newCcmTabInput">새 세부 탭 추가 (최대 20자)</label>
-        <div style="display:flex; gap:6px;">
-          <input id="newCcmTabInput" class="form-input" style="flex:1;" maxlength="20" placeholder="예: 경배·찬양, 묵상·기도, 수련회 찬양" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleAddCcmSubTab('newCcmTabInput');}" />
-          <button class="btn-admin" type="button" style="white-space:nowrap;" onclick="handleAddCcmSubTab('newCcmTabInput')">+ 추가</button>
+        <label class="form-label">다른 날짜 직접 추가</label>
+        <div class="form-grid-2" style="margin-bottom:6px;">
+          <div class="combo-input-row">
+            <input id="newCcmDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; padding:8px 9px; font-size:13px;" placeholder="2026.11.29" oninput="formatDateTyping(this); onNewCcmDateModalTyped('newCcmDateInput', 'newCcmTabInput');" />
+            <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="달력에서 선택" onclick="openNativePicker('newCcmDatePicker', 'newCcmDateInput', 'date')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.2"/><line x1="8" y1="2.8" x2="8" y2="6.2"/><line x1="16" y1="2.8" x2="16" y2="6.2"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/></svg></span></button>
+            <input id="newCcmDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('newCcmDatePicker', 'newCcmDateInput', 'date'); onNewCcmDateModalTyped('newCcmDateInput', 'newCcmTabInput');" />
+          </div>
+          <div style="display:flex; gap:6px;">
+            <input id="newCcmTabInput" class="form-input" style="flex:1; padding:8px 9px; font-size:13px;" maxlength="24" placeholder="예: 11월 29일 주일" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleAddCcmDateTab('newCcmDateInput', 'newCcmTabInput');}" />
+            <button class="btn-admin" type="button" style="white-space:nowrap; padding:8px 11px;" onclick="handleAddCcmDateTab('newCcmDateInput', 'newCcmTabInput')">+ 추가</button>
+          </div>
         </div>
       </div>
       <div id="ccmTabsModalList" style="margin-bottom:10px;"></div>
       <div id="ccmTabsModalFeedback"></div>
-      <div style="display:flex; gap:8px; margin-top:10px;">
-        <button class="btn-outline" type="button" onclick="handleResetDefaultCcmSubTabs()">기본 탭 복원</button>
-        <button class="btn-full btn-dark" type="button" style="flex:1; padding:11px;" data-close="ccmTabsModal">닫기</button>
+      <div style="margin-top:10px;">
+        <button class="btn-full btn-dark" type="button" style="width:100%; padding:11px;" data-close="ccmTabsModal">닫기</button>
       </div>
     </div>
   </div>
@@ -6605,8 +6673,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 35;
-    const APP_CLIENT_BUILD = 281;
-    const APP_CACHE_NAME = 'right-youth-app-v10.181';
+    const APP_CLIENT_BUILD = 282;
+    const APP_CACHE_NAME = 'right-youth-app-v10.182';
     const APP_BOOT_TS = Date.now();
     try {
       const _bootUrl = new URL(window.location.href);
@@ -6767,13 +6835,14 @@
       }
     ];
     const DEFAULT_SERMON_SUB_TABS = ['주일예배', '청년부예배', '수요·금요예배', '특강·수련회'];
-    const DEFAULT_CCM_SUB_TABS = ['경배·찬양', '묵상·기도', '신나는 찬양', '은혜·위로'];
+    const DEFAULT_CCM_SUB_TABS = [];
     const DEFAULT_VIDEO_SETTINGS = {
       showOnHome: true,
       submitAudience: 'roles',
       submitTargetRoles: ['role_pastor', 'role_director', 'role_teacher', 'role_president', 'role_leader', 'role_cell_leader'],
       sermonTabs: [...DEFAULT_SERMON_SUB_TABS],
-      ccmTabs: [...DEFAULT_CCM_SUB_TABS]
+      ccmTabs: [],
+      ccmDateTabs: []
     };
     const MAX_REACTION_EMOJI_ITEMS = 10;
     const DEFAULT_VIDEO_REACTION_EMOJIS = [
@@ -6967,7 +7036,7 @@
       { key: 'termsHeroTitle', defaultVal: '라이트 청년부 앱 이용약관', hint: '이용약관 화면 상단 제목', max: 36 },
       { key: 'termsHeroSub', defaultVal: '구미제일감리교회 라이트 청년부 회칙을 바탕으로 작성된 서비스 이용약관입니다.', hint: '이용약관 화면 상단 안내 문구', max: 80 },
       { key: 'sermonHeroSub', defaultVal: '교회별·라이트 청년부 탭으로 자동 분류된 설교 영상을 편하게 시청하세요.', hint: '설교 탭 상단 안내 문구', max: 80 },
-      { key: 'ccmHeroSub', defaultVal: '찬양팀 이름별(어노인팅·마커스 등) 탭으로 자동 분류된 CCM을 바로 찾아 들어보세요.', hint: 'CCM 탭 상단 안내 문구', max: 80 },
+      { key: 'ccmHeroSub', defaultVal: '주일·예배 날짜별 찬양 콘티 영상을 미리 듣고 함께 준비하는 공간입니다.', hint: 'CCM(찬양 콘티) 탭 상단 안내 문구', max: 80 },
       { key: 'videosHeroTitle', defaultVal: '설교 · CCM 영상', hint: '유튜브 전체 영상 화면 및 홈 영상 섹션 제목', max: 28 },
       { key: 'videosHeroSub', defaultVal: '자동 보안·채널 검사를 통과한 교회 설교와 CCM 영상을 안전하게 나눕니다.', hint: '유튜브 전체 영상 화면 상단 안내 문구', max: 80 },
       { key: 'settingsProfileSub', defaultVal: '이용자 개인 설정 · 변경 내용은 내 기기에만 적용됩니다.', hint: '설정 프로필 하단 안내 문구', max: 60 },
@@ -7935,7 +8004,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? `<span style="color:#FECACA; display:inline-flex; align-items:center; justify-content:center;">${renderMonoSvg('alertShield', 20)}</span>`
-        : '<img src="./icon-192.png?v=281" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=282" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -7959,8 +8028,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=281', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=281', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=282', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=282', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -8685,7 +8754,7 @@
     let sermonSubTabFilter = '전체';
     let ccmSearchQuery = '';
     let ccmTeamFilter = '전체';
-    let ccmSubTabFilter = '전체';
+    let ccmSubTabFilter = '';
     let lastVideoInspectResult = null;
     let lastVideoSubmitTs = 0;
     let currentPlayerVideoDocId = '';
@@ -9093,9 +9162,9 @@
       const cSub = document.getElementById('ccmViewSub');
       if (cSub) cSub.textContent = ut('ccmHeroSub');
       const cBtn = document.getElementById('ccmRecommendTopBtn');
-      if (cBtn) cBtn.textContent = `+ ${lbl('ccm')} 게시`;
+      if (cBtn) cBtn.textContent = '+ 콘티 등록';
       const cInp = document.getElementById('ccmSearchInput');
-      if (cInp) cInp.placeholder = `${lbl('ccm')} 제목·세부 탭·찬양팀·추천글 검색...`;
+      if (cInp) cInp.placeholder = `${lbl('ccm')} 제목·날짜(예: 11월 29일)·메모 검색...`;
 
 
     }
@@ -11211,7 +11280,8 @@
                 : [...DEFAULT_SERMON_SUB_TABS],
               ccmTabs: Array.isArray(d.videoSettings.ccmTabs)
                 ? Array.from(new Set(d.videoSettings.ccmTabs.map(x => String(x || '').trim()).filter(Boolean)))
-                : [...DEFAULT_CCM_SUB_TABS]
+                : [],
+              ccmDateTabs: normalizeCcmDateTabsList(d.videoSettings.ccmDateTabs)
             };
           } else {
             videoSettings = structuredClone(DEFAULT_VIDEO_SETTINGS);
@@ -13222,7 +13292,7 @@
           keywords: `${getTabLabel('sermon')} ${getTabLabel('ccm')} 설교 CCM 찬양 유튜브 영상 재생 게시 추천 이모지 반응 은혜 감동`,
           steps: [
             `<b>${escapeHtml(getTabLabel('sermon'))} 탭 (${escapeHtml(getTabIcon('sermon'))}):</b> 설교 영상을 올리면 교회별(구미제일감리교회·라이트 청년부 등) 1차 탭과 주일예배·청년부예배 등 2차 세부 탭으로 자동 분류되어 편하게 시청할 수 있습니다.`,
-            `<b>${escapeHtml(getTabLabel('ccm'))} 탭 (${escapeHtml(getTabIcon('ccm'))}):</b> CCM 영상을 올리면 찬양팀 이름(예: 어노인팅, 마커스) 1차 탭과 경배·찬양, 묵상·기도 등 2차 세부 탭으로 자동 분류되어 모아 들을 수 있습니다.`,
+            `<b>${escapeHtml(getTabLabel('ccm'))} 탭 (${escapeHtml(getTabIcon('ccm'))}):</b> 관리자가 등록한 주일·예배 날짜 탭(예: 11월 29일 주일, 12월 6일 주일)을 누르면 그 주 찬양 콘티 곡들을 순서대로 미리 들을 수 있습니다.`,
             `<b>영상 게시하기:</b> 게시 권한이 있는 지체는 <b>${hLbl}</b> 영상 영역의 <b>[+ 게시]</b> 또는 각 탭 우측 상단의 <b>[+ 게시]</b> 버튼에서 유튜브 링크를 넣고 <b>[🔍 자동 검사]</b>를 누르면 공식 원본 제목이 자동 입력되어 안전하게 등록됩니다.`,
             `<b>이모지 반응 & ${hLbl} 인기 추천순:</b> 영상 카드와 재생 창에서 명칭이 표시된 이모지(<b>🙏 아멘 · ❤️ 좋아요 · 🙌 은혜 · 🥹 감동</b> 등)를 남기고 반응자 명단을 확인할 수 있습니다. <b>${hLbl}</b>에는 이모지를 가장 많이 받은 추천 영상(<b>🔥 추천 1위</b>)이 우선 표시됩니다.`
           ],
@@ -13509,7 +13579,7 @@
           targetLabel: `${getTabIcon('manageVideos')} ${getTabLabel('manageVideos')} 열기`,
           steps: [
             `<b>${qlLbl} ([${qlIcn} ${qlLbl}]):</b> 하단 <b>[${moreIcn} ${moreLbl}]</b> 메뉴에 표시되는 인스타그램·유튜브·교회 홈페이지 등의 링크를 추가·수정·순서 변경·삭제할 수 있습니다.`,
-            `<b>${vidLbl} ([${vidIcn} ${vidLbl}]):</b> 공식 유튜브 채널(구미제일감리교회·라이트 청년부 등)은 4단계 자동 검사 통과 시 즉시 게시되며, 미등록 채널 영상은 검토 후 승인(공식 채널 자동 추가 가능) 또는 거절합니다. <b>${sermonLbl}·${ccmLbl}</b> 탭 상단의 <b>[+ ${sermonLbl} 게시] / [+ ${ccmLbl} 게시]</b>로 영상을 올리고 <b>[🗂️ 탭 관리]</b>에서 2차 세부 탭을 편집할 수 있습니다.`,
+            `<b>${vidLbl} ([${vidIcn} ${vidLbl}]):</b> 설교 영상은 공식 채널 자동 검사 통과 시 즉시 게시되며 <b>[탭 관리]</b>에서 세부 탭을 편집합니다. <b>${ccmLbl}</b> 탭은 최고 관리자 전용 <b>주간 찬양 콘티</b> 방식으로 운영되며, <b>[날짜 탭]</b>과 <b>[+ 콘티 등록]</b>에서 주일·행사 날짜 탭(예: 11월 29일 주일)과 곡 순서를 관리할 수 있습니다.`,
             `<b>이모지 반응 & ${hLbl} 인기 추천순:</b> 설교·CCM 영상 카드와 재생 창에서 명칭이 적힌 이모지 반응과 반응자 성명을 확인할 수 있으며, <b>${hLbl}</b> 영상 영역에는 이모지가 가장 많이 달린 추천 영상(<b>🔥 추천 1위</b>)이 우선 표시되고 <b>[+ 게시]</b> 버튼이 제공됩니다.`,
             `<b>${inqLbl} ([${inqIcn} ${inqLbl}]):</b> 이용자가 <b>설정 → 문의 사항</b>으로 남긴 불편·개선 요청을 확인하고 답변을 저장하면 해당 이용자에게 실시간 알림이 전송되며, 구글 시트 <b>[문의 내역]</b> 탭에도 자동 기록됩니다.`
           ],
@@ -14816,7 +14886,7 @@
     };
 
     // ==================== 12. 관리 센터 ====================
-    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|jumpToManageReactionEmojis|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterViewMode|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|openWeeklyAttendancePrintView|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|openInviteQrModal|copyInviteQrLink|openSecSimModal|selectSecSimVariant|runAllSecSimulations|runLiveSheetSchemaInspect|loadMoreAuditLogs|switchMainTab|stepTabSlideBar|goToTabSlideBar)\s*\(/;
+    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|jumpToManageReactionEmojis|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterViewMode|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|openWeeklyAttendancePrintView|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|setCcmDateFilter|jumpToCcmDateTab|openInviteQrModal|copyInviteQrLink|openSecSimModal|selectSecSimVariant|runAllSecSimulations|runLiveSheetSchemaInspect|loadMoreAuditLogs|switchMainTab|stepTabSlideBar|goToTabSlideBar)\s*\(/;
     const OBSERVER_ALLOWED_INPUT_IDS = new Set([
       'roleMemberSearchInput', 'adminLogSearchInput', 'adminGuideSearchInput', 'attRosterSearchInput', 'attRosterQuickJumpInput'
     ]);
@@ -21634,10 +21704,16 @@
       const catLabel = getVideoCategoryDisplayLabel(v.category);
       const baseGrp = getVideoAutoGroupLabel(v);
       const isCcm = isCcmVideo(v);
-      const subTab = isCcm
-        ? ((typeof getCcmSubTabLabel === 'function') ? getCcmSubTabLabel(v) : '')
-        : ((typeof getSermonSubTabLabel === 'function') ? getSermonSubTabLabel(v) : '');
-      const grpLabel = (subTab && subTab !== '기타 설교' && subTab !== '기타 CCM') ? `${baseGrp} · ${subTab}` : baseGrp;
+      let grpLabel = baseGrp;
+      if (isCcm) {
+        const cInfo = (typeof getVideoContiInfo === 'function') ? getVideoContiInfo(v) : null;
+        const cLbl = (cInfo && cInfo.label) ? cInfo.label : '이전 찬양';
+        const cOrd = (cInfo && cInfo.order > 0 && cInfo.order < 999) ? ` · ${cInfo.order}번 곡` : '';
+        grpLabel = `${cLbl}${cOrd}`;
+      } else {
+        const subTab = (typeof getSermonSubTabLabel === 'function') ? getSermonSubTabLabel(v) : '';
+        grpLabel = (subTab && subTab !== '기타 설교') ? `${baseGrp} · ${subTab}` : baseGrp;
+      }
       const stLabel = v.status === 'approved' ? '게시 완료' : (v.status === 'pending' ? '검토 대기' : '반려됨');
       const approvedInfo = v.status === 'approved'
         ? `${v.approvedBy || '자동'}${v.approvedAt ? ` (${v.approvedAt})` : ''}`
@@ -21660,7 +21736,7 @@
     }
 
     function computeVideoSheetSig(v) {
-      return `${v.category || ''}|${v.sermonTab || ''}|${v.ccmTab || ''}|${v.title || ''}|${v.status || ''}|${v.officialVerified ? 1 : 0}|${v.updatedTs || 0}|${v.approvedTs || 0}|${v.rejectReason || ''}`;
+      return `${v.category || ''}|${v.sermonTab || ''}|${v.ccmTab || ''}|${v.contiDate || ''}|${v.contiOrder || 0}|${v.title || ''}|${v.status || ''}|${v.officialVerified ? 1 : 0}|${v.updatedTs || 0}|${v.approvedTs || 0}|${v.rejectReason || ''}`;
     }
 
     function syncVideoToSheet(v) {
@@ -36675,10 +36751,20 @@ ${handleUrl}`);
       const catSel = document.getElementById('videoCategorySelect');
       const sermonGrp = document.getElementById('videoSermonTabGroup');
       const ccmGrp = document.getElementById('videoCcmTabGroup');
+      const noteLbl = document.getElementById('videoNoteLabel');
+      const noteInp = document.getElementById('videoNoteInput');
       if (!catSel) return;
       const isCcm = catSel.value === 'CCM';
       if (sermonGrp) sermonGrp.classList.toggle('hidden', isCcm);
       if (ccmGrp) ccmGrp.classList.toggle('hidden', !isCcm);
+      if (noteLbl) {
+        noteLbl.textContent = isCcm ? '콘티 메모 · 인도자 코멘트 (선택)' : '은혜 나눔 · 추천 한마디 (선택)';
+      }
+      if (noteInp) {
+        noteInp.placeholder = isCcm
+          ? '예: G키 · 예배 전 미리 듣고 함께 찬양해요!'
+          : '어떤 부분에서 은혜를 받았는지 간단히 나눠 주세요.';
+      }
     }
 
     function getSelectedVideoSermonTabInput() {
@@ -36714,7 +36800,7 @@ ${handleUrl}`);
         ...DEFAULT_VIDEO_SETTINGS,
         ...(videoSettings || {}),
         sermonTabs: cleaned,
-        ccmTabs: getConfiguredCcmSubTabs()
+        ccmDateTabs: getConfiguredCcmDateTabs()
       };
       setInlineSaveStatus('sermon_tabs', 'loading', '⏳ 설교 세부 탭을 저장하는 중입니다...');
       try {
@@ -36862,95 +36948,266 @@ ${handleUrl}`);
       await saveSermonSubTabsList([...DEFAULT_SERMON_SUB_TABS], '설교 세부 탭 기본 복원', DEFAULT_SERMON_SUB_TABS.join(', '), '🔄 설교 세부 탭이 기본값으로 복원되었습니다!');
     };
 
+    // ==================== 주간 찬양 콘티 날짜 탭 엔진 (v10.182 · 최고 관리자 전용 등록) ====================
+    function formatContiDateDefaultLabel(isoDate) {
+      const iso = normalizeDateAnyInput(isoDate);
+      if (!iso) return '';
+      const [y, m, d] = iso.split('-').map(Number);
+      const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+      if (dow === 0) return `${m}월 ${d}일 주일`;
+      return `${m}월 ${d}일 (${DAY_SHORT_KO[dow] || ''})`;
+    }
+
+    function getUpcomingSundayIsoDates() {
+      const now = getKstNowInfo();
+      const [y, m, d] = now.iso.split('-').map(Number);
+      const todayUtc = Date.UTC(y, m - 1, d);
+      const daysUntilSun = (7 - now.dow) % 7;
+      const toIso = (utcMs) => {
+        const dt = new Date(utcMs);
+        return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}-${String(dt.getUTCDate()).padStart(2, '0')}`;
+      };
+      return {
+        thisSunday: toIso(todayUtc + daysUntilSun * 86400000),
+        nextSunday: toIso(todayUtc + (daysUntilSun + 7) * 86400000),
+        thirdSunday: toIso(todayUtc + (daysUntilSun + 14) * 86400000)
+      };
+    }
+
+    function normalizeCcmDateTabsList(rawList) {
+      if (!Array.isArray(rawList)) return [];
+      const byKey = new Map();
+      rawList.forEach(item => {
+        if (!item) return;
+        let date = '';
+        let label = '';
+        if (typeof item === 'string') {
+          const s = item.trim();
+          if (!s || s === '전체' || s === '이전 찬양') return;
+          const iso = normalizeDateAnyInput(s);
+          if (iso) {
+            date = iso;
+            label = formatContiDateDefaultLabel(iso);
+          } else {
+            label = s.slice(0, 24);
+          }
+        } else if (typeof item === 'object') {
+          date = normalizeDateAnyInput(item.date || '');
+          label = String(item.label || '').trim().slice(0, 24);
+          if (!label && date) label = formatContiDateDefaultLabel(date);
+        }
+        if (!label || label === '전체' || label === '이전 찬양') return;
+        const key = date || `lbl:${label}`;
+        if (!byKey.has(key)) {
+          byKey.set(key, { date, label });
+        }
+      });
+      return Array.from(byKey.values()).sort((a, b) => {
+        if (a.date && b.date) return b.date.localeCompare(a.date);
+        if (a.date) return -1;
+        if (b.date) return 1;
+        return b.label.localeCompare(a.label, 'ko');
+      });
+    }
+
+    function getConfiguredCcmDateTabs() {
+      const raw = (videoSettings && Array.isArray(videoSettings.ccmDateTabs))
+        ? videoSettings.ccmDateTabs
+        : [];
+      return normalizeCcmDateTabsList(raw);
+    }
+
     function getConfiguredCcmSubTabs() {
-      const raw = (videoSettings && Array.isArray(videoSettings.ccmTabs))
-        ? videoSettings.ccmTabs
-        : DEFAULT_CCM_SUB_TABS;
-      return Array.from(new Set(raw.map(x => String(x || '').trim()).filter(x => x && x !== '전체' && x !== '기타 CCM')));
+      return getConfiguredCcmDateTabs().map(t => t.label);
+    }
+
+    function getVideoContiInfo(v) {
+      if (!v || !isCcmVideo(v)) return { key: '', date: '', label: '', order: 0, isLegacy: false };
+      const tabs = getConfiguredCcmDateTabs();
+      const rawDate = normalizeDateAnyInput(v.contiDate || '');
+      const rawTab = String(v.ccmTab || '').trim();
+      const rawOrd = Number(v.contiOrder || 0);
+      const order = (Number.isFinite(rawOrd) && rawOrd > 0) ? Math.round(rawOrd) : 999;
+
+      if (rawDate) {
+        const matched = tabs.find(t => t.date === rawDate);
+        const label = (matched && matched.label) || rawTab || formatContiDateDefaultLabel(rawDate);
+        return { key: rawDate, date: rawDate, label, order, isLegacy: false };
+      }
+      if (rawTab && rawTab !== '전체' && rawTab !== '기타 CCM' && rawTab !== '이전 찬양') {
+        const matched = tabs.find(t => t.label === rawTab);
+        if (matched) {
+          return { key: matched.date || `lbl:${matched.label}`, date: matched.date || '', label: matched.label, order, isLegacy: false };
+        }
+        if (/\d+\s*월\s*\d+\s*일|주일|수련회|부흥회|성탄|부활|특새|예배/.test(rawTab)) {
+          return { key: `lbl:${rawTab}`, date: '', label: rawTab, order, isLegacy: false };
+        }
+      }
+      return { key: '__legacy__', date: '', label: '이전 찬양', order, isLegacy: true };
     }
 
     function getCcmSubTabLabel(v) {
       if (!v || !isCcmVideo(v)) return '';
-      const explicit = String(v.ccmTab || '').trim();
-      if (explicit && explicit !== '전체') return explicit;
-
-      const tabs = getConfiguredCcmSubTabs();
-      const hay = `${v.title || v.fetchedTitle || ''} ${v.note || ''}`;
-
-      // 1) 관리자가 만든 커스텀 탭 포함, 제목·추천글에 탭 이름이 직접 들어가면 자동 매칭 (긴 이름 우선)
-      const byLen = [...tabs].sort((a, b) => b.length - a.length);
-      for (const tName of byLen) {
-        if (tName.length >= 2 && hay.includes(tName)) return tName;
-      }
-
-      // 2) 분위기·주제 키워드 자동 분류 (설정에 해당 탭이 있을 때 매칭)
-      const pickIfExists = (target, fallbackKeywordRe) => {
-        if (tabs.includes(target)) return target;
-        const found = tabs.find(t => fallbackKeywordRe.test(t));
-        return found || '';
-      };
-
-      if (/신나|기쁨|기뻐|뛰어|경쾌|빠른|행진|축제|할렐루야|승리|기뻐하며/i.test(hay)) {
-        const m = pickIfExists('신나는 찬양', /신나|기쁨|빠른/);
-        if (m) return m;
-      }
-      if (/묵상|기도|조용|잔잔|피아노|연주|새벽|침묵|고백|헌신|주님\s*앞에/i.test(hay)) {
-        const m = pickIfExists('묵상·기도', /묵상|기도|잔잔/);
-        if (m) return m;
-      }
-      if (/위로|은혜|치유|회복|평안|눈물|사랑|쉼|안식|고통|힘들|축복/i.test(hay)) {
-        const m = pickIfExists('은혜·위로', /은혜|위로|치유|회복/);
-        if (m) return m;
-      }
-      if (/경배|예배|워십|worship|라이브|live|찬양\s*집회|집회/i.test(hay)) {
-        const m = pickIfExists('경배·찬양', /경배|찬양|예배|워십/);
-        if (m) return m;
-      }
-      return '기타 CCM';
+      return getVideoContiInfo(v).label;
     }
 
-    function populateVideoCcmTabSelect(selectedVal = '') {
-      const sel = document.getElementById('videoCcmTabSelect');
-      const customInp = document.getElementById('videoCcmTabCustomInput');
-      if (!sel) return;
-      const tabs = getConfiguredCcmSubTabs();
-      const val = String(selectedVal || '').trim();
-      const extraOpt = (val && val !== '기타 CCM' && !tabs.includes(val))
-        ? `<option value="${escapeHtml(val)}">${escapeHtml(val)}</option>`
-        : '';
-      sel.innerHTML = [
-        '<option value="">✨ 자동 분류 (영상 제목·내용 기준)</option>',
-        ...tabs.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`),
-        extraOpt,
-        '<option value="__custom__">✏️ 새 세부 탭 직접 입력...</option>'
-      ].join('');
-      sel.value = (val && val !== '기타 CCM') ? val : '';
-      if (customInp) {
-        customInp.value = '';
-        customInp.classList.add('hidden');
+    function getNextContiOrderForKey(dateKey) {
+      if (!dateKey || dateKey === '__legacy__') return 1;
+      const list = (videoItems || []).filter(v => v && v.status !== 'rejected' && isCcmVideo(v) && getVideoContiInfo(v).key === dateKey);
+      let maxOrd = 0;
+      list.forEach((v, idx) => {
+        const o = Number(v.contiOrder || 0);
+        if (Number.isFinite(o) && o > maxOrd) maxOrd = Math.round(o);
+      });
+      return Math.max(list.length, maxOrd) + 1;
+    }
+
+    function compareCcmContiSongs(a, b, withinSingleTab = true) {
+      const ia = getVideoContiInfo(a);
+      const ib = getVideoContiInfo(b);
+      if (!withinSingleTab) {
+        if (ia.date !== ib.date) {
+          if (ia.date && ib.date) return ib.date.localeCompare(ia.date);
+          if (ia.date) return -1;
+          if (ib.date) return 1;
+        }
+        if (ia.key !== ib.key) return String(ia.label).localeCompare(String(ib.label), 'ko');
       }
+      const ordDiff = ia.order - ib.order;
+      if (ordDiff !== 0) return ordDiff;
+      return Number(a.createdTs || 0) - Number(b.createdTs || 0);
+    }
+
+    function populateVideoCcmTabSelect(selectedKeyOrDate = '', selectedLabel = '', currentOrder = 0) {
+      const sel = document.getElementById('videoCcmTabSelect');
+      const wrap = document.getElementById('videoCcmCustomDateWrap');
+      const dateInp = document.getElementById('videoCcmDateInput');
+      const customInp = document.getElementById('videoCcmTabCustomInput');
+      const ordInp = document.getElementById('videoCcmOrderInput');
+      if (!sel) return;
+
+      const tabs = getConfiguredCcmDateTabs();
+      const sundays = getUpcomingSundayIsoDates();
+      const existingDates = new Set(tabs.map(t => t.date).filter(Boolean));
+      const opts = [];
+
+      tabs.forEach(t => {
+        const k = t.date || `lbl:${t.label}`;
+        const dateHint = t.date ? ` (${t.date.replace(/-/g, '.')})` : '';
+        opts.push(`<option value="${escapeHtml(k)}">${escapeHtml(t.label)}${escapeHtml(dateHint)}</option>`);
+      });
+
+      const quickSundays = [
+        { iso: sundays.thisSunday, tag: '이번 주' },
+        { iso: sundays.nextSunday, tag: '다음 주' }
+      ];
+      quickSundays.forEach(qs => {
+        if (!existingDates.has(qs.iso)) {
+          const lbl = formatContiDateDefaultLabel(qs.iso);
+          opts.push(`<option value="__quick__${escapeHtml(qs.iso)}">+ ${escapeHtml(lbl)} (${qs.tag} · 자동 생성)</option>`);
+        }
+      });
+
+      let targetVal = '';
+      const wantKey = String(selectedKeyOrDate || '').trim();
+      const wantIso = normalizeDateAnyInput(wantKey);
+      if (wantIso) {
+        if (existingDates.has(wantIso)) targetVal = wantIso;
+        else if (quickSundays.some(q => q.iso === wantIso)) targetVal = `__quick__${wantIso}`;
+        else {
+          const lbl = selectedLabel || formatContiDateDefaultLabel(wantIso);
+          opts.unshift(`<option value="__quick__${escapeHtml(wantIso)}">${escapeHtml(lbl)} (${wantIso.replace(/-/g, '.')})</option>`);
+          targetVal = `__quick__${wantIso}`;
+        }
+      } else if (wantKey && wantKey !== '전체' && wantKey !== '__legacy__') {
+        const byLbl = tabs.find(t => t.label === wantKey || `lbl:${t.label}` === wantKey);
+        if (byLbl) targetVal = byLbl.date || `lbl:${byLbl.label}`;
+      }
+
+      opts.push('<option value="__custom__">다른 날짜 직접 선택 (달력)...</option>');
+      sel.innerHTML = opts.join('');
+
+      if (targetVal) {
+        sel.value = targetVal;
+      } else if (sel.options.length > 1) {
+        sel.selectedIndex = 0;
+      } else {
+        sel.value = '__custom__';
+      }
+
+      const isCustom = sel.value === '__custom__';
+      if (wrap) wrap.classList.toggle('hidden', !isCustom);
+      if (dateInp) dateInp.value = (wantIso || sundays.thisSunday).replace(/-/g, '.');
+      if (customInp) customInp.value = formatContiDateDefaultLabel(wantIso || sundays.thisSunday);
+      if (ordInp) {
+        const resolved = getSelectedVideoCcmContiInput();
+        const nextOrd = (Number(currentOrder) > 0 && Number(currentOrder) < 999)
+          ? Math.round(Number(currentOrder))
+          : getNextContiOrderForKey(resolved.key);
+        ordInp.value = String(nextOrd);
+      }
+    }
+
+    function getSelectedVideoCcmContiInput() {
+      const catSel = document.getElementById('videoCategorySelect');
+      if (catSel && catSel.value !== 'CCM') return { date: '', label: '', key: '', order: 0 };
+      const sel = document.getElementById('videoCcmTabSelect');
+      const ordInp = document.getElementById('videoCcmOrderInput');
+      const rawOrd = Number(ordInp ? ordInp.value : 0);
+      const order = (Number.isFinite(rawOrd) && rawOrd >= 1 && rawOrd <= 30) ? Math.round(rawOrd) : 1;
+      if (!sel) return { date: '', label: '', key: '', order };
+
+      const val = String(sel.value || '').trim();
+      if (val === '__custom__') {
+        const dateRaw = document.getElementById('videoCcmDateInput') ? document.getElementById('videoCcmDateInput').value : '';
+        const iso = normalizeDateAnyInput(dateRaw);
+        const customLbl = String(document.getElementById('videoCcmTabCustomInput') ? document.getElementById('videoCcmTabCustomInput').value : '').trim().slice(0, 24);
+        const label = customLbl || (iso ? formatContiDateDefaultLabel(iso) : '');
+        const key = iso || (label ? `lbl:${label}` : '');
+        return { date: iso, label, key, order };
+      }
+      if (val.startsWith('__quick__')) {
+        const iso = normalizeDateAnyInput(val.slice('__quick__'.length));
+        const label = formatContiDateDefaultLabel(iso);
+        return { date: iso, label, key: iso, order };
+      }
+      const tabs = getConfiguredCcmDateTabs();
+      const matched = tabs.find(t => (t.date && t.date === val) || `lbl:${t.label}` === val);
+      if (matched) {
+        return { date: matched.date || '', label: matched.label, key: matched.date || `lbl:${matched.label}`, order };
+      }
+      const iso = normalizeDateAnyInput(val);
+      if (iso) return { date: iso, label: formatContiDateDefaultLabel(iso), key: iso, order };
+      return { date: '', label: '', key: '', order };
     }
 
     function getSelectedVideoCcmTabInput() {
-      const catSel = document.getElementById('videoCategorySelect');
-      if (catSel && catSel.value !== 'CCM') return '';
-      const sel = document.getElementById('videoCcmTabSelect');
-      if (!sel) return '';
-      if (sel.value === '__custom__') {
-        const customInp = document.getElementById('videoCcmTabCustomInput');
-        return String(customInp ? customInp.value : '').trim().slice(0, 20);
-      }
-      return String(sel.value || '').trim();
+      return getSelectedVideoCcmContiInput().label;
     }
+
+    window.onVideoCcmCustomDateTyped = () => {
+      const dateInp = document.getElementById('videoCcmDateInput');
+      const customInp = document.getElementById('videoCcmTabCustomInput');
+      if (!dateInp || !customInp) return;
+      const iso = normalizeDateAnyInput(dateInp.value);
+      if (iso) {
+        customInp.value = formatContiDateDefaultLabel(iso);
+      }
+      onVideoCcmTabSelectChange();
+    };
 
     window.onVideoCcmTabSelectChange = () => {
       const sel = document.getElementById('videoCcmTabSelect');
-      const customInp = document.getElementById('videoCcmTabCustomInput');
-      if (sel && customInp) {
-        const isCustom = sel.value === '__custom__';
-        customInp.classList.toggle('hidden', !isCustom);
-        if (isCustom && document.activeElement !== customInp) {
-          setTimeout(() => customInp.focus(), 30);
+      const wrap = document.getElementById('videoCcmCustomDateWrap');
+      const ordInp = document.getElementById('videoCcmOrderInput');
+      const editId = document.getElementById('editVideoDocId') ? document.getElementById('editVideoDocId').value : '';
+      if (sel && wrap) {
+        wrap.classList.toggle('hidden', sel.value !== '__custom__');
+      }
+      if (!editId && ordInp) {
+        const resolved = getSelectedVideoCcmContiInput();
+        if (resolved.key) {
+          ordInp.value = String(getNextContiOrderForKey(resolved.key));
         }
       }
       if (lastVideoInspectResult && lastVideoInspectResult.ok) {
@@ -36958,26 +37215,34 @@ ${handleUrl}`);
       }
     };
 
-    async function saveCcmSubTabsList(nextTabs, auditAction, auditDetail = '', toastMsg = '') {
-      const cleaned = Array.from(new Set((Array.isArray(nextTabs) ? nextTabs : []).map(x => String(x || '').trim().slice(0, 20)).filter(x => x && x !== '전체' && x !== '기타 CCM')));
+    window.onNewCcmDateModalTyped = (dateInputId, labelInputId) => {
+      const dEl = document.getElementById(dateInputId);
+      const lEl = document.getElementById(labelInputId);
+      if (!dEl || !lEl) return;
+      const iso = normalizeDateAnyInput(dEl.value);
+      if (iso) lEl.value = formatContiDateDefaultLabel(iso);
+    };
+
+    async function saveCcmDateTabsList(nextTabs, auditAction, auditDetail = '', toastMsg = '') {
+      const cleaned = normalizeCcmDateTabsList(nextTabs);
       const nextSettings = {
         ...DEFAULT_VIDEO_SETTINGS,
         ...(videoSettings || {}),
         sermonTabs: getConfiguredSermonSubTabs(),
-        ccmTabs: cleaned
+        ccmDateTabs: cleaned
       };
-      setInlineSaveStatus('ccm_tabs', 'loading', '⏳ CCM 세부 탭을 저장하는 중입니다...');
+      setInlineSaveStatus('ccm_tabs', 'loading', '주간 찬양 날짜 탭을 저장하는 중입니다...');
       try {
         await db.collection('config').doc('layout').set({ videoSettings: nextSettings }, { merge: true });
         videoSettings = nextSettings;
         recordAuditLog({
           actorType: 'admin',
           category: '영상',
-          action: auditAction || 'CCM 세부 탭 변경',
-          target: `${cleaned.length}개 탭`,
-          detail: auditDetail || cleaned.join(', ')
+          action: auditAction || '찬양 콘티 날짜 탭 변경',
+          target: `${cleaned.length}개 날짜 탭`,
+          detail: auditDetail || cleaned.map(t => t.label).join(', ')
         });
-        setInlineSaveStatus('ccm_tabs', 'ok', toastMsg || '✅ CCM 세부 탭이 저장되었습니다.');
+        setInlineSaveStatus('ccm_tabs', 'ok', toastMsg || '찬양 콘티 날짜 탭이 저장되었습니다.');
         renderCcmTabsModalList();
         if (currentMainTab === 'ccm') renderCcmView();
         const u = getCurrentUser();
@@ -36987,34 +37252,49 @@ ${handleUrl}`);
         if (toastMsg) showToast(toastMsg, 'ok');
         return true;
       } catch (err) {
-        setInlineSaveStatus('ccm_tabs', 'err', '❌ CCM 세부 탭 저장에 실패했습니다.');
-        handleDbError(err, 'CCM 세부 탭 저장');
+        setInlineSaveStatus('ccm_tabs', 'err', '찬양 콘티 날짜 탭 저장에 실패했습니다.');
+        handleDbError(err, '찬양 콘티 날짜 탭 저장');
         return false;
       }
     }
 
+    function buildCcmQuickSundayButtonsHtml() {
+      const sundays = getUpcomingSundayIsoDates();
+      const existing = new Set(getConfiguredCcmDateTabs().map(t => t.date).filter(Boolean));
+      const items = [
+        { iso: sundays.thisSunday, tag: '이번 주' },
+        { iso: sundays.nextSunday, tag: '다음 주' },
+        { iso: sundays.thirdSunday, tag: '2주 뒤' }
+      ];
+      return items.map(it => {
+        const lbl = formatContiDateDefaultLabel(it.iso);
+        const already = existing.has(it.iso);
+        return `<button class="quick-preset-chip" type="button" ${already ? 'disabled style="opacity:0.5; cursor:default;"' : ''} onclick="handleQuickAddCcmSundayTab('${escapeJsAttr(it.iso)}')">${already ? '등록됨 · ' : '+ '}${escapeHtml(lbl)} (${it.tag})</button>`;
+      }).join('');
+    }
+
     function buildCcmTabsManagerRowsHtml() {
-      const tabs = getConfiguredCcmSubTabs();
+      const tabs = getConfiguredCcmDateTabs();
       const ccmVids = (videoItems || []).filter(v => v.status === 'approved' && isCcmVideo(v));
       if (tabs.length === 0) {
-        return '<div class="card" style="text-align:center; color:#64748B; font-size:12.5px; padding:16px 12px;">등록된 CCM 세부 탭이 없습니다. 위 입력창에서 새 탭을 추가하거나 기본 탭을 복원해 주세요.</div>';
+        return '<div class="card" style="text-align:center; color:#64748B; font-size:12.5px; padding:16px 12px;">등록된 찬양 콘티 날짜 탭이 없습니다. 위에서 주일 날짜를 추가하거나 콘티 곡을 바로 등록해 주세요.</div>';
       }
-      return tabs.map((name, idx) => {
-        const cnt = ccmVids.filter(v => getCcmSubTabLabel(v) === name).length;
+      return tabs.map((tab, idx) => {
+        const key = tab.date || `lbl:${tab.label}`;
+        const cnt = ccmVids.filter(v => getVideoContiInfo(v).key === key).length;
         return `
-          <div class="tab-order-row" style="justify-content:space-between;">
-            <div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">
+          <div class="tab-order-row" style="justify-content:space-between; flex-wrap:wrap; gap:6px;">
+            <div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1 1 150px;">
               <span class="tab-order-num" style="background:#7E22CE; color:#FFFFFF;">${idx + 1}</span>
               <div style="min-width:0; flex:1;">
-                <div style="font-size:13.5px; font-weight:800; color:#0F172A;">📂 ${escapeHtml(name)}</div>
-                <div style="font-size:11px; color:#64748B;">현재 CCM ${cnt}곡</div>
+                <div style="font-size:13.5px; font-weight:800; color:#0F172A;">${escapeHtml(tab.label)}</div>
+                <div style="font-size:11px; color:#64748B;">${tab.date ? `${escapeHtml(tab.date.replace(/-/g, '.'))} · ` : ''}찬양 ${cnt}곡</div>
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
-              <button class="order-btn" type="button" ${idx === 0 ? 'disabled' : ''} onclick="handleMoveCcmSubTab(${idx}, -1)" title="위로">▲</button>
-              <button class="order-btn" type="button" ${idx === tabs.length - 1 ? 'disabled' : ''} onclick="handleMoveCcmSubTab(${idx}, 1)" title="아래로">▼</button>
-              <button class="btn-sm" type="button" style="padding:5px 8px;" onclick="handleRenameCcmSubTab(${idx})">✏️ 수정</button>
-              <button class="btn-sm danger" type="button" style="padding:5px 8px;" onclick="handleDeleteCcmSubTab(${idx})">삭제</button>
+              <button class="btn-sm primary" type="button" style="padding:5px 8px;" onclick="openCcmSubmitForDateFromModal('${escapeJsAttr(key)}')">+ 곡 추가</button>
+              <button class="btn-sm" type="button" style="padding:5px 8px;" onclick="handleRenameCcmDateTab(${idx})">수정</button>
+              <button class="btn-sm danger" type="button" style="padding:5px 8px;" onclick="handleDeleteCcmDateTab(${idx})">삭제</button>
             </div>
           </div>
         `;
@@ -37022,6 +37302,8 @@ ${handleUrl}`);
     }
 
     function renderCcmTabsModalList() {
+      const qEl = document.getElementById('ccmQuickSundayBtns');
+      if (qEl) qEl.innerHTML = buildCcmQuickSundayButtonsHtml();
       const listEl = document.getElementById('ccmTabsModalList');
       if (listEl) listEl.innerHTML = buildCcmTabsManagerRowsHtml();
       const fbEl = document.getElementById('ccmTabsModalFeedback');
@@ -37030,56 +37312,88 @@ ${handleUrl}`);
 
     window.openCcmTabsModal = () => {
       const u = getCurrentUser();
-      if (!u || !u.isSuperAdmin) return showToast('최고 관리자만 CCM 세부 탭을 관리할 수 있습니다.');
-      const inp = document.getElementById('newCcmTabInput');
-      if (inp) inp.value = '';
+      if (!u || !u.isSuperAdmin) return showToast('최고 관리자만 찬양 콘티 날짜 탭을 관리할 수 있습니다.');
+      const sundays = getUpcomingSundayIsoDates();
+      const dInp = document.getElementById('newCcmDateInput');
+      const lInp = document.getElementById('newCcmTabInput');
+      if (dInp) dInp.value = sundays.thisSunday.replace(/-/g, '.');
+      if (lInp) lInp.value = formatContiDateDefaultLabel(sundays.thisSunday);
       renderCcmTabsModalList();
       document.getElementById('ccmTabsModal').classList.add('open');
     };
 
-    window.handleAddCcmSubTab = async (inputId = 'newCcmTabInput') => {
-      const u = getCurrentUser();
-      if (!u || !u.isSuperAdmin) return;
-      const inp = document.getElementById(inputId);
-      const raw = String(inp ? inp.value : '').trim().slice(0, 20);
-      if (!raw) return showToast('추가할 세부 탭 이름을 입력해 주세요.');
-      if (raw === '전체' || raw === '기타 CCM') return showToast('해당 이름은 시스템 예약 탭 이름입니다. 다른 이름을 입력해 주세요.');
-      if (!enforceInputSecurity(raw, 'CCM 세부 탭 이름', true)) return;
-      const cur = getConfiguredCcmSubTabs();
-      if (cur.includes(raw)) return showToast(`이미 [${raw}] 탭이 등록되어 있습니다.`);
-      const ok = await saveCcmSubTabsList([...cur, raw], 'CCM 세부 탭 추가', `추가: ${raw}`, `✅ [${raw}] CCM 세부 탭이 추가되었습니다!`);
-      if (ok && inp) inp.value = '';
+    window.openCcmSubmitForDateFromModal = (dateKey) => {
+      document.getElementById('ccmTabsModal').classList.remove('open');
+      openVideoSubmitModal('CCM', dateKey);
     };
 
-    window.handleMoveCcmSubTab = async (idx, dir) => {
+    window.handleQuickAddCcmSundayTab = async (isoDate) => {
       const u = getCurrentUser();
       if (!u || !u.isSuperAdmin) return;
-      const cur = getConfiguredCcmSubTabs();
-      const target = idx + dir;
-      if (idx < 0 || idx >= cur.length || target < 0 || target >= cur.length) return;
-      [cur[idx], cur[target]] = [cur[target], cur[idx]];
-      await saveCcmSubTabsList(cur, 'CCM 세부 탭 순서 변경', cur.join(' → '), '✅ CCM 세부 탭 순서가 저장되었습니다!');
-    };
-
-    window.handleRenameCcmSubTab = async (idx) => {
-      const u = getCurrentUser();
-      if (!u || !u.isSuperAdmin) return;
-      const cur = getConfiguredCcmSubTabs();
-      const oldName = cur[idx];
-      if (!oldName) return;
-      const nextNameRaw = prompt(`[${oldName}] CCM 탭의 새 이름을 입력해 주세요 (최대 20자):`, oldName);
-      if (nextNameRaw === null) return;
-      const nextName = String(nextNameRaw || '').trim().slice(0, 20);
-      if (!nextName || nextName === oldName) return;
-      if (nextName === '전체' || nextName === '기타 CCM') return showToast('해당 이름은 사용할 수 없습니다.');
-      if (!enforceInputSecurity(nextName, 'CCM 세부 탭 이름', true)) return;
-      if (cur.includes(nextName)) return showToast(`이미 [${nextName}] 탭이 존재합니다.`);
-
-      cur[idx] = nextName;
-      const ok = await saveCcmSubTabsList(cur, 'CCM 세부 탭 이름 변경', `${oldName} → ${nextName}`, `✅ [${oldName}] → [${nextName}] 이름으로 변경되었습니다!`);
+      const iso = normalizeDateAnyInput(isoDate);
+      if (!iso) return;
+      const label = formatContiDateDefaultLabel(iso);
+      const cur = getConfiguredCcmDateTabs();
+      if (cur.some(t => t.date === iso || t.label === label)) {
+        return showToast(`이미 [${label}] 날짜 탭이 등록되어 있습니다.`);
+      }
+      const ok = await saveCcmDateTabsList([...cur, { date: iso, label }], '찬양 콘티 날짜 탭 추가', `${iso} · ${label}`, `[${label}] 날짜 탭이 추가되었습니다!`);
       if (ok) {
-        if (ccmSubTabFilter === oldName) ccmSubTabFilter = nextName;
-        const toMigrate = (videoItems || []).filter(v => v && isCcmVideo(v) && String(v.ccmTab || '').trim() === oldName);
+        ccmSubTabFilter = iso;
+        if (currentMainTab === 'ccm') renderCcmView();
+      }
+    };
+
+    window.handleAddCcmDateTab = async (dateInputId = 'newCcmDateInput', labelInputId = 'newCcmTabInput') => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const dEl = document.getElementById(dateInputId);
+      const lEl = document.getElementById(labelInputId);
+      const rawDate = String(dEl ? dEl.value : '').trim();
+      const iso = rawDate ? normalizeDateAnyInput(rawDate) : '';
+      if (rawDate && !iso) {
+        return showToast('올바른 날짜 형식으로 입력해 주세요. (예: 2026.11.29)');
+      }
+      const rawLabel = String(lEl ? lEl.value : '').trim().slice(0, 24) || (iso ? formatContiDateDefaultLabel(iso) : '');
+      if (!rawLabel) return showToast('날짜를 선택하거나 탭 이름을 입력해 주세요.');
+      if (rawLabel === '전체' || rawLabel === '이전 찬양' || rawLabel === '기타 CCM') {
+        return showToast('해당 이름은 시스템 예약 이름입니다. 다른 이름을 입력해 주세요.');
+      }
+      if (!enforceInputSecurity(rawLabel, '찬양 날짜 탭 이름', true)) return;
+      const cur = getConfiguredCcmDateTabs();
+      if ((iso && cur.some(t => t.date === iso)) || cur.some(t => t.label === rawLabel)) {
+        return showToast(`이미 같은 날짜 또는 [${rawLabel}] 탭이 등록되어 있습니다.`);
+      }
+      const ok = await saveCcmDateTabsList([...cur, { date: iso, label: rawLabel }], '찬양 콘티 날짜 탭 추가', `${iso || '날짜 미지정'} · ${rawLabel}`, `[${rawLabel}] 날짜 탭이 추가되었습니다!`);
+      if (ok) {
+        ccmSubTabFilter = iso || `lbl:${rawLabel}`;
+        if (lEl) lEl.value = '';
+        if (currentMainTab === 'ccm') renderCcmView();
+      }
+    };
+
+    window.handleRenameCcmDateTab = async (idx) => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const cur = getConfiguredCcmDateTabs();
+      const target = cur[idx];
+      if (!target) return;
+      const oldName = target.label;
+      const nextNameRaw = prompt(`[${oldName}] 날짜 탭의 표시 이름을 수정해 주세요 (최대 24자):`, oldName);
+      if (nextNameRaw === null) return;
+      const nextName = String(nextNameRaw || '').trim().slice(0, 24);
+      if (!nextName || nextName === oldName) return;
+      if (nextName === '전체' || nextName === '이전 찬양' || nextName === '기타 CCM') return showToast('해당 이름은 사용할 수 없습니다.');
+      if (!enforceInputSecurity(nextName, '찬양 날짜 탭 이름', true)) return;
+      if (cur.some((t, i) => i !== idx && t.label === nextName)) return showToast(`이미 [${nextName}] 탭이 존재합니다.`);
+
+      cur[idx] = { ...target, label: nextName };
+      const ok = await saveCcmDateTabsList(cur, '찬양 콘티 날짜 탭 수정', `${oldName} → ${nextName}`, `[${oldName}] → [${nextName}] 이름으로 변경되었습니다!`);
+      if (ok) {
+        const oldKey = target.date || `lbl:${oldName}`;
+        const newKey = target.date || `lbl:${nextName}`;
+        if (ccmSubTabFilter === oldKey) ccmSubTabFilter = newKey;
+        const toMigrate = (videoItems || []).filter(v => v && isCcmVideo(v) && getVideoContiInfo(v).key === oldKey);
         if (toMigrate.length > 0) {
           try {
             const batch = db.batch();
@@ -37088,30 +37402,57 @@ ${handleUrl}`);
               batch.update(db.collection('videos').doc(String(v.id)), { ccmTab: nextName, updatedTs: nowTs });
             });
             await batch.commit();
-          } catch (e) { console.warn('CCM tab video rename batch error:', e); }
+          } catch (e) { console.warn('CCM date tab video rename batch error:', e); }
         }
       }
     };
 
-    window.handleDeleteCcmSubTab = async (idx) => {
+    window.handleDeleteCcmDateTab = async (idx) => {
       const u = getCurrentUser();
       if (!u || !u.isSuperAdmin) return;
-      const cur = getConfiguredCcmSubTabs();
-      const targetName = cur[idx];
-      if (!targetName) return;
-      if (!confirm(`[${targetName}] CCM 세부 탭을 삭제할까요?\n(해당 탭에 있던 CCM 영상 자체는 삭제되지 않고 [전체] 또는 자동 분류로 유지됩니다.)`)) return;
+      const cur = getConfiguredCcmDateTabs();
+      const target = cur[idx];
+      if (!target) return;
+      const key = target.date || `lbl:${target.label}`;
+      if (!confirm(`[${target.label}] 날짜 탭을 삭제할까요?
+(해당 주에 등록된 찬양 영상 자체는 삭제되지 않고 [전체]에서 계속 확인할 수 있습니다.)`)) return;
       cur.splice(idx, 1);
-      if (ccmSubTabFilter === targetName) ccmSubTabFilter = '전체';
-      await saveCcmSubTabsList(cur, 'CCM 세부 탭 삭제', `삭제: ${targetName}`, `🗑️ [${targetName}] CCM 세부 탭을 삭제했습니다.`);
+      if (ccmSubTabFilter === key) ccmSubTabFilter = '';
+      await saveCcmDateTabsList(cur, '찬양 콘티 날짜 탭 삭제', `삭제: ${target.label}`, `[${target.label}] 날짜 탭을 삭제했습니다.`);
     };
 
-    window.handleResetDefaultCcmSubTabs = async () => {
+    window.moveCcmContiSongOrder = async (docId, dir) => {
       const u = getCurrentUser();
       if (!u || !u.isSuperAdmin) return;
-      if (!confirm(`CCM 세부 탭을 기본 구성(${DEFAULT_CCM_SUB_TABS.join(', ')})으로 복원할까요?`)) return;
-      await saveCcmSubTabsList([...DEFAULT_CCM_SUB_TABS], 'CCM 세부 탭 기본 복원', DEFAULT_CCM_SUB_TABS.join(', '), '🔄 CCM 세부 탭이 기본값으로 복원되었습니다!');
+      const target = (videoItems || []).find(v => v && String(v.id) === String(docId) && isCcmVideo(v));
+      if (!target) return;
+      const tInfo = getVideoContiInfo(target);
+      const list = (videoItems || [])
+        .filter(v => v && v.status === 'approved' && isCcmVideo(v) && getVideoContiInfo(v).key === tInfo.key)
+        .sort((a, b) => compareCcmContiSongs(a, b, true));
+      const idx = list.findIndex(v => String(v.id) === String(docId));
+      const nextIdx = idx + dir;
+      if (idx < 0 || nextIdx < 0 || nextIdx >= list.length) return;
+      [list[idx], list[nextIdx]] = [list[nextIdx], list[idx]];
+      try {
+        const batch = db.batch();
+        const nowTs = Date.now();
+        list.forEach((v, i) => {
+          batch.update(db.collection('videos').doc(String(v.id)), { contiOrder: i + 1, updatedTs: nowTs });
+        });
+        await batch.commit();
+        recordAuditLog({
+          actorType: 'admin',
+          category: '영상',
+          action: '찬양 콘티 곡 순서 변경',
+          target: tInfo.label,
+          detail: list.map((v, i) => `${i + 1}.${v.title || ''}`).join(' / ').slice(0, 240)
+        });
+        showToast('콘티 곡 순서를 변경했습니다.', 'ok');
+      } catch (err) {
+        handleDbError(err, '콘티 순서 변경');
+      }
     };
-
 
 
     function getVideoCategoryDisplayLabel(cat) {
@@ -37186,9 +37527,12 @@ ${handleUrl}`);
                         <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap; margin-bottom:3px;">
                           ${reactTotal > 0 ? `<span class="tag warm" style="font-size:10px; padding:2px 6px;">추천 ${idx + 1}위 · ${reactTotal}</span>` : ''}
                           ${vidNew ? '<span class="new-badge">NEW</span>' : ''}
-                          <span class="tag slate" style="font-size:10px; padding:2px 6px;">${escapeHtml(grp)}</span>
-                          ${(!ccm && getSermonSubTabLabel(v) && getSermonSubTabLabel(v) !== '기타 설교') ? `<span class="tag" style="font-size:10px; padding:2px 6px;">${escapeHtml(getSermonSubTabLabel(v))}</span>` : ''}
-                          ${(ccm && getCcmSubTabLabel(v) && getCcmSubTabLabel(v) !== '기타 CCM') ? `<span class="tag" style="font-size:10px; padding:2px 6px; background:#F3E8FF; color:#7E22CE;">${escapeHtml(getCcmSubTabLabel(v))}</span>` : ''}
+                          ${ccm
+                            ? (() => {
+                                const ci = getVideoContiInfo(v);
+                                return `<span class="tag" style="font-size:10px; padding:2px 6px; background:#F3E8FF; color:#7E22CE;">${escapeHtml(ci.label || '찬양 콘티')}</span>${(ci.order > 0 && ci.order < 999) ? `<span class="conti-order-pill" style="font-size:9.5px; padding:1.5px 6px;">${ci.order}번 곡</span>` : ''}`;
+                              })()
+                            : `<span class="tag slate" style="font-size:10px; padding:2px 6px;">${escapeHtml(grp)}</span>${(getSermonSubTabLabel(v) && getSermonSubTabLabel(v) !== '기타 설교') ? `<span class="tag" style="font-size:10px; padding:2px 6px;">${escapeHtml(getSermonSubTabLabel(v))}</span>` : ''}`}
                           ${v.officialVerified ? '<span class="tag green" style="font-size:10px; padding:2px 6px;">공식 채널</span>' : '<span class="tag" style="font-size:10px; padding:2px 6px;">관리자 검증</span>'}
                         </div>
                         <div style="font-size:13.5px; font-weight:800; color:#0F172A; line-height:1.35; margin-bottom:3px;">${escapeHtml(v.title || '')}</div>
@@ -37421,8 +37765,10 @@ ${handleUrl}`);
         const grpLbl = rec ? getVideoAutoGroupLabel(rec) : '설교·CCM';
         const isRecCcm = !!(rec && isCcmVideo(rec));
         const sTabLbl = (rec && !isRecCcm) ? getSermonSubTabLabel(rec) : '';
-        const cTabLbl = (rec && isRecCcm) ? getCcmSubTabLabel(rec) : '';
-        const catTag = `<span class="tag slate">${isRecCcm ? '🎵' : (grpLbl === '라이트 청년부' ? '✨' : '⛪')} ${escapeHtml(grpLbl)}</span>${(sTabLbl && sTabLbl !== '기타 설교') ? `<span class="tag">📂 ${escapeHtml(sTabLbl)}</span>` : ''}${(cTabLbl && cTabLbl !== '기타 CCM') ? `<span class="tag" style="background:#F3E8FF; color:#7E22CE;">📂 ${escapeHtml(cTabLbl)}</span>` : ''}`;
+        const cInfo = (rec && isRecCcm) ? getVideoContiInfo(rec) : null;
+        const catTag = isRecCcm
+          ? `<span class="tag" style="background:#F3E8FF; color:#7E22CE;">${escapeHtml((cInfo && cInfo.label) || '찬양 콘티')}</span>${(cInfo && cInfo.order > 0 && cInfo.order < 999) ? `<span class="conti-order-pill">${cInfo.order}번 곡</span>` : ''}`
+          : `<span class="tag slate">${escapeHtml(grpLbl)}</span>${(sTabLbl && sTabLbl !== '기타 설교') ? `<span class="tag">${escapeHtml(sTabLbl)}</span>` : ''}`;
         const verTag = rec
           ? (rec.officialVerified
               ? '<span class="tag green">✅ 공식 채널</span>'
@@ -37477,17 +37823,19 @@ ${handleUrl}`);
       if (reactEl) { reactEl.classList.add('hidden'); reactEl.innerHTML = ''; }
     };
 
-    function buildVideoFeedCardHtml(v, user) {
+    function buildVideoFeedCardHtml(v, user, opts = {}) {
       const isMine = fbUser && String(v.uid) === String(fbUser.uid);
-      const canEdit = user.isSuperAdmin || isMine;
       const ccm = isCcmVideo(v);
+      const canEdit = ccm ? !!user.isSuperAdmin : (user.isSuperAdmin || isMine);
       const grp = getVideoAutoGroupLabel(v);
       const vidNew = isVideoUnread(v);
       const sermonSubTab = ccm ? '' : getSermonSubTabLabel(v);
-      const ccmSubTab = ccm ? getCcmSubTabLabel(v) : '';
+      const contiInfo = ccm ? getVideoContiInfo(v) : null;
+      const displayOrd = opts.displayOrder || (contiInfo && contiInfo.order < 999 ? contiInfo.order : 0);
       const grpBadgeHtml = ccm
-        ? `<button class="tag" type="button" style="border:none; cursor:pointer; background:#F3E8FF; color:#7E22CE;" onclick="jumpToCcmTeam('${escapeJsAttr(grp)}')">${escapeHtml(grp)}</button>${ccmSubTab ? `<button class="tag" type="button" style="border:none; cursor:pointer; background:#EDE9FE; color:#6D28D9;" onclick="jumpToCcmSubTab('${escapeJsAttr(grp)}', '${escapeJsAttr(ccmSubTab)}')">${escapeHtml(ccmSubTab)}</button>` : ''}`
+        ? `${displayOrd > 0 ? `<span class="conti-order-pill">${displayOrd}번 곡</span>` : ''}<button class="tag" type="button" style="border:none; cursor:pointer; background:#F3E8FF; color:#7E22CE;" onclick="jumpToCcmDateTab('${escapeJsAttr(contiInfo.key)}')">${escapeHtml(contiInfo.label)}</button>`
         : `<button class="tag slate" type="button" style="border:none; cursor:pointer;" onclick="jumpToSermonChurch('${escapeJsAttr(grp)}')">${escapeHtml(grp)}</button>${sermonSubTab ? `<button class="tag" type="button" style="border:none; cursor:pointer;" onclick="jumpToSermonSubTab('${escapeJsAttr(grp)}', '${escapeJsAttr(sermonSubTab)}')">${escapeHtml(sermonSubTab)}</button>` : ''}`;
+      const canReorder = !!(ccm && user.isSuperAdmin && opts.canReorder);
       return `
         <div class="video-card">
           <div class="video-thumb-wrap" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">
@@ -37502,22 +37850,26 @@ ${handleUrl}`);
               <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
                 ${vidNew ? '<span class="new-badge">NEW</span>' : ''}
                 ${grpBadgeHtml}
-                ${v.officialVerified
+                ${!ccm ? (v.officialVerified
                   ? '<span class="tag green">공식 채널 · 자동 검사 통과</span>'
-                  : '<span class="tag">관리자 검증 완료</span>'}
+                  : '<span class="tag">관리자 검증 완료</span>') : ''}
               </div>
               <span class="card-date">${escapeHtml(v.createdAt ? String(v.createdAt).slice(0, 10) : '')}</span>
             </div>
             <div style="font-size:15px; font-weight:800; color:#0F172A; line-height:1.38; margin-bottom:4px;">${escapeHtml(v.title || '')}</div>
             <div style="font-size:12px; color:#475569; margin-bottom:${v.note ? '7px' : '0'};">
-              <b>${escapeHtml(v.channelName || '유튜브')}</b> · 추천: ${escapeHtml(v.authorName || '회원')}${v.roleName ? ` (${escapeHtml(v.roleName)})` : ''}
+              <b>${escapeHtml(v.channelName || '유튜브')}</b>${ccm ? ` · 등록: ${escapeHtml(v.authorName || '관리자')}` : ` · 추천: ${escapeHtml(v.authorName || '회원')}${v.roleName ? ` (${escapeHtml(v.roleName)})` : ''}`}
             </div>
             ${v.note ? `<div class="video-note-box" style="margin:6px 0 0;">${escapeHtml(v.note)}</div>` : ''}
             ${buildVideoReactionBarHtml(v, 'card')}
             <div class="card-footer" style="margin-top:10px; padding-top:8px;">
               <button class="btn-sm primary" type="button" onclick="openYouTubeVideoSafely('${escapeJsAttr(v.videoId)}', '${escapeJsAttr(v.title || '유튜브 영상')}', '${escapeJsAttr(v.id)}')">▶ 앱에서 재생</button>
               ${canEdit ? `
-                <div style="display:flex; gap:5px;">
+                <div style="display:flex; gap:5px; align-items:center;">
+                  ${canReorder ? `
+                    <button class="order-btn" type="button" style="width:28px; height:28px;" ${opts.isFirst ? 'disabled' : ''} onclick="moveCcmContiSongOrder('${escapeJsAttr(v.id)}', -1)" title="앞 순서로">▲</button>
+                    <button class="order-btn" type="button" style="width:28px; height:28px;" ${opts.isLast ? 'disabled' : ''} onclick="moveCcmContiSongOrder('${escapeJsAttr(v.id)}', 1)" title="뒤 순서로">▼</button>
+                  ` : ''}
                   <button class="btn-sm" type="button" onclick="openEditVideoModal('${escapeJsAttr(v.id)}')">수정</button>
                   <button class="btn-sm danger" type="button" onclick="deleteVideoItem('${escapeJsAttr(v.id)}')">삭제</button>
                 </div>
@@ -37548,9 +37900,11 @@ ${handleUrl}`);
       }
     };
 
-    window.jumpToCcmTeam = (teamName) => {
-      ccmTeamFilter = teamName || '전체';
-      ccmSubTabFilter = '전체';
+    window.jumpToCcmDateTab = (dateKey) => {
+      ccmSubTabFilter = dateKey || '전체';
+      ccmSearchQuery = '';
+      const inp = document.getElementById('ccmSearchInput');
+      if (inp) inp.value = '';
       if (currentMainTab !== 'ccm') {
         switchMainTab('ccm');
       } else {
@@ -37558,15 +37912,8 @@ ${handleUrl}`);
       }
     };
 
-    window.jumpToCcmSubTab = (teamName, subTabName) => {
-      ccmTeamFilter = teamName || '전체';
-      ccmSubTabFilter = subTabName || '전체';
-      if (currentMainTab !== 'ccm') {
-        switchMainTab('ccm');
-      } else {
-        renderCcmView();
-      }
-    };
+    window.jumpToCcmTeam = (teamName) => { window.jumpToCcmDateTab('전체'); };
+    window.jumpToCcmSubTab = (teamName, subTabName) => { window.jumpToCcmDateTab(subTabName || '전체'); };
 
     function buildMySubmittedVideosHtml(user, filterFn, headingLabel) {
       const canSubmit = canUserSubmitVideo(user);
@@ -37749,80 +38096,72 @@ ${handleUrl}`);
     function renderCcmView() {
       const user = getCurrentUser();
       if (!user) return;
-      const canSubmit = canUserSubmitVideo(user);
+      const isAdmin = !!user.isSuperAdmin;
       const topBtn = document.getElementById('ccmRecommendTopBtn');
-      if (topBtn) topBtn.classList.toggle('hidden', !canSubmit);
+      if (topBtn) topBtn.classList.toggle('hidden', !isAdmin);
       const tabsMgrBtn = document.getElementById('ccmTabsManageBtn');
-      if (tabsMgrBtn) tabsMgrBtn.classList.toggle('hidden', !user.isSuperAdmin);
+      if (tabsMgrBtn) tabsMgrBtn.classList.toggle('hidden', !isAdmin);
 
       const approved = (videoItems || []).filter(v => v.status === 'approved' && isCcmVideo(v));
-      const teamCountMap = new Map();
-      const teamUnreadMap = new Map();
-      let totalCcmUnread = 0;
+      const configuredDateTabs = getConfiguredCcmDateTabs();
+
+      // 등록된 날짜 탭 + 실제 찬양 영상에 붙은 날짜 탭 병합 (최신 날짜순)
+      const tabMetaMap = new Map();
+      configuredDateTabs.forEach(t => {
+        const key = t.date || `lbl:${t.label}`;
+        tabMetaMap.set(key, { key, date: t.date || '', label: t.label, count: 0, unread: 0 });
+      });
+
+      let totalUnread = 0;
+      let legacyCount = 0;
+      let legacyUnread = 0;
       approved.forEach(v => {
-        const teamName = getCcmTeamLabel(v);
-        teamCountMap.set(teamName, (teamCountMap.get(teamName) || 0) + 1);
-        if (isVideoUnread(v)) {
-          totalCcmUnread++;
-          teamUnreadMap.set(teamName, (teamUnreadMap.get(teamName) || 0) + 1);
+        const info = getVideoContiInfo(v);
+        const unread = isVideoUnread(v);
+        if (unread) totalUnread++;
+        if (info.isLegacy) {
+          legacyCount++;
+          if (unread) legacyUnread++;
+        } else {
+          if (!tabMetaMap.has(info.key)) {
+            tabMetaMap.set(info.key, { key: info.key, date: info.date || '', label: info.label, count: 0, unread: 0 });
+          }
+          const m = tabMetaMap.get(info.key);
+          m.count++;
+          if (unread) m.unread++;
         }
       });
 
-      // 1차 탭: 찬양팀 이름별 (어노인팅, 마커스 등 자동 생성)
-      const dynamicTeams = Array.from(teamCountMap.keys()).sort((a, b) =>
-        (teamCountMap.get(b) - teamCountMap.get(a)) || a.localeCompare(b, 'ko')
-      );
-      const teamTabs = ['전체', ...dynamicTeams];
-      if (!teamTabs.includes(ccmTeamFilter)) {
-        ccmTeamFilter = '전체';
-      }
-
-      const chipsEl = document.getElementById('ccmTeamChips');
-      if (chipsEl) {
-        chipsEl.innerHTML = teamTabs.map(name => {
-          const cnt = name === '전체' ? approved.length : (teamCountMap.get(name) || 0);
-          const uCnt = name === '전체' ? totalCcmUnread : (teamUnreadMap.get(name) || 0);
-          const countTxt = cnt > 0 ? ` (${cnt})` : '';
-          return `<button class="filter-chip ${ccmTeamFilter === name ? 'active' : ''} ${uCnt > 0 ? 'has-badge' : ''}" type="button" onclick="setCcmTeamFilter('${escapeJsAttr(name)}')"><span>${escapeHtml(name)}${countTxt}</span>${buildSubTabBadgeHtml(uCnt)}</button>`;
-        }).join('');
-      }
-
-      // 2차 탭: CCM 세부 탭 (관리자 설정 탭 + 영상에 지정된 커스텀 탭 + 미분류 시 '기타 CCM')
-      const teamScoped = approved.filter(v => ccmTeamFilter === '전체' || getCcmTeamLabel(v) === ccmTeamFilter);
-      const subCountMap = new Map();
-      const subUnreadMap = new Map();
-      let scopedUnreadTotal = 0;
-      teamScoped.forEach(v => {
-        const cTab = getCcmSubTabLabel(v) || '기타 CCM';
-        subCountMap.set(cTab, (subCountMap.get(cTab) || 0) + 1);
-        if (isVideoUnread(v)) {
-          scopedUnreadTotal++;
-          subUnreadMap.set(cTab, (subUnreadMap.get(cTab) || 0) + 1);
-        }
+      const dateTabsSorted = Array.from(tabMetaMap.values()).sort((a, b) => {
+        if (a.date && b.date) return b.date.localeCompare(a.date);
+        if (a.date) return -1;
+        if (b.date) return 1;
+        return b.label.localeCompare(a.label, 'ko');
       });
 
-      const configuredSubTabs = getConfiguredCcmSubTabs();
-      const extraUsedSubTabs = Array.from(subCountMap.keys()).filter(k => k && k !== '기타 CCM' && !configuredSubTabs.includes(k));
-      const hasEtcCcm = (subCountMap.get('기타 CCM') || 0) > 0;
-      const subTabs = ['전체', ...configuredSubTabs, ...extraUsedSubTabs, ...(hasEtcCcm ? ['기타 CCM'] : [])];
-      if (!subTabs.includes(ccmSubTabFilter)) {
-        ccmSubTabFilter = '전체';
+      const allTabs = [
+        ...dateTabsSorted,
+        ...(legacyCount > 0 ? [{ key: '__legacy__', date: '', label: '이전 찬양', count: legacyCount, unread: legacyUnread }] : []),
+        { key: '전체', date: '', label: '전체', count: approved.length, unread: totalUnread }
+      ];
+
+      const validKeys = allTabs.map(t => t.key);
+      if (!ccmSubTabFilter || !validKeys.includes(ccmSubTabFilter)) {
+        // 기본 선택: 가장 최신 날짜 탭 (등록된 날짜 탭이 없으면 전체)
+        ccmSubTabFilter = dateTabsSorted.length > 0 ? dateTabsSorted[0].key : '전체';
       }
 
       const subBoxEl = document.getElementById('ccmSubTabsBox');
       if (subBoxEl) {
-        const scopeName = ccmTeamFilter === '전체' ? `전체 ${getTabLabel('ccm')}` : ccmTeamFilter;
         subBoxEl.innerHTML = `
           <div class="sermon-subtabs-head">
-            <span class="ccm-subtabs-label">${escapeHtml(scopeName)} 세부 탭</span>
-            ${user.isSuperAdmin ? '<button class="btn-sm" type="button" style="padding:2.5px 7px; font-size:10.5px;" onclick="openCcmTabsModal()">+ 탭 편집</button>' : ''}
+            <span class="ccm-subtabs-label">주간 찬양 콘티 날짜 선택</span>
+            ${isAdmin ? '<button class="btn-sm" type="button" style="padding:2.5px 7px; font-size:10.5px;" onclick="openCcmTabsModal()">+ 날짜 탭 관리</button>' : ''}
           </div>
           <div class="sermon-subtab-row" data-ts-bar="ccm_sub" data-ts-body="#ccmListArea">
-            ${subTabs.map(tabName => {
-              const cnt = tabName === '전체' ? teamScoped.length : (subCountMap.get(tabName) || 0);
-              const uCnt = tabName === '전체' ? scopedUnreadTotal : (subUnreadMap.get(tabName) || 0);
-              const cntTxt = cnt > 0 ? ` (${cnt})` : '';
-              return `<button class="ccm-subtab-chip ${ccmSubTabFilter === tabName ? 'active' : ''} ${uCnt > 0 ? 'has-badge' : ''}" type="button" onclick="setCcmSubTabFilter('${escapeJsAttr(tabName)}')"><span>${escapeHtml(tabName)}${cntTxt}</span>${buildSubTabBadgeHtml(uCnt)}</button>`;
+            ${allTabs.map(t => {
+              const cntTxt = t.count > 0 ? ` (${t.count})` : '';
+              return `<button class="ccm-subtab-chip ${ccmSubTabFilter === t.key ? 'active' : ''} ${t.unread > 0 ? 'has-badge' : ''}" type="button" onclick="setCcmDateFilter('${escapeJsAttr(t.key)}')"><span>${escapeHtml(t.label)}${cntTxt}</span>${buildSubTabBadgeHtml(t.unread)}</button>`;
             }).join('')}
           </div>
         `;
@@ -37832,52 +38171,72 @@ ${handleUrl}`);
       const clr = document.getElementById('ccmSearchClear');
       if (clr) clr.classList.toggle('hidden', !q);
 
-      const filtered = teamScoped.filter(v => {
-        const teamName = getCcmTeamLabel(v);
-        const cTab = getCcmSubTabLabel(v) || '기타 CCM';
-        if (ccmSubTabFilter !== '전체' && cTab !== ccmSubTabFilter) return false;
-        if (!q) return true;
-        const hay = `${v.title || ''} ${v.channelName || ''} ${teamName} ${cTab} ${v.note || ''} ${v.authorName || ''}`.toLowerCase();
-        return hay.includes(q);
-      });
+      const isSingleDateTab = ccmSubTabFilter !== '전체' && ccmSubTabFilter !== '__legacy__';
+      const activeTabMeta = allTabs.find(t => t.key === ccmSubTabFilter) || null;
+
+      // 검색어가 있으면 전체 주차에서 검색, 아니면 선택한 날짜 탭 표시
+      let filtered = [];
+      if (q) {
+        filtered = approved
+          .filter(v => {
+            const info = getVideoContiInfo(v);
+            const hay = `${v.title || ''} ${v.channelName || ''} ${info.label || ''} ${info.date || ''} ${v.note || ''}`.toLowerCase();
+            return hay.includes(q);
+          })
+          .sort((a, b) => compareCcmContiSongs(a, b, false));
+      } else {
+        filtered = approved
+          .filter(v => ccmSubTabFilter === '전체' || getVideoContiInfo(v).key === ccmSubTabFilter)
+          .sort((a, b) => compareCcmContiSongs(a, b, isSingleDateTab));
+      }
 
       const listEl = document.getElementById('ccmListArea');
       if (listEl) {
         const cLbl = getTabLabel('ccm');
+        const headerHtml = q
+          ? `<div style="font-size:12px; color:#6B21A8; font-weight:700; margin:2px 2px 9px;">전체 주차 검색 결과 ${filtered.length}곡</div>`
+          : (isSingleDateTab && activeTabMeta ? `
+              <div class="conti-week-banner">
+                <div style="min-width:0; flex:1;">
+                  <div class="conti-week-title">${escapeHtml(activeTabMeta.label)} 찬양 콘티</div>
+                  <div class="conti-week-sub">${activeTabMeta.date ? `${escapeHtml(activeTabMeta.date.replace(/-/g, '.'))} · ` : ''}총 ${filtered.length}곡${filtered.length > 0 ? ' · 예배 순서대로 정렬됨' : ''}</div>
+                </div>
+                ${isAdmin ? `<button class="btn-sm primary" type="button" style="background:#7E22CE; border-color:#7E22CE;" onclick="openVideoSubmitModal('CCM', '${escapeJsAttr(activeTabMeta.key)}')">+ 이 주에 곡 추가</button>` : ''}
+              </div>
+            ` : '');
+
         if (filtered.length === 0) {
-          const emptyScope = [
-            ccmTeamFilter !== '전체' ? ccmTeamFilter : '',
-            ccmSubTabFilter !== '전체' ? ccmSubTabFilter : ''
-          ].filter(Boolean).join(' · ');
-          listEl.innerHTML = `
+          listEl.innerHTML = headerHtml + `
             <div class="card" style="text-align:center; padding:30px 16px; color:#64748B;">
               <div class="empty-state-svg">${renderUiIconHtml('ccm', { forceOutline: true })}</div>
-              <div style="font-size:14px; font-weight:800; color:#334155;">${emptyScope ? `[${escapeHtml(emptyScope)}] 찬양이 아직 없습니다.` : `등록된 ${escapeHtml(cLbl)} 영상이 없습니다.`}</div>
-              <div style="font-size:12px; margin-top:4px; line-height:1.5;">${canSubmit ? `오른쪽 위 [+ ${escapeHtml(cLbl)} 게시]로 영상을 올리고 원하는 세부 탭을 선택해 분류해 보세요.` : `찬양팀별·세부 탭 영상이 등록되면 이곳에 자동 분류됩니다.`}</div>
-              ${(canSubmit && ccmSubTabFilter !== '전체' && ccmSubTabFilter !== '기타 CCM')
-                ? `<button class="btn-sm primary" type="button" style="margin-top:11px; padding:7px 12px;" onclick="openVideoSubmitModal('CCM', '${escapeJsAttr(ccmSubTabFilter)}')">+ [${escapeHtml(ccmSubTabFilter)}] ${escapeHtml(cLbl)} 등록</button>`
+              <div style="font-size:14px; font-weight:800; color:#334155;">${q ? '검색 결과에 맞는 찬양이 없습니다.' : (activeTabMeta && activeTabMeta.key !== '전체' ? `[${escapeHtml(activeTabMeta.label)}] 찬양 콘티가 아직 등록되지 않았습니다.` : `등록된 ${escapeHtml(cLbl)} 찬양 콘티가 아직 없습니다.`)}</div>
+              <div style="font-size:12px; margin-top:4px; line-height:1.5;">${isAdmin ? '오른쪽 위 [+ 콘티 등록] 버튼으로 그 주 찬양곡을 순서대로 올려 보세요.' : '관리자가 이번 주 찬양 콘티를 등록하면 날짜 탭에 바로 표시됩니다.'}</div>
+              ${(isAdmin && !q)
+                ? `<button class="btn-sm primary" type="button" style="margin-top:11px; padding:7px 12px; background:#7E22CE; border-color:#7E22CE;" onclick="openVideoSubmitModal('CCM', '${escapeJsAttr(isSingleDateTab ? ccmSubTabFilter : '')}')">+ ${isSingleDateTab && activeTabMeta ? `[${escapeHtml(activeTabMeta.label)}] ` : ''}찬양 곡 등록</button>`
                 : ''}
             </div>
           `;
         } else {
-          listEl.innerHTML = filtered.map(v => buildVideoFeedCardHtml(v, user)).join('');
+          const canReorderNow = !!(isAdmin && !q && isSingleDateTab && filtered.length > 1);
+          listEl.innerHTML = headerHtml + filtered.map((v, idx) => buildVideoFeedCardHtml(v, user, {
+            displayOrder: (!q && isSingleDateTab) ? (idx + 1) : 0,
+            canReorder: canReorderNow,
+            isFirst: idx === 0,
+            isLast: idx === filtered.length - 1
+          })).join('');
         }
       }
 
       const myArea = document.getElementById('mySubmittedCcmArea');
-      if (myArea) {
-        myArea.innerHTML = buildMySubmittedVideosHtml(user, isCcmVideo, `내가 추천한 검토 대기 · 반려 ${getTabLabel('ccm')} 영상`);
-      }
+      if (myArea) myArea.innerHTML = '';
     }
 
-    window.setCcmTeamFilter = (team) => {
-      ccmTeamFilter = team;
+    window.setCcmDateFilter = (dateKey) => {
+      ccmSubTabFilter = dateKey || '전체';
       renderCcmView();
     };
-    window.setCcmSubTabFilter = (subTab) => {
-      ccmSubTabFilter = subTab || '전체';
-      renderCcmView();
-    };
+    window.setCcmTeamFilter = (team) => { window.setCcmDateFilter('전체'); };
+    window.setCcmSubTabFilter = (subTab) => { window.setCcmDateFilter(subTab || '전체'); };
     window.onCcmSearchInput = (val) => {
       ccmSearchQuery = val;
       renderCcmView();
@@ -37928,27 +38287,45 @@ ${handleUrl}`);
       }
     };
 
+    function applyVideoCategoryPermissionsUI(user) {
+      const ccmOpt = document.getElementById('videoCatOptionCcm');
+      const catSel = document.getElementById('videoCategorySelect');
+      const isAdmin = !!(user && user.isSuperAdmin);
+      if (ccmOpt) {
+        ccmOpt.hidden = !isAdmin;
+        ccmOpt.disabled = !isAdmin;
+      }
+      if (!isAdmin && catSel && catSel.value === 'CCM') {
+        catSel.value = '설교';
+      }
+    }
+
     window.openVideoSubmitModal = (defaultCat = '', defaultSermonTab = '') => {
       const user = getCurrentUser();
       if (!canUserSubmitVideo(user)) return showToast('영상 게시 권한이 없습니다.');
+      if ((defaultCat === 'CCM' || defaultCat === '찬양') && !user.isSuperAdmin) {
+        return showToast('찬양 콘티는 최고 관리자만 등록할 수 있습니다.');
+      }
       lastVideoInspectResult = null;
-      const initCat = defaultCat || (currentMainTab === 'ccm' ? 'CCM' : (currentMainTab === 'sermon' && sermonCatFilter === '라이트 청년부' ? '라이트 청년부' : '설교'));
-      const modalCatLabel = initCat === 'CCM' ? getTabLabel('ccm') : (initCat === '라이트 청년부' ? '라이트 청년부' : getTabLabel('sermon'));
+      let initCat = defaultCat || (currentMainTab === 'ccm' ? 'CCM' : (currentMainTab === 'sermon' && sermonCatFilter === '라이트 청년부' ? '라이트 청년부' : '설교'));
+      if ((initCat === 'CCM' || initCat === '찬양') && !user.isSuperAdmin) initCat = '설교';
+      const modalCatLabel = initCat === 'CCM' ? `${getTabLabel('ccm')} 콘티` : (initCat === '라이트 청년부' ? '라이트 청년부' : getTabLabel('sermon'));
       document.getElementById('videoSubmitModalTitle').textContent = user.isSuperAdmin
-        ? `🎬 ${modalCatLabel} · 유튜브 영상 등록`
-        : `🎬 ${modalCatLabel} 영상 게시`;
+        ? `${modalCatLabel} 영상 등록`
+        : `${modalCatLabel} 영상 게시`;
       document.getElementById('editVideoDocId').value = '';
       document.getElementById('videoUrlFieldGroup').classList.remove('hidden');
       document.getElementById('videoUrlInput').value = '';
+      applyVideoCategoryPermissionsUI(user);
       document.getElementById('videoCategorySelect').value = (initCat === '찬양' ? 'CCM' : (initCat === '청년부 영상' ? '라이트 청년부' : (['설교', '라이트 청년부', 'CCM'].includes(initCat) ? initCat : '설교')));
       const initSermonTab = (initCat !== 'CCM')
         ? (defaultSermonTab || ((currentMainTab === 'sermon' && sermonSubTabFilter && sermonSubTabFilter !== '전체' && sermonSubTabFilter !== '기타 설교') ? sermonSubTabFilter : ''))
         : '';
-      const initCcmTab = (initCat === 'CCM')
-        ? (defaultSermonTab || ((currentMainTab === 'ccm' && ccmSubTabFilter && ccmSubTabFilter !== '전체' && ccmSubTabFilter !== '기타 CCM') ? ccmSubTabFilter : ''))
+      const initCcmDateKey = (initCat === 'CCM')
+        ? (defaultSermonTab || ((currentMainTab === 'ccm' && ccmSubTabFilter && ccmSubTabFilter !== '전체' && ccmSubTabFilter !== '__legacy__') ? ccmSubTabFilter : ''))
         : '';
       populateVideoSermonTabSelect(initSermonTab);
-      populateVideoCcmTabSelect(initCcmTab);
+      populateVideoCcmTabSelect(initCcmDateKey, '', 0);
       syncVideoSermonTabFieldVisibility();
       document.getElementById('videoTitleInput').value = '';
       applyVideoTitleFieldLock(user);
@@ -37967,13 +38344,18 @@ ${handleUrl}`);
       const all = [...(videoItems || []), ...(myVideoItems || [])];
       const v = all.find(x => String(x.id) === String(id));
       if (!v) return;
+      if (isCcmVideo(v) && (!user || !user.isSuperAdmin)) {
+        return showToast('찬양 콘티는 최고 관리자만 수정할 수 있습니다.');
+      }
       lastVideoInspectResult = null;
-      document.getElementById('videoSubmitModalTitle').textContent = '✏️ 영상 정보 수정';
+      document.getElementById('videoSubmitModalTitle').textContent = isCcmVideo(v) ? '찬양 콘티 수정' : '영상 정보 수정';
       document.getElementById('editVideoDocId').value = v.id;
       document.getElementById('videoUrlFieldGroup').classList.add('hidden');
+      applyVideoCategoryPermissionsUI(user);
       document.getElementById('videoCategorySelect').value = (isCcmVideo(v) ? 'CCM' : (isRightYouthVideo(v) ? '라이트 청년부' : '설교'));
       populateVideoSermonTabSelect(isCcmVideo(v) ? '' : (v.sermonTab || ''));
-      populateVideoCcmTabSelect(isCcmVideo(v) ? (v.ccmTab || '') : '');
+      const ci = isCcmVideo(v) ? getVideoContiInfo(v) : null;
+      populateVideoCcmTabSelect(ci && !ci.isLegacy ? (ci.date || ci.key) : '', ci && !ci.isLegacy ? ci.label : '', ci ? ci.order : 0);
       syncVideoSermonTabFieldVisibility();
       document.getElementById('videoTitleInput').value = v.title || '';
       applyVideoTitleFieldLock(user);
@@ -38010,14 +38392,17 @@ ${handleUrl}`);
         matchedChannelName: res.matchedOfficialChannel ? res.matchedOfficialChannel.name : '',
         title: res.fetchedTitle || ''
       }) : '';
-      const autoGrpPrefix = curCatVal === 'CCM' ? '🎵 자동 찬양팀 탭' : (autoGrp === '라이트 청년부' ? '✨ 자동 분류 탭' : '⛪ 자동 교회 탭');
+      const autoGrpPrefix = autoGrp === '라이트 청년부' ? '자동 분류 탭' : '자동 교회 탭';
+      const selContiPreview = curCatVal === 'CCM' ? getSelectedVideoCcmContiInput() : null;
       const previewCard = res.ok ? `
         <div style="display:flex; gap:10px; align-items:center; background:rgba(255,255,255,0.75); border-radius:10px; padding:8px; margin-bottom:8px;">
           <img src="${escapeHtml(res.thumbnailUrl)}" alt="미리보기" style="width:92px; height:52px; border-radius:8px; object-fit:cover; flex-shrink:0;" />
           <div style="min-width:0; flex:1;">
             <div style="font-size:12.5px; font-weight:800; color:#0F172A; line-height:1.35;">${escapeHtml(res.fetchedTitle || '제목 없음')}</div>
-            <div style="font-size:11.5px; color:#475569; margin-top:2px;">📺 ${escapeHtml(res.channelName || '알 수 없음')}</div>
-            ${autoGrp ? `<div style="margin-top:4px; display:flex; gap:4px; flex-wrap:wrap;"><span class="tag" style="font-size:10.5px; padding:2px 7px; background:${curCatVal === 'CCM' ? '#F3E8FF' : '#EFF6FF'}; color:${curCatVal === 'CCM' ? '#7E22CE' : '#1D4ED8'};">${autoGrpPrefix}: <b>${escapeHtml(autoGrp)}</b></span>${curCatVal !== 'CCM' ? `<span class="tag" style="font-size:10.5px; padding:2px 7px;">📂 세부 탭: <b>${escapeHtml(getSelectedVideoSermonTabInput() || getSermonSubTabLabel({ category: curCatVal, channelId: res.channelId || '', channelName: res.channelName || '', matchedChannelName: res.matchedOfficialChannel ? res.matchedOfficialChannel.name : '', title: res.fetchedTitle || '' }))}</b></span>` : `<span class="tag" style="font-size:10.5px; padding:2px 7px; background:#EDE9FE; color:#6D28D9;">📂 세부 탭: <b>${escapeHtml(getSelectedVideoCcmTabInput() || getCcmSubTabLabel({ category: 'CCM', channelId: res.channelId || '', channelName: res.channelName || '', matchedChannelName: res.matchedOfficialChannel ? res.matchedOfficialChannel.name : '', title: res.fetchedTitle || '' }))}</b></span>`}</div>` : ''}
+            <div style="font-size:11.5px; color:#475569; margin-top:2px;">${escapeHtml(res.channelName || '알 수 없음')}</div>
+            ${curCatVal === 'CCM'
+              ? `<div style="margin-top:4px; display:flex; gap:4px; flex-wrap:wrap;"><span class="tag" style="font-size:10.5px; padding:2px 7px; background:#F3E8FF; color:#7E22CE;">콘티 날짜 탭: <b>${escapeHtml((selContiPreview && selContiPreview.label) || '날짜 선택 필요')}</b></span>${(selContiPreview && selContiPreview.order > 0) ? `<span class="conti-order-pill" style="font-size:10px;">${selContiPreview.order}번 곡</span>` : ''}</div>`
+              : (autoGrp ? `<div style="margin-top:4px; display:flex; gap:4px; flex-wrap:wrap;"><span class="tag" style="font-size:10.5px; padding:2px 7px; background:#EFF6FF; color:#1D4ED8;">${autoGrpPrefix}: <b>${escapeHtml(autoGrp)}</b></span><span class="tag" style="font-size:10.5px; padding:2px 7px;">세부 탭: <b>${escapeHtml(getSelectedVideoSermonTabInput() || getSermonSubTabLabel({ category: curCatVal, channelId: res.channelId || '', channelName: res.channelName || '', matchedChannelName: res.matchedOfficialChannel ? res.matchedOfficialChannel.name : '', title: res.fetchedTitle || '' }))}</b></span></div>` : '')}
           </div>
         </div>
       ` : '';
@@ -38114,8 +38499,16 @@ ${handleUrl}`);
 
       const editId = document.getElementById('editVideoDocId').value;
       const category = document.getElementById('videoCategorySelect').value || '설교';
+      if (category === 'CCM' && !user.isSuperAdmin) {
+        return showToast('찬양 콘티는 최고 관리자만 등록·수정할 수 있습니다.');
+      }
       const titleInputVal = document.getElementById('videoTitleInput').value.trim();
       const note = document.getElementById('videoNoteInput').value.trim();
+      const contiSel = category === 'CCM' ? getSelectedVideoCcmContiInput() : { date: '', label: '', key: '', order: 0 };
+      if (category === 'CCM') {
+        if (!contiSel.label) return showToast('찬양 콘티 날짜 탭을 선택하거나 날짜를 입력해 주세요.');
+        if (!enforceInputSecurity(contiSel.label, '찬양 콘티 날짜 탭', true)) return;
+      }
 
       if (!enforceInputSecurity(`${titleInputVal}\n${note}`, '설교·찬양 영상', !!user.isSuperAdmin)) return;
 
@@ -38138,12 +38531,10 @@ ${handleUrl}`);
             title: finalEditTitle
           });
           const chosenSermonTab = getSelectedVideoSermonTabInput();
-          const chosenCcmTab = getSelectedVideoCcmTabInput();
           if (chosenSermonTab && !enforceInputSecurity(chosenSermonTab, '설교 세부 탭', !!user.isSuperAdmin)) return;
-          if (chosenCcmTab && !enforceInputSecurity(chosenCcmTab, 'CCM 세부 탭', !!user.isSuperAdmin)) return;
           const editPatch = {
             category,
-            groupLabel: editGroupLabel,
+            groupLabel: category === 'CCM' ? contiSel.label : editGroupLabel,
             note,
             edited: true,
             updatedAt: nowFull,
@@ -38152,9 +38543,13 @@ ${handleUrl}`);
           if (category !== 'CCM') {
             editPatch.sermonTab = chosenSermonTab;
             editPatch.ccmTab = '';
+            editPatch.contiDate = '';
+            editPatch.contiOrder = 0;
           } else {
             editPatch.sermonTab = '';
-            editPatch.ccmTab = chosenCcmTab;
+            editPatch.ccmTab = contiSel.label;
+            editPatch.contiDate = contiSel.date || '';
+            editPatch.contiOrder = contiSel.order || 1;
           }
           if (user.isSuperAdmin) {
             editPatch.title = finalEditTitle;
@@ -38166,6 +38561,8 @@ ${handleUrl}`);
               const fallbackPatch = { ...editPatch };
               delete fallbackPatch.sermonTab;
               delete fallbackPatch.ccmTab;
+              delete fallbackPatch.contiDate;
+              delete fallbackPatch.contiOrder;
               await db.collection('videos').doc(String(editId)).update(fallbackPatch);
             } else {
               throw updErr;
@@ -38174,8 +38571,13 @@ ${handleUrl}`);
           if (user.isSuperAdmin && category !== 'CCM' && chosenSermonTab && chosenSermonTab !== '기타 설교' && !getConfiguredSermonSubTabs().includes(chosenSermonTab)) {
             await saveSermonSubTabsList([...getConfiguredSermonSubTabs(), chosenSermonTab], '설교 세부 탭 자동 추가', `영상 수정 중 추가: ${chosenSermonTab}`, '');
           }
-          if (user.isSuperAdmin && category === 'CCM' && chosenCcmTab && chosenCcmTab !== '기타 CCM' && !getConfiguredCcmSubTabs().includes(chosenCcmTab)) {
-            await saveCcmSubTabsList([...getConfiguredCcmSubTabs(), chosenCcmTab], 'CCM 세부 탭 자동 추가', `영상 수정 중 추가: ${chosenCcmTab}`, '');
+          if (user.isSuperAdmin && category === 'CCM' && contiSel.label) {
+            const curDateTabs = getConfiguredCcmDateTabs();
+            const existsTab = curDateTabs.some(t => (contiSel.date && t.date === contiSel.date) || t.label === contiSel.label);
+            if (!existsTab) {
+              await saveCcmDateTabsList([...curDateTabs, { date: contiSel.date || '', label: contiSel.label }], '찬양 콘티 날짜 탭 자동 추가', `콘티 수정 중 추가: ${contiSel.label}`, '');
+            }
+            if (contiSel.key) ccmSubTabFilter = contiSel.key;
           }
           recordAuditLog({
             actorType: user.isSuperAdmin ? 'admin' : 'member',
@@ -38252,11 +38654,19 @@ ${handleUrl}`);
           return showToast(`🚨 자동 검사 실패: ${res.error}`);
         }
 
-        // 중복 영상 검사
+        // 중복 영상 검사 (찬양 콘티는 같은 날짜 탭 안에서만 중복 차단 · 다른 주차에는 동일 곡 재등록 허용)
         const allKnown = [...(videoItems || []), ...(myVideoItems || [])];
-        const dup = allKnown.find(x => String(x.videoId) === String(res.videoId) && x.status !== 'rejected');
+        const dup = allKnown.find(x => {
+          if (String(x.videoId) !== String(res.videoId) || x.status === 'rejected') return false;
+          if (category === 'CCM') {
+            return isCcmVideo(x) && getVideoContiInfo(x).key === contiSel.key;
+          }
+          return !isCcmVideo(x);
+        });
         if (dup) {
-          return showToast(`이미 ${dup.status === 'approved' ? '게시' : '검토 대기'} 중인 동일한 유튜브 영상입니다.`);
+          return showToast(category === 'CCM'
+            ? `[${contiSel.label}] 콘티에 이미 등록된 동일한 찬양 영상입니다.`
+            : `이미 ${dup.status === 'approved' ? '게시' : '검토 대기'} 중인 동일한 유튜브 영상입니다.`);
         }
 
         if (!user.isSuperAdmin && !String(res.fetchedTitle || '').trim()) {
@@ -38279,13 +38689,15 @@ ${handleUrl}`);
           thumbnailUrl: res.thumbnailUrl,
           category,
           sermonTab: category === 'CCM' ? '' : getSelectedVideoSermonTabInput(),
-          ccmTab: category === 'CCM' ? getSelectedVideoCcmTabInput() : '',
+          ccmTab: category === 'CCM' ? contiSel.label : '',
+          contiDate: category === 'CCM' ? (contiSel.date || '') : '',
+          contiOrder: category === 'CCM' ? (contiSel.order || 1) : 0,
           title: finalTitle,
           note,
           channelName: res.channelName || '유튜브',
           channelUrl: res.channelUrl || '',
           channelId: res.channelId || '',
-          groupLabel: getVideoAutoGroupLabel({
+          groupLabel: category === 'CCM' ? contiSel.label : getVideoAutoGroupLabel({
             category,
             channelId: res.channelId || '',
             channelName: res.channelName || '',
@@ -38316,9 +38728,13 @@ ${handleUrl}`);
         if (isAdminDirect && createdSermonTab && createdSermonTab !== '기타 설교' && !getConfiguredSermonSubTabs().includes(createdSermonTab)) {
           await saveSermonSubTabsList([...getConfiguredSermonSubTabs(), createdSermonTab], '설교 세부 탭 자동 추가', `영상 등록 중 추가: ${createdSermonTab}`, '');
         }
-        const createdCcmTab = category === 'CCM' ? getSelectedVideoCcmTabInput() : '';
-        if (isAdminDirect && createdCcmTab && createdCcmTab !== '기타 CCM' && !getConfiguredCcmSubTabs().includes(createdCcmTab)) {
-          await saveCcmSubTabsList([...getConfiguredCcmSubTabs(), createdCcmTab], 'CCM 세부 탭 자동 추가', `영상 등록 중 추가: ${createdCcmTab}`, '');
+        if (isAdminDirect && category === 'CCM' && contiSel.label) {
+          const curDateTabs = getConfiguredCcmDateTabs();
+          const existsTab = curDateTabs.some(t => (contiSel.date && t.date === contiSel.date) || t.label === contiSel.label);
+          if (!existsTab) {
+            await saveCcmDateTabsList([...curDateTabs, { date: contiSel.date || '', label: contiSel.label }], '찬양 콘티 날짜 탭 자동 추가', `콘티 등록 중 추가: ${contiSel.label}`, '');
+          }
+          if (contiSel.key) ccmSubTabFilter = contiSel.key;
         }
 
         // 관리자가 미등록 채널을 공식 채널로 함께 추가 체크한 경우 자동 학습
@@ -38439,7 +38855,7 @@ ${handleUrl}`);
       const hiddenDefs = DEFAULT_OFFICIAL_YT_CHANNELS.filter(d => (hiddenDefaultYtChannelIds || []).includes(String(d.id)));
       const vf = manageVideosFilter || 'all';
       const sermonSubTabsList = getConfiguredSermonSubTabs();
-      const ccmSubTabsList = getConfiguredCcmSubTabs();
+      const ccmSubTabsList = getConfiguredCcmDateTabs();
       const showPending = vf === 'all' || vf === 'pending';
       const showSermonTabs = vf === 'all' || vf === 'sermontabs';
       const showCcmTabs = vf === 'all' || vf === 'ccmtabs';
@@ -38478,7 +38894,7 @@ ${handleUrl}`);
           <button class="filter-chip ${vf === 'all' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('all')">전체</button>
           <button class="filter-chip ${vf === 'pending' ? 'active' : ''} ${pending.length > 0 ? 'has-badge' : ''}" type="button" onclick="setManageVideosFilter('pending')">🔴 검토 대기 (${pending.length})</button>
           <button class="filter-chip ${vf === 'sermontabs' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('sermontabs')">🗂️ 설교 세부 탭 (${sermonSubTabsList.length})</button>
-          <button class="filter-chip ${vf === 'ccmtabs' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('ccmtabs')">🎵 CCM 세부 탭 (${ccmSubTabsList.length})</button>
+          <button class="filter-chip ${vf === 'ccmtabs' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('ccmtabs')">찬양 날짜 탭 (${ccmSubTabsList.length})</button>
           <button class="filter-chip ${vf === 'channels' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('channels')">✅ 공식 채널 (${officialYtChannels.length})</button>
           <button class="filter-chip ${vf === 'perm' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('perm')">⚙️ 권한 · 표시</button>
           <button class="filter-chip ${vf === 'approved' ? 'active' : ''}" type="button" onclick="setManageVideosFilter('approved')">🎬 게시된 영상 (${approved.length})</button>
@@ -38561,27 +38977,34 @@ ${handleUrl}`);
         ` : ''}
 
         ${showCcmTabs ? `
-        <!-- 1.6) CCM 2차 세부 탭 관리 -->
+        <!-- 1.6) 주간 찬양 콘티 날짜 탭 관리 -->
         ${buildManageAccordionBar({
           key: 'vid_ccm_tabs',
           marginTop: (showPending || showSermonTabs) ? '10px' : '',
-          titleHtml: '🎵 CCM 세부 탭 관리 (분위기 · 주제별 2차 탭)',
-          badgeHtml: `<span class="tag" style="background:#F3E8FF; color:#7E22CE;">${ccmSubTabsList.length}개 탭</span>`,
+          titleHtml: '주간 찬양 콘티 날짜 탭 관리 (관리자 전용)',
+          badgeHtml: `<span class="tag" style="background:#F3E8FF; color:#7E22CE;">${ccmSubTabsList.length}개 주차</span>`,
           defaultOpen: vf === 'ccmtabs'
         })}
         <div data-acc-body="vid_ccm_tabs" class="${ccmTabsOpen ? '' : 'hidden'}">
           <div class="card">
             <div style="font-size:12px; color:#475569; line-height:1.5; margin-bottom:10px;">
-              <b>🎵 CCM</b> 화면에서 찬양팀별 1차 탭 아래에 표시되는 <b>세부 탭</b>을 추가·수정·순서 변경·삭제할 수 있습니다.
+              <b>${escapeHtml(getTabLabel('ccm'))}</b> 화면에 표시되는 <b>주간 날짜 탭</b>(예: 11월 29일 주일, 12월 6일 주일)을 관리합니다. 찬양 콘티 등록·수정·순서 변경은 최고 관리자만 가능합니다.
             </div>
-            <div style="display:flex; gap:6px; margin-bottom:10px;">
-              <input id="manageNewCcmTabInput" class="form-input" style="flex:1; padding:8px 10px; font-size:13px;" maxlength="20" placeholder="새 세부 탭 추가 (예: 경배·찬양, 수련회 찬양)" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleAddCcmSubTab('manageNewCcmTabInput');}" />
-              <button class="btn-admin" type="button" style="white-space:nowrap;" onclick="handleAddCcmSubTab('manageNewCcmTabInput')">+ 추가</button>
+            <div class="quick-preset-row" style="margin-bottom:9px;">
+              ${buildCcmQuickSundayButtonsHtml()}
+            </div>
+            <div class="form-grid-2" style="margin-bottom:10px;">
+              <div class="combo-input-row">
+                <input id="manageNewCcmDateInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; padding:8px 9px; font-size:13px;" placeholder="2026.11.29" oninput="formatDateTyping(this); onNewCcmDateModalTyped('manageNewCcmDateInput', 'manageNewCcmTabInput');" />
+                <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="달력에서 선택" onclick="openNativePicker('manageNewCcmDatePicker', 'manageNewCcmDateInput', 'date')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.2"/><line x1="8" y1="2.8" x2="8" y2="6.2"/><line x1="16" y1="2.8" x2="16" y2="6.2"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/></svg></span></button>
+                <input id="manageNewCcmDatePicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('manageNewCcmDatePicker', 'manageNewCcmDateInput', 'date'); onNewCcmDateModalTyped('manageNewCcmDateInput', 'manageNewCcmTabInput');" />
+              </div>
+              <div style="display:flex; gap:6px;">
+                <input id="manageNewCcmTabInput" class="form-input" style="flex:1; padding:8px 9px; font-size:13px;" maxlength="24" placeholder="예: 12월 25일 성탄절" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleAddCcmDateTab('manageNewCcmDateInput', 'manageNewCcmTabInput');}" />
+                <button class="btn-admin" type="button" style="white-space:nowrap;" onclick="handleAddCcmDateTab('manageNewCcmDateInput', 'manageNewCcmTabInput')">+ 추가</button>
+              </div>
             </div>
             ${buildCcmTabsManagerRowsHtml()}
-            <div style="display:flex; justify-content:flex-end; margin-top:8px;">
-              <button class="btn-sm" type="button" onclick="handleResetDefaultCcmSubTabs()">기본 탭 복원</button>
-            </div>
             ${buildInlineSaveStatusHtml('ccm_tabs')}
           </div>
         </div>
@@ -38652,7 +39075,7 @@ ${handleUrl}`);
               </label>
             </div>
             <div class="form-group" style="margin-top:10px;">
-              <label class="form-label" for="cfgVidSubmitAudience">유튜브 영상 게시 가능 대상</label>
+              <label class="form-label" for="cfgVidSubmitAudience">설교 · 라이트 청년부 영상 게시 가능 대상 <span style="font-weight:600; color:#7E22CE;">(찬양 콘티는 최고 관리자 전용)</span></label>
               <select id="cfgVidSubmitAudience" class="form-select" onchange="onCfgVidAudienceChange()">
                 <option value="roles" ${cfg.submitAudience === 'roles' ? 'selected' : ''}>🎯 선택한 역할만 게시 가능 (권장)</option>
                 <option value="all" ${cfg.submitAudience === 'all' ? 'selected' : ''}>👥 전체 승인 회원 게시 가능</option>
@@ -38698,9 +39121,12 @@ ${handleUrl}`);
                     <img class="video-compact-thumb" src="https://i.ytimg.com/vi/${escapeHtml(v.videoId)}/hqdefault.jpg" alt="썸네일" loading="lazy" />
                     <div style="min-width:0; flex:1;">
                       <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:3px;">
-                        <span class="tag slate" style="font-size:10px;">${isCcmVideo(v) ? '🎵' : (getVideoAutoGroupLabel(v) === '라이트 청년부' ? '✨' : '⛪')} ${escapeHtml(getVideoAutoGroupLabel(v))}</span>
-                        ${(!isCcmVideo(v) && getSermonSubTabLabel(v) && getSermonSubTabLabel(v) !== '기타 설교') ? `<span class="tag" style="font-size:10px;">📂 ${escapeHtml(getSermonSubTabLabel(v))}</span>` : ''}
-                        ${(isCcmVideo(v) && getCcmSubTabLabel(v) && getCcmSubTabLabel(v) !== '기타 CCM') ? `<span class="tag" style="font-size:10px; background:#F3E8FF; color:#7E22CE;">📂 ${escapeHtml(getCcmSubTabLabel(v))}</span>` : ''}
+                        ${isCcmVideo(v)
+                          ? (() => {
+                              const ci = getVideoContiInfo(v);
+                              return `<span class="tag" style="font-size:10px; background:#F3E8FF; color:#7E22CE;">${escapeHtml(ci.label || '찬양 콘티')}</span>${(ci.order > 0 && ci.order < 999) ? `<span class="conti-order-pill" style="font-size:9.5px; padding:1.5px 6px;">${ci.order}번 곡</span>` : ''}`;
+                            })()
+                          : `<span class="tag slate" style="font-size:10px;">${escapeHtml(getVideoAutoGroupLabel(v))}</span>${(getSermonSubTabLabel(v) && getSermonSubTabLabel(v) !== '기타 설교') ? `<span class="tag" style="font-size:10px;">${escapeHtml(getSermonSubTabLabel(v))}</span>` : ''}`}
                         ${v.autoApproved ? '<span class="tag green" style="font-size:10px;">⚡ 공식 자동 게시</span>' : '<span class="tag" style="font-size:10px;">✅ 관리자 승인</span>'}
                       </div>
                       <div style="font-size:13.5px; font-weight:800; color:#0F172A; line-height:1.35;">${escapeHtml(v.title || '')}</div>
@@ -38734,7 +39160,7 @@ ${handleUrl}`);
       if (submitAudience === 'roles' && submitTargetRoles.length === 0) {
         return showToast('게시 권한을 부여할 역할을 1개 이상 선택해 주세요.');
       }
-      const next = { showOnHome, submitAudience, submitTargetRoles, sermonTabs: getConfiguredSermonSubTabs(), ccmTabs: getConfiguredCcmSubTabs() };
+      const next = { showOnHome, submitAudience, submitTargetRoles, sermonTabs: getConfiguredSermonSubTabs(), ccmDateTabs: getConfiguredCcmDateTabs() };
       const btn = document.getElementById('saveVideoSettingsBtn');
       if (btn) { btn.disabled = true; btn.textContent = '⏳ 저장 중...'; }
       setInlineSaveStatus('video_cfg', 'loading', '⏳ 영상 권한 및 홈 표시 설정을 저장하는 중입니다...');
