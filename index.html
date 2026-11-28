@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://right-youth-app.firebaseapp.com https://www.youtube.com https://noembed.com https://api.allorigins.win https://api.codetabs.com https://api.rss2json.com https://script.google.com https://script.googleusercontent.com https://calendar.google.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com https://calendar.google.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://right-youth-app.firebaseapp.com https://www.youtube.com https://noembed.com https://api.allorigins.win https://api.codetabs.com https://api.rss2json.com https://script.google.com https://script.googleusercontent.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com https://calendar.google.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>라이트 청년부</title>
@@ -4271,17 +4271,14 @@
       word-break: keep-all;
       overflow-wrap: anywhere;
     }
-    /* v10.184 광고·글 본문 미리보기 스타일 */
-    .notice-preview-clamp {
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+    /* v10.184 광고 본문 1줄 미리보기 스타일 */
+    .notice-preview-one-line {
       font-size: 13px;
       color: #475569;
-      line-height: 1.54;
-      white-space: pre-line;
-      word-break: keep-all;
+      line-height: 1.48;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       margin: 0;
     }
 
@@ -4526,7 +4523,7 @@
       flex-shrink: 0;
     }
 
-    /* v10.183 홈 상단 구글 캘린더 카드 스타일 */
+    /* v10.184 홈 상단 구글 캘린더 월간 그리드 · 1줄 미리보기 · 날짜 상세 스타일 */
     .home-cal-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -4540,22 +4537,22 @@
       justify-content: space-between;
       gap: 8px;
       flex-wrap: wrap;
-      padding: 12px 14px;
+      padding: 11px 13px;
       background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
       color: #FFFFFF;
     }
     .home-cal-title-wrap {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       min-width: 0;
-      font-size: 14.5px;
+      font-size: 14px;
       font-weight: 800;
       letter-spacing: -0.25px;
     }
     .home-cal-title-wrap .ui-svg-icon svg {
-      width: 17px;
-      height: 17px;
+      width: 16px;
+      height: 16px;
       color: #FDE68A;
     }
     .home-cal-actions {
@@ -4563,28 +4560,6 @@
       align-items: center;
       gap: 5px;
       flex-wrap: wrap;
-    }
-    .home-cal-mode-seg {
-      display: inline-flex;
-      background: rgba(255, 255, 255, 0.12);
-      border-radius: 8px;
-      padding: 2px;
-      gap: 2px;
-    }
-    .home-cal-mode-btn {
-      border: none;
-      background: transparent;
-      color: #CBD5E1;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 4px 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-family: inherit;
-    }
-    .home-cal-mode-btn.active {
-      background: #FFFFFF;
-      color: #0F172A;
     }
     .home-cal-action-btn {
       border: 1px solid rgba(255, 255, 255, 0.24);
@@ -4597,9 +4572,181 @@
       cursor: pointer;
       font-family: inherit;
       white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
     }
     .home-cal-action-btn:active {
       background: rgba(255, 255, 255, 0.22);
+    }
+    .home-cal-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 9px 12px 7px;
+      background: #FFFFFF;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .home-cal-month-label {
+      font-size: 15px;
+      font-weight: 900;
+      color: #0F172A;
+      letter-spacing: -0.3px;
+    }
+    .home-cal-nav-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .home-cal-nav-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #F8FAFC;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .home-cal-nav-btn:active {
+      background: #E2E8F0;
+    }
+    .home-cal-today-btn {
+      height: 28px;
+      padding: 0 9px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      color: #1E293B;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .home-cal-today-btn:active {
+      background: #F1F5F9;
+    }
+    .home-cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      background: #F8FAFC;
+      border-bottom: 1px solid #E2E8F0;
+      text-align: center;
+      padding: 6px 2px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #64748B;
+    }
+    .home-cal-weekdays span:first-child { color: #DC2626; }
+    .home-cal-weekdays span:last-child { color: #2563EB; }
+    .home-cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      background: #E2E8F0;
+      gap: 1px;
+    }
+    .home-cal-day {
+      background: #FFFFFF;
+      border: none;
+      min-height: 68px;
+      padding: 4px 2.5px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+      overflow: hidden;
+      min-width: 0;
+      transition: background 0.12s ease;
+    }
+    .home-cal-day:active {
+      background: #EFF6FF;
+    }
+    .home-cal-day.empty {
+      background: #F8FAFC;
+      cursor: default;
+      pointer-events: none;
+    }
+    .home-cal-day.selected {
+      background: #EFF6FF;
+      box-shadow: inset 0 0 0 1.5px #2563EB;
+    }
+    .home-cal-day-num-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2px;
+      padding: 0 1px;
+    }
+    .home-cal-day-num {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #1E293B;
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .home-cal-day.sun .home-cal-day-num { color: #DC2626; }
+    .home-cal-day.sat .home-cal-day-num { color: #2563EB; }
+    .home-cal-day.today .home-cal-day-num {
+      background: #111827;
+      color: #FDE68A !important;
+    }
+    .home-cal-ev-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+      width: 100%;
+    }
+    .home-cal-ev-pill {
+      display: block;
+      width: 100%;
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1.28;
+      padding: 1.5px 3.5px;
+      border-radius: 4px;
+      background: #DBEAFE;
+      color: #1E40AF;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .home-cal-ev-pill.allday {
+      background: #EDE9FE;
+      color: #5B21B6;
+    }
+    .home-cal-ev-more {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #64748B;
+      padding-left: 2px;
+      line-height: 1.15;
+    }
+    .home-cal-foot-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 8px 12px;
+      background: #F8FAFC;
+      border-top: 1px solid #E2E8F0;
+      font-size: 11px;
+      color: #64748B;
     }
     .home-cal-frame-wrap {
       position: relative;
@@ -4614,230 +4761,57 @@
       display: block;
     }
     .home-cal-empty {
-      padding: 26px 16px;
+      padding: 24px 16px;
       text-align: center;
       color: #64748B;
       background: #F8FAFC;
     }
-    @media (min-width: 600px) {
-      .home-cal-frame-wrap {
-        height: 480px;
-      }
-    }
-
-    /* v10.184 홈 달력 내 일정 직접 표시(네이티브 월간 캘린더 + 구글 캘린더 실시간 동기화) */
-    .hcal-nav-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      padding: 9px 11px 7px;
+    .cal-day-event-card {
       background: #F8FAFC;
-      border-bottom: 1px solid var(--border);
-    }
-    .hcal-nav-left {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .hcal-nav-btn {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
       border: 1px solid var(--border);
-      background: #FFFFFF;
-      color: #334155;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      font-family: inherit;
+      border-left: 4px solid #2563EB;
+      border-radius: 13px;
+      padding: 12px 13px;
+      margin-bottom: 9px;
     }
-    .hcal-nav-btn:active { background: #E2E8F0; }
-    .hcal-month-lbl {
+    .cal-day-event-card.allday {
+      border-left-color: #7C3AED;
+    }
+    .cal-day-event-title {
       font-size: 14.5px;
-      font-weight: 900;
-      color: #0F172A;
-      letter-spacing: -0.25px;
-      padding: 0 4px;
-    }
-    .hcal-today-btn {
-      border: 1px solid #CBD5E1;
-      background: #FFFFFF;
-      color: #334155;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 4px 8px;
-      border-radius: 7px;
-      cursor: pointer;
-      font-family: inherit;
-    }
-    .hcal-today-btn:active { background: #E2E8F0; }
-    .hcal-sync-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 10.5px;
-      font-weight: 700;
-      color: #475569;
-      background: #FFFFFF;
-      border: 1px solid #E2E8F0;
-      border-radius: 999px;
-      padding: 3px 8px;
-      cursor: pointer;
-      font-family: inherit;
-    }
-    .hcal-sync-chip.ok { color: #166534; border-color: #BBF7D0; background: #F0FDF4; }
-    .hcal-sync-chip.err { color: #B45309; border-color: #FDE68A; background: #FFFBEB; }
-    .hcal-weekdays {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-      background: #F8FAFC;
-      border-bottom: 1px solid var(--border);
-      text-align: center;
-      padding: 5px 2px;
-      font-size: 11px;
-      font-weight: 800;
-      color: #64748B;
-    }
-    .hcal-weekdays span:first-child { color: #DC2626; }
-    .hcal-weekdays span:last-child { color: #2563EB; }
-    .hcal-grid {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-      background: #E2E8F0;
-      gap: 1px;
-    }
-    .hcal-cell {
-      background: #FFFFFF;
-      min-height: 68px;
-      padding: 3px 2px 4px;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      gap: 2px;
-      border: none;
-      text-align: left;
-      cursor: pointer;
-      font-family: inherit;
-      overflow: hidden;
-      min-width: 0;
-      position: relative;
-    }
-    .hcal-cell.empty {
-      background: #F8FAFC;
-      cursor: default;
-      pointer-events: none;
-    }
-    .hcal-cell.selected {
-      background: #EFF6FF;
-      box-shadow: inset 0 0 0 1.5px #2563EB;
-      z-index: 1;
-    }
-    .hcal-day-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
-      border-radius: 999px;
-      font-size: 11.5px;
-      font-weight: 800;
-      color: #1E293B;
-      line-height: 1;
-      margin-bottom: 1px;
-    }
-    .hcal-cell.sun .hcal-day-num { color: #DC2626; }
-    .hcal-cell.sat .hcal-day-num { color: #2563EB; }
-    .hcal-cell.today .hcal-day-num {
-      background: #111827;
-      color: #FDE68A !important;
-    }
-    .hcal-ev-pill {
-      display: block;
-      width: 100%;
-      font-size: 9.5px;
-      font-weight: 700;
-      line-height: 1.28;
-      padding: 1.5px 3px;
-      border-radius: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      letter-spacing: -0.35px;
-    }
-    .hcal-ev-pill.blue { background: #DBEAFE; color: #1E40AF; }
-    .hcal-ev-pill.green { background: #DCFCE7; color: #166534; }
-    .hcal-ev-pill.purple { background: #F3E8FF; color: #6B21A8; }
-    .hcal-ev-pill.amber { background: #FEF3C7; color: #92400E; }
-    .hcal-ev-pill.rose { background: #FCE7F3; color: #9D174D; }
-    .hcal-ev-more {
-      font-size: 9px;
-      font-weight: 800;
-      color: #64748B;
-      padding-left: 2px;
-      line-height: 1.1;
-    }
-    .hcal-detail-box {
-      padding: 11px 12px 12px;
-      background: #F8FAFC;
-      border-top: 1px solid var(--border);
-    }
-    .hcal-detail-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 8px;
-      flex-wrap: wrap;
-    }
-    .hcal-detail-date {
-      font-size: 13px;
-      font-weight: 900;
-      color: #0F172A;
-    }
-    .hcal-ev-row {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 8px;
-      background: #FFFFFF;
-      border: 1px solid #E2E8F0;
-      border-left-width: 3.5px;
-      border-radius: 10px;
-      padding: 8px 10px;
-      margin-bottom: 6px;
-    }
-    .hcal-ev-row:last-child { margin-bottom: 0; }
-    .hcal-ev-row.blue { border-left-color: #2563EB; }
-    .hcal-ev-row.green { border-left-color: #16A34A; }
-    .hcal-ev-row.purple { border-left-color: #7C3AED; }
-    .hcal-ev-row.amber { border-left-color: #D97706; }
-    .hcal-ev-row.rose { border-left-color: #DB2777; }
-    .hcal-ev-title {
-      font-size: 13px;
       font-weight: 800;
       color: #0F172A;
-      line-height: 1.35;
-    }
-    .hcal-ev-meta {
-      font-size: 11px;
-      color: #64748B;
-      margin-top: 2px;
-      line-height: 1.4;
+      line-height: 1.38;
+      margin: 0 0 5px;
       word-break: keep-all;
     }
-    .hcal-agenda-wrap {
-      padding: 10px 12px 12px;
-      background: #F8FAFC;
+    .cal-day-event-meta {
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .cal-day-event-desc {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed #CBD5E1;
+      font-size: 12.5px;
+      color: #334155;
+      line-height: 1.6;
+      white-space: pre-line;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
     }
     @media (min-width: 600px) {
-      .hcal-cell { min-height: 84px; padding: 4px 4px 5px; gap: 2.5px; }
-      .hcal-ev-pill { font-size: 10.5px; padding: 2px 4px; }
-      .hcal-day-num { width: 22px; height: 22px; font-size: 12px; }
+      .home-cal-day { min-height: 82px; padding: 5px 4px; }
+      .home-cal-ev-pill { font-size: 11px; padding: 2px 5px; }
+      .home-cal-frame-wrap { height: 480px; }
+    }
+    @media (max-width: 380px) {
+      .home-cal-day { min-height: 62px; padding: 3px 1.5px; }
+      .home-cal-ev-pill { font-size: 9.2px; padding: 1px 2.5px; }
     }
 
   </style>
@@ -5411,6 +5385,21 @@
       <div style="display:flex; gap:8px; margin-top:14px;">
         <button id="reqPermBtn" class="btn-full btn-dark hidden" type="button" style="flex:1; padding:11px; font-size:13.5px;" onclick="requestDeviceNotifPermission()">기기 알림 허용하기</button>
         <button class="btn-outline" type="button" style="flex:1; padding:11px; font-size:13.5px;" onclick="sendTestNotification()">테스트 알림</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 홈 구글 캘린더: 날짜 클릭 시 일정 상세 보기 모달 -->
+  <div id="homeCalDayModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="homeCalDayModalTitle" class="modal-title"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.2"/><line x1="8" y1="2.8" x2="8" y2="6.2"/><line x1="16" y1="2.8" x2="16" y2="6.2"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/></svg></span><span>일정 상세</span></h3>
+        <button class="close-btn" data-close="homeCalDayModal">✕</button>
+      </div>
+      <div id="homeCalDayModalBody"></div>
+      <div style="display:flex; gap:8px; margin-top:12px;">
+        <button id="homeCalDayOpenGoogleBtn" class="btn-outline" type="button" style="flex:1; padding:11px; font-size:13px;" onclick="openLinkedGoogleCalendarExternal()">구글 캘린더 열기 ↗</button>
+        <button class="btn-dark" type="button" style="border:none; border-radius:10px; padding:11px 18px; font-size:13px; font-weight:800; cursor:pointer;" data-close="homeCalDayModal">닫기</button>
       </div>
     </div>
   </div>
@@ -6708,63 +6697,6 @@
     </div>
   </div>
 
-  <!-- 관리자: 홈 캘린더 일정 추가/수정 모달 -->
-  <div id="homeCalEventModal" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-head">
-        <h3 id="homeCalEventModalTitle" class="modal-title">캘린더 일정 추가</h3>
-        <button class="close-btn" data-close="homeCalEventModal">✕</button>
-      </div>
-      <input type="hidden" id="editHomeCalEventId" />
-      <div class="form-group">
-        <label class="form-label" for="homeCalEvTitleInput">일정 제목 (필수 · 달력 칸에 바로 표시)</label>
-        <input id="homeCalEvTitleInput" class="form-input" maxlength="36" placeholder="예: 팀장회의, 셀모임, 겨울 수련회, 아웃팅" />
-      </div>
-      <div class="form-grid-2">
-        <div class="form-group">
-          <label class="form-label" for="homeCalEvStartInput">시작 날짜 (필수)</label>
-          <div class="combo-input-row">
-            <input id="homeCalEvStartInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; padding:8px 9px; font-size:13px;" placeholder="2026.11.29" oninput="formatDateTyping(this)" />
-            <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="달력에서 선택" onclick="openNativePicker('homeCalEvStartPicker', 'homeCalEvStartInput', 'date')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.2"/><line x1="8" y1="2.8" x2="8" y2="6.2"/><line x1="16" y1="2.8" x2="16" y2="6.2"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/></svg></span></button>
-            <input id="homeCalEvStartPicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('homeCalEvStartPicker', 'homeCalEvStartInput', 'date')" />
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="homeCalEvEndInput">종료 날짜 (선택 · 하루면 비움)</label>
-          <div class="combo-input-row">
-            <input id="homeCalEvEndInput" type="text" inputmode="numeric" maxlength="10" class="form-input" style="flex:1; padding:8px 9px; font-size:13px;" placeholder="선택 (예: 2026.12.01)" oninput="formatDateTyping(this)" />
-            <button class="combo-picker-btn" type="button" style="width:36px; height:36px;" title="달력에서 선택" onclick="openNativePicker('homeCalEvEndPicker', 'homeCalEvEndInput', 'date')"><span class="ui-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.2"/><line x1="8" y1="2.8" x2="8" y2="6.2"/><line x1="16" y1="2.8" x2="16" y2="6.2"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/></svg></span></button>
-            <input id="homeCalEvEndPicker" type="date" class="hidden-native-picker" onchange="syncPickerToText('homeCalEvEndPicker', 'homeCalEvEndInput', 'date')" />
-          </div>
-        </div>
-      </div>
-      <div class="form-grid-2">
-        <div class="form-group">
-          <label class="form-label" for="homeCalEvTimeInput">시간 (선택 · 비우면 종일)</label>
-          <input id="homeCalEvTimeInput" class="form-input" maxlength="20" placeholder="예: 14:00 또는 오후 2시" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="homeCalEvColorSelect">표시 색상</label>
-          <select id="homeCalEvColorSelect" class="form-select">
-            <option value="purple">보라 (청년부 일정)</option>
-            <option value="blue">파랑 (모임·회의)</option>
-            <option value="green">초록 (예배·기도)</option>
-            <option value="amber">주황 (행사·수련회)</option>
-            <option value="rose">분홍 (축하·특별)</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="homeCalEvMemoInput">간단한 메모 · 장소 (선택)</label>
-        <input id="homeCalEvMemoInput" class="form-input" maxlength="100" placeholder="예: 비전홀 · 예배 후 진행" />
-      </div>
-      <div style="display:flex; gap:8px; margin-top:8px;">
-        <button id="saveHomeCalEventBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:12px;" onclick="handleSaveHomeCalEvent()">일정 저장하기</button>
-        <button class="btn-outline" type="button" data-close="homeCalEventModal">취소</button>
-      </div>
-    </div>
-  </div>
-
   <div id="toast" class="toast" onclick="this.classList.remove('show')"></div>
 
   <script>
@@ -6939,15 +6871,15 @@
     const KEY_QUICK_LINKS_CACHE = 'right_youth_quick_links_cache_v1';
     const KEY_BANNER_AUTO_SLIDE_SEC = 'right_youth_banner_auto_slide_sec_v1';
     const KEY_HOME_CALENDAR_CACHE = 'right_youth_home_cal_cache_v1';
-    const KEY_HOME_CAL_ICS_CACHE = 'right_youth_home_cal_ics_v1';
+    const KEY_HOME_CAL_EVENTS_CACHE = 'right_youth_home_cal_events_v1';
+    const HOME_CAL_EVENTS_TTL_MS = 10 * 60 * 1000;
     const DEFAULT_HOME_CALENDAR_CONFIG = {
       enabled: true,
       title: '라이트 청년부 캘린더',
       calendarId: '',
       extraIds: [],
+      icsUrl: '',
       defaultMode: 'MONTH',
-      showWorshipEvents: true,
-      customEvents: [],
       updatedAt: '',
       updatedBy: ''
     };
@@ -8419,52 +8351,22 @@
       } catch {}
     }
 
-    function normalizeHomeCalendarCustomEvents(rawEvents) {
-      if (!Array.isArray(rawEvents)) return [];
-      const allowedColors = new Set(['blue', 'green', 'purple', 'amber', 'rose']);
-      const out = [];
-      const seen = new Set();
-      rawEvents.forEach((ev, idx) => {
-        if (!ev || typeof ev !== 'object') return;
-        const title = String(ev.title || '').trim().slice(0, 36);
-        const startDate = normalizeDateAnyInput(ev.startDate || ev.date || '');
-        if (!title || !startDate) return;
-        let endDate = normalizeDateAnyInput(ev.endDate || '');
-        if (!endDate || endDate < startDate) endDate = startDate;
-        const id = String(ev.id || `hcev_${idx}_${startDate}`).trim();
-        if (seen.has(id)) return;
-        seen.add(id);
-        const color = allowedColors.has(String(ev.color || '')) ? String(ev.color) : 'purple';
-        out.push({
-          id,
-          title,
-          startDate,
-          endDate,
-          time: String(ev.time || '').trim().slice(0, 20),
-          memo: String(ev.memo || '').trim().slice(0, 100),
-          color
-        });
-      });
-      return out.sort((a, b) => a.startDate.localeCompare(b.startDate) || a.time.localeCompare(b.time)).slice(0, 120);
-    }
-
     function normalizeHomeCalendarConfig(raw) {
       const d = (raw && typeof raw === 'object') ? raw : {};
       const calId = String(d.calendarId || '').trim().slice(0, 180);
       const extraIds = Array.isArray(d.extraIds)
         ? Array.from(new Set(d.extraIds.map(x => String(x || '').trim().slice(0, 180)).filter(x => x && x !== calId)))
         : [];
-      const rawMode = String(d.defaultMode || 'MONTH').toUpperCase();
-      const mode = ['MONTH', 'AGENDA', 'GOOGLE'].includes(rawMode) ? rawMode : 'MONTH';
+      const rawIcs = String(d.icsUrl || '').trim().slice(0, 360);
+      const icsUrl = /^https:\/\/calendar\.google\.com\/calendar\/ical\//i.test(rawIcs) ? rawIcs : '';
       const title = String(d.title || DEFAULT_HOME_CALENDAR_CONFIG.title).trim().slice(0, 30) || DEFAULT_HOME_CALENDAR_CONFIG.title;
       return {
         enabled: d.enabled !== false,
         title,
         calendarId: calId,
         extraIds,
-        defaultMode: mode,
-        showWorshipEvents: d.showWorshipEvents !== false,
-        customEvents: normalizeHomeCalendarCustomEvents(d.customEvents),
+        icsUrl,
+        defaultMode: 'MONTH',
         updatedAt: String(d.updatedAt || ''),
         updatedBy: String(d.updatedBy || '')
       };
@@ -8486,15 +8388,15 @@
     }
 
     let homeCalendarConfig = loadCachedHomeCalendarConfig();
-    let homeCalendarViewModeOverride = '';
-    let homeCalYear = 0;
-    let homeCalMonth = 0;
+    let homeCalViewYear = 0;
+    let homeCalViewMonth = 0; // 1~12
     let homeCalSelectedIso = '';
-    let homeCalGoogleEvents = [];
-    let homeCalGoogleSyncKey = '';
-    let homeCalGoogleSyncState = 'idle'; // 'idle' | 'loading' | 'ok' | 'err'
-    let homeCalGoogleSyncMsg = '';
-    let homeCalGoogleSyncedAt = '';
+    let homeCalBaseEvents = [];
+    let homeCalEventsLoadedKey = '';
+    let homeCalEventsFetchedTs = 0;
+    let homeCalEventsLoading = false;
+    let homeCalEventsError = '';
+    let homeCalShowFallbackIframe = false;
     let bannerAutoSlideSec = loadCachedBannerAutoSlideSec();
     let quickLinks = loadCachedQuickLinks();
     let selectedQuickLinkTheme = 'instagram';
@@ -11448,6 +11350,9 @@
             homeCalendarConfig = structuredClone(DEFAULT_HOME_CALENDAR_CONFIG);
             saveCachedHomeCalendarConfig(homeCalendarConfig);
           }
+          if (typeof ensureHomeGoogleCalendarLoaded === 'function') {
+            ensureHomeGoogleCalendarLoaded(false).catch(() => {});
+          }
           if (d.bannerAutoSlideSec !== undefined) {
             bannerAutoSlideSec = normalizeBannerAutoSlideSec(d.bannerAutoSlideSec);
             saveCachedBannerAutoSlideSec(bannerAutoSlideSec);
@@ -13462,12 +13367,12 @@
           id: 'ug_home_att',
           iconKey: 'home',
           icon: getTabIcon('home'),
-          title: `${getTabLabel('home')} 캘린더 · 광고 & 예배 출석 체크`,
-          sub: '달력 일정 바로 보기(구글 캘린더 연동), 광고 미리보기 & 예배 출석',
-          keywords: `${getTabLabel('home')} 메인 홈 캘린더 달력 일정 구글 캘린더 광고 공지 소식 미리보기 새신자 출석 체크 주일예배 행사`,
+          title: `${getTabLabel('home')} 구글 캘린더 · 광고 & 예배 출석 체크`,
+          sub: '구글 캘린더 1줄 미리보기·날짜 상세, 광고 1줄 미리보기 & 출석 방법',
+          keywords: `${getTabLabel('home')} 메인 홈 캘린더 구글 캘린더 일정 광고 공지 소식 미리보기 새신자 출석 체크 주일예배 행사`,
           steps: [
-            `<b>홈 캘린더 일정 바로 보기:</b> <b>${hLbl}</b> 상단 달력 칸에 구글 캘린더·예배·청년부 일정이 바로 표시됩니다. 날짜를 누르면 하단에 시간과 메모가 펼쳐지며, 상단 <b>[달력 / 목록 / 구글]</b> 버튼으로 보기 방식을 바꿀 수 있습니다.`,
-            `<b>광고 미리보기 확인:</b> 캘린더 바로 아래 <b>광고</b> 목록에서 본문 3줄 미리보기를 바로 확인하고, 카드를 눌러 전체 본문을 볼 수 있습니다.`,
+            `<b>구글 캘린더 일정 확인:</b> <b>${hLbl}</b> 상단의 구글 캘린더에서 날짜별 일정 1줄 미리보기를 바로 보고, 원하는 날짜를 누르면 시간·장소·상세 내용을 자세히 볼 수 있습니다.`,
+            `<b>통합 광고 확인:</b> 캘린더 아래 <b>광고</b> 목록에서 제목과 본문 1줄 미리보기를 확인하고, 카드를 누르면 전체 본문이 열립니다.`,
             `<b>새가족 환영 카드:</b> 새로 온 새가족이 있으면 <b>${hLbl}</b> 상단에 환영 카드가 자동으로 표시됩니다.`,
             `<b>예배 · 특별 행사 출석 체크:</b> 설정된 주일 예배 시간(기본 일요일 14:00~15:30) 또는 특별 행사 시간에만 <b>${hLbl}</b> 맨 위에 <b>초록색 출석 카드</b>가 자동으로 나타납니다.`,
             `<b>출석O / 출석X 선택 및 주간 출석부 반영:</b> <b>[출석O]</b> 또는 <b>[출석X]</b> 버튼을 누르면 출석이 즉시 기록되고 카드가 닫힙니다. 구글 시트 주간 출석부에는 출석한 지체(<b>출석O</b>)만 소속 셀 칸에 <b>○</b>로 자동 체크되며, 불참·미응답은 빈칸으로 유지됩니다. 내 출석 이력은 하단 <b>[${stLbl}] → 내 계정 관리</b>에서 확인할 수 있습니다.`
@@ -13743,14 +13648,13 @@
           catId: 'content_qt',
           category: catMap.content_qt,
           icon: getTabIcon('manageContent'),
-          title: `2. ${getTabLabel('manageContent')} (구글 캘린더 · 일정 · 광고 · 예약 · 새가족)`,
-          sub: `${getTabLabel('home')} 달력 일정 바로 표시, 구글 캘린더 연동, 광고 미리보기, 예약 게시(KST)`,
-          keywords: `${getTabLabel('manageContent')} ${getTabLabel('home')} 화면 캘린더 달력 일정 구글 캘린더 광고 공지 미리보기 임시저장 예약 게시 역할 전용 새가족 새신자 환영 멘트`,
+          title: `2. ${getTabLabel('manageContent')} (구글 캘린더 · 광고 · 역할별 공개 · 예약 · 새가족)`,
+          sub: `${getTabLabel('home')} 구글 캘린더 연동, 통합 광고(1줄 미리보기), 역할 전용 공개, 예약 게시(KST)`,
+          keywords: `${getTabLabel('manageContent')} ${getTabLabel('home')} 화면 캘린더 구글 캘린더 광고 공지 미리보기 임시저장 예약 게시 역할 전용 새가족 새신자 환영 멘트`,
           targetTab: 'content',
           targetLabel: `${getTabIcon('manageContent')} ${getTabLabel('manageContent')} 열기`,
           steps: [
-            `<b>${hLbl} 상단 캘린더 & 구글 캘린더 연동:</b> 구글 캘린더 ID(또는 삽입 코드)를 저장하면 홈 달력 칸에 일정이 바로 표시되며, 홈 캘린더의 <b>[+ 일정]</b> 버튼으로 앱에서 직접 일정을 추가·수정·삭제할 수도 있습니다.`,
-            `<b>통합 광고 관리:</b> 아래 <b>[+ 새 광고 등록]</b>에서 캘린더 밑에 표시되는 통합 광고 목록을 관리합니다. 홈 카드에는 본문 3줄 미리보기가 함께 표시됩니다.`,
+            `<b>${hLbl} 상단 구글 캘린더 연동 & 광고 관리:</b> 상단 카드에 구글 캘린더 ID·iCal 주소·삽입 코드를 저장하면 홈 맨 위 달력에 날짜별 일정 1줄 미리보기와 날짜 클릭 상세 보기가 연동되며, 아래 <b>[+ 새 광고 등록]</b>에서 캘린더 밑에 표시되는 통합 광고 목록을 관리합니다.`,
             '<b>특정 역할에게만 보여주기 (서버 보안 분리):</b> 공개 대상에서 <b>[선택한 역할만 보기]</b>를 고르고 원하는 역할(목사·부장·회장·팀장·셀장 등 중복 선택)을 체크하면 해당 역할 회원에게만 표시됩니다.',
             '<b>임시저장 · 예약 게시 & 새가족 명단:</b> <b>[임시저장]</b>은 관리자만 볼 수 있고, <b>[예약 게시]</b>는 지정한 한국시간(KST)이 지나면 자동 공개됩니다. 노란색 카드의 <b>[명단·멘트·색 수정]</b>에서 새가족 이름을 추가·해제할 수 있습니다.'
           ],
@@ -14541,7 +14445,7 @@
       startHomeTopBannerAutoSlide();
     }
 
-    // ==================== 홈 상단 네이티브 월간 캘린더 + 구글 캘린더 실시간 동기화 엔진 (v10.184) ====================
+    // ==================== 홈 상단 구글 캘린더 연동 엔진 (v10.184 · 월간 달력 1줄 미리보기 + 날짜 클릭 상세) ====================
     function isValidGoogleCalendarId(id) {
       const s = String(id || '').trim();
       if (!s || s.length < 4 || s.length > 180) return false;
@@ -14551,8 +14455,9 @@
 
     function parseGoogleCalendarInput(rawInput) {
       let s = String(rawInput || '').trim();
-      if (!s) return { ok: true, empty: true, calendarId: '', extraIds: [] };
+      if (!s) return { ok: true, empty: true, calendarId: '', extraIds: [], icsUrl: '' };
 
+      // 1) 구글 캘린더 <iframe src="..."> 삽입 코드를 그대로 붙여넣은 경우 src 주소만 안전하게 추출
       const iframeSrcMatch = s.match(/src\s*=\s*["'](https:\/\/calendar\.google\.com\/[^"']+)["']/i);
       if (iframeSrcMatch && iframeSrcMatch[1]) {
         s = iframeSrcMatch[1].replace(/&amp;/g, '&').trim();
@@ -14560,6 +14465,7 @@
         return { ok: false, error: '구글 캘린더 삽입 코드(calendar.google.com)에서 캘린더 주소를 찾지 못했습니다.' };
       }
 
+      // 2) URL 형태인 경우 (embed?src=..., ?cid=..., /ical/.../basic.ics)
       if (/^https?:\/\//i.test(s)) {
         let u = null;
         try { u = new URL(s); } catch {}
@@ -14569,17 +14475,17 @@
         const srcs = u.searchParams.getAll('src').map(x => String(x || '').trim()).filter(isValidGoogleCalendarId);
         if (srcs.length > 0) {
           const unique = Array.from(new Set(srcs));
-          return { ok: true, empty: false, calendarId: unique[0], extraIds: unique.slice(1, 5) };
+          return { ok: true, empty: false, calendarId: unique[0], extraIds: unique.slice(1, 5), icsUrl: '' };
         }
         const cidRaw = String(u.searchParams.get('cid') || '').trim();
         if (cidRaw) {
           if (isValidGoogleCalendarId(cidRaw)) {
-            return { ok: true, empty: false, calendarId: cidRaw, extraIds: [] };
+            return { ok: true, empty: false, calendarId: cidRaw, extraIds: [], icsUrl: '' };
           }
           try {
             const decodedCid = atob(cidRaw.replace(/-/g, '+').replace(/_/g, '/')).trim();
             if (isValidGoogleCalendarId(decodedCid)) {
-              return { ok: true, empty: false, calendarId: decodedCid, extraIds: [] };
+              return { ok: true, empty: false, calendarId: decodedCid, extraIds: [], icsUrl: '' };
             }
           } catch {}
         }
@@ -14587,24 +14493,24 @@
         if (icalMatch && icalMatch[1]) {
           const decoded = decodeURIComponent(icalMatch[1]).trim();
           if (isValidGoogleCalendarId(decoded)) {
-            return { ok: true, empty: false, calendarId: decoded, extraIds: [] };
+            return { ok: true, empty: false, calendarId: decoded, extraIds: [], icsUrl: u.href };
           }
         }
         return { ok: false, error: '구글 캘린더 URL에서 캘린더 ID(src)를 찾지 못했습니다. 캘린더 설정에서 [캘린더 ID] 또는 [삽입 코드]를 복사해 넣어 주세요.' };
       }
 
+      // 3) 쉼표·줄바꿈으로 여러 캘린더 ID를 직접 입력한 경우
       const parts = s.split(/[\n,]+/).map(x => x.trim()).filter(Boolean);
       const validIds = Array.from(new Set(parts.filter(isValidGoogleCalendarId)));
       if (validIds.length === 0) {
         return { ok: false, error: '올바른 구글 캘린더 ID(예: xxx@group.calendar.google.com) 또는 구글 캘린더 삽입 URL을 입력해 주세요.' };
       }
-      return { ok: true, empty: false, calendarId: validIds[0], extraIds: validIds.slice(1, 5) };
+      return { ok: true, empty: false, calendarId: validIds[0], extraIds: validIds.slice(1, 5), icsUrl: '' };
     }
 
-    function buildGoogleCalendarEmbedUrl(cfg, modeOverride = '') {
+    function buildGoogleCalendarEmbedUrl(cfg) {
       const c = normalizeHomeCalendarConfig(cfg);
       if (!c.calendarId || !isValidGoogleCalendarId(c.calendarId)) return '';
-      const mode = modeOverride === 'AGENDA' ? 'AGENDA' : 'MONTH';
       const params = new URLSearchParams();
       params.append('src', c.calendarId);
       (c.extraIds || []).forEach(id => {
@@ -14612,7 +14518,7 @@
       });
       params.set('ctz', 'Asia/Seoul');
       params.set('hl', 'ko');
-      params.set('mode', mode);
+      params.set('mode', 'MONTH');
       params.set('wkst', '1');
       params.set('showTitle', '0');
       params.set('showNav', '1');
@@ -14630,75 +14536,110 @@
       return `https://calendar.google.com/calendar/u/0/r?cid=${encodeURIComponent(c.calendarId)}`;
     }
 
-    function ensureHomeCalMonthInit() {
-      const now = getKstNowInfo();
-      if (!homeCalYear || !homeCalMonth) {
-        homeCalYear = Number(now.y);
-        homeCalMonth = Number(now.m);
+    function getHomeCalendarFeedUrls(cfg) {
+      const c = normalizeHomeCalendarConfig(cfg);
+      const urls = [];
+      if (c.icsUrl && /^https:\/\/calendar\.google\.com\/calendar\/ical\//i.test(c.icsUrl)) {
+        urls.push(c.icsUrl);
+      } else if (c.calendarId && isValidGoogleCalendarId(c.calendarId)) {
+        urls.push(`https://calendar.google.com/calendar/ical/${encodeURIComponent(c.calendarId)}/public/basic.ics`);
       }
-      if (!homeCalSelectedIso) {
-        homeCalSelectedIso = now.iso;
-      }
+      (c.extraIds || []).forEach(id => {
+        if (isValidGoogleCalendarId(id)) {
+          urls.push(`https://calendar.google.com/calendar/ical/${encodeURIComponent(id)}/public/basic.ics`);
+        }
+      });
+      return Array.from(new Set(urls));
     }
 
-    function isoFromYmd(y, m, d) {
-      return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    function getHomeCalendarCacheKey(cfg) {
+      const c = normalizeHomeCalendarConfig(cfg);
+      return `${c.calendarId}|${(c.extraIds || []).join(',')}|${c.icsUrl || ''}`;
     }
 
     function addDaysIso(iso, deltaDays) {
-      const [y, m, d] = String(iso).split('-').map(Number);
-      const dt = new Date(Date.UTC(y, m - 1, d + Number(deltaDays || 0)));
-      return isoFromYmd(dt.getUTCFullYear(), dt.getUTCMonth() + 1, dt.getUTCDate());
+      const parts = String(iso || '').split('-').map(Number);
+      if (parts.length !== 3) return iso;
+      const dt = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2] + Number(deltaDays || 0)));
+      return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}-${String(dt.getUTCDate()).padStart(2, '0')}`;
     }
 
-    function diffDaysIso(isoA, isoB) {
-      const [ya, ma, da] = String(isoA).split('-').map(Number);
-      const [yb, mb, db] = String(isoB).split('-').map(Number);
-      return Math.round((Date.UTC(yb, mb - 1, db) - Date.UTC(ya, ma - 1, da)) / 86400000);
+    function isoToUtcMs(iso) {
+      const parts = String(iso || '').split('-').map(Number);
+      if (parts.length !== 3) return 0;
+      return Date.UTC(parts[0], parts[1] - 1, parts[2]);
     }
 
-    function unescapeIcsText(s) {
-      return String(s || '')
-        .replace(/\\n|\\N/g, ' ')
+    function unescapeIcsText(raw) {
+      return String(raw || '')
+        .replace(/\\[nN]/g, '\n')
         .replace(/\\,/g, ',')
         .replace(/\\;/g, ';')
         .replace(/\\\\/g, '\\')
-        .replace(/<[^>]*>/g, ' ')
-        .replace(/\s+/g, ' ')
         .trim();
     }
 
-    function parseIcsDateVal(val, paramsStr = '') {
-      const v = String(val || '').trim();
-      const isDateOnly = /VALUE=DATE\b/i.test(paramsStr) || /^\d{8}$/.test(v);
-      if (isDateOnly) {
-        const m = v.match(/^(\d{4})(\d{2})(\d{2})/);
-        if (!m) return null;
-        return { iso: `${m[1]}-${m[2]}-${m[3]}`, hhmm: '', allDay: true };
+    function cleanGoogleCalDescText(raw) {
+      let s = unescapeIcsText(raw);
+      if (!s) return '';
+      if (/<[a-z][^>]*>/i.test(s)) {
+        s = s
+          .replace(/<br\s*\/?>/gi, '\n')
+          .replace(/<\/(?:p|div|li|tr|h[1-6])>/gi, '\n')
+          .replace(/<li[^>]*>/gi, '• ')
+          .replace(/<[^>]+>/g, '');
       }
-      const m = v.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})?(Z)?$/i);
-      if (!m) return null;
-      const y = Number(m[1]), mo = Number(m[2]), d = Number(m[3]), hh = Number(m[4]), mi = Number(m[5]);
-      if (m[7]) {
-        const kst = new Date(Date.UTC(y, mo - 1, d, hh, mi, 0) + 9 * 3600000);
-        return {
-          iso: isoFromYmd(kst.getUTCFullYear(), kst.getUTCMonth() + 1, kst.getUTCDate()),
-          hhmm: `${String(kst.getUTCHours()).padStart(2, '0')}:${String(kst.getUTCMinutes()).padStart(2, '0')}`,
-          allDay: false
-        };
-      }
-      return {
-        iso: isoFromYmd(y, mo, d),
-        hhmm: `${String(hh).padStart(2, '0')}:${String(mi).padStart(2, '0')}`,
-        allDay: false
-      };
+      s = s
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/&amp;/gi, '&')
+        .replace(/&lt;/gi, '<')
+        .replace(/&gt;/gi, '>')
+        .replace(/&quot;/gi, '"')
+        .replace(/&#39;/gi, "'")
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+      return s.slice(0, 1500);
     }
 
-    function parseGoogleCalendarIcs(icsText) {
-      const unfolded = String(icsText || '').replace(/\r\n[ \t]/g, '').replace(/\n[ \t]/g, '');
-      const lines = unfolded.split(/\r?\n/);
+    function parseIcsDateValue(valRaw, paramMap) {
+      const val = String(valRaw || '').trim();
+      const valType = String((paramMap && paramMap.VALUE) || '').toUpperCase();
+      const tzid = String((paramMap && paramMap.TZID) || '').toUpperCase();
+
+      const mDate = val.match(/^(\d{4})(\d{2})(\d{2})$/);
+      if (valType === 'DATE' || mDate) {
+        if (!mDate) return null;
+        return { iso: `${mDate[1]}-${mDate[2]}-${mDate[3]}`, hhmm: '', allDay: true };
+      }
+      const mUtc = val.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/i);
+      if (mUtc) {
+        const utcMs = Date.UTC(Number(mUtc[1]), Number(mUtc[2]) - 1, Number(mUtc[3]), Number(mUtc[4]), Number(mUtc[5]), Number(mUtc[6]));
+        const kst = new Date(utcMs + 9 * 60 * 60 * 1000);
+        const iso = `${kst.getUTCFullYear()}-${String(kst.getUTCMonth() + 1).padStart(2, '0')}-${String(kst.getUTCDate()).padStart(2, '0')}`;
+        const hhmm = `${String(kst.getUTCHours()).padStart(2, '0')}:${String(kst.getUTCMinutes()).padStart(2, '0')}`;
+        return { iso, hhmm, allDay: false };
+      }
+      const mLoc = val.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})$/i);
+      if (mLoc) {
+        if (tzid === 'UTC' || tzid === 'GMT' || tzid === 'ETC/UTC') {
+          const utcMs = Date.UTC(Number(mLoc[1]), Number(mLoc[2]) - 1, Number(mLoc[3]), Number(mLoc[4]), Number(mLoc[5]), Number(mLoc[6]));
+          const kst = new Date(utcMs + 9 * 60 * 60 * 1000);
+          const iso = `${kst.getUTCFullYear()}-${String(kst.getUTCMonth() + 1).padStart(2, '0')}-${String(kst.getUTCDate()).padStart(2, '0')}`;
+          const hhmm = `${String(kst.getUTCHours()).padStart(2, '0')}:${String(kst.getUTCMinutes()).padStart(2, '0')}`;
+          return { iso, hhmm, allDay: false };
+        }
+        return { iso: `${mLoc[1]}-${mLoc[2]}-${mLoc[3]}`, hhmm: `${mLoc[4]}:${mLoc[5]}`, allDay: false };
+      }
+      return null;
+    }
+
+    function parseIcsEventsText(rawIcs) {
+      if (!rawIcs || !rawIcs.includes('BEGIN:VCALENDAR')) return [];
+      const unfolded = String(rawIcs).replace(/\r\n/g, '\n').replace(/\r/g, '\n').replace(/\n[ \t]/g, '');
+      const lines = unfolded.split('\n');
       const events = [];
       let cur = null;
+
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         if (line === 'BEGIN:VEVENT') {
@@ -14706,8 +14647,40 @@
           continue;
         }
         if (line === 'END:VEVENT') {
-          if (cur && cur.summary && cur.start && cur.status !== 'CANCELLED') {
-            events.push(cur);
+          if (cur && cur.start && cur.status !== 'CANCELLED') {
+            const startIso = cur.start.iso;
+            let endIso = startIso;
+            let endTime = '';
+            if (cur.end) {
+              if (cur.start.allDay) {
+                const dec = addDaysIso(cur.end.iso, -1);
+                endIso = dec >= startIso ? dec : startIso;
+              } else {
+                if (cur.end.hhmm === '00:00' && cur.end.iso > startIso) {
+                  endIso = addDaysIso(cur.end.iso, -1);
+                  endTime = '24:00';
+                } else {
+                  endIso = cur.end.iso >= startIso ? cur.end.iso : startIso;
+                  endTime = cur.end.hhmm || '';
+                }
+              }
+            }
+            const spanDays = Math.max(0, Math.round((isoToUtcMs(endIso) - isoToUtcMs(startIso)) / 86400000));
+            events.push({
+              uid: cur.uid || `ev_${events.length}`,
+              recId: cur.recId || '',
+              summary: cur.summary || '(제목 없음)',
+              description: cur.description || '',
+              location: cur.location || '',
+              startIso,
+              endIso,
+              spanDays,
+              startTime: cur.start.hhmm || '',
+              endTime,
+              allDay: !!cur.start.allDay,
+              rrule: cur.rrule || '',
+              exdates: cur.exdates || []
+            });
           }
           cur = null;
           continue;
@@ -14715,545 +14688,442 @@
         if (!cur) continue;
         const colonIdx = line.indexOf(':');
         if (colonIdx <= 0) continue;
-        const left = line.slice(0, colonIdx);
-        const val = line.slice(colonIdx + 1);
-        const semiIdx = left.indexOf(';');
-        const prop = (semiIdx >= 0 ? left.slice(0, semiIdx) : left).toUpperCase();
-        const paramsStr = semiIdx >= 0 ? left.slice(semiIdx + 1) : '';
-        if (prop === 'UID') cur.uid = val.trim();
-        else if (prop === 'SUMMARY') cur.summary = unescapeIcsText(val).slice(0, 60);
-        else if (prop === 'DESCRIPTION') cur.description = unescapeIcsText(val).slice(0, 140);
-        else if (prop === 'LOCATION') cur.location = unescapeIcsText(val).slice(0, 60);
-        else if (prop === 'STATUS') cur.status = val.trim().toUpperCase();
-        else if (prop === 'DTSTART') cur.start = parseIcsDateVal(val, paramsStr);
-        else if (prop === 'DTEND') cur.end = parseIcsDateVal(val, paramsStr);
-        else if (prop === 'RRULE') cur.rrule = val.trim();
-        else if (prop === 'EXDATE') {
-          val.split(',').forEach(ex => {
-            const p = parseIcsDateVal(ex.trim(), paramsStr);
-            if (p && p.iso) cur.exdates.push(p.iso);
+        const headPart = line.slice(0, colonIdx);
+        const valPart = line.slice(colonIdx + 1);
+        const headSegs = headPart.split(';');
+        const propName = headSegs[0].toUpperCase();
+        const params = {};
+        for (let p = 1; p < headSegs.length; p++) {
+          const eq = headSegs[p].indexOf('=');
+          if (eq > 0) {
+            params[headSegs[p].slice(0, eq).toUpperCase()] = headSegs[p].slice(eq + 1);
+          }
+        }
+        if (propName === 'UID') cur.uid = valPart.trim();
+        else if (propName === 'STATUS') cur.status = valPart.trim().toUpperCase();
+        else if (propName === 'SUMMARY') cur.summary = unescapeIcsText(valPart);
+        else if (propName === 'DESCRIPTION') cur.description = cleanGoogleCalDescText(valPart);
+        else if (propName === 'LOCATION') cur.location = unescapeIcsText(valPart);
+        else if (propName === 'DTSTART') cur.start = parseIcsDateValue(valPart, params);
+        else if (propName === 'DTEND') cur.end = parseIcsDateValue(valPart, params);
+        else if (propName === 'RRULE') cur.rrule = valPart.trim();
+        else if (propName === 'RECURRENCE-ID') {
+          const rd = parseIcsDateValue(valPart, params);
+          if (rd) cur.recId = rd.iso;
+        } else if (propName === 'EXDATE') {
+          valPart.split(',').forEach(part => {
+            const ed = parseIcsDateValue(part, params);
+            if (ed && ed.iso) cur.exdates.push(ed.iso);
           });
         }
       }
-      return events.map((ev, idx) => {
-        const s = ev.start;
-        let endIso = s.iso;
-        let endTime = '';
-        if (ev.end && ev.end.iso) {
-          if (s.allDay) {
-            const adj = addDaysIso(ev.end.iso, -1);
-            endIso = adj >= s.iso ? adj : s.iso;
-          } else {
-            endIso = ev.end.iso >= s.iso ? ev.end.iso : s.iso;
-            endTime = ev.end.hhmm || '';
-          }
-        }
-        const timeStr = s.allDay ? '' : (endTime && endIso === s.iso && endTime !== s.hhmm ? `${s.hhmm}~${endTime}` : (s.hhmm || ''));
-        const memoParts = [ev.location, ev.description].filter(Boolean);
-        return {
-          id: ev.uid || `gcal_${idx}_${s.iso}`,
-          title: ev.summary,
-          startDate: s.iso,
-          endDate: endIso,
-          spanDays: Math.max(0, diffDaysIso(s.iso, endIso)),
-          time: timeStr,
-          memo: memoParts.join(' · ').slice(0, 120),
-          rrule: ev.rrule || '',
-          exdates: ev.exdates || []
-        };
-      });
+      return events;
     }
 
-    function expandGoogleEventsForMonth(rawEvents, year, month) {
-      const monthStart = isoFromYmd(year, month, 1);
+    function expandGoogleCalEventsForMonth(baseEvents, year, month) {
+      const monthStartIso = `${year}-${String(month).padStart(2, '0')}-01`;
       const lastDay = new Date(Date.UTC(year, month, 0)).getUTCDate();
-      const monthEnd = isoFromYmd(year, month, lastDay);
-      const dayCodeMap = { SU: 0, MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6 };
-      const out = [];
+      const monthEndIso = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+      const winStartMs = isoToUtcMs(monthStartIso);
+      const winEndMs = isoToUtcMs(monthEndIso);
 
-      (rawEvents || []).forEach(ev => {
-        if (!ev || !ev.startDate) return;
-        const exSet = new Set(ev.exdates || []);
-        const span = Number(ev.spanDays || 0);
+      // RECURRENCE-ID로 개별 수정된 날짜는 원본 반복에서 제외
+      const overriddenByUid = new Map();
+      (baseEvents || []).forEach(ev => {
+        if (ev && ev.uid && ev.recId) {
+          if (!overriddenByUid.has(ev.uid)) overriddenByUid.set(ev.uid, new Set());
+          overriddenByUid.get(ev.uid).add(ev.recId);
+        }
+      });
 
+      const dayMap = new Map(); // iso -> Event[]
+      const pushToRange = (ev, occStartIso) => {
+        const span = Math.min(60, Math.max(0, Number(ev.spanDays || 0)));
+        const occEndIso = span > 0 ? addDaysIso(occStartIso, span) : occStartIso;
+        if (occEndIso < monthStartIso || occStartIso > monthEndIso) return;
+        const item = {
+          uid: ev.uid,
+          summary: ev.summary,
+          description: ev.description,
+          location: ev.location,
+          startIso: occStartIso,
+          endIso: occEndIso,
+          startTime: ev.startTime,
+          endTime: ev.endTime,
+          allDay: ev.allDay
+        };
+        let curIso = occStartIso < monthStartIso ? monthStartIso : occStartIso;
+        const stopIso = occEndIso > monthEndIso ? monthEndIso : occEndIso;
+        let guard = 0;
+        while (curIso <= stopIso && guard < 40) {
+          if (!dayMap.has(curIso)) dayMap.set(curIso, []);
+          dayMap.get(curIso).push(item);
+          curIso = addDaysIso(curIso, 1);
+          guard++;
+        }
+      };
+
+      const DOW_CODE_MAP = { SU: 0, MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6 };
+
+      (baseEvents || []).forEach(ev => {
+        if (!ev || !ev.startIso) return;
         if (!ev.rrule) {
-          if (ev.endDate >= monthStart && ev.startDate <= monthEnd && !exSet.has(ev.startDate)) {
-            out.push({
-              id: ev.id,
-              title: ev.title,
-              startDate: ev.startDate,
-              endDate: ev.endDate,
-              time: ev.time || '',
-              memo: ev.memo || '',
-              color: 'blue',
-              source: 'google',
-              sourceLabel: '구글 캘린더'
-            });
-          }
+          pushToRange(ev, ev.startIso);
           return;
         }
-
-        // RRULE 파싱 (WEEKLY / MONTHLY / YEARLY / DAILY)
-        const rule = {};
-        String(ev.rrule).split(';').forEach(pair => {
-          const [k, v] = pair.split('=');
-          if (k && v) rule[k.toUpperCase()] = v.toUpperCase();
+        const rules = {};
+        String(ev.rrule).split(';').forEach(seg => {
+          const eq = seg.indexOf('=');
+          if (eq > 0) rules[seg.slice(0, eq).toUpperCase()] = seg.slice(eq + 1).toUpperCase();
         });
-        const freq = rule.FREQ || '';
-        const interval = Math.max(1, Number(rule.INTERVAL || 1));
-        const untilParsed = rule.UNTIL ? parseIcsDateVal(rule.UNTIL, '') : null;
-        const untilIso = untilParsed ? untilParsed.iso : '';
-        const maxCount = rule.COUNT ? Number(rule.COUNT) : 0;
+        const freq = rules.FREQ || '';
+        const interval = Math.max(1, parseInt(rules.INTERVAL || '1', 10) || 1);
+        const maxCount = rules.COUNT ? Math.max(1, parseInt(rules.COUNT, 10) || 0) : 0;
+        let untilIso = '';
+        if (rules.UNTIL) {
+          const parsedUntil = parseIcsDateValue(rules.UNTIL, {});
+          if (parsedUntil) untilIso = parsedUntil.iso;
+        }
+        const exSet = new Set([...(ev.exdates || []), ...Array.from(overriddenByUid.get(ev.uid) || [])]);
+        const [sy, sm, sd] = ev.startIso.split('-').map(Number);
+        const startMs = isoToUtcMs(ev.startIso);
+        if (startMs > winEndMs) return;
+        if (untilIso && untilIso < addDaysIso(monthStartIso, -Math.min(60, ev.spanDays || 0))) return;
 
-        if (untilIso && untilIso < monthStart) return;
-        if (ev.startDate > monthEnd) return;
-
-        const [sy, sm, sd] = ev.startDate.split('-').map(Number);
-        const startDow = new Date(Date.UTC(sy, sm - 1, sd)).getUTCDay();
-
-        const pushOcc = (occStartIso) => {
-          if (occStartIso < ev.startDate) return;
-          if (untilIso && occStartIso > untilIso) return;
-          if (exSet.has(occStartIso)) return;
-          const occEndIso = span > 0 ? addDaysIso(occStartIso, span) : occStartIso;
-          if (occEndIso >= monthStart && occStartIso <= monthEnd) {
-            out.push({
-              id: `${ev.id}_${occStartIso}`,
-              title: ev.title,
-              startDate: occStartIso,
-              endDate: occEndIso,
-              time: ev.time || '',
-              memo: ev.memo || '',
-              color: 'blue',
-              source: 'google',
-              sourceLabel: '구글 캘린더'
-            });
-          }
+        const isAllowedOcc = (candIso) => {
+          if (candIso < ev.startIso) return false;
+          if (untilIso && candIso > untilIso) return false;
+          if (exSet.has(candIso)) return false;
+          return true;
         };
 
-        if (freq === 'WEEKLY') {
-          const byDays = rule.BYDAY
-            ? rule.BYDAY.split(',').map(x => dayCodeMap[x.slice(-2)]).filter(x => x !== undefined)
-            : [startDow];
-          const scanStart = addDaysIso(monthStart, -Math.min(span, 7));
-          for (let cur = scanStart; cur <= monthEnd; cur = addDaysIso(cur, 1)) {
-            if (cur < ev.startDate) continue;
-            const [cy, cm, cd] = cur.split('-').map(Number);
-            const dow = new Date(Date.UTC(cy, cm - 1, cd)).getUTCDay();
-            if (!byDays.includes(dow)) continue;
-            const wkDiff = Math.floor((diffDaysIso(ev.startDate, cur) + startDow - dow) / 7);
-            if (wkDiff < 0 || wkDiff % interval !== 0) continue;
-            if (maxCount && (Math.floor(wkDiff / interval) * byDays.length) >= maxCount) continue;
-            pushOcc(cur);
+        if (freq === 'DAILY') {
+          let emitted = 0;
+          let stepStart = 0;
+          if (!maxCount && startMs < winStartMs) {
+            const diffDays = Math.floor((winStartMs - startMs) / 86400000);
+            stepStart = Math.max(0, Math.floor((diffDays - (ev.spanDays || 0)) / interval));
           }
-        } else if (freq === 'MONTHLY') {
-          const mDiff = (year - sy) * 12 + (month - sm);
-          if (mDiff >= 0 && mDiff % interval === 0 && (!maxCount || (mDiff / interval) < maxCount)) {
-            if (rule.BYDAY) {
-              const mBy = rule.BYDAY.match(/^(-?\d)?(SU|MO|TU|WE|TH|FR|SA)$/);
-              if (mBy) {
-                const nth = Number(mBy[1] || 1);
-                const targetDow = dayCodeMap[mBy[2]];
-                const matches = [];
-                for (let d = 1; d <= lastDay; d++) {
-                  if (new Date(Date.UTC(year, month - 1, d)).getUTCDay() === targetDow) matches.push(d);
-                }
-                const picked = nth > 0 ? matches[nth - 1] : matches[matches.length + nth];
-                if (picked) pushOcc(isoFromYmd(year, month, picked));
-              }
-            } else {
-              const targetDay = Number(rule.BYMONTHDAY || sd);
-              if (targetDay >= 1 && targetDay <= lastDay) {
-                pushOcc(isoFromYmd(year, month, targetDay));
-              }
+          for (let k = stepStart; k < stepStart + 2000; k++) {
+            const cand = addDaysIso(ev.startIso, k * interval);
+            if (cand > monthEndIso) break;
+            if (untilIso && cand > untilIso) break;
+            emitted++;
+            if (maxCount && emitted > maxCount) break;
+            if (isAllowedOcc(cand)) pushToRange(ev, cand);
+          }
+        } else if (freq === 'WEEKLY') {
+          const startDow = new Date(startMs).getUTCDay();
+          const byDays = rules.BYDAY
+            ? rules.BYDAY.split(',').map(s => DOW_CODE_MAP[s.replace(/[^A-Z]/g, '')]).filter(n => n !== undefined)
+            : [startDow];
+          const sortedDays = Array.from(new Set(byDays)).sort((a, b) => a - b);
+          const week0SunIso = addDaysIso(ev.startIso, -startDow);
+          const week0SunMs = isoToUtcMs(week0SunIso);
+          let weekStart = 0;
+          if (!maxCount && week0SunMs < winStartMs) {
+            const diffWeeks = Math.floor((winStartMs - week0SunMs) / (7 * 86400000));
+            weekStart = Math.max(0, Math.floor((diffWeeks - 2) / interval));
+          }
+          let emitted = 0;
+          for (let w = weekStart; w < weekStart + 500; w++) {
+            const baseSun = addDaysIso(week0SunIso, w * interval * 7);
+            if (baseSun > addDaysIso(monthEndIso, 7)) break;
+            for (let di = 0; di < sortedDays.length; di++) {
+              const cand = addDaysIso(baseSun, sortedDays[di]);
+              if (cand < ev.startIso) continue;
+              if (untilIso && cand > untilIso) { w = weekStart + 500; break; }
+              emitted++;
+              if (maxCount && emitted > maxCount) { w = weekStart + 500; break; }
+              if (cand > monthEndIso) continue;
+              if (isAllowedOcc(cand)) pushToRange(ev, cand);
             }
           }
-        } else if (freq === 'YEARLY') {
-          const yDiff = year - sy;
-          if (yDiff >= 0 && yDiff % interval === 0 && month === sm && sd <= lastDay && (!maxCount || (yDiff / interval) < maxCount)) {
-            pushOcc(isoFromYmd(year, month, sd));
+        } else if (freq === 'MONTHLY') {
+          let emitted = 0;
+          const totalMonthsDiff = (year - sy) * 12 + (month - sm);
+          const mStart = (!maxCount && totalMonthsDiff > 2) ? Math.max(0, Math.floor((totalMonthsDiff - 2) / interval)) : 0;
+          for (let k = mStart; k < mStart + 240; k++) {
+            const absM = (sy * 12 + (sm - 1)) + k * interval;
+            const cy = Math.floor(absM / 12);
+            const cm = (absM % 12) + 1;
+            const dim = new Date(Date.UTC(cy, cm, 0)).getUTCDate();
+            let candDay = sd;
+            if (rules.BYDAY) {
+              const mBy = rules.BYDAY.match(/^(-?\d)?([A-Z]{2})$/);
+              if (mBy && DOW_CODE_MAP[mBy[2]] !== undefined) {
+                const wantDow = DOW_CODE_MAP[mBy[2]];
+                const nth = parseInt(mBy[1] || '1', 10);
+                const matches = [];
+                for (let d = 1; d <= dim; d++) {
+                  if (new Date(Date.UTC(cy, cm - 1, d)).getUTCDay() === wantDow) matches.push(d);
+                }
+                candDay = nth > 0 ? (matches[nth - 1] || 0) : (matches[matches.length + nth] || 0);
+              }
+            } else if (candDay > dim) {
+              candDay = 0;
+            }
+            if (!candDay) continue;
+            const cand = `${cy}-${String(cm).padStart(2, '0')}-${String(candDay).padStart(2, '0')}`;
+            if (cand < ev.startIso) continue;
+            if (cand > monthEndIso) break;
+            if (untilIso && cand > untilIso) break;
+            emitted++;
+            if (maxCount && emitted > maxCount) break;
+            if (isAllowedOcc(cand)) pushToRange(ev, cand);
           }
-        } else if (freq === 'DAILY') {
-          const scanStart = addDaysIso(monthStart, -Math.min(span, 7));
-          for (let cur = scanStart; cur <= monthEnd; cur = addDaysIso(cur, 1)) {
-            if (cur < ev.startDate) continue;
-            const dDiff = diffDaysIso(ev.startDate, cur);
-            if (dDiff < 0 || dDiff % interval !== 0) continue;
-            if (maxCount && (dDiff / interval) >= maxCount) continue;
-            pushOcc(cur);
+        } else if (freq === 'YEARLY') {
+          let emitted = 0;
+          for (let k = 0; k < 80; k++) {
+            const cy = sy + k * interval;
+            if (cy > year + 1) break;
+            const dim = new Date(Date.UTC(cy, sm, 0)).getUTCDate();
+            if (sd > dim) continue;
+            const cand = `${cy}-${String(sm).padStart(2, '0')}-${String(sd).padStart(2, '0')}`;
+            if (untilIso && cand > untilIso) break;
+            emitted++;
+            if (maxCount && emitted > maxCount) break;
+            if (isAllowedOcc(cand)) pushToRange(ev, cand);
           }
         }
       });
-      return out;
+
+      dayMap.forEach((arr, k) => {
+        arr.sort((a, b) => {
+          if (a.allDay !== b.allDay) return a.allDay ? -1 : 1;
+          return String(a.startTime || '').localeCompare(String(b.startTime || '')) || String(a.summary || '').localeCompare(String(b.summary || ''), 'ko');
+        });
+      });
+      return dayMap;
     }
 
-    async function fetchTextWithTimeout(url, timeoutMs = 9000) {
-      const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
-      const timer = ctrl ? setTimeout(() => ctrl.abort(), timeoutMs) : null;
+    async function fetchIcsTextViaCorsProxy(icsUrl) {
+      const cleanUrl = String(icsUrl || '').trim();
+      if (!/^https:\/\/calendar\.google\.com\/calendar\/ical\//i.test(cleanUrl)) return '';
+      // (1) allorigins JSON 브리지
       try {
-        const res = await fetch(url, { signal: ctrl ? ctrl.signal : undefined, cache: 'no-store' });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return await res.text();
-      } finally {
-        if (timer) clearTimeout(timer);
-      }
+        const u1 = `https://api.allorigins.win/get?url=${encodeURIComponent(cleanUrl)}`;
+        const r1 = await fetchWithTimeout(u1, {}, 7500);
+        if (r1.ok) {
+          const j1 = await r1.json();
+          if (j1 && typeof j1.contents === 'string' && j1.contents.includes('BEGIN:VCALENDAR')) {
+            return j1.contents;
+          }
+        }
+      } catch {}
+      // (2) codetabs 프록시 폴백
+      try {
+        const u2 = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(cleanUrl)}`;
+        const r2 = await fetchWithTimeout(u2, {}, 7500);
+        if (r2.ok) {
+          const t2 = await r2.text();
+          if (t2 && t2.includes('BEGIN:VCALENDAR')) return t2;
+        }
+      } catch {}
+      return '';
     }
 
-    async function fetchSingleGoogleCalendarIcs(calId) {
-      const icsUrl = `https://calendar.google.com/calendar/ical/${encodeURIComponent(calId)}/public/basic.ics`;
-      const candidates = [
-        `https://api.allorigins.win/raw?url=${encodeURIComponent(icsUrl)}`,
-        `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(icsUrl)}`
-      ];
-      let lastErr = null;
-      for (const u of candidates) {
-        try {
-          const txt = await fetchTextWithTimeout(u, 8500);
-          if (txt && txt.includes('BEGIN:VCALENDAR')) {
-            return parseGoogleCalendarIcs(txt);
+    function loadCachedHomeCalEvents(cacheKey) {
+      try {
+        const raw = localStorage.getItem(KEY_HOME_CAL_EVENTS_CACHE);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (parsed && parsed.key === cacheKey && Array.isArray(parsed.events)) {
+          return parsed;
+        }
+      } catch {}
+      return null;
+    }
+
+    function saveCachedHomeCalEvents(cacheKey, events) {
+      try {
+        localStorage.setItem(KEY_HOME_CAL_EVENTS_CACHE, JSON.stringify({
+          key: cacheKey,
+          ts: Date.now(),
+          events: Array.isArray(events) ? events : []
+        }));
+      } catch {}
+    }
+
+    async function ensureHomeGoogleCalendarLoaded(force = false) {
+      const cfg = normalizeHomeCalendarConfig(homeCalendarConfig);
+      const feedUrls = getHomeCalendarFeedUrls(cfg);
+      const cacheKey = getHomeCalendarCacheKey(cfg);
+      if (feedUrls.length === 0) {
+        homeCalBaseEvents = [];
+        homeCalEventsLoadedKey = '';
+        homeCalEventsError = '';
+        return;
+      }
+
+      if (!force && homeCalEventsLoadedKey === cacheKey && (Date.now() - homeCalEventsFetchedTs) < HOME_CAL_EVENTS_TTL_MS) {
+        return;
+      }
+
+      // 캐시가 있으면 먼저 즉시 반영해 대기 없이 표시
+      if (!force && homeCalEventsLoadedKey !== cacheKey) {
+        const cached = loadCachedHomeCalEvents(cacheKey);
+        if (cached) {
+          homeCalBaseEvents = cached.events;
+          homeCalEventsLoadedKey = cacheKey;
+          homeCalEventsFetchedTs = cached.ts || 0;
+          homeCalEventsError = '';
+          if ((Date.now() - (cached.ts || 0)) < HOME_CAL_EVENTS_TTL_MS) {
+            const curU = getCurrentUser();
+            if (curU && currentMainTab === 'home') renderHomeView(curU);
+            return;
           }
-        } catch (err) {
-          lastErr = err;
         }
       }
-      throw lastErr || new Error('구글 캘린더 일정을 불러오지 못했습니다.');
-    }
 
-    async function ensureHomeGoogleCalendarSynced(force = false) {
-      const cfg = normalizeHomeCalendarConfig(homeCalendarConfig);
-      const ids = [cfg.calendarId, ...(cfg.extraIds || [])].filter(isValidGoogleCalendarId);
-      const syncKey = ids.join('|');
-      if (!syncKey) {
-        homeCalGoogleEvents = [];
-        homeCalGoogleSyncKey = '';
-        homeCalGoogleSyncState = 'idle';
-        homeCalGoogleSyncMsg = '';
-        return;
-      }
-      if (!force && homeCalGoogleSyncKey === syncKey && (homeCalGoogleSyncState === 'ok' || homeCalGoogleSyncState === 'loading')) {
-        return;
-      }
-
-      // 10분 로컬 캐시 확인
-      if (!force) {
-        try {
-          const raw = localStorage.getItem(KEY_HOME_CAL_ICS_CACHE);
-          if (raw) {
-            const cached = JSON.parse(raw);
-            if (cached && cached.key === syncKey && Array.isArray(cached.events) && (Date.now() - Number(cached.ts || 0)) < 10 * 60 * 1000) {
-              homeCalGoogleEvents = cached.events;
-              homeCalGoogleSyncKey = syncKey;
-              homeCalGoogleSyncState = 'ok';
-              homeCalGoogleSyncedAt = cached.syncedAt || '';
-              return;
-            }
-          }
-        } catch {}
-      }
-
-      homeCalGoogleSyncKey = syncKey;
-      homeCalGoogleSyncState = 'loading';
-      homeCalGoogleSyncMsg = '구글 캘린더 동기화 중...';
-      if (currentMainTab === 'home') {
-        const u = getCurrentUser();
-        if (u) renderHomeView(u);
+      if (homeCalEventsLoading) return;
+      homeCalEventsLoading = true;
+      if (force) {
+        homeCalEventsError = '';
+        const u0 = getCurrentUser();
+        if (u0 && currentMainTab === 'home') renderHomeView(u0);
       }
 
       try {
         const allParsed = [];
-        for (const cid of ids) {
-          const list = await fetchSingleGoogleCalendarIcs(cid);
-          allParsed.push(...list);
-        }
-        homeCalGoogleEvents = allParsed;
-        homeCalGoogleSyncState = 'ok';
-        homeCalGoogleSyncedAt = getKstNowInfo().hhmm;
-        homeCalGoogleSyncMsg = '';
-        try {
-          localStorage.setItem(KEY_HOME_CAL_ICS_CACHE, JSON.stringify({
-            key: syncKey,
-            ts: Date.now(),
-            syncedAt: homeCalGoogleSyncedAt,
-            events: allParsed
-          }));
-        } catch {}
-      } catch (err) {
-        console.warn('Google Calendar ICS sync failed:', err);
-        homeCalGoogleSyncState = 'err';
-        homeCalGoogleSyncMsg = '구글 캘린더 공개 설정을 확인하거나 [구글] 탭을 이용해 주세요.';
-      }
-      if (currentMainTab === 'home') {
-        const u = getCurrentUser();
-        if (u) renderHomeView(u);
-      }
-    }
-
-    function getMergedCalendarEventsForMonth(year, month) {
-      const cfg = normalizeHomeCalendarConfig(homeCalendarConfig);
-      const monthStart = isoFromYmd(year, month, 1);
-      const lastDay = new Date(Date.UTC(year, month, 0)).getUTCDate();
-      const monthEnd = isoFromYmd(year, month, lastDay);
-      const merged = [];
-
-      // 1) 구글 캘린더 동기화 일정
-      if (cfg.calendarId && homeCalGoogleEvents.length > 0) {
-        merged.push(...expandGoogleEventsForMonth(homeCalGoogleEvents, year, month));
-      }
-
-      // 2) 앱 내 직접 등록 일정 (homeCalendar.customEvents)
-      (cfg.customEvents || []).forEach(ev => {
-        if (ev.endDate >= monthStart && ev.startDate <= monthEnd) {
-          merged.push({
-            ...ev,
-            source: 'custom',
-            sourceLabel: '청년부 일정'
-          });
-        }
-      });
-
-      // 3) 앱 예배 · 특별 행사 자동 반영 (attendanceConfig)
-      if (cfg.showWorshipEvents !== false && attendanceConfig) {
-        const skippedSet = new Set((attendanceConfig.skippedSundays || []).map(String));
-        if (attendanceConfig.regularEnabled !== false) {
-          const regLbl = String(attendanceConfig.regularLabel || '청년부 예배').trim();
-          const regTime = (attendanceConfig.regularStart && attendanceConfig.regularEnd)
-            ? `${attendanceConfig.regularStart}~${attendanceConfig.regularEnd}`
-            : (attendanceConfig.regularStart || '');
-          for (let d = 1; d <= lastDay; d++) {
-            const dow = new Date(Date.UTC(year, month - 1, d)).getUTCDay();
-            if (dow === 0) {
-              const iso = isoFromYmd(year, month, d);
-              if (!skippedSet.has(iso)) {
-                merged.push({
-                  id: `att_reg_${iso}`,
-                  title: regLbl,
-                  startDate: iso,
-                  endDate: iso,
-                  time: regTime,
-                  memo: '',
-                  color: 'green',
-                  source: 'worship',
-                  sourceLabel: '정기 예배'
-                });
-              }
-            }
+        let okCnt = 0;
+        for (let i = 0; i < feedUrls.length; i++) {
+          const text = await fetchIcsTextViaCorsProxy(feedUrls[i]);
+          if (text) {
+            okCnt++;
+            parseIcsEventsText(text).forEach(ev => allParsed.push(ev));
           }
         }
-        (attendanceConfig.specialEvents || []).forEach(sp => {
-          if (!sp) return;
-          const sIso = normalizeDateAnyInput(sp.startDate || sp.date || '');
-          const eIso = normalizeDateAnyInput(sp.endDate || sIso) || sIso;
-          if (!sIso || eIso < monthStart || sIso > monthEnd) return;
-          const spTime = (sp.startTime && sp.endTime) ? `${sp.startTime}~${sp.endTime}` : (sp.startTime || '');
-          merged.push({
-            id: `att_sp_${sp.id || sIso}`,
-            title: String(sp.title || '특별 행사').trim(),
-            startDate: sIso,
-            endDate: eIso,
-            time: spTime,
-            memo: '',
-            color: 'amber',
-            source: 'special',
-            sourceLabel: '특별 행사'
-          });
-        });
-      }
-
-      return merged;
-    }
-
-    function buildMonthEventsByDayMap(events, year, month) {
-      const lastDay = new Date(Date.UTC(year, month, 0)).getUTCDate();
-      const monthStart = isoFromYmd(year, month, 1);
-      const monthEnd = isoFromYmd(year, month, lastDay);
-      const map = new Map();
-      for (let d = 1; d <= lastDay; d++) map.set(isoFromYmd(year, month, d), []);
-
-      events.forEach(ev => {
-        const s = ev.startDate < monthStart ? monthStart : ev.startDate;
-        const e = ev.endDate > monthEnd ? monthEnd : ev.endDate;
-        for (let cur = s; cur <= e; cur = addDaysIso(cur, 1)) {
-          const arr = map.get(cur);
-          if (arr) arr.push(ev);
+        if (okCnt > 0) {
+          homeCalBaseEvents = allParsed;
+          homeCalEventsLoadedKey = cacheKey;
+          homeCalEventsFetchedTs = Date.now();
+          homeCalEventsError = '';
+          homeCalShowFallbackIframe = false;
+          saveCachedHomeCalEvents(cacheKey, allParsed);
+        } else if (homeCalEventsLoadedKey !== cacheKey) {
+          homeCalEventsError = '구글 캘린더 일정 데이터를 불러오지 못했습니다. (캘린더가 [공개 사용 설정]인지 확인해 주세요)';
         }
-      });
-
-      const srcOrder = { special: 0, custom: 1, google: 2, worship: 3 };
-      map.forEach(arr => {
-        arr.sort((a, b) => {
-          const ta = a.time || '00:00';
-          const tb = b.time || '00:00';
-          if (ta !== tb) return ta.localeCompare(tb);
-          return (srcOrder[a.source] ?? 9) - (srcOrder[b.source] ?? 9);
-        });
-      });
-      return map;
+      } catch (err) {
+        console.warn('Home Google Calendar load error:', err);
+        if (homeCalEventsLoadedKey !== cacheKey) {
+          homeCalEventsError = '구글 캘린더 연결 중 일시적인 오류가 발생했습니다.';
+        }
+      } finally {
+        homeCalEventsLoading = false;
+        const curU = getCurrentUser();
+        if (curU && currentMainTab === 'home') renderHomeView(curU);
+      }
     }
 
-    window.setHomeCalendarMode = (mode) => {
-      homeCalendarViewModeOverride = ['MONTH', 'AGENDA', 'GOOGLE'].includes(mode) ? mode : 'MONTH';
-      const u = getCurrentUser();
-      if (u && currentMainTab === 'home') renderHomeView(u);
-    };
-
-    window.shiftHomeCalMonth = (delta) => {
-      ensureHomeCalMonthInit();
-      const dt = new Date(Date.UTC(homeCalYear, homeCalMonth - 1 + Number(delta || 0), 1));
-      homeCalYear = dt.getUTCFullYear();
-      homeCalMonth = dt.getUTCMonth() + 1;
-      const now = getKstNowInfo();
-      if (homeCalYear === Number(now.y) && homeCalMonth === Number(now.m)) {
-        homeCalSelectedIso = now.iso;
-      } else {
-        homeCalSelectedIso = isoFromYmd(homeCalYear, homeCalMonth, 1);
+    function ensureHomeCalMonthInit() {
+      if (!homeCalViewYear || !homeCalViewMonth) {
+        const now = getKstNowInfo();
+        homeCalViewYear = now.y;
+        homeCalViewMonth = Number(now.m);
       }
+    }
+
+    window.shiftHomeCalendarMonth = (delta) => {
+      ensureHomeCalMonthInit();
+      const dt = new Date(Date.UTC(homeCalViewYear, homeCalViewMonth - 1 + Number(delta || 0), 1));
+      homeCalViewYear = dt.getUTCFullYear();
+      homeCalViewMonth = dt.getUTCMonth() + 1;
       const u = getCurrentUser();
       if (u && currentMainTab === 'home') renderHomeView(u);
     };
 
-    window.jumpHomeCalToday = () => {
+    window.jumpHomeCalendarToday = () => {
       const now = getKstNowInfo();
-      homeCalYear = Number(now.y);
-      homeCalMonth = Number(now.m);
+      homeCalViewYear = now.y;
+      homeCalViewMonth = Number(now.m);
       homeCalSelectedIso = now.iso;
       const u = getCurrentUser();
       if (u && currentMainTab === 'home') renderHomeView(u);
     };
 
-    window.selectHomeCalDate = (iso) => {
-      const clean = normalizeDateAnyInput(iso);
-      if (!clean) return;
-      homeCalSelectedIso = clean;
+    window.refreshHomeCalendarEvents = async () => {
+      homeCalShowFallbackIframe = false;
+      await ensureHomeGoogleCalendarLoaded(true);
+      if (!homeCalEventsError) showToast('구글 캘린더 일정을 최신화했습니다.', 'ok');
+    };
+
+    window.toggleHomeCalendarFallbackIframe = (useIframe) => {
+      homeCalShowFallbackIframe = !!useIframe;
       const u = getCurrentUser();
       if (u && currentMainTab === 'home') renderHomeView(u);
     };
 
-    window.refreshHomeGoogleCalendarNow = () => {
-      ensureHomeGoogleCalendarSynced(true);
+    window.openLinkedGoogleCalendarExternal = () => {
+      const openUrl = buildGoogleCalendarOpenUrl(homeCalendarConfig);
+      if (!openUrl) return showToast('연동된 구글 캘린더가 없습니다.');
+      openExternalLinkSafely(openUrl, homeCalendarConfig.title || '구글 캘린더');
     };
 
-    window.openHomeCalEventModal = (editId = '', defaultIso = '') => {
-      const u = getCurrentUser();
-      if (!u || !u.isSuperAdmin) return showToast('최고 관리자만 캘린더 일정을 등록·수정할 수 있습니다.');
-      const cfg = normalizeHomeCalendarConfig(homeCalendarConfig);
-      const existing = editId ? (cfg.customEvents || []).find(e => String(e.id) === String(editId)) : null;
-      const initIso = existing ? existing.startDate : (normalizeDateAnyInput(defaultIso) || homeCalSelectedIso || getKstNowInfo().iso);
+    window.openHomeCalDayModal = (isoDate) => {
+      const iso = normalizeDateAnyInput(isoDate);
+      if (!iso) return;
+      homeCalSelectedIso = iso;
+      const [y, m, d] = iso.split('-').map(Number);
+      homeCalViewYear = y;
+      homeCalViewMonth = m;
+      const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+      const dayMap = expandGoogleCalEventsForMonth(homeCalBaseEvents, y, m);
+      const list = dayMap.get(iso) || [];
 
-      document.getElementById('homeCalEventModalTitle').textContent = existing ? '캘린더 일정 수정' : '캘린더 일정 추가';
-      document.getElementById('editHomeCalEventId').value = existing ? existing.id : '';
-      document.getElementById('homeCalEvTitleInput').value = existing ? existing.title : '';
-      document.getElementById('homeCalEvStartInput').value = initIso.replace(/-/g, '.');
-      document.getElementById('homeCalEvEndInput').value = (existing && existing.endDate && existing.endDate !== existing.startDate)
-        ? existing.endDate.replace(/-/g, '.')
-        : '';
-      document.getElementById('homeCalEvTimeInput').value = existing ? (existing.time || '') : '';
-      document.getElementById('homeCalEvColorSelect').value = existing ? (existing.color || 'purple') : 'purple';
-      document.getElementById('homeCalEvMemoInput').value = existing ? (existing.memo || '') : '';
-      document.getElementById('homeCalEventModal').classList.add('open');
-      setTimeout(() => {
-        const inp = document.getElementById('homeCalEvTitleInput');
-        if (inp) inp.focus();
-      }, 60);
-    };
-
-    window.handleSaveHomeCalEvent = async () => {
-      const u = getCurrentUser();
-      if (!u || !u.isSuperAdmin) return;
-      const editId = document.getElementById('editHomeCalEventId').value.trim();
-      const title = document.getElementById('homeCalEvTitleInput').value.trim().slice(0, 36);
-      const startIso = normalizeDateAnyInput(document.getElementById('homeCalEvStartInput').value);
-      const endRaw = document.getElementById('homeCalEvEndInput').value.trim();
-      const endIso = endRaw ? normalizeDateAnyInput(endRaw) : startIso;
-      const time = document.getElementById('homeCalEvTimeInput').value.trim().slice(0, 20);
-      const color = document.getElementById('homeCalEvColorSelect').value || 'purple';
-      const memo = document.getElementById('homeCalEvMemoInput').value.trim().slice(0, 100);
-
-      if (!title) return showToast('일정 제목을 입력해 주세요.');
-      if (!startIso) return showToast('시작 날짜를 올바르게 입력해 주세요. (예: 2026.11.29)');
-      if (endRaw && !endIso) return showToast('종료 날짜를 올바르게 입력해 주세요.');
-      if (endIso < startIso) return showToast('종료 날짜는 시작 날짜 이후로 선택해 주세요.');
-      if (!enforceInputSecurity(`${title}\n${time}\n${memo}`, '캘린더 일정', true)) return;
-
-      const curCfg = normalizeHomeCalendarConfig(homeCalendarConfig);
-      const nextList = structuredClone(curCfg.customEvents || []);
-      const evObj = {
-        id: editId || `hcev_${Date.now()}_${Math.random().toString(36).slice(2, 5)}`,
-        title,
-        startDate: startIso,
-        endDate: endIso,
-        time,
-        memo,
-        color
-      };
-      if (editId) {
-        const idx = nextList.findIndex(x => String(x.id) === editId);
-        if (idx >= 0) nextList[idx] = evObj;
-        else nextList.push(evObj);
-      } else {
-        nextList.push(evObj);
+      const titleEl = document.getElementById('homeCalDayModalTitle');
+      if (titleEl) {
+        titleEl.innerHTML = `${renderMonoSvg('calendar', 18)}<span>${y}년 ${m}월 ${d}일 (${DAY_SHORT_KO[dow] || ''})</span>`;
       }
-      const nextCfg = normalizeHomeCalendarConfig({
-        ...curCfg,
-        customEvents: nextList,
-        updatedAt: formatKstDateTime(),
-        updatedBy: currentAdminName || '관리자'
-      });
 
-      const btn = document.getElementById('saveHomeCalEventBtn');
-      if (btn) { btn.disabled = true; btn.textContent = '저장 중...'; }
-      try {
-        await db.collection('config').doc('layout').set({ homeCalendar: nextCfg }, { merge: true });
-        homeCalendarConfig = nextCfg;
-        saveCachedHomeCalendarConfig(nextCfg);
-        homeCalYear = Number(startIso.slice(0, 4));
-        homeCalMonth = Number(startIso.slice(5, 7));
-        homeCalSelectedIso = startIso;
-        document.getElementById('homeCalEventModal').classList.remove('open');
-        recordAuditLog({
-          actorType: 'admin',
-          category: '공지·배너',
-          action: editId ? '캘린더 일정 수정' : '캘린더 일정 추가',
-          target: title,
-          detail: `${startIso}${endIso !== startIso ? `~${endIso}` : ''}${time ? ` · ${time}` : ''}`
-        });
-        showToast(editId ? '캘린더 일정을 수정했습니다.' : '캘린더 일정이 추가되었습니다!', 'ok');
-        applyScreen();
-      } catch (err) {
-        handleDbError(err, '캘린더 일정 저장');
-      } finally {
-        if (btn) { btn.disabled = false; btn.textContent = '일정 저장하기'; }
+      const bodyEl = document.getElementById('homeCalDayModalBody');
+      if (bodyEl) {
+        if (list.length === 0) {
+          bodyEl.innerHTML = `
+            <div class="card" style="text-align:center; padding:26px 14px; color:#64748B; margin-bottom:0;">
+              <div class="empty-state-svg">${renderMonoSvg('calendar', 26)}</div>
+              <div style="font-size:13.5px; font-weight:800; color:#334155;">등록된 일정이 없습니다.</div>
+              <div style="font-size:12px; margin-top:4px;">구글 캘린더에 일정을 추가하면 이곳에 자동으로 표시됩니다.</div>
+            </div>
+          `;
+        } else {
+          bodyEl.innerHTML = `
+            <div style="font-size:12px; font-weight:800; color:#475569; margin-bottom:9px;">총 ${list.length}건의 구글 캘린더 일정</div>
+            ${list.map(ev => {
+              let timeText = '종일';
+              if (ev.allDay) {
+                if (ev.endIso && ev.endIso > ev.startIso) {
+                  timeText = `종일 (${ev.startIso.slice(5).replace('-', '.')} ~ ${ev.endIso.slice(5).replace('-', '.')})`;
+                }
+              } else {
+                const tRange = ev.endTime ? `${ev.startTime} ~ ${ev.endTime}` : (ev.startTime || '');
+                if (ev.endIso && ev.endIso > ev.startIso) {
+                  timeText = `${ev.startIso.slice(5).replace('-', '.')} ${ev.startTime || ''} ~ ${ev.endIso.slice(5).replace('-', '.')} ${ev.endTime || ''}`.trim();
+                } else {
+                  timeText = tRange || '시간 미지정';
+                }
+              }
+              return `
+                <div class="cal-day-event-card ${ev.allDay ? 'allday' : ''}">
+                  <h4 class="cal-day-event-title">${escapeHtml(ev.summary)}</h4>
+                  <div class="cal-day-event-meta">
+                    <div><b>시간:</b> ${escapeHtml(timeText)}</div>
+                    ${ev.location ? `<div><b>장소:</b> ${escapeHtml(ev.location)}</div>` : ''}
+                  </div>
+                  ${ev.description ? `<div class="cal-day-event-desc">${escapeHtml(ev.description)}</div>` : ''}
+                </div>
+              `;
+            }).join('')}
+          `;
+        }
       }
-    };
 
-    window.deleteHomeCalEvent = async (eventId) => {
+      const openBtn = document.getElementById('homeCalDayOpenGoogleBtn');
+      if (openBtn) openBtn.classList.toggle('hidden', !buildGoogleCalendarOpenUrl(homeCalendarConfig));
+
+      document.getElementById('homeCalDayModal').classList.add('open');
       const u = getCurrentUser();
-      if (!u || !u.isSuperAdmin) return;
-      const curCfg = normalizeHomeCalendarConfig(homeCalendarConfig);
-      const target = (curCfg.customEvents || []).find(x => String(x.id) === String(eventId));
-      if (!target) return;
-      if (!confirm(`[${target.title}] 일정을 삭제할까요?`)) return;
-      const nextCfg = normalizeHomeCalendarConfig({
-        ...curCfg,
-        customEvents: (curCfg.customEvents || []).filter(x => String(x.id) !== String(eventId)),
-        updatedAt: formatKstDateTime(),
-        updatedBy: currentAdminName || '관리자'
-      });
-      try {
-        await db.collection('config').doc('layout').set({ homeCalendar: nextCfg }, { merge: true });
-        homeCalendarConfig = nextCfg;
-        saveCachedHomeCalendarConfig(nextCfg);
-        recordAuditLog({
-          actorType: 'admin',
-          category: '공지·배너',
-          action: '캘린더 일정 삭제',
-          target: target.title,
-          detail: target.startDate
-        });
-        showToast('캘린더 일정을 삭제했습니다.');
-        applyScreen();
-      } catch (err) {
-        handleDbError(err, '캘린더 일정 삭제');
-      }
+      if (u && currentMainTab === 'home') renderHomeView(u);
     };
 
     window.jumpToManageHomeCalendar = () => {
@@ -15274,13 +15144,8 @@
     window.handleSaveHomeCalendarConfig = async () => {
       const u = getCurrentUser();
       if (!u || !u.isSuperAdmin) return;
-      const curCfg = normalizeHomeCalendarConfig(homeCalendarConfig);
       const titleRaw = document.getElementById('cfgHomeCalTitleInput') ? document.getElementById('cfgHomeCalTitleInput').value.trim() : '';
       const srcRaw = document.getElementById('cfgHomeCalSourceInput') ? document.getElementById('cfgHomeCalSourceInput').value.trim() : '';
-      const modeRaw = (document.getElementById('cfgHomeCalModeSelect') || {}).value || 'MONTH';
-      const showWorship = document.getElementById('cfgHomeCalShowWorship')
-        ? !!document.getElementById('cfgHomeCalShowWorship').checked
-        : curCfg.showWorshipEvents;
       const title = (titleRaw || DEFAULT_HOME_CALENDAR_CONFIG.title).slice(0, 30);
 
       if (!enforceInputSecurity(title, '홈 캘린더 제목', true)) return;
@@ -15291,223 +15156,179 @@
       }
 
       const nextCfg = normalizeHomeCalendarConfig({
-        ...curCfg,
         enabled: true,
         title,
         calendarId: parsed.calendarId || '',
         extraIds: parsed.extraIds || [],
-        defaultMode: modeRaw,
-        showWorshipEvents: showWorship,
+        icsUrl: parsed.icsUrl || '',
+        defaultMode: 'MONTH',
         updatedAt: formatKstDateTime(),
         updatedBy: currentAdminName || '관리자'
       });
 
       const btn = document.getElementById('saveHomeCalBtn');
       if (btn) { btn.disabled = true; btn.textContent = '저장 중...'; }
-      setInlineSaveStatus('home_cal', 'loading', '캘린더 연동 설정을 저장하는 중입니다...');
+      setInlineSaveStatus('home_cal', 'loading', '구글 캘린더 연동 설정을 저장하고 일정을 불러오는 중입니다...');
       try {
         await db.collection('config').doc('layout').set({ homeCalendar: nextCfg }, { merge: true });
         homeCalendarConfig = nextCfg;
-        homeCalendarViewModeOverride = '';
         saveCachedHomeCalendarConfig(nextCfg);
-        homeCalGoogleSyncKey = '';
-        if (nextCfg.calendarId) {
-          ensureHomeGoogleCalendarSynced(true);
-        } else {
-          homeCalGoogleEvents = [];
-          homeCalGoogleSyncState = 'idle';
+        homeCalEventsLoadedKey = '';
+        homeCalBaseEvents = [];
+        homeCalEventsError = '';
+        homeCalShowFallbackIframe = false;
+        try { localStorage.removeItem(KEY_HOME_CAL_EVENTS_CACHE); } catch {}
+        if (nextCfg.calendarId || nextCfg.icsUrl) {
+          await ensureHomeGoogleCalendarLoaded(true);
         }
         recordAuditLog({
           actorType: 'admin',
           category: '공지·배너',
-          action: nextCfg.calendarId ? '홈 구글 캘린더 연동 저장' : '홈 캘린더 설정 저장',
+          action: (nextCfg.calendarId || nextCfg.icsUrl) ? '홈 구글 캘린더 연동 저장' : '홈 구글 캘린더 연동 해제',
           target: nextCfg.title,
-          detail: `${nextCfg.calendarId ? `구글ID:${nextCfg.calendarId}` : '구글 미연동'} · 예배자동표시:${showWorship ? 'ON' : 'OFF'}`
+          detail: (nextCfg.calendarId || nextCfg.icsUrl) ? `ID: ${nextCfg.calendarId || 'iCal'}` : '연동 해제됨'
         });
-        setInlineSaveStatus('home_cal', 'ok', nextCfg.calendarId
-          ? `구글 캘린더 연동이 저장되었습니다! (${nextCfg.calendarId})`
-          : '캘린더 설정이 저장되었습니다.');
-        showToast(nextCfg.calendarId ? '홈 구글 캘린더 연동이 저장되었습니다!' : '캘린더 설정이 저장되었습니다.', 'ok');
+        setInlineSaveStatus('home_cal', 'ok', (nextCfg.calendarId || nextCfg.icsUrl)
+          ? `구글 캘린더 연동 저장 완료! (${nextCfg.calendarId || 'iCal'} · 일정 ${homeCalBaseEvents.length}건 불러옴)`
+          : '구글 캘린더 연동이 해제되었습니다.');
+        showToast((nextCfg.calendarId || nextCfg.icsUrl) ? '홈 구글 캘린더 연동이 저장되었습니다!' : '구글 캘린더 연동이 해제되었습니다.', 'ok');
         const curU = getCurrentUser();
         if (curU && currentMainTab === 'manage' && currentManageSubTab === 'content') {
           renderManageContent(document.getElementById('manageContent'), curU);
         }
       } catch (err) {
-        setInlineSaveStatus('home_cal', 'err', '캘린더 설정 저장에 실패했습니다.');
-        handleDbError(err, '캘린더 저장');
+        setInlineSaveStatus('home_cal', 'err', '구글 캘린더 설정 저장에 실패했습니다.');
+        handleDbError(err, '구글 캘린더 저장');
       } finally {
         const liveBtn = document.getElementById('saveHomeCalBtn');
-        if (liveBtn) { liveBtn.disabled = false; liveBtn.textContent = '캘린더 설정 저장'; }
+        if (liveBtn) { liveBtn.disabled = false; liveBtn.textContent = '캘린더 연동 저장'; }
       }
     };
 
     window.handleClearHomeCalendarConfig = async () => {
       const u = getCurrentUser();
       if (!u || !u.isSuperAdmin) return;
-      if (!confirm('구글 캘린더 연동을 해제할까요? (앱에 직접 등록한 일정은 유지됩니다.)')) return;
+      if (!confirm('홈 상단의 구글 캘린더 연동을 해제할까요?')) return;
       const inp = document.getElementById('cfgHomeCalSourceInput');
       if (inp) inp.value = '';
       await window.handleSaveHomeCalendarConfig();
     };
 
-    function buildHomeCalEventRowHtml(ev, isAdmin, showDatePrefix = false) {
-      const colorCls = ['blue', 'green', 'purple', 'amber', 'rose'].includes(ev.color) ? ev.color : 'blue';
-      const dateStr = showDatePrefix
-        ? `${Number(ev.startDate.slice(5, 7))}.${Number(ev.startDate.slice(8, 10))}(${DAY_SHORT_KO[getDowForDateStr(ev.startDate)] || ''})${ev.endDate && ev.endDate !== ev.startDate ? `~${Number(ev.endDate.slice(5, 7))}.${Number(ev.endDate.slice(8, 10))}` : ''}`
-        : (ev.endDate && ev.endDate !== ev.startDate
-          ? `${ev.startDate.slice(5).replace('-', '.')}~${ev.endDate.slice(5).replace('-', '.')}`
-          : '');
-      const metaParts = [
-        dateStr,
-        ev.time || '종일',
-        ev.sourceLabel || ''
-      ].filter(Boolean);
-      return `
-        <div class="hcal-ev-row ${colorCls}">
-          <div style="min-width:0; flex:1;">
-            <div class="hcal-ev-title">${escapeHtml(ev.title)}</div>
-            <div class="hcal-ev-meta">${escapeHtml(metaParts.join(' · '))}${ev.memo ? `<br>${escapeHtml(ev.memo)}` : ''}</div>
-          </div>
-          ${(isAdmin && ev.source === 'custom') ? `
-            <div style="display:flex; gap:4px; flex-shrink:0;">
-              <button class="btn-sm" type="button" style="padding:4px 7px; font-size:11px;" onclick="openHomeCalEventModal('${escapeJsAttr(ev.id)}')">수정</button>
-              <button class="btn-sm danger" type="button" style="padding:4px 7px; font-size:11px;" onclick="deleteHomeCalEvent('${escapeJsAttr(ev.id)}')">삭제</button>
-            </div>
-          ` : ''}
-        </div>
-      `;
-    }
-
     function buildHomeCalendarSectionHtml(user) {
-      ensureHomeCalMonthInit();
       const cfg = normalizeHomeCalendarConfig(homeCalendarConfig);
-      const hasGoogle = !!(cfg.calendarId && isValidGoogleCalendarId(cfg.calendarId));
-      if (hasGoogle) ensureHomeGoogleCalendarSynced(false);
-
-      let activeMode = homeCalendarViewModeOverride || cfg.defaultMode || 'MONTH';
-      if (activeMode === 'GOOGLE' && !hasGoogle) activeMode = 'MONTH';
-
-      const embedUrl = hasGoogle ? buildGoogleCalendarEmbedUrl(cfg, 'MONTH') : '';
-      const openUrl = hasGoogle ? buildGoogleCalendarOpenUrl(cfg) : '';
+      const isLinked = !!(cfg.calendarId || cfg.icsUrl);
+      const embedUrl = buildGoogleCalendarEmbedUrl(cfg);
+      const openUrl = buildGoogleCalendarOpenUrl(cfg);
       const isAdmin = !!(user && user.isSuperAdmin);
-      const todayIso = getKstNowInfo().iso;
 
-      const monthEvents = getMergedCalendarEventsForMonth(homeCalYear, homeCalMonth);
-      const dayMap = buildMonthEventsByDayMap(monthEvents, homeCalYear, homeCalMonth);
-      const firstDow = new Date(Date.UTC(homeCalYear, homeCalMonth - 1, 1)).getUTCDay();
-      const lastDay = new Date(Date.UTC(homeCalYear, homeCalMonth, 0)).getUTCDate();
-
-      const maxPillsPerCell = (typeof window !== 'undefined' && window.innerWidth >= 600) ? 3 : 2;
-      let cellsHtml = '';
-      for (let i = 0; i < firstDow; i++) {
-        cellsHtml += '<div class="hcal-cell empty"></div>';
-      }
-      for (let d = 1; d <= lastDay; d++) {
-        const iso = isoFromYmd(homeCalYear, homeCalMonth, d);
-        const dow = (firstDow + d - 1) % 7;
-        const evs = dayMap.get(iso) || [];
-        const isToday = iso === todayIso;
-        const isSel = iso === homeCalSelectedIso;
-        const cls = [
-          'hcal-cell',
-          dow === 0 ? 'sun' : (dow === 6 ? 'sat' : ''),
-          isToday ? 'today' : '',
-          isSel ? 'selected' : ''
-        ].filter(Boolean).join(' ');
-        const shown = evs.slice(0, maxPillsPerCell);
-        const moreCnt = evs.length - shown.length;
-        cellsHtml += `
-          <button class="${cls}" type="button" onclick="selectHomeCalDate('${iso}')">
-            <span class="hcal-day-num">${d}</span>
-            ${shown.map(ev => `<span class="hcal-ev-pill ${['blue', 'green', 'purple', 'amber', 'rose'].includes(ev.color) ? ev.color : 'blue'}">${escapeHtml(ev.title)}</span>`).join('')}
-            ${moreCnt > 0 ? `<span class="hcal-ev-more">+${moreCnt}</span>` : ''}
-          </button>
+      if (!isLinked) {
+        return `
+          <div class="home-block">
+            <div class="home-cal-card">
+              <div class="home-cal-head">
+                <span class="home-cal-title-wrap">${renderMonoSvg('calendar', 16)}<span>${escapeHtml(cfg.title)}</span></span>
+                <div class="home-cal-actions">
+                  ${isAdmin ? `<button class="home-cal-action-btn" type="button" onclick="jumpToManageHomeCalendar()">설정</button>` : ''}
+                </div>
+              </div>
+              <div class="home-cal-empty">
+                <div class="empty-state-svg">${renderMonoSvg('calendar', 28)}</div>
+                <div style="font-size:14px; font-weight:800; color:#1E293B; margin-bottom:4px;">${isAdmin ? '구글 캘린더를 아직 연동하지 않았습니다' : '구글 캘린더 일정을 준비 중입니다'}</div>
+                <div style="font-size:12px; color:#64748B; line-height:1.5;">${isAdmin ? '구글 캘린더 ID 또는 삽입 코드를 저장하면 홈 상단 달력에 일정이 한 줄 미리보기로 표시됩니다.' : '관리자가 구글 캘린더를 연동하면 청년부 일정이 달력에 표시됩니다.'}</div>
+                ${isAdmin ? `<button class="btn-sm primary" type="button" style="margin-top:11px; padding:8px 13px;" onclick="jumpToManageHomeCalendar()">구글 캘린더 연동하기</button>` : ''}
+              </div>
+            </div>
+          </div>
         `;
       }
-      const trailing = (7 - ((firstDow + lastDay) % 7)) % 7;
-      for (let i = 0; i < trailing; i++) {
-        cellsHtml += '<div class="hcal-cell empty"></div>';
-      }
 
-      const selEvents = dayMap.get(homeCalSelectedIso) || [];
-      const selDateLabel = homeCalSelectedIso
-        ? `${Number(homeCalSelectedIso.slice(5, 7))}월 ${Number(homeCalSelectedIso.slice(8, 10))}일 (${DAY_SHORT_KO[getDowForDateStr(homeCalSelectedIso)] || ''})`
-        : '';
-      const upcomingMonthEvs = monthEvents
-        .filter(ev => ev.endDate >= todayIso)
-        .sort((a, b) => a.startDate.localeCompare(b.startDate) || (a.time || '').localeCompare(b.time || ''))
-        .slice(0, 4);
+      // 백그라운드 자동 동기화 트리거
+      ensureHomeGoogleCalendarLoaded(false).catch(() => {});
+      ensureHomeCalMonthInit();
 
-      const syncChipHtml = hasGoogle
-        ? (homeCalGoogleSyncState === 'loading'
-          ? '<span class="hcal-sync-chip">구글 동기화 중...</span>'
-          : (homeCalGoogleSyncState === 'err'
-            ? `<button class="hcal-sync-chip err" type="button" onclick="refreshHomeGoogleCalendarNow()">구글 재시도</button>`
-            : `<button class="hcal-sync-chip ok" type="button" onclick="refreshHomeGoogleCalendarNow()" title="구글 캘린더 새로고침">구글 연동${homeCalGoogleSyncedAt ? ` ${escapeHtml(homeCalGoogleSyncedAt)}` : ''}</button>`))
-        : '';
-
-      const navBarHtml = `
-        <div class="hcal-nav-bar">
-          <div class="hcal-nav-left">
-            <button class="hcal-nav-btn" type="button" aria-label="이전 달" onclick="shiftHomeCalMonth(-1)">‹</button>
-            <span class="hcal-month-lbl">${homeCalYear}년 ${homeCalMonth}월</span>
-            <button class="hcal-nav-btn" type="button" aria-label="다음 달" onclick="shiftHomeCalMonth(1)">›</button>
-            <button class="hcal-today-btn" type="button" onclick="jumpHomeCalToday()">오늘</button>
-          </div>
-          <div style="display:flex; align-items:center; gap:5px;">
-            ${syncChipHtml}
-          </div>
-        </div>
-      `;
+      const y = homeCalViewYear;
+      const m = homeCalViewMonth;
+      const todayIso = getKstNowInfo().iso;
+      const cacheKey = getHomeCalendarCacheKey(cfg);
+      const hasData = homeCalEventsLoadedKey === cacheKey;
 
       let bodyHtml = '';
-      if (activeMode === 'GOOGLE' && embedUrl) {
+      if (homeCalShowFallbackIframe && embedUrl) {
         bodyHtml = `
           <div id="homeCalendarFrameWrap" class="home-cal-frame-wrap">
             <iframe class="home-cal-iframe" src="${escapeHtml(embedUrl)}" title="${escapeHtml(cfg.title)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
           </div>
+          <div class="home-cal-foot-bar">
+            <span>구글 캘린더 원본 화면으로 표시 중</span>
+            <button class="btn-sm" type="button" style="padding:3px 8px; font-size:11px;" onclick="toggleHomeCalendarFallbackIframe(false)">미리보기 달력으로 전환</button>
+          </div>
         `;
-      } else if (activeMode === 'AGENDA') {
-        const sortedMonth = [...monthEvents].sort((a, b) => a.startDate.localeCompare(b.startDate) || (a.time || '').localeCompare(b.time || ''));
-        bodyHtml = navBarHtml + `
-          <div class="hcal-agenda-wrap">
-            ${homeCalGoogleSyncState === 'err' && hasGoogle ? `
-              <div style="font-size:11.5px; color:#92400E; background:#FFFBEB; border:1px solid #FDE68A; border-radius:9px; padding:7px 9px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
-                <span>${escapeHtml(homeCalGoogleSyncMsg)}</span>
-                <button class="btn-sm" type="button" style="padding:3px 8px; font-size:11px;" onclick="setHomeCalendarMode('GOOGLE')">구글 원본</button>
-              </div>
-            ` : ''}
-            ${sortedMonth.length === 0
-              ? `<div style="text-align:center; padding:18px 8px; font-size:12.5px; color:#64748B;">${homeCalMonth}월에 등록된 일정이 없습니다.</div>`
-              : sortedMonth.map(ev => buildHomeCalEventRowHtml(ev, isAdmin, true)).join('')}
+      } else if (!hasData && homeCalEventsLoading) {
+        bodyHtml = `
+          <div class="home-cal-empty" style="padding:34px 16px;">
+            <div class="spinner" style="margin:0 auto 10px; border-color:#E2E8F0; border-top-color:#111827;"></div>
+            <div style="font-size:13px; font-weight:700; color:#334155;">구글 캘린더 일정을 불러오는 중입니다...</div>
+          </div>
+        `;
+      } else if (!hasData && homeCalEventsError) {
+        bodyHtml = `
+          <div class="home-cal-empty">
+            <div class="empty-state-svg">${renderMonoSvg('calendar', 26)}</div>
+            <div style="font-size:13px; font-weight:800; color:#991B1B; margin-bottom:4px;">${escapeHtml(homeCalEventsError)}</div>
+            <div style="display:flex; justify-content:center; gap:6px; flex-wrap:wrap; margin-top:10px;">
+              <button class="btn-sm primary" type="button" onclick="refreshHomeCalendarEvents()">다시 불러오기</button>
+              ${embedUrl ? `<button class="btn-sm" type="button" onclick="toggleHomeCalendarFallbackIframe(true)">구글 원본 달력 보기</button>` : ''}
+            </div>
           </div>
         `;
       } else {
-        bodyHtml = navBarHtml + `
-          <div class="hcal-weekdays">
+        const firstDow = new Date(Date.UTC(y, m - 1, 1)).getUTCDay();
+        const daysInMonth = new Date(Date.UTC(y, m, 0)).getUTCDate();
+        const dayMap = expandGoogleCalEventsForMonth(homeCalBaseEvents, y, m);
+        const cells = [];
+        for (let b = 0; b < firstDow; b++) {
+          cells.push('<div class="home-cal-day empty"></div>');
+        }
+        for (let d = 1; d <= daysInMonth; d++) {
+          const iso = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          const dow = (firstDow + d - 1) % 7;
+          const evs = dayMap.get(iso) || [];
+          const cls = [
+            'home-cal-day',
+            dow === 0 ? 'sun' : (dow === 6 ? 'sat' : ''),
+            iso === todayIso ? 'today' : '',
+            iso === homeCalSelectedIso ? 'selected' : ''
+          ].filter(Boolean).join(' ');
+          const previewHtml = evs.slice(0, 2).map(ev =>
+            `<span class="home-cal-ev-pill ${ev.allDay ? 'allday' : ''}">${escapeHtml(ev.summary)}</span>`
+          ).join('') + (evs.length > 2 ? `<span class="home-cal-ev-more">+${evs.length - 2}</span>` : '');
+          cells.push(`
+            <button class="${cls}" type="button" onclick="openHomeCalDayModal('${iso}')">
+              <div class="home-cal-day-num-row"><span class="home-cal-day-num">${d}</span></div>
+              ${previewHtml ? `<div class="home-cal-ev-list">${previewHtml}</div>` : ''}
+            </button>
+          `);
+        }
+        const rem = cells.length % 7;
+        if (rem > 0) {
+          for (let r = 0; r < 7 - rem; r++) cells.push('<div class="home-cal-day empty"></div>');
+        }
+        bodyHtml = `
+          <div class="home-cal-nav-bar">
+            <span class="home-cal-month-label">${y}년 ${m}월</span>
+            <div class="home-cal-nav-group">
+              <button class="home-cal-nav-btn" type="button" aria-label="이전 달" onclick="shiftHomeCalendarMonth(-1)">‹</button>
+              <button class="home-cal-today-btn" type="button" onclick="jumpHomeCalendarToday()">오늘</button>
+              <button class="home-cal-nav-btn" type="button" aria-label="다음 달" onclick="shiftHomeCalendarMonth(1)">›</button>
+            </div>
+          </div>
+          <div class="home-cal-weekdays">
             <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
           </div>
-          <div class="hcal-grid">${cellsHtml}</div>
-          <div class="hcal-detail-box">
-            ${homeCalGoogleSyncState === 'err' && hasGoogle ? `
-              <div style="font-size:11.5px; color:#92400E; background:#FFFBEB; border:1px solid #FDE68A; border-radius:9px; padding:7px 9px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
-                <span>${escapeHtml(homeCalGoogleSyncMsg)}</span>
-                <button class="btn-sm" type="button" style="padding:3px 8px; font-size:11px;" onclick="setHomeCalendarMode('GOOGLE')">구글 원본</button>
-              </div>
-            ` : ''}
-            <div class="hcal-detail-head">
-              <span class="hcal-detail-date">${escapeHtml(selDateLabel)} 일정 (${selEvents.length})</span>
-              ${isAdmin ? `<button class="btn-sm primary" type="button" style="padding:4px 9px; font-size:11px;" onclick="openHomeCalEventModal('', '${escapeJsAttr(homeCalSelectedIso)}')">+ 이 날 일정</button>` : ''}
-            </div>
-            ${selEvents.length > 0
-              ? selEvents.map(ev => buildHomeCalEventRowHtml(ev, isAdmin, false)).join('')
-              : `<div style="font-size:12px; color:#64748B; padding:4px 2px;">선택한 날짜에 등록된 일정이 없습니다.</div>`}
-            ${(selEvents.length === 0 && upcomingMonthEvs.length > 0) ? `
-              <div style="margin-top:9px; padding-top:8px; border-top:1px dashed #CBD5E1;">
-                <div style="font-size:11.5px; font-weight:800; color:#475569; margin-bottom:6px;">${homeCalMonth}월 다가오는 일정</div>
-                ${upcomingMonthEvs.map(ev => buildHomeCalEventRowHtml(ev, isAdmin, true)).join('')}
-              </div>
-            ` : ''}
+          <div class="home-cal-grid">${cells.join('')}</div>
+          <div class="home-cal-foot-bar">
+            <span>날짜를 누르면 상세 일정을 확인할 수 있습니다.</span>
+            ${homeCalEventsLoading ? '<span style="color:#2563EB; font-weight:700;">동기화 중...</span>' : ''}
           </div>
         `;
       }
@@ -15516,15 +15337,10 @@
         <div class="home-block">
           <div class="home-cal-card">
             <div class="home-cal-head">
-              <span class="home-cal-title-wrap">${renderMonoSvg('calendar', 17)}<span>${escapeHtml(cfg.title)}</span></span>
+              <span class="home-cal-title-wrap">${renderMonoSvg('calendar', 16)}<span>${escapeHtml(cfg.title)}</span></span>
               <div class="home-cal-actions">
-                <div class="home-cal-mode-seg" role="group" aria-label="캘린더 보기 전환">
-                  <button class="home-cal-mode-btn ${activeMode === 'MONTH' ? 'active' : ''}" type="button" onclick="setHomeCalendarMode('MONTH')">달력</button>
-                  <button class="home-cal-mode-btn ${activeMode === 'AGENDA' ? 'active' : ''}" type="button" onclick="setHomeCalendarMode('AGENDA')">목록</button>
-                  ${hasGoogle ? `<button class="home-cal-mode-btn ${activeMode === 'GOOGLE' ? 'active' : ''}" type="button" onclick="setHomeCalendarMode('GOOGLE')">구글</button>` : ''}
-                </div>
-                ${hasGoogle ? `<button class="home-cal-action-btn" type="button" onclick="openExternalLinkSafely('${escapeJsAttr(openUrl)}', '${escapeJsAttr(cfg.title)}')">열기 ↗</button>` : ''}
-                ${isAdmin ? `<button class="home-cal-action-btn" type="button" style="background:rgba(245,158,11,0.22); border-color:rgba(245,158,11,0.5); color:#FDE68A;" onclick="openHomeCalEventModal()">+ 일정</button>` : ''}
+                <button class="home-cal-action-btn" type="button" title="구글 캘린더 새로고침" onclick="refreshHomeCalendarEvents()">새로고침</button>
+                ${openUrl ? `<button class="home-cal-action-btn" type="button" onclick="openExternalLinkSafely('${escapeJsAttr(openUrl)}', '${escapeJsAttr(cfg.title)}')">열기 ↗</button>` : ''}
                 ${isAdmin ? `<button class="home-cal-action-btn" type="button" onclick="jumpToManageHomeCalendar()">설정</button>` : ''}
               </div>
             </div>
@@ -15601,8 +15417,8 @@
                         </div>
                         <span class="card-date">${escapeHtml(n.date)}</span>
                       </div>
-                      <h3 class="card-title" style="margin-bottom:${String(n.body || '').trim() ? '6px' : '0'};">${escapeHtml(n.title)}</h3>
-                      ${String(n.body || '').trim() ? `<p class="card-body notice-preview-clamp">${escapeHtml(n.body)}</p>` : ''}
+                      <h3 class="card-title" style="margin-bottom:${String(n.body || '').trim() ? '4px' : '0'};">${escapeHtml(n.title)}</h3>
+                      ${String(n.body || '').trim() ? `<p class="notice-preview-one-line">${escapeHtml(String(n.body).replace(/\s+/g, ' ').trim())}</p>` : ''}
                     </div>
                   `;
                 }).join('')}
@@ -15690,7 +15506,7 @@
     };
 
     // ==================== 12. 관리 센터 ====================
-    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setHomeCalendarMode|shiftHomeCalMonth|jumpHomeCalToday|selectHomeCalDate|refreshHomeGoogleCalendarNow|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterViewMode|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|openWeeklyAttendancePrintView|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|setCcmDateFilter|jumpToCcmDateTab|openInviteQrModal|copyInviteQrLink|openSecSimModal|selectSecSimVariant|runAllSecSimulations|runLiveSheetSchemaInspect|loadMoreAuditLogs|switchMainTab|stepTabSlideBar|goToTabSlideBar)\s*\(/;
+    const OBSERVER_ALLOWED_ONCLICK_RE = /^(?:event\.stopPropagation\(\);\s*)?(?:toggleManageSection|collapseManageSectionAndScroll|switchManageSubTab|setManageContentFilter|setManageAdminsFilter|setManageMembersFilter|setManageVideosFilter|setManageWorshipFilter|setManageSheetFilter|setManageSecurityFilter|setManageDiagnosticsFilter|setManageQrFilter|setManageAdminCodeFilter|setManageLabelsFilter|selectRoleMemberTab|toggleAllRolesEditor|setAdminLogFilter|setAdminLogCategoryFilter|setAdminGuideCategory|setAdminInquiryFilter|setWorshipAttStatusFilter|shiftAttRosterCalMonth|selectAttRosterDate|jumpAttRosterToday|selectAttRosterSession|setAttRosterViewMode|setAttRosterFilter|clearAttRosterSearch|jumpAttRosterToIso|clearAttRosterQuickJump|openWeeklyAttendancePrintView|clearRoleMemberSearch|clearAdminLogSearch|clearAdminGuideSearch|openYouTubeVideoSafely|openExternalLinkSafely|setCcmDateFilter|jumpToCcmDateTab|openInviteQrModal|copyInviteQrLink|openSecSimModal|selectSecSimVariant|runAllSecSimulations|runLiveSheetSchemaInspect|loadMoreAuditLogs|switchMainTab|stepTabSlideBar|goToTabSlideBar)\s*\(/;
     const OBSERVER_ALLOWED_INPUT_IDS = new Set([
       'roleMemberSearchInput', 'adminLogSearchInput', 'adminGuideSearchInput', 'attRosterSearchInput', 'attRosterQuickJumpInput'
     ]);
@@ -15998,7 +15814,7 @@
       const canNotices = hasUserPerm(user, 'canManageNotices') || isManageReadOnlyUser(user);
 
       const calCfg = normalizeHomeCalendarConfig(homeCalendarConfig);
-      const calLinked = !!(calCfg.calendarId && isValidGoogleCalendarId(calCfg.calendarId));
+      const calLinked = !!((calCfg.calendarId && isValidGoogleCalendarId(calCfg.calendarId)) || calCfg.icsUrl);
       const calOpenUrl = calLinked ? buildGoogleCalendarOpenUrl(calCfg) : '';
       const liveNotices = notices.filter(n => getPublishState(n) === 'live');
       const pendingNotices = notices.filter(n => getPublishState(n) !== 'live');
@@ -16039,7 +15855,7 @@
               ` : ''}
             </div>
             <h3 class="card-title">${escapeHtml(n.title)}</h3>
-            ${String(n.body || '').trim() ? `<p class="card-body notice-preview-clamp">${escapeHtml(n.body)}</p>` : ''}
+            ${String(n.body || '').trim() ? `<p class="notice-preview-one-line">${escapeHtml(String(n.body).replace(/\s+/g, ' ').trim())}</p>` : ''}
             <div class="card-footer">
               <span class="card-date">${escapeHtml(n.date)}</span>
               <div style="display:flex;gap:6px;flex-wrap:wrap;">
@@ -16060,9 +15876,11 @@
            </div>`
         : '';
 
-      const calInputValue = calCfg.extraIds && calCfg.extraIds.length > 0
-        ? [calCfg.calendarId, ...calCfg.extraIds].join(', ')
-        : calCfg.calendarId;
+      const calInputValue = calCfg.icsUrl
+        ? calCfg.icsUrl
+        : (calCfg.extraIds && calCfg.extraIds.length > 0
+            ? [calCfg.calendarId, ...calCfg.extraIds].join(', ')
+            : calCfg.calendarId);
 
       el.innerHTML = `
         <div class="stats-grid-3">
@@ -16089,40 +15907,19 @@
               </div>
               <span class="tag ${calLinked ? 'green' : 'warm'}">${calLinked ? '연동 완료' : '미연동'}</span>
             </div>
-            <div class="form-grid-2" style="margin-bottom:8px;">
-              <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label" for="cfgHomeCalTitleInput">캘린더 표시 제목</label>
-                <input id="cfgHomeCalTitleInput" class="form-input" maxlength="30" value="${escapeHtml(calCfg.title)}" placeholder="예: 라이트 청년부 캘린더" />
-              </div>
-              <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label" for="cfgHomeCalModeSelect">기본 보기 형식</label>
-                <select id="cfgHomeCalModeSelect" class="form-select">
-                  <option value="MONTH" ${calCfg.defaultMode === 'MONTH' ? 'selected' : ''}>월간 달력 · 일정 바로 표시 (기본)</option>
-                  <option value="AGENDA" ${calCfg.defaultMode === 'AGENDA' ? 'selected' : ''}>일정 목록</option>
-                  <option value="GOOGLE" ${calCfg.defaultMode === 'GOOGLE' ? 'selected' : ''}>구글 캘린더 원본</option>
-                </select>
-              </div>
+            <div class="form-group" style="margin-bottom:8px;">
+              <label class="form-label" for="cfgHomeCalTitleInput">캘린더 표시 제목</label>
+              <input id="cfgHomeCalTitleInput" class="form-input" maxlength="30" value="${escapeHtml(calCfg.title)}" placeholder="예: 라이트 청년부 캘린더" />
             </div>
             <div class="form-group" style="margin-bottom:8px;">
               <label class="form-label" for="cfgHomeCalSourceInput">구글 캘린더 ID · 공개 URL · 삽입 코드(iframe)</label>
               <input id="cfgHomeCalSourceInput" class="form-input" value="${escapeHtml(calInputValue)}" placeholder="예: xxxxx@group.calendar.google.com 또는 구글 캘린더 삽입 코드 붙여넣기" />
             </div>
-            <label class="checkbox-row" style="margin:4px 0 9px; cursor:pointer;">
-              <input type="checkbox" id="cfgHomeCalShowWorship" ${calCfg.showWorshipEvents !== false ? 'checked' : ''} />
-              <span style="font-size:12.5px;">정기 주일 예배 · 특별 행사 일정도 달력에 자동 표시</span>
-            </label>
             <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
-              <button id="saveHomeCalBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:10px 12px; font-size:13px;" onclick="handleSaveHomeCalendarConfig()">캘린더 설정 저장</button>
-              <button class="btn-outline" type="button" style="padding:10px 11px; font-size:12.5px; font-weight:800;" onclick="openHomeCalEventModal()">+ 일정 추가</button>
-              ${calLinked ? `<button class="btn-outline" type="button" style="padding:10px 11px; font-size:12.5px;" onclick="openExternalLinkSafely('${escapeJsAttr(calOpenUrl)}', '${escapeJsAttr(calCfg.title)}')">열기 ↗</button>` : ''}
+              <button id="saveHomeCalBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:10px 12px; font-size:13px;" onclick="handleSaveHomeCalendarConfig()">캘린더 연동 저장</button>
+              ${calLinked ? `<button class="btn-outline" type="button" style="padding:10px 12px; font-size:12.5px;" onclick="openExternalLinkSafely('${escapeJsAttr(calOpenUrl)}', '${escapeJsAttr(calCfg.title)}')">열기 ↗</button>` : ''}
               ${calLinked ? `<button class="btn-sm danger" type="button" style="padding:0 11px;" onclick="handleClearHomeCalendarConfig()">해제</button>` : ''}
             </div>
-            ${(calCfg.customEvents || []).length > 0 ? `
-              <div style="margin:8px 0 4px; padding-top:8px; border-top:1px dashed #CBD5E1;">
-                <div style="font-size:12px; font-weight:800; color:#334155; margin-bottom:6px;">앱에 직접 등록한 캘린더 일정 (${calCfg.customEvents.length}건)</div>
-                ${calCfg.customEvents.slice(0, 8).map(ev => buildHomeCalEventRowHtml({ ...ev, source: 'custom', sourceLabel: '청년부 일정' }, true, true)).join('')}
-              </div>
-            ` : ''}
             ${buildInlineSaveStatusHtml('home_cal')}
             <details style="margin-top:8px; background:#F8FAFC; border:1px solid var(--border); border-radius:10px; padding:8px 10px; font-size:12px; color:#475569; line-height:1.55;">
               <summary style="cursor:pointer; font-weight:800; color:#1E293B;">구글 캘린더 연동 방법 (3단계)</summary>
@@ -39480,8 +39277,7 @@ ${handleUrl}`);
                         ${v.autoApproved ? '<span class="tag green" style="font-size:10px;">⚡ 공식 자동 게시</span>' : '<span class="tag" style="font-size:10px;">✅ 관리자 승인</span>'}
                       </div>
                       <div style="font-size:13.5px; font-weight:800; color:#0F172A; line-height:1.35;">${escapeHtml(v.title || '')}</div>
-                      <div style="font-size:11.5px; color:#64748B; margin-top:2px;">${escapeHtml(v.channelName || '-')} · ${isCcmVideo(v) ? '등록' : '추천'}: ${escapeHtml(v.authorName || '-')}</div>
-                      ${String(v.note || '').trim() ? `<div class="card-body clamp" style="font-size:12px; color:#475569; margin-top:4px;">${escapeHtml(v.note)}</div>` : ''}
+                      <div style="font-size:11.5px; color:#64748B; margin-top:2px;">📺 ${escapeHtml(v.channelName || '-')} · 추천: ${escapeHtml(v.authorName || '-')}</div>
                     </div>
                   </div>
                   <div class="card-footer" style="margin-top:8px; padding-top:8px;">
