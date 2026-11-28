@@ -2,19 +2,19 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://right-youth-app.firebaseapp.com https://www.youtube.com https://noembed.com https://api.allorigins.win https://api.codetabs.com https://api.rss2json.com https://script.google.com https://script.googleusercontent.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com https://calendar.google.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://right-youth-app.firebaseapp.com https://www.youtube.com https://noembed.com https://api.allorigins.win https://api.codetabs.com https://corsproxy.io https://api.rss2json.com https://script.google.com https://script.googleusercontent.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com https://calendar.google.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=284" />
+  <link rel="manifest" href="./manifest.json?v=285" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=284" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=284" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=285" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=285" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4838,7 +4838,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=284" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=285" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -6749,8 +6749,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 35;
-    const APP_CLIENT_BUILD = 284;
-    const APP_CACHE_NAME = 'right-youth-app-v10.184';
+    const APP_CLIENT_BUILD = 285;
+    const APP_CACHE_NAME = 'right-youth-app-v10.185';
     const APP_BOOT_TS = Date.now();
     try {
       const _bootUrl = new URL(window.location.href);
@@ -8053,7 +8053,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? `<span style="color:#FECACA; display:inline-flex; align-items:center; justify-content:center;">${renderMonoSvg('alertShield', 20)}</span>`
-        : '<img src="./icon-192.png?v=284" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=285" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -8077,8 +8077,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=284', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=284', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=285', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=285', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -8394,6 +8394,8 @@
     let homeCalBaseEvents = [];
     let homeCalEventsLoadedKey = '';
     let homeCalEventsFetchedTs = 0;
+    let homeCalEventsAttemptedKey = '';
+    let homeCalEventsAttemptedTs = 0;
     let homeCalEventsLoading = false;
     let homeCalEventsError = '';
     let homeCalShowFallbackIframe = false;
@@ -14475,6 +14477,12 @@
         const srcs = u.searchParams.getAll('src').map(x => String(x || '').trim()).filter(isValidGoogleCalendarId);
         if (srcs.length > 0) {
           const unique = Array.from(new Set(srcs));
+          const isHoliday = (id) => /#holiday@/i.test(id);
+          const isGroupCal = (id) => /@group\.calendar\.google\.com$/i.test(id) && !isHoliday(id);
+          unique.sort((a, b) => {
+            const score = (id) => isGroupCal(id) ? 0 : (!isHoliday(id) ? 1 : 2);
+            return score(a) - score(b);
+          });
           return { ok: true, empty: false, calendarId: unique[0], extraIds: unique.slice(1, 5), icsUrl: '' };
         }
         const cidRaw = String(u.searchParams.get('cid') || '').trim();
@@ -14531,9 +14539,7 @@
     }
 
     function buildGoogleCalendarOpenUrl(cfg) {
-      const c = normalizeHomeCalendarConfig(cfg);
-      if (!c.calendarId || !isValidGoogleCalendarId(c.calendarId)) return '';
-      return `https://calendar.google.com/calendar/u/0/r?cid=${encodeURIComponent(c.calendarId)}`;
+      return buildGoogleCalendarEmbedUrl(cfg);
     }
 
     function getHomeCalendarFeedUrls(cfg) {
@@ -14897,30 +14903,83 @@
       return dayMap;
     }
 
+    function decodeIcsProxyPayload(raw) {
+      const s = String(raw || '').trim();
+      if (!s) return '';
+      if (s.includes('BEGIN:VCALENDAR')) return s;
+      const m = s.match(/^data:[^;,]+(?:;[^;,]+)*;base64,([A-Za-z0-9+/=\s]+)$/i);
+      if (m && m[1]) {
+        try {
+          const bin = atob(m[1].replace(/\s+/g, ''));
+          const bytes = new Uint8Array(bin.length);
+          for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+          const decoded = new TextDecoder('utf-8').decode(bytes);
+          if (decoded.includes('BEGIN:VCALENDAR')) return decoded;
+        } catch {}
+      }
+      return '';
+    }
+
     async function fetchIcsTextViaCorsProxy(icsUrl) {
       const cleanUrl = String(icsUrl || '').trim();
-      if (!/^https:\/\/calendar\.google\.com\/calendar\/ical\//i.test(cleanUrl)) return '';
-      // (1) allorigins JSON 브리지
+      if (!/^https:\/\/calendar\.google\.com\/calendar\/ical\//i.test(cleanUrl)) {
+        return { text: '', httpCode: 0 };
+      }
+      let lastHttpCode = 0;
+
+      // (1) allorigins /raw (UTF-8 원문 직접 반환 · 가장 빠름)
+      try {
+        const u0 = `https://api.allorigins.win/raw?url=${encodeURIComponent(cleanUrl)}`;
+        const r0 = await fetchWithTimeout(u0, {}, 5500);
+        if (r0.ok) {
+          const t0 = decodeIcsProxyPayload(await r0.text());
+          if (t0) return { text: t0, httpCode: 200 };
+        } else if (r0.status === 403 || r0.status === 404) {
+          lastHttpCode = r0.status;
+        }
+      } catch {}
+
+      // (2) allorigins /get JSON 브리지 (base64 data-URL 자동 복호화 + Google HTTP 상태코드 확인)
       try {
         const u1 = `https://api.allorigins.win/get?url=${encodeURIComponent(cleanUrl)}`;
-        const r1 = await fetchWithTimeout(u1, {}, 7500);
+        const r1 = await fetchWithTimeout(u1, {}, 6000);
         if (r1.ok) {
           const j1 = await r1.json();
-          if (j1 && typeof j1.contents === 'string' && j1.contents.includes('BEGIN:VCALENDAR')) {
-            return j1.contents;
+          const stCode = Number(j1 && j1.status && j1.status.http_code || 0);
+          if (stCode) lastHttpCode = stCode;
+          const t1 = decodeIcsProxyPayload(j1 && j1.contents);
+          if (t1) return { text: t1, httpCode: 200 };
+          if (stCode === 403 || stCode === 404) {
+            return { text: '', httpCode: stCode };
           }
         }
       } catch {}
-      // (2) codetabs 프록시 폴백
+
+      // (3) corsproxy.io 폴백
       try {
-        const u2 = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(cleanUrl)}`;
-        const r2 = await fetchWithTimeout(u2, {}, 7500);
+        const u2 = `https://corsproxy.io/?url=${encodeURIComponent(cleanUrl)}`;
+        const r2 = await fetchWithTimeout(u2, {}, 5500);
         if (r2.ok) {
-          const t2 = await r2.text();
-          if (t2 && t2.includes('BEGIN:VCALENDAR')) return t2;
+          const t2 = decodeIcsProxyPayload(await r2.text());
+          if (t2) return { text: t2, httpCode: 200 };
+        } else if (r2.status === 403 || r2.status === 404) {
+          lastHttpCode = r2.status;
         }
       } catch {}
-      return '';
+
+      // (4) codetabs 프록시 폴백
+      try {
+        const u3 = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(cleanUrl)}`;
+        const r3 = await fetchWithTimeout(u3, {}, 6000);
+        if (r3.ok) {
+          const t3 = decodeIcsProxyPayload(await r3.text());
+          if (t3) return { text: t3, httpCode: 200 };
+        } else if (r3.status === 403 || r3.status === 404) {
+          lastHttpCode = r3.status;
+        }
+      } catch {}
+
+      return { text: '', httpCode: lastHttpCode };
     }
 
     function loadCachedHomeCalEvents(cacheKey) {
@@ -14952,11 +15011,17 @@
       if (feedUrls.length === 0) {
         homeCalBaseEvents = [];
         homeCalEventsLoadedKey = '';
+        homeCalEventsAttemptedKey = '';
         homeCalEventsError = '';
         return;
       }
 
       if (!force && homeCalEventsLoadedKey === cacheKey && (Date.now() - homeCalEventsFetchedTs) < HOME_CAL_EVENTS_TTL_MS) {
+        return;
+      }
+
+      // 실패 직후 자동 무한 재시도(무한 로딩) 방지: 2분 이내 동일 캘린더 에러 상태면 자동 재호출 중단
+      if (!force && homeCalEventsAttemptedKey === cacheKey && homeCalEventsError && (Date.now() - homeCalEventsAttemptedTs) < 120000) {
         return;
       }
 
@@ -14967,6 +15032,8 @@
           homeCalBaseEvents = cached.events;
           homeCalEventsLoadedKey = cacheKey;
           homeCalEventsFetchedTs = cached.ts || 0;
+          homeCalEventsAttemptedKey = cacheKey;
+          homeCalEventsAttemptedTs = Date.now();
           homeCalEventsError = '';
           if ((Date.now() - (cached.ts || 0)) < HOME_CAL_EVENTS_TTL_MS) {
             const curU = getCurrentUser();
@@ -14978,6 +15045,8 @@
 
       if (homeCalEventsLoading) return;
       homeCalEventsLoading = true;
+      homeCalEventsAttemptedKey = cacheKey;
+      homeCalEventsAttemptedTs = Date.now();
       if (force) {
         homeCalEventsError = '';
         const u0 = getCurrentUser();
@@ -14987,11 +15056,14 @@
       try {
         const allParsed = [];
         let okCnt = 0;
+        let deniedHttpCode = 0;
         for (let i = 0; i < feedUrls.length; i++) {
-          const text = await fetchIcsTextViaCorsProxy(feedUrls[i]);
-          if (text) {
+          const res = await fetchIcsTextViaCorsProxy(feedUrls[i]);
+          if (res && res.text) {
             okCnt++;
-            parseIcsEventsText(text).forEach(ev => allParsed.push(ev));
+            parseIcsEventsText(res.text).forEach(ev => allParsed.push(ev));
+          } else if (res && (res.httpCode === 403 || res.httpCode === 404)) {
+            deniedHttpCode = res.httpCode;
           }
         }
         if (okCnt > 0) {
@@ -15002,7 +15074,11 @@
           homeCalShowFallbackIframe = false;
           saveCachedHomeCalEvents(cacheKey, allParsed);
         } else if (homeCalEventsLoadedKey !== cacheKey) {
-          homeCalEventsError = '구글 캘린더 일정 데이터를 불러오지 못했습니다. (캘린더가 [공개 사용 설정]인지 확인해 주세요)';
+          if (deniedHttpCode === 403 || deniedHttpCode === 404) {
+            homeCalEventsError = '구글 캘린더가 비공개 상태이거나 캘린더 ID가 올바르지 않습니다. (Google 캘린더 설정 → [공개 사용 설정]을 체크해 주세요)';
+          } else {
+            homeCalEventsError = '일정 미리보기 서버 응답이 지연되고 있습니다. [다시 불러오기] 또는 [구글 원본 달력 보기]를 눌러 주세요.';
+          }
         }
       } catch (err) {
         console.warn('Home Google Calendar load error:', err);
@@ -15011,6 +15087,8 @@
         }
       } finally {
         homeCalEventsLoading = false;
+        homeCalEventsAttemptedKey = cacheKey;
+        homeCalEventsAttemptedTs = Date.now();
         const curU = getCurrentUser();
         if (curU && currentMainTab === 'home') renderHomeView(curU);
       }
@@ -15174,6 +15252,8 @@
         homeCalendarConfig = nextCfg;
         saveCachedHomeCalendarConfig(nextCfg);
         homeCalEventsLoadedKey = '';
+        homeCalEventsAttemptedKey = '';
+        homeCalEventsAttemptedTs = 0;
         homeCalBaseEvents = [];
         homeCalEventsError = '';
         homeCalShowFallbackIframe = false;
@@ -15242,8 +15322,6 @@
         `;
       }
 
-      // 백그라운드 자동 동기화 트리거
-      ensureHomeGoogleCalendarLoaded(false).catch(() => {});
       ensureHomeCalMonthInit();
 
       const y = homeCalViewYear;
@@ -15251,6 +15329,12 @@
       const todayIso = getKstNowInfo().iso;
       const cacheKey = getHomeCalendarCacheKey(cfg);
       const hasData = homeCalEventsLoadedKey === cacheKey;
+      const needsInitialFetch = !hasData && !homeCalEventsLoading && homeCalEventsAttemptedKey !== cacheKey;
+      const needsRefresh = hasData && !homeCalEventsLoading && (Date.now() - homeCalEventsFetchedTs) >= HOME_CAL_EVENTS_TTL_MS;
+
+      if (needsInitialFetch || needsRefresh) {
+        setTimeout(() => { ensureHomeGoogleCalendarLoaded(false).catch(() => {}); }, 0);
+      }
 
       let bodyHtml = '';
       if (homeCalShowFallbackIframe && embedUrl) {
@@ -15263,7 +15347,7 @@
             <button class="btn-sm" type="button" style="padding:3px 8px; font-size:11px;" onclick="toggleHomeCalendarFallbackIframe(false)">미리보기 달력으로 전환</button>
           </div>
         `;
-      } else if (!hasData && homeCalEventsLoading) {
+      } else if (!hasData && (homeCalEventsLoading || needsInitialFetch)) {
         bodyHtml = `
           <div class="home-cal-empty" style="padding:34px 16px;">
             <div class="spinner" style="margin:0 auto 10px; border-color:#E2E8F0; border-top-color:#111827;"></div>
@@ -15914,6 +15998,13 @@
             <div class="form-group" style="margin-bottom:8px;">
               <label class="form-label" for="cfgHomeCalSourceInput">구글 캘린더 ID · 공개 URL · 삽입 코드(iframe)</label>
               <input id="cfgHomeCalSourceInput" class="form-input" value="${escapeHtml(calInputValue)}" placeholder="예: xxxxx@group.calendar.google.com 또는 구글 캘린더 삽입 코드 붙여넣기" />
+              ${calCfg.calendarId ? `<div style="font-size:11.5px; color:#475569; margin-top:5px; word-break:break-all;">현재 연동 ID: <code>${escapeHtml(calCfg.calendarId)}</code></div>` : ''}
+              ${calCfg.calendarId && /@gmail\.com$/i.test(calCfg.calendarId) ? `
+                <div class="info-box warn" style="margin-top:7px; padding:9px 10px; font-size:11.5px;">
+                  <b>개인 기본 캘린더(<code>@gmail.com</code>)가 연결되어 있습니다.</b><br>
+                  교회·청년부 전용 캘린더를 따로 만드셨다면 Google 캘린더 왼쪽 <b>내 캘린더</b>에서 해당 교회 캘린더의 <b>⋮ → 설정 및 공유 → 캘린더 ID (<code>...@group.calendar.google.com</code>)</b>를 복사해 넣어 주세요.
+                </div>
+              ` : ''}
             </div>
             <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
               <button id="saveHomeCalBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:10px 12px; font-size:13px;" onclick="handleSaveHomeCalendarConfig()">캘린더 연동 저장</button>
