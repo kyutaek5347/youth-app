@@ -2,19 +2,19 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://right-youth-app.firebaseapp.com https://www.youtube.com https://noembed.com https://api.allorigins.win https://api.codetabs.com https://api.rss2json.com https://script.google.com https://script.googleusercontent.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://right-youth-app.firebaseapp.com https://www.youtube.com https://noembed.com https://api.allorigins.win https://api.codetabs.com https://api.rss2json.com https://script.google.com https://script.googleusercontent.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com https://calendar.google.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>라이트 청년부</title>
 
   <!-- PWA 필수 설정 -->
-  <link rel="manifest" href="./manifest.json?v=282" />
+  <link rel="manifest" href="./manifest.json?v=283" />
   <meta name="theme-color" content="#0B0F19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="라이트 청년부" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=282" />
-  <link rel="icon" type="image/png" href="./icon-192.png?v=282" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=283" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=283" />
 
   <!-- Firebase SDK (Auth + Firestore Compat · 로컬 자체 보관) -->
   <script src="./firebase-app-compat.js"></script>
@@ -4749,6 +4749,105 @@
       flex-shrink: 0;
     }
 
+    /* v10.183 홈 상단 구글 캘린더 카드 스타일 */
+    .home-cal-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    }
+    .home-cal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 12px 14px;
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: #FFFFFF;
+    }
+    .home-cal-title-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 0;
+      font-size: 14.5px;
+      font-weight: 800;
+      letter-spacing: -0.25px;
+    }
+    .home-cal-title-wrap .ui-svg-icon svg {
+      width: 17px;
+      height: 17px;
+      color: #FDE68A;
+    }
+    .home-cal-actions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .home-cal-mode-seg {
+      display: inline-flex;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .home-cal-mode-btn {
+      border: none;
+      background: transparent;
+      color: #CBD5E1;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .home-cal-mode-btn.active {
+      background: #FFFFFF;
+      color: #0F172A;
+    }
+    .home-cal-action-btn {
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.1);
+      color: #F8FAFC;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4.5px 8px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .home-cal-action-btn:active {
+      background: rgba(255, 255, 255, 0.22);
+    }
+    .home-cal-frame-wrap {
+      position: relative;
+      width: 100%;
+      height: 410px;
+      background: #FFFFFF;
+    }
+    .home-cal-iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+    .home-cal-empty {
+      padding: 26px 16px;
+      text-align: center;
+      color: #64748B;
+      background: #F8FAFC;
+    }
+    @media (min-width: 600px) {
+      .home-cal-frame-wrap {
+        height: 480px;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -4773,7 +4872,7 @@
 
     <!-- 인앱 실시간 알림 팝업 배너 -->
     <div id="inAppNotif" class="inapp-notif" onclick="handleInAppNotifClick()">
-      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=282" alt="라이트 청년부" /></div>
+      <div id="inAppNotifIcon" class="inapp-notif-icon"><img src="./icon-192.png?v=283" alt="라이트 청년부" /></div>
       <div style="min-width:0; flex:1;">
         <div id="inAppNotifTitle" class="inapp-notif-title">새 알림</div>
         <div id="inAppNotifBody" class="inapp-notif-body"></div>
@@ -5471,16 +5570,16 @@
         <button class="close-btn" data-close="noticeModal">✕</button>
       </div>
       <input type="hidden" id="editNoticeId" />
-      <div class="form-group">
-        <label class="form-label" for="noticeCategory">구분 (선택 또는 직접 입력)</label>
+      <div class="form-group hidden" id="noticeCategoryGroup">
+        <label class="form-label" for="noticeCategory">구분</label>
         <select id="noticeCategory" class="form-select" onchange="onNoticeCategorySelectChange()">
+          <option value="광고" selected>광고</option>
           <option value="공지">공지</option>
-          <option value="광고">광고</option>
           <option value="소식">소식</option>
           <option value="행사">행사</option>
           <option value="__custom__">직접 입력...</option>
         </select>
-        <input id="noticeCategoryCustomInput" class="form-input hidden" style="margin-top:6px;" maxlength="12" placeholder="구분 직접 입력 (예: 수련회)" />
+        <input id="noticeCategoryCustomInput" class="form-input hidden" style="margin-top:6px;" maxlength="12" placeholder="구분 직접 입력" />
       </div>
       <div class="form-group">
         <label class="form-label">제목</label>
@@ -5540,7 +5639,7 @@
         </div>
       </div>
 
-      <div id="noticePinBannerRow" class="form-group" style="margin-bottom:10px;">
+      <div id="noticePinBannerRow" class="form-group hidden" style="margin-bottom:10px;">
         <label class="form-label">홈 상단 배너 표시 여부</label>
         <input type="checkbox" id="noticePinBannerInput" class="hidden" onchange="onNoticePinBannerChange()" />
         <div class="qr-mode-grid" style="grid-template-columns:1fr 1fr; margin:0;">
@@ -6673,8 +6772,8 @@
 
     const ADMIN_EMAIL = 'admin@right-youth.app';
     const CURRENT_SCHEMA_VERSION = 35;
-    const APP_CLIENT_BUILD = 282;
-    const APP_CACHE_NAME = 'right-youth-app-v10.182';
+    const APP_CLIENT_BUILD = 283;
+    const APP_CACHE_NAME = 'right-youth-app-v10.183';
     const APP_BOOT_TS = Date.now();
     try {
       const _bootUrl = new URL(window.location.href);
@@ -6794,6 +6893,16 @@
     const KEY_CELEB_MSGS_CACHE = 'right_youth_celeb_msgs_cache_v1';
     const KEY_QUICK_LINKS_CACHE = 'right_youth_quick_links_cache_v1';
     const KEY_BANNER_AUTO_SLIDE_SEC = 'right_youth_banner_auto_slide_sec_v1';
+    const KEY_HOME_CALENDAR_CACHE = 'right_youth_home_cal_cache_v1';
+    const DEFAULT_HOME_CALENDAR_CONFIG = {
+      enabled: true,
+      title: '라이트 청년부 캘린더',
+      calendarId: '',
+      extraIds: [],
+      defaultMode: 'MONTH',
+      updatedAt: '',
+      updatedBy: ''
+    };
     const DEFAULT_BANNER_AUTO_SLIDE_SEC = 5;
     const ALLOWED_BANNER_AUTO_SLIDE_SECS = [0, 3, 5, 7, 10];
 
@@ -6837,7 +6946,7 @@
     const DEFAULT_SERMON_SUB_TABS = ['주일예배', '청년부예배', '수요·금요예배', '특강·수련회'];
     const DEFAULT_CCM_SUB_TABS = [];
     const DEFAULT_VIDEO_SETTINGS = {
-      showOnHome: true,
+      showOnHome: false,
       submitAudience: 'roles',
       submitTargetRoles: ['role_pastor', 'role_director', 'role_teacher', 'role_president', 'role_leader', 'role_cell_leader'],
       sermonTabs: [...DEFAULT_SERMON_SUB_TABS],
@@ -7047,7 +7156,7 @@
     const DEFAULT_UI_TEXTS = Object.fromEntries(UI_TEXT_REGISTRY.map(x => [x.key, x.defaultVal]));
 
     const MANAGE_SUBTAB_REGISTRY = [
-      { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', intro: '공지·광고를 등록·수정할 때 상단 배너 표시 여부를 선택하고, 새가족 환영 배너와 자동 전환 간격을 관리합니다.', permCheck: p => !!(p.canEditLayout || p.canManageNotices || p.canObserveManage) },
+      { id: 'content', labelKey: 'manageContent', defaultIcon: '🎨', defaultLabel: '화면·공지 관리', intro: '홈 상단 구글 캘린더 연동과 새가족 환영 카드, 캘린더 아래 통합 광고 목록을 관리합니다.', permCheck: p => !!(p.canEditLayout || p.canManageNotices || p.canObserveManage) },
       { id: 'quicklinks', labelKey: 'manageQuickLinks', defaultIcon: '🔗', defaultLabel: '사이트 바로가기 관리', intro: '하단 바로가기 메뉴에 표시되는 인스타그램·유튜브·교회 홈페이지 등 외부 사이트 링크를 관리합니다.', permCheck: p => !!(p.canEditLayout || p.canObserveManage) },
       { id: 'videos', labelKey: 'manageVideos', defaultIcon: '🎬', defaultLabel: '영상 관리', intro: '게시(추천)된 설교·CCM 유튜브 영상을 검토·승인하고, 공식 채널 화이트리스트와 세부 탭을 관리합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
       { id: 'worship', labelKey: 'manageWorship', defaultIcon: '⛪', defaultLabel: '예배 관리', intro: '매주 일요일 정기 예배 출석체크 시간, 예배X(휴무) 지정 및 수련회·특별 행사 일정을 설정합니다.', permCheck: p => !!(p.canManageMembers || p.canObserveManage) },
@@ -8004,7 +8113,7 @@
     function showInAppNotif(icon, title, body, onClickAction, variant = '') {
       document.getElementById('inAppNotifIcon').innerHTML = variant === 'sec-alert'
         ? `<span style="color:#FECACA; display:inline-flex; align-items:center; justify-content:center;">${renderMonoSvg('alertShield', 20)}</span>`
-        : '<img src="./icon-192.png?v=282" alt="라이트 청년부" />';
+        : '<img src="./icon-192.png?v=283" alt="라이트 청년부" />';
       document.getElementById('inAppNotifTitle').textContent = title;
       document.getElementById('inAppNotifBody').textContent = body;
       inAppNotifAction = onClickAction || null;
@@ -8028,8 +8137,8 @@
 
     async function sendDeviceNotification(title, body, fixedTag = '') {
       if (getNotifPermissionState() !== 'granted') return false;
-      const iconUrl = new URL('./icon-192.png?v=282', window.location.href).href;
-      const badgeUrl = new URL('./badge-96.png?v=282', window.location.href).href;
+      const iconUrl = new URL('./icon-192.png?v=283', window.location.href).href;
+      const badgeUrl = new URL('./badge-96.png?v=283', window.location.href).href;
       const notifTag = fixedTag ? `right-youth-${fixedTag}` : ('right-youth-' + Date.now());
       try {
         if (swRegistration && typeof swRegistration.showNotification === 'function') {
@@ -8304,6 +8413,42 @@
       } catch {}
     }
 
+    function normalizeHomeCalendarConfig(raw) {
+      const d = (raw && typeof raw === 'object') ? raw : {};
+      const calId = String(d.calendarId || '').trim().slice(0, 180);
+      const extraIds = Array.isArray(d.extraIds)
+        ? Array.from(new Set(d.extraIds.map(x => String(x || '').trim().slice(0, 180)).filter(x => x && x !== calId)))
+        : [];
+      const mode = String(d.defaultMode || 'MONTH').toUpperCase() === 'AGENDA' ? 'AGENDA' : 'MONTH';
+      const title = String(d.title || DEFAULT_HOME_CALENDAR_CONFIG.title).trim().slice(0, 30) || DEFAULT_HOME_CALENDAR_CONFIG.title;
+      return {
+        enabled: d.enabled !== false,
+        title,
+        calendarId: calId,
+        extraIds,
+        defaultMode: mode,
+        updatedAt: String(d.updatedAt || ''),
+        updatedBy: String(d.updatedBy || '')
+      };
+    }
+
+    function loadCachedHomeCalendarConfig() {
+      try {
+        const raw = localStorage.getItem(KEY_HOME_CALENDAR_CACHE);
+        if (!raw) return structuredClone(DEFAULT_HOME_CALENDAR_CONFIG);
+        return normalizeHomeCalendarConfig(JSON.parse(raw));
+      } catch {}
+      return structuredClone(DEFAULT_HOME_CALENDAR_CONFIG);
+    }
+
+    function saveCachedHomeCalendarConfig(cfg) {
+      try {
+        localStorage.setItem(KEY_HOME_CALENDAR_CACHE, JSON.stringify(normalizeHomeCalendarConfig(cfg)));
+      } catch {}
+    }
+
+    let homeCalendarConfig = loadCachedHomeCalendarConfig();
+    let homeCalendarViewModeOverride = '';
     let bannerAutoSlideSec = loadCachedBannerAutoSlideSec();
     let quickLinks = loadCachedQuickLinks();
     let selectedQuickLinkTheme = 'instagram';
@@ -11257,6 +11402,13 @@
             celebrationMsgs = structuredClone(DEFAULT_CELEBRATION_MSGS);
             saveCachedCelebrationMsgs(celebrationMsgs);
           }
+          if (d.homeCalendar && typeof d.homeCalendar === 'object') {
+            homeCalendarConfig = normalizeHomeCalendarConfig(d.homeCalendar);
+            saveCachedHomeCalendarConfig(homeCalendarConfig);
+          } else if (!(doc.metadata && doc.metadata.fromCache)) {
+            homeCalendarConfig = structuredClone(DEFAULT_HOME_CALENDAR_CONFIG);
+            saveCachedHomeCalendarConfig(homeCalendarConfig);
+          }
           if (d.bannerAutoSlideSec !== undefined) {
             bannerAutoSlideSec = normalizeBannerAutoSlideSec(d.bannerAutoSlideSec);
             saveCachedBannerAutoSlideSec(bannerAutoSlideSec);
@@ -13275,7 +13427,7 @@
           sub: '공지·배너 슬라이드, 이모지 반응(명칭·반응자 확인) & 주일/행사 출석 방법',
           keywords: `${getTabLabel('home')} 메인 홈 공지 광고 소식 배너 슬라이드 이모지 반응 확인 좋아요 아멘 새신자 출석 체크 주일예배 행사`,
           steps: [
-            `<b>공지 · 광고 · 소식 & 상단 배너 확인:</b> <b>${hLbl}</b> 상단 고정 배너(2개 이상 시 좌우 스와이프 및 <b>❚❚/▶</b> 자동 넘김 제어 지원)와 하단 공지 목록에서 청년부 소식을 확인합니다. 구분 칩으로 필터링할 수 있으며 카드를 누르면 전체 본문이 열립니다.`,
+            `<b>구글 캘린더 & 통합 광고 확인:</b> <b>${hLbl}</b> 상단의 구글 캘린더에서 청년부 예배·행사 일정을 <b>월간/일정</b> 보기로 확인하고, 바로 아래 <b>광고</b> 목록에서 청년부 소식을 한눈에 볼 수 있습니다. 카드를 누르면 전체 본문이 열립니다.`,
             `<b>공지 · 광고 이모지 반응 & 반응자 확인:</b> 공지·광고 목록 카드와 상세 창에서 명칭이 적힌 이모지(<b>👍 확인 · ❤️ 좋아요 · 🙏 아멘</b> 등)를 눌러 마음을 표현할 수 있으며, 다시 누르면 취소됩니다. 버튼 아래 <b>[👥 이름 ▾]</b>을 누르거나 상세 창을 열면 <b>누가 어떤 이모지를 달았는지</b> 확인할 수 있습니다. (상단 배너에는 이모지가 달리지 않습니다.)`,
             `<b>새가족 환영 배너:</b> 새로 온 새가족이 있으면 <b>${hLbl}</b> 상단에 환영 배너가 자동으로 표시됩니다.`,
             `<b>예배 · 특별 행사 출석 체크:</b> 설정된 주일 예배 시간(기본 일요일 14:00~15:30) 또는 특별 행사 시간에만 <b>${hLbl}</b> 맨 위에 <b>초록색 출석 카드</b>가 자동으로 나타납니다.`,
@@ -13294,7 +13446,7 @@
             `<b>${escapeHtml(getTabLabel('sermon'))} 탭 (${escapeHtml(getTabIcon('sermon'))}):</b> 설교 영상을 올리면 교회별(구미제일감리교회·라이트 청년부 등) 1차 탭과 주일예배·청년부예배 등 2차 세부 탭으로 자동 분류되어 편하게 시청할 수 있습니다.`,
             `<b>${escapeHtml(getTabLabel('ccm'))} 탭 (${escapeHtml(getTabIcon('ccm'))}):</b> 관리자가 등록한 주일·예배 날짜 탭(예: 11월 29일 주일, 12월 6일 주일)을 누르면 그 주 찬양 콘티 곡들을 순서대로 미리 들을 수 있습니다.`,
             `<b>영상 게시하기:</b> 게시 권한이 있는 지체는 <b>${hLbl}</b> 영상 영역의 <b>[+ 게시]</b> 또는 각 탭 우측 상단의 <b>[+ 게시]</b> 버튼에서 유튜브 링크를 넣고 <b>[🔍 자동 검사]</b>를 누르면 공식 원본 제목이 자동 입력되어 안전하게 등록됩니다.`,
-            `<b>이모지 반응 & ${hLbl} 인기 추천순:</b> 영상 카드와 재생 창에서 명칭이 표시된 이모지(<b>🙏 아멘 · ❤️ 좋아요 · 🙌 은혜 · 🥹 감동</b> 등)를 남기고 반응자 명단을 확인할 수 있습니다. <b>${hLbl}</b>에는 이모지를 가장 많이 받은 추천 영상(<b>🔥 추천 1위</b>)이 우선 표시됩니다.`
+            `<b>이모지 반응:</b> 영상 카드와 재생 창에서 명칭이 표시된 이모지(<b>🙏 아멘 · ❤️ 좋아요 · 🙌 은혜 · 🥹 감동</b> 등)를 남기고 반응자 명단을 확인할 수 있습니다.`
           ],
           tip: '공식 채널(구미제일감리교회·라이트 청년부 등) 영상은 4단계 자동 검사 통과 시 즉시 게시되며, 미등록 채널 영상은 관리자 확인 후 게시됩니다.'
         },
@@ -13559,7 +13711,7 @@
           targetTab: 'content',
           targetLabel: `${getTabIcon('manageContent')} ${getTabLabel('manageContent')} 열기`,
           steps: [
-            `<b>${hLbl} 배너·공지·광고 통합 등록·관리:</b> <b>[+ 새 배너 · 공지 · 광고 등록]</b> 버튼 하나로 <b>공지·광고만 / 배너·칸만 / 둘 다 동시 등록</b>을 선택해 올릴 수 있으며, 통합 목록에서 필터와 <b>▲/▼</b> 순서를 한눈에 관리합니다.`,
+            `<b>${hLbl} 상단 구글 캘린더 연동 & 광고 관리:</b> 상단 카드에 구글 캘린더 ID 또는 삽입 코드를 저장하면 홈 맨 위에 실시간 연동되며(월간/일정 보기 전환 지원), 아래 <b>[+ 새 광고 등록]</b>에서 캘린더 밑에 표시되는 통합 광고 목록을 관리합니다.`,
             `<b>공지·광고 이모지 반응 (배너 제외):</b> 게시된 공지·광고 카드와 상세 화면에는 명칭이 적힌 이모지 버튼이 표시되며, 반응한 회원 성명을 실시간으로 확인할 수 있습니다. (홈 상단 배너에는 이모지가 표시되지 않으며, 이모지 종류·명칭은 <b>[${lblIcn} ${lblLbl}]</b>에서 추가·수정·삭제 가능)`,
             `<b>다중 배너 · 개별 색상/배지 · 자동 슬라이드:</b> 공지 여러 개를 동시에 <b>[📌 배너 고정]</b>하거나 배너마다 배경색·배지 문구를 다르게 설정할 수 있으며, ${hLbl} 상단 슬라이더의 자동 넘김 시간(끄기 / 3·5·7·10초)도 조절할 수 있습니다.`,
             '<b>특정 역할에게만 보여주기 (서버 보안 분리):</b> 공개 대상에서 <b>[🎯 선택한 역할만 보기]</b>를 고르고 원하는 역할(목사·부장·회장·팀장·셀장 등 중복 선택)을 체크하면 해당 역할 회원에게만 표시됩니다.',
@@ -13580,7 +13732,7 @@
           steps: [
             `<b>${qlLbl} ([${qlIcn} ${qlLbl}]):</b> 하단 <b>[${moreIcn} ${moreLbl}]</b> 메뉴에 표시되는 인스타그램·유튜브·교회 홈페이지 등의 링크를 추가·수정·순서 변경·삭제할 수 있습니다.`,
             `<b>${vidLbl} ([${vidIcn} ${vidLbl}]):</b> 설교 영상은 공식 채널 자동 검사 통과 시 즉시 게시되며 <b>[탭 관리]</b>에서 세부 탭을 편집합니다. <b>${ccmLbl}</b> 탭은 최고 관리자 전용 <b>주간 찬양 콘티</b> 방식으로 운영되며, <b>[날짜 탭]</b>과 <b>[+ 콘티 등록]</b>에서 주일·행사 날짜 탭(예: 11월 29일 주일)과 곡 순서를 관리할 수 있습니다.`,
-            `<b>이모지 반응 & ${hLbl} 인기 추천순:</b> 설교·CCM 영상 카드와 재생 창에서 명칭이 적힌 이모지 반응과 반응자 성명을 확인할 수 있으며, <b>${hLbl}</b> 영상 영역에는 이모지가 가장 많이 달린 추천 영상(<b>🔥 추천 1위</b>)이 우선 표시되고 <b>[+ 게시]</b> 버튼이 제공됩니다.`,
+            `<b>이모지 반응:</b> 설교·CCM 영상 카드와 재생 창에서 명칭이 적힌 이모지 반응과 반응자 성명을 확인할 수 있습니다.`,
             `<b>${inqLbl} ([${inqIcn} ${inqLbl}]):</b> 이용자가 <b>설정 → 문의 사항</b>으로 남긴 불편·개선 요청을 확인하고 답변을 저장하면 해당 이용자에게 실시간 알림이 전송되며, 구글 시트 <b>[문의 내역]</b> 탭에도 자동 기록됩니다.`
           ],
           tip: '인스타그램·유튜브 URL을 등록하면 스마트폰에 해당 앱이 설치된 이용자가 눌렀을 때 앱으로 바로 연결됩니다.'
@@ -14657,9 +14809,231 @@
       startHomeTopBannerAutoSlide();
     }
 
+    // ==================== 홈 상단 구글 캘린더 연동 엔진 (v10.183) ====================
+    function isValidGoogleCalendarId(id) {
+      const s = String(id || '').trim();
+      if (!s || s.length < 4 || s.length > 180) return false;
+      if (/[<>'"\s]/.test(s)) return false;
+      return s.includes('@');
+    }
+
+    function parseGoogleCalendarInput(rawInput) {
+      let s = String(rawInput || '').trim();
+      if (!s) return { ok: true, empty: true, calendarId: '', extraIds: [] };
+
+      // 1) 구글 캘린더 <iframe src="..."> 삽입 코드를 그대로 붙여넣은 경우 src 주소만 안전하게 추출
+      const iframeSrcMatch = s.match(/src\s*=\s*["'](https:\/\/calendar\.google\.com\/[^"']+)["']/i);
+      if (iframeSrcMatch && iframeSrcMatch[1]) {
+        s = iframeSrcMatch[1].replace(/&amp;/g, '&').trim();
+      } else if (/^<\s*iframe/i.test(s)) {
+        return { ok: false, error: '구글 캘린더 삽입 코드(calendar.google.com)에서 캘린더 주소를 찾지 못했습니다.' };
+      }
+
+      // 2) URL 형태인 경우 (embed?src=..., ?cid=..., /ical/.../basic.ics)
+      if (/^https?:\/\//i.test(s)) {
+        let u = null;
+        try { u = new URL(s); } catch {}
+        if (!u || !/^(?:calendar\.google\.com)$/i.test(u.hostname)) {
+          return { ok: false, error: '구글 캘린더 주소(calendar.google.com) 또는 캘린더 ID(@...)만 입력할 수 있습니다.' };
+        }
+        const srcs = u.searchParams.getAll('src').map(x => String(x || '').trim()).filter(isValidGoogleCalendarId);
+        if (srcs.length > 0) {
+          const unique = Array.from(new Set(srcs));
+          return { ok: true, empty: false, calendarId: unique[0], extraIds: unique.slice(1, 5) };
+        }
+        const cidRaw = String(u.searchParams.get('cid') || '').trim();
+        if (cidRaw) {
+          if (isValidGoogleCalendarId(cidRaw)) {
+            return { ok: true, empty: false, calendarId: cidRaw, extraIds: [] };
+          }
+          try {
+            const decodedCid = atob(cidRaw.replace(/-/g, '+').replace(/_/g, '/')).trim();
+            if (isValidGoogleCalendarId(decodedCid)) {
+              return { ok: true, empty: false, calendarId: decodedCid, extraIds: [] };
+            }
+          } catch {}
+        }
+        const icalMatch = u.pathname.match(/\/calendar\/ical\/([^/]+)\//i);
+        if (icalMatch && icalMatch[1]) {
+          const decoded = decodeURIComponent(icalMatch[1]).trim();
+          if (isValidGoogleCalendarId(decoded)) {
+            return { ok: true, empty: false, calendarId: decoded, extraIds: [] };
+          }
+        }
+        return { ok: false, error: '구글 캘린더 URL에서 캘린더 ID(src)를 찾지 못했습니다. 캘린더 설정에서 [캘린더 ID] 또는 [삽입 코드]를 복사해 넣어 주세요.' };
+      }
+
+      // 3) 쉼표·줄바꿈으로 여러 캘린더 ID를 직접 입력한 경우
+      const parts = s.split(/[\n,]+/).map(x => x.trim()).filter(Boolean);
+      const validIds = Array.from(new Set(parts.filter(isValidGoogleCalendarId)));
+      if (validIds.length === 0) {
+        return { ok: false, error: '올바른 구글 캘린더 ID(예: xxx@group.calendar.google.com) 또는 구글 캘린더 삽입 URL을 입력해 주세요.' };
+      }
+      return { ok: true, empty: false, calendarId: validIds[0], extraIds: validIds.slice(1, 5) };
+    }
+
+    function buildGoogleCalendarEmbedUrl(cfg, modeOverride = '') {
+      const c = normalizeHomeCalendarConfig(cfg);
+      if (!c.calendarId || !isValidGoogleCalendarId(c.calendarId)) return '';
+      const mode = (modeOverride === 'AGENDA' || modeOverride === 'MONTH') ? modeOverride : c.defaultMode;
+      const params = new URLSearchParams();
+      params.append('src', c.calendarId);
+      (c.extraIds || []).forEach(id => {
+        if (isValidGoogleCalendarId(id)) params.append('src', id);
+      });
+      params.set('ctz', 'Asia/Seoul');
+      params.set('hl', 'ko');
+      params.set('mode', mode);
+      params.set('wkst', '1');
+      params.set('showTitle', '0');
+      params.set('showNav', '1');
+      params.set('showDate', '1');
+      params.set('showPrint', '0');
+      params.set('showTabs', '0');
+      params.set('showCalendars', '0');
+      params.set('showTz', '0');
+      return `https://calendar.google.com/calendar/embed?${params.toString()}`;
+    }
+
+    function buildGoogleCalendarOpenUrl(cfg) {
+      const c = normalizeHomeCalendarConfig(cfg);
+      if (!c.calendarId || !isValidGoogleCalendarId(c.calendarId)) return '';
+      return `https://calendar.google.com/calendar/u/0/r?cid=${encodeURIComponent(c.calendarId)}`;
+    }
+
+    window.setHomeCalendarMode = (mode) => {
+      homeCalendarViewModeOverride = mode === 'AGENDA' ? 'AGENDA' : 'MONTH';
+      const u = getCurrentUser();
+      if (u && currentMainTab === 'home') renderHomeView(u);
+    };
+
+    window.jumpToManageHomeCalendar = () => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      currentMainTab = 'manage';
+      currentManageSubTab = 'content';
+      applyScreen();
+      setTimeout(() => {
+        const el = document.getElementById('cfgHomeCalSourceInput');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.focus();
+        }
+      }, 120);
+    };
+
+    window.handleSaveHomeCalendarConfig = async () => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      const titleRaw = document.getElementById('cfgHomeCalTitleInput') ? document.getElementById('cfgHomeCalTitleInput').value.trim() : '';
+      const srcRaw = document.getElementById('cfgHomeCalSourceInput') ? document.getElementById('cfgHomeCalSourceInput').value.trim() : '';
+      const modeVal = (document.getElementById('cfgHomeCalModeSelect') && document.getElementById('cfgHomeCalModeSelect').value === 'AGENDA') ? 'AGENDA' : 'MONTH';
+      const title = (titleRaw || DEFAULT_HOME_CALENDAR_CONFIG.title).slice(0, 30);
+
+      if (!enforceInputSecurity(title, '홈 캘린더 제목', true)) return;
+      const parsed = parseGoogleCalendarInput(srcRaw);
+      if (!parsed.ok) {
+        setInlineSaveStatus('home_cal', 'err', parsed.error);
+        return showToast(parsed.error, 'err');
+      }
+
+      const nextCfg = normalizeHomeCalendarConfig({
+        enabled: true,
+        title,
+        calendarId: parsed.calendarId || '',
+        extraIds: parsed.extraIds || [],
+        defaultMode: modeVal,
+        updatedAt: formatKstDateTime(),
+        updatedBy: currentAdminName || '관리자'
+      });
+
+      const btn = document.getElementById('saveHomeCalBtn');
+      if (btn) { btn.disabled = true; btn.textContent = '저장 중...'; }
+      setInlineSaveStatus('home_cal', 'loading', '구글 캘린더 연동 설정을 저장하는 중입니다...');
+      try {
+        await db.collection('config').doc('layout').set({ homeCalendar: nextCfg }, { merge: true });
+        homeCalendarConfig = nextCfg;
+        homeCalendarViewModeOverride = '';
+        saveCachedHomeCalendarConfig(nextCfg);
+        recordAuditLog({
+          actorType: 'admin',
+          category: '공지·배너',
+          action: nextCfg.calendarId ? '홈 구글 캘린더 연동 저장' : '홈 구글 캘린더 연동 해제',
+          target: nextCfg.title,
+          detail: nextCfg.calendarId ? `ID: ${nextCfg.calendarId} · 기본 보기: ${nextCfg.defaultMode}` : '연동 해제됨'
+        });
+        setInlineSaveStatus('home_cal', 'ok', nextCfg.calendarId
+          ? `구글 캘린더 연동이 저장되었습니다! (${nextCfg.calendarId})`
+          : '구글 캘린더 연동이 해제되었습니다.');
+        showToast(nextCfg.calendarId ? '홈 구글 캘린더 연동이 저장되었습니다!' : '구글 캘린더 연동이 해제되었습니다.', 'ok');
+        const curU = getCurrentUser();
+        if (curU && currentMainTab === 'manage' && currentManageSubTab === 'content') {
+          renderManageContent(document.getElementById('manageContent'), curU);
+        }
+      } catch (err) {
+        setInlineSaveStatus('home_cal', 'err', '구글 캘린더 설정 저장에 실패했습니다.');
+        handleDbError(err, '구글 캘린더 저장');
+      } finally {
+        const liveBtn = document.getElementById('saveHomeCalBtn');
+        if (liveBtn) { liveBtn.disabled = false; liveBtn.textContent = '캘린더 연동 저장'; }
+      }
+    };
+
+    window.handleClearHomeCalendarConfig = async () => {
+      const u = getCurrentUser();
+      if (!u || !u.isSuperAdmin) return;
+      if (!confirm('홈 상단의 구글 캘린더 연동을 해제할까요?')) return;
+      const inp = document.getElementById('cfgHomeCalSourceInput');
+      if (inp) inp.value = '';
+      await window.handleSaveHomeCalendarConfig();
+    };
+
+    function buildHomeCalendarSectionHtml(user) {
+      const cfg = normalizeHomeCalendarConfig(homeCalendarConfig);
+      const activeMode = (homeCalendarViewModeOverride === 'AGENDA' || homeCalendarViewModeOverride === 'MONTH')
+        ? homeCalendarViewModeOverride
+        : cfg.defaultMode;
+      const embedUrl = buildGoogleCalendarEmbedUrl(cfg, activeMode);
+      const openUrl = buildGoogleCalendarOpenUrl(cfg);
+      const isAdmin = !!(user && user.isSuperAdmin);
+
+      return `
+        <div class="home-block">
+          <div class="home-cal-card">
+            <div class="home-cal-head">
+              <span class="home-cal-title-wrap">${renderMonoSvg('calendar', 17)}<span>${escapeHtml(cfg.title)}</span></span>
+              <div class="home-cal-actions">
+                ${embedUrl ? `
+                  <div class="home-cal-mode-seg" role="group" aria-label="캘린더 보기 전환">
+                    <button class="home-cal-mode-btn ${activeMode === 'MONTH' ? 'active' : ''}" type="button" onclick="setHomeCalendarMode('MONTH')">월간</button>
+                    <button class="home-cal-mode-btn ${activeMode === 'AGENDA' ? 'active' : ''}" type="button" onclick="setHomeCalendarMode('AGENDA')">일정</button>
+                  </div>
+                  <button class="home-cal-action-btn" type="button" onclick="openExternalLinkSafely('${escapeJsAttr(openUrl)}', '${escapeJsAttr(cfg.title)}')">열기 ↗</button>
+                ` : ''}
+                ${isAdmin ? `<button class="home-cal-action-btn" type="button" onclick="jumpToManageHomeCalendar()">설정</button>` : ''}
+              </div>
+            </div>
+            ${embedUrl ? `
+              <div id="homeCalendarFrameWrap" class="home-cal-frame-wrap">
+                <iframe class="home-cal-iframe" src="${escapeHtml(embedUrl)}" title="${escapeHtml(cfg.title)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+              </div>
+            ` : `
+              <div class="home-cal-empty">
+                <div class="empty-state-svg">${renderMonoSvg('calendar', 28)}</div>
+                <div style="font-size:14px; font-weight:800; color:#1E293B; margin-bottom:4px;">${isAdmin ? '구글 캘린더를 아직 연동하지 않았습니다' : '캘린더 일정을 준비 중입니다'}</div>
+                <div style="font-size:12px; color:#64748B; line-height:1.5;">${isAdmin ? '구글 캘린더 ID 또는 삽입 코드를 입력하면 청년부 일정이 홈 상단에 실시간으로 연동됩니다.' : '관리자가 구글 캘린더를 연동하면 청년부 예배·행사 일정이 이곳에 표시됩니다.'}</div>
+                ${isAdmin ? `<button class="btn-sm primary" type="button" style="margin-top:11px; padding:8px 13px;" onclick="jumpToManageHomeCalendar()">구글 캘린더 연동하기</button>` : ''}
+              </div>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
     function renderHomeView(user) {
       const perms = user.role.perms;
       const container = document.getElementById('viewHome');
+      stopHomeTopBannerAutoSlide();
 
       function canSeeItemOnHome(item) {
         if (!canUserSeeTarget(user, item)) return false;
@@ -14669,22 +15043,16 @@
         return true;
       }
 
-      function getAdminSchedPill(item) {
-        if (!user.isSuperAdmin || getPublishState(item) !== 'scheduled') return '';
-        const p = tsToKstParts(item.publishAtTs);
-        return `<div class="sched-preview-pill">예약 미리보기 · ${escapeHtml(p ? p.shortLabel : '')} 자동 공개</div>`;
-      }
-
       const attendanceHtml = buildAttendanceHomeCardHtml(user);
       const newcomerInner = buildNewcomerAutoBannerCardInner(user);
       const newcomerHtml = newcomerInner ? `<div class="home-block">${newcomerInner}</div>` : '';
-      const homeVideosHtml = buildHomeVideosSectionHtml(user);
+      const homeCalendarHtml = buildHomeCalendarSectionHtml(user);
 
       if (homeContentPermError && !homeBlocksLoaded) {
-        container.innerHTML = attendanceHtml + newcomerHtml + `
+        container.innerHTML = attendanceHtml + newcomerHtml + homeCalendarHtml + `
           <div class="card" style="text-align:center; padding:30px 18px; border-color:#FECACA; background:#FEF2F2;">
             <div class="empty-state-svg" style="color:#991B1B;">${renderMonoSvg('lock', 28)}</div>
-            <div style="font-size:14.5px; font-weight:800; color:#991B1B; margin-bottom:6px;">메인 소식을 불러올 권한이 필요합니다</div>
+            <div style="font-size:14.5px; font-weight:800; color:#991B1B; margin-bottom:6px;">광고를 불러올 권한이 필요합니다</div>
             <div style="font-size:12.5px; color:#7F1D1D; line-height:1.55; margin-bottom:14px;">
               관리자에게 Firebase Firestore 보안 규칙을 최신 버전으로 게시해 달라고 요청해 주세요.
             </div>
@@ -14694,94 +15062,36 @@
         return;
       }
 
-      if (!homeBlocksLoaded || !homeNoticesLoaded) {
-        container.innerHTML = attendanceHtml + newcomerHtml + `
-          <div class="card" style="text-align:center; padding:38px 20px; color:#64748B;">
+      if (!homeNoticesLoaded) {
+        container.innerHTML = attendanceHtml + newcomerHtml + homeCalendarHtml + `
+          <div class="card" style="text-align:center; padding:34px 20px; color:#64748B;">
             <div class="spinner" style="margin:0 auto 12px; border-color:#E2E8F0; border-top-color:#111827;"></div>
-            <div style="font-size:13.5px; font-weight:700; color:#334155;">메인 화면을 불러오는 중입니다...</div>
+            <div style="font-size:13.5px; font-weight:700; color:#334155;">광고를 불러오는 중입니다...</div>
           </div>
         `;
         return;
       }
 
       const visibleNotices = notices.filter(canSeeItemOnHome);
-      const visibleBlocks = blocks.filter(canSeeItemOnHome);
+      const totalUnreadNotices = visibleNotices.filter(n => isNoticeUnread(n, user)).length;
 
-      const heroFallbackBlock = blocks.find(x => x.type === 'hero_notice') || { id: 'blk_hero', type: 'hero_notice', badge: '공지', theme: 'dark' };
-      const noticeListBlock = blocks.find(x => x.type === 'notice_list') || { id: 'blk_notices', type: 'notice_list', title: '공지 · 광고 · 소식' };
-      const pinnedNotices = visibleNotices.filter(n => !!n.pinned);
-      const legacyExtraBanners = visibleBlocks.filter(b => b.type === 'newcomer_card' || b.type === 'leader_card' || b.type === 'custom_ad');
-
-      if (!attendanceHtml && !newcomerHtml && !homeVideosHtml && visibleNotices.length === 0 && legacyExtraBanners.length === 0 && !perms.canManageNotices) {
-        container.innerHTML = `
-          <div class="card" style="text-align:center; padding:42px 20px; color:#64748B;">
-            <div class="empty-state-svg">${renderMonoSvg('sparkle', 28)}</div>
-            <div style="font-size:15px; font-weight:800; color:#1E293B; margin-bottom:6px;">아직 메인 화면에 표시된 소식이 없습니다.</div>
-            <div style="font-size:12.5px; color:#64748B; line-height:1.55;">새로운 공지나 광고가 올라오면 이곳에 표시됩니다.</div>
-          </div>
-        `;
-        return;
-      }
-
-      const topBannerSlides = [];
-      if (newcomerInner) {
-        topBannerSlides.push({ label: '새가족 환영 배너', html: newcomerInner });
-      }
-      // 공지·광고 중 '상단 배너에 띄우기'가 선택된 글만 배너로 표시
-      pinnedNotices.forEach(pn => {
-        const slideHtml = buildHeroNoticeCardInner(heroFallbackBlock, pn, user);
-        if (slideHtml) {
-          topBannerSlides.push({ label: pn.title || '공지 배너', html: slideHtml });
-        }
-      });
-      // 기존에 등록된 단독 배너가 남아 있는 경우 호환 표시
-      legacyExtraBanners.forEach(b => {
-        const slideHtml = buildHomeBannerBlockInner(b, user, getAdminSchedPill);
-        if (slideHtml) {
-          topBannerSlides.push({ label: getBlockDisplayLabel(b), html: slideHtml });
-        }
-      });
-
-      const useTopCarousel = topBannerSlides.length >= 2;
-      const topBannerAreaHtml = useTopCarousel
-        ? buildTopBannerCarouselHtml(topBannerSlides)
-        : (topBannerSlides.length === 1 ? `<div class="home-block">${topBannerSlides[0].html}</div>` : '');
-
-      const filtered = currentFilter === '전체' ? visibleNotices : visibleNotices.filter(n => n.category === currentFilter);
-      const unreadCatMap = new Map();
-      let totalUnreadNotices = 0;
-      visibleNotices.forEach(n => {
-        if (isNoticeUnread(n, user)) {
-          totalUnreadNotices++;
-          const c = String(n.category || '');
-          unreadCatMap.set(c, (unreadCatMap.get(c) || 0) + 1);
-        }
-      });
-      const noticeSectionTitle = String((noticeListBlock && noticeListBlock.title) || '공지 · 광고 · 소식').replace(/^📢\s*/, '') || '공지 · 광고 · 소식';
       const noticeListHtml = `
-        <div class="home-block" data-ts-zone="home_notice">
+        <div class="home-block">
           <div class="section-head">
-            <h2 class="section-title"><span class="section-title-with-icon">${renderUiIconHtml('notice', { forceOutline: true })}<span>${escapeHtml(noticeSectionTitle)}</span></span></h2>
+            <h2 class="section-title"><span class="section-title-with-icon">${renderUiIconHtml('notice', { forceOutline: true })}<span>광고</span>${buildSubTabBadgeHtml(totalUnreadNotices)}</span></h2>
             ${perms.canManageNotices ? `<button class="btn-sm primary" onclick="openAddNoticeModal()">+ 글쓰기</button>` : ''}
           </div>
-          <div class="filter-row" data-ts-bar="home_notice" data-ts-body="home_notice" data-ts-pos="after-body">
-            ${Array.from(new Set(['전체', '공지', '광고', '소식', '행사', ...visibleNotices.map(n => n.category).filter(Boolean)])).map(cat => {
-              const uCnt = cat === '전체' ? totalUnreadNotices : (unreadCatMap.get(cat) || 0);
-              return `<button class="filter-chip ${currentFilter === cat ? 'active' : ''} ${uCnt > 0 ? 'has-badge' : ''}" data-cat="${escapeHtml(cat)}" onclick="setFilter(this.dataset.cat)"><span>${escapeHtml(cat)}</span>${buildSubTabBadgeHtml(uCnt)}</button>`;
-            }).join('')}
-          </div>
-          <div class="ts-swipe-body" data-ts-body="home_notice">
-            ${filtered.length === 0
-              ? '<div class="card" style="text-align:center;color:#64748B;">해당 구분의 글이 없습니다.</div>'
-              : filtered.map(n => {
+          <div>
+            ${visibleNotices.length === 0
+              ? '<div class="card" style="text-align:center;color:#64748B;font-size:13px;padding:24px 14px;">등록된 광고가 없습니다.</div>'
+              : visibleNotices.map(n => {
                   const isNewN = isNoticeUnread(n, user);
                   return `
                     <div class="card clickable" onclick="openDetail('${escapeJsAttr(n.id)}')">
                       <div class="card-top">
                         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
                           ${isNewN ? '<span class="new-badge">NEW</span>' : ''}
-                          <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)}</span>
-                          ${n.pinned ? '<span class="tag green">배너고정</span>' : ''}
+                          <span class="tag warm">광고</span>
                           ${getPublishState(n) === 'scheduled' ? getPublishStateBadgeHtml(n) : ''}
                           ${getAudienceBadgeHtml(n)}
                         </div>
@@ -14793,14 +15103,10 @@
                   `;
                 }).join('')}
           </div>
-          <div data-ts-ctrl-slot="home_notice"></div>
         </div>
       `;
 
-      container.innerHTML = attendanceHtml + topBannerAreaHtml + noticeListHtml + homeVideosHtml;
-
-      if (useTopCarousel) bindHomeTopBannerCarousel();
-      else stopHomeTopBannerAutoSlide();
+      container.innerHTML = attendanceHtml + newcomerHtml + homeCalendarHtml + noticeListHtml;
     }
 
     window.setFilter = (cat) => {
@@ -14826,7 +15132,7 @@
       }
       currentDetailKind = 'notice';
       currentDetailId = String(id);
-      document.getElementById('detailTag').textContent = n.category;
+      document.getElementById('detailTag').textContent = '광고';
       document.getElementById('detailTitle').textContent = n.title;
       const dateEl = document.getElementById('detailDate');
       if (dateEl) {
@@ -15193,13 +15499,13 @@
       const canLayout = hasUserPerm(user, 'canEditLayout') || isManageReadOnlyUser(user);
       const canNotices = hasUserPerm(user, 'canManageNotices') || isManageReadOnlyUser(user);
 
+      const calCfg = normalizeHomeCalendarConfig(homeCalendarConfig);
+      const calLinked = !!(calCfg.calendarId && isValidGoogleCalendarId(calCfg.calendarId));
+      const calOpenUrl = calLinked ? buildGoogleCalendarOpenUrl(calCfg) : '';
       const liveNotices = notices.filter(n => getPublishState(n) === 'live');
-      const pinnedLiveNotices = liveNotices.filter(n => !!n.pinned);
-      const listOnlyLiveNotices = liveNotices.filter(n => !n.pinned);
       const pendingNotices = notices.filter(n => getPublishState(n) !== 'live');
-      const legacyExtraBlocks = blocks.filter(b => b.type !== 'hero_notice' && b.type !== 'notice_list');
 
-      if (!['all', 'banner', 'listonly', 'pending'].includes(manageContentFilter)) {
+      if (!['all', 'live', 'pending'].includes(manageContentFilter)) {
         manageContentFilter = 'all';
       }
       if (manageContentFilter === 'pending' && pendingNotices.length === 0) {
@@ -15208,8 +15514,7 @@
 
       const visibleNoticeEntries = notices.map((n, idx) => ({ n, idx })).filter(({ n }) => {
         const st = getPublishState(n);
-        if (manageContentFilter === 'banner') return st === 'live' && !!n.pinned;
-        if (manageContentFilter === 'listonly') return st === 'live' && !n.pinned;
+        if (manageContentFilter === 'live') return st === 'live';
         if (manageContentFilter === 'pending') return st !== 'live';
         return true;
       });
@@ -15218,15 +15523,13 @@
       const noticeCardsHtml = visibleNoticeEntries.map(({ n, idx }) => {
         const st = getPublishState(n);
         const statusBadgeHtml = st !== 'live'
-          ? `${getPublishStateBadgeHtml(n)}${n.pinned && st === 'scheduled' ? '<span class="tag green">배너 예정</span>' : ''}`
-          : (n.pinned
-            ? `<span class="tag green" style="display:inline-flex;align-items:center;gap:4px;"><span class="banner-swatch-dot" style="background:${getThemeCss(getNoticeEffectiveBannerTheme(n))};"></span>상단 배너 표시중</span>`
-            : '<span class="tag slate">목록만 표시</span>');
+          ? getPublishStateBadgeHtml(n)
+          : '<span class="tag green">홈 표시중</span>';
         return `
           <div class="card" style="${st === 'draft' ? 'opacity:0.74; background:#F8FAFC;' : (st === 'scheduled' ? 'border-color:#A5B4FC; background:#F5F7FF;' : '')}">
             <div class="card-top">
               <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
-                <span class="tag ${tagColor(n.category)}">${escapeHtml(n.category)} ${idx + 1}</span>
+                <span class="tag warm">광고 ${idx + 1}</span>
                 ${statusBadgeHtml}
                 ${getAudienceBadgeHtml(n)}
               </div>
@@ -15242,11 +15545,7 @@
             <div class="card-footer">
               <span class="card-date">${escapeHtml(n.date)}</span>
               <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                ${st !== 'live'
-                  ? `<button class="btn-sm approve" onclick="publishNoticeNow('${escapeJsAttr(n.id)}')">지금 바로 게시</button>`
-                  : (n.pinned
-                    ? `<button class="btn-sm" onclick="openQuickBannerStyleModal('${escapeJsAttr(n.id)}')">배너 색</button><button class="btn-sm warn" onclick="unpinNoticeFromHomeBanner('${escapeJsAttr(n.id)}')">배너 내리기</button>`
-                    : `<button class="btn-sm primary" onclick="pinNoticeToHomeBanner('${escapeJsAttr(n.id)}')">배너 띄우기</button>`)}
+                ${st !== 'live' ? `<button class="btn-sm approve" onclick="publishNoticeNow('${escapeJsAttr(n.id)}')">지금 바로 게시</button>` : ''}
                 <button class="btn-sm" onclick="openEditNotice('${escapeJsAttr(n.id)}')">수정</button>
                 <button class="btn-sm danger" onclick="deleteNotice('${escapeJsAttr(n.id)}')">삭제</button>
               </div>
@@ -15257,60 +15556,74 @@
 
       const emptyNoticeHtml = visibleNoticeEntries.length === 0
         ? `<div class="card" style="text-align:center;color:#64748B;font-size:13px;padding:22px 14px;">
-             ${manageContentFilter === 'banner'
-               ? '현재 상단 배너에 띄워진 공지·광고가 없습니다.'
-               : (manageContentFilter === 'listonly'
-                 ? '목록에만 표시 중인 공지·광고가 없습니다.'
-                 : (manageContentFilter === 'pending'
-                   ? '임시저장 또는 예약된 공지·광고가 없습니다.'
-                   : '등록된 공지·광고가 없습니다. 위 [+ 새 공지 · 광고 등록] 버튼으로 첫 글을 올려 보세요.'))}
+             ${manageContentFilter === 'pending'
+               ? '임시저장 또는 예약된 광고가 없습니다.'
+               : '등록된 광고가 없습니다. 위 [+ 새 광고 등록] 버튼으로 첫 글을 올려 보세요.'}
            </div>`
         : '';
 
-      const legacyBlocksSectionHtml = (canLayout && legacyExtraBlocks.length > 0) ? `
-        ${buildManageAccordionBar({
-          key: 'content_legacy_blocks',
-          titleHtml: '이전 단독 배너 정리',
-          badgeHtml: `<span class="tag warm">${legacyExtraBlocks.length}개</span>`,
-          defaultOpen: false,
-          marginTop: '14px'
-        })}
-        <div data-acc-body="content_legacy_blocks" class="${isManageSectionOpen('content_legacy_blocks', false) ? '' : 'hidden'}">
-          <div class="info-box" style="margin-top:0; margin-bottom:10px;">
-            예전에 따로 등록해 둔 단독 배너입니다. 이제 배너는 공지·광고를 입력할 때 선택하므로, 불필요한 이전 배너는 여기서 삭제할 수 있습니다.
-          </div>
-          ${legacyExtraBlocks.map(b => `
-            <div class="card">
-              <div class="layout-item-head">
-                <div style="min-width:0;">
-                  <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-bottom:4px;">
-                    <span class="tag slate">${escapeHtml(BLOCK_TYPE_NAMES[b.type] || '단독 배너')}</span>
-                    ${getPublishStateBadgeHtml(b)}
-                  </div>
-                  <strong style="font-size:14px; color:#0F172A;">${escapeHtml(getBlockDisplayLabel(b))}</strong>
-                </div>
-                <button class="btn-sm danger" type="button" onclick="deleteBlock('${escapeJsAttr(b.id)}')">삭제</button>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      ` : '';
+      const calInputValue = calCfg.extraIds && calCfg.extraIds.length > 0
+        ? [calCfg.calendarId, ...calCfg.extraIds].join(', ')
+        : calCfg.calendarId;
 
       el.innerHTML = `
         <div class="stats-grid-3">
-          <div class="stat-box" onclick="setManageContentFilter('banner')">
-            <div class="stat-num">${pinnedLiveNotices.length}</div>
-            <div class="stat-label">상단 배너</div>
+          <div class="stat-box" onclick="jumpToManageHomeCalendar()">
+            <div class="stat-num" style="font-size:15px;">${calLinked ? '연동됨' : '미연동'}</div>
+            <div class="stat-label">홈 구글 캘린더</div>
           </div>
-          <div class="stat-box" onclick="setManageContentFilter('all')">
+          <div class="stat-box" onclick="setManageContentFilter('live')">
             <div class="stat-num">${liveNotices.length}</div>
-            <div class="stat-label">게시 공지·광고</div>
+            <div class="stat-label">게시 광고</div>
           </div>
           <div class="stat-box" onclick="setManageContentFilter('pending')">
             <div class="stat-num">${pendingNotices.length}</div>
             <div class="stat-label">임시·예약</div>
           </div>
         </div>
+
+        ${canLayout ? `
+          <div class="card" style="border-color:#CBD5E1; margin-bottom:12px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; flex-wrap:wrap;">
+              <div style="font-size:14px; font-weight:800; color:#0F172A; display:inline-flex; align-items:center; gap:6px;">
+                ${renderMonoSvg('calendar', 16)}
+                <span>홈 상단 구글 캘린더 연동</span>
+              </div>
+              <span class="tag ${calLinked ? 'green' : 'warm'}">${calLinked ? '연동 완료' : '미연동'}</span>
+            </div>
+            <div class="form-grid-2" style="margin-bottom:8px;">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" for="cfgHomeCalTitleInput">캘린더 표시 제목</label>
+                <input id="cfgHomeCalTitleInput" class="form-input" maxlength="30" value="${escapeHtml(calCfg.title)}" placeholder="예: 라이트 청년부 캘린더" />
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" for="cfgHomeCalModeSelect">기본 보기 형식</label>
+                <select id="cfgHomeCalModeSelect" class="form-select">
+                  <option value="MONTH" ${calCfg.defaultMode === 'MONTH' ? 'selected' : ''}>월간 달력 (기본)</option>
+                  <option value="AGENDA" ${calCfg.defaultMode === 'AGENDA' ? 'selected' : ''}>일정 목록</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:8px;">
+              <label class="form-label" for="cfgHomeCalSourceInput">구글 캘린더 ID · 공개 URL · 삽입 코드(iframe)</label>
+              <input id="cfgHomeCalSourceInput" class="form-input" value="${escapeHtml(calInputValue)}" placeholder="예: xxxxx@group.calendar.google.com 또는 구글 캘린더 삽입 코드 붙여넣기" />
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+              <button id="saveHomeCalBtn" class="btn-full btn-dark" type="button" style="flex:1; padding:10px 12px; font-size:13px;" onclick="handleSaveHomeCalendarConfig()">캘린더 연동 저장</button>
+              ${calLinked ? `<button class="btn-outline" type="button" style="padding:10px 12px; font-size:12.5px;" onclick="openExternalLinkSafely('${escapeJsAttr(calOpenUrl)}', '${escapeJsAttr(calCfg.title)}')">열기 ↗</button>` : ''}
+              ${calLinked ? `<button class="btn-sm danger" type="button" style="padding:0 11px;" onclick="handleClearHomeCalendarConfig()">해제</button>` : ''}
+            </div>
+            ${buildInlineSaveStatusHtml('home_cal')}
+            <details style="margin-top:8px; background:#F8FAFC; border:1px solid var(--border); border-radius:10px; padding:8px 10px; font-size:12px; color:#475569; line-height:1.55;">
+              <summary style="cursor:pointer; font-weight:800; color:#1E293B;">구글 캘린더 연동 방법 (3단계)</summary>
+              <ol style="margin:7px 0 0; padding-left:18px;">
+                <li>PC에서 <b>Google 캘린더</b>를 열고 왼쪽 <b>내 캘린더</b>에서 청년부 캘린더 옆 <b>⋮ → 설정 및 공유</b>로 들어갑니다.</li>
+                <li><b>일정에 대한 액세스 권한</b>에서 <b>공개 사용 설정</b>을 체크합니다. (비공개 상태면 청년부원에게 일정이 보이지 않습니다.)</li>
+                <li>아래 <b>캘린더 통합</b>에서 <b>캘린더 ID</b>(또는 <b>삽입 코드</b> 전체)를 복사해 위 입력칸에 붙여넣고 <b>[캘린더 연동 저장]</b>을 누릅니다.</li>
+              </ol>
+            </details>
+          </div>
+        ` : ''}
 
         ${canLayout ? (() => {
           const curNc = getValidNewcomerList();
@@ -15326,48 +15639,32 @@
                 ? `<div style="font-weight:700; color:#0F172A; margin-bottom:2px;">${escapeHtml(renderCelebrationText(getCelebrationMsg('newcomerTitle'), curNcNames))}</div>
                    <div style="font-size:11.5px; color:#64748B;">등록 새가족 (${curNcNames.length}명): ${escapeHtml(curNcNames.join(', '))}</div>`
                 : `<div>${escapeHtml(getCelebrationMsg('newcomerTitle'))}</div>
-                   <div style="font-size:11.5px; color:#92400E; margin-top:2px;">현재 등록된 새가족이 없습니다. [명단·멘트·색 수정]에서 1명 이상(2명 이상 무제한) 추가하면 홈 배너에 자동 표시됩니다.</div>`}
+                   <div style="font-size:11.5px; color:#92400E; margin-top:2px;">현재 등록된 새가족이 없습니다. [명단·멘트·색 수정]에서 1명 이상 추가하면 홈 상단에 환영 카드가 자동 표시됩니다.</div>`}
             </div>
           </div>
           `;
         })() : ''}
 
-        ${canLayout ? `
-          <div class="card" style="padding:12px 14px; margin-bottom:10px;">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:7px; flex-wrap:wrap;">
-              <div style="font-size:13px; font-weight:800; color:#0F172A;">상단 배너 자동 전환 간격</div>
-              <span class="tag ${bannerAutoSlideSec > 0 ? 'green' : 'slate'}">${bannerAutoSlideSec > 0 ? `${bannerAutoSlideSec}초마다 자동 순환` : '자동 전환 꺼짐'}</span>
-            </div>
-            <div class="filter-row" style="margin-bottom:4px;" data-ts-skip="1">
-              ${ALLOWED_BANNER_AUTO_SLIDE_SECS.map(s => `
-                <button class="filter-chip ${bannerAutoSlideSec === s ? 'active' : ''}" type="button" onclick="handleSetBannerAutoSlideSec(${s})">${s === 0 ? '꺼짐' : (s === DEFAULT_BANNER_AUTO_SLIDE_SEC ? `${s}초 (기본)` : `${s}초`)}</button>
-              `).join('')}
-            </div>
-            <div style="font-size:11px; color:#64748B; line-height:1.45;">배너가 2개 이상일 때 설정한 시간마다 자동으로 넘어가며, 마지막 배너 다음엔 다시 첫 배너로 돌아가 반복됩니다.</div>
-          </div>
-        ` : ''}
-
         ${(canLayout || canNotices) ? `
           ${buildManageAccordionBar({
             key: 'content_unified',
-            titleHtml: '공지 · 광고 관리',
+            titleHtml: '홈 광고 관리',
             badgeHtml: `<span class="tag slate">총 ${notices.length}개</span>`,
             defaultOpen: true,
             marginTop: '12px'
           })}
           <div data-acc-body="content_unified" class="${isManageSectionOpen('content_unified', true) ? '' : 'hidden'}">
             <div class="info-box" style="margin-top:0; margin-bottom:10px;">
-              공지·광고를 작성하거나 수정할 때 <b>상단 배너에 띄우기</b>를 선택하면 홈 맨 위 배너에도 함께 표시됩니다.
+              등록한 글은 홈 화면 캘린더 아래 <b>광고</b> 목록에 하나로 묶여 표시됩니다.
             </div>
             <div style="display:flex; gap:6px; margin-bottom:10px;">
-              <button class="btn-full btn-dark" type="button" style="flex:1; padding:11px 12px; font-size:13.5px; border-radius:12px;" onclick="openAddNoticeModal()">+ 새 공지 · 광고 등록</button>
+              <button class="btn-full btn-dark" type="button" style="flex:1; padding:11px 12px; font-size:13.5px; border-radius:12px;" onclick="openAddNoticeModal()">+ 새 광고 등록</button>
               <button class="btn-outline" type="button" style="white-space:nowrap; padding:0 11px; border-radius:12px; font-size:12px; font-weight:800;" onclick="jumpToManageReactionEmojis()">이모지 설정</button>
             </div>
 
             <div class="filter-row" style="margin-bottom:10px;" data-ts-bar="manage_content_filter" data-ts-body="#manageContentCardsBody">
               <button class="filter-chip ${manageContentFilter === 'all' ? 'active' : ''}" type="button" onclick="setManageContentFilter('all')">전체 (${notices.length})</button>
-              <button class="filter-chip ${manageContentFilter === 'banner' ? 'active' : ''}" type="button" onclick="setManageContentFilter('banner')">배너 표시중 (${pinnedLiveNotices.length})</button>
-              <button class="filter-chip ${manageContentFilter === 'listonly' ? 'active' : ''}" type="button" onclick="setManageContentFilter('listonly')">목록만 표시 (${listOnlyLiveNotices.length})</button>
+              <button class="filter-chip ${manageContentFilter === 'live' ? 'active' : ''}" type="button" onclick="setManageContentFilter('live')">홈 표시중 (${liveNotices.length})</button>
               ${pendingNotices.length > 0 ? `<button class="filter-chip ${manageContentFilter === 'pending' ? 'active' : ''}" type="button" onclick="setManageContentFilter('pending')">임시·예약 (${pendingNotices.length})</button>` : ''}
             </div>
 
@@ -15375,9 +15672,8 @@
               ${noticeCardsHtml}
               ${emptyNoticeHtml}
             </div>
-            ${visibleNoticeEntries.length >= 5 ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('content_unified', true)">▲ 공지·광고 목록 접기</button>` : ''}
+            ${visibleNoticeEntries.length >= 5 ? `<button class="acc-fold-footer-btn" type="button" onclick="collapseManageSectionAndScroll('content_unified', true)">▲ 광고 목록 접기</button>` : ''}
           </div>
-          ${legacyBlocksSectionHtml}
         ` : ''}
       `;
     }
@@ -15698,9 +15994,9 @@
     window.openAddNoticeModal = () => {
       const user = getCurrentUser();
       if (!user) return;
-      document.getElementById('noticeModalTitle').textContent = '새 공지 · 광고 등록';
+      document.getElementById('noticeModalTitle').textContent = '새 광고 등록';
       document.getElementById('editNoticeId').value = '';
-      document.getElementById('noticeCategory').value = '공지';
+      document.getElementById('noticeCategory').value = '광고';
       document.getElementById('noticeCategoryCustomInput').value = '';
       onNoticeCategorySelectChange();
       document.getElementById('noticeTitleInput').value = '';
@@ -15729,7 +16025,7 @@
     window.onNoticePublishModeChange = () => {
       const mode = document.getElementById('noticePublishModeSelect').value;
       document.getElementById('noticeScheduleBox').classList.toggle('hidden', mode !== 'scheduled');
-      document.getElementById('noticePinBannerRow').classList.toggle('hidden', mode === 'draft');
+      document.getElementById('noticePinBannerRow').classList.add('hidden');
       document.getElementById('noticeNotifyRow').classList.toggle('hidden', mode !== 'now');
       onNoticePinBannerChange();
       if (mode === 'scheduled') {
@@ -16659,7 +16955,7 @@
     window.openEditNotice = (id) => {
       const n = notices.find(x => String(x.id) === String(id));
       if (!n) return;
-      document.getElementById('noticeModalTitle').textContent = '공지 · 광고 수정';
+      document.getElementById('noticeModalTitle').textContent = '광고 수정';
       document.getElementById('editNoticeId').value = n.id;
       const baseCats = ['공지', '광고', '소식', '행사'];
       if (baseCats.includes(n.category)) {
@@ -31753,7 +32049,9 @@
               const src = String(node.getAttribute('src') || '').trim();
               const inVideoPlayer = !!(node.closest && node.closest('#videoPlayerFrameWrap'));
               const isYoutubeEmbed = /^https:\/\/www\.youtube(?:-nocookie)?\.com\/embed\//i.test(src);
-              if (!inVideoPlayer || !isYoutubeEmbed) {
+              const inHomeCalendar = !!(node.closest && node.closest('#homeCalendarFrameWrap'));
+              const isGoogleCalEmbed = /^https:\/\/calendar\.google\.com\/calendar\/embed\?/i.test(src);
+              if (!((inVideoPlayer && isYoutubeEmbed) || (inHomeCalendar && isGoogleCalEmbed))) {
                 violation = `미인가 iframe 삽입(${(src || 'inline').slice(0, 120)})`;
               }
             } else {
@@ -39064,17 +39362,10 @@ ${handleUrl}`);
         })}
         <div data-acc-body="vid_perm" class="${permOpen ? '' : 'hidden'}">
           <div class="card">
-            <div class="setting-row" style="padding-top:0;">
-              <div>
-                <div class="setting-title" style="font-size:13.5px;">메인 홈 화면에 인기 추천 영상 섹션 표시</div>
-                <div class="setting-sub" style="font-size:11.5px;">꺼도 하단 [설교] · [CCM] 탭에서 전체 영상을 볼 수 있습니다.</div>
-              </div>
-              <label class="switch">
-                <input type="checkbox" id="cfgVidShowHome" ${cfg.showOnHome !== false ? 'checked' : ''} />
-                <span class="slider"></span>
-              </label>
+            <div class="info-box" style="margin-top:0; margin-bottom:10px;">
+              설교와 찬양(CCM) 영상은 홈 화면에 중복 노출되지 않고 하단 <b>[설교]</b> · <b>[${escapeHtml(getTabLabel('ccm'))}]</b> 전용 탭에서 바로 시청할 수 있습니다.
             </div>
-            <div class="form-group" style="margin-top:10px;">
+            <div class="form-group" style="margin-top:4px;">
               <label class="form-label" for="cfgVidSubmitAudience">설교 · 라이트 청년부 영상 게시 가능 대상 <span style="font-weight:600; color:#7E22CE;">(찬양 콘티는 최고 관리자 전용)</span></label>
               <select id="cfgVidSubmitAudience" class="form-select" onchange="onCfgVidAudienceChange()">
                 <option value="roles" ${cfg.submitAudience === 'roles' ? 'selected' : ''}>🎯 선택한 역할만 게시 가능 (권장)</option>
@@ -39154,7 +39445,7 @@ ${handleUrl}`);
     };
 
     window.handleSaveVideoSettings = async () => {
-      const showOnHome = !!(document.getElementById('cfgVidShowHome') && document.getElementById('cfgVidShowHome').checked);
+      const showOnHome = false;
       const submitAudience = (document.getElementById('cfgVidSubmitAudience') || {}).value || 'roles';
       const submitTargetRoles = Array.from(document.querySelectorAll('.cfg-vid-role-chk:checked')).map(el => String(el.value));
       if (submitAudience === 'roles' && submitTargetRoles.length === 0) {
@@ -39452,8 +39743,6 @@ ${handleUrl}`);
     // ==================== 24. 통합 탭 좌우 슬라이드 엔진 (핵심 이용자 콘텐츠 6곳 전용 · 스와이프 + 배너형 인디케이터 동기화) ====================
     const TAB_SLIDE_BAR_SELECTOR = '.filter-row:not([data-ts-skip="1"]), .sub-tabs:not([data-ts-skip="1"]), .role-member-tabs:not([data-ts-skip="1"]), .sermon-subtab-row:not([data-ts-skip="1"]), .auth-tabs:not([data-ts-skip="1"]), .modal-tabs-2:not([data-ts-skip="1"])';
     const TAB_SLIDE_ENABLED_KEYS = new Set([
-      'home_notice',
-      'home_videos',
       'sermon_sub',
       'ccm_sub',
       'videos_cat',
